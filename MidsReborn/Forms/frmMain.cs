@@ -327,7 +327,7 @@ namespace Mids_Reborn.Forms
                 var toonLoaded = false;
                 if (!MidsContext.Config.DisableLoadLastFileOnStart)
                     toonLoaded = DoOpen(MidsContext.Config.LastFileName);
-
+                
                 if (!toonLoaded)
                 {
                     NewToon();
@@ -431,6 +431,7 @@ namespace Mids_Reborn.Forms
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
                     clsXMLUpdate.CheckUpdate();*/
+
             }
             catch (Exception ex)
             {
@@ -1359,27 +1360,7 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             FloatUpdate(true);
 
-            // Force rendering the bottom part of the main build UI if it any of the selected powers match these conditions:
-            // - Any accolade
-            // - Any incarnate power
-            // - Any PB/WS shapeshifting special power (dwarves and novae)
-            var pEntry = MidsContext.Character.CurrentBuild.Powers.Any(pe =>
-            {
-                return pe.Power.FullName switch
-                {
-                    { } a when a.StartsWith("Temporary_Powers.Accolades.") => true,
-                    { } b when b.StartsWith("Incarnate.") => true,
-                    { } c when c.StartsWith("Inherent.Inherent.Black_Dwarf") => true,
-                    { } d when d.StartsWith("Inherent.Inherent.Dark_Nova") => true,
-                    { } e when e.StartsWith("Inherent.Inherent.White_Dwarf") => true,
-                    { } f when f.StartsWith("Inherent.Inherent.Bright_Nova") => true,
-                    _ => false
-                };
-            });
-
-            if (!pEntry) return true;
-            pnlGFX.Update();
-            pnlGFX.Refresh();
+            
 
             return true;
         }
@@ -5692,6 +5673,12 @@ namespace Mids_Reborn.Forms
 
             DoOpen(DlgOpen.FileName);
             FloatTop(true);
+            var containsPower = MidsContext.Character.CurrentBuild.Powers.Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
+            if (containsPower && ActiveForm == this)
+            {
+                pnlGFX.Update();
+                pnlGFX.Refresh();
+            }
         }
 
         private void tsFilePrint_Click(object sender, EventArgs e)
