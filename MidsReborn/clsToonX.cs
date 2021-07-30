@@ -926,6 +926,38 @@ namespace Mids_Reborn
             return ret;
         }
 
+        private List<IEffect> GBPA_GetPowerFlatEffectsList(string powerFullName, int recursionLevel = 0)
+        {
+            var ret = new List<IEffect>();
+            var p = DatabaseAPI.GetPowerByFullName(powerFullName);
+            if (p == null) return ret;
+
+            foreach (var fx in p.Effects)
+            {
+                ret.Add(fx);
+            }
+
+            foreach (var fx in p.Effects)
+            {
+                if (fx.EffectType == Enums.eEffectType.EntCreate)
+                {
+                    var summon = DatabaseAPI.NidFromUidEntity(fx.Summon);
+                    if (summon <= -1) continue;
+                    if (DatabaseAPI.Database.Entities[summon].PowersetFullName.Length <= 0) continue;
+                    
+                    var summonPowerset = DatabaseAPI.GetPowersetByName(DatabaseAPI.Database.Entities[summon].PowersetFullName[0]);
+                    if (summonPowerset == null) continue;
+                    if (recursionLevel >= 2) continue;
+                    foreach (var sp in summonPowerset.Powers)
+                    {
+                        ret.AddRange(GBPA_GetPowerFlatEffectsList(sp.FullName, recursionLevel + 1));
+                    }
+                }
+            }
+
+            return ret;
+        }
+
         private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
         {
             if (iPower == null)
@@ -943,12 +975,32 @@ namespace Mids_Reborn
                 return false;
             }
 
-            var num = iPower.Effects.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = iPower.Effects.Length;
+            var nonStackableEffectPowersets = new List<string>();
+            for (var index = 0; index < num; index++)
             {
-                if (iPower.Effects[index].VariableModified)
+                if (iPower.Effects[index].EffectType == Enums.eEffectType.EntCreate & iPower.Effects[index].Stacking == Enums.eStacking.No)
                 {
-                    iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
+                    var summon = DatabaseAPI.NidFromUidEntity(iPower.Effects[index].Summon);
+                    if (summon > -1)
+                    {
+                        nonStackableEffectPowersets.Add(DatabaseAPI.Database.Entities[summon].PowersetFullName[0]);
+                    }
+                }
+
+                var sourcePowerset = iPower.Effects[index].GetPower().GetPowerSet();
+                if (CurrentBuild.Powers[hIDX].Power.VariableEnabled & iPower.Effects[index].Stacking == Enums.eStacking.Yes & !nonStackableEffectPowersets.Contains(sourcePowerset.FullName))
+                {
+                    if (iPower.Effects[index].PowerFullName != "")
+                    {
+                        var powerRef = DatabaseAPI.GetPowerByFullName(iPower.FullName);
+                        var powerRefFx = GBPA_GetPowerFlatEffectsList(iPower.FullName);
+                        iPower.Effects[index].Scale = powerRefFx[index].Scale * CurrentBuild.Powers[hIDX].VariableValue;
+                    }
+                    else
+                    {
+                        iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
+                    }
                 }
             }
 
