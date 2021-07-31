@@ -696,16 +696,19 @@ namespace mrbBase.Base.Data_Classes
             var str3 = string.Empty;
             var str4 = string.Empty;
             var effectNameShort1 = Enums.GetEffectNameShort(EffectType);
-            if (power != null && power.VariableEnabled && VariableModified)
+            if (power is {VariableEnabled: true} && VariableModified)
                 str4 = " (V)";
-            if (!simple)
-                str3 = ToWho switch
+            str3 = simple switch
+            {
+                false => ToWho switch
                 {
                     Enums.eToWho.Target => " to Tgt",
                     Enums.eToWho.Self => " to Slf",
                     Enums.eToWho.Ally => " to Ally",
                     _ => str3
-                };
+                },
+                _ => str3
+            };
             if (useBaseProbability)
             {
                 if (BaseProbability < 1.0)
@@ -918,18 +921,13 @@ namespace mrbBase.Base.Data_Classes
 
             if (!simple)
             {
-                if (ToWho == Enums.eToWho.Target)
+                sTarget = ToWho switch
                 {
-                    sTarget = " to Target";
-                }
-                else if (ToWho == Enums.eToWho.Self)
-                {
-                    sTarget = " to Self";
-                }
-                else if (ToWho == Enums.eToWho.Ally)
-                {
-                    sTarget = " to Ally";
-                }
+                    Enums.eToWho.Target => " to Target",
+                    Enums.eToWho.Self => " to Self",
+                    Enums.eToWho.Ally => " to Ally",
+                    _ => sTarget
+                };
                 if (RequiresToHitCheck)
                 {
                     sToHit = " requires ToHit check";

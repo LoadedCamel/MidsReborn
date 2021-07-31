@@ -1564,7 +1564,7 @@ namespace mrbBase.Base.Data_Classes
                         shortFx.Add(iIndex, Effects[iIndex].Mag);
                     }
                 }
-                else if (Effects[iIndex].ToWho != Enums.eToWho.Target || Effects[iIndex].ToWho != Enums.eToWho.Ally)
+                else if (Effects[iIndex].ToWho is not (Enums.eToWho.Target or Enums.eToWho.Ally))
                 {
                     shortFx.Add(iIndex, Effects[iIndex].Mag);
                 }
@@ -1846,10 +1846,7 @@ namespace mrbBase.Base.Data_Classes
                 var str = string.Empty;
                 var array = new int[0];
                 var effect = (IEffect) Effects[idEffect].Clone();
-                if (effect.EffectType == Enums.eEffectType.DamageBuff ||
-                    effect.EffectType == Enums.eEffectType.Defense ||
-                    effect.EffectType == Enums.eEffectType.Resistance ||
-                    effect.EffectType == Enums.eEffectType.Elusivity)
+                if (effect.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity)
                 {
                     var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
                     for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
@@ -2276,12 +2273,12 @@ namespace mrbBase.Base.Data_Classes
 
             var intList = new List<int>();
             for (var index = 0; index < Effects.Length; ++index)
-                if (Effects[index].EffectType == Enums.eEffectType.EntCreate && Effects[index].nSummon > -1 &&
-                    Math.Abs(Effects[index].Probability - 1f) < 0.01 &&
-                    DatabaseAPI.Database.Entities.Length > Effects[index].nSummon)
+            {
+                if (Effects[index].EffectType == Enums.eEffectType.EntCreate && Effects[index].nSummon > -1 && Math.Abs(Effects[index].Probability - 1f) < 0.01 && DatabaseAPI.Database.Entities.Length > Effects[index].nSummon)
                 {
                     intList.Add(index);
                 }
+            }
 
             if (intList.Count > 0)
             {
@@ -2293,8 +2290,7 @@ namespace mrbBase.Base.Data_Classes
                 var effect = Effects[t];
                 var nSummon1 = effect.nSummon;
                 var stacking = 1;
-                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) &&
-                    MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
+                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                 {
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;
                 }
@@ -2353,20 +2349,20 @@ namespace mrbBase.Base.Data_Classes
                     }
 
                     foreach (var power1 in DatabaseAPI.Database.Powersets[setIndex].Powers)
-                    foreach (var absorbEffect in AbsorbEffects(power1, effect.Duration, effect.DelayedTime,
-                        DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking))
                     {
-                        var nSummon2 = power1.Effects[absorbEffect].nSummon;
-                        if (DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0] < 0)
+                        foreach (var absorbEffect in AbsorbEffects(power1, effect.Duration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking))
                         {
-                            continue;
-                        }
+                            var nSummon2 = power1.Effects[absorbEffect].nSummon;
+                            if (DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0] < 0)
+                            {
+                                continue;
+                            }
 
-                        foreach (var power2 in DatabaseAPI.Database
-                            .Powersets[DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0]].Powers)
-                            AbsorbEffects(power2, effect.Duration, effect.DelayedTime,
-                                DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()],
-                                stacking);
+                            foreach (var power2 in DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0]].Powers)
+                            {
+                                AbsorbEffects(power2, effect.Duration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                            }
+                        }
                     }
                 }
             }
