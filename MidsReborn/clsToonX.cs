@@ -934,7 +934,7 @@ namespace Mids_Reborn
             return ret;
         }
 
-        private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
+        private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX, IPower refPower)
         {
             if (iPower == null)
             {
@@ -954,9 +954,16 @@ namespace Mids_Reborn
             var num = iPower.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
             {
-                if (iPower.Effects[index].VariableModified && !iPower.AbsorbSummonEffects)
+                if (iPower.Effects[index].VariableModified)
                 {
-                    iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
+                    if (!iPower.AbsorbSummonEffects)
+                    {
+                        iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
+                    }
+                    else
+                    {
+                        iPower.Effects[index].Scale = refPower.Effects[index].Scale * CurrentBuild.Powers[hIDX].VariableValue;
+                    }
                 }
             }
 
@@ -967,9 +974,15 @@ namespace Mids_Reborn
         {
             _buffedPower = new IPower[CurrentBuild.Powers.Count];
             _mathPower = new IPower[CurrentBuild.Powers.Count];
+            var _refPower = new IPower[CurrentBuild.Powers.Count];
             for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
+            {
                 if (CurrentBuild.Powers[hIDX].NIDPower > -1)
+                {
                     _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX);
+                    _refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                }
+            }
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
             {
@@ -991,7 +1004,7 @@ namespace Mids_Reborn
             {
                 if (CurrentBuild.Powers[hIDX].NIDPower <= -1)
                     continue;
-                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX);
+                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX, _refPower[hIDX]);
                 _buffedPower[hIDX] = new Power(_mathPower[hIDX]);
                 _buffedPower[hIDX].SetMathMag();
             }
@@ -1369,14 +1382,14 @@ namespace Mids_Reborn
             return true;
         }
 
-        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX)
+        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
         {
             if (nIDPower < 0)
                 return null;
             IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
             GBPA_ApplyPowerOverride(ref power2);
             GBPA_AddEnhFX(ref power2, hIDX);
-            power2.AbsorbPetEffects(hIDX);
+            power2.AbsorbPetEffects(hIDX, stackingOverride);
             power2.ApplyGrantPowerEffects();
             GBPA_AddSubPowerEffects(ref power2, hIDX);
             return power2;
