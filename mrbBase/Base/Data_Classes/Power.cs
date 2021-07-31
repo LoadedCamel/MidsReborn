@@ -2267,7 +2267,7 @@ namespace mrbBase.Base.Data_Classes
                 .Any(validEnhancement => validEnhancement == iEnh);
         }
 
-        public void AbsorbPetEffects(int hIdx = -1)
+        public void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1)
         {
             if (!AbsorbSummonAttributes && !AbsorbSummonEffects)
             {
@@ -2298,6 +2298,8 @@ namespace mrbBase.Base.Data_Classes
                 {
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;
                 }
+
+                if (stackingOverride > 0) stacking = stackingOverride;
 
                 var nPowerset = DatabaseAPI.Database.Entities[nSummon1].GetNPowerset();
                 if (nPowerset.Count == 0)
