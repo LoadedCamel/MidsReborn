@@ -500,34 +500,51 @@ namespace Mids_Reborn.Forms.Controls
                             }
                             else if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
                             {
-                                if (effect.IgnoreED)
-                                    foreach (var str in power2.BoostsAllowed)
+                                switch (effect.IgnoreED)
+                                {
+                                    case true:
                                     {
-                                        if (str.StartsWith("Res_Damage"))
+                                        foreach (var str in power2.BoostsAllowed)
                                         {
-                                            afterED3[18] += effect.Mag;
+                                            if (str.StartsWith("Res_Damage"))
+                                            {
+                                                afterED3[18] += effect.Mag;
+                                                break;
+                                            }
+
+                                            if (!str.StartsWith("Damage"))
+                                            {
+                                                continue;
+                                            }
+
+                                            afterED3[2] += effect.Mag;
                                             break;
                                         }
 
-                                        if (!str.StartsWith("Damage"))
-                                            continue;
-                                        afterED3[2] += effect.Mag;
                                         break;
                                     }
-                                else
-                                    foreach (var str in power2.BoostsAllowed)
+                                    default:
                                     {
-                                        if (str.StartsWith("Res_Damage"))
+                                        foreach (var str in power2.BoostsAllowed)
                                         {
-                                            numArray3[18] += effect.Mag;
+                                            if (str.StartsWith("Res_Damage"))
+                                            {
+                                                numArray3[18] += effect.Mag;
+                                                break;
+                                            }
+
+                                            if (!str.StartsWith("Damage"))
+                                            {
+                                                continue;
+                                            }
+
+                                            numArray3[2] += effect.Mag;
                                             break;
                                         }
 
-                                        if (!str.StartsWith("Damage"))
-                                            continue;
-                                        numArray3[2] += effect.Mag;
                                         break;
                                     }
+                                }
                             }
                         }
                     }
