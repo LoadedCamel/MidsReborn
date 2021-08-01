@@ -1518,7 +1518,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 displayStats.BuffAccuracy
             });
 
-            Debug.WriteLine($"frmTotalsV2 (#1): DamageBuff={displayStats.BuffDamage(false)}");
             SetBarSingle(Enums.eBarType.Damage, new List<float>
             {
                 displayStats.BuffDamage(false),
@@ -1628,7 +1627,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
             SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
             SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
-            Debug.WriteLine($"frmTotalsV2 (#2): DamageBuff={displayStats.BuffDamage(false)}");
             SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false));
             SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
             SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
