@@ -908,7 +908,7 @@ namespace mrbBase.Base.Data_Classes
             // Some variable effect may not show that they are,
             // e.g. Kinetics Fulcrum Shift self buff effect.
             // VariableModified will be false if ToWho is set to Self.
-            if (power != null && power.VariableEnabled && VariableModified | ToWho == Enums.eToWho.Self)
+            if (power != null && power.VariableEnabled && VariableModified | (ToWho == Enums.eToWho.Self & Stacking == Enums.eStacking.Yes))
             {
                 sVariable = " (Variable)";
             }
@@ -1378,6 +1378,14 @@ namespace mrbBase.Base.Data_Classes
 
             var sExtra = string.Empty;
             var sExtra2 = string.Empty;
+            
+            // Fallback for GCM flag not being shown for some powers
+            // E.g. Inherent.Inherent.Opportunity
+            if (!sChance.Contains("when ") & EffectId != "" & EffectId != "Ones")
+            {
+                sChance += $"when {EffectId}";
+            }
+
             //(20% chance, non-resistible if target = player)
             if (!string.IsNullOrEmpty(sChance + sResist + sPvx + sDelay + sSpecial + sConditional + sToHit + sSuppressShort))
             {
