@@ -379,8 +379,7 @@ namespace Mids_Reborn
                                 {
                                     if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance") | effect.SpecialCase == Enums.eSpecialCase.Defiance))
                                     {
-                                        if (effect.ToWho != Enums.eToWho.Ally)
-                                            nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
+                                        nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                                     }
                                 }
                                 else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))

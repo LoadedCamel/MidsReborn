@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using mrbControls;
@@ -32,9 +33,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Less Than");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
@@ -137,6 +138,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkFXResistable = new System.Windows.Forms.CheckBox();
             this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.cbCoDFormat = new System.Windows.Forms.CheckBox();
+            this.chkIgnoreScale = new System.Windows.Forms.CheckBox();
             this.GroupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -353,9 +355,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalOp.HideSelection = false;
             this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
             this.lvConditionalOp.LostFocusItem = -1;
             this.lvConditionalOp.MultiSelect = false;
@@ -1337,7 +1339,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbCoDFormat
             // 
             this.cbCoDFormat.AutoSize = true;
-            this.cbCoDFormat.Location = new System.Drawing.Point(840, 130);
+            this.cbCoDFormat.Location = new System.Drawing.Point(1040, 129);
             this.cbCoDFormat.Name = "cbCoDFormat";
             this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
             this.cbCoDFormat.TabIndex = 175;
@@ -1345,10 +1347,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbCoDFormat.UseVisualStyleBackColor = true;
             this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
             // 
+            // chkIgnoreScale
+            // 
+            this.chkIgnoreScale.AutoSize = true;
+            this.chkIgnoreScale.Location = new System.Drawing.Point(838, 129);
+            this.chkIgnoreScale.Name = "chkIgnoreScale";
+            this.chkIgnoreScale.Size = new System.Drawing.Size(145, 18);
+            this.chkIgnoreScale.TabIndex = 176;
+            this.chkIgnoreScale.Text = "Ignore Scaling For Effect";
+            this.chkIgnoreScale.UseVisualStyleBackColor = true;
+            this.chkIgnoreScale.CheckedChanged += new EventHandler(this.chkIgnoreScale_CheckChanged);
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1264, 756);
+            this.Controls.Add(this.chkIgnoreScale);
             this.Controls.Add(this.cbCoDFormat);
             this.Controls.Add(this.chkCancelOnMiss);
             this.Controls.Add(this.chkStack);
@@ -1503,5 +1517,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox chkFXResistable;
         private CheckBox chkNearGround;
         private CheckBox cbCoDFormat;
+        private CheckBox chkIgnoreScale;
     }
 }

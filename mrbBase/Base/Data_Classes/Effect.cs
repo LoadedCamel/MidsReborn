@@ -107,6 +107,7 @@ namespace mrbBase.Base.Data_Classes
                 Resistible = reader.ReadBoolean();
                 SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
                 VariableModifiedOverride = reader.ReadBoolean();
+                IgnoreScaling = reader.ReadBoolean();
                 PvMode = (Enums.ePvX)reader.ReadInt32();
                 ToWho = (Enums.eToWho)reader.ReadInt32();
                 DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
@@ -233,6 +234,7 @@ namespace mrbBase.Base.Data_Classes
             Resistible = template.Resistible;
             SpecialCase = template.SpecialCase;
             VariableModifiedOverride = template.VariableModifiedOverride;
+            IgnoreScaling = template.IgnoreScaling;
             isEnhancementEffect = template.isEnhancementEffect;
             PvMode = template.PvMode;
             ToWho = template.ToWho;
@@ -471,11 +473,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
@@ -591,6 +593,8 @@ namespace mrbBase.Base.Data_Classes
 
         public bool VariableModifiedOverride { get; set; }
 
+        public bool IgnoreScaling { get; set; }
+
         public bool isEnhancementEffect { get; set; }
 
         public Enums.ePvX PvMode { get; set; }
@@ -696,7 +700,7 @@ namespace mrbBase.Base.Data_Classes
             var str3 = string.Empty;
             var str4 = string.Empty;
             var effectNameShort1 = Enums.GetEffectNameShort(EffectType);
-            if (power is {VariableEnabled: true} && VariableModified)
+            if (power is {VariableEnabled: true} && VariableModified && !IgnoreScaling)
                 str4 = " (V)";
             str3 = simple switch
             {
@@ -908,9 +912,9 @@ namespace mrbBase.Base.Data_Classes
             // Some variable effect may not show that they are,
             // e.g. Kinetics Fulcrum Shift self buff effect.
             // VariableModified will be false if ToWho is set to Self.
-            if (power != null && power.VariableEnabled && VariableModified | (ToWho == Enums.eToWho.Self & Stacking == Enums.eStacking.Yes))
+            if (power is {VariableEnabled: true} && VariableModified | ToWho == Enums.eToWho.Self)
             {
-                sVariable = " (Variable)";
+                if (!IgnoreScaling) sVariable = " (Variable)";
             }
 
             if (isEnhancementEffect)
@@ -1378,14 +1382,6 @@ namespace mrbBase.Base.Data_Classes
 
             var sExtra = string.Empty;
             var sExtra2 = string.Empty;
-            
-            // Fallback for GCM flag not being shown for some powers
-            // E.g. Inherent.Inherent.Opportunity
-            if (!sChance.Contains("when ") & EffectId != "" & EffectId != "Ones")
-            {
-                sChance += $"when {EffectId}";
-            }
-
             //(20% chance, non-resistible if target = player)
             if (!string.IsNullOrEmpty(sChance + sResist + sPvx + sDelay + sSpecial + sConditional + sToHit + sSuppressShort))
             {
@@ -1441,6 +1437,7 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(Resistible);
             writer.Write((int)SpecialCase);
             writer.Write(VariableModifiedOverride);
+            writer.Write(IgnoreScaling);
             writer.Write((int)PvMode);
             writer.Write((int)ToWho);
             writer.Write((int)DisplayPercentageOverride);

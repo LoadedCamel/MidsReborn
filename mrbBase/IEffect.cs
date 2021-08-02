@@ -77,6 +77,8 @@ namespace mrbBase
 
         bool VariableModifiedOverride { get; set; }
 
+        bool IgnoreScaling { get; set; }
+
         bool isEnhancementEffect { get; set; }
 
         Enums.ePvX PvMode { get; set; }
