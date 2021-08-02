@@ -955,14 +955,7 @@ namespace Mids_Reborn
             {
                 if (iPower.Effects[index].VariableModified & !iPower.Effects[index].IgnoreScaling)
                 {
-                    if (!iPower.AbsorbSummonEffects)
-                    {
-                        iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
-                    }
-                    else
-                    {
-                        iPower.Effects[index].Scale = refPower.Effects[index].Scale * CurrentBuild.Powers[hIDX].VariableValue;
-                    }
+                    iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
                 }
             }
 
