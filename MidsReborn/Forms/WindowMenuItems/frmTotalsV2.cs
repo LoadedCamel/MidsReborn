@@ -748,7 +748,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                   ) +
                                   (valueBase > 0
                                       ? $"\r\nBase: {(plusSignEnabled && valueBase > 0 ? "+" : "")}{valueBase:##0.##}{percentageSign}{movementUnit}"
-                                      : "");
+                                      : "") +
+                                  (barIndex == (int)Enums.eBarType.Damage
+                                    ? $"\r\nEnh: {valueMainBar - valueBase}{percentageSign}"
+                                    : "");
                     break;
 
                 // Dual bar main + overcap

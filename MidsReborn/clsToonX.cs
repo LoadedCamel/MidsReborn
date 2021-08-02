@@ -953,7 +953,7 @@ namespace Mids_Reborn
             var num = iPower.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
             {
-                if (iPower.Effects[index].VariableModified)
+                if (iPower.Effects[index].VariableModified & !iPower.Effects[index].IgnoreScaling)
                 {
                     if (!iPower.AbsorbSummonEffects)
                     {
