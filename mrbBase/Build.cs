@@ -1118,6 +1118,13 @@ namespace mrbBase
                     }
 
                     var flag2 = power1.HasMutexID(index1);
+                    var isKheldianShapeshift = new List<string>
+                    {
+                        "Peacebringer_Offensive.Luminous_Blast.Bright_Nova",
+                        "Peacebringer_Defensive.Luminous_Aura.White_Dwarf",
+                        "Warshade_Offensive.Umbral_Blast.Dark_Nova",
+                        "Warshade_Defensive.Umbral_Aura.Black_Dwarf"
+                    }.Contains(power1.FullName);
                     foreach (var power2 in Powers)
                     {
                         if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex)
@@ -1125,6 +1132,13 @@ namespace mrbBase
                         var power3 = power2.Power;
                         if (!power2.StatInclude || power3.MutexIgnore)
                             continue;
+
+                        if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") |
+                                                    power2.Power.FullName.StartsWith("Incarnate.")))
+                        {
+                            continue;
+                        }
+
                         if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") &&
                             power3.HasMutexID(index1))
                         {
@@ -1156,6 +1170,7 @@ namespace mrbBase
                     {
                         foreach (var powerEntry in powerEntryList)
                             powerEntry.StatInclude = false;
+
                         eMutex = Enums.eMutex.NoConflict;
                     }
                     else
@@ -1164,7 +1179,12 @@ namespace mrbBase
                             Powers[hIdx].StatInclude = false;
                         if (!silent && powerEntryList.Count > 0)
                         {
-                            var empty = string.Empty;
+                            var str1 = $"{power1.DisplayName} is mutually exclusive and can't be used at the same time as the following powers:\n{string.Join(", ", powerEntryList.Select(e => e.Power.DisplayName).ToArray())}";
+                            MessageBox.Show(
+                                !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
+                                    ? str1 + "\n\nYou should turn off the powers listed before turning this one on."
+                                    : str1 + "\n\nThe listed powers have been turned off.", "Power Conflict");
+                            /*var empty = string.Empty;
                             var str1 = power1.DisplayName +
                                        " is mutually exclusive and can't be used at the same time as the following powers:\n";
                             foreach (var powerEntry in powerEntryList)
@@ -1178,7 +1198,7 @@ namespace mrbBase
                             MessageBox.Show(
                                 !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
                                     ? str2 + "\n\nYou should turn off the powers listed before turning this one on."
-                                    : str2 + "\n\nThe listed powers have been turned off.", "Power Conflict");
+                                    : str2 + "\n\nThe listed powers have been turned off.", "Power Conflict");*/
                         }
 
                         eMutex = powerEntryList.Count > 0
