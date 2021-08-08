@@ -97,7 +97,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (!DatabaseAPI.LoadLevelsDatabase(path))
             {
-                MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/Reborn-Team/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/LoadedCamel/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
