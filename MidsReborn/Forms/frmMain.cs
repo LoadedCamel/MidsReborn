@@ -5216,6 +5216,7 @@ namespace Mids_Reborn.Forms
             tempPowersButton.Checked = false;
             if (fTemp == null || fTemp.IsDisposed)
             {
+                // Inherent.Inherent.MxD_Temps
                 var power = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
                 var iPowers = new List<IPower>();
                 var num = power.NIDSubPower.Length - 1;
