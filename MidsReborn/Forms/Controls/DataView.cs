@@ -500,34 +500,51 @@ namespace Mids_Reborn.Forms.Controls
                             }
                             else if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
                             {
-                                if (effect.IgnoreED)
-                                    foreach (var str in power2.BoostsAllowed)
+                                switch (effect.IgnoreED)
+                                {
+                                    case true:
                                     {
-                                        if (str.StartsWith("Res_Damage"))
+                                        foreach (var str in power2.BoostsAllowed)
                                         {
-                                            afterED3[18] += effect.Mag;
+                                            if (str.StartsWith("Res_Damage"))
+                                            {
+                                                afterED3[18] += effect.Mag;
+                                                break;
+                                            }
+
+                                            if (!str.StartsWith("Damage"))
+                                            {
+                                                continue;
+                                            }
+
+                                            afterED3[2] += effect.Mag;
                                             break;
                                         }
 
-                                        if (!str.StartsWith("Damage"))
-                                            continue;
-                                        afterED3[2] += effect.Mag;
                                         break;
                                     }
-                                else
-                                    foreach (var str in power2.BoostsAllowed)
+                                    default:
                                     {
-                                        if (str.StartsWith("Res_Damage"))
+                                        foreach (var str in power2.BoostsAllowed)
                                         {
-                                            numArray3[18] += effect.Mag;
+                                            if (str.StartsWith("Res_Damage"))
+                                            {
+                                                numArray3[18] += effect.Mag;
+                                                break;
+                                            }
+
+                                            if (!str.StartsWith("Damage"))
+                                            {
+                                                continue;
+                                            }
+
+                                            numArray3[2] += effect.Mag;
                                             break;
                                         }
 
-                                        if (!str.StartsWith("Damage"))
-                                            continue;
-                                        numArray3[2] += effect.Mag;
                                         break;
                                     }
+                                }
                             }
                         }
                     }
@@ -1509,7 +1526,7 @@ namespace Mids_Reborn.Forms.Controls
                 if (sFXCheck(effectMagSum1))
                     iList.SetUnique();
 
-                //original damage buff code
+                //original damage buff code (Effects Tab)
                 Enums.ShortFX[] shortFxArray = Power.SplitFX(ref effectMagSum3, ref pEnh);
                 int num2 = shortFxArray.Length - 1;
                 for (int index1 = 0; index1 <= num2; ++index1)
@@ -1537,10 +1554,7 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             if (pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.None && pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.Defiance)
                             {
-                                iList.AddItem(new PairedList.ItemPair("DamageBuff:",
-                                    Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false,
-                                    pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase == Enums.eSpecialCase.Combo,
-                                    false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                                iList.AddItem(new PairedList.ItemPair("DamageBuff:", Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false, pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                             }
                             else if (pEnh.Effects[shortFxArray[index1].Index[0]].ActiveConditionals.Count > 0)
                             {
@@ -2926,11 +2940,21 @@ namespace Mids_Reborn.Forms.Controls
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter) |
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                            shortFx.Multiply();
-                            s2.Multiply();
-                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
+                            if (!pBase.Effects[Index[ID]].Absorbed_Effect)
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                shortFx.Multiply();
+                                s2.Multiply();
+                                Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
+                            }
+                            else
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                s2.Multiply();
+                                Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
+                            }
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {

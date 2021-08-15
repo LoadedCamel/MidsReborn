@@ -734,6 +734,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             valueBase = displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat);
                             valueOverCap = displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat);
                             break;
+
+                        case (int)Enums.eBarType.Damage:
+                            valueMainBar = displayStats.BuffDamage(false);
+                            valueBase = 100;
+                            valueOverCap = displayStats.BuffDamage(true);
+                            break;
                     }
 
                     tooltipText = (valueOverCap > valueMainBar
@@ -742,7 +748,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                   ) +
                                   (valueBase > 0
                                       ? $"\r\nBase: {(plusSignEnabled && valueBase > 0 ? "+" : "")}{valueBase:##0.##}{percentageSign}{movementUnit}"
-                                      : "");
+                                      : "") +
+                                  (barIndex == (int)Enums.eBarType.Damage
+                                    ? $"\r\nEnh: {valueMainBar - valueBase}{percentageSign}"
+                                    : "");
                     break;
 
                 // Dual bar main + overcap

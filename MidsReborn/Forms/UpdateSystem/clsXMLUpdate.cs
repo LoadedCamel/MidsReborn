@@ -15,7 +15,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public static void BugReportCrytilis()
         {
-            LaunchBrowser("https://github.com/Reborn-Team/MidsReborn/issues");
+            LaunchBrowser("https://github.com/LoadedCamel/MidsReborn/issues");
         }
 
         public static void DownloadFromDomain()
@@ -35,7 +35,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public static void GoToGitHub()
         {
-            LaunchBrowser("https://github.com/Reborn-Team/MidsReborn");
+            LaunchBrowser("https://github.com/LoadedCamel/MidsReborn");
         }
 
         public static void GoToForums()

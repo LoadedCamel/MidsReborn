@@ -809,6 +809,18 @@ namespace mrbBase
             return FindInToonHistory(power.PowerIndex) > -1;
         }
 
+        public bool PowerActive(IPower power)
+        {
+            for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+            {
+                if (Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == power.PowerIndex)
+                {
+                    return Powers[powerIdx].Power.Active;
+                }
+            }
+            return false;
+        }
+
         private void AddAutomaticGrantedPowers()
         {
             var maxLevel = GetMaxLevel();
@@ -1052,36 +1064,38 @@ namespace mrbBase
             return fxList;
         }
 
-        private static int GcsbCheck(IEffect[] fxList, IEffect testFX)
+        private static int GcsbCheck(IReadOnlyList<IEffect> fxList, IEffect testFx)
         {
-            for (var index = 0; index < fxList.Length; ++index)
+            for (var index = 0; index < fxList.Count; ++index)
             {
-                if (fxList[index].EffectType != testFX.EffectType || !((fxList[index].Mag > 0.0) & (testFX.Mag > 0.0)) &&
-                    !((fxList[index].Mag < 0.0) & (testFX.Mag < 0.0)) &&
-                    !(Math.Abs(fxList[index].Mag - ((double)testFX.Mag > 0.0 ? 1f : 0.0f)) <
-                      0.001))
+                if (fxList[index].EffectType != testFx.EffectType || !((fxList[index].Mag > 0.0) & (testFx.Mag > 0.0)) && !((fxList[index].Mag < 0.0) & (testFx.Mag < 0.0)) && !(Math.Abs(fxList[index].Mag - ((double)testFx.Mag > 0.0 ? 1f : 0.0f)) < 0.001))
+                {
                     continue;
-                if (
-                    (testFX.EffectType == Enums.eEffectType.Mez || testFX.EffectType == Enums.eEffectType.MezResist) &&
-                    fxList[index].MezType == testFX.MezType ||
-                    testFX.EffectType == Enums.eEffectType.Damage && testFX.DamageType == fxList[index].DamageType ||
-                    testFX.EffectType == Enums.eEffectType.Defense && testFX.DamageType == fxList[index].DamageType ||
-                    testFX.EffectType == Enums.eEffectType.Resistance && testFX.DamageType == fxList[index].DamageType ||
-                    testFX.EffectType == Enums.eEffectType.DamageBuff && testFX.DamageType == fxList[index].DamageType ||
-                    testFX.EffectType == Enums.eEffectType.Enhancement && testFX.ETModifies == fxList[index].ETModifies &&
-                    testFX.DamageType == fxList[index].DamageType && testFX.MezType == fxList[index].MezType ||
-                    testFX.EffectType == Enums.eEffectType.ResEffect && testFX.ETModifies == fxList[index].ETModifies ||
-                    testFX.EffectType == Enums.eEffectType.None && testFX.Special == fxList[index].Special &&
-                    testFX.Special.IndexOf("DEBT", StringComparison.OrdinalIgnoreCase) > -1)
-                    return index;
-                if ((testFX.EffectType != Enums.eEffectType.Mez) & (testFX.EffectType != Enums.eEffectType.MezResist) &
-                    (testFX.EffectType != Enums.eEffectType.Damage) & (testFX.EffectType != Enums.eEffectType.Defense) &
-                    (testFX.EffectType != Enums.eEffectType.Resistance) &
-                    (testFX.EffectType != Enums.eEffectType.DamageBuff) &
-                    (testFX.EffectType != Enums.eEffectType.Enhancement) &
-                    (testFX.EffectType != Enums.eEffectType.ResEffect) &
-                    (testFX.EffectType == fxList[index].EffectType))
-                    return index;
+                }
+
+                switch (testFx.EffectType)
+                {
+                    case Enums.eEffectType.Mez or Enums.eEffectType.MezResist when fxList[index].MezType == testFx.MezType:
+                    case Enums.eEffectType.Damage when testFx.DamageType == fxList[index].DamageType:
+                    case Enums.eEffectType.Defense when testFx.DamageType == fxList[index].DamageType:
+                    case Enums.eEffectType.Resistance when testFx.DamageType == fxList[index].DamageType:
+                    case Enums.eEffectType.DamageBuff when testFx.DamageType == fxList[index].DamageType:
+                    case Enums.eEffectType.Enhancement when testFx.ETModifies == fxList[index].ETModifies && testFx.DamageType == fxList[index].DamageType && testFx.MezType == fxList[index].MezType:
+                    case Enums.eEffectType.ResEffect when testFx.ETModifies == fxList[index].ETModifies:
+                    case Enums.eEffectType.None when testFx.Special == fxList[index].Special && testFx.Special.IndexOf("DEBT", StringComparison.OrdinalIgnoreCase) > -1:
+                        return index;
+                }
+                switch ((testFx.EffectType != Enums.eEffectType.Mez) & (testFx.EffectType != Enums.eEffectType.MezResist) &
+                        (testFx.EffectType != Enums.eEffectType.Damage) & (testFx.EffectType != Enums.eEffectType.Defense) &
+                        (testFx.EffectType != Enums.eEffectType.Resistance) &
+                        (testFx.EffectType != Enums.eEffectType.DamageBuff) &
+                        (testFx.EffectType != Enums.eEffectType.Enhancement) &
+                        (testFx.EffectType != Enums.eEffectType.ResEffect) &
+                        (testFx.EffectType == fxList[index].EffectType))
+                {
+                    case true:
+                        return index;
+                }
             }
 
             return -1;
@@ -1116,6 +1130,13 @@ namespace mrbBase
                     }
 
                     var flag2 = power1.HasMutexID(index1);
+                    var isKheldianShapeshift = new List<string>
+                    {
+                        "Peacebringer_Offensive.Luminous_Blast.Bright_Nova",
+                        "Peacebringer_Defensive.Luminous_Aura.White_Dwarf",
+                        "Warshade_Offensive.Umbral_Blast.Dark_Nova",
+                        "Warshade_Defensive.Umbral_Aura.Black_Dwarf"
+                    }.Contains(power1.FullName);
                     foreach (var power2 in Powers)
                     {
                         if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex)
@@ -1123,6 +1144,13 @@ namespace mrbBase
                         var power3 = power2.Power;
                         if (!power2.StatInclude || power3.MutexIgnore)
                             continue;
+
+                        if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") |
+                                                    power2.Power.FullName.StartsWith("Incarnate.")))
+                        {
+                            continue;
+                        }
+
                         if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") &&
                             power3.HasMutexID(index1))
                         {
@@ -1154,6 +1182,7 @@ namespace mrbBase
                     {
                         foreach (var powerEntry in powerEntryList)
                             powerEntry.StatInclude = false;
+
                         eMutex = Enums.eMutex.NoConflict;
                     }
                     else
@@ -1162,7 +1191,12 @@ namespace mrbBase
                             Powers[hIdx].StatInclude = false;
                         if (!silent && powerEntryList.Count > 0)
                         {
-                            var empty = string.Empty;
+                            var str1 = $"{power1.DisplayName} is mutually exclusive and can't be used at the same time as the following powers:\n{string.Join(", ", powerEntryList.Select(e => e.Power.DisplayName).ToArray())}";
+                            MessageBox.Show(
+                                !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
+                                    ? str1 + "\n\nYou should turn off the powers listed before turning this one on."
+                                    : str1 + "\n\nThe listed powers have been turned off.", "Power Conflict");
+                            /*var empty = string.Empty;
                             var str1 = power1.DisplayName +
                                        " is mutually exclusive and can't be used at the same time as the following powers:\n";
                             foreach (var powerEntry in powerEntryList)
@@ -1176,7 +1210,7 @@ namespace mrbBase
                             MessageBox.Show(
                                 !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
                                     ? str2 + "\n\nYou should turn off the powers listed before turning this one on."
-                                    : str2 + "\n\nThe listed powers have been turned off.", "Power Conflict");
+                                    : str2 + "\n\nThe listed powers have been turned off.", "Power Conflict");*/
                         }
 
                         eMutex = powerEntryList.Count > 0

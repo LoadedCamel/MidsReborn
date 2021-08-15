@@ -102,7 +102,7 @@ namespace Mids_Reborn
             {
                 if (CanRemovePower(inToonHistory, true, out message))
                 {
-                    if ((inToonHistory > -1) & (inToonHistory < CurrentBuild.Powers.Count))
+                    if ((true) & (inToonHistory < CurrentBuild.Powers.Count))
                         CurrentBuild.Powers[inToonHistory].Reset();
                     RequestedLevel = CurrentBuild.Powers[inToonHistory].Level;
                 }
@@ -308,6 +308,7 @@ namespace Mids_Reborn
                     }
                 }
                 else
+                {
                     switch (iEffect)
                     {
                         case Enums.eEffectType.MaxRunSpeed:
@@ -323,8 +324,7 @@ namespace Mids_Reborn
                             nBuffs.Effect[(int) Enums.eStatType.MaxJumpSpeed] += sFxSelf.Sum;
                             break;
                         case Enums.eEffectType.MaxFlySpeed:
-                            shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false,
-                                true));
+                            shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false, true));
                             sFxSelf.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.MaxFlySpeed, false, true));
                             nBuffs.Effect[(int) Enums.eStatType.MaxFlySpeed] += sFxSelf.Sum;
                             break;
@@ -332,6 +332,7 @@ namespace Mids_Reborn
                             shortFx.Assign(tPwr.GetEffectMagSum(iEffect));
                             break;
                     }
+                }
 
                 for (var shortFxIdx = 0; shortFxIdx <= shortFx.Value.Length - 1; ++shortFxIdx)
                 {
@@ -565,9 +566,15 @@ namespace Mids_Reborn
                 if (0 >= index || index >= 9)
                     continue;
                 if (_selfEnhance.Damage[index] > (double) maxDmgBuff)
+                {
                     maxDmgBuff = _selfEnhance.Damage[index];
+                }
+
                 if (_selfEnhance.Damage[index] < (double) minDmgBuff)
+                {
                     minDmgBuff = _selfEnhance.Damage[index];
+                }
+
                 avgDmgBuff += _selfEnhance.Damage[index];
             }
 
@@ -926,7 +933,7 @@ namespace Mids_Reborn
             return ret;
         }
 
-        private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
+        private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX, IPower refPower)
         {
             if (iPower == null)
             {
@@ -946,7 +953,7 @@ namespace Mids_Reborn
             var num = iPower.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
             {
-                if (iPower.Effects[index].VariableModified)
+                if (iPower.Effects[index].VariableModified & !iPower.Effects[index].IgnoreScaling)
                 {
                     iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
                 }
@@ -959,9 +966,15 @@ namespace Mids_Reborn
         {
             _buffedPower = new IPower[CurrentBuild.Powers.Count];
             _mathPower = new IPower[CurrentBuild.Powers.Count];
+            var _refPower = new IPower[CurrentBuild.Powers.Count];
             for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
+            {
                 if (CurrentBuild.Powers[hIDX].NIDPower > -1)
+                {
                     _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX);
+                    _refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                }
+            }
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
             {
@@ -983,7 +996,7 @@ namespace Mids_Reborn
             {
                 if (CurrentBuild.Powers[hIDX].NIDPower <= -1)
                     continue;
-                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX);
+                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX, _refPower[hIDX]);
                 _buffedPower[hIDX] = new Power(_mathPower[hIDX]);
                 _buffedPower[hIDX].SetMathMag();
             }
@@ -1216,12 +1229,10 @@ namespace Mids_Reborn
                             switch (eEffectType)
                             {
                                 case Enums.eEffectType.Damage:
-                                    var num5 = Enum.GetValues(powerMath.Effects[index2].DamageType.GetType()).Length -
-                                               1;
+                                    var num5 = Enum.GetValues(powerMath.Effects[index2].DamageType.GetType()).Length - 1;
                                     for (var index3 = 0; index3 <= num5; ++index3)
                                         if (powerMath.Effects[index2].DamageType == (Enums.eDamage) index3)
-                                            powerMath.Effects[index2].Math_Mag +=
-                                                _selfEnhance.Damage[(int) powerMath.Effects[index2].DamageType];
+                                            powerMath.Effects[index2].Math_Mag += _selfEnhance.Damage[(int) powerMath.Effects[index2].DamageType];
 
                                     mag = 0.0f;
                                     break;
@@ -1343,10 +1354,8 @@ namespace Mids_Reborn
             var num = powerMath.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
             {
-                powerBuffed.Effects[index].Math_Mag =
-                    powerBuffed.Effects[index].Mag * powerMath.Effects[index].Math_Mag;
-                powerBuffed.Effects[index].Math_Duration =
-                    powerBuffed.Effects[index].Duration * powerMath.Effects[index].Math_Duration;
+                powerBuffed.Effects[index].Math_Mag = powerBuffed.Effects[index].Mag * powerMath.Effects[index].Math_Mag;
+                powerBuffed.Effects[index].Math_Duration = powerBuffed.Effects[index].Duration * powerMath.Effects[index].Math_Duration;
             }
 
             return true;
@@ -1360,21 +1369,19 @@ namespace Mids_Reborn
                 return false;
             var nToHit = !powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? 0.0f : _selfBuffs.Effect[40];
             var nAcc = !powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? 0.0f : _selfBuffs.Effect[1];
-            powerBuffed.Accuracy =
-                (float) (powerBuffed.Accuracy * (1.0 + powerMath.Accuracy + nAcc) *
-                         (MidsContext.Config.BaseAcc + (double) nToHit));
+            powerBuffed.Accuracy = (float) (powerBuffed.Accuracy * (1.0 + powerMath.Accuracy + nAcc) * (MidsContext.Config.BaseAcc + (double) nToHit));
             powerBuffed.AccuracyMult = powerBuffed.Accuracy * (1f + powerMath.Accuracy + nAcc);
             return true;
         }
 
-        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX)
+        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
         {
             if (nIDPower < 0)
                 return null;
             IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
             GBPA_ApplyPowerOverride(ref power2);
             GBPA_AddEnhFX(ref power2, hIDX);
-            power2.AbsorbPetEffects(hIDX);
+            power2.AbsorbPetEffects(hIDX, stackingOverride);
             power2.ApplyGrantPowerEffects();
             GBPA_AddSubPowerEffects(ref power2, hIDX);
             return power2;
@@ -1384,13 +1391,14 @@ namespace Mids_Reborn
         {
             for (var i = 0; i <= CurrentBuild.Powers.Count - 1; ++i)
             {
-                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1))
-                    || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
+                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
                     continue;
                 if (enhancementPass)
                 {
                     if (_buffedPower[i] != null)
+                    {
                         GBD_Stage(ref _buffedPower[i], ref nBuffs, true);
+                    }
                 }
                 else if (_buffedPower[i] != null)
                 {
@@ -1434,8 +1442,12 @@ namespace Mids_Reborn
 
             GenerateBuffData(ref _selfBuffs, false);
             for (var index = 0; index <= _mathPower.Length - 1; ++index)
+            {
                 if (_mathPower[index] != null)
+                {
                     GBPA_Pass6_MultiplyPostBuff(ref _mathPower[index], ref _buffedPower[index]);
+                }
+            }
 
             GBD_Totals();
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -106,6 +107,7 @@ namespace mrbBase.Base.Data_Classes
                 Resistible = reader.ReadBoolean();
                 SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
                 VariableModifiedOverride = reader.ReadBoolean();
+                IgnoreScaling = reader.ReadBoolean();
                 PvMode = (Enums.ePvX)reader.ReadInt32();
                 ToWho = (Enums.eToWho)reader.ReadInt32();
                 DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
@@ -232,6 +234,7 @@ namespace mrbBase.Base.Data_Classes
             Resistible = template.Resistible;
             SpecialCase = template.SpecialCase;
             VariableModifiedOverride = template.VariableModifiedOverride;
+            IgnoreScaling = template.IgnoreScaling;
             isEnhancementEffect = template.isEnhancementEffect;
             PvMode = template.PvMode;
             ToWho = template.ToWho;
@@ -470,11 +473,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
@@ -590,6 +593,8 @@ namespace mrbBase.Base.Data_Classes
 
         public bool VariableModifiedOverride { get; set; }
 
+        public bool IgnoreScaling { get; set; }
+
         public bool isEnhancementEffect { get; set; }
 
         public Enums.ePvX PvMode { get; set; }
@@ -695,16 +700,19 @@ namespace mrbBase.Base.Data_Classes
             var str3 = string.Empty;
             var str4 = string.Empty;
             var effectNameShort1 = Enums.GetEffectNameShort(EffectType);
-            if (power != null && power.VariableEnabled && VariableModified)
+            if (power is {VariableEnabled: true} && VariableModified && !IgnoreScaling)
                 str4 = " (V)";
-            if (!simple)
-                str3 = ToWho switch
+            str3 = simple switch
+            {
+                false => ToWho switch
                 {
                     Enums.eToWho.Target => " to Tgt",
                     Enums.eToWho.Self => " to Slf",
                     Enums.eToWho.Ally => " to Ally",
                     _ => str3
-                };
+                },
+                _ => str3
+            };
             if (useBaseProbability)
             {
                 if (BaseProbability < 1.0)
@@ -901,9 +909,12 @@ namespace mrbBase.Base.Data_Classes
             var sConditional = string.Empty;
             var sNearGround = string.Empty;
 
-            if (power != null && power.VariableEnabled && VariableModified)
+            // Some variable effect may not show that they are,
+            // e.g. Kinetics Fulcrum Shift self buff effect.
+            // VariableModified will be false if ToWho is set to Self.
+            if (power is {VariableEnabled: true} && VariableModified | ToWho == Enums.eToWho.Self)
             {
-                sVariable = " (Variable)";
+                if (!IgnoreScaling) sVariable = " (Variable)";
             }
 
             if (isEnhancementEffect)
@@ -914,18 +925,13 @@ namespace mrbBase.Base.Data_Classes
 
             if (!simple)
             {
-                if (ToWho == Enums.eToWho.Target)
+                sTarget = ToWho switch
                 {
-                    sTarget = " to Target";
-                }
-                else if (ToWho == Enums.eToWho.Self)
-                {
-                    sTarget = " to Self";
-                }
-                else if (ToWho == Enums.eToWho.Ally)
-                {
-                    sTarget = " to Ally";
-                }
+                    Enums.eToWho.Target => " to Target",
+                    Enums.eToWho.Self => " to Self",
+                    Enums.eToWho.Ally => " to Ally",
+                    _ => sTarget
+                };
                 if (RequiresToHitCheck)
                 {
                     sToHit = " requires ToHit check";
@@ -1431,6 +1437,7 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(Resistible);
             writer.Write((int)SpecialCase);
             writer.Write(VariableModifiedOverride);
+            writer.Write(IgnoreScaling);
             writer.Write((int)PvMode);
             writer.Write((int)ToWho);
             writer.Write((int)DisplayPercentageOverride);
@@ -1519,7 +1526,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     case "Active":
                         bool? boolVal = Convert.ToBoolean(cVp.Value);
-                        if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                        if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                         {
                             cVp.Validated = true;
                         }
@@ -1633,7 +1640,7 @@ namespace mrbBase.Base.Data_Classes
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
                 {
                     bool? boolVal = Convert.ToBoolean(cVp.Value);
-                    if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                    if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                     {
                         cVp.Validated = true;
                     }
@@ -1738,7 +1745,7 @@ namespace mrbBase.Base.Data_Classes
                         if (conditionPower != null)
                         {
                             bool? boolVal = Convert.ToBoolean(cVp.Value);
-                            if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                            if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                             {
                                 cVp.Validated = true;
                             }
@@ -2158,7 +2165,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                                 {
                                     cVp.Validated = true;
                                 }
@@ -2535,7 +2542,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                                 {
                                     cVp.Validated = true;
                                 }

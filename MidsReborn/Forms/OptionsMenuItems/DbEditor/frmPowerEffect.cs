@@ -236,6 +236,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateFXText();
         }
 
+        private void chkIgnoreScale_CheckChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.IgnoreScaling = chkIgnoreScale.Checked;
+            UpdateFXText();
+        }
+
         private void clbSuppression_SelectedIndexChanged(object sender, EventArgs e)
         {
             StoreSuppression();
@@ -315,6 +323,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             cbFXClass.SelectedIndex = (int)myFX.EffectClass;
             chkVariable.Checked = myFX.VariableModifiedOverride;
+            chkIgnoreScale.Checked = myFX.IgnoreScaling;
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
             var names1 = Enum.GetNames(myFX.Suppression.GetType());
