@@ -57,6 +57,7 @@
     <Compile Include="ZStatus.Designer.cs">
       <DependentUpon>ZStatus.cs</DependentUpon>
     </Compile>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
