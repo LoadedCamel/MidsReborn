@@ -149,6 +149,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpEffects = new System.Windows.Forms.TabPage();
             this.lvFX = new System.Windows.Forms.ListBox();
             this.pnlFX = new System.Windows.Forms.Panel();
+            this.cbCoDFormat = new System.Windows.Forms.CheckBox();
             this.btnSetDamage = new System.Windows.Forms.Button();
             this.btnFXEdit = new System.Windows.Forms.Button();
             this.btnFXDown = new System.Windows.Forms.Button();
@@ -220,7 +221,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
-            this.cbCoDFormat = new System.Windows.Forms.CheckBox();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -266,7 +266,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tcPower.Location = new System.Drawing.Point(8, 8);
             this.tcPower.Name = "tcPower";
             this.tcPower.SelectedIndex = 0;
-            this.tcPower.Size = new System.Drawing.Size(840, 364);
+            this.tcPower.Size = new System.Drawing.Size(840, 380);
             this.tcPower.TabIndex = 2;
             // 
             // tpText
@@ -1561,6 +1561,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pnlFX.Size = new System.Drawing.Size(824, 332);
             this.pnlFX.TabIndex = 71;
             // 
+            // cbCoDFormat
+            // 
+            this.cbCoDFormat.AutoSize = true;
+            this.cbCoDFormat.Location = new System.Drawing.Point(580, 292);
+            this.cbCoDFormat.Name = "cbCoDFormat";
+            this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
+            this.cbCoDFormat.TabIndex = 79;
+            this.cbCoDFormat.Text = "Use CoD effect format";
+            this.cbCoDFormat.UseVisualStyleBackColor = true;
+            this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
+            // 
             // btnSetDamage
             // 
             this.btnSetDamage.Location = new System.Drawing.Point(312, 288);
@@ -1715,7 +1726,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSets.Controls.Add(this.pbInvSetUsed);
             this.tpSets.Location = new System.Drawing.Point(4, 23);
             this.tpSets.Name = "tpSets";
-            this.tpSets.Size = new System.Drawing.Size(832, 337);
+            this.tpSets.Size = new System.Drawing.Size(832, 353);
             this.tpSets.TabIndex = 5;
             this.tpSets.Text = "Invention Set Types";
             this.tpSets.UseVisualStyleBackColor = true;
@@ -1742,7 +1753,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pbInvSetList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.pbInvSetList.Location = new System.Drawing.Point(24, 84);
             this.pbInvSetList.Name = "pbInvSetList";
-            this.pbInvSetList.Size = new System.Drawing.Size(316, 220);
+            this.pbInvSetList.Size = new System.Drawing.Size(316, 256);
             this.pbInvSetList.TabIndex = 91;
             this.pbInvSetList.TabStop = false;
             this.pbInvSetList.Paint += new System.Windows.Forms.PaintEventHandler(this.pbInvSetList_Paint);
@@ -2245,7 +2256,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(740, 380);
+            this.btnOK.Location = new System.Drawing.Point(740, 394);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(104, 36);
             this.btnOK.TabIndex = 3;
@@ -2255,7 +2266,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(632, 380);
+            this.btnCancel.Location = new System.Drawing.Point(632, 394);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(104, 36);
             this.btnCancel.TabIndex = 4;
@@ -2264,7 +2275,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFullPaste
             // 
-            this.btnFullPaste.Location = new System.Drawing.Point(434, 380);
+            this.btnFullPaste.Location = new System.Drawing.Point(434, 394);
             this.btnFullPaste.Name = "btnFullPaste";
             this.btnFullPaste.Size = new System.Drawing.Size(104, 36);
             this.btnFullPaste.TabIndex = 5;
@@ -2274,7 +2285,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFullCopy
             // 
-            this.btnFullCopy.Location = new System.Drawing.Point(324, 380);
+            this.btnFullCopy.Location = new System.Drawing.Point(324, 394);
             this.btnFullCopy.Name = "btnFullCopy";
             this.btnFullCopy.Size = new System.Drawing.Size(104, 36);
             this.btnFullCopy.TabIndex = 6;
@@ -2284,7 +2295,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnCSVImport
             // 
-            this.btnCSVImport.Location = new System.Drawing.Point(8, 380);
+            this.btnCSVImport.Location = new System.Drawing.Point(8, 394);
             this.btnCSVImport.Name = "btnCSVImport";
             this.btnCSVImport.Size = new System.Drawing.Size(151, 36);
             this.btnCSVImport.TabIndex = 7;
@@ -2292,23 +2303,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
             // 
-            // cbCoDFormat
-            // 
-            this.cbCoDFormat.AutoSize = true;
-            this.cbCoDFormat.Location = new System.Drawing.Point(580, 292);
-            this.cbCoDFormat.Name = "cbCoDFormat";
-            this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
-            this.cbCoDFormat.TabIndex = 79;
-            this.cbCoDFormat.Text = "Use CoD effect format";
-            this.cbCoDFormat.UseVisualStyleBackColor = true;
-            this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
-            // 
             // frmEditPower
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(870, 428);
+            this.ClientSize = new System.Drawing.Size(870, 441);
             this.Controls.Add(this.btnCSVImport);
             this.Controls.Add(this.btnFullCopy);
             this.Controls.Add(this.btnFullPaste);

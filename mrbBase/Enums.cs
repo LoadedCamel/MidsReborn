@@ -929,7 +929,11 @@ namespace mrbBase
             Stalker,
             Tanker,
             UniversalDamage,
-            Sentinel
+            Sentinel,
+            RunNoSprint,
+            JumpNoSprint,
+            FlightNoSprint,
+            TeleportNoSprint
         }
 
         public enum eSpecialCase
