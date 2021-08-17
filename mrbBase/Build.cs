@@ -809,6 +809,18 @@ namespace mrbBase
             return FindInToonHistory(power.PowerIndex) > -1;
         }
 
+        public bool PowerActive(IPower power)
+        {
+            for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+            {
+                if (Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == power.PowerIndex)
+                {
+                    return Powers[powerIdx].Power.Active;
+                }
+            }
+            return false;
+        }
+
         private void AddAutomaticGrantedPowers()
         {
             var maxLevel = GetMaxLevel();

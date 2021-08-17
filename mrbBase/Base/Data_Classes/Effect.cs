@@ -1526,7 +1526,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     case "Active":
                         bool? boolVal = Convert.ToBoolean(cVp.Value);
-                        if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                        if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                         {
                             cVp.Validated = true;
                         }
@@ -1640,7 +1640,7 @@ namespace mrbBase.Base.Data_Classes
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
                 {
                     bool? boolVal = Convert.ToBoolean(cVp.Value);
-                    if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                    if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                     {
                         cVp.Validated = true;
                     }
@@ -1745,7 +1745,7 @@ namespace mrbBase.Base.Data_Classes
                         if (conditionPower != null)
                         {
                             bool? boolVal = Convert.ToBoolean(cVp.Value);
-                            if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                            if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                             {
                                 cVp.Validated = true;
                             }
@@ -2165,7 +2165,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                                 {
                                     cVp.Validated = true;
                                 }
@@ -2542,7 +2542,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
                                 {
                                     cVp.Validated = true;
                                 }
