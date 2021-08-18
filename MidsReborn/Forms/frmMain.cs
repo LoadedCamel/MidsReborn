@@ -155,7 +155,7 @@ namespace Mids_Reborn.Forms
 
         public bool petWindowFlag { get; set; }
 
-        private List<string> MMPets { get; } = new List<string>();
+        private List<string> MMPets { get; set; } = new List<string>();
 
         // store the instance for reuse, as these things are called per draw/redraw
         private Lazy<ComboBoxT<Archetype>> CbtAT =>
@@ -5171,15 +5171,19 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                MMPets.Clear();
-                var CurrentPowers = MidsContext.Character.CurrentBuild.Powers;
-                foreach (var item in CurrentPowers)
-                {
-                    var PetExists = Enum.GetNames(typeof(Enums.eMMpets)).Contains(item.Name.Replace(" ", "_"));
-                    if (PetExists) MMPets.Add(item.Name);
-                }
+                // Zed: added check on level so hidden Henchmen powers (*_H) don't get in,
+                // leading to duplicates.
+                MMPets = MidsContext.Character.CurrentBuild.Powers == null
+                    ? new List<string>()
+                    : MidsContext.Character.CurrentBuild.Powers
+                    .Where(e =>
+                        e is { Power: { } } &&
+                        Enum.GetNames(typeof(Enums.eMMpets)).Contains(e.Name.Replace(" ", "_")) &
+                        e.Power.Level > 0)
+                    .Select(e => e.Name)
+                    .ToList();
 
-                var isEmpty = !MMPets.Any();
+                var isEmpty = MMPets.Count <= 0;
                 if (!isEmpty)
                 {
                     fMMPets = new frmMMPowers(this, MMPets)
