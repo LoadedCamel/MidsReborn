@@ -1422,6 +1422,11 @@ namespace Mids_Reborn.Forms
             DoRedraw();
         }
 
+        public void DoRefresh()
+        {
+            pnlGFX.Refresh();
+        }
+
         private bool doSave()
         {
             if (string.IsNullOrEmpty(LastFileName))

@@ -445,6 +445,7 @@ namespace Mids_Reborn.Forms
             LLLeft.Refresh();
             LLRight.Refresh();
             myParent.PowerModified(true);
+            myParent.DoRefresh();
         }
 
         private void llLeft_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -504,6 +505,7 @@ namespace Mids_Reborn.Forms
                 LLLeft.Refresh();
                 LLRight.Refresh();
                 myParent.PowerModified(unused || hasChanges);
+                myParent.DoRefresh();
             }
         }
 
