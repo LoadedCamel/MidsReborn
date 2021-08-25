@@ -210,7 +210,7 @@ namespace Mids_Reborn.Forms
         // [Zed 06/01/20]
         // Input: argv: string[] Command line parameters, value: argument value to look for, caseSensitive: bool, perform case (in)sensitive lookup
         // Output: bool, target value has (not) been found
-        private bool findCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
+        private bool FindCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
         {
             // Only inspect first 10 arguments,
             // skip first argument (aka %0), since it is the executable path.
@@ -221,7 +221,7 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    if (argv[i].ToLower() == value.ToLower()) return true;
+                    if (string.Equals(argv[i], value, StringComparison.CurrentCultureIgnoreCase)) return true;
                 }
 
             return false;
@@ -232,7 +232,7 @@ namespace Mids_Reborn.Forms
         // Output: Usable filename (trimmed out of quotes)
         // Note: not checked here, but a valid file name should be either a local path name (X:\...) or a UNC resource name (\\server\share\...)
         // Integrate Environment.GetCommandLineArgs().Skip(1); directly here?
-        private string formatFilenameFromParameter(string clFilename)
+        private string FormatFilenameFromParameter(string clFilename)
         {
             return clFilename.Replace("\"", string.Empty);
         }
@@ -294,7 +294,7 @@ namespace Mids_Reborn.Forms
                 }
 
                 var args = Environment.GetCommandLineArgs();
-                if (findCommandLineParameter(args, "RECOVERY"))
+                if (FindCommandLineParameter(args, "RECOVERY"))
                 {
                     MessageBox.Show(
                         "As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.",
@@ -304,7 +304,7 @@ namespace Mids_Reborn.Forms
                     return;
                 }
 
-                if (findCommandLineParameter(args, "MASTERMODE=YES"))
+                if (FindCommandLineParameter(args, "MASTERMODE=YES"))
                 {
                     MidsContext.Config.MasterMode = true;
                 }
@@ -314,13 +314,20 @@ namespace Mids_Reborn.Forms
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 var loadedFromArgs = false;
+                var prevLastFileNameCfg = MidsContext.Config.LastFileName;
+                var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
                 if (args.Length > 1)
                 {
-                    var clFilename = formatFilenameFromParameter(args[1]).Trim();
-                    if (File.Exists(clFilename) && !DoOpen(clFilename))
+                    // [Zed 08/26/21]
+                    // Instead of directly trying to load a build when an argument is passed from command line,
+                    // set the build full path into the config and pretend it's going to be loaded
+                    // like it is build you had open on previous run.
+                    var clFilename = FormatFilenameFromParameter(args[1]).Trim();
+                    if (File.Exists(clFilename))
                     {
                         loadedFromArgs = true;
-                        PowerModified(false);
+                        MidsContext.Config.DisableLoadLastFileOnStart = false;
+                        MidsContext.Config.LastFileName = clFilename;
                     }
                 }
 
@@ -336,6 +343,14 @@ namespace Mids_Reborn.Forms
 
                 if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded)
                     PowerModified(true);
+
+                // Build loaded from a file set as argument from the command line: done
+                // Restore config variables to their original values.
+                if (loadedFromArgs)
+                {
+                    MidsContext.Config.LastFileName = prevLastFileNameCfg;
+                    MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
+                }
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
