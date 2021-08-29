@@ -807,20 +807,28 @@ namespace mrbBase
         public static string GetEnhancementBaseUIDName(string iName)
         {
             var purpleSetsEnh = GetPurpleSetsEnhUIDList();
-            var ATOSetsEnh = GetATOSetsEnhUIDList();
-            var WinterEventEnh = GetWinterEventEnhUIDList();
-            var MovieEnh = GetMovieEnhUIDList();
+            var atoSetsEnh = GetATOSetsEnhUIDList();
+            var winterEventEnh = GetWinterEventEnhUIDList();
+            var movieEnh = GetMovieEnhUIDList();
 
-            // Purple IOs
-            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
-                return iName.Replace("Superior_Attuned_", "Crafted_");
+            // Purple IOs / Superior ATOs
+            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", ""))))
+            {
+                return winterEventEnh.Any(e => e.Contains(iName)) | movieEnh.Any(e => e.Contains(iName))
+                    ? iName
+                    : iName.Replace("Superior_Attuned_", "Crafted_");
+            }
 
-            if (ATOSetsEnh.Any(e => e.Contains(iName)) || WinterEventEnh.Any(e => e.Contains(iName)) ||
-                MovieEnh.Any(e => e.Contains(iName))) return iName;
+            if (atoSetsEnh.Any(e => e.Contains(iName)) ||
+                winterEventEnh.Any(e => e.Contains(iName)) ||
+                movieEnh.Any(e => e.Contains(iName)))
+            {
+                return iName;
+            }
 
             // IOs + SpecialOs
             return iName
-                .Replace("Synthetic_", string.Empty)
+                .Replace("Synthetic_", "")
                 .Replace("Attuned_", "Crafted_")
                 .Replace("Science_", "Magic_")
                 .Replace("Mutation_", "Magic_")
