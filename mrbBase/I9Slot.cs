@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
@@ -323,10 +324,13 @@ namespace mrbBase
                                         Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule),
                                         (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo),
                                         Math.Abs(sEffect.Multiplier) > float.Epsilon &
-                                            sEffect.Multiplier != 1 &
-                                            sEffect.Multiplier != 0.625 &
-                                            sEffect.Multiplier != 0.5 &
-                                            sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "");
+                                        MidsContext.Config.CoDEffectFormat &
+                                        sEffect.Multiplier != 1 &
+                                        sEffect.Multiplier != 0.625 &
+                                        sEffect.Multiplier != 0.5 &
+                                        sEffect.Multiplier != 0.4375
+                                            ? $" [x{sEffect.Multiplier}]"
+                                            : "");
                                 }
 
                                 break;
