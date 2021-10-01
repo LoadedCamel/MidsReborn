@@ -43,6 +43,8 @@ namespace Mids_Reborn.Forms
 
         private bool loading;
 
+        private bool gfxDrawing;
+
         public bool DbChangeRequested { get; set; }
 
         public frmMain()
@@ -1375,15 +1377,17 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             FloatUpdate(true);
 
-            
-
             return true;
         }
 
         public void DoRedraw()
         {
             if (drawing == null) return;
-            
+            if (gfxDrawing) return;
+
+            gfxDrawing = true;
+            var t = Stopwatch.StartNew();
+
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
@@ -1396,10 +1400,13 @@ namespace Mids_Reborn.Forms
             // Prevent horizontal scrollbar to appear
             pnlGFX.Width = flowWidth - 26; // - 10;
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
-            pnlGFX.Update();
-            pnlGFXFlow.Update();
             NoResizeEvent = false;
             drawing.FullRedraw();
+            pnlGFXFlow.Invalidate();
+            gfxDrawing = false;
+
+            t.Stop();
+            Debug.WriteLine($"frmMain.DoRedraw(): {t.ElapsedMilliseconds:####.##} ms");
         }
 
         private void DoResize(bool forceResize = false)
@@ -1431,15 +1438,16 @@ namespace Mids_Reborn.Forms
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
             drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             ReArrange(false);
-            pnlGFX.Update();
-            pnlGFX.Refresh();
+            //pnlGFX.Update();
+            //pnlGFX.Refresh();
             NoResizeEvent = true;
             DoRedraw();
         }
 
         public void DoRefresh()
         {
-            pnlGFX.Refresh();
+            pnlGFXFlow.Invalidate();
+            //pnlGFX.Invalidate();
         }
 
         private bool doSave()
@@ -2675,6 +2683,11 @@ namespace Mids_Reborn.Forms
             HidePopup();
         }
 
+        private void llALL_ItemClick_RefreshGfx()
+        {
+            DoRefresh();
+        }
+
         private void llAncillary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Item.ItemState == ListLabelV3.LLItemState.Heading)
@@ -2689,6 +2702,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llAncillary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2723,6 +2738,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool0_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2750,6 +2767,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool1_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2777,6 +2796,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool2_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2804,6 +2825,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool3_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2832,6 +2855,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPrimary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2862,6 +2887,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llSecondary_ItemHover(ListLabelV3.ListLabelItemV3 Item)

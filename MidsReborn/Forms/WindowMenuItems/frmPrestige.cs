@@ -199,6 +199,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 llLeft.Refresh();
                 _myParent.PowerModified(true);
+                _myParent.DoRefresh();
             }
         }
 
@@ -241,6 +242,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 llRight.Refresh();
                 _myParent.PowerModified(false);
+                _myParent.DoRefresh();
             }
         }
 
