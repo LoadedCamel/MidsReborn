@@ -193,7 +193,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]).StatInclude = true;
+                    // Toggle on if (any):
+                    // - Toggle default is ON
+                    // - Is a click buff
+                    // - Is an auto
+                    var pToggled =
+                        (_myPowers[pIDX].AlwaysToggle & _myPowers[pIDX].PowerType == Enums.ePowerType.Toggle) |
+                        _myPowers[pIDX].ClickBuff |
+                        _myPowers[pIDX].PowerType == Enums.ePowerType.Auto_;
+                    var p = MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]);
+                    
+                    // Get power index in build powers' list
+                    var hIDPower = MidsContext.Character.CurrentBuild.Powers.FindIndex(e => e.Power != null && e.Power.StaticIndex == p.Power.StaticIndex);
+                    // Check for mutexes
+                    var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                    MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = (eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup) && pToggled;
+                    
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 

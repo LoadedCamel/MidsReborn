@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -1434,7 +1435,7 @@ namespace Mids_Reborn.Forms
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
-            pnlGFX = (PictureBox)pnlGfx;
+            pnlGFX = (pnlGFX)pnlGfx;
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
             drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             ReArrange(false);
@@ -1446,8 +1447,8 @@ namespace Mids_Reborn.Forms
 
         public void DoRefresh()
         {
-            pnlGFXFlow.Invalidate();
-            //pnlGFX.Invalidate();
+            pnlGFX.Invalidate();
+            //pnlGFX.Update(); // Invalidate + Update force synchronous update
         }
 
         private bool doSave()

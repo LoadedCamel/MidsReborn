@@ -55,6 +55,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="pnlGFX.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="clsCustomBorderUC.cs" />
     <Compile Include="clsDrawX.cs" />
     <Compile Include="ctlAvatar.cs">

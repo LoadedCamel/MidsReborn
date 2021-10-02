@@ -189,7 +189,7 @@ namespace Mids_Reborn.Forms
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.pbDynMode = new System.Windows.Forms.PictureBox();
-            this.pnlGFX = new System.Windows.Forms.PictureBox();
+            this.pnlGFX = new mrbControls.pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
             this.lblOrigin = new GFXLabel();
@@ -2231,7 +2231,7 @@ namespace Mids_Reborn.Forms
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         PictureBox pbDynMode;
-        public PictureBox pnlGFX;
+        public pnlGFX pnlGFX;
         public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
