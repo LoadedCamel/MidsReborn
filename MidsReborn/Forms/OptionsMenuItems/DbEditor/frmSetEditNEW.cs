@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -19,6 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public readonly EnhancementSet mySet;
         private bool Loading;
         private int[] SetBonusList;
+        private List<int> lstBonusNid;
 
         public frmSetEditNEW(ref EnhancementSet iSet)
         {
@@ -293,12 +295,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 lstBonus.BeginUpdate();
                 lstBonus.Items.Clear();
+                lstBonusNid = new List<int>();
                 if (isBonus())
                 {
                     var index1 = BonusID();
                     var num = mySet.Bonus[index1].Index.Length - 1;
                     for (var index2 = 0; index2 <= num; ++index2)
-                        lstBonus.Items.Add(DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName);
+                    {
+                        var powerNid = mySet.Bonus[index1].Index[index2];
+                        var p = DatabaseAPI.Database.Power[powerNid];
+                        var pNameEx = $"{p.PowerName}{(p.FullName.ToLowerInvariant().Contains("pvp") ? " [PvP]" : "")}";
+                        lstBonus.Items.Add(pNameEx);
+                        lstBonusNid.Add(powerNid);
+                    }
+
                     txtAlternate.Text = mySet.Bonus[index1].AltString;
                 }
                 else if (isSpecial())
@@ -424,7 +434,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DisplaySetIcons()
         {
-            FillImageList();
+            //FillImageList();
             var items = new string[2];
             lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
@@ -483,6 +493,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lvBonusList.BeginUpdate();
             lvBonusList.Items.Clear();
+            lvBonusList.SelectedIndices.Clear();
             var items = new string[2];
             var num1 = SetBonusList.Length - 1;
             for (var index = 0; index <= num1; ++index)
@@ -491,7 +502,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (DatabaseAPI.Database.Power[SetBonusList[index]].Effects.Length > 0)
                     items[1] = DatabaseAPI.Database.Power[SetBonusList[index]].Effects[0]
                         .BuildEffectStringShort(false, true);
-                items[0] = DatabaseAPI.Database.Power[SetBonusList[index]].PowerName;
+                items[0] = $"{DatabaseAPI.Database.Power[SetBonusList[index]].PowerName}{(DatabaseAPI.Database.Power[SetBonusList[index]].FullName.ToLowerInvariant().Contains("pvp") ? " [PvP]" : "")}";
                 if (items[0].ToUpper(CultureInfo.InvariantCulture)
                     .Contains(txtBonusFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
                     lvBonusList.Items.Add(new ListViewItem(items)
@@ -528,7 +539,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (enhancement.ImageIdx > -1)
                 {
                     var gfxGrade = I9Gfx.ToGfxGrade(enhancement.TypeID);
-                    extendedBitmap.Graphics.Clear(Color.White);
+                    extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancement(ref graphics,
                         DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].ImageIdx, gfxGrade);

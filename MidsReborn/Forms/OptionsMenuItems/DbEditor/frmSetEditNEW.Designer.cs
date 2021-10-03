@@ -32,7 +32,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSetEditNEW));
             this.btnImage = new System.Windows.Forms.Button();
             this.btnNoImage = new System.Windows.Forms.Button();
             this.ilEnh = new System.Windows.Forms.ImageList(this.components);
@@ -344,6 +343,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.columnHeader4});
             this.lvBonusList.HideSelection = false;
             this.lvBonusList.Location = new System.Drawing.Point(281, 20);
+            this.lvBonusList.MultiSelect = false;
             this.lvBonusList.Name = "lvBonusList";
             this.lvBonusList.Size = new System.Drawing.Size(498, 421);
             this.lvBonusList.TabIndex = 5;
@@ -354,12 +354,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // columnHeader3
             // 
             this.columnHeader3.Text = "Bonus";
-            this.columnHeader3.Width = 275;
+            this.columnHeader3.Width = 212;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Effect";
-            this.columnHeader4.Width = 350;
+            this.columnHeader4.Width = 253;
             // 
             // txtAlternate
             // 
@@ -505,7 +505,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnNoImage);
             this.Controls.Add(this.btnImage);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSetEditNEW";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PvE Invention Set Editor";
