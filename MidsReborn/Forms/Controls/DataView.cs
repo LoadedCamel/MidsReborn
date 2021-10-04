@@ -1352,6 +1352,8 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DoPaint()
         {
+            if (pnlTabs.IsDisposed) return;
+
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
             var font1 = new Font("Arial", 8.55f, FontStyle.Regular);//
