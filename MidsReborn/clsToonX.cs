@@ -833,10 +833,52 @@ namespace Mids_Reborn
             if (!powerMath.Slottable)
                 return;
 
+            if (!powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.") &
+                !power.FullName.ToLowerInvariant().StartsWith("incarnate.")) return;
+
+            Debug.WriteLine($"GBPA_ApplyIncarnateEnhancements(powerMath: {powerMath.FullName}, hIDX: {hIDX}, power: {power.FullName}, ignoreED: {ignoreED}, effectType: {effectType}) start");
+
             for (var effIdx = 0; effIdx <= power.Effects.Length - 1; ++effIdx)
             {
                 var effect1 = power.Effects[effIdx];
-                var disqualified = effect1.EffectClass == Enums.eEffectClass.Ignored
+                Debug.WriteLine($"\tIncarnate Enhancements - Power: {power.FullName}");
+                Debug.WriteLine($"\tIncarnate Enhancements - Effect: {effect1.BuildEffectString()}");
+
+                if (effect1.EffectClass == Enums.eEffectClass.Ignored)
+                {
+                    Debug.WriteLine("\t\tIncarnate Enhancements - Effect disqualified (#1 - Ignored EffectClass)");
+                }
+                else if (effectType == Enums.eEffectType.Enhancement &&
+                    effect1.EffectType != Enums.eEffectType.Enhancement &&
+                    effect1.EffectType != Enums.eEffectType.DamageBuff)
+                {
+                    Debug.WriteLine("\t\tIncarnate Enhancements - Effect disqualified (#2 - Enhancement/DamageBuff)");
+                }
+                else if (effectType == Enums.eEffectType.GrantPower &&
+                    (effect1.EffectType == Enums.eEffectType.Enhancement ||
+                     effect1.EffectType == Enums.eEffectType.DamageBuff))
+                {
+                    Debug.WriteLine("\t\tIncarnate Enhancements - Effect disqualified (#3 - GrantPower + Enhancement/DamageBuff)");
+                }
+                else if (effect1.IgnoreED != ignoreED)
+                {
+                    Debug.WriteLine($"\t\tIncarnate Enhancements - Effect disqualified (#4 - IgnoreED do not match method call - effect is {effect1.IgnoreED}, call is {ignoreED})");
+                }
+                else if (power.PowerType != Enums.ePowerType.GlobalBoost &&
+                    (!effect1.Absorbed_Effect ||
+                     effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
+                {
+                    Debug.WriteLine("\t\tIncarnate Enhancements - Effect disqualified (#5 - Buff is not a GlobalBoost, not absorbed)");
+                }
+                else if (effect1.EffectType == Enums.eEffectType.GrantPower && effect1.Absorbed_Effect)
+                {
+                    Debug.WriteLine("\t\tIncarnate Enhancements - Effect disqualified (#6 - Absorbed GrantPower)");
+                }
+
+                var disqualified = effect1.EffectClass == Enums.eEffectClass.Ignored;
+
+
+                /*var disqualified = effect1.EffectClass == Enums.eEffectClass.Ignored
                                    || effectType == Enums.eEffectType.Enhancement &&
                                    effect1.EffectType != Enums.eEffectType.Enhancement &&
                                    effect1.EffectType != Enums.eEffectType.DamageBuff
@@ -847,13 +889,20 @@ namespace Mids_Reborn
                                    || power.PowerType != Enums.ePowerType.GlobalBoost &&
                                    (!effect1.Absorbed_Effect ||
                                     effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)
-                                   || effect1.EffectType == Enums.eEffectType.GrantPower && effect1.Absorbed_Effect;
+                                   || effect1.EffectType == Enums.eEffectType.GrantPower && effect1.Absorbed_Effect;*/
+                
+                Debug.WriteLine($"\t\tIncarnate Enhancement - Effect disqualified: {disqualified}");
+                
                 if (disqualified)
                     continue;
-                var power1 = power;
-                if (effect1.Absorbed_Effect & (effect1.Absorbed_Power_nID > -1))
-                    power1 = DatabaseAPI.Database.Power[effect1.Absorbed_Power_nID];
+                var power1 = effect1.Absorbed_Effect & (effect1.Absorbed_Power_nID > -1)
+                    ? DatabaseAPI.Database.Power[effect1.Absorbed_Power_nID]
+                    : power;
                 var isAllowed = powerMath.BoostsAllowed.Any(pmb => power1.BoostsAllowed.Any(pba => pba == pmb));
+                Debug.WriteLine("");
+                Debug.WriteLine($"\t\tIncarnate Enhancement - allowed boosts (powerMath={powerMath.FullName}): {string.Join(", ", powerMath.BoostsAllowed)}");
+                Debug.WriteLine($"\t\tIncarnate Enhancement - allowed boosts (power1={power1.FullName}): {string.Join(", ", power1.BoostsAllowed)}");
+                Debug.WriteLine($"\t\tIncarnate Enhancement - effect is allowed: {isAllowed}");
                 if (!isAllowed)
                     continue;
                 if (effectType == Enums.eEffectType.Enhancement &&

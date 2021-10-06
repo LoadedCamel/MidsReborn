@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -322,6 +323,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         Convert.ToString(clbMutex.CheckedItems[index], CultureInfo.InvariantCulture);
                     myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
                 }
+
+                myPower.BoostsAllowed = myPower.Enhancements
+                    .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
+                    .ToArray();
 
                 DialogResult = DialogResult.OK;
                 Hide();
@@ -1543,9 +1548,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var num1 = -1;
             var num2 = -1;
             var num3 = enhAcross - 1;
-            for (var index = 0; index <= num3; ++index)
-                if ((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))
-                    num1 = index;
+            for (var index = 0; index < enhAcross; index++)
+            {
+                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))) continue;
+                
+                num1 = index;
+                break;
+            }
+
             var num4 = 0;
             do
             {
@@ -1558,17 +1568,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((index1 <= DatabaseAPI.Database.EnhancementClasses.Length - 1) & (num1 > -1) & (num2 > -1)))
                 return;
             var flag = false;
-            var num5 = myPower.Enhancements.Length - 1;
-            for (var index2 = 0; index2 <= num5; ++index2)
-                if (myPower.Enhancements[index2] == DatabaseAPI.Database.EnhancementClasses[index1].ID)
+            foreach (var pEnh in myPower.Enhancements)
+            {
+                if (pEnh == DatabaseAPI.Database.EnhancementClasses[index1].ID)
+                {
                     flag = true;
+                    break;
+                }
+            }
 
-            if (flag)
-                return;
-            var power = myPower;
-            var numArray = (int[]) Utils.CopyArray(power.Enhancements, new int[myPower.Enhancements.Length + 1]);
-            power.Enhancements = numArray;
-            myPower.Enhancements[myPower.Enhancements.Length - 1] = DatabaseAPI.Database.EnhancementClasses[index1].ID;
+            if (flag) return;
+
+            var enhList = myPower.Enhancements.ToList();
+            enhList.Add(DatabaseAPI.Database.EnhancementClasses[index1].ID);
+            myPower.Enhancements = enhList.ToArray();
             Array.Sort(myPower.Enhancements);
             RedrawEnhList();
         }
@@ -1597,31 +1610,35 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void pbEnhancements_MouseDown(object sender, MouseEventArgs e)
         {
-            var num1 = -1;
-            var length = myPower.Enhancements.Length;
-            for (var index = 0; index <= length; ++index)
-                if ((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))
-                    num1 = index;
-            var num2 = num1;
-            if (!((num2 < myPower.Enhancements.Length) & (num1 > -1)))
-                return;
-            var power = myPower;
-            var numArray = new int[power.Enhancements.Length];
-            var num3 = power.Enhancements.Length - 1;
-            for (var index = 0; index <= num3; ++index)
-                numArray[index] = power.Enhancements[index];
-            var index1 = 0;
-            power.Enhancements = new int[power.Enhancements.Length - 1];
-            var num4 = numArray.Length - 1;
-            for (var index2 = 0; index2 <= num4; ++index2)
+            var enhIdx = -1;
+            for (var index = 0; index < myPower.Enhancements.Length; index++)
             {
-                if (index2 == num2)
-                    continue;
-                power.Enhancements[index1] = numArray[index2];
-                ++index1;
+                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))) continue;
+                
+                enhIdx = index;
+                break;
             }
 
-            Array.Sort(power.Enhancements);
+            if (!((enhIdx < myPower.Enhancements.Length) & (enhIdx > -1))) return;
+            
+            var numArray = new int[myPower.Enhancements.Length];
+            for (var index = 0; index < myPower.Enhancements.Length; index++)
+            {
+                numArray[index] = myPower.Enhancements[index];
+            }
+
+            var index1 = 0;
+            myPower.Enhancements = new int[myPower.Enhancements.Length - 1];
+            var num4 = numArray.Length - 1;
+            for (var index2 = 0; index2 < numArray.Length; index2++)
+            {
+                if (index2 == enhIdx)
+                    continue;
+                myPower.Enhancements[index1] = numArray[index2];
+                index1++;
+            }
+
+            Array.Sort(myPower.Enhancements);
             RedrawEnhList();
         }
 
