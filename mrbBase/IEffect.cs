@@ -13,6 +13,8 @@ namespace mrbBase
 
         float Mag { get; }
 
+        float BuffedMag { get; }
+
         float MagPercent { get; }
 
         float Duration { get; }

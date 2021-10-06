@@ -346,20 +346,20 @@ namespace mrbBase.Base.Data_Classes
                 switch (AttribType)
                 {
                     case Enums.eAttribType.Magnitude:
-                        if (Math.Abs(Math_Mag) > 0.01)
+                        /*if (Math.Abs(Math_Mag) > 0.01)
                         {
                             return Math_Mag;
-                        }
+                        }*/
 
                         return Scale * nMagnitude
                                      * (EffectType == Enums.eEffectType.Damage ? -1 : 1)
                                      * DatabaseAPI.GetModifier(this);
                     
                     case Enums.eAttribType.Duration:
-                        if (Math.Abs(Math_Mag) > 0.01)
+                        /*if (Math.Abs(Math_Mag) > 0.01)
                         {
                             return Math_Mag;
-                        }
+                        }*/
 
                         return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
                     
@@ -373,7 +373,12 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public float MagPercent => !DisplayPercentage ? Mag : Mag * 100f;
+        public float BuffedMag
+        {
+            get => Math.Abs(Math_Mag) > 0.01 ? Math_Mag : Mag;
+        }
+
+        public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
         public float Duration
         {
@@ -791,19 +796,19 @@ namespace mrbBase.Base.Data_Classes
 
                     if (Aspect == Enums.eAspect.Cur)
                     {
-                        str5 = Utilities.FixDP(Mag * 100f) + "% " + effectNameShort1 + str3 + str2;
+                        str5 = Utilities.FixDP(BuffedMag * 100f) + "% " + effectNameShort1 + str3 + str2;
                         break;
                     }
 
                     if (!DisplayPercentage)
                     {
                         str5 = str1 + " (" +
-                               Utilities.FixDP((float)(Mag / (double)MidsContext.Archetype.Hitpoints * 100.0)) +
+                               Utilities.FixDP((float)(BuffedMag / (double)MidsContext.Archetype.Hitpoints * 100.0)) +
                                "%)" + effectNameShort1 + str3 + str2;
                         break;
                     }
 
-                    str5 = Utilities.FixDP(Mag / 100f * MidsContext.Archetype.Hitpoints) + " (" + str1 + ") " +
+                    str5 = Utilities.FixDP(BuffedMag / 100f * MidsContext.Archetype.Hitpoints) + " (" + str1 + ") " +
                            effectNameShort1 + str3 + str2;
                     break;
                 case Enums.eEffectType.Mez:
@@ -830,7 +835,7 @@ namespace mrbBase.Base.Data_Classes
                     if (DisplayPercentage)
                     {
                         str5 = str1 + " (" +
-                               Utilities.FixDP(Mag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic)) +
+                               Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic)) +
                                " /s) " + effectNameShort1 + str3 + str2;
                         break;
                     }
@@ -848,7 +853,7 @@ namespace mrbBase.Base.Data_Classes
                     {
                         str5 = str1 + " (" +
                                Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 *
-                                                        (Mag * (double)MidsContext.Archetype.BaseRegen *
+                                                        (BuffedMag * (double)MidsContext.Archetype.BaseRegen *
                                                          1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 +
                                str2;
                         break;
@@ -1005,7 +1010,7 @@ namespace mrbBase.Base.Data_Classes
             }
 
             var resistPresent = false;
-            if (Resistible == false)
+            if (!Resistible)
             {
                 if ((!simple & ToWho != Enums.eToWho.Self) | EffectType == Enums.eEffectType.Damage)
                 {
@@ -1043,9 +1048,11 @@ namespace mrbBase.Base.Data_Classes
             }
             if (!simple)
             {
-                if (Buffable == false & EffectType != Enums.eEffectType.DamageBuff)
+                if (!Buffable & EffectType != Enums.eEffectType.DamageBuff)
                 {
-                    sBuff = " [Ignores Enhancements & Buffs]";
+                    sBuff = IgnoreED
+                        ? " [Ignores Enhancements, Buffs & ED]"
+                        : " [Ignores Enhancements & Buffs]";
                 }
                 if (Stacking == Enums.eStacking.No)
                 {
@@ -1135,8 +1142,8 @@ namespace mrbBase.Base.Data_Classes
                 sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                     ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                     : DisplayPercentage
-                        ? $"{Utilities.FixDP(Mag * 100)}%"
-                        : Utilities.FixDP(Mag);
+                        ? $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * 100)}%"
+                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag)}";
             }
 
             if (!simple)
@@ -1279,13 +1286,13 @@ namespace mrbBase.Base.Data_Classes
                         }
                         if (Aspect == Enums.eAspect.Cur)
                         {
-                            sBuild = $"{Utilities.FixDP(Mag * 100)}% {sEffect}{sTarget}{sDuration}";
+                            sBuild = $"{Utilities.FixDP(BuffedMag * 100)}% {sEffect}{sTarget}{sDuration}";
                         }
                         else
                         {
                             sBuild = DisplayPercentage
-                                ? $"{Utilities.FixDP(Mag / 100 * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
-                                : $"{sMag} HP ({Utilities.FixDP(Mag / MidsContext.Archetype.Hitpoints * 100)}%) {sEffect}{sTarget}{sDuration}";
+                                ? $"{Utilities.FixDP(BuffedMag / 100 * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / MidsContext.Archetype.Hitpoints * 100)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
@@ -1297,7 +1304,7 @@ namespace mrbBase.Base.Data_Classes
                     if (!noMag)
                     {
                         sBuild = DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(MidsContext.Archetype.Hitpoints / 100f * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(MidsContext.Archetype.Hitpoints / 100f * (BuffedMag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     else
@@ -1309,7 +1316,7 @@ namespace mrbBase.Base.Data_Classes
                     if (!noMag)
                     {
                         sBuild = DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(Mag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     else

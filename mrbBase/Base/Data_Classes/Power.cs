@@ -1634,7 +1634,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var mag = Effects[iIndex].Mag;
+                var mag = Effects[iIndex].BuffedMag;
                 if (Effects[iIndex].Ticks > 1 && Effects[iIndex].Stacking == Enums.eStacking.Yes)
                 {
                     mag *= Effects[iIndex].Ticks;
