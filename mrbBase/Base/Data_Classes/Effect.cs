@@ -2843,6 +2843,10 @@ namespace mrbBase.Base.Data_Classes
 
             return num1;
         }
+
+        public string SummonedEntityName => nSummon <= -1
+        ? Summon
+        : DatabaseAPI.Database.Entities[nSummon].DisplayName;
     }
     public class KeyValue<TKey, TValue>
     {

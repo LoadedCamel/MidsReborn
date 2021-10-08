@@ -193,5 +193,7 @@ namespace mrbBase
         bool CanGrantPower();
 
         bool PvXInclude();
+
+        string SummonedEntityName { get; }
     }
 }

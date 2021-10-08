@@ -702,6 +702,7 @@ namespace Mids_Reborn
                 var effect = powerMath.Effects[index2];
                 if (!effect.Buffable)
                     continue;
+
                 var duration = 0.0f;
                 var mag = 0.0f;
                 if ((effect.EffectType == Enums.eEffectType.Resistance ||
@@ -835,7 +836,24 @@ namespace Mids_Reborn
                 return;
 
             // Check if only one of the matching powers is an incarnate power
-            if (!(powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.") ^ power.FullName.ToLowerInvariant().StartsWith("incarnate.")))
+            if (!(powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.") ^
+                  power.FullName.ToLowerInvariant().StartsWith("incarnate.")))
+                return;
+
+            // Prevent Judgement effects to be merged with random powers
+            if (powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.judgement") &
+                !power.FullName.ToLowerInvariant().StartsWith("incarnate.judgement"))
+                return;
+            if (power.FullName.ToLowerInvariant().StartsWith("incarnate.judgement") &
+                !powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.judgement"))
+                return;
+
+            // Prevent Lore pets effects to be merged with random powers
+            if (powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.lore") &
+                !power.FullName.ToLowerInvariant().StartsWith("incarnate.lore"))
+                return;
+            if (power.FullName.ToLowerInvariant().StartsWith("incarnate.lore") &
+                !powerMath.FullName.ToLowerInvariant().StartsWith("incarnate.lore"))
                 return;
 
             // Check if both powers are on the current build and active

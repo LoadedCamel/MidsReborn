@@ -819,7 +819,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var num2 = effect.Mag;
+                var num2 = effect.BuffedMag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     num2 *= effect.Probability;
@@ -898,7 +898,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var effectMag = effect.Mag;
+                var effectMag = effect.BuffedMag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     effectMag *= effect.Probability;
@@ -1693,7 +1693,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var mag = Effects[iIndex].Mag;
+                var mag = Effects[iIndex].BuffedMag;
                 if (Effects[iIndex].Ticks > 1)
                 {
                     mag *= Effects[iIndex].Ticks;
