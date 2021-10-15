@@ -117,7 +117,9 @@ namespace Mids_Reborn.Forms
         {
             var linkedEnhIdx = Convert.ToInt32(lvItem.Tag);
             var lvPowerName = lvItem.SubItems[2].Text;
-            var powerEntry = MidsContext.Character.CurrentBuild.Powers.First(p => p.Power.DisplayName == lvPowerName);
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers
+                .Where(p => p.Power != null)
+                .First(p => p.Power.DisplayName == lvPowerName);
             //var linkedEnh = DatabaseAPI.Database.Enhancements[linkedEnhIdx];
             var powerSlot = powerEntry.Slots.First(ps => ps.Enhancement.Enh == linkedEnhIdx);
             var numBoosters = powerSlot.Enhancement.RelativeLevel switch
