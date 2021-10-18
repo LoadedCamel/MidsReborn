@@ -258,6 +258,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.MatchAllIDs();
+
+            // Uncomment below to update AT modifier columns if necessary
+            // for (var index = 0; index < DatabaseAPI.Database.Classes.Length - 1; index++)
+            // {
+            //     DatabaseAPI.Database.Classes[index].Column = index;
+            // }
+
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
             BusyHide();
             DialogResult = DialogResult.OK;
