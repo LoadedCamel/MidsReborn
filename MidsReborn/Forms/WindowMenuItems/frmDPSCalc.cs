@@ -484,10 +484,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var basePower =
                             MainModule.MidsController.Toon.GetBasePower(
                                 int.Parse(lvPower.Items[index].SubItems[8].Text));
-                        array[length].HidenDPA = basePower.FXGetDamageValue();
-                        array[length].HidenDPA =
-                            array[length].HidenDPA * (array[length].DamageBuff / array[length].Recharge) /
-                            array[length].Animation;
+                        if (basePower != null)
+                        {
+                            array[length].HidenDPA = basePower.FXGetDamageValue();
+                            array[length].HidenDPA =
+                                array[length].HidenDPA * (array[length].DamageBuff / array[length].Recharge) /
+                                array[length].Animation;
+                        }
+                        else
+                        {
+                            array[length].HidenDPA = 0;
+                        }
                     }
 
                     ++length;
