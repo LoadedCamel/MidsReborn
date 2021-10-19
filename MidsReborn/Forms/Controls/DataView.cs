@@ -2941,7 +2941,7 @@ namespace Mids_Reborn.Forms.Controls
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter) |
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
                         {
-                            if (!pBase.Effects[Index[ID]].Absorbed_Effect)
+                            /*if (!pBase.Effects[Index[ID]].Absorbed_Effect)
                             {
                                 shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
                                 s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
@@ -2955,7 +2955,13 @@ namespace Mids_Reborn.Forms.Controls
                                 s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
                                 s2.Multiply();
                                 Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
-                            }
+                            }*/
+
+                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
+                            shortFx.Multiply();
+                            s2.Multiply();
+                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {
@@ -2978,30 +2984,16 @@ namespace Mids_Reborn.Forms.Controls
                     Suffix = "%";
                 }
 
-                if (!((pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target) & (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self) & (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally)))
+                Suffix += pBase.Effects[Index[ID]].ToWho switch
                 {
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target)
-                        Suffix += " (Tgt)";
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self)
-                        Suffix += " (Self)";
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally)
-                        Suffix += " (Ally)";
-                }
+                    Enums.eToWho.Target => " (Tgt)",
+                    Enums.eToWho.Self => " (Self)",
+                    Enums.eToWho.Ally => " (Ally)",
+                    _ => ""
+                };
 
                 if (flag)
                     return FastItem("", 0.0f, 0.0f, string.Empty);
-            }
-
-            for (var index = 0; index < shortFx.Index.Length; index++)
-            {
-                if (shortFx.Index[index] <= -1 || !pBase.Effects[shortFx.Index[index]].DisplayPercentage)
-                    continue;
-                if (shortFx.Value[index] > 1)
-                    continue;
-
-                shortFx.Value[index] *= 100f;
-                shortFx.ReSum();
-                break;
             }
 
             for (var index = 0; index < s2.Index.Length; index++)
@@ -3010,12 +3002,6 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 if (s2.Value[index] > 1)
                     continue;
-
-                if (pBase.Effects[s2.Index[index]].EffectType != Enums.eEffectType.Defense &
-                    pBase.Effects[s2.Index[index]].EffectType != Enums.eEffectType.Resistance)
-                {
-                    s2.Value[index] *= 100f;
-                }
 
                 if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.Absorb)
                 {
@@ -3040,8 +3026,7 @@ namespace Mids_Reborn.Forms.Controls
                 break;
             }
 
-            string iTip;
-            iTip = GetToolTip(s2);
+            var iTip = GetToolTip(s2);
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
                 return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
