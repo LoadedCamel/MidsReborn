@@ -1422,7 +1422,9 @@ namespace mrbBase.Base.Data_Classes
 
             if (sExtra.Equals(" ()")) { sExtra = ""; }
 
-            return (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Trim();
+            return (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress)
+                .Replace("--", "-")
+                .Trim();
         }
 
         public void StoreTo(ref BinaryWriter writer)

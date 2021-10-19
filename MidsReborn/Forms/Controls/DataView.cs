@@ -2992,22 +2992,31 @@ namespace Mids_Reborn.Forms.Controls
                     return FastItem("", 0.0f, 0.0f, string.Empty);
             }
 
-            var num1 = shortFx.Index.Length - 1;
-            for (var index = 0; index < num1; index++)
+            for (var index = 0; index < shortFx.Index.Length; index++)
             {
                 if (shortFx.Index[index] <= -1 || !pBase.Effects[shortFx.Index[index]].DisplayPercentage)
                     continue;
+                if (shortFx.Value[index] > 1)
+                    continue;
+
                 shortFx.Value[index] *= 100f;
                 shortFx.ReSum();
                 break;
             }
 
-            var num2 = s2.Index.Length - 1;
-            for (var index = 0; index < num2; index++)
+            for (var index = 0; index < s2.Index.Length; index++)
             {
                 if (s2.Index[index] <= -1 || !pBase.Effects[s2.Index[index]].DisplayPercentage)
                     continue;
-                s2.Value[index] *= 100f;
+                if (s2.Value[index] > 1)
+                    continue;
+
+                if (pBase.Effects[s2.Index[index]].EffectType != Enums.eEffectType.Defense &
+                    pBase.Effects[s2.Index[index]].EffectType != Enums.eEffectType.Resistance)
+                {
+                    s2.Value[index] *= 100f;
+                }
+
                 if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.Absorb)
                 {
                     //Fixes the Absorb display to correctly show the percentage
