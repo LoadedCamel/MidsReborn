@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using FastDeepCloner;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
@@ -594,7 +595,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void display_Info(bool NoLevel = false, int iEnhLvl = -1)
         {
-
+            Debug.WriteLine($"display_Info: {pBase.FullName} / {pEnh.FullName}");
             if (!NoLevel & (pBase.Level > 0))
                 info_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
             else
@@ -738,6 +739,8 @@ namespace Mids_Reborn.Forms.Controls
                     if (num3 <= 0 || rankedEffects[ID] <= -1)
                         continue;
                     var rankedEffect = GetRankedEffect(rankedEffects, ID);
+                    if (pBase.Effects[rankedEffects[ID]].EffectType == Enums.eEffectType.PowerRedirect)
+                        continue;
                     if (!((pBase.Effects[rankedEffects[ID]].Probability > 0.0) &
                           ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[ID]].Suppression) ==
                            Enums.eSuppress.None) &
@@ -3475,6 +3478,35 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.SetTip(iTip);
         }
 
+        private Power? GetPowerRedirectParent(IPower pSrc)
+        {
+            var pSrcRedirectParent = new Power();
+            pSrcRedirectParent.FullName = "";
+            foreach (var p in DatabaseAPI.Database.Power)
+            {
+                if (p.GetPowerSet().SetType != Enums.ePowerSetType.Primary &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Secondary &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Pool &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Ancillary)
+                {
+                    continue;
+                }
+
+                foreach (var fx in p.Effects)
+                {
+                    if (fx.EffectType != Enums.eEffectType.PowerRedirect)
+                        continue;
+
+                    if (fx.Override != pSrc.FullName)
+                        continue;
+
+                    pSrcRedirectParent = new Power(DatabaseAPI.GetPowerByFullName(p.FullName));
+                }
+            }
+
+            return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
+        }
+
         public void SetData(IPower iBase, IPower iEnhanced, bool noLevel = false, bool Locked = false,
             int iHistoryIDX = -1)
         {
@@ -3482,15 +3514,22 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             Lock = Locked;
             pBase = new Power(iBase);
-            /*pEnh = iEnhanced != null
-                ? iEnhanced.Effects.Length == iBase.Effects.Length
-                    ? new Power(iEnhanced)
-                    : new Power(iBase)
-                : new Power(iBase);*/
+
+            var pBaseRedirectParent = GetPowerRedirectParent(pBase);
+            if (pBaseRedirectParent != null && pBase.FullName != pBaseRedirectParent.FullName)
+            {
+                pBase = pBaseRedirectParent.Clone();
+            }
 
             pEnh = iEnhanced == null
                 ? new Power(iBase)
                 : new Power(iEnhanced);
+
+            var pEnhRedirectParent = GetPowerRedirectParent(pEnh);
+            if (pEnhRedirectParent != null && pEnh.FullName != pEnhRedirectParent.FullName)
+            {
+                pEnh = pBaseRedirectParent.Clone();
+            }
 
             HistoryIDX = iHistoryIDX;
             SetDamageTip();
