@@ -595,7 +595,6 @@ namespace Mids_Reborn.Forms.Controls
 
         private void display_Info(bool NoLevel = false, int iEnhLvl = -1)
         {
-            Debug.WriteLine($"display_Info: {pBase.FullName} / {pEnh.FullName}");
             if (!NoLevel & (pBase.Level > 0))
                 info_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
             else
@@ -1997,7 +1996,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                var iTip = string.Empty + pEnh.Effects[index].BuildEffectString();
+                var iTip = pEnh.Effects[index].BuildEffectString();
                 var iValue = Convert.ToString(pBase.Effects[index].MagPercent, CultureInfo.InvariantCulture) + "%";
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
@@ -2929,20 +2928,27 @@ namespace Mids_Reborn.Forms.Controls
                             s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
                             Tag2.Assign(shortFx);
                         }*/
-                        else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MezResist) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.RechargeTime) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedRunning) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedJumping) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.JumpHeight) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.PerceptionRadius) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
+                        // Set list of effects below that are treated as percentages
+                        // Base and enhanced values will be multiplied by 100
+                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MezResist |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.RechargeTime |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedRunning |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedJumping |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.JumpHeight |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.PerceptionRadius |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxFlySpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxRunSpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxJumpSpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Jumppack |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.GlobalChanceMod)
                         {
                             /*if (!pBase.Effects[Index[ID]].Absorbed_Effect)
                             {
@@ -3507,6 +3513,57 @@ namespace Mids_Reborn.Forms.Controls
             return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
         }
 
+        /*private void MergeRedirectEffects(ref IPower pSrc, IPower pSub = null, int rLevel = 0)
+        {
+            // Merge pSub effects into pSrc and follow redirects
+            // (up to 5 levels recursion)
+            // Look for redirects in pSrc and follow any if pSub == null
+
+            if (pSub == null)
+            {
+                foreach (var fx in pSrc.Effects)
+                {
+                    if (fx.EffectType == Enums.eEffectType.PowerRedirect) continue;
+
+                    // Check conditionals/GCM
+                    pSub = DatabaseAPI.GetPowerByFullName(fx.Override);
+                    if (pSub == null) continue;
+                        
+                    if (rLevel < 5) MergeRedirectEffects(ref pSrc, pSub, ++rLevel);
+                }
+            }
+            else
+            {
+                pSrc.Accuracy = pSub.Accuracy;
+                pSrc.ActivatePeriod = pSub.ActivatePeriod;
+                pSrc.Arc = pSub.Arc;
+                pSrc.CastTime = pSub.CastTime;
+                pSrc.EffectArea = pSub.EffectArea;
+                pSrc.EndCost = pSub.EndCost;
+                pSrc.InterruptTime = pSub.InterruptTime;
+                pSrc.MaxTargets = pSub.MaxTargets;
+                pSrc.Radius = pSub.Radius;
+                pSrc.Range = pSub.Range;
+                pSrc.RechargeTime = pSub.RechargeTime;
+                pSrc.RangeSecondary = pSub.RangeSecondary;
+                pSrc.IgnoreEnh = (Enums.eEnhance[])pSub.IgnoreEnh.Clone();
+                pSrc.Ignore_Buff = (Enums.eEnhance[])pSub.Ignore_Buff.Clone();
+
+                foreach (var fx in pSub.Effects)
+                {
+                    if (fx.EffectType != Enums.eEffectType.PowerRedirect)
+                    {
+                        // Check conditionals/GCM
+                        if (rLevel < 5) MergeRedirectEffects(ref pSrc, pSub, ++rLevel);
+                    }
+
+                    var srcEffects = pSrc.Effects.ToList();
+                    srcEffects.Add(fx);
+                    pSrc.Effects = srcEffects.ToArray();
+                }
+            }
+        }*/
+
         public void SetData(IPower iBase, IPower iEnhanced, bool noLevel = false, bool Locked = false,
             int iHistoryIDX = -1)
         {
@@ -3856,10 +3913,10 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         Suffix = "%";
                         var effect = pEnh.Effects[shortFxArray1[index].Index[0]];
-                        if (((effect.EffectType == Enums.eEffectType.Heal) |
-                             (effect.EffectType == Enums.eEffectType.Endurance) |
-                             (effect.EffectType == Enums.eEffectType.Damage)) &
-                            (pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur))
+                        if ((effect.EffectType == Enums.eEffectType.Heal |
+                             effect.EffectType == Enums.eEffectType.Endurance |
+                             effect.EffectType == Enums.eEffectType.Damage) &
+                            pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur)
                         {
                             num2 *= 100f;
                             num3 *= 100f;
