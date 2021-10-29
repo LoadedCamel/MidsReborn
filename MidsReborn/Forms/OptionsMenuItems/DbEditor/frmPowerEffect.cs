@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1039,8 +1040,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void ListView_Leave(object sender, EventArgs e)
         {
-            var lvControl = (ctlListViewColored) sender;
-            lvControl.LostFocusItem = lvControl.FocusedItem.Index;
+            try
+            {
+                var lvControl = (ctlListViewColored)sender;
+                lvControl.LostFocusItem = lvControl.FocusedItem.Index;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("frmPowerEffect.ListView_Leave(): null sender object");
+                Debug.WriteLine($"Exception: {ex.Message}");
+            }
         }
 
         private void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)

@@ -241,7 +241,7 @@ namespace mrbBase
             bool onlyTarget = false,
             bool onlyAlly = false,
             bool maxMode = false);
-
+        
         Enums.ShortFX GetDamageMagSum(
             Enums.eEffectType iEffect,
             Enums.eDamage iSub,

@@ -1706,10 +1706,14 @@ namespace mrbBase
                     Sum = 0.0f;
                 }
 
-                Array.Resize(ref Value, Value.Length + 1);
-                Array.Resize(ref Index, Index.Length + 1);
-                Value[Value.Length - 1] = iValue;
-                Index[Index.Length - 1] = iIndex;
+                var values = Value.ToList();
+                values.Add(iValue);
+                Value = values.ToArray();
+
+                var indexes = Index.ToList();
+                indexes.Add(iIndex);
+                Index = indexes.ToArray();
+                
                 Sum += iValue;
             }
 

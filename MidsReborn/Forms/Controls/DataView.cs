@@ -712,8 +712,12 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, pEnh.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItem(ShortStr("Interrupt", "Intrpt"), pEnh.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
-            var num3 = 2;
-            if (num3 > 1 && durationEffectId > -1 && (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) & (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
+            if (durationEffectId > -1 &&
+                pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
+                !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
+                   pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
+                  pBase.Effects[durationEffectId].Mag < 0))
             {
                 info_DataList.AddItem(new PairedList.ItemPair("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
@@ -721,21 +725,24 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
 
-                var iAlternate = Math.Abs(pBase.Effects[durationEffectId].BuffedMag - (double)pEnh.Effects[durationEffectId].BuffedMag) > float.Epsilon;
+                var iAlternate =
+                    Math.Abs(pBase.Effects[durationEffectId].BuffedMag -
+                             (double)pEnh.Effects[durationEffectId].BuffedMag) > float.Epsilon;
 
                 info_DataList.AddItem(new PairedList.ItemPair("Mag:",
-                    Convert.ToString(pEnh.Effects[durationEffectId].BuffedMag, CultureInfo.InvariantCulture), iAlternate,
+                    Convert.ToString(pEnh.Effects[durationEffectId].BuffedMag, CultureInfo.InvariantCulture),
+                    iAlternate,
                     pBase.Effects[durationEffectId].Probability < 1.0));
-                num3 -= 2;
             }
 
             var rankedEffects = pBase.GetRankedEffects();
-            var num4 = rankedEffects.Length - 1;
-            for (var ID = 0; ID <= num4; ++ID)
+            for (var ID = 0; ID < rankedEffects.Length; ID++)
             {
                 try
                 {
-                    if (num3 <= 0 || rankedEffects[ID] <= -1)
+                    if (rankedEffects[ID] <= -1)
+                        continue;
+                    if (pBase.Effects[rankedEffects[ID]].EffectType == Enums.eEffectType.Mez)
                         continue;
                     var rankedEffect = GetRankedEffect(rankedEffects, ID);
                     if (pBase.Effects[rankedEffects[ID]].EffectType == Enums.eEffectType.PowerRedirect)
@@ -771,7 +778,6 @@ namespace Mids_Reborn.Forms.Controls
                                                 rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
                                     }
 
-                                    --num3;
                                     break;
                                 }
                                 case Enums.eEffectType.RevokePower:
@@ -795,7 +801,6 @@ namespace Mids_Reborn.Forms.Controls
                                                 rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
                                     }
 
-                                    --num3;
                                     break;
                                 }
                                 default:
@@ -813,7 +818,6 @@ namespace Mids_Reborn.Forms.Controls
                     info_DataList.AddItem(rankedEffect);
                     if (pBase.Effects[rankedEffects[ID]].isEnhancementEffect)
                         info_DataList.SetUnique();
-                    --num3;
                 }
                 catch (Exception ex)
                 {
@@ -1450,6 +1454,18 @@ namespace Mids_Reborn.Forms.Controls
 
         private int effects_BuffDebuff(Control iLabel, PairedList iList)
         {
+            var nullPowerEntry = new PowerEntry { NIDPower = -1 };
+            var basePowerEntry = MidsContext.Character.CurrentBuild.Powers
+                .Where(pe => pe.Power != null)
+                .DefaultIfEmpty(nullPowerEntry)
+                .FirstOrDefault(pe => pBase.FullName == pe.Power.FullName);
+
+            var powerStacks = 0;
+            if (basePowerEntry != null && basePowerEntry.NIDPower >= 0)
+            {
+                powerStacks = basePowerEntry.Power.Stacks;
+            }
+
             var effectMagSum1 = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum2 = pEnh.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum3 = pEnh.GetEffectMagSum(Enums.eEffectType.DamageBuff);
@@ -1495,6 +1511,7 @@ namespace Mids_Reborn.Forms.Controls
             effectMagSum10.Multiply();
             effectMagSum11.Multiply();
             effectMagSum12.Multiply();
+
             var str1 = string.Empty;
             if (effectMagSum10.Present)
                 str1 = pBase.Effects[effectMagSum10.Index[0]].ETModifies == Enums.eEffectType.Mez
@@ -1502,7 +1519,18 @@ namespace Mids_Reborn.Forms.Controls
                     : Enums.GetEffectNameShort(pBase.Effects[effectMagSum10.Index[0]].ETModifies);
             iList.ValueWidth = 55;
             int num1;
-            if (!(effectMagSum1.Present | effectMagSum3.Present | effectMagSum1.Present | effectMagSum4.Present | effectMagSum6.Present | effectMag1.Present | effectMag3.Present | effectMag5.Present | effectMag7.Present | effectMagSum10.Present | effectMagSum8.Present | effectMag9.Present))
+            if (!(effectMagSum1.Present |
+                  effectMagSum3.Present |
+                  effectMagSum1.Present |
+                  effectMagSum4.Present |
+                  effectMagSum6.Present |
+                  effectMag1.Present |
+                  effectMag3.Present |
+                  effectMag5.Present |
+                  effectMag7.Present |
+                  effectMagSum10.Present |
+                  effectMagSum8.Present |
+                  effectMag9.Present))
             {
                 num1 = 0;
             }
@@ -1651,7 +1679,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                if (effectMagSum10.Present & (str1 != string.Empty))
+                if (effectMagSum10.Present & str1 != string.Empty)
                 {
                     var str2 = !string.Equals(str1, "EnduranceDiscount", StringComparison.OrdinalIgnoreCase)
                         ? !string.Equals(str1, "RechargeTime", StringComparison.OrdinalIgnoreCase)
@@ -1675,19 +1703,19 @@ namespace Mids_Reborn.Forms.Controls
                                         ? CapString(str3, 7)
                                         : "RechRdx"
                                     : "EndRdx";
-                                var str5 = string.Empty;
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Target)
-                                    str5 = " (Tgt)";
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Self)
-                                    str5 = " (Self)";
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Ally)
-                                    str5 = " (Ally)";
+                                var str5 = pEnh.Effects[effectMagSum10.Index[index]].ToWho switch
+                                {
+                                    Enums.eToWho.Target => " (Tgt)",
+                                    Enums.eToWho.Self => " (Self)",
+                                    Enums.eToWho.Ally => " (Ally)",
+                                    _ => ""
+                                };
+
                                 if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
                                     continue;
-                                iList.AddItem(new PairedList.ItemPair("+" + str4 + ":",
-                                    Convert.ToString(effectMagSum10.Value[index], CultureInfo.InvariantCulture) + "%" +
-                                    str5, false, false, false,
-                                    pEnh.Effects[effectMagSum10.Index[index]].BuildEffectString()));
+                                iList.AddItem(new PairedList.ItemPair($"+{str4}:",
+                                    $"{effectMagSum11.Value[index]}%{str5}", false, false, false,
+                                    pEnh.Effects[effectMagSum11.Index[index]].BuildEffectString()));
                                 if (pEnh.Effects[effectMagSum10.Index[index]].isEnhancementEffect)
                                     iList.SetUnique();
                             }
@@ -1701,27 +1729,26 @@ namespace Mids_Reborn.Forms.Controls
                                 if (string.Equals(pEnh.Effects[effectMagSum10.Index[iIndex]].Special, "RechargeTime",
                                     StringComparison.OrdinalIgnoreCase))
                                 {
-                                    var str4 = string.Empty;
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Target)
-                                        str4 = " (Tgt)";
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Self)
-                                        str4 = " (Self)";
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Ally)
-                                        str4 = " (Ally)";
+                                    var str4 = pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho switch
+                                    {
+                                        Enums.eToWho.Target => " (Tgt)",
+                                        Enums.eToWho.Self => " (Self)",
+                                        Enums.eToWho.Ally => " (Ally)",
+                                        _ => ""
+                                    };
+                                    
                                     iList.AddItem(new PairedList.ItemPair("+RechRdx:",
-                                        Convert.ToString(effectMagSum10.Value[iIndex], CultureInfo.InvariantCulture) +
-                                        "%" + str4, false, false, false,
-                                        pEnh.Effects[effectMagSum10.Index[iIndex]].BuildEffectString()));
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].isEnhancementEffect)
+                                        $"{effectMagSum11.Value[iIndex]}%{str4}", false, false, false,
+                                        pEnh.Effects[effectMagSum11.Index[iIndex]].BuildEffectString()));
+                                    if (pEnh.Effects[effectMagSum11.Index[iIndex]].isEnhancementEffect)
                                         iList.SetUnique();
                                     effectMagSum10.Remove(iIndex);
                                 }
                                 else
                                 {
                                     if (num3 == -1)
-                                        num3 = (int)Math.Round(effectMagSum10.Value[0]);
-                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)effectMagSum10.Value[iIndex]) >
-                                                           float.Epsilon))
+                                        num3 = (int)Math.Round(effectMagSum11.Value[0]);
+                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)effectMagSum11.Value[iIndex]) > float.Epsilon))
                                         num3 = -2;
                                     ++iIndex;
                                 }
@@ -1730,11 +1757,10 @@ namespace Mids_Reborn.Forms.Controls
                             {
                                 var iValue = "Varies";
                                 if (num3 > 0)
-                                    iValue = num3 + "%";
-                                if (effectMagSum10.Multiple)
+                                    iValue = $"{num3}%";
+                                if (effectMagSum11.Multiple)
                                 {
-                                    iList.AddItem(new PairedList.ItemPair("+" + str3 + ":", iValue, false, false,
-                                        false, effectMagSum10));
+                                    iList.AddItem(new PairedList.ItemPair($"+{str3}:", iValue, false, false, false, effectMagSum11));
                                 }
                                 else
                                 {
@@ -1742,8 +1768,7 @@ namespace Mids_Reborn.Forms.Controls
                                     if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0)
                                     {
                                         iList.AddItem(
-                                            new PairedList.ItemPair("+" + str4 + ":", iValue, false, false, false,
-                                                effectMagSum10));
+                                            new PairedList.ItemPair($"+{str4}:", iValue, false, false, false, effectMagSum11));
                                         if (sFXCheck(effectMagSum10))
                                             iList.SetUnique();
                                     }
@@ -1753,9 +1778,9 @@ namespace Mids_Reborn.Forms.Controls
                     }
                     else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0)
                     {
-                        iList.AddItem(new PairedList.ItemPair("+" + str2 + ":",
-                            Convert.ToString(effectMagSum10.Value[0], CultureInfo.InvariantCulture) + "%", false,
-                            false, false, effectMagSum10));
+                        iList.AddItem(new PairedList.ItemPair($"+{str2}:",
+                            $"{effectMagSum11.Value[0]}%", false,
+                            false, false, effectMagSum11));
                         if (sFXCheck(effectMagSum10))
                             iList.SetUnique();
                     }
@@ -2774,6 +2799,7 @@ namespace Mids_Reborn.Forms.Controls
             var s2 = new Enums.ShortFX();
             var Tag2 = new Enums.ShortFX();
             var Suffix = string.Empty;
+
             if (Index[ID] > -1)
             {
                 var eEffectTypeShort = Enums.eEffectTypeShort.None;
@@ -2793,26 +2819,29 @@ namespace Mids_Reborn.Forms.Controls
                 if (pBase.Effects[Index[ID]].DelayedTime > 5.0)
                     flag = true;
                 var names = Enum.GetNames(eEffectTypeShort.GetType());
-                Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Enhancement
-                    ? pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
+                if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement)
+                {
+                    Title = pBase.Effects[Index[ID]].ETModifies switch
+                    {
+                        Enums.eEffectType.EnduranceDiscount => "+EndRdx",
+                        Enums.eEffectType.RechargeTime => "+Rechg",
+                        Enums.eEffectType.Mez => pBase.Effects[Index[ID]].MezType == Enums.eMez.None
+                            ? "+Effects"
+                            : $"Enh({Enum.GetName(Enums.eMezShort.None.GetType(), pBase.Effects[Index[ID]].MezType)})",
+                        Enums.eEffectType.Defense => "Enh(Def)",
+                        Enums.eEffectType.Resistance => "Enh(Res)",
+                        _ => CapString(
+                            Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(),
+                                pBase.Effects[Index[ID]].ETModifies), 7)
+                    };
+                }
+                else
+                {
+                    Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
                         ? names[(int)pBase.Effects[Index[ID]].EffectType]
-                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType)
-                    : pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.EnduranceDiscount
-                        ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.RechargeTime
-                            ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Mez
-                                ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Mez
-                                    ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Defense
-                                        ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Resistance
-                                            ? CapString(
-                                                Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(),
-                                                    pBase.Effects[Index[ID]].ETModifies), 7)
-                                            : "Enh(Res)"
-                                        : "Enh(Def)"
-                                    : "Enh(" + Enum.GetName(Enums.eMezShort.None.GetType(),
-                                        pBase.Effects[Index[ID]].MezType) + ")"
-                                : "+Effects"
-                            : "+Rechg"
-                        : "+EndRdx";
+                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
+                }
+
                 string temp = string.Empty;
                 switch (pBase.Effects[Index[ID]].EffectType)
                 {
