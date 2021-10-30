@@ -2795,9 +2795,9 @@ namespace Mids_Reborn.Forms.Controls
         private PairedList.ItemPair GetRankedEffect(int[] Index, int ID)
         {
             var Title = string.Empty;
-            var shortFx = new Enums.ShortFX();
-            var s2 = new Enums.ShortFX();
-            var Tag2 = new Enums.ShortFX();
+            var shortFxBase = new Enums.ShortFX();
+            var shortFxEnh = new Enums.ShortFX();
+            var tag2 = new Enums.ShortFX();
             var Suffix = string.Empty;
 
             if (Index[ID] > -1)
@@ -2830,115 +2830,111 @@ namespace Mids_Reborn.Forms.Controls
                             : $"Enh({Enum.GetName(Enums.eMezShort.None.GetType(), pBase.Effects[Index[ID]].MezType)})",
                         Enums.eEffectType.Defense => "Enh(Def)",
                         Enums.eEffectType.Resistance => "Enh(Res)",
-                        _ => CapString(
-                            Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(),
-                                pBase.Effects[Index[ID]].ETModifies), 7)
+                        _ => CapString(Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(), pBase.Effects[Index[ID]].ETModifies), 7)
                     };
                 }
                 else
                 {
-                    Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
-                        ? names[(int)pBase.Effects[Index[ID]].EffectType]
-                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
+                    Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez ? names[(int)pBase.Effects[Index[ID]].EffectType] : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
                 }
-
+                
                 string temp = string.Empty;
                 switch (pBase.Effects[Index[ID]].EffectType)
                 {
                     case Enums.eEffectType.HitPoints:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
-                        Tag2.Assign(shortFx);
-                        shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                        s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
+                        tag2.Assign(shortFxBase);
+                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Heal:
                         if (pBase.Effects[Index[ID]].BuffedMag <= 1)
                         {
                             temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
-                            shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                            s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Absorb:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Endurance:
                         if (pBase.Effects[Index[ID]].BuffedMag < -0.01 && pBase.Effects[Index[ID]].BuffedMag > -1)
                         {
                             temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Regeneration:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Sum *= 100;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Sum *= 100;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Null:
                         if (pBase.Effects[Index[ID]].BuffedMag < 1)
                         {
                             temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.ToHit:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Fly:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Recovery:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     default:
@@ -2946,9 +2942,9 @@ namespace Mids_Reborn.Forms.Controls
                             ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
                              (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
+                            tag2.Assign(shortFxBase);
                             Suffix = "s";
                         }
                         /*else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
@@ -2995,23 +2991,23 @@ namespace Mids_Reborn.Forms.Controls
                                 Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
                             }*/
 
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
-                            shortFx.Multiply();
-                            s2.Multiply();
-                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
+                            shortFxBase.Multiply();
+                            shortFxEnh.Multiply();
+                            tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
+                            tag2.Assign(shortFxBase);
                         }
 
                         break;
@@ -3034,48 +3030,48 @@ namespace Mids_Reborn.Forms.Controls
                     return FastItem("", 0.0f, 0.0f, string.Empty);
             }
 
-            for (var index = 0; index < s2.Index.Length; index++)
+            for (var index = 0; index < shortFxEnh.Index.Length; index++)
             {
-                if (s2.Index[index] <= -1 || !pBase.Effects[s2.Index[index]].DisplayPercentage)
+                if (shortFxEnh.Index[index] <= -1 || !pBase.Effects[shortFxEnh.Index[index]].DisplayPercentage)
                     continue;
-                if (s2.Value[index] > 1)
+                if (shortFxEnh.Value[index] > 1)
                     continue;
 
-                if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.Absorb)
+                if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.Absorb)
                 {
                     //Fixes the Absorb display to correctly show the percentage
-                    s2.Sum = float.Parse(s2.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
+                    shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
                 }
-                else if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.ToHit)
+                else if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.ToHit)
                 {
                     //Fixes the ToHit display to correctly show the percentage
-                    if (pBase.Effects[s2.Index[index]].Stacking == Enums.eStacking.Yes)
+                    if (pBase.Effects[shortFxEnh.Index[index]].Stacking == Enums.eStacking.Yes)
                     {
                         var overage = pBase.Effects[Index[ID]].Ticks * 0.05f;
-                        s2.Sum -= overage;
-                        s2.Sum /= 2;
+                        shortFxEnh.Sum -= overage;
+                        shortFxEnh.Sum /= 2;
                     }
                 }
                 else
                 {
-                    s2.ReSum();
+                    shortFxEnh.ReSum();
                 }
 
                 break;
             }
 
-            var iTip = GetToolTip(s2);
+            var iTip = GetToolTip(shortFxEnh);
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
-                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
+                return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
             }
 
             if (pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None)
             {
-                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
+                return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
             }
 
-            return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
+            return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
         }
 
         public void Init()
