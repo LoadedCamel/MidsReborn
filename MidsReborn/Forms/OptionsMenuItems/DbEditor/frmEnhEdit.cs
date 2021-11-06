@@ -25,54 +25,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmEnhEdit_Load;
             InitializeComponent();
             Name = nameof(frmEnhEdit);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEnhEdit));
+            // var componentResourceManager = new ComponentResourceManager(typeof(frmEnhEdit));
             Icon = Resources.reborn;
         }
 
-        private void AddListItem(int Index)
+        private void AddListItem(int index)
         {
-            var items = new string[7];
-            var enhancement = DatabaseAPI.Database.Enhancements[Index];
-            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
-            items[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            items[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
-            items[3] = "";
-            items[5] = enhancement.UID;
-            items[6] = enhancement.LongName;
-            var num1 = enhancement.ClassID.Length - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
-            {
-                if (!string.IsNullOrWhiteSpace(items[3]))
-                {
-                    var strArray1 = items;
-                    var num2 = 3;
-                    string[] strArray2;
-                    IntPtr index2;
-                    (strArray2 = strArray1)[(int)(index2 = (IntPtr)num2)] = strArray2[(int)index2] + ",";
-                }
-
-                var strArray3 = items;
-                var num3 = 3;
-                string[] strArray4;
-                IntPtr index3;
-                (strArray4 = strArray3)[(int)(index3 = (IntPtr)num3)] = strArray4[(int)index3] +
-                                                                          DatabaseAPI.Database
-                                                                              .EnhancementClasses[
-                                                                                  enhancement.ClassID[index1]]
-                                                                              .ShortName;
-            }
+            var item = new string[7];
+            var enhancement = DatabaseAPI.Database.Enhancements[index];
+            item[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
+            item[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
+            item[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
+            item[3] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
+            item[5] = enhancement.UID;
+            item[6] = enhancement.LongName;
 
             if (enhancement.nIDSet > -1)
             {
-                items[4] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                items[0] = items[4] + ": " + items[0];
+                item[4] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
+                item[0] = $"{item[4]}: {item[0]}";
             }
             else
             {
-                items[4] = "";
+                item[4] = "";
             }
 
-            lvEnh.Items.Add(new ListViewItem(items, Index));
+            lvEnh.Items.Add(new ListViewItem(item, index));
             lvEnh.Items[lvEnh.Items.Count - 1].Selected = true;
             lvEnh.Items[lvEnh.Items.Count - 1].EnsureVisible();
         }
@@ -133,7 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvEnh.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete enhancement: {lvEnh.SelectedItems[0].Text}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            var enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length - 1 + 1];
+            var enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length];
             var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
             var index1 = 0;
             var num1 = DatabaseAPI.Database.Enhancements.Length - 1;
@@ -153,7 +131,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ++index1;
             }
 
-            DatabaseAPI.Database.Enhancements = new IEnhancement[DatabaseAPI.Database.Enhancements.Length - 2 + 1];
+            DatabaseAPI.Database.Enhancements = new IEnhancement[DatabaseAPI.Database.Enhancements.Length - 1];
             var num2 = DatabaseAPI.Database.Enhancements.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
                 DatabaseAPI.Database.Enhancements[index2] = new Enhancement(enhancementArray[index2]);
@@ -265,21 +243,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
             var num = DatabaseAPI.Database.Enhancements.Length - 1;
-            for (var Index = 0; Index <= num; ++Index)
+            for (var index = 0; index <= num; ++index)
             {
-                if (string.IsNullOrEmpty(txtFilter.Text) || DatabaseAPI.Database.Enhancements[Index].Name
+                /*if (string.IsNullOrEmpty(txtFilter.Text) || DatabaseAPI.Database.Enhancements[index].Name
                     .ToUpper(CultureInfo.InvariantCulture)
                     .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
                 {
-                    AddListItem(Index);
+                    AddListItem(index);
                     continue;
                 }
 
-                if (DatabaseAPI.Database.Enhancements[Index].nIDSet > -1)
-                    if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[Index].nIDSet]
+                if (DatabaseAPI.Database.Enhancements[index].nIDSet <= -1) continue;
+
+                if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[index].nIDSet]
+                    .DisplayName.ToUpper(CultureInfo.InvariantCulture)
+                    .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
+                    AddListItem(index);
+                */
+                if (string.IsNullOrEmpty(txtFilter.Text) ||
+                    DatabaseAPI.Database.Enhancements[index].nIDSet >= 0 &
+                    DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[index].nIDSet]
                         .DisplayName.ToUpper(CultureInfo.InvariantCulture)
                         .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
-                        AddListItem(Index);
+                {
+                    AddListItem(index);
+                }
             }
 
             if (lvEnh.Items.Count > 0)
@@ -305,7 +293,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var enhancement = DatabaseAPI.Database.Enhancements[index];
                 if (enhancement.ImageIdx > -1)
                 {
-                    extendedBitmap.Graphics.Clear(Color.White);
+                    extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancement(ref graphics, DatabaseAPI.Database.Enhancements[index].ImageIdx,
                         I9Gfx.ToGfxGrade(enhancement.TypeID));
@@ -357,39 +345,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var strArray1 = new string[6];
             var enhancement = DatabaseAPI.Database.Enhancements[Index];
-            strArray1[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " +
-                           Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
+            strArray1[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
             strArray1[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
             strArray1[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
-            strArray1[3] = "";
+            strArray1[3] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
             strArray1[5] = enhancement.UID;
-            var num1 = enhancement.ClassID.Length - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
-            {
-                if (!string.IsNullOrWhiteSpace(strArray1[3]))
-                {
-                    var strArray2 = strArray1;
-                    var num2 = 3;
-                    string[] strArray3;
-                    IntPtr index2;
-                    (strArray3 = strArray2)[(int)(index2 = (IntPtr)num2)] = strArray3[(int)index2] + ",";
-                }
-
-                var strArray4 = strArray1;
-                var num3 = 3;
-                string[] strArray5;
-                IntPtr index3;
-                (strArray5 = strArray4)[(int)(index3 = (IntPtr)num3)] = strArray5[(int)index3] +
-                                                                          DatabaseAPI.Database
-                                                                              .EnhancementClasses[
-                                                                                  enhancement.ClassID[index1]]
-                                                                              .ShortName;
-            }
 
             if (enhancement.nIDSet > -1)
             {
                 strArray1[4] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                strArray1[0] = strArray1[4] + ": " + strArray1[0];
+                strArray1[0] = $"{strArray1[4]}: {strArray1[0]}";
             }
             else
             {

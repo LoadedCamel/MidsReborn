@@ -908,7 +908,7 @@ namespace mrbBase
             DefDebuff,
             EndMod,
             Knockback,
-            Taunt,
+            Threat,
             ToHit,
             ToHitDeb,
             PetRech,

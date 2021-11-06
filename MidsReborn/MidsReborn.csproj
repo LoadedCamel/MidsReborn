@@ -375,7 +375,7 @@
     <Compile Include="Forms\frmEnhMiniPick.Designer.cs">
       <DependentUpon>frmEnhMiniPick.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmEnhData.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.Designer.cs">
       <DependentUpon>frmEnhData.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
@@ -2369,7 +2369,7 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditPowerset.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmEnhData.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhEdit.cs">
@@ -2480,7 +2480,7 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditPowerset.resx">
       <DependentUpon>frmEditPowerset.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmEnhData.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.resx">
       <DependentUpon>frmEnhData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEnhEdit.resx">
