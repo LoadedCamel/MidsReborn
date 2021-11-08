@@ -645,6 +645,9 @@
     <None Include="Images\Enhancements\DefDebuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\dsync.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Enhancements\eMarksman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -741,6 +744,9 @@
     <None Include="Images\Enhancements\HYNeutron.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Hypersonic.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Enhancements\HYPositron.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -753,6 +759,9 @@
     <None Include="Images\Enhancements\HYTheta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Ice_Mistrals_Torment.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Enhancements\Immob.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -771,6 +780,9 @@
     <None Include="Images\Enhancements\Knock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Launch.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>	  
     <None Include="Images\Enhancements\Lockdown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1332,6 +1344,9 @@
     <None Include="Images\Enhancements\TheftOfEssence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Thrust.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Enhancements\TNAmethyst.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1380,6 +1395,9 @@
     <None Include="Images\Enhancements\UnbreakableGuard.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Warp.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Enhancements\WintersGift.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
