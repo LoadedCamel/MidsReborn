@@ -16,7 +16,7 @@ namespace Mids_Reborn
         [STAThread]
         private static void Main()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzczMTM1QDMxMzgyZTM0MmUzME9URGZHeHFrdFFwZlhxQnZITjlreGZGek96bldQRGpPSmFDd3VWQ1lBaUU9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTMxMjE2QDMxMzkyZTMzMmUzMFlHcjdJU1R1YTVodjdadXBsWkQraGtIQVJmMitSSXVsNytuK2NCeXg5RjA9");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             MidsContext.AssertVersioning();
