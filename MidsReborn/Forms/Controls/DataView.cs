@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -596,37 +595,36 @@ namespace Mids_Reborn.Forms.Controls
         private void display_Info(bool NoLevel = false, int iEnhLvl = -1)
         {
             if (!NoLevel & (pBase.Level > 0))
-                info_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
+                info_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
             else
                 info_Title.Text = pBase.DisplayName;
             if (iEnhLvl > -1)
             {
                 var infoTitle = info_Title;
-                infoTitle.Text = infoTitle.Text + " (Slot Level " + Convert.ToString(iEnhLvl + 1) + ")";
+                infoTitle.Text = $"{infoTitle.Text} (Slot Level {iEnhLvl + 1})";
             }
 
             enhNameDisp.Text = "Enhancement Values";
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescLong) + RTF.EndRTF();
-            var Suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? string.Empty : "/s";
+            var Suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
             info_DataList.Clear();
             var Tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
                 if ((pEnh.ToggleCost > 0.0) & (pEnh.RechargeTime + (double)pEnh.CastTime + pEnh.InterruptTime > 0.0))
-                    Tip1 = "Effective end drain per second: " +
-                           Utilities.FixDP(pEnh.ToggleCost / (pEnh.RechargeTime + pEnh.CastTime + pEnh.InterruptTime)) +
-                           "/s";
+                    Tip1 = $"Effective end drain per second: {Utilities.FixDP(pEnh.ToggleCost / (pEnh.RechargeTime + pEnh.CastTime + pEnh.InterruptTime))}/s";
+
                 if ((pEnh.ToggleCost > 0.0) &
                     (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
                 {
                     var damageValue = pEnh.FXGetDamageValue();
                     if (damageValue > 0.0)
                     {
-                        if (Tip1 != string.Empty)
+                        if (!string.IsNullOrEmpty(Tip1))
                             Tip1 += "\r\n";
-                        Tip1 = Tip1 + "Effective damage per unit of end: " +
-                               Utilities.FixDP(damageValue / pEnh.ToggleCost);
+
+                        Tip1 = $"{Tip1}Effective damage per unit of end: {Utilities.FixDP(damageValue / pEnh.ToggleCost)}";
                     }
                 }
             }
@@ -1455,7 +1453,9 @@ namespace Mids_Reborn.Forms.Controls
         private int effects_BuffDebuff(Control iLabel, PairedList iList)
         {
             var nullPowerEntry = new PowerEntry { NIDPower = -1 };
-            var basePowerEntry = MidsContext.Character.CurrentBuild.Powers
+            var basePowerEntry = pBase == null
+                ? nullPowerEntry
+                : MidsContext.Character.CurrentBuild.Powers
                 .Where(pe => pe.Power != null)
                 .DefaultIfEmpty(nullPowerEntry)
                 .FirstOrDefault(pe => pBase.FullName == pe.Power.FullName);
@@ -2776,19 +2776,29 @@ namespace Mids_Reborn.Forms.Controls
             pnlEnhInactive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, rectangle1, GraphicsUnit.Pixel);
         }
 
+        private static string ConvertNewlinesToRTF(string str)
+        {
+            return str
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", RTF.Crlf());
+        }
+
         private static string GetEnhancementStringLongRTF(I9Slot iEnh)
         {
-            var iStr = iEnh.GetEnhancementStringLong();
-            if (iStr != string.Empty)
-                iStr = RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic(iStr) + RTF.Color(RTF.ElementID.Text);
-            return iStr;
+            var str = iEnh.GetEnhancementStringLong();
+            if (!string.IsNullOrEmpty(str))
+                str = RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic(ConvertNewlinesToRTF(str)) + RTF.Color(RTF.ElementID.Text);
+
+            return str;
         }
 
         private static string GetEnhancementStringRTF(I9Slot iEnh)
         {
             var str = iEnh.GetEnhancementString();
-            if (str != string.Empty)
-                str = RTF.Color(RTF.ElementID.Enhancement) + str + RTF.Color(RTF.ElementID.Text);
+            if (!string.IsNullOrEmpty(str))
+                str = RTF.Color(RTF.ElementID.Enhancement) + ConvertNewlinesToRTF(str) + RTF.Color(RTF.ElementID.Text);
+
             return str;
         }
 
@@ -3738,7 +3748,11 @@ namespace Mids_Reborn.Forms.Controls
             string iStr2;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
-                iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
+                // Fix strange white "-2" showing at the end of the enhancement long text
+                /*iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
+                        EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);*/
+
+                iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + "\r\n" +
                         EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
             }
             else
