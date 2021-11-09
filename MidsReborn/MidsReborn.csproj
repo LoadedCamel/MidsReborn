@@ -1344,6 +1344,9 @@
     <None Include="Images\Enhancements\TheftOfEssence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Enhancements\Threat.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
 	<None Include="Images\Enhancements\Thrust.png">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
@@ -2223,6 +2226,9 @@
     <None Include="Images\Sets\Titan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Sets\Threat.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Sets\ToHit.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

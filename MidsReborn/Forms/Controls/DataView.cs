@@ -1452,20 +1452,6 @@ namespace Mids_Reborn.Forms.Controls
 
         private int effects_BuffDebuff(Control iLabel, PairedList iList)
         {
-            var nullPowerEntry = new PowerEntry { NIDPower = -1 };
-            var basePowerEntry = pBase == null
-                ? nullPowerEntry
-                : MidsContext.Character.CurrentBuild.Powers
-                .Where(pe => pe.Power != null)
-                .DefaultIfEmpty(nullPowerEntry)
-                .FirstOrDefault(pe => pBase.FullName == pe.Power.FullName);
-
-            var powerStacks = 0;
-            if (basePowerEntry != null && basePowerEntry.NIDPower >= 0)
-            {
-                powerStacks = basePowerEntry.Power.Stacks;
-            }
-
             var effectMagSum1 = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum2 = pEnh.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum3 = pEnh.GetEffectMagSum(Enums.eEffectType.DamageBuff);
