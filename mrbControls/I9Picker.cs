@@ -1154,7 +1154,8 @@ namespace mrbControls
                                         1 => "Hamidon/Synthetic Hamidon enhancements.",
                                         2 => "Rewards from the Sewer Trial.",
                                         3 => "Rewards from the Eden Trial.",
-                                        4 => "Rewards from the Aeon Strike Force.",
+                                        4 => "Purchased from the Yin Market",
+                                        5 => "Rewards from the Aeon Strike Force.",
                                         _ => ""
                                     };
 
