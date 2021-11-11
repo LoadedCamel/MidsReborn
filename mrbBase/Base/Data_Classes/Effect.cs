@@ -2849,10 +2849,42 @@ namespace mrbBase.Base.Data_Classes
             return num1;
         }
 
-        public string SummonedEntityName => nSummon <= -1
-        ? Summon
-        : DatabaseAPI.Database.Entities[nSummon].DisplayName;
+        private string _summonedEntName;
+
+        public string SummonedEntityName
+        {
+            get
+            {
+                if (nSummon <= -1)
+                {
+                    _summonedEntName = Summon;
+                }
+                else if (nSummon > -1 && nSummon <= DatabaseAPI.Database.Entities.Length)
+                {
+                    _summonedEntName = DatabaseAPI.Database.Entities[nSummon].DisplayName;
+                }
+                else
+                {
+                    _summonedEntName = "";
+                }
+
+                return _summonedEntName;
+            }
+            set
+            {
+                _summonedEntName = value;
+                if (nSummon <= -1)
+                {
+                    _summonedEntName = Summon;
+                }
+                else
+                {
+                    _summonedEntName = DatabaseAPI.Database.Entities[nSummon].DisplayName;
+                }
+            }
+        }
     }
+
     public class KeyValue<TKey, TValue>
     {
         public TKey Key { get; set; }
