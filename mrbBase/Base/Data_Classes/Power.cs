@@ -2214,17 +2214,16 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public int[] GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
+        public List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
         {
-            var intList = new List<int>();
-            int[] numArray;
             if (iType == Enums.eType.SetO)
             {
-                numArray = GetValidEnhancementsFromSets();
+                return GetValidEnhancementsFromSets().ToList();
             }
             else
             {
-                for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
+                var intList = new List<int>();
+                for (var index1 = 0; index1 < DatabaseAPI.Database.Enhancements.Length; index1++)
                 {
                     var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
                     if (enhancement1.TypeID != iType)
@@ -2234,13 +2233,17 @@ namespace mrbBase.Base.Data_Classes
 
                     var flag = false;
                     foreach (var index2 in enhancement1.ClassID)
-                    foreach (var enhancement2 in Enhancements)
-                        if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 &&
+                    {
+                        foreach (var enhancement2 in Enhancements)
+                        {
+                            if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 &&
                             (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None ||
                              enhancement1.SubTypeID == iSubType))
-                        {
-                            flag = true;
+                            {
+                                flag = true;
+                            }
                         }
+                    }
 
                     if (flag)
                     {
@@ -2248,10 +2251,8 @@ namespace mrbBase.Base.Data_Classes
                     }
                 }
 
-                numArray = intList.ToArray();
+                return intList;
             }
-
-            return numArray;
         }
 
         public bool IsEnhancementValid(int iEnh)

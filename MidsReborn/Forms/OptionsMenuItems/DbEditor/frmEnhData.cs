@@ -20,6 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private ExtendedBitmap bxClass;
         private ExtendedBitmap bxClassList;
         private bool Loading;
+        private bool EnhClassesSelectorOpen = false;
 
         public frmEnhData(ref IEnhancement iEnh, int newStaticIndex)
         {
@@ -662,18 +663,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DrawClassList()
         {
-            using var bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
+            bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
             var enhPadding1 = EnhPadding;
             var enhPadding2 = EnhPadding;
             var num1 = 0;
             using var solidBrush = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxClassList.Graphics.FillRectangle(solidBrush, bxClassList.ClipRect);
-            var num2 = DatabaseAPI.Database.EnhancementClasses.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxClassList.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(index),
-                    GraphicsUnit.Pixel);
+                bxClassList.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(index), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + EnhPadding;
                 ++num1;
                 if (num1 != EnhAcross)
@@ -940,17 +939,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void PickerExpand()
 
         {
-            if (gbClass.Width == 84)
+            if (!EnhClassesSelectorOpen)
             {
+                btnEditPowerData.Visible = false;
                 gbClass.Width = 272;
                 gbClass.Left -= 188;
                 lblClass.Width = 256;
+                pnlClassList.Refresh();
+                EnhClassesSelectorOpen = true;
             }
             else
             {
+                btnEditPowerData.Visible = true;
                 gbClass.Width = 84;
                 gbClass.Left = 596;
                 lblClass.Width = pnlClass.Width;
+                EnhClassesSelectorOpen = false;
             }
         }
 
