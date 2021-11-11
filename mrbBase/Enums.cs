@@ -1052,8 +1052,8 @@ namespace mrbBase
             Hamidon,
             Hydra,
             Titan,
-            Yin,
-            DSync
+            DSync/*,
+            Yin*/
         }
 
         public enum eSummonEntity

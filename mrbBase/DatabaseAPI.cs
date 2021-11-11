@@ -2465,20 +2465,20 @@ namespace mrbBase
                 Database.EnhGradeStringShort[1] = "TO";
                 Database.EnhGradeStringShort[2] = "DO";
                 Database.EnhGradeStringShort[3] = "SO";
-                Database.SpecialEnhStringLong = new string[6];
-                Database.SpecialEnhStringShort = new string[6];
+                Database.SpecialEnhStringLong = new string[5];
+                Database.SpecialEnhStringShort = new string[5];
                 Database.SpecialEnhStringLong[0] = "None";
                 Database.SpecialEnhStringLong[1] = "Hamidon Origin";
                 Database.SpecialEnhStringLong[2] = "Hydra Origin";
                 Database.SpecialEnhStringLong[3] = "Titan Origin";
-                Database.SpecialEnhStringLong[4] = "Yin's Talisman";
-                Database.SpecialEnhStringLong[5] = "D-Sync Origin";
+                Database.SpecialEnhStringLong[4] = "D-Sync Origin";
+                //Database.SpecialEnhStringLong[5] = "Yin's Talisman";
                 Database.SpecialEnhStringShort[0] = "None";
                 Database.SpecialEnhStringShort[1] = "HO";
                 Database.SpecialEnhStringShort[2] = "TnO";
                 Database.SpecialEnhStringShort[3] = "HyO";
-                Database.SpecialEnhStringShort[4] = "YinO";
-                Database.SpecialEnhStringShort[5] = "DSyncO";
+                Database.SpecialEnhStringShort[4] = "DSyncO";
+                //Database.SpecialEnhStringShort[5] = "YinO";
             }
             catch (Exception ex)
             {
