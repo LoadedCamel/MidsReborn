@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -2216,43 +2217,47 @@ namespace mrbBase.Base.Data_Classes
 
         public List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
         {
-            if (iType == Enums.eType.SetO)
-            {
-                return GetValidEnhancementsFromSets().ToList();
-            }
-            else
-            {
-                var intList = new List<int>();
-                for (var index1 = 0; index1 < DatabaseAPI.Database.Enhancements.Length; index1++)
-                {
-                    var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
-                    if (enhancement1.TypeID != iType)
-                    {
-                        continue;
-                    }
+            var intList = new List<int>();
+            List<int> allowedEnh;
 
-                    var flag = false;
-                    foreach (var index2 in enhancement1.ClassID)
+
+            switch (iType)
+            {
+                case Enums.eType.SetO:
+                    allowedEnh = GetValidEnhancementsFromSets().ToList();
+                    break;
+               default:
+                    for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
                     {
-                        foreach (var enhancement2 in Enhancements)
+                        var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
+                        if (enhancement1.TypeID != iType)
                         {
-                            if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 &&
-                            (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None ||
-                             enhancement1.SubTypeID == iSubType))
+                            continue;
+                        }
+
+                        var flag = false;
+                        foreach (var index2 in enhancement1.ClassID)
+                        {
+                            foreach (var enhancement2 in Enhancements)
                             {
-                                flag = true;
+                                if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None || enhancement1.SubTypeID == iSubType))
+                                {
+                                    flag = true;
+                                }
                             }
+                        }
+
+                        if (flag)
+                        {
+                            intList.Add(index1);
                         }
                     }
 
-                    if (flag)
-                    {
-                        intList.Add(index1);
-                    }
-                }
-
-                return intList;
+                    allowedEnh = intList;
+                    break;
             }
+
+            return allowedEnh;
         }
 
         public bool IsEnhancementValid(int iEnh)
