@@ -1629,6 +1629,9 @@
     <None Include="Images\Powersets\EarthControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Powersets\EarthManipulation.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Powersets\ElecBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1953,6 +1956,9 @@
     <None Include="Images\Powersets\SavageMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Powersets\SeismicBlast.png">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Powersets\ShieldDef.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
