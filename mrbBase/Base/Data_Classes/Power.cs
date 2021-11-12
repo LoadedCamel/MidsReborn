@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -2220,13 +2218,12 @@ namespace mrbBase.Base.Data_Classes
             var intList = new List<int>();
             List<int> allowedEnh;
 
-
             switch (iType)
             {
                 case Enums.eType.SetO:
                     allowedEnh = GetValidEnhancementsFromSets().ToList();
                     break;
-               default:
+                default:
                     for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
                     {
                         var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
