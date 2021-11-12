@@ -67,13 +67,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
-
         {
             EffectList_Add();
         }
 
         private void btnAddFX_Click(object sender, EventArgs e)
-
         {
             IEffect iFx = new Effect();
             using var frmPowerEffect = new frmPowerEffect(iFx);
@@ -109,11 +107,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             enh.Effect = sEffects;
             ListSelectedEffects();
             lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
-
         }
 
         private void btnAutoFill_Click(object sender, EventArgs e)
-
         {
             var eEnhance = Enums.eEnhance.None;
             var eEnhanceShort = Enums.eEnhanceShort.None;
@@ -179,14 +175,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
-
         {
             DialogResult = DialogResult.Cancel;
             Hide();
         }
 
         private void btnDown_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndices.Count <= 0)
                 return;
@@ -204,7 +198,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
-
         {
             EditClick();
         }
@@ -255,7 +248,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnEditPowerData3_Click(object sender, EventArgs e)
-
         {
             var enh = myEnh;
             var power = enh.GetPower();
@@ -271,7 +263,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnImage_Click(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -293,7 +284,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnNoImage_Click(object sender, EventArgs e)
-
         {
             myEnh.Image = "";
             SetTypeIcons();
@@ -307,7 +297,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -336,7 +325,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnUp_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndices.Count <= 0)
                 return;
@@ -354,7 +342,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void cbMutEx_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -362,7 +349,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void cbRecipe_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (cbRecipe.SelectedIndex > 0)
             {
@@ -377,7 +363,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void cbSched_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -387,7 +372,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -398,7 +382,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
         }
@@ -919,13 +902,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void lstAvailable_DoubleClick(object sender, EventArgs e)
-
         {
             EffectList_Add();
         }
 
         private void lstSelected_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             DisplayEnhanceData();
             tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem, CultureInfo.InvariantCulture));
@@ -937,7 +918,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void PickerExpand()
-
         {
             if (!EnhClassesSelectorOpen)
             {
@@ -959,7 +939,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClass_MouseDown(object sender, MouseEventArgs e)
-
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -1011,7 +990,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClass_MouseMove(object sender, MouseEventArgs e)
-
         {
             var num1 = -1;
             var num2 = -1;
@@ -1041,7 +1019,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClass_Paint(object sender, PaintEventArgs e)
-
         {
             if (bxClass == null)
                 return;
@@ -1049,7 +1026,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClassList_MouseDown(object sender, MouseEventArgs e)
-
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -1085,12 +1061,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     if (flag)
                         return;
-                    var enh = myEnh;
-                    //var numArray = (int[]) Utils.CopyArray(enh.ClassID, new int[myEnh.ClassID.Length + 1]);
-                    var numArray = new int[myEnh.ClassID.Length + 1];
-                    Array.Copy(enh.ClassID, numArray, myEnh.ClassID.Length + 1);
-                    enh.ClassID = numArray;
-                    myEnh.ClassID[myEnh.ClassID.Length - 1] = num5;
+
+                    var classIdList = myEnh.ClassID.ToList();
+                    classIdList.Add(num5);
+                    myEnh.ClassID = classIdList.ToArray();
                     Array.Sort(myEnh.ClassID);
                     DrawClasses();
                 }
@@ -1098,7 +1072,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClassList_MouseMove(object sender, MouseEventArgs e)
-
         {
             var num1 = -1;
             var num2 = -1;
@@ -1122,7 +1095,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void pnlClassList_Paint(object sender, PaintEventArgs e)
-
         {
             if (bxClassList == null)
                 return;
@@ -1130,7 +1102,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void rbBuffDebuff_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading || lstSelected.SelectedIndex <= -1)
                 return;
@@ -1146,7 +1117,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void rbMod_CheckedChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -1227,13 +1197,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void StaticIndex_TextChanged(object sender, EventArgs e)
-
         {
             myEnh.StaticIndex = Convert.ToInt32(StaticIndex.Text, CultureInfo.InvariantCulture);
         }
 
         private void txtDesc_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1241,7 +1209,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtInternal_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1249,7 +1216,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtModOther_TextChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -1259,7 +1225,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtNameFull_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1268,7 +1233,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtNameShort_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1276,7 +1240,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtProb_Leave(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1284,7 +1247,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void txtProb_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1297,7 +1259,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void type_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1344,14 +1305,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void udMaxLevel_Leave(object sender, EventArgs e)
-
         {
             SetMaxLevel(Convert.ToInt32(udMaxLevel.Text));
             myEnh.LevelMax = Convert.ToInt32(udMaxLevel.Value) - 1;
         }
 
         private void udMaxLevel_ValueChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1360,14 +1319,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void udMinLevel_Leave(object sender, EventArgs e)
-
         {
             SetMinLevel(Convert.ToInt32(udMinLevel.Text));
             myEnh.LevelMin = Convert.ToInt32(udMinLevel.Value) - 1;
         }
 
         private void udMinLevel_ValueChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
