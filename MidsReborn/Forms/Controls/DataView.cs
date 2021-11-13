@@ -757,7 +757,14 @@ namespace Mids_Reborn.Forms.Controls
                             {
                                 case Enums.eEffectType.Recovery:
                                     rankedEffect.Name = "Recovery";
-                                    rankedEffect.Value = $"{(pBase.Effects[rankedEffects[ID]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[ID]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[ID]].BuffedMag}"):####.##}";
+                                    var fxTarget = pEnh.Effects[rankedEffects[ID]].ToWho switch
+                                    {
+                                        Enums.eToWho.Self => " (Self)",
+                                        Enums.eToWho.Target => " (Tgt)",
+                                        Enums.eToWho.Ally => " (Ally)",
+                                        _ => ""
+                                    };
+                                    rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[ID]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[ID]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[ID]].BuffedMag}"):####.##}{fxTarget}";
                                     break;
                                 
                                 case Enums.eEffectType.EntCreate:
