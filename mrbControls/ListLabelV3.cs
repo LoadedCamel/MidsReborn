@@ -1016,6 +1016,8 @@ namespace mrbControls
 
         private void Draw()
         {
+            if (IsDisposed) return;
+
             checked
             {
                 if (DisableRedraw) return;

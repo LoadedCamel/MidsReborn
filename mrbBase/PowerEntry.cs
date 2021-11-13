@@ -330,6 +330,38 @@ namespace mrbBase
             return num1;
         }
 
+        public int AddSlot2(int lvl)
+        {
+            if ((Slots.Length > 5) | !DatabaseAPI.Database.Power[NIDPower].Slottable)
+            {
+                return -1;
+            }
+            else
+            {
+                if (Slots.Length == 0)
+                {
+                    Slots = new SlotEntry[1];
+                    Slots[0].Enhancement = new I9Slot();
+                    Slots[0].FlippedEnhancement = new I9Slot();
+                    Slots[0].Level = lvl;
+
+                    return 0;
+                }
+
+                var slotsList = Slots.ToList();
+                slotsList.Add(new SlotEntry
+                {
+                    Enhancement = new I9Slot(),
+                    FlippedEnhancement = new I9Slot(),
+                    Level = lvl
+                });
+
+                Slots = slotsList.ToArray();
+
+                return Slots.Length - 1;
+            }
+        }
+
         public bool CanRemoveSlot(int slotIdx, out string message)
         {
             message = string.Empty;

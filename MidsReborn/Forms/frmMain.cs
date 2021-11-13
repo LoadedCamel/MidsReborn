@@ -8,7 +8,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -5083,9 +5082,6 @@ namespace Mids_Reborn.Forms
                         }
 
                         I9Popup.SetPopup(iPopup);
-                        //Debug.WriteLine($"rectangle.Y: {rectangle.Y}, I9Popup.Height: {I9Popup.Height}, rectangle.Height: {rectangle.Height} -- frmMain.InnerHeight:{ClientSize.Height - MenuBar.Height}");
-                        //Debug.WriteLine($"rectangle.Bottom: {rectangle.Bottom}, frmMain.Height: {ClientSize.Height - MenuBar.Height}");
-                        //Debug.WriteLine($"Diff: {rectangle.Bottom - (ClientSize.Height - MenuBar.Height)}");
                         if (vAlign == VerticalAlignment.Bottom)
                         {
                             rectangle.Y -= rectangle.Height;
@@ -6773,8 +6769,8 @@ namespace Mids_Reborn.Forms
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
-            MidsContext.Character.CurrentBuild.LastPower =
-                24; //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+            MidsContext.Character.CurrentBuild.LastPower = 24;
+            //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
             var k = 0;
@@ -6782,8 +6778,12 @@ namespace Mids_Reborn.Forms
             try
             {
                 for (k = 0; k < listPowers.Count; k++)
+                {
                     if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    {
                         PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -6800,12 +6800,17 @@ namespace Mids_Reborn.Forms
                     if (pe.Power == null) continue; // Not picked power will be in the list, but not instanciated!
                     var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
                     if (pList.Length == 0) continue;
+                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
 
                     p = pList.First();
-                    while (pe.Slots.Length < p.Slots.Length) pe.AddSlot(MidsContext.Character.MaxLevel);
+                    while (pe.Slots.Length < p.Slots.Length)
+                    {
+                        pe.AddSlot(MidsContext.Character.MaxLevel);
+                    }
 
                     p.Slots.CopyTo(pe.Slots, 0);
                     for (i = 0; i < pe.Slots.Length; i++)
+                    {
                         if (i == 0)
                         {
                             pe.Slots[i].Level = pe.Level;
@@ -6815,6 +6820,7 @@ namespace Mids_Reborn.Forms
                             pe.Slots[i].Level = sl.PickSlot();
                             pickedSlots++;
                         }
+                    }
                 }
             }
             catch (Exception ex)

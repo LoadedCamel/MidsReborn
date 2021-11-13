@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -308,33 +307,30 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num1 = BaseProbability;
-                if (ProcsPerMinute > 0.0 && num1 < 0.01 && power != null)
+                var probability = BaseProbability;
+                if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
                 {
-                    var num2 = (float)(power.AoEModifier * 0.75 + 0.25);
+                    var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
                     var procsPerMinute = ProcsPerMinute;
-                    var Global_Recharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    var rechargeval = power.BaseRechargeTime /
-                                      (power.BaseRechargeTime / power.RechargeTime - Global_Recharge);
-                    if (power.PowerType == Enums.ePowerType.Click)
-                        num1 = Math.Min(
-                            Math.Max(procsPerMinute * (rechargeval + power.CastTimeReal) / (60f * num2),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                    else
-                        num1 = Math.Min(
-                            Math.Max(procsPerMinute * 10 / (60f * num2),
+                    var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
+                    var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
+                        ? 0
+                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
+                    probability = power.PowerType == Enums.ePowerType.Click
+                        ? Math.Min(
+                            Math.Max(procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor),
+                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f)
+                        : Math.Min(
+                            Math.Max(procsPerMinute * 10 / (60f * areaFactor),
                                 (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }
 
-                //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                //probability = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) &&
                     MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
-                    num1 += MidsContext.Character.ModifyEffects[EffectId];
-                if (num1 > 1.0)
-                    num1 = 1f;
-                if (num1 < 0.0)
-                    num1 = 0.0f;
-                return num1;
+                    probability += MidsContext.Character.ModifyEffects[EffectId];
+
+                return Math.Max(0, Math.Min(1, probability));
             }
             set => BaseProbability = value;
         }
@@ -945,7 +941,7 @@ namespace mrbBase.Base.Data_Classes
 
             if (ProcsPerMinute > 0 && Probability < 0.01)
             {
-                sChance = $"{ProcsPerMinute}PPM";
+                sChance = $"{ProcsPerMinute} PPM";
             }
             else if (useBaseProbability)
             {
