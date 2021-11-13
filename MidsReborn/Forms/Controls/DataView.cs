@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -636,9 +635,6 @@ namespace Mids_Reborn.Forms.Controls
                 SetDamageTip();
             }*/
 
-            Debug.WriteLine($"DataView: {pBase.FullName}");
-            Debug.WriteLine($"DataView: toggle cost: base={pBase.ToggleCost}, enh={pEnh.ToggleCost}");
-            Debug.WriteLine($"EndCost (base): {pBase.EndCost}, ActivatePeriod (base): {pBase.ActivatePeriod}");
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1, Tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
@@ -759,6 +755,11 @@ namespace Mids_Reborn.Forms.Controls
                         if (pBase.Effects[rankedEffects[ID]].EffectType != Enums.eEffectType.Mez)
                             switch (pBase.Effects[rankedEffects[ID]].EffectType)
                             {
+                                case Enums.eEffectType.Recovery:
+                                    rankedEffect.Name = "Recovery";
+                                    rankedEffect.Value = $"{(pBase.Effects[rankedEffects[ID]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[ID]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[ID]].BuffedMag}"):####.##}";
+                                    break;
+                                
                                 case Enums.eEffectType.EntCreate:
                                 {
                                     rankedEffect.Name = "Summon";
@@ -806,8 +807,7 @@ namespace Mids_Reborn.Forms.Controls
                                     break;
                                 }
                                 default:
-                                    rankedEffect.Name =
-                                        ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[ID]].EffectType),
+                                    rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[ID]].EffectType),
                                             Enums.GetEffectNameShort(pBase.Effects[rankedEffects[ID]].EffectType));
                                     break;
                             }
@@ -2715,7 +2715,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ": hhh", iValue, iAlternate, isChance, isSpecial, tip);
+                itemPair = new PairedList.ItemPair($"{Title}:", iValue, iAlternate, isChance, isSpecial, tip);
             }
 
             return itemPair;
@@ -2949,7 +2949,6 @@ namespace Mids_Reborn.Forms.Controls
                         shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
                         shortFxBase.Sum *= 100f;
                         shortFxEnh.Sum *= 100f;
-                        Debug.WriteLine($"Recovery: {shortFxBase.Sum} / {shortFxEnh.Sum}");
                         tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
