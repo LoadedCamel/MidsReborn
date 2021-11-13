@@ -281,7 +281,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpText.Controls.Add(this.GroupBox1);
             this.tpText.Location = new System.Drawing.Point(4, 23);
             this.tpText.Name = "tpText";
-            this.tpText.Size = new System.Drawing.Size(832, 337);
+            this.tpText.Size = new System.Drawing.Size(832, 353);
             this.tpText.TabIndex = 2;
             this.tpText.Text = "Basic";
             this.tpText.UseVisualStyleBackColor = true;
@@ -856,7 +856,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpBasic.Controls.Add(this.Label4);
             this.tpBasic.Location = new System.Drawing.Point(4, 23);
             this.tpBasic.Name = "tpBasic";
-            this.tpBasic.Size = new System.Drawing.Size(832, 337);
+            this.tpBasic.Size = new System.Drawing.Size(832, 353);
             this.tpBasic.TabIndex = 0;
             this.tpBasic.Text = "Power Attributes";
             this.tpBasic.UseVisualStyleBackColor = true;
@@ -1210,7 +1210,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.lblAcc.Location = new System.Drawing.Point(180, 37);
             this.lblAcc.Name = "lblAcc";
-            this.lblAcc.Size = new System.Drawing.Size(50, 20);
+            this.lblAcc.Size = new System.Drawing.Size(95, 20);
             this.lblAcc.TabIndex = 100;
             this.lblAcc.Text = "(75%)";
             this.lblAcc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1530,7 +1530,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpEffects.Controls.Add(this.pnlFX);
             this.tpEffects.Location = new System.Drawing.Point(4, 23);
             this.tpEffects.Name = "tpEffects";
-            this.tpEffects.Size = new System.Drawing.Size(832, 337);
+            this.tpEffects.Size = new System.Drawing.Size(832, 353);
             this.tpEffects.TabIndex = 1;
             this.tpEffects.Text = "Effects";
             this.tpEffects.UseVisualStyleBackColor = true;
@@ -1645,7 +1645,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpEnh.Controls.Add(this.lblEnhName);
             this.tpEnh.Location = new System.Drawing.Point(4, 23);
             this.tpEnh.Name = "tpEnh";
-            this.tpEnh.Size = new System.Drawing.Size(832, 337);
+            this.tpEnh.Size = new System.Drawing.Size(832, 353);
             this.tpEnh.TabIndex = 9;
             this.tpEnh.Text = "Enhancements";
             this.tpEnh.UseVisualStyleBackColor = true;
@@ -1779,7 +1779,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpPreReq.Controls.Add(this.GroupBox8);
             this.tpPreReq.Location = new System.Drawing.Point(4, 23);
             this.tpPreReq.Name = "tpPreReq";
-            this.tpPreReq.Size = new System.Drawing.Size(832, 337);
+            this.tpPreReq.Size = new System.Drawing.Size(832, 353);
             this.tpPreReq.TabIndex = 4;
             this.tpPreReq.Text = "Requirements";
             this.tpPreReq.UseVisualStyleBackColor = true;
@@ -2034,7 +2034,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSpecialEnh.Location = new System.Drawing.Point(4, 23);
             this.tpSpecialEnh.Name = "tpSpecialEnh";
             this.tpSpecialEnh.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSpecialEnh.Size = new System.Drawing.Size(832, 337);
+            this.tpSpecialEnh.Size = new System.Drawing.Size(832, 353);
             this.tpSpecialEnh.TabIndex = 7;
             this.tpSpecialEnh.Text = "Enhancement Disabling";
             this.tpSpecialEnh.UseVisualStyleBackColor = true;
@@ -2082,7 +2082,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.Controls.Add(this.chkMutexSkip);
             this.tpMutex.Location = new System.Drawing.Point(4, 23);
             this.tpMutex.Name = "tpMutex";
-            this.tpMutex.Size = new System.Drawing.Size(832, 337);
+            this.tpMutex.Size = new System.Drawing.Size(832, 353);
             this.tpMutex.TabIndex = 8;
             this.tpMutex.Text = "Mutal Exclusivity";
             this.tpMutex.UseVisualStyleBackColor = true;
@@ -2146,7 +2146,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSubPower.Controls.Add(this.lvSPGroup);
             this.tpSubPower.Location = new System.Drawing.Point(4, 23);
             this.tpSubPower.Name = "tpSubPower";
-            this.tpSubPower.Size = new System.Drawing.Size(832, 337);
+            this.tpSubPower.Size = new System.Drawing.Size(832, 353);
             this.tpSubPower.TabIndex = 10;
             this.tpSubPower.Text = "Sub-Powers";
             this.tpSubPower.UseVisualStyleBackColor = true;
