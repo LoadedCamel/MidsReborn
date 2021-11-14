@@ -13,7 +13,7 @@ namespace Mids_Reborn
         private const int EnhancementsTrayCapacity = 70;
         private const string BoostCmd = "boost";
         private const string CmdSeparator = "$$";
-        private const bool AutoAttune = true;
+        private const bool AutoAttune = false;
         public static string MenuName { get; set; } = "MRBTest";
         public const string MenuExt = "mnu";
 
