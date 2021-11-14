@@ -3773,7 +3773,7 @@ namespace Mids_Reborn.Forms.Controls
 
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr1) + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) +
                                 "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
-            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF("aaa " + iStr2) + RTF.EndRTF();
+            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr2) + RTF.EndRTF();
         }
 
         public void SetEnhancementPicker(I9Slot iEnh)
@@ -3834,7 +3834,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr1) + RTF.Crlf() + RTF.EndRTF();
-            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF("bbb " + iStr2) + RTF.EndRTF();
+            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr2) + RTF.EndRTF();
         }
 
         public void SetFontData()
