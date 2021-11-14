@@ -1957,7 +1957,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
 	<None Include="Images\Powersets\SeismicBlast.png">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
     <None Include="Images\Powersets\ShieldDef.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1989,6 +1989,12 @@
     <None Include="Images\Powersets\StoneArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Powersets\StoneArmor_Scrapper.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<None Include="Images\Powersets\StoneArmor_Stalker.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="Images\Powersets\StoneMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
