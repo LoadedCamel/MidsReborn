@@ -2524,14 +2524,28 @@ namespace Mids_Reborn.Forms
 
             DataViewLocked = Lock;
             if (num1 > -1)
-                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1),
-                    MainModule.MidsController.Toon.GetEnhancedPower(num1),
-                    NoLevel, DataViewLocked, num1);
+            {
+                var basePower = MainModule.MidsController.Toon.GetBasePower(num1);
+                var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(num1);
+                if (basePower != null && enhancedPower != null)
+                {
+                    myDataView.SetData(basePower, enhancedPower, NoLevel, DataViewLocked, num1);
+                }
+                else
+                {
+                    myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel, DataViewLocked, num1);
+                }
+            }
             else
-                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel,
-                    DataViewLocked, num1);
+            {
+                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel, DataViewLocked, num1);
+            }
+            
             if (!Lock || dvAnchored.Visible)
+            {
                 return;
+            }
+
             FloatingDataForm.Activate();
         }
 

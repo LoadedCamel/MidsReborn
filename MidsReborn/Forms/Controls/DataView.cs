@@ -2150,6 +2150,48 @@ namespace Mids_Reborn.Forms.Controls
             return num1;
         }
 
+        // Move the extra effects from the longest array (pBase) to the shortest (pEnh),
+        // Resulting in pEnh always being the longest one.
+        private List<IEffect[]> swapExtraEffects(IEffect[] baseEffects, IEffect[] enhEffects)
+        {
+            var enhFxList = enhEffects.ToList();
+            for (var i = enhEffects.Length; i < baseEffects.Length; i++)
+            {
+                enhFxList.Add((IEffect)baseEffects[i].Clone());
+            }
+
+            var baseFxList = new List<IEffect>();
+            for (var i = 0; i < enhEffects.Length; i++)
+            {
+                baseFxList.Add((IEffect)baseEffects[i].Clone());
+            }
+
+            baseEffects = baseFxList.ToArray();
+            enhEffects = enhFxList.ToArray();
+
+            return new List<IEffect[]> { baseEffects, enhEffects };
+        }
+
+        private List<Enums.ShortFX[]> swapExtraEffects(Enums.ShortFX[] baseEffects, Enums.ShortFX[] enhEffects)
+        {
+            var enhFxList = enhEffects.ToList();
+            for (var i = enhEffects.Length; i < baseEffects.Length; i++)
+            {
+                enhFxList.Add((Enums.ShortFX)baseEffects[i].Clone());
+            }
+
+            var baseFxList = new List<Enums.ShortFX>();
+            for (var i = 0; i < enhEffects.Length; i++)
+            {
+                baseFxList.Add((Enums.ShortFX)baseEffects[i].Clone());
+            }
+
+            baseEffects = baseFxList.ToArray();
+            enhEffects = enhFxList.ToArray();
+
+            return new List<Enums.ShortFX[]> { baseEffects, enhEffects };
+        }
+
         private int effects_Status(Label iLabel, PairedList iList)
         {
             var eMezShort = Enums.eMezShort.None;
@@ -2248,30 +2290,42 @@ namespace Mids_Reborn.Forms.Controls
             if (!shortFx1.Present)
                 return num1;
             {
-                var num2 = pBase.Effects.Length - 1;
-                for (var iTagID = 0; iTagID <= num2; ++iTagID)
+                if (pEnh.Effects.Length < pBase.Effects.Length)
+                {
+                    var swappedFX = swapExtraEffects(pBase.Effects, pEnh.Effects);
+                    pBase.Effects = (IEffect[])swappedFX[0].Clone();
+                    pEnh.Effects = (IEffect[])swappedFX[1].Clone();
+                }
+
+                for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
                 {
                     if (!(((pBase.Effects[iTagID].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
                           ((pBase.Effects[iTagID].PvMode != Enums.ePvX.PvE) & MidsContext.Config.Inc.DisablePvE)) ||
                         !((pBase.Effects[iTagID].EffectType == Enums.eEffectType.MezResist) &
                           (pBase.Effects[iTagID].Probability > 0.0)))
                         continue;
+
                     var str = (double)pEnh.Effects[iTagID].Duration >= 15.0
-                        ? " - " + Utilities.FixDP(pEnh.Effects[iTagID].Duration) + "s"
-                        : string.Empty;
-                    var iValue = Convert.ToString(pBase.Effects[iTagID].MagPercent, CultureInfo.InvariantCulture) +
-                                 "%" + str;
+                        ? $" - {Utilities.FixDP(pEnh.Effects[iTagID].Duration)}s"
+                        : "";
+                    var iValue = $"{pBase.Effects[iTagID].MagPercent}%{str}";
                     if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                    {
                         iValue = "0%";
+                    }
+
                     var iItem = new PairedList.ItemPair(
-                        CapString("-" + names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, false,
-                        false, iTagID);
+                        CapString($"-{names[(int)pBase.Effects[iTagID].MezType]}", 7) + ":", iValue, false, false, false, iTagID);
                     iList.AddItem(iItem);
                     if (pBase.Effects[iTagID].isEnhancementEffect)
+                    {
                         iList.SetUnique();
+                    }
+
                     ++num1;
                 }
             }
+
             return num1;
         }
 
@@ -3954,8 +4008,14 @@ namespace Mids_Reborn.Forms.Controls
             {
                 var shortFxArray1 = Power.SplitFX(ref BaseSFX, ref pBase);
                 var shortFxArray2 = Power.SplitFX(ref EnhSFX, ref pEnh);
-                var num1 = shortFxArray1.Length - 1;
-                for (var index = 0; index <= num1; ++index)
+                if (shortFxArray2.Length < shortFxArray1.Length)
+                {
+                    var swappedFX = swapExtraEffects(shortFxArray1, shortFxArray2);
+                    shortFxArray1 = (Enums.ShortFX[])swappedFX[0].Clone();
+                    shortFxArray2 = (Enums.ShortFX[])swappedFX[1].Clone();
+                }
+                
+                for (var index = 0; index < shortFxArray1.Length; index++)
                 {
                     if (!shortFxArray1[index].Present)
                         continue;
