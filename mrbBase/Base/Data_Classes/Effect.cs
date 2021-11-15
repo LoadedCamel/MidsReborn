@@ -2866,7 +2866,7 @@ namespace mrbBase.Base.Data_Classes
 
                 return _summonedEntName;
             }
-            set
+            /*set
             {
                 _summonedEntName = value;
                 if (nSummon <= -1)
@@ -2877,7 +2877,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     _summonedEntName = DatabaseAPI.Database.Entities[nSummon].DisplayName;
                 }
-            }
+            }*/
         }
     }
 
