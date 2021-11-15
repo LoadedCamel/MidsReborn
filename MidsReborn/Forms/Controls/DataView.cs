@@ -2183,7 +2183,7 @@ namespace Mids_Reborn.Forms.Controls
             return new List<IEffect[]> { baseEffects, enhEffects };
         }
 
-        private List<Enums.ShortFX[]> swapExtraEffects(Enums.ShortFX[] baseEffects, Enums.ShortFX[] enhEffects)
+        private List<Enums.ShortFX[]> SwapExtraEffects(Enums.ShortFX[] baseEffects, Enums.ShortFX[] enhEffects)
         {
             var enhFxList = enhEffects.ToList();
             for (var i = enhEffects.Length; i < baseEffects.Length; i++)
@@ -2257,7 +2257,7 @@ namespace Mids_Reborn.Forms.Controls
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
-                        var iItem = new PairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();
@@ -2265,12 +2265,11 @@ namespace Mids_Reborn.Forms.Controls
                     else if ((pBase.Effects[iTagID].MezType == Enums.eMez.ToggleDrop) &
                              (pBase.Effects[iTagID].Probability > 0.0))
                     {
-                        var iValue = Convert.ToString(pBase.Effects[iTagID].Probability * 100f,
-                            CultureInfo.InvariantCulture) + "%";
+                        var iValue = $"{pBase.Effects[iTagID].Probability * 100f}%";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0%";
-                        var iItem = new PairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();
@@ -2282,12 +2281,12 @@ namespace Mids_Reborn.Forms.Controls
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
                              (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
-                        var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag) + str;
+                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
                         var iItem = new PairedList.ItemPair(
-                            CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
+                            $"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2,
                             pBase.Effects[iTagID].Probability < 1.0,
                             pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
@@ -2299,12 +2298,12 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            /*if (!shortFx1.Present)
+            if (!shortFx1.Present)
                 return num1;
             {
                 if (pEnh.Effects.Length < pBase.Effects.Length)
                 {
-                    var swappedFX = swapExtraEffects(pBase.Effects, pEnh.Effects);
+                    var swappedFX = SwapExtraEffects(pBase.Effects, pEnh.Effects);
                     pBase.Effects = (IEffect[])swappedFX[0].Clone();
                     pEnh.Effects = (IEffect[])swappedFX[1].Clone();
                 }
@@ -2336,7 +2335,7 @@ namespace Mids_Reborn.Forms.Controls
 
                     ++num1;
                 }
-            }*/
+            }
 
             return num1;
         }
@@ -4022,7 +4021,7 @@ namespace Mids_Reborn.Forms.Controls
                 var shortFxArray2 = Power.SplitFX(ref EnhSFX, ref pEnh);
                 if (shortFxArray2.Length < shortFxArray1.Length)
                 {
-                    var swappedFX = swapExtraEffects(shortFxArray1, shortFxArray2);
+                    var swappedFX = SwapExtraEffects(shortFxArray1, shortFxArray2);
                     shortFxArray1 = (Enums.ShortFX[])swappedFX[0].Clone();
                     shortFxArray2 = (Enums.ShortFX[])swappedFX[1].Clone();
                 }
