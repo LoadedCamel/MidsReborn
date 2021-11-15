@@ -639,10 +639,14 @@ namespace Mids_Reborn.Forms.Controls
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = false;
-            var num1 = pBase.Effects.Length - 1;
-            for (var index = 0; (index <= num1) & !flag2; ++index)
+            for (var index = 0; index < pBase.Effects.Length; index++)
+            {
                 if (pBase.Effects[index].RequiresToHitCheck)
+                {
                     flag2 = true;
+                    break;
+                }
+            }
 
             if ((pBase.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 | ((pBase.Range > 20.0) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
@@ -912,6 +916,14 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.Style = Enums.eDDStyle.Text;
             }
 
+            // Ensure pEnh has at least as many effects as pBase
+            if (pBase.Effects.Length > pEnh.Effects.Length)
+            {
+                var swappedFx = SwapExtraEffects(pBase.Effects, pEnh.Effects);
+                pBase.Effects = (IEffect[])swappedFx[0].Clone();
+                pEnh.Effects = (IEffect[])swappedFx[1].Clone();
+            }
+
             lblLock.Visible = Lock & (TabPage != 2);
             display_Info(noLevel, iEnhLevel);
             DisplayEffects(noLevel, iEnhLevel);
@@ -921,13 +933,13 @@ namespace Mids_Reborn.Forms.Controls
         private void DisplayEffects(bool noLevel = false, int iEnhLvl = -1)
         {
             if (!noLevel & (pBase.Level > 0))
-                fx_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
+                fx_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
             else
                 fx_Title.Text = pBase.DisplayName;
             if (iEnhLvl > -1)
             {
                 var fxTitle = fx_Title;
-                fxTitle.Text = fxTitle.Text + " (Slot Level " + Convert.ToString(iEnhLvl + 1) + ")";
+                fxTitle.Text = $"{fxTitle.Text} (Slot Level {iEnhLvl + 1})";
             }
 
             PairedList[] PairedListArray =
@@ -944,6 +956,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_lblHead1.Text = string.Empty;
             fx_lblHead2.Text = string.Empty;
             fx_LblHead3.Text = string.Empty;
+
             var index = EffectsDrh();
             var num1 = 0;
             var flag1 = false;
@@ -1627,9 +1640,9 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("Percept", effectMagSum4, effectMagSum5, "%", effectMagSum4));
                 if (sFXCheck(effectMagSum4))
                     iList.SetUnique();
-                if (effectMagSum6.Present)
+                if (effectMagSum6.Present && effectMagSum7.Index != null && effectMagSum7.Index.Length > 0)
                     iList.AddItem(new PairedList.ItemPair("Stealth",
-                        Convert.ToString(effectMagSum6.Sum, CultureInfo.InvariantCulture) + "ft", false, false, false,
+                        $"{effectMagSum6.Sum}ft", false, false, false,
                         pEnh.Effects[effectMagSum7.Index[0]].BuildEffectString(false, "Stealth Radius")));
                 if (sFXCheck(effectMagSum6))
                     iList.SetUnique();
@@ -1637,7 +1650,7 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("ThretLvl", effectMag1, effectMag2, "%", effectMag1));
                 if (sFXCheck(effectMag1))
                     iList.SetUnique();
-                if (effectMag3.Present)
+                if (effectMag3.Present && effectMag3.Index != null && effectMag3.Index.Length > 0)
                     iList.AddItem(FastItem("TogDrop", effectMag3, effectMag4, "%", false, false,
                         pBase.Effects[effectMag3.Index[0]].Probability < 1.0, false, effectMag3));
                 if (sFXCheck(effectMag3))
@@ -1654,14 +1667,13 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("Rchrg (Ally)", effectMag9, effectMag10, "%", effectMag9));
                 if (sFXCheck(effectMag9))
                     iList.SetUnique();
-                if (effectMagSum8.Present)
+                if (effectMagSum8.Present && effectMagSum8.Index != null && effectMagSum8.Index.Length > 0)
                 {
                     if (!effectMagSum8.Multiple)
                     {
                         if (effectMagSum8.Present)
                             iList.AddItem(FastItem(
-                                "Res(" + Enums.GetEffectNameShort(pBase.Effects[effectMagSum8.Index[0]].ETModifies) +
-                                ")",
+                                $"Res({Enums.GetEffectNameShort(pBase.Effects[effectMagSum8.Index[0]].ETModifies)})",
                                 effectMagSum8, effectMagSum9, "%", effectMagSum8));
                         if (sFXCheck(effectMagSum8))
                             iList.SetUnique();
@@ -1669,7 +1681,7 @@ namespace Mids_Reborn.Forms.Controls
                     else
                     {
                         iList.AddItem(new PairedList.ItemPair("Res(Multi):",
-                            Convert.ToString(effectMagSum8.Value[0], CultureInfo.InvariantCulture) + "%", false,
+                            $"{effectMagSum8.Value[0]}%", false,
                             false, false, effectMagSum8));
                         if (sFXCheck(effectMagSum8))
                             iList.SetUnique();
@@ -2025,8 +2037,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             var flag = iList.ItemCount == 0;
             var num1 = 0;
-            var num2 = pBase.Effects.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < pBase.Effects.Length; index++)
             {
                 if (!((pBase.Effects[index].EffectType == Enums.eEffectType.GlobalChanceMod) & (pBase.Effects[index].Probability > 0.0)))
                 {
@@ -2034,13 +2045,13 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 var iTip = pEnh.Effects[index].BuildEffectString();
-                var iValue = Convert.ToString(pBase.Effects[index].MagPercent, CultureInfo.InvariantCulture) + "%";
+                var iValue = $"{pBase.Effects[index].MagPercent}%";
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
                     iValue = "(suppressed)";
                 }
 
-                var iItem = new PairedList.ItemPair(pBase.Effects[index].Reward + ":", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
+                var iItem = new PairedList.ItemPair($"{pBase.Effects[index].Reward}:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
                 iList.AddItem(iItem);
                 ++num1;
             }
@@ -2152,7 +2163,7 @@ namespace Mids_Reborn.Forms.Controls
 
         // Move the extra effects from the longest array (pBase) to the shortest (pEnh),
         // Resulting in pEnh always being the longest one.
-        private List<IEffect[]> swapExtraEffects(IEffect[] baseEffects, IEffect[] enhEffects)
+        private List<IEffect[]> SwapExtraEffects(IEffect[] baseEffects, IEffect[] enhEffects)
         {
             var enhFxList = enhEffects.ToList();
             for (var i = enhEffects.Length; i < baseEffects.Length; i++)
@@ -2226,14 +2237,15 @@ namespace Mids_Reborn.Forms.Controls
             var names = Enum.GetNames(eMezShort.GetType());
             if (shortFx3.Present)
             {
-                var num2 = pBase.Effects.Length - 1;
-                for (var iTagID = 0; iTagID <= num2; ++iTagID)
+                for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
                 {
                     if (!((pBase.Effects[iTagID].EffectType == Enums.eEffectType.Mez) &
                           (pBase.Effects[iTagID].Probability > 0.0) &
                           pBase.Effects[iTagID].CanInclude()) || !pEnh.Effects[iTagID].PvXInclude())
                         continue;
-                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_)) ? " - " + pEnh.Effects[iTagID].Duration.ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "s" : string.Empty;
+                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_))
+                        ? $" - {pEnh.Effects[iTagID].Duration:#0.#}s"
+                        : "";
                     if (pBase.Effects[iTagID].BuffedMag > 0.0)
                     {
                         var iAlternate2 =
@@ -2241,7 +2253,7 @@ namespace Mids_Reborn.Forms.Controls
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
                              (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
-                        var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag) + str;
+                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
@@ -2287,7 +2299,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            if (!shortFx1.Present)
+            /*if (!shortFx1.Present)
                 return num1;
             {
                 if (pEnh.Effects.Length < pBase.Effects.Length)
@@ -2324,7 +2336,7 @@ namespace Mids_Reborn.Forms.Controls
 
                     ++num1;
                 }
-            }
+            }*/
 
             return num1;
         }
