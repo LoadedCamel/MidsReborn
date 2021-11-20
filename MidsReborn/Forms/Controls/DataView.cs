@@ -3955,8 +3955,8 @@ namespace Mids_Reborn.Forms.Controls
             if (iSet < 0)
             {
                 info_Title.Text = "No Enhancement";
-                Info_txtLarge.Text = string.Empty;
-                info_txtSmall.Text = string.Empty;
+                Info_txtLarge.Text = "";
+                info_txtSmall.Text = "";
             }
             else
             {
@@ -3967,14 +3967,10 @@ namespace Mids_Reborn.Forms.Controls
                     str1 += RTF.Crlf();
                 var str2 = DatabaseAPI.Database.EnhancementSets[iSet].LevelMin !=
                            DatabaseAPI.Database.EnhancementSets[iSet].LevelMax
-                    ? Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1) + " to " +
-                      Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1)
-                    : Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1);
-                info_txtSmall.Rtf = RTF.StartRTF() +
-                                    str1 + RTF.Color(RTF.ElementID.Invention) + "Level: " + str2 +
-                                    RTF.Color(RTF.ElementID.Text) +
-                                    RTF.EndRTF();
-                Info_txtLarge.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(iSet) + RTF.EndRTF();
+                    ? $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1} to {DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1}"
+                    : $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1}";
+                info_txtSmall.Rtf = $"{RTF.StartRTF()}{str1}{RTF.Color(RTF.ElementID.Invention)}Level: {str2}{RTF.Color(RTF.ElementID.Text)}{RTF.EndRTF()}";
+                Info_txtLarge.Rtf = $"{RTF.StartRTF()}{EnhancementSetCollection.GetSetInfoLongRTF(iSet)}{RTF.EndRTF()}";
             }
         }
 
