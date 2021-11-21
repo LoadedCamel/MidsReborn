@@ -2001,6 +2001,9 @@
     <None Include="Images\Powersets\StoneMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="Images\Powersets\StoneMelee_Stalker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Images\Powersets\StormSummon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
