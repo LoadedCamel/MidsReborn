@@ -134,7 +134,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading || cbAttribute.SelectedIndex < 0)
                 return;
             myFX.AttribType = (Enums.eAttribType)cbAttribute.SelectedIndex;
-            Console.WriteLine(myFX.AttribType);
+            //Console.WriteLine(myFX.AttribType);
             UpdateFXText();
         }
 
