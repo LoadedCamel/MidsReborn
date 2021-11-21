@@ -39,7 +39,7 @@ namespace Mids_Reborn
                     var setLevelMax = enhData.nIDSet > -1
                         ? DatabaseAPI.Database.EnhancementSets[enhData.nIDSet].LevelMax
                         : 49;
-                    var enhBoostLevel = 50;
+                    var enhBoostLevel = enhData.LevelMax + 1;
                     if (enhData.nIDSet > -1 & AutoAttune & setLevelMax < 49)
                     {
                         enhUid = enhData.UID.Replace("Crafted_", "Attuned_");
