@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
 
@@ -38,14 +39,14 @@ namespace mrbBase.Base.Document_Classes
         {
             if (!Document.PrinterSettings.IsValid)
             {
-                var num = (int) MessageBox.Show(Document.PrinterSettings.PrinterName + " is not a valid printer!");
+                MessageBox.Show($"{Document.PrinterSettings.PrinterName} is not a valid printer!");
                 Document = null;
             }
             else
             {
                 Document.DocumentName = string.IsNullOrEmpty(MidsContext.Character.Name)
-                    ? MidsContext.Character.Alignment + " Plan (" + MidsContext.Character.Archetype.DisplayName + ")"
-                    : MidsContext.Character.Alignment + " Plan (" + MidsContext.Character.Name + ")";
+                    ? $"{MidsContext.Character.Alignment} Plan ({MidsContext.Character.Archetype.DisplayName})"
+                    : $"{MidsContext.Character.Alignment} Plan ({MidsContext.Character.Name})";
                 Document.PrinterSettings.DefaultPageSettings.Margins.Bottom = 25;
                 Document.PrinterSettings.DefaultPageSettings.Margins.Top = 25;
                 Document.PrinterSettings.DefaultPageSettings.Margins.Left = 25;
@@ -59,8 +60,7 @@ namespace mrbBase.Base.Document_Classes
                 }
                 catch (Exception ex)
                 {
-                    var num = (int) MessageBox.Show("An error occurred while attempting to print: \n\n" + ex.Message +
-                                                    "\n\nYou should save your work, exit and then re-launch the application.");
+                    MessageBox.Show($"An error occurred while attempting to print:\n\n{ex.Message}\n\nYou should save your work, exit and then re-launch the application.");
                     Document = new PrintDocument();
                 }
             }
@@ -112,28 +112,31 @@ namespace mrbBase.Base.Document_Classes
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Near;
             var layoutRectangle = new RectangleF(bounds.Left, num1, bounds.Width, Convert.ToInt32(num2 * 1.25));
-            var num3 = MidsContext.Character.Level + 1;
-            if (num3 > 50)
-                num3 = 50;
-            string s;
-            if (!string.IsNullOrEmpty(MidsContext.Character.Name))
-                s = MidsContext.Character.Name + ": Level " + num3 + " " + MidsContext.Character.Archetype.DisplayName;
-            else
-                s = "Level " + num3 + " " + MidsContext.Character.Archetype.DisplayName;
+            var lvl49PowerTaken = MidsContext.Character.CurrentBuild.Powers != null &&
+                MidsContext.Character.CurrentBuild.Powers
+                    .Where(pe => pe.Power != null)
+                    .Where(pe => pe.Level == 48)
+                    .Count() > 0;
+            var cLevel = (MidsContext.Character.CurrentBuild.Powers != null & lvl49PowerTaken)
+                ? 50
+                : Math.Min(50, MidsContext.Character.Level + 1);
+            var s = string.IsNullOrEmpty(MidsContext.Character.Name)
+                ? $"Level {cLevel} {MidsContext.Character.Archetype.DisplayName}"
+                : $"{MidsContext.Character.Name}: Level {cLevel} {MidsContext.Character.Archetype.DisplayName}";
             args.Graphics.DrawString(s, font1, solidBrush, layoutRectangle, format);
             var num4 = num1 + 8 + num2;
             args.Graphics.DrawLine(pen, bounds.Left, num4, bounds.Left + bounds.Width, num4);
             format.Alignment = StringAlignment.Near;
             format.LineAlignment = StringAlignment.Center;
-            var int32 = Convert.ToInt32(12.8);
+            //var int32 = Convert.ToInt32(12.8); // 13
             layoutRectangle = new RectangleF(bounds.Left + 5.28f, bounds.Top, bounds.Width, num4 - bounds.Top);
-            var font2 = new Font("Arial", int32, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            var font2 = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             args.Graphics.DrawString("Page " + _pageNumber, font2, solidBrush, layoutRectangle, format);
             format.Alignment = StringAlignment.Far;
             layoutRectangle = new RectangleF(bounds.Left, bounds.Top, bounds.Width - 5.28f, num4 - bounds.Top);
-            args.Graphics.DrawString(DateTime.Now.ToShortDateString() + "\n" + DateTime.Now.ToShortTimeString(), font2,
+            args.Graphics.DrawString($"{DateTime.Now.ToShortDateString()}\n{DateTime.Now.ToShortTimeString()}", font2,
                 solidBrush, layoutRectangle, format);
-            return Convert.ToInt32(num4 + 8);
+            return num4 + 8;
         }
 
         private void PrintHistory(Rectangle bounds, PrintPageEventArgs args)
@@ -148,7 +151,7 @@ namespace mrbBase.Base.Document_Classes
             var historyMapArray =
                 MidsContext.Character.CurrentBuild.BuildHistoryMap(true, !MidsContext.Config.I9.DisablePrintIOLevels);
             var lvl = 0;
-            var s = (int) MidsContext.Character.Alignment + " CurrentBuild";
+            var s = $"{MidsContext.Character.Alignment} Build History";
             var layoutRectangle = new RectangleF(bounds.Left + 15, top, bounds.Width, 12.5f);
             var font1 = new Font("Arial", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
             args.Graphics.DrawString(s, font1, solidBrush, layoutRectangle, format);
@@ -197,45 +200,22 @@ namespace mrbBase.Base.Document_Classes
                 Alignment = StringAlignment.Near,
                 LineAlignment = StringAlignment.Near
             };
-            args.Graphics.DrawString("Primary Power Set: " + MidsContext.Character.Powersets[0].DisplayName + '\n',
+            args.Graphics.DrawString($"Primary Power Set: {MidsContext.Character.Powersets[0].DisplayName}\n",
                 font, solidBrush, new RectangleF(bounds.Left + 25, top, bounds.Width, 15f), format);
             var num1 = top + 15;
-            args.Graphics.DrawString("Secondary Power Set: " + MidsContext.Character.Powersets[1].DisplayName + '\n',
+            args.Graphics.DrawString($"Secondary Power Set: {MidsContext.Character.Powersets[1].DisplayName}\n",
                 font, solidBrush, new RectangleF(bounds.Left + 25, num1, bounds.Width, 15f), format);
             var y = num1 + 15;
-            if (MidsContext.Character.PoolTaken(3))
+            
+            for (var i = 3; i < 8; i++)
             {
-                args.Graphics.DrawString("Power Pool: " + MidsContext.Character.Powersets[3].DisplayName + '\n', font,
+                if (!MidsContext.Character.PoolTaken(i)) continue;
+                
+                args.Graphics.DrawString($"{(i < 7 ? "Power" : "Ancillary")} Pool: {MidsContext.Character.Powersets[i].DisplayName}\n", font,
                     solidBrush, new RectangleF(bounds.Left + 25, y, bounds.Width, 15f), format);
                 y += 15;
             }
-
-            if (MidsContext.Character.PoolTaken(4))
-            {
-                args.Graphics.DrawString("Power Pool: " + MidsContext.Character.Powersets[4].DisplayName + '\n', font,
-                    solidBrush, new RectangleF(bounds.Left + 25, y, bounds.Width, 15f), format);
-                y += 15;
-            }
-
-            if (MidsContext.Character.PoolTaken(5))
-            {
-                args.Graphics.DrawString("Power Pool: " + MidsContext.Character.Powersets[5].DisplayName + '\n', font,
-                    solidBrush, new RectangleF(bounds.Left + 25, y, bounds.Width, 15f), format);
-                y += 15;
-            }
-
-            if (MidsContext.Character.PoolTaken(6))
-            {
-                args.Graphics.DrawString("Power Pool: " + MidsContext.Character.Powersets[6].DisplayName + '\n', font,
-                    solidBrush, new RectangleF(bounds.Left + 25, y, bounds.Width, 15f), format);
-                y += 15;
-            }
-
-            if (!MidsContext.Character.PoolTaken(7))
-                return y;
-            args.Graphics.DrawString("Ancillary Pool: " + MidsContext.Character.Powersets[7].DisplayName + '\n', font,
-                solidBrush, new RectangleF(bounds.Left + 25, y, bounds.Width, 15f), format);
-            y += 15;
+            
             return y;
         }
 
@@ -252,7 +232,7 @@ namespace mrbBase.Base.Document_Classes
             {
                 var num = PpInfo(bounds, args) + 6;
                 var font = new Font("Arial", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
-                args.Graphics.DrawString("Extended " + MidsContext.Character.Alignment + " Profile", font, solidBrush,
+                args.Graphics.DrawString($"Extended {MidsContext.Character.Alignment} Profile", font, solidBrush,
                     new RectangleF(bounds.Left + 15, num, bounds.Width, 15f), format);
                 vPos = num + 15;
             }
