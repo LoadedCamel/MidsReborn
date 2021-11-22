@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using FastDeepCloner;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -24,6 +25,22 @@ namespace Mids_Reborn
         private IPower[] _mathPower = Array.Empty<IPower>();
         private Enums.BuffsX _selfBuffs;
         private Enums.BuffsX _selfEnhance;
+
+        private struct FxIdentifierKey
+        {
+            public Enums.eEffectType EffectType;
+            public Enums.eDamage DamageType;
+            public Enums.eMez MezType;
+            public Enums.eEffectType ETModifies;
+            public string Summon;
+        }
+
+        private struct GrantedPowerInfo
+        {
+            public IEffect GrantPowerFX;
+            public IPower TargetPower;
+            public IPower SourcePower;
+        }
 
         private void ApplyPvpDr()
         {
@@ -279,6 +296,151 @@ namespace Mids_Reborn
             var num = CurrentBuild.Powers[iPowerSlot].SlotCount - 1;
             for (var index = 0; index <= num; ++index)
                 CurrentBuild.Powers[iPowerSlot].Slots[index].Flip();
+        }
+
+        private void RemoveGrantEffectIndirect(ref IPower[] basePower, IPower targetPower, string summon)
+        {
+            var basePowerIdx = basePower.FindIndexes(bp => bp.FullName == targetPower.FullName).ToList();
+            if (basePowerIdx.Count() > 0)
+            {
+                var fxListBase = basePower[basePowerIdx[0]].Effects.ToList();
+                var gFxIdxBase = fxListBase.FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == summon).ToList();
+                if (gFxIdxBase.Count() > 0)
+                {
+                    fxListBase.Remove(fxListBase[gFxIdxBase[0]]);
+                    basePower[basePowerIdx[0]].Effects = fxListBase.ToArray();
+                }
+            }
+        }
+
+        private void ApplyGlobalEnhancements()
+        {
+            var grantedPowers = new List<GrantedPowerInfo>();
+            
+            // Fetch buffed powers that are non empty, non incarnates
+            var mainPowers = _buffedPower
+                .Where(p => p != null && p.StaticIndex >= 0 && !p.FullName.StartsWith("Incarnate"))
+                .ToList();
+
+            // Inventory and collect GrantPower effects that lead to GlobalBoost powers
+            foreach (var p in mainPowers)
+            {
+                var grantedPowersFx = p.Effects
+                    .Where(fx => fx.EffectType == Enums.eEffectType.GrantPower)
+                    .ToList();
+
+                if (grantedPowersFx.Count <= 0) continue;
+
+                foreach (var gFx in grantedPowersFx)
+                {
+                    var gPower = DatabaseAPI.GetPowerByFullName(gFx.Summon);
+                    if (gPower == null) continue;
+                    if (gPower.PowerType != Enums.ePowerType.GlobalBoost) continue;
+                    
+                    // Verify if the list doesn't have yet the target granted power
+                    // Effect definition may differ a little.
+                    var hasPower = false;
+                    foreach (var gp in grantedPowers)
+                    {
+                        if (gp.TargetPower.FullName == gPower.FullName)
+                        {
+                            hasPower = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasPower)
+                    {
+                        grantedPowers.Add(new GrantedPowerInfo
+                        {
+                            GrantPowerFX = (IEffect)gFx.Clone(),
+                            TargetPower = gPower.Clone(),
+                            SourcePower = p.Clone()
+                        });
+
+                        // Special flag to get rid of the GrantPower effect from source
+                        // Power attributes > Basic > MxD Special Flags > Ignore when setting graph scale
+                        if (gPower.SkipMax)
+                        {
+                            var fxList = p.Effects.ToList();
+                            fxList.Remove(gFx);
+                            p.Effects = fxList.ToArray();
+                            RemoveGrantEffectIndirect(ref _mathPower, p, gFx.Summon);
+                            if (MidsContext.Character.CurrentBuild.Powers != null)
+                            {
+                                var buildPowerIdx = MidsContext.Character.CurrentBuild.Powers
+                                    .Where(pe => pe.Power != null)
+                                    .FindIndexes(pe => pe.Power.FullName == p.FullName)
+                                    .ToList();
+                                if (buildPowerIdx.Count() > 0)
+                                {
+                                    var buildPower = MidsContext.Character.CurrentBuild.Powers[buildPowerIdx[0]].Power;
+                                    var gFxIdxBuild = buildPower.Effects.FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == gFx.Summon).ToList();
+                                    if (gFxIdxBuild.Count() > 0)
+                                    {
+                                        buildPower.Effects[gFxIdxBuild[0]].EffectClass = Enums.eEffectClass.Ignored;
+                                        buildPower.Effects[gFxIdxBuild[0]].Probability = 0;
+                                        buildPower.Effects[gFxIdxBuild[0]].Scale = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var gp in grantedPowers)
+            {
+                foreach (var p in mainPowers)
+                {
+                    // Check if power already has the target granted power
+                    var hasBoost = p.FullName == gp.SourcePower.FullName;
+                    if (hasBoost) continue;
+
+                    foreach (var fx in p.Effects)
+                    {
+                        if (fx.EffectType != Enums.eEffectType.GrantPower) continue;
+                        if (fx.Summon == gp.TargetPower.FullName)
+                        {
+                            hasBoost = true;
+                            break;
+                        }
+                    }
+
+                    if (hasBoost) continue;
+
+                    // Check if power is eligible to the boost effect:
+                    // Must have at least one type of effect in common
+                    var bPowerFxIdentifiers = p.Effects
+                        .Select(pfx => new FxIdentifierKey
+                        {
+                            EffectType = pfx.EffectType,
+                            DamageType = Enums.eDamage.None,
+                            MezType = pfx.MezType,
+                            ETModifies = pfx.ETModifies,
+                            Summon = pfx.Summon
+                        });
+
+                    var gPowerFxIdentifiers = gp.TargetPower.Effects
+                        .Select(pfx => new FxIdentifierKey
+                        {
+                            EffectType = pfx.EffectType,
+                            DamageType = Enums.eDamage.None,
+                            MezType = pfx.MezType,
+                            ETModifies = pfx.ETModifies,
+                            Summon = pfx.Summon
+                        });
+
+                    if (bPowerFxIdentifiers.Intersect(gPowerFxIdentifiers).Count() <= 0) continue;
+
+                    var fxList = p.Effects.ToList();
+                    foreach (var gpFx in gp.TargetPower.Effects)
+                    {
+                        fxList.Add((IEffect)gpFx.Clone());
+                    }
+                    p.Effects = fxList.ToArray();
+                }
+            }
         }
 
         private static void GBD_Stage(ref IPower tPwr, ref Enums.BuffsX nBuffs, bool enhancementPass)
@@ -1361,7 +1523,7 @@ namespace Mids_Reborn
             ++powerMath.InterruptTime;
             ++powerMath.Range;
             ++powerMath.RechargeTime;
-            for (var index = 0; index <= powerMath.Effects.Length - 1; ++index)
+            for (var index = 0; index < powerMath.Effects.Length; index++)
             {
                 ++powerMath.Effects[index].Math_Mag;
                 ++powerMath.Effects[index].Math_Duration;
@@ -1378,8 +1540,7 @@ namespace Mids_Reborn
             powerBuffed.InterruptTime /= powerMath.InterruptTime;
             powerBuffed.Range *= powerMath.Range;
             powerBuffed.RechargeTime /= powerMath.RechargeTime;
-            var num = powerMath.Effects.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < powerMath.Effects.Length; index++)
             {
                 powerBuffed.Effects[index].Math_Mag = powerBuffed.Effects[index].Mag * powerMath.Effects[index].Math_Mag;
                 powerBuffed.Effects[index].Math_Duration = powerBuffed.Effects[index].Duration * powerMath.Effects[index].Math_Duration;
@@ -1416,7 +1577,7 @@ namespace Mids_Reborn
 
         private void GenerateBuffData(ref Enums.BuffsX nBuffs, bool enhancementPass)
         {
-            for (var i = 0; i <= CurrentBuild.Powers.Count - 1; ++i)
+            for (var i = 0; i < CurrentBuild.Powers.Count; i++)
             {
                 if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1))
                     || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
@@ -1447,6 +1608,7 @@ namespace Mids_Reborn
             _mathPower = new IPower[CurrentBuild.Powers.Count];
             GBPA_Pass0_InitializePowerArray();
             GenerateModifyEffectsArray();
+            ApplyGlobalEnhancements();
             GenerateBuffData(ref _selfEnhance, true);
             for (var hIDX = 0; hIDX <= _mathPower.Length - 1; ++hIDX)
             {
