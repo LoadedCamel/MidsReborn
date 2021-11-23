@@ -124,9 +124,11 @@ namespace mrbControls
         private Font _defaultFont;
         public int Highlight;
         public Enums.eInterfaceMode InterfaceMode;
-        
+        //private bool inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
+        private bool inDesigner = AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
+
         //bool VillainColor;
-        
+
         public clsDrawX(Control iTarget)
         {
             InterfaceMode = 0;
@@ -685,7 +687,6 @@ namespace mrbControls
                 }
                 SolidBrush solidBrush;
                 //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
-                var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
                 for (var i = 0; i < iSlot.Slots.Length; i++)
                 {
                     var slot = iSlot.Slots[i];
