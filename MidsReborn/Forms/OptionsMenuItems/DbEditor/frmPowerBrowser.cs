@@ -9,7 +9,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -231,7 +230,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 BusyMsg(@"Re-Indexing && Saving...");
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
                 Array.Sort(DatabaseAPI.Database.Power);
-                var serializer = MyApplication.GetSerializer();
+                var serializer = Serializer.GetSerializer();
                 DatabaseAPI.AssignStaticIndexValues(serializer, false);
                 DatabaseAPI.MatchAllIDs();
                 DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
@@ -243,7 +242,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
                 Array.Sort(DatabaseAPI.Database.Power);
-                var serializer = MyApplication.GetSerializer();
+                var serializer = Serializer.GetSerializer();
                 DatabaseAPI.AssignStaticIndexValues(serializer, false);
                 DatabaseAPI.MatchAllIDs();
                 var iParent = this;
@@ -255,7 +254,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             BusyMsg(@"Re-Indexing && Saving...");
             foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
             Array.Sort(DatabaseAPI.Database.Power);
-            var serializer = MyApplication.GetSerializer();
+            var serializer = Serializer.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.MatchAllIDs();
 

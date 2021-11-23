@@ -6,11 +6,9 @@ using System.Linq;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
 using Mids_Reborn.Forms;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
-using mrbControls;
 
 namespace Mids_Reborn.UIv2
 {
@@ -30,7 +28,7 @@ namespace Mids_Reborn.UIv2
         public Form1()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw, true);
-            ConfigData.Initialize(MyApplication.GetSerializer());
+            ConfigData.Initialize(Serializer.GetSerializer());
             Load += Form1_Load;
             Resize += Form1_Resize;
             InitializeComponent();

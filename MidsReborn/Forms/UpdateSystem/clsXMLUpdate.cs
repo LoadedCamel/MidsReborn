@@ -1,11 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Windows.Forms;
-using System.Xml;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {

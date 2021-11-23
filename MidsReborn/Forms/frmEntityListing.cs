@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Extensions;
 
@@ -142,7 +141,7 @@ namespace Mids_Reborn.Forms
         private void btnOK_Click(object sender, EventArgs e)
         {
             DatabaseAPI.MatchSummonIDs();
-            var serializer = MyApplication.GetSerializer();
+            var serializer = Serializer.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             Hide();
         }

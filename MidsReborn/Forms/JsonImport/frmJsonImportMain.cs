@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using Newtonsoft.Json;
@@ -56,8 +55,8 @@ namespace Mids_Reborn.Forms.JsonImport
                 }
             }
 
-            DatabaseAPI.Database.AttribMods.Store(MyApplication.GetSerializer());
-            DatabaseAPI.SaveJsonDatabase(MyApplication.GetSerializer());
+            DatabaseAPI.Database.AttribMods.Store(Serializer.GetSerializer());
+            DatabaseAPI.SaveJsonDatabase(Serializer.GetSerializer());
             _ = MessageBox.Show(@"Import completed");
         }
     }

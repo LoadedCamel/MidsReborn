@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.My;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
@@ -98,7 +97,7 @@ namespace Mids_Reborn.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             DialogResult = DialogResult.OK;
             Hide();
         }
