@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -8,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Display;
 using mrbBase.Base.Extensions;
@@ -205,7 +202,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             I9Gfx.LoadEnhancements();
             foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
             Array.Sort(DatabaseAPI.Database.Power);
-            var serializer = MyApplication.GetSerializer();
+            var serializer = Serializer.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.AssignRecipeIDs();
             DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.DataPath);

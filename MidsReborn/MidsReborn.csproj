@@ -388,6 +388,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Serializer.cs" />
     <Compile Include="UIv2\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1629,9 +1630,9 @@
     <None Include="Images\Powersets\EarthControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="Images\Powersets\EarthManipulation.png">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Include="Images\Powersets\EarthManipulation.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Images\Powersets\ElecBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1956,9 +1957,9 @@
     <None Include="Images\Powersets\SavageMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="Images\Powersets\SeismicBlast.png">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Include="Images\Powersets\SeismicBlast.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Images\Powersets\ShieldDef.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1989,19 +1990,19 @@
     <None Include="Images\Powersets\StoneArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="Images\Powersets\StoneArmor_Scrapper.png">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Include="Images\Powersets\StoneArmor_Stalker.png">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Include="Images\Powersets\StoneArmor_Scrapper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Powersets\StoneArmor_Stalker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Images\Powersets\StoneMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Images\Powersets\StoneMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="Images\Powersets\StoneMelee_Stalker.png">
+    <None Include="Images\Powersets\StoneMelee_Stalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Images\Powersets\StormSummon.png">
@@ -2487,8 +2488,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainModule.cs" />
-    <Compile Include="My\MyApplication.cs" />
-    <Compile Include="My\Resources\Resources.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

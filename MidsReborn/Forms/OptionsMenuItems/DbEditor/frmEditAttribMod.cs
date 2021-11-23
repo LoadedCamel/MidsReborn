@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbControls;
@@ -112,14 +111,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             TempAttribMods.Revision = Convert.ToInt32(lblRevision.Text);
             TempAttribMods.RevisionDate = Convert.ToDateTime(lblRevisionDate.Text);
             Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
-            //Database.Instance.AttribMods.Store(MyApplication.GetSerializer());
+            //Database.Instance.AttribMods.Store(Serializer.GetSerializer());
             //DatabaseAPI.UpdateModifiersDict(Database.Instance.AttribMods.Modifier);
 
             // This one barely shows up.
             // May only be needed if one has Mids on a ZIP drive!
             BusyMsg("Saving newly imported Attribute Modifiers...");
             Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
-            DatabaseAPI.Database.AttribMods?.Store(MyApplication.GetSerializer());
+            DatabaseAPI.Database.AttribMods?.Store(Serializer.GetSerializer());
             BusyHide();
             //MessageBox.Show($@"Attribute Modifiers have been saved.", @"Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;

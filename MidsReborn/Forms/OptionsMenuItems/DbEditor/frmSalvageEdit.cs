@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Extensions;
 
@@ -133,7 +132,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.SaveSalvage(MyApplication.GetSerializer());
+            DatabaseAPI.SaveSalvage(Serializer.GetSerializer());
             Close();
         }
 

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.WindowMenuItems;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Extensions;
 
@@ -318,7 +317,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.Enhancements = (IEnhancement[]) _tempEnhancements.Clone();
             DatabaseAPI.AssignRecipeSalvageIDs();
             DatabaseAPI.AssignRecipeIDs();
-            var serializer = MyApplication.GetSerializer();
+            var serializer = Serializer.GetSerializer();
             DatabaseAPI.SaveRecipes(serializer);
             DatabaseAPI.SaveEnhancementDb(serializer);
             Close();

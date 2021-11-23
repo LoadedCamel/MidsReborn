@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Mids_Reborn.Forms.JsonImport;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
 using Newtonsoft.Json;
@@ -226,7 +225,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnExportJSON_Click(object sender, EventArgs e)
         {
-            ISerialize serializer = MyApplication.GetSerializer();
+            ISerialize serializer = Serializer.GetSerializer();
             using frmProgress prg = new frmProgress {WindowTitle = "DB Export progress", OperationText = "", Value = 0};
             prg.Show(this);
             DatabaseAPI.SaveJsonDatabaseProgress(serializer, prg.Handle, this);

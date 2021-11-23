@@ -8,7 +8,6 @@ using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {

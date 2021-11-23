@@ -19,7 +19,6 @@ using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -56,21 +55,21 @@ namespace Mids_Reborn.Forms
                     var fInfo = new FileInfo(Files.GetConfigFilename(false));
                     if (fInfo.Length > 0)
                     {
-                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        ConfigData.Initialize(Serializer.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
-                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                         }
                     }
                     else
                     {
                         var tempConfig = new ConfigData();
-                        tempConfig.Save(MyApplication.GetSerializer(), Files.GetConfigFilename(false));
-                        tempConfig.SaveConfig(MyApplication.GetSerializer());
-                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        tempConfig.Save(Serializer.GetSerializer(), Files.GetConfigFilename(false));
+                        tempConfig.SaveConfig(Serializer.GetSerializer());
+                        ConfigData.Initialize(Serializer.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
-                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                         }
                     }
                 }
@@ -2052,10 +2051,10 @@ namespace Mids_Reborn.Forms
         private void frmMain_Closed(object sender, EventArgs e)
         {
             MidsContext.Config.LastSize = Size;
-            MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             if (MidsContext.Config.DiscordEnabled is true)
             {
-                MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
+                MidsContext.ConfigSp.SaveConfig(Serializer.GetSerializer());
             }
         }
 
@@ -5430,7 +5429,7 @@ namespace Mids_Reborn.Forms
             var frmCalcOpt = new frmCalcOpt(ref iParent);
             if (frmCalcOpt.ShowDialog(this) == DialogResult.OK)
             {
-                var serializer = MyApplication.GetSerializer();
+                var serializer = Serializer.GetSerializer();
                 MidsContext.Config.SaveConfig(serializer);
                 UpdateControls();
                 UpdateOtherFormsFonts();
@@ -6279,7 +6278,7 @@ namespace Mids_Reborn.Forms
                 tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
                 if (MidsContext.Config.DiscordEnabled is true)
                 {
-                    ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                    ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                     if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
                     {
                         MidsContext.ConfigSp.IsInitialized = true;
