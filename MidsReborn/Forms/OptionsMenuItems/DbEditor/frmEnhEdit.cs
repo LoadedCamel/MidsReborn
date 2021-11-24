@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Display;
 using mrbBase.Base.Extensions;
@@ -61,8 +60,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements,
-                new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
+            var enhancementArray = Array.Empty<IEnhancement>();
+            Array.Copy(database.Enhancements, enhancementArray, DatabaseAPI.Database.Enhancements.Length + 1);
+            //var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements, new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
             database.Enhancements = enhancementArray;
             var newEnhancement = new Enhancement(frmEnhData.myEnh) { IsNew = true };
             DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] = newEnhancement;
@@ -95,8 +95,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements,
-                new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
+            var enhancementArray = Array.Empty<IEnhancement>();
+            Array.Copy(database.Enhancements, enhancementArray, DatabaseAPI.Database.Enhancements.Length + 1);
+            //var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements, new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
             database.Enhancements = enhancementArray;
             DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] =
                 new Enhancement(frmEnhData.myEnh) { IsNew = true, StaticIndex = -1 };

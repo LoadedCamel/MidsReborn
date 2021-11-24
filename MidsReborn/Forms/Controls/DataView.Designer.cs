@@ -759,7 +759,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #endregion
 
-        private ToolTip dbTip;
+        public ToolTip dbTip;
         private GFXLabel Enh_Title;
         private PairedList enhListing;
         private GFXLabel enhNameDisp;

@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private string TwoDP(float iValue)
         {
-            return Strings.Format(iValue, "###,##0.00");
+            return $@"{Convert.ToDecimal(iValue):###,###.##}";  //Strings.Format(iValue, "###,##0.00");
         }
 
         public void UpdateData(int powerID)

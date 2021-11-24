@@ -6,8 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -380,16 +378,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void PopInfo_MouseWheel(object sender, MouseEventArgs e)
         {
-            var ConVal = Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
-            if (ConVal != -1)
-            {
-                VScrollBar1.Value =
-                    Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
-                if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
-                    VScrollBar1.Value = VScrollBar1.Maximum - 9;
-                VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
-                    new ScrollEventArgs(ScrollEventType.EndScroll, 0));
-            }
+            // var ConVal = Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
+            // if (ConVal != -1)
+            // {
+            //     VScrollBar1.Value =
+            //         Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
+            //     if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
+            //         VScrollBar1.Value = VScrollBar1.Maximum - 9;
+            //     VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
+            //         new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            // }
         }
 
         private static void UpdateLlColours(ref ListLabelV3 iList)

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
 
@@ -46,9 +45,9 @@ namespace Mids_Reborn.Forms
             {
                 if ((txtAddOvr.Text != txtAddActual.Text) & (txtAddOvr.Text != ""))
                 {
-                    MidsContext.Config.CompOverride = (Enums.CompOverride[]) Utils.CopyArray(
-                        MidsContext.Config.CompOverride,
-                        new Enums.CompOverride[MidsContext.Config.CompOverride.Length + 1]);
+                    var configCompOverride = MidsContext.Config.CompOverride;
+                    Array.Resize(ref configCompOverride, MidsContext.Config.CompOverride.Length + 1);
+                    //MidsContext.Config.CompOverride = (Enums.CompOverride[]) Utils.CopyArray(MidsContext.Config.CompOverride, new Enums.CompOverride[MidsContext.Config.CompOverride.Length + 1]);
                     var compOverride = MidsContext.Config.CompOverride;
                     var index = MidsContext.Config.CompOverride.Length - 1;
                     compOverride[index].Power = Convert.ToString(cbPower.SelectedItem);

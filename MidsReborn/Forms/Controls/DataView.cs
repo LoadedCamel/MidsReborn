@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -8,8 +9,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using FastDeepCloner;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -3235,7 +3234,7 @@ namespace Mids_Reborn.Forms.Controls
             string str1;
             if (Tag2.Present)
             {
-                var numArray = new int[0];
+                var numArray = Array.Empty<int>();
                 var empty2 = string.Empty;
                 IPower power = new Power(pEnh);
                 var num1 = Tag2.Index.Length - 1;
@@ -3245,7 +3244,7 @@ namespace Mids_Reborn.Forms.Controls
                         power.Effects[Tag2.Index[index1]].EffectType == Enums.eEffectType.None)
                         continue;
                     var empty3 = string.Empty;
-                    var returnMask = new int[0];
+                    var returnMask = Array.Empty<int>();
                     power.GetEffectStringGrouped(Tag2.Index[index1], ref empty3, ref returnMask, false, false);
                     if (returnMask.Length <= 0)
                         continue;
@@ -3278,19 +3277,22 @@ namespace Mids_Reborn.Forms.Controls
                 str1 = tooltip;
             }
 
-            object[] Arguments = { str1 };
-            bool[] CopyBack = { true };
+            Debug.WriteLine(str1);
+            // object[] Arguments = { str1 };
+            // bool[] CopyBack = { true };
+
+            dbTip.SetToolTip((Control)Sender, str1);
+            //NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
 
 
-            NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
 
-            if (!CopyBack[0])
-            {
-            }
-            else
-            {
-                var str2 = (string)Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
-            }
+            // if (!CopyBack[0])
+            // {
+            // }
+            // else
+            // {
+            //     var str2 = (string)Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
+            // }
         }
 
 
@@ -3748,12 +3750,11 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
                         iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) &
-                        (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
-                        str2 = str2 + RTF.Color(RTF.ElementID.Enhancement) +
-                               Strings.Format(
-                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
-                               "% chance of ";
+                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
+                    {
+
+                        str2 = $"{str2}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):##.##)} % chance of ";
+                    }
                 }
                 else
                 {
@@ -3807,12 +3808,10 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
                         iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) &
-                        (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
-                        str1 = str1 + RTF.Color(RTF.ElementID.Enhancement) +
-                               Strings.Format(
-                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
-                               "% chance of ";
+                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
+                    {
+                        str1 = $"{str1}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):##.##)} % chance of ";
+                    }
                 }
                 else
                 {
@@ -4116,6 +4115,5 @@ namespace Mids_Reborn.Forms.Controls
             var moved = Moved;
             moved?.Invoke();
         }
-
     }
 }

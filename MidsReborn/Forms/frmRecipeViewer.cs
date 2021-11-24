@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -151,7 +150,7 @@ namespace Mids_Reborn.Forms
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
-            var tl = new CountingList[0];
+            var tl = Array.Empty<CountingList>();
             if (lvDPA.SelectedIndices.Count < 1)
             {
                 ChangeVScrollBarState(popupData);
@@ -853,7 +852,7 @@ namespace Mids_Reborn.Forms
         {
             if (e.Item.Index == 0)
             {
-                if (Operators.ConditionalCompareObjectLess(e.Item.Tag, 0, false) && e.Item.Checked)
+                if (!e.Item.Tag.Equals(0) && e.Item.Checked)
                 {
                     foreach (var o in lvPower.Items)
                     {
@@ -899,7 +898,8 @@ namespace Mids_Reborn.Forms
                 return;
             }
 
-            tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
+            Array.Resize(ref tl, tl.Length + 1);
+            //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
             tl[tl.Length - 1].Count = 1;
             tl[tl.Length - 1].Text = item;
         }

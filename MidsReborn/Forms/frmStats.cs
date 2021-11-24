@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -329,8 +327,8 @@ namespace Mids_Reborn.Forms
                                 .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
                                 .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
                                 continue;
-                            BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
-                            EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
+                            Array.Resize(ref BaseArray, BaseArray.Length + 1);
+                            Array.Resize(ref EnhArray, EnhArray.Length + 1);
                             var index = BaseArray.Length - 1;
                             BaseArray[index] = new Power(DatabaseAPI.Database
                                 .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
@@ -350,7 +348,8 @@ namespace Mids_Reborn.Forms
                             .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
                             .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
                             continue;
-                        BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
+                        Array.Resize(ref BaseArray, BaseArray.Length + 1);
+                        //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
                         BaseArray[BaseArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
                     }
 
@@ -364,7 +363,8 @@ namespace Mids_Reborn.Forms
                             .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
                             .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
                             continue;
-                        EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
+                        Array.Resize(ref EnhArray, EnhArray.Length + 1);
+                        //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
                         EnhArray[EnhArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
                     }
 
@@ -403,7 +403,8 @@ namespace Mids_Reborn.Forms
                     if (!((iType == Enums.ePowerType.Auto_) |
                           (MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType)))
                         continue;
-                    BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
+                    Array.Resize(ref BaseArray, BaseArray.Length + 1);
+                    //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
                     var index = BaseArray.Length - 1;
                     BaseArray[index] =
                         MainModule.MidsController.Toon.GetEnhancedPower(GrabPlaced(
@@ -422,7 +423,8 @@ namespace Mids_Reborn.Forms
                     if (!((iType == Enums.ePowerType.Auto_) |
                           (MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType)))
                         continue;
-                    EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
+                    Array.Resize(ref EnhArray, EnhArray.Length + 1);
+                    //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
                     var index = EnhArray.Length - 1;
                     EnhArray[index] =
                         MainModule.MidsController.Toon.GetEnhancedPower(GrabPlaced(
@@ -444,8 +446,10 @@ namespace Mids_Reborn.Forms
                     if (!((iType == Enums.ePowerType.Auto_) |
                           (MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType)))
                         continue;
-                    BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
-                    EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
+                    Array.Resize(ref BaseArray, BaseArray.Length + 1);
+                    Array.Resize(ref EnhArray, EnhArray.Length + 1);
+                    //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
+                    //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
                     var index = BaseArray.Length - 1;
                     BaseArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
                     EnhArray[index] =
@@ -505,21 +509,27 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num4 = nBase;
-                    nBase = nEnh;
-                    nEnh = num4;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
-                var iTip = Graph.Style != Enums.GraphStyle.baseOnly
-                    ? displayName + ": " + Strings.Format(nEnh, "##0.#") + "%"
-                    : displayName + ": " + Strings.Format(nBase, "##0.#") + "%";
+                string iTip;
+                if (Graph.Style != Enums.GraphStyle.baseOnly)
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nEnh):##0.#)}%";
+                }
+                else
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.#)}%";
+                }
+
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.#") + "%)";
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.#)}%)";
+                }
+
                 if (BaseOverride)
                 {
-                    var num4 = nBase;
-                    nBase = nEnh;
-                    nEnh = num4;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -547,9 +557,7 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
@@ -565,15 +573,16 @@ namespace Mids_Reborn.Forms
                 }
 
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)}%)";
+                }
+
                 if (BaseArray[index].PowerType == Enums.ePowerType.Toggle)
                     iTip = iTip + "\r\n(Applied every " +
                            Convert.ToString(BaseArray[index].ActivatePeriod, CultureInfo.InvariantCulture) + "s)";
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -602,9 +611,7 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
@@ -621,12 +628,13 @@ namespace Mids_Reborn.Forms
 
                 var iTip = str + "/s";
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                }
+
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -673,28 +681,26 @@ namespace Mids_Reborn.Forms
 
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 string iTip;
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
                 {
-                    iTip = str + "\r\nDamage per unit of End: " + Strings.Format(nBase, "##0.##");
+                    iTip = $"{str}\r\nDamage per unit of End: {Convert.ToDecimal(nBase):##0.##}";
                 }
                 else
                 {
-                    iTip = str + "\r\nDamage per unit of End: " + Strings.Format(nEnh, "##0.##");
+                    iTip = $"{str}\r\nDamage per unit of End: {Convert.ToDecimal(nEnh):##0.##}";
                     if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                        iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                    {
+                        iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                    }
                 }
 
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -723,9 +729,7 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
@@ -742,12 +746,13 @@ namespace Mids_Reborn.Forms
 
                 var iTip = str + "/s";
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                }
+
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -782,24 +787,28 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 string str2;
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
-                    str2 = displayName + " (" + str1 + "): " + Strings.Format(nBase, "##0.#");
+                {
+                    str2 = $"{displayName} ({str1}): {Convert.ToDecimal(nBase):##0.#)}";
+                }
                 else
-                    str2 = displayName + " (" + str1 + "): " + Strings.Format(nEnh, "##0.#");
+                {
+                    str2 = $"{displayName} ({str1}): {Convert.ToDecimal(nEnh):##0.#)}";
+                }
+
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    str2 = str2 + " (" + Strings.Format(nBase, "##0.#") + ")";
+                {
+                    str2 = $"{str2} ({Convert.ToDecimal(nBase):##0.#)})";
+                }
+
                 var iTip = str2 + "s";
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -825,23 +834,29 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
-                var iTip = Graph.Style != Enums.GraphStyle.baseOnly
-                    ? displayName + ": " + Strings.Format(nEnh, "##0.##")
-                    : displayName + ": " + Strings.Format(nBase, "##0.##");
+                string iTip;
+                if (Graph.Style != Enums.GraphStyle.baseOnly)
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nEnh):##0.##)}";
+                }
+                else
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.##)}";
+                }
+
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                }
+
                 if (BaseArray[index].PowerType == Enums.ePowerType.Toggle)
                     iTip += "\r\n(Per Second)";
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -890,21 +905,27 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
-                var iTip = (Graph.Style != Enums.GraphStyle.baseOnly
-                    ? displayName + ": " + Strings.Format(nEnh, "##0.##")
-                    : displayName + ": " + Strings.Format(nBase, "##0.##")) + "/s";
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+
+                string iTip;
+                if (Graph.Style != Enums.GraphStyle.baseOnly)
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nEnh):##0.##)}";
+                }
+                else
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.##)}/s";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                }
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -930,28 +951,32 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 var num4 = (float) (nBase / (double) MidsContext.Archetype.Hitpoints * 100.0);
                 var num5 = (float) (nEnh / (double) MidsContext.Archetype.Hitpoints * 100.0);
+
+
+
                 string iTip;
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
-                    iTip = displayName + ": " + Strings.Format(num4, "##0.#") + "%";
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(num4):##0.#)}%";
+                }
                 else
-                    iTip = displayName + "\r\n  Enhanced: " + Strings.Format(num5, "##0.#") + "% (" +
-                           Strings.Format(nEnh, "##0.#") + " HP)";
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + "\r\n  Base: " + Strings.Format(num4, "##0.#") + "% (" +
-                           Strings.Format(nBase, "##0.#") + " HP)";
+                {
+                    iTip = $"{displayName}\r\n Enhanced: {Convert.ToDecimal(num5):##0.#)}% ({Convert.ToDecimal(nEnh):##0.#} HP)";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    iTip = $"{iTip}\r\n Base: {Convert.ToDecimal(num4):##0.#)}% ({Convert.ToDecimal(nBase):##0.#} HP)";
+                }
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
-                    iTip = iTip.Replace("Enhanced", "Acive").Replace("Base", "Alternate");
+                    (nBase, nEnh) = (nEnh, nBase);
+                    iTip = iTip.Replace("Enhanced", "Active").Replace("Base", "Alternate");
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -983,28 +1008,29 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 var num4 = (float) (nBase / (double) MidsContext.Archetype.Hitpoints * 100.0);
                 var num5 = (float) (nEnh / (double) MidsContext.Archetype.Hitpoints * 100.0);
                 string iTip;
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
-                    iTip = displayName + ": " + Strings.Format(nBase, "##0.##") + "%";
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.##)}%";
+                }
                 else
-                    iTip = displayName + "\r\n  Enhanced Heal per unit of End: " + Strings.Format(num5, "##0.##") +
-                           "% (" +
-                           Strings.Format(nEnh, "##0.##") + " HP)";
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + "\r\n  Base Heal per unit of End: " + Strings.Format(num4, "##0.##") + "% (" +
-                           Strings.Format(nBase, "##0.##") + " HP)";
+                {
+                    iTip = $"{displayName}\r\n Enhanced Heal per unit of End: {Convert.ToDecimal(num5):##0.##)}% ({Convert.ToDecimal(nEnh):##0.##} HP)";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    iTip = $"{iTip}\r\n Base Heal per unit of End: {Convert.ToDecimal(num4):##0.##)}% ({Convert.ToDecimal(nBase):##0.##} HP)";
+                }
+
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                     iTip = iTip.Replace("Enhanced", "Acive").Replace("Base", "Alternate");
                 }
 
@@ -1052,29 +1078,30 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 var num4 = (float) (nBase / (double) MidsContext.Archetype.Hitpoints * 100.0);
                 var num5 = (float) (nEnh / (double) MidsContext.Archetype.Hitpoints * 100.0);
                 string iTip;
+
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
-                    iTip = displayName + ": " + Strings.Format(num4, "##0.##") + "%";
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(num4):##0.##)}%";
+                }
                 else
-                    iTip = displayName + "\r\n  Enhanced: " + Strings.Format(num5, "##0.##") + "%/s (" +
-                           Strings.Format(nEnh, "##0.##") +
-                           " HP)";
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + "\r\n  Base: " + Strings.Format(num4, "##0.##") + "%/s (" +
-                           Strings.Format(nBase, "##0.##") + " HP)";
+                {
+                    iTip = $"{displayName}\r\n Enhanced: {Convert.ToDecimal(num5):##0.##)}%/s ({Convert.ToDecimal(nEnh):##0.##} HP)";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    iTip = $"{iTip}\r\n Base: {Convert.ToDecimal(num4):##0.#)}%/s ({Convert.ToDecimal(nBase):##0.##} HP)";
+                }
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
-                    iTip = iTip.Replace("Enhanced", "Acive").Replace("Base", "Alternate");
+                    (nBase, nEnh) = (nEnh, nBase);
+                    iTip = iTip.Replace("Enhanced", "Active").Replace("Base", "Alternate");
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -1111,22 +1138,29 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
-                var str = Graph.Style != Enums.GraphStyle.baseOnly
-                    ? displayName + ": " + Strings.Format(nEnh, "##0.#")
-                    : displayName + ": " + Strings.Format(nBase, "##0.#");
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    str = str + " (" + Strings.Format(nBase, "##0.#") + ")";
+                string str;
+
+
+                if (Graph.Style != Enums.GraphStyle.baseOnly)
+                {
+                    str = $"{displayName}: {Convert.ToDecimal(nEnh):##0.#)}";
+                }
+                else
+                {
+                    str = $"{displayName}: {Convert.ToDecimal(nBase):##0.#)}";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    str = $"{str} ({Convert.ToDecimal(nBase):##0.#)})";
+                }
                 var iTip = str + "ft";
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -1152,21 +1186,26 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
-                var iTip = (Graph.Style != Enums.GraphStyle.baseOnly
-                    ? displayName + ": " + Strings.Format(nEnh, "##0.##")
-                    : displayName + ": " + Strings.Format(nBase, "##0.##")) + "s";
-                if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
-                    iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
+                string iTip;
+                if (Graph.Style != Enums.GraphStyle.baseOnly)
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nEnh):##0.##)}";
+                }
+                else
+                {
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.##)}s";
+                }
+
+                if (Math.Abs(nBase - (double)nEnh) > float.Epsilon)
+                {
+                    iTip = $"{iTip} ({Convert.ToDecimal(nBase):##0.##)})";
+                }
                 if (BaseOverride)
                 {
-                    var num3 = nBase;
-                    nBase = nEnh;
-                    nEnh = num3;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);
@@ -1197,48 +1236,29 @@ namespace Mids_Reborn.Forms
                     num1 = nBase;
                 if (BaseOverride)
                 {
-                    var num8 = nBase;
-                    nBase = nEnh;
-                    nEnh = num8;
-                    var num9 = num4;
-                    num4 = num6;
-                    num6 = num9;
-                    var num10 = num5;
-                    num5 = num7;
-                    num7 = num10;
+                    (nBase, nEnh) = (nEnh, nBase);
+                    (num4, num6) = (num6, num4);
+                    (num5, num7) = (num7, num5);
                 }
 
                 string iTip;
                 if (Graph.Style == Enums.GraphStyle.baseOnly)
                 {
-                    var str = displayName + ": " + Strings.Format(nBase, "##0.#") + "%";
-                    iTip = " Health regenerated per second: " + Strings.Format(num5, "##0.##") +
-                           "%\r\n HitPoints regenerated per second at level 50: " + Strings.Format(num4, "##0.##") +
-                           " HP";
+                    var str = $"{displayName}: {Convert.ToDecimal(nBase):##0.#)}%";
+                    iTip = $"Health regenerated per second: {Convert.ToDecimal(num5):##0.##)}%\r\n Hitpoints regenerated per second at level 50: {Convert.ToDecimal(num4):##0.#)} HP";
                 }
                 else if (Math.Abs(nBase - (double) nEnh) < float.Epsilon)
                 {
-                    iTip = displayName + ": " + Strings.Format(nBase, "##0.#") +
-                           "%\r\n Health regenerated per second: " +
-                           Strings.Format(num5, "##0.##") + "%\r\n HitPoints regenerated per second at level 50: " +
-                           Strings.Format(num4, "##0.##") + " HP";
+                    iTip = $"{displayName}: {Convert.ToDecimal(nBase):##0.#)}%\r\n Health regenerated per second: {Convert.ToDecimal(num5):##0.##)}%\r\n Hitpoints regenerated per second at level 50: {Convert.ToDecimal(num4):##0.#)} HP";
                 }
                 else
                 {
-                    iTip = displayName + ": " + Strings.Format(nEnh, "##0.#") + "% (" + Strings.Format(nBase, "##0.#") +
-                           "%)" +
-                           "\r\n Health regenerated per second: " + Strings.Format(num7, "##0.##") + "% (" +
-                           Strings.Format(num5, "##0.##") +
-                           ")" + "\r\n HitPoints regenerated per second at level 50: " +
-                           Strings.Format(num6, "##0.##") + " HP (" +
-                           Strings.Format(num4, "##0.##") + ")";
+                    iTip = $"{displayName}: {Convert.ToDecimal(nEnh):##0.#)}% ({Convert.ToDecimal(nBase):##0.#}%)\r\n Health regenerated per second: {Convert.ToDecimal(num7):##0.##)}% ({Convert.ToDecimal(num5):##0.##)})\r\n Hitpoints regenerated per second at level 50: {Convert.ToDecimal(num6):##0.#)} HP ({Convert.ToDecimal(num4):##0.##)})";
                 }
 
                 if (BaseOverride)
                 {
-                    var num8 = nBase;
-                    nBase = nEnh;
-                    nEnh = num8;
+                    (nBase, nEnh) = (nEnh, nBase);
                 }
 
                 Graph.AddItem(BaseArray[index].DisplayName, nBase, nEnh, iTip);

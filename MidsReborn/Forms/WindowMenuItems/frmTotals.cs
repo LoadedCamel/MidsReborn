@@ -205,12 +205,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
-        string PM(float iValue, string iFormat, string iSuff)
+        /*string PM(float iValue, string iFormat, string iSuff)
         {
-            return (double) iValue >= 0.0
-                ? ((double) iValue <= 0.0 ? "+0" + iSuff : "+" + Strings.Format(iValue, iFormat) + iSuff)
-                : Strings.Format(iValue, iFormat) + iSuff;
-        }
+            if (iValue >= 0.0)
+            {
+                if (iValue <= 0.0)
+                    return "+0" + iSuff;
+                else
+                    return "+" + Strings.Format(iValue, iFormat) + iSuff;
+            }
+            else
+                return Strings.Format(iValue, iFormat) + iSuff;
+        }*/
 
         void RbSpeedCheckedChanged(object sender, EventArgs e)
         {
@@ -224,7 +230,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.FeetPerSecond;
             else if (rbMSec.Checked)
                 MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.MetersPerSecond;
-            UpdateData();
+            //UpdateData();
         }
 
         static void SetFontDataSingle(ref ctlMultiGraph iGraph)
@@ -436,7 +442,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
-        public void UpdateData()
+        /*public void UpdateData()
         {
             string[] names1 = Enum.GetNames(Enums.eDamage.None.GetType());
             pbClose.Refresh();
@@ -586,16 +592,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? jmpTip2 + " m."
                 : jmpTip2 + " ft.";
 
-            void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) =>
-                graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp,
-                    dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
+            void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) => graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp, dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
 
             AddGrphMovement("Run:|", displayStats.MovementRunSpeed, iTip8);
             AddGrphMovement("Jump:|", displayStats.MovementJumpSpeed, jumpTip);
             //this.graphMovement.AddItem("Run:|" + Strings.Format(displayStats.MovementRunSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
             //this.graphMovement.AddItem("Jump:|" + Strings.Format(displayStats.MovementJumpSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
-            graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp,
-                displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+            graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                 displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
             //this.graphMovement.AddItem("Fly:|" + Strings.Format(displayStats.MovementFlySpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
 
@@ -605,8 +608,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
             graphToHit.Clear();
-            graphToHit.AddItem("ToHit:|" + PM(displayStats.BuffToHit, "##0.##", "%"), displayStats.BuffToHit, 0.0f,
-                "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
+            graphToHit.AddItem("ToHit:|" + PM(displayStats.BuffToHit, "##0.##", "%"), displayStats.BuffToHit, 0.0f, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100f;
             graphToHit.Draw();
             graphAcc.Clear();
@@ -760,6 +762,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             graphSDeb.Max = graphSDeb.GetMaxValue() + 1f;
             graphSDeb.Draw();
-        }
+        }*/
     }
 }

@@ -7,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -100,7 +98,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udMaxLevel_Leave(object sender, EventArgs e)
         {
-            SetMaxLevel((int) Math.Round(Conversion.Val(udMaxLevel.Text)));
+            SetMaxLevel((int) Math.Round(Convert.ToDecimal(udMaxLevel.Text)));
             mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
         }
 
@@ -114,7 +112,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udMinLevel_Leave(object sender, EventArgs e)
         {
-            SetMinLevel((int) Math.Round(Conversion.Val(udMinLevel.Text)));
+            SetMinLevel((int) Math.Round(Convert.ToDecimal(udMinLevel.Text)));
             mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
         }
 
@@ -228,8 +226,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvBonusList.SelectedIndices.Count < 1)
                 return;
-            var index = (int) Math.Round(
-                Conversion.Val(RuntimeHelpers.GetObjectValue(lvBonusList.SelectedItems[0].Tag)));
+            var index = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvBonusList.SelectedItems[0].Tag)));
             if (index < 0)
             {
                 MessageBox.Show(@"Tag was less than 0!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -238,26 +235,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 if (isBonus())
                 {
-                    mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name,
-                        new string[mySet.Bonus[BonusID()].Name.Length + 1]);
-                    mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index,
-                        new int[mySet.Bonus[BonusID()].Index.Length + 1]);
-                    mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] =
-                        DatabaseAPI.Database.Power[index].FullName;
+                    // mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
+                    // mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
+                    var bonus = mySet.Bonus;
+                    var bonusArName = Array.Empty<string>();
+                    var bonusArIndex = Array.Empty<int>();
+                    Array.Copy(bonus[BonusID()].Name, bonusArName, bonus[BonusID()].Name.Length + 1);
+                    Array.Copy(bonus[BonusID()].Index, bonusArIndex, bonus[BonusID()].Index.Length + 1);
+                    bonus[BonusID()].Name = bonusArName;
+                    bonus[BonusID()].Index = bonusArIndex;
+                    mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
                     mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex + 2;
                 }
                 else if (isSpecial())
                 {
+                    // mySet.SpecialBonus[SpecialID()].Special = SpecialID();
+                    // mySet.SpecialBonus[SpecialID()].Name = (string[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
+                    // mySet.SpecialBonus[SpecialID()].Index = (int[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
+                    var spBonus = mySet.SpecialBonus;
+                    var spBonusArName = Array.Empty<string>();
+                    var spBonusArIndex = Array.Empty<int>();
                     mySet.SpecialBonus[SpecialID()].Special = SpecialID();
-                    mySet.SpecialBonus[SpecialID()].Name = (string[]) Utils.CopyArray(
-                        mySet.SpecialBonus[SpecialID()].Name,
-                        new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
-                    mySet.SpecialBonus[SpecialID()].Index = (int[]) Utils.CopyArray(
-                        mySet.SpecialBonus[SpecialID()].Index,
-                        new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
-                    mySet.SpecialBonus[SpecialID()].Name[mySet.SpecialBonus[SpecialID()].Name.Length - 1] =
-                        DatabaseAPI.Database.Power[index].FullName;
+                    Array.Copy(spBonus[SpecialID()].Name, spBonusArName, spBonus[SpecialID()].Name.Length + 1);
+                    Array.Copy(spBonus[SpecialID()].Index, spBonusArIndex, spBonus[SpecialID()].Index.Length + 1);
+                    spBonus[SpecialID()].Name = spBonusArName;
+                    spBonus[SpecialID()].Index = spBonusArIndex;
+                    mySet.SpecialBonus[SpecialID()].Name[mySet.SpecialBonus[SpecialID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.SpecialBonus[SpecialID()].Index[mySet.SpecialBonus[SpecialID()].Index.Length - 1] = index;
                 }
 

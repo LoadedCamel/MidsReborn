@@ -3,8 +3,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
@@ -145,9 +143,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var text = DatabaseAPI.Database
                         .Power[MidsContext.Character.CurrentBuild.Powers[powerLocation].NIDPower].DisplayName;
                     if (chkSortByLevel.Checked)
-                        text =
-                            Strings.Format(MidsContext.Character.CurrentBuild.Powers[powerLocation].Level + 1, "00") +
-                            " - " + text;
+                    {
+                        text = $"{MidsContext.Character.CurrentBuild.Powers[powerLocation].Level + 100} - {text}";
+                        //text = Strings.Format(MidsContext.Character.CurrentBuild.Powers[powerLocation].Level + 1, "00") + " - " + text;
+                    }
+
                     var damageData = GetDamageData(powerLocation);
                     lvPower.Items.Add(text).SubItems.AddRange(damageData);
                     GlobalDamageBuff += float.Parse(damageData[5]) *
@@ -267,12 +267,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (e.Item.Index == 0)
             {
-                if (Operators.ConditionalCompareObjectLess(e.Item.Tag, 0, false) && e.Item.Checked)
-                {
-                    var num = lvPower.Items.Count - 1;
-                    for (var index = 1; index <= num; ++index)
-                        lvPower.Items[index].Checked = false;
-                }
+                // if (Operators.ConditionalCompareObjectLess(e.Item.Tag, 0, false) && e.Item.Checked)
+                // {
+                //     var num = lvPower.Items.Count - 1;
+                //     for (var index = 1; index <= num; ++index)
+                //         lvPower.Items[index].Checked = false;
+                // }
             }
             else if (e.Item.Checked)
             {
@@ -332,7 +332,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return;
             }
 
-            tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
+            Array.Resize(ref tl, tl.Length+1);
+            //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
             tl[tl.Length - 1].Count = 1;
             tl[tl.Length - 1].Text = item;
         }

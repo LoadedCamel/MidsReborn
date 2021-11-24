@@ -28,7 +28,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace Mids_Reborn.Forms
 {
-    public partial class frmMain : Form
+    public sealed partial class frmMain : Form
     {
         private frmInitializing _frmInitializing;
 
@@ -45,6 +45,8 @@ namespace Mids_Reborn.Forms
         private bool gfxDrawing;
 
         public bool DbChangeRequested { get; set; }
+
+        private int Columns { get; set; } = 3;
 
         public frmMain()
         {
@@ -72,6 +74,21 @@ namespace Mids_Reborn.Forms
                             ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                         }
                     }
+                }
+
+                if (MidsContext.Config != null)
+                {
+                    Columns = MidsContext.Config.Columns;
+                }
+
+                switch (Columns)
+                {
+                    case 2:
+                        MinimumSize = new Size(800, 600);
+                        break;
+                    default:
+                        MinimumSize = new Size(1342, 1001);
+                        break;
                 }
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
@@ -106,7 +123,7 @@ namespace Mids_Reborn.Forms
                 DbChangeRequested = false;
             }
 
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
@@ -178,6 +195,11 @@ namespace Mids_Reborn.Forms
 
         internal clsDrawX Drawing => drawing;
 
+        private void InitializeDv()
+        {
+            Info_Power(llPrimary.Items[0].nIDPower);
+        }
+
         private I9Picker I9Picker
         {
             get
@@ -247,7 +269,7 @@ namespace Mids_Reborn.Forms
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
-
+                
                 var height1 = 0;
                 var width1 = 0;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
@@ -375,8 +397,7 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Location = cbAncillary.Location;
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
-                if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) &
-                    (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
+                /*if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
                 {
                     var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
                     var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
@@ -391,12 +412,15 @@ namespace Mids_Reborn.Forms
                     width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
                 }
 
-                if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height &&
-                    MidsContext.Config.LastSize.Height >= MinimumSize.Height)
+                if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
                     height1 = MidsContext.Config.LastSize.Height;
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
-                Size = new Size(width1, height1);
+                Size = new Size(width1, height1);*/
+                if (MidsContext.Config != null)
+                {
+                    Size = MidsContext.Config.LastSize;
+                }
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -443,6 +467,7 @@ namespace Mids_Reborn.Forms
                 UpdateControls(true);
                 CenterToScreen();
                 UpdatePoolsPanelSize();
+                InitializeDv();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -805,8 +830,8 @@ namespace Mids_Reborn.Forms
                 return;
             MidsContext.Character.Origin = cbOrigin.SelectedIndex;
             I9Gfx.SetOrigin(cbOrigin.SelectedItem.ToStringOrNull());
-            if (drawing != null)
-                DoRedraw();
+            // if (drawing != null)
+            //     DoRedraw();
             DisplayName();
         }
 
@@ -2022,7 +2047,7 @@ namespace Mids_Reborn.Forms
                     fTotals.SetLocation();
                     fTotals.Show();
                     fTotals.BringToFront();
-                    fTotals.UpdateData();
+                    //fTotals.UpdateData();
                     fTotals.Activate();
                 }
                 else
@@ -2040,7 +2065,7 @@ namespace Mids_Reborn.Forms
         {
             fSets?.UpdateData();
             fGraphStats?.UpdateData(newData);
-            fTotals?.UpdateData();
+            //fTotals?.UpdateData();
             fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();
@@ -2116,6 +2141,7 @@ namespace Mids_Reborn.Forms
             if (!NoResizeEvent & MainModule.MidsController.IsAppInitialized & Visible)
                 MidsContext.Config.LastSize = Size;
             UpdateControls();
+            DoRedraw();
         }
 
         internal void DoCalcOptUpdates()
@@ -2959,7 +2985,7 @@ namespace Mids_Reborn.Forms
                 drawing.Highlight = -1;
             if (skipDraw)
                 return;
-            DoRedraw();
+            //DoRedraw();
         }
 
         private void NewToon(bool init = true, bool skipDraw = false)
@@ -3007,7 +3033,7 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             info_Totals();
             FileModified = false;
-            DoRedraw();
+            //DoRedraw();
         }
 
         private void pbDynMode_Click(object sender, EventArgs e)
@@ -3580,7 +3606,7 @@ namespace Mids_Reborn.Forms
             if ((index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
-            DoRedraw();
+            //DoRedraw();
             Application.DoEvents();
             UpdateControls();
             RefreshInfo();
@@ -4622,8 +4648,9 @@ namespace Mids_Reborn.Forms
 
         private void setColumns(int columns)
         {
-            MidsContext.Config.Columns = columns;
-            drawing.Columns = columns;
+            Columns = columns;
+            MidsContext.Config.Columns = Columns;
+            drawing.Columns = Columns;
             DoResize();
             SetFormWidth();
             DoRedraw();
@@ -4747,14 +4774,13 @@ namespace Mids_Reborn.Forms
                     Width = workingArea.Width - initialWidth;
                 }
             }*/
-            Height = 857;
             switch (MidsContext.Config.Columns)
             {
                 case 2:
                     Width = 1071;
                     break;
                 case 3:
-                    Width = 1280;
+                    Width = 1344;
                     break;
                 case 4:
                     Width = 1588;

@@ -1,12 +1,13 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.Controls;
 using mrbControls;
 
 namespace Mids_Reborn.Forms
 {
-    public partial class frmMain
+    public sealed partial class frmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -2043,7 +2044,8 @@ namespace Mids_Reborn.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1318, 857);
+            this.ClientSize = new Size(1342, 1001);
+            //this.ClientSize = new System.Drawing.Size(1318, 857);
             this.Controls.Add(this.i9Picker);
             this.Controls.Add(this.I9Popup);
             this.Controls.Add(this.lblLockedSecondary);
@@ -2076,7 +2078,7 @@ namespace Mids_Reborn.Forms
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
             //this.MinimumSize = new System.Drawing.Size(1293, 835);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
+            //this.MinimumSize = new System.Drawing.Size(1342, 1001);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hero Designer";

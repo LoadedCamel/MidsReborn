@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.WindowMenuItems;
 using mrbBase;
 using mrbBase.Base.Extensions;
@@ -294,9 +293,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (RecipeID() < 0 || (_tempRecipes[RecipeID()].Item.Length < 1) | (_tempRecipes[RecipeID()].Item.Length > 53))
                 return;
-            _tempRecipes[RecipeID()].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(
-                _tempRecipes[RecipeID()].Item,
-                new Recipe.RecipeEntry[_tempRecipes[RecipeID()].Item.Length + 1]);
+            Array.Resize(ref _tempRecipes[RecipeID()].Item, _tempRecipes[RecipeID()].Item.Length + 1);
+            //_tempRecipes[RecipeID()].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(_tempRecipes[RecipeID()].Item, new Recipe.RecipeEntry[_tempRecipes[RecipeID()].Item.Length + 1]);
             _tempRecipes[RecipeID()].Item[_tempRecipes[RecipeID()].Item.Length - 1] = new Recipe.RecipeEntry(_tempRecipes[RecipeID()]
                     .Item[_tempRecipes[RecipeID()].Item.Length - 2]);
             ++_tempRecipes[RecipeID()].Item[_tempRecipes[RecipeID()].Item.Length - 1].Level;

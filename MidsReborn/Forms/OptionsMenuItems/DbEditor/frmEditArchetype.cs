@@ -116,7 +116,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                var num3 = (float) Conversion.Val(txtHP.Text);
+                var num3 = Convert.ToSingle(txtHP.Text);
                 if (num3 < 1.0)
                 {
                     num3 = 1f;
@@ -125,45 +125,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 MyAT.Hitpoints = (int) Math.Round(num3);
-                var num5 = (float) Conversion.Val(txtHPCap.Text);
+                var num5 = Convert.ToSingle(txtHPCap.Text);
                 if (num5 < 1.0)
                     num5 = 1f;
                 if (num5 < (double) MyAT.Hitpoints)
                     num5 = MyAT.Hitpoints;
                 MyAT.HPCap = num5;
-                var num6 = (float) Conversion.Val(txtResCap.Text);
+                var num6 = Convert.ToSingle(txtResCap.Text);
                 if (num6 < 1.0)
                     num6 = 1f;
                 MyAT.ResCap = num6 / 100f;
-                var num7 = (float) Conversion.Val(txtDamCap.Text);
+                var num7 = Convert.ToSingle(txtDamCap.Text);
                 if (num7 < 1.0)
                     num7 = 1f;
                 MyAT.DamageCap = num7 / 100f;
-                var num8 = (float) Conversion.Val(txtRechargeCap.Text);
+                var num8 = Convert.ToSingle(txtRechargeCap.Text);
                 if (num8 < 1.0)
                     num8 = 1f;
                 MyAT.RechargeCap = num8 / 100f;
-                var num9 = (float) Conversion.Val(txtRecCap.Text);
+                var num9 = Convert.ToSingle(txtRecCap.Text);
                 if (num9 < 1.0)
                     num9 = 1f;
                 MyAT.RecoveryCap = num9 / 100f;
-                var num10 = (float) Conversion.Val(txtRegCap.Text);
+                var num10 = Convert.ToSingle(txtRegCap.Text);
                 if (num10 < 1.0)
                     num10 = 1f;
                 MyAT.RegenCap = num10 / 100f;
-                var num11 = (float) Conversion.Val(txtBaseRec.Text);
+                var num11 = Convert.ToSingle(txtBaseRec.Text);
                 if (num11 < 0.0)
                     num11 = 0.0f;
                 if (num11 > 100.0)
                     num11 = 1.67f;
                 MyAT.BaseRecovery = num11;
-                var num12 = (float) Conversion.Val(txtBaseRegen.Text);
+                var num12 = Convert.ToSingle(txtBaseRegen.Text);
                 if (num12 < 0.0)
                     num12 = 0.0f;
                 if (num12 > 100.0)
                     num12 = 100f;
                 MyAT.BaseRegen = num12;
-                var num13 = (float) Conversion.Val(txtPerceptionCap.Text);
+                var num13 = Convert.ToSingle(txtPerceptionCap.Text);
                 if (num13 < 0.0)
                     num13 = 0.0f;
                 if (num13 > 10000.0)
@@ -290,10 +290,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             txtRechargeCap.Text = Convert.ToString(MyAT.RechargeCap * 100f, CultureInfo.InvariantCulture);
             txtRecCap.Text = Convert.ToString(MyAT.RecoveryCap * 100f, CultureInfo.InvariantCulture);
             txtRegCap.Text = Convert.ToString(MyAT.RegenCap * 100f, CultureInfo.InvariantCulture);
-            txtBaseRec.Text = Strings.Format(MyAT.BaseRecovery,
-                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
-            txtBaseRegen.Text = Strings.Format(MyAT.BaseRegen,
-                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
+            txtBaseRec.Text = $@"{Convert.ToDecimal(MyAT.BaseRecovery):##.###}";
+            txtBaseRegen.Text = $@"{Convert.ToDecimal(MyAT.BaseRegen):##.###}";
             txtPerceptionCap.Text = Convert.ToString(MyAT.PerceptionCap, CultureInfo.InvariantCulture);
             cbPriGroup.BeginUpdate();
             cbSecGroup.BeginUpdate();

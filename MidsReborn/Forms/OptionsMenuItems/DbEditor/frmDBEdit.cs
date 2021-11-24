@@ -166,25 +166,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void DisplayInfo()
         {
             if (MainModule.MidsController.Toon == null) return;
-            lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
+            lblDate.Text = DatabaseAPI.Database.Date.ToString("MM/dd/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
             lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length, CultureInfo.InvariantCulture);
-            lblCountEnh.Text = Strings.Format(DatabaseAPI.Database.Enhancements.Length, "#,###,##0");
-            lblCountIOSet.Text = Strings.Format(DatabaseAPI.Database.EnhancementSets.Count, "#,###,##0");
-            lblCountPS.Text = Strings.Format(DatabaseAPI.Database.Powersets.Length, "#,###,##0");
-            lblCountPwr.Text = Strings.Format(DatabaseAPI.Database.Power.Length, "#,###,##0");
+            lblCountEnh.Text = DatabaseAPI.Database.Enhancements.Length.ToString("#,###,##0");
+            lblCountIOSet.Text = DatabaseAPI.Database.EnhancementSets.Count.ToString("#,###,##0");
+            lblCountPS.Text = DatabaseAPI.Database.Powersets.Length.ToString("#,###,##0");
+            lblCountPwr.Text = DatabaseAPI.Database.Power.Length.ToString("#,###,##0");
             txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version, CultureInfo.InvariantCulture);
             var num1 = 0;
             var num2 = DatabaseAPI.Database.Power.Length - 1;
             for (var index = 0; index <= num2; ++index)
                 num1 += DatabaseAPI.Database.Power[index].Effects.Length;
-            lblCountFX.Text = Strings.Format(num1, "#,###,##0");
+            lblCountFX.Text = num1.ToString("#,###,##0");
             var num3 = 0;
             var num4 = DatabaseAPI.Database.Recipes.Length - 1;
             for (var index = 0; index <= num4; ++index)
                 num3 += DatabaseAPI.Database.Recipes[index].Item.Length;
-            lblCountRecipe.Text = Strings.Format(num3, "#,###,##0");
-            lblCountSalvage.Text = Strings.Format(DatabaseAPI.Database.Salvage.Length, "#,###,##0");
+            lblCountRecipe.Text = num3.ToString("#,###,##0");
+            lblCountSalvage.Text = DatabaseAPI.Database.Salvage.Length.ToString("#,###,##0");
             Initialized = true;
         }
 
