@@ -3464,8 +3464,14 @@ namespace Mids_Reborn.Forms
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
+                            //var t = Stopwatch.StartNew();
                             I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
+                            //t.Stop();
+                            //Debug.WriteLine($"Repeat last enhancement - EnhancementPicked(): {t.ElapsedMilliseconds} ms");
+                            //t.Restart();
                             EnhancementModified();
+                            //t.Stop();
+                            //Debug.WriteLine($"Repeat last enhancement - EnhancementModified(): {t.ElapsedMilliseconds} ms");
                         }
                         else if ((e.Button == MouseButtons.Right) & (slotID > -1) && ModifierKeys != Keys.Shift)
                         {

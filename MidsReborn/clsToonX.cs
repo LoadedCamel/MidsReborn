@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -299,7 +300,10 @@ namespace Mids_Reborn
 
         private void RemoveGrantEffectIndirect(ref IPower[] basePower, IPower targetPower, string summon)
         {
-            var basePowerIdx = basePower.FindIndexes(bp => bp.FullName == targetPower.FullName).ToList();
+            var basePowerIdx = basePower
+                .Where(bp => bp != null)
+                .FindIndexes(bp => bp.FullName == targetPower.FullName)
+                .ToList();
             if (basePowerIdx.Count() > 0)
             {
                 var fxListBase = basePower[basePowerIdx[0]].Effects.ToList();
@@ -1531,6 +1535,29 @@ namespace Mids_Reborn
             return true;
         }
 
+        private static void GBPA_Pass5_ResyncEffects(ref IPower powerMath, ref IPower powerBuffed)
+        {
+            var l = Math.Min(powerMath.Effects.Length, powerBuffed.Effects.Length);
+            var fxMath = powerMath.Effects.ToList();
+            var fxBuffed = powerBuffed.Effects.ToList();
+            for (var i = 0; i < l; i++)
+            {
+                if (fxMath[i].EffectType == fxBuffed[i].EffectType &
+                    fxMath[i].DamageType == fxBuffed[i].DamageType &
+                    fxMath[i].MezType == fxBuffed[i].MezType &
+                    fxMath[i].ETModifies == fxBuffed[i].ETModifies &
+                    fxMath[i].Summon == fxBuffed[i].Summon                    
+                    )
+                {
+                    continue;
+                }
+
+                fxMath.RemoveAt(i);
+            }
+
+            powerMath.Effects = fxMath.ToArray();
+        }
+
         private static bool GBPA_Pass5_MultiplyPreBuff(ref IPower powerMath, ref IPower powerBuffed)
         {
             if (powerBuffed == null)
@@ -1539,6 +1566,11 @@ namespace Mids_Reborn
             powerBuffed.InterruptTime /= powerMath.InterruptTime;
             powerBuffed.Range *= powerMath.Range;
             powerBuffed.RechargeTime /= powerMath.RechargeTime;
+            if (powerMath.Effects.Length > powerBuffed.Effects.Length)
+            {
+                GBPA_Pass5_ResyncEffects(ref powerMath, ref powerBuffed);
+            }
+
             for (var index = 0; index < powerMath.Effects.Length; index++)
             {
                 powerBuffed.Effects[index].Math_Mag = powerBuffed.Effects[index].Mag * powerMath.Effects[index].Math_Mag;
