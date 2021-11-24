@@ -7,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using FastDeepCloner;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -1680,12 +1678,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (flag | (myPower.SetTypes.Length > 10))
                 return;
-            var power = myPower;
-            var eSetTypeArray = Array.Empty<Enums.eSetType>();
-            Array.Copy(power.SetTypes, eSetTypeArray, power.SetTypes.Length + 1);
-            //var eSetTypeArray = (Enums.eSetType[]) Utils.CopyArray(power.SetTypes, new Enums.eSetType[myPower.SetTypes.Length + 1]);
-            power.SetTypes = eSetTypeArray;
-            myPower.SetTypes[myPower.SetTypes.Length - 1] = (Enums.eSetType) invSetListIndex;
+            var eSetTypeList = myPower.SetTypes.ToList();
+            eSetTypeList.Add((Enums.eSetType)invSetListIndex);
+            myPower.SetTypes = eSetTypeList.ToArray();
             Array.Sort(myPower.SetTypes);
             DrawAcceptedSets();
         }
