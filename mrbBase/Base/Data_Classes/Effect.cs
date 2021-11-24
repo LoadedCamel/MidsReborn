@@ -1083,19 +1083,19 @@ namespace mrbBase.Base.Data_Classes
 
                     if (!condition.Equals("Stacks") && !condition.Equals("Team"))
                     {
-                        conList.Add($"{conditionPower} {conditionOperator}{condition}");
+                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
                     }
                     else if (condition.Equals("Stacks"))
                     {
-                        conList.Add($"{conditionPower} {condition} {cVp.Value}");
+                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
                     }
                     else if (condition.Equals("Team"))
                     {
                         conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
                     }
                     /*conList.Add(!condition.Equals("Stacks")
-                        ? $"{conditionPower} {conditionOperator}{condition}"
-                        : $"{conditionPower} {condition} {cVp.Value}");*/
+                        ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
+                        : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
                     sConditional = string.Join(" AND ", conList);
                 }
             }
