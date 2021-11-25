@@ -125,7 +125,7 @@ namespace mrbControls
         public int Highlight;
         public Enums.eInterfaceMode InterfaceMode;
         //private bool inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
-        private bool inDesigner = AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
+        private readonly bool _inDesigner = Debugger.IsAttached; //AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
 
         //bool VillainColor;
 
@@ -709,7 +709,7 @@ namespace mrbControls
                     }
                     else
                     {
-                        if (inDesigner) continue;
+                        if (_inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         Graphics graphics6 = bxBuffer.Graphics;
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height);

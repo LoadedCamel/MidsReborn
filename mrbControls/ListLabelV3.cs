@@ -347,18 +347,14 @@ namespace mrbControls
             if (!Debugger.IsAttached && !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv")) return;
             
             ClearItems();
-            AddItem(new ListLabelItemV3("Header Item", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold,
-                LLTextAlign.Center));
+            AddItem(new ListLabelItemV3("Header Item", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold, LLTextAlign.Center));
             AddItem(new ListLabelItemV3("Enabled", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV3("Disabled Item", LLItemState.Disabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Selected Item", LLItemState.Selected, -1, -1, -1, "",
-                LLFontFlags.Bold | LLFontFlags.Italic));
+            AddItem(new ListLabelItemV3("Selected Item", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold | LLFontFlags.Italic));
             AddItem(new ListLabelItemV3("SD Item", LLItemState.SelectedDisabled, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV3("Invalid Item", LLItemState.Invalid, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Automatic multiline Item", LLItemState.Enabled, -1, -1, -1, "",
-                LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Scrollable", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold,
-                LLTextAlign.Center));
+            AddItem(new ListLabelItemV3("Automatic multiline Item", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Scrollable", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold, LLTextAlign.Center));
             AddItem(new ListLabelItemV3("Item 1", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV3("Item 2", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV3("Item 3", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
