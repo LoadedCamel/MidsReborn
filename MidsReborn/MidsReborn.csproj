@@ -395,12 +395,27 @@
     <Compile Include="UIv2\Form1.designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList.Designer.cs">
+      <DependentUpon>PowerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList_Test.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList_Test.Designer.cs">
+      <DependentUpon>PowerList_Test.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIv2\v2Controls\PowersControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
       <DependentUpon>PowersControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
+      <DependentUpon>PowerList.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Images\Classes\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
