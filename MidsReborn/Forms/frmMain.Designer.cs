@@ -2077,7 +2077,7 @@ namespace Mids_Reborn.Forms
             this.ForeColor = System.Drawing.Color.White;
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
-            //this.MinimumSize = new System.Drawing.Size(1293, 835);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             //this.MinimumSize = new System.Drawing.Size(1342, 1001);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

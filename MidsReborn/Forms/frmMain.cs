@@ -46,8 +46,6 @@ namespace Mids_Reborn.Forms
 
         public bool DbChangeRequested { get; set; }
 
-        private int Columns { get; set; } = 3;
-
         public frmMain()
         {
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -76,20 +74,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                if (MidsContext.Config != null)
-                {
-                    Columns = MidsContext.Config.Columns;
-                }
-
-                switch (Columns)
-                {
-                    case 2:
-                        MinimumSize = new Size(800, 600);
-                        break;
-                    default:
-                        MinimumSize = new Size(1342, 1001);
-                        break;
-                }
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -397,7 +381,7 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Location = cbAncillary.Location;
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
-                /*if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
+                if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
                 {
                     var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
                     var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
@@ -416,11 +400,7 @@ namespace Mids_Reborn.Forms
                     height1 = MidsContext.Config.LastSize.Height;
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
-                Size = new Size(width1, height1);*/
-                if (MidsContext.Config != null)
-                {
-                    Size = MidsContext.Config.LastSize;
-                }
+                Size = new Size(width1, height1);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -4654,9 +4634,8 @@ namespace Mids_Reborn.Forms
 
         private void setColumns(int columns)
         {
-            Columns = columns;
-            MidsContext.Config.Columns = Columns;
-            drawing.Columns = Columns;
+            MidsContext.Config.Columns = columns;
+            drawing.Columns = columns;
             DoResize();
             SetFormWidth();
             DoRedraw();
