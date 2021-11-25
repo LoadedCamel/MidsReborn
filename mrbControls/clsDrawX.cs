@@ -125,7 +125,7 @@ namespace mrbControls
         public int Highlight;
         public Enums.eInterfaceMode InterfaceMode;
         //private bool inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
-        private readonly bool _inDesigner = Debugger.IsAttached; //AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
+        private readonly bool _inDesigner = AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
 
         //bool VillainColor;
 

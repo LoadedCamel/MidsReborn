@@ -3612,7 +3612,7 @@ namespace Mids_Reborn.Forms
             if ((index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
-            //DoRedraw();
+            DoRedraw();
             Application.DoEvents();
             UpdateControls();
             RefreshInfo();
