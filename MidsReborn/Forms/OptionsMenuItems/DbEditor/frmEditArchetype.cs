@@ -290,8 +290,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             txtRechargeCap.Text = Convert.ToString(MyAT.RechargeCap * 100f, CultureInfo.InvariantCulture);
             txtRecCap.Text = Convert.ToString(MyAT.RecoveryCap * 100f, CultureInfo.InvariantCulture);
             txtRegCap.Text = Convert.ToString(MyAT.RegenCap * 100f, CultureInfo.InvariantCulture);
-            txtBaseRec.Text = $@"{Convert.ToDecimal(MyAT.BaseRecovery):##.###}";
-            txtBaseRegen.Text = $@"{Convert.ToDecimal(MyAT.BaseRegen):##.###}";
+            txtBaseRec.Text = $@"{Convert.ToDecimal(MyAT.BaseRecovery):#0.###}";
+            txtBaseRegen.Text = $@"{Convert.ToDecimal(MyAT.BaseRegen):#0.###}";
             txtPerceptionCap.Text = Convert.ToString(MyAT.PerceptionCap, CultureInfo.InvariantCulture);
             cbPriGroup.BeginUpdate();
             cbSecGroup.BeginUpdate();

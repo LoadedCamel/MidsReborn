@@ -767,7 +767,7 @@ namespace Mids_Reborn.Forms.Controls
                                         Enums.eToWho.Ally => " (Ally)",
                                         _ => ""
                                     };
-                                    rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[ID]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[ID]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[ID]].BuffedMag}"):####.##}{fxTarget}";
+                                    rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[ID]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[ID]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[ID]].BuffedMag}"):###0.##}{fxTarget}";
                                     break;
                                 
                                 case Enums.eEffectType.EntCreate:
@@ -3753,7 +3753,7 @@ namespace Mids_Reborn.Forms.Controls
                     if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
                     {
 
-                        str2 = $"{str2}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):##.##)} % chance of ";
+                        str2 = $"{str2}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
                     }
                 }
                 else
@@ -3810,7 +3810,7 @@ namespace Mids_Reborn.Forms.Controls
                         iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
                     if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
                     {
-                        str1 = $"{str1}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):##.##)} % chance of ";
+                        str1 = $"{str1}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
                     }
                 }
                 else

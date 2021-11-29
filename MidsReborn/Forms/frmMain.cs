@@ -1410,7 +1410,7 @@ namespace Mids_Reborn.Forms
             gfxDrawing = false;
 
             t.Stop();
-            Debug.WriteLine($"frmMain.DoRedraw(): {t.ElapsedMilliseconds:####.##} ms");
+            Debug.WriteLine($"frmMain.DoRedraw(): {t.ElapsedMilliseconds:###0.##} ms");
         }
 
         private void DoResize(bool forceResize = false)
@@ -2027,7 +2027,7 @@ namespace Mids_Reborn.Forms
                     fTotals.SetLocation();
                     fTotals.Show();
                     fTotals.BringToFront();
-                    //fTotals.UpdateData();
+                    fTotals.UpdateData();
                     fTotals.Activate();
                 }
                 else
@@ -2045,7 +2045,7 @@ namespace Mids_Reborn.Forms
         {
             fSets?.UpdateData();
             fGraphStats?.UpdateData(newData);
-            //fTotals?.UpdateData();
+            fTotals?.UpdateData();
             fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();

@@ -1166,14 +1166,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtRangeSec.Text = Strings.Format(power.RangeSecondary, Style);
 
             txtLevel.Text = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
-            txtAcc.Text = $@"{Convert.ToDecimal(power.Accuracy):###.###}";
-            txtInterrupt.Text = $@"{Convert.ToDecimal(power.InterruptTime):###.###}";
-            txtCastTime.Text = $@"{Convert.ToDecimal(power.CastTimeReal):###.###}";
-            txtRechargeTime.Text = $@"{Convert.ToDecimal(power.RechargeTime):###.###}";
-            txtActivate.Text = $@"{Convert.ToDecimal(power.ActivatePeriod):###.###}";
-            txtEndCost.Text = $@"{Convert.ToDecimal(power.EndCost):###.###}";
-            txtRange.Text = $@"{Convert.ToDecimal(power.Range):###.###}";
-            txtRangeSec.Text = $@"{Convert.ToDecimal(power.RangeSecondary):###.###}";
+            txtAcc.Text = $@"{Convert.ToDecimal(power.Accuracy):##0.###}";
+            txtInterrupt.Text = $@"{Convert.ToDecimal(power.InterruptTime):##0.###}";
+            txtCastTime.Text = $@"{Convert.ToDecimal(power.CastTimeReal):##0.###}";
+            txtRechargeTime.Text = $@"{Convert.ToDecimal(power.RechargeTime):##0.###}";
+            txtActivate.Text = $@"{Convert.ToDecimal(power.ActivatePeriod):##0.###}";
+            txtEndCost.Text = $@"{Convert.ToDecimal(power.EndCost):##0.###}";
+            txtRange.Text = $@"{Convert.ToDecimal(power.Range):##0.###}";
+            txtRangeSec.Text = $@"{Convert.ToDecimal(power.RangeSecondary):##0.###}";
 
 
             txtRadius.Text = Convert.ToString(power.Radius, CultureInfo.InvariantCulture);
@@ -2125,7 +2125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkAlwaysToggle.Enabled = power.PowerType == Enums.ePowerType.Toggle;
             if ((power.ActivatePeriod > 0.0) & (power.PowerType == Enums.ePowerType.Toggle))
             {
-                lblEndCost.Text = $@"{Convert.ToDecimal(power.EndCost / power.ActivatePeriod):###.##}/s";
+                lblEndCost.Text = $@"{Convert.ToDecimal(power.EndCost / power.ActivatePeriod):##0.##}/s";
                 //lblEndCost.Text = "(" + Strings.Format((float) (power.EndCost / (double) power.ActivatePeriod), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "/s)";
             }
             else
@@ -2133,7 +2133,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lblEndCost.Text = "";
             }
 
-            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.BaseAcc * 100.0):###.##}%)";
+            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.BaseAcc * 100.0):##0.##}%)";
             //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) MidsContext.Config.BaseAcc * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
         }
 
