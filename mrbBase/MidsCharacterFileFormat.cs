@@ -24,7 +24,8 @@ namespace mrbBase
 
         private const string MagicCompressed = "MxDz";
         private const string MagicUncompressed = "MxDu";
-        private const float SaveVersion = 1.01f;
+        private const float SaveVersion = 3.10f;
+
 
         private const int DataLinkMaxLength = 2048;
 
@@ -41,7 +42,6 @@ namespace mrbBase
         };
 
         //const bool UseHexEncoding = true;
-
 
         private static bool MxDBuildSaveBuffer(ref byte[] buffer, bool includeAltEnh)
         {
@@ -83,6 +83,7 @@ namespace mrbBase
                     writer.Write(DatabaseAPI.Database.Power[power.NIDPower].StaticIndex);
                     writer.Write(Convert.ToSByte(power.Level));
                     writer.Write(Convert.ToBoolean(power.StatInclude));
+                    writer.Write(Convert.ToBoolean(power.ProcInclude));
                     writer.Write(power.VariableValue);
                     writer.Write(Convert.ToSByte(power.SubPowers.Length - 1));
                     foreach (var index2 in power.SubPowers)
@@ -125,10 +126,7 @@ namespace mrbBase
                 : "";
         }
 
-        private static string MxDBuildSaveStringShared(
-            ref CompressionData cData,
-            bool includeAltEnh,
-            bool @break)
+        private static string MxDBuildSaveStringShared(ref CompressionData cData, bool includeAltEnh, bool @break)
         {
             var numArray = Array.Empty<byte>();
             string str;
@@ -150,10 +148,10 @@ namespace mrbBase
             return str;
         }
 
-        public static string MxDBuildSaveString(bool inncludeAltEnh, bool forumMode)
+        public static string MxDBuildSaveString(bool includeAltEnh, bool forumMode)
         {
             var cData = new CompressionData();
-            var str1 = MxDBuildSaveStringShared(ref cData, inncludeAltEnh, true);
+            var str1 = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
             if (string.IsNullOrEmpty(str1)) return string.Empty;
 
             var str3 = "\n";
@@ -259,6 +257,7 @@ namespace mrbBase
 
         private static bool MxDReadSaveData(ref byte[] buffer, bool silent)
         {
+            var useOldFormat = false;
             InherentPowers = new List<PowerEntry>();
             DisplayIndex = -1;
             if (buffer.Length < 1)
@@ -311,14 +310,24 @@ namespace mrbBase
                 } while (!magicFound);
 
                 var fVersion = r.ReadSingle();
-                if (fVersion > 2.0)
+                // if (fVersion > 2.0) //
+                // {
+                //     MessageBox.Show(@"File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.", @"Unable to Load");
+                //     r.Close();
+                //     memoryStream.Close();
+                //     return false;
+                // }
+
+                switch (fVersion)
                 {
-                    MessageBox.Show(
-                        "File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.",
-                        "Unable to Load");
-                    r.Close();
-                    memoryStream.Close();
-                    return false;
+                    case > 3.10f:
+                        MessageBox.Show(@"File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.", @"Unable to Load");
+                        r.Close();
+                        memoryStream.Close();
+                        return false;
+                    case < 3.10f:
+                        useOldFormat = true;
+                        break;
                 }
 
                 var qualifiedNames = r.ReadBoolean();
@@ -410,7 +419,15 @@ namespace mrbBase
                         if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
                         {
                             powerEntry1.Level = r.ReadSByte();
-                            powerEntry1.StatInclude = r.ReadBoolean();
+                            if (useOldFormat)
+                            {
+                                powerEntry1.StatInclude = r.ReadBoolean();
+                            }
+                            else
+                            {
+                                powerEntry1.StatInclude = r.ReadBoolean();
+                                powerEntry1.ProcInclude = r.ReadBoolean();
+                            }
                             powerEntry1.VariableValue = r.ReadInt32();
                             if (hasSubPower)
                             {
@@ -703,11 +720,7 @@ namespace mrbBase
             }
         }
 
-        private static void ReadSlotData(
-            BinaryReader reader,
-            ref I9Slot slot,
-            bool qualifiedNames,
-            float fVersion)
+        private static void ReadSlotData(BinaryReader reader, ref I9Slot slot, bool qualifiedNames, float fVersion)
         {
             var num = -1;
             if (qualifiedNames)

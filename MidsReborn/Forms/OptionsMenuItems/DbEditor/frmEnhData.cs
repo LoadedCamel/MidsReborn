@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -383,7 +384,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
+            var cb = sender as ComboBox;
+            if (cb?.SelectedText != null)
+            {
+                var selectedItem = cb.SelectedItem.ToString();
+                if (selectedItem != "None")
+                {
+                    var subType = (Enums.eSubtype)Enum.Parse(typeof(Enums.eSubtype), selectedItem);
+                    myEnh.SubTypeID = subType;
+                }
+            }
         }
 
         private void chkSuperior_CheckedChanged(object sender, EventArgs e)
@@ -465,7 +475,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
-                    cbSubType.SelectedIndex = (int)myEnh.SubTypeID;
+                    var type = Enum.GetName(typeof(Enums.eSubtype), myEnh.SubTypeID);
+                    Debug.WriteLine(type);
+                    cbSubType.SelectedItem = type;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;
                     cbRecipe.SelectedIndex = 0;
@@ -852,15 +864,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillSubTypeList()
         {
-            var names = Enum.GetNames(Enums.eSubtype.None.GetType());
+            //var names = Enum.GetNames(Enums.eSubtype.None.GetType());
+            var names = Enum.GetNames(typeof(Enums.eSubtype)).ToList();
             cbSubType.BeginUpdate();
-            cbSubType.Items.Clear();
-            cbSubType.Items.AddRange(names);
+            //cbSubType.Items.Clear();
+            cbSubType.DataSource = names;
+            //cbSubType.Items.AddRange(names);
             cbSubType.EndUpdate();
         }
 
         private void frmEnhData_Load(object sender, EventArgs e)
-
         {
             FillSetList();
             FillEffectList();
@@ -1175,23 +1188,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ? new ExtendedBitmap(30, 30)
                 : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeRegular.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.InventO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.InventO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeIO.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SpecialO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SpecialO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeHO.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeSet.Image = new Bitmap(extendedBitmap1.Bitmap);
         }

@@ -1473,20 +1473,26 @@ namespace Mids_Reborn.Forms
             {
                 DlgSave.FileName = FileIO.StripPath(LastFileName);
                 if (DlgSave.FileName.Length > 3 && DlgSave.FileName.ToUpper().EndsWith(".TXT"))
+                {
                     DlgSave.FileName = DlgSave.FileName.Substring(0, DlgSave.FileName.Length - 3) + DlgSave.DefaultExt;
-                DlgSave.InitialDirectory =
-                    LastFileName.Substring(0, LastFileName.LastIndexOf("\\", StringComparison.Ordinal));
+                }
+
+                DlgSave.InitialDirectory = LastFileName.Substring(0, LastFileName.LastIndexOf("\\", StringComparison.Ordinal));
             }
             else if (!string.IsNullOrWhiteSpace(MidsContext.Character.Name))
             {
                 if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
+                {
                     DlgSave.FileName = MidsContext.Character.Name + " - Arachnos " + MidsContext.Character.Powersets[0]
                         .DisplayName
                         .Replace(" Training", string.Empty).Replace("Arachnos ", string.Empty);
+                }
                 else
+                {
                     DlgSave.FileName = MidsContext.Character.Name + " - " +
                                        MidsContext.Character.Archetype.DisplayName + " (" +
                                        MidsContext.Character.Powersets[0].DisplayName + ")";
+                }
             }
             else if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
             {
@@ -1498,8 +1504,7 @@ namespace Mids_Reborn.Forms
             {
                 DlgSave.FileName = MidsContext.Character.Archetype.DisplayName;
                 var dlgSave = DlgSave;
-                dlgSave.FileName = dlgSave.FileName + " - " + MidsContext.Character.Powersets[0].DisplayName + " - " +
-                                   MidsContext.Character.Powersets[1].DisplayName;
+                dlgSave.FileName = dlgSave.FileName + " - " + MidsContext.Character.Powersets[0].DisplayName + " - " + MidsContext.Character.Powersets[1].DisplayName;
             }
 
             if (DlgSave.ShowDialog() == DialogResult.OK)

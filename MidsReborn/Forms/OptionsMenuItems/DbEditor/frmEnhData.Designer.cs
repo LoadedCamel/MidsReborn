@@ -299,7 +299,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSubType.Name = "cbSubType";
             this.cbSubType.Size = new System.Drawing.Size(124, 22);
             this.cbSubType.TabIndex = 54;
-            this.tTip.SetToolTip(this.cbSubType, "(Currently only apllicable to Stealth IOs");
+            this.tTip.SetToolTip(this.cbSubType, "(Currently only applicable to Stealth IOs");
             this.cbSubType.SelectedIndexChanged += new System.EventHandler(this.cbSubType_SelectedIndexChanged);
             // 
             // typeSet
