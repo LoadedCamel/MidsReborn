@@ -264,7 +264,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // {
             //     DatabaseAPI.Database.Classes[index].Column = index;
             // }
-
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
             BusyHide();
             DialogResult = DialogResult.OK;

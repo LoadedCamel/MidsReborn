@@ -108,16 +108,16 @@ namespace mrbBase
             {
                 Bonus[index].Special = -1;
                 Bonus[index].AltString = string.Empty;
-                Bonus[index].Name = new string[0];
-                Bonus[index].Index = new int[0];
+                Bonus[index].Name = Array.Empty<string>();
+                Bonus[index].Index = Array.Empty<int>();
             }
 
             for (var index = 0; index <= SpecialBonus.Length - 1; ++index)
             {
                 SpecialBonus[index].Special = -1;
                 SpecialBonus[index].AltString = string.Empty;
-                SpecialBonus[index].Name = new string[0];
-                SpecialBonus[index].Index = new int[0];
+                SpecialBonus[index].Name = Array.Empty<string>();
+                SpecialBonus[index].Index = Array.Empty<int>();
             }
         }
 

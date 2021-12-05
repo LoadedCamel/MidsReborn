@@ -1,98 +1,70 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    public partial class frmSetEdit : Form
+    public partial class FrmSetEdit : Form
     {
-        private readonly EnhancementSet mySet;
-        private bool Loading;
-        private int[] SetBonusList;
+        public readonly EnhancementSet MySet;
+        private bool _loading;
+        private int[] _setBonusList;
+        private List<int> _lstBonusNid;
 
-        public frmSetEdit(ref EnhancementSet iSet)
+        public FrmSetEdit(ref EnhancementSet iSet)
         {
             Load += frmSetEdit_Load;
-            SetBonusList = new int[0];
-            Loading = true;
+            _setBonusList = Array.Empty<int>();
+            _loading = true;
             InitializeComponent();
-            Name = nameof(frmSetEdit);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetEdit));
+            Name = nameof(FrmSetEdit);
+            var componentResourceManager = new ComponentResourceManager(typeof(FrmSetEdit));
             Icon = Resources.reborn;
             btnImage.Image = Resources.enhData;
-            mySet = new EnhancementSet(iSet);
+            MySet = new EnhancementSet(iSet);
         }
 
-        private ListView lvBonusList
-        {
-            get => _lvBonusList;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                EventHandler eventHandler2 = lvBonusList_DoubleClick;
-                if (_lvBonusList != null) _lvBonusList.DoubleClick -= eventHandler2;
-                _lvBonusList = value;
-                if (_lvBonusList == null)
-                    return;
-                _lvBonusList.DoubleClick += eventHandler2;
-            }
-        }
-
-        private NumericUpDown udMaxLevel
-        {
-            get => _udMaxLevel;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                EventHandler eventHandler1 = udMaxLevel_Leave;
-                EventHandler eventHandler2 = udMaxLevel_ValueChanged;
-                if (_udMaxLevel != null)
-                {
-                    _udMaxLevel.Leave -= eventHandler1;
-                    _udMaxLevel.ValueChanged -= eventHandler2;
-                }
-
-                _udMaxLevel = value;
-                if (_udMaxLevel == null)
-                    return;
-                _udMaxLevel.Leave += eventHandler1;
-                _udMaxLevel.ValueChanged += eventHandler2;
-            }
-        }
-
-        private NumericUpDown udMinLevel
-        {
-            get => _udMinLevel;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                EventHandler eventHandler1 = udMinLevel_Leave;
-                EventHandler eventHandler2 = udMinLevel_ValueChanged;
-                if (_udMinLevel != null)
-                {
-                    _udMinLevel.Leave -= eventHandler1;
-                    _udMinLevel.ValueChanged -= eventHandler2;
-                }
-
-                _udMinLevel = value;
-                if (_udMinLevel == null)
-                    return;
-                _udMinLevel.Leave += eventHandler1;
-                _udMinLevel.ValueChanged += eventHandler2;
-            }
-        }
-
-        private int BonusID()
+        private int BonusId()
         {
             return cbSlotCount.SelectedIndex;
+        }
+
+        private void btnImage_Click(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            ImagePicker.InitialDirectory = I9Gfx.GetEnhancementsPath();
+            ImagePicker.FileName = MySet.Image;
+            if (ImagePicker.ShowDialog() == DialogResult.OK)
+            {
+                var str = FileIO.StripPath(ImagePicker.FileName);
+                if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
+                {
+                    MessageBox.Show(
+                        $"You must select an image from the {I9Gfx.GetEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
+                        @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MySet.Image = str;
+                    DisplayIcon();
+                }
+            }
+        }
+
+        private void btnNoImage_Click(object sender, EventArgs e)
+        {
+            MySet.Image = "";
+            DisplayIcon();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -101,94 +73,224 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Hide();
         }
 
-        private void btnImage_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            ImagePicker.InitialDirectory = I9Gfx.GetEnhancementsPath();
-            ImagePicker.FileName = mySet.Image;
-            if (ImagePicker.ShowDialog() == DialogResult.OK)
-            {
-                var str = FileIO.StripPath(ImagePicker.FileName);
-                if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
-                {
-                    MessageBox.Show(
-                        $"You must select an image from the {I9Gfx.GetEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
-                        "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    mySet.Image = str;
-                    DisplayIcon();
-                }
-            }
-        }
-
-        private void btnNoImage_Click(object sender, EventArgs e)
-        {
-            mySet.Image = "";
-            DisplayIcon();
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
-            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
+            MySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+            MySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
             DialogResult = DialogResult.OK;
             Hide();
         }
 
-        private void btnPaste_Click(object sender, EventArgs e)
+        private void cbSetType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var str = Convert.ToString(Clipboard.GetData("System.String"));
-            var chArray = new char[1] {'^'};
-            var strArray1 = str.Replace("\r\n", Convert.ToString(chArray[0])).Split(chArray);
-            chArray[0] = '\t';
-            mySet.InitBonus();
-            var num1 = strArray1.Length - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            if (_loading)
+                return;
+            MySet.SetType = (Enums.eSetType) cbSetType.SelectedIndex;
+        }
+
+        private void cbSlotX_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            DisplayBonus();
+            DisplayBonusText();
+        }
+
+        private void udMaxLevel_Leave(object sender, EventArgs e)
+        {
+            SetMaxLevel((int) Math.Round(Convert.ToDecimal(udMaxLevel.Text)));
+            MySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
+        }
+
+        private void udMaxLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
+            udMinLevel.Maximum = udMaxLevel.Value;
+        }
+
+        private void udMinLevel_Leave(object sender, EventArgs e)
+        {
+            SetMinLevel((int) Math.Round(Convert.ToDecimal(udMinLevel.Text)));
+            MySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+        }
+
+        private void udMinLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+            udMaxLevel.Minimum = udMinLevel.Value;
+        }
+
+        private void txtAlternate_TextChanged(object sender, EventArgs e)
+        {
+            if (IsBonus())
+                MySet.Bonus[BonusId()].AltString = txtAlternate.Text;
+            else if (IsSpecial())
+                MySet.SpecialBonus[SpecialId()].AltString = txtAlternate.Text;
+            DisplayBonusText();
+        }
+
+        private void txtDesc_TextChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MySet.Desc = txtDesc.Text;
+        }
+
+        private void txtInternal_TextChanged(object sender, EventArgs e)
+
+        {
+            if (_loading)
+                return;
+            MySet.Uid = txtInternal.Text;
+        }
+
+        private void txtNameFull_TextChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MySet.DisplayName = txtNameFull.Text;
+        }
+
+        private void txtNameShort_TextChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MySet.ShortName = txtNameShort.Text;
+        }
+
+        private void lstBonus_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstBonus.SelectedIndex < 0)
+                return;
+            var selectedIndex = lstBonus.SelectedIndex;
+            var numArray1 = Array.Empty<int>();
+            var strArray1 = Array.Empty<string>();
+            var index1 = 0;
+            if (IsBonus())
             {
-                var strArray2 = strArray1[index1].Split(chArray);
-                if (strArray2.Length > 3)
-                {
-                    var num2 = (int) Math.Round(Convert.ToDouble(strArray2[0]));
-                    var index2 = DatabaseAPI.NidFromUidPower(strArray2[3]);
-                    var num3 = num2 - 2;
-                    if ((num3 > -1) & (index2 > -1))
+                var numArray2 = new int[MySet.Bonus[BonusId()].Index.Length - 2 + 1];
+                var strArray2 = new string[MySet.Bonus[BonusId()].Name.Length - 2 + 1];
+                var num1 = MySet.Bonus[BonusId()].Index.Length - 1;
+                for (var index2 = 0; index2 <= num1; ++index2)
+                    if (index2 != selectedIndex)
                     {
-                        var bonus = mySet.Bonus;
-                        var index3 = num3;
-                        var bonusArName = Array.Empty<string>();
-                        var bonusArIndex = Array.Empty<int>();
-                        Array.Copy(bonus[index3].Name, bonusArName, bonus[index3].Name.Length + 1);
-                        Array.Copy(bonus[index3].Index, bonusArIndex, bonus[index3].Index.Length + 1);
-                        bonus[index3].Name = bonusArName;
-                        bonus[index3].Index = bonusArIndex;
-                        //bonus[index3].Name = (string[]) Utils.CopyArray(bonus[index3].Name, new string[bonus[index3].Name.Length + 1]);
-                        //bonus[index3].Index = (int[]) Utils.CopyArray(bonus[index3].Index, new int[bonus[index3].Index.Length + 1]);
-                        bonus[index3].Index[bonus[index3].Index.Length - 1] = index2;
-                        bonus[index3].Name[bonus[index3].Name.Length - 1] = DatabaseAPI.Database.Power[index2].FullName;
+                        numArray2[index1] = MySet.Bonus[BonusId()].Index[index2];
+                        strArray2[index1] = MySet.Bonus[BonusId()].Name[index2];
+                        ++index1;
                     }
+
+                MySet.Bonus[BonusId()].Name = new string[numArray2.Length - 1 + 1];
+                MySet.Bonus[BonusId()].Index = new int[strArray2.Length - 1 + 1];
+                var num2 = numArray2.Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
+                {
+                    MySet.Bonus[BonusId()].Index[index2] = numArray2[index2];
+                    MySet.Bonus[BonusId()].Name[index2] = strArray2[index2];
                 }
+            }
+            else if (IsSpecial())
+            {
+                var numArray2 = new int[MySet.SpecialBonus[SpecialId()].Index.Length - 2 + 1];
+                var strArray2 = new string[MySet.SpecialBonus[SpecialId()].Name.Length - 2 + 1];
+                var num1 = MySet.SpecialBonus[SpecialId()].Index.Length - 1;
+                for (var index2 = 0; index2 <= num1; ++index2)
+                    if (index2 != selectedIndex)
+                    {
+                        numArray2[index1] = MySet.SpecialBonus[SpecialId()].Index[index2];
+                        strArray2[index1] = MySet.SpecialBonus[SpecialId()].Name[index2];
+                        ++index1;
+                    }
+
+                MySet.SpecialBonus[SpecialId()].Name = new string[numArray2.Length - 1 + 1];
+                MySet.SpecialBonus[SpecialId()].Index = new int[strArray2.Length - 1 + 1];
+                var num2 = numArray2.Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
+                {
+                    MySet.SpecialBonus[SpecialId()].Index[index2] = numArray2[index2];
+                    MySet.SpecialBonus[SpecialId()].Name[index2] = strArray2[index2];
+                }
+
+                if (MySet.SpecialBonus[SpecialId()].Index.Length < 1)
+                    MySet.SpecialBonus[SpecialId()].Special = -1;
             }
 
             DisplayBonus();
             DisplayBonusText();
         }
 
-        private void cbSetType_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvBonusList_DoubleClick(object sender, EventArgs e)
         {
-            if (Loading)
+            if (lvBonusList.SelectedIndices.Count < 1)
                 return;
-            mySet.SetType = (Enums.eSetType) cbSetType.SelectedIndex;
+            var index = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvBonusList.SelectedItems[0].Tag)));
+            if (index < 0)
+            {
+                MessageBox.Show(@"Tag was less than 0!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                if (IsBonus())
+                {
+                    // mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
+                    // mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
+                    var bonus = MySet.Bonus;
+                    var bonusArName = Array.Empty<string>();
+                    var bonusArIndex = Array.Empty<int>();
+                    Array.Copy(bonus[BonusId()].Name, bonusArName, bonus[BonusId()].Name.Length + 1);
+                    Array.Copy(bonus[BonusId()].Index, bonusArIndex, bonus[BonusId()].Index.Length + 1);
+                    bonus[BonusId()].Name = bonusArName;
+                    bonus[BonusId()].Index = bonusArIndex;
+                    MySet.Bonus[BonusId()].Name[MySet.Bonus[BonusId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
+                    MySet.Bonus[BonusId()].Index[MySet.Bonus[BonusId()].Index.Length - 1] = index;
+                    MySet.Bonus[BonusId()].Slotted = cbSlotCount.SelectedIndex + 2;
+                }
+                else if (IsSpecial())
+                {
+                    // mySet.SpecialBonus[SpecialID()].Special = SpecialID();
+                    // mySet.SpecialBonus[SpecialID()].Name = (string[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
+                    // mySet.SpecialBonus[SpecialID()].Index = (int[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
+                    var spBonus = MySet.SpecialBonus;
+                    var spBonusArName = Array.Empty<string>();
+                    var spBonusArIndex = Array.Empty<int>();
+                    MySet.SpecialBonus[SpecialId()].Special = SpecialId();
+                    Array.Copy(spBonus[SpecialId()].Name, spBonusArName, spBonus[SpecialId()].Name.Length + 1);
+                    Array.Copy(spBonus[SpecialId()].Index, spBonusArIndex, spBonus[SpecialId()].Index.Length + 1);
+                    spBonus[SpecialId()].Name = spBonusArName;
+                    spBonus[SpecialId()].Index = spBonusArIndex;
+                    MySet.SpecialBonus[SpecialId()].Name[MySet.SpecialBonus[SpecialId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
+                    MySet.SpecialBonus[SpecialId()].Index[MySet.SpecialBonus[SpecialId()].Index.Length - 1] = index;
+                }
+
+                DisplayBonus();
+                DisplayBonusText();
+            }
         }
 
-        private void cbSlotX_SelectedIndexChanged(object sender, EventArgs e)
+        private void SetMaxLevel(int iValue)
         {
-            if (Loading)
-                return;
-            DisplayBonus();
-            DisplayBonusText();
+            if (decimal.Compare(new decimal(iValue), udMaxLevel.Minimum) < 0)
+                iValue = Convert.ToInt32(udMaxLevel.Minimum);
+            if (decimal.Compare(new decimal(iValue), udMaxLevel.Maximum) > 0)
+                iValue = Convert.ToInt32(udMaxLevel.Maximum);
+            udMaxLevel.Value = new decimal(iValue);
+        }
+
+        private void SetMinLevel(int iValue)
+        {
+            if (decimal.Compare(new decimal(iValue), udMinLevel.Minimum) < 0)
+                iValue = Convert.ToInt32(udMinLevel.Minimum);
+            if (decimal.Compare(new decimal(iValue), udMinLevel.Maximum) > 0)
+                iValue = Convert.ToInt32(udMinLevel.Maximum);
+            udMinLevel.Value = new decimal(iValue);
+        }
+
+        private int SpecialId()
+        {
+            return cbSlotCount.SelectedIndex - (MySet.Enhancements.Length - 1);
         }
 
         private void DisplayBonus()
@@ -197,85 +299,96 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 lstBonus.BeginUpdate();
                 lstBonus.Items.Clear();
-                if (isBonus())
+                _lstBonusNid = new List<int>();
+                if (IsBonus())
                 {
-                    var index1 = BonusID();
-                    var num = mySet.Bonus[index1].Index.Length - 1;
+                    var index1 = BonusId();
+                    var num = MySet.Bonus[index1].Index.Length - 1;
                     for (var index2 = 0; index2 <= num; ++index2)
-                        lstBonus.Items.Add(DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName);
-                    txtAlternate.Text = mySet.Bonus[index1].AltString;
+                    {
+                        var powerNid = MySet.Bonus[index1].Index[index2];
+                        var p = DatabaseAPI.Database.Power[powerNid];
+                        var pNameEx = $"{p.PowerName}{(p.FullName.ToLowerInvariant().Contains("pvp") ? " [PvP]" : "")}";
+                        lstBonus.Items.Add(pNameEx);
+                        _lstBonusNid.Add(powerNid);
+                    }
+
+                    txtAlternate.Text = MySet.Bonus[index1].AltString;
                 }
-                else if (isSpecial())
+                else if (IsSpecial())
                 {
-                    var index1 = SpecialID();
-                    var num = mySet.SpecialBonus[index1].Index.Length - 1;
+                    var index1 = SpecialId();
+                    var num = MySet.SpecialBonus[index1].Index.Length - 1;
                     for (var index2 = 0; index2 <= num; ++index2)
-                        lstBonus.Items.Add(DatabaseAPI.Database.Power[mySet.SpecialBonus[index1].Index[index2]]
+                        lstBonus.Items.Add(DatabaseAPI.Database.Power[MySet.SpecialBonus[index1].Index[index2]]
                             .PowerName);
-                    txtAlternate.Text = mySet.SpecialBonus[index1].AltString;
+                    txtAlternate.Text = MySet.SpecialBonus[index1].AltString;
                 }
 
                 lstBonus.EndUpdate();
-                cbSlotCount.Enabled = mySet.Enhancements.Length > 1;
+                cbSlotCount.Enabled = MySet.Enhancements.Length > 1;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}\r\n\t{ex.StackTrace}");
+                MessageBox.Show($"{ex.Message}\r\n\n{ex.StackTrace}");
+                //ProjectData.SetProjectError(ex);
+                //ProjectData.ClearProjectError();
             }
         }
 
         private void DisplayBonusText()
         {
             var str1 = RTF.StartRTF();
-            var num1 = mySet.Bonus.Length - 1;
+            var num1 = MySet.Bonus.Length - 1;
             for (var index1 = 0; index1 <= num1; ++index1)
             {
-                if (mySet.Bonus[index1].Index.Length > 0)
+                if (MySet.Bonus[index1].Index.Length > 0)
                     str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                           RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
-                var num2 = mySet.Bonus[index1].Index.Length - 1;
+                           RTF.Bold($"{MySet.Bonus[index1].Slotted} Enhancements: ");
+                var num2 = MySet.Bonus[index1].Index.Length - 1;
                 for (var index2 = 0; index2 <= num2; ++index2)
-                    if (mySet.Bonus[index1].Index[index2] > -1)
+                    if (MySet.Bonus[index1].Index[index2] > -1)
                     {
                         if (index2 > 0)
                             str1 += ", ";
                         str1 = str1 + RTF.Color(RTF.ElementID.InventionInvert) +
-                               DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName;
+                               DatabaseAPI.Database.Power[MySet.Bonus[index1].Index[index2]].PowerName;
                     }
 
-                if (mySet.Bonus[index1].Index.Length > 0)
-                    str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, false));
-                if (mySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
+                if (MySet.Bonus[index1].Index.Length > 0)
+                    str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, false));
+                if (MySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
                     str1 += "(PvP)";
-                if (mySet.Bonus[index1].Index.Length > 0)
+                if (MySet.Bonus[index1].Index.Length > 0)
                     str1 += RTF.Crlf();
             }
 
-            var num3 = mySet.SpecialBonus.Length - 1;
+            var num3 = MySet.SpecialBonus.Length - 1;
             for (var index1 = 0; index1 <= num3; ++index1)
             {
-                if (mySet.SpecialBonus[index1].Special > -1)
+                if (MySet.SpecialBonus[index1].Special > -1)
                 {
                     var str2 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold("Special Case Enhancement: ") +
                                RTF.Color(RTF.ElementID.InventionInvert);
-                    if (mySet.Enhancements[mySet.SpecialBonus[index1].Special] > -1)
+                    if (MySet.Enhancements[MySet.SpecialBonus[index1].Special] > -1)
                         str2 += DatabaseAPI.Database
-                            .Enhancements[mySet.Enhancements[mySet.SpecialBonus[index1].Special]].Name;
+                            .Enhancements[MySet.Enhancements[MySet.SpecialBonus[index1].Special]].Name;
                     var str3 = str2 + RTF.Crlf();
-                    var num2 = mySet.SpecialBonus[index1].Index.Length - 1;
+                    var num2 = MySet.SpecialBonus[index1].Index.Length - 1;
                     for (var index2 = 0; index2 <= num2; ++index2)
-                        if (mySet.SpecialBonus[index1].Index[index2] > -1)
+                        if (MySet.SpecialBonus[index1].Index[index2] > -1)
                         {
                             if (index2 > 0)
                                 str3 += ", ";
                             str3 = str3 + RTF.Color(RTF.ElementID.InventionInvert) + DatabaseAPI.Database
-                                .Power[mySet.SpecialBonus[index1].Index[index2]].PowerName;
+                                .Power[MySet.SpecialBonus[index1].Index[index2]].PowerName;
                         }
 
-                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, true)) + RTF.Crlf();
+                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, true)) +
+                           RTF.Crlf();
                 }
 
-                if (mySet.SpecialBonus[index1].Index.Length > 0)
+                if (MySet.SpecialBonus[index1].Index.Length > 0)
                     str1 += RTF.Crlf();
             }
 
@@ -284,16 +397,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DisplayIcon()
         {
-            if (!string.IsNullOrWhiteSpace(mySet.Image))
+            if (!string.IsNullOrWhiteSpace(MySet.Image))
             {
-                using var extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{mySet.Image}");
+                using var extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{MySet.Image}");
                 using var extendedBitmap2 = new ExtendedBitmap(30, 30);
                 extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
                     I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                 extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect,
                     extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
-                btnImage.Text = mySet.Image;
+                btnImage.Text = MySet.Image;
             }
             else
             {
@@ -309,37 +422,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             DisplaySetIcons();
             DisplayIcon();
-            txtNameFull.Text = mySet.DisplayName;
-            txtNameShort.Text = mySet.ShortName;
-            txtDesc.Text = mySet.Desc;
-            txtInternal.Text = mySet.Uid;
-            SetMinLevel(mySet.LevelMin + 1);
-            SetMaxLevel(mySet.LevelMax + 1);
+            txtNameFull.Text = MySet.DisplayName;
+            txtNameShort.Text = MySet.ShortName;
+            txtDesc.Text = MySet.Desc;
+            txtInternal.Text = MySet.Uid;
+            SetMinLevel(MySet.LevelMin + 1);
+            SetMaxLevel(MySet.LevelMax + 1);
             udMaxLevel.Minimum = udMinLevel.Value;
             udMinLevel.Maximum = udMaxLevel.Value;
-            cbSetType.SelectedIndex = (int) mySet.SetType;
-            btnImage.Text = mySet.Image;
+            cbSetType.SelectedIndex = (int) MySet.SetType;
+            btnImage.Text = MySet.Image;
             DisplayBonusText();
             DisplayBonus();
         }
 
         private void DisplaySetIcons()
         {
-            FillImageList();
+            //FillImageList();
             var items = new string[2];
             lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
             FillImageList();
-            var num1 = mySet.Enhancements.Length - 1;
+            var num1 = MySet.Enhancements.Length - 1;
             for (var imageIndex = 0; imageIndex <= num1; ++imageIndex)
             {
-                var enhancement = DatabaseAPI.Database.Enhancements[mySet.Enhancements[imageIndex]];
+                var enhancement = DatabaseAPI.Database.Enhancements[MySet.Enhancements[imageIndex]];
                 items[0] = enhancement.Name + " (" + enhancement.ShortName + ")";
                 items[1] = "";
                 var num2 = enhancement.ClassID.Length - 1;
                 for (var index1 = 0; index1 <= num2; ++index1)
                 {
-                    if (items[1] != "")
+                    if (!string.IsNullOrWhiteSpace(items[1]))
                     {
                         var strArray1 = items;
                         var num3 = 1;
@@ -369,12 +482,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             cbSlotCount.BeginUpdate();
             cbSlotCount.Items.Clear();
-            var num1 = mySet.Enhancements.Length - 2;
+            var num1 = MySet.Enhancements.Length - 2;
             for (var index = 0; index <= num1; ++index)
-                cbSlotCount.Items.Add(Convert.ToString(index + 2) + " Enhancements");
-            var num2 = mySet.Enhancements.Length - 1;
+                cbSlotCount.Items.Add($"{index + 2} Enhancements");
+            var num2 = MySet.Enhancements.Length - 1;
             for (var index = 0; index <= num2; ++index)
-                cbSlotCount.Items.Add(DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].Name);
+                cbSlotCount.Items.Add(DatabaseAPI.Database.Enhancements[MySet.Enhancements[index]].Name);
             if (cbSlotCount.Items.Count > 0)
                 cbSlotCount.SelectedIndex = 0;
             cbSlotCount.EndUpdate();
@@ -384,20 +497,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lvBonusList.BeginUpdate();
             lvBonusList.Items.Clear();
+            lvBonusList.SelectedIndices.Clear();
             var items = new string[2];
-            var num1 = SetBonusList.Length - 1;
+            var num1 = _setBonusList.Length - 1;
             for (var index = 0; index <= num1; ++index)
             {
                 items[1] = "";
-                if (DatabaseAPI.Database.Power[SetBonusList[index]].Effects.Length > 0)
-                    items[1] = DatabaseAPI.Database.Power[SetBonusList[index]].Effects[0]
+                if (DatabaseAPI.Database.Power[_setBonusList[index]].Effects.Length > 0)
+                    items[1] = DatabaseAPI.Database.Power[_setBonusList[index]].Effects[0]
                         .BuildEffectStringShort(false, true);
-                items[0] = DatabaseAPI.Database.Power[SetBonusList[index]].PowerName;
+                items[0] = $"{DatabaseAPI.Database.Power[_setBonusList[index]].PowerName}{(DatabaseAPI.Database.Power[_setBonusList[index]].FullName.ToLowerInvariant().Contains("pvp") ? " [PvP]" : "")}";
                 if (items[0].ToUpper(CultureInfo.InvariantCulture)
                     .Contains(txtBonusFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
                     lvBonusList.Items.Add(new ListViewItem(items)
                     {
-                        Tag = SetBonusList[index]
+                        Tag = _setBonusList[index]
                     });
             }
 
@@ -410,7 +524,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var names = Enum.GetNames(Enums.eSetType.Untyped.GetType());
             cbSetType.BeginUpdate();
             cbSetType.Items.Clear();
-            cbSetType.Items.AddRange(names);
+            cbSetType.Items.AddRange(names.ToArray<object>());
             cbSetType.EndUpdate();
         }
 
@@ -422,17 +536,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var height1 = imageSize1.Height;
             using var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilEnh.Images.Clear();
-            var num = mySet.Enhancements.Length - 1;
+            var num = MySet.Enhancements.Length - 1;
             for (var index = 0; index <= num; ++index)
             {
-                var enhancement = DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]];
+                var enhancement = DatabaseAPI.Database.Enhancements[MySet.Enhancements[index]];
                 if (enhancement.ImageIdx > -1)
                 {
                     var gfxGrade = I9Gfx.ToGfxGrade(enhancement.TypeID);
-                    extendedBitmap.Graphics.Clear(Color.White);
+                    extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancement(ref graphics,
-                        DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].ImageIdx, gfxGrade);
+                        DatabaseAPI.Database.Enhancements[MySet.Enhancements[index]].ImageIdx, gfxGrade);
                     ilEnh.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
@@ -450,224 +564,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmSetEdit_Load(object sender, EventArgs e)
         {
-            if (MidsContext.Config.MasterMode)
-                btnPaste.Visible = true;
-            SetBonusList = DatabaseAPI.NidPowers("set_bonus.set_bonus");
-            if (mySet.Bonus.Length < 1)
-                mySet.InitBonus();
+            _setBonusList = DatabaseAPI.NidPowers("set_bonus.set_bonus");
+            if (MySet.Bonus.Length < 1)
+                MySet.InitBonus();
             FillComboBoxes();
             FillBonusCombos();
             FillBonusList();
             DisplaySetData();
-            Loading = false;
+            _loading = false;
             DisplayBonus();
         }
 
-        private bool isBonus()
+        private bool IsBonus()
         {
-            return (cbSlotCount.SelectedIndex > -1) & (cbSlotCount.SelectedIndex < mySet.Enhancements.Length - 1);
+            return (cbSlotCount.SelectedIndex > -1) & (cbSlotCount.SelectedIndex < MySet.Enhancements.Length - 1);
         }
 
-        private bool isSpecial()
+        private bool IsSpecial()
         {
-            return (cbSlotCount.SelectedIndex >= mySet.Enhancements.Length - 1) & (cbSlotCount.SelectedIndex <
-                mySet.Enhancements.Length + mySet.Enhancements.Length - 1);
-        }
-
-        private void lstBonus_DoubleClick(object sender, EventArgs e)
-        {
-            if (lstBonus.SelectedIndex < 0)
-                return;
-            var selectedIndex = lstBonus.SelectedIndex;
-            var numArray1 = new int[0];
-            var strArray1 = new string[0];
-            var index1 = 0;
-            if (isBonus())
-            {
-                var numArray2 = new int[mySet.Bonus[BonusID()].Index.Length - 2 + 1];
-                var strArray2 = new string[mySet.Bonus[BonusID()].Name.Length - 2 + 1];
-                var num1 = mySet.Bonus[BonusID()].Index.Length - 1;
-                for (var index2 = 0; index2 <= num1; ++index2)
-                    if (index2 != selectedIndex)
-                    {
-                        numArray2[index1] = mySet.Bonus[BonusID()].Index[index2];
-                        strArray2[index1] = mySet.Bonus[BonusID()].Name[index2];
-                        ++index1;
-                    }
-
-                mySet.Bonus[BonusID()].Name = new string[numArray2.Length - 1 + 1];
-                mySet.Bonus[BonusID()].Index = new int[strArray2.Length - 1 + 1];
-                var num2 = numArray2.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
-                {
-                    mySet.Bonus[BonusID()].Index[index2] = numArray2[index2];
-                    mySet.Bonus[BonusID()].Name[index2] = strArray2[index2];
-                }
-            }
-            else if (isSpecial())
-            {
-                var numArray2 = new int[mySet.SpecialBonus[SpecialID()].Index.Length - 2 + 1];
-                var strArray2 = new string[mySet.SpecialBonus[SpecialID()].Name.Length - 2 + 1];
-                var num1 = mySet.SpecialBonus[SpecialID()].Index.Length - 1;
-                for (var index2 = 0; index2 <= num1; ++index2)
-                    if (index2 != selectedIndex)
-                    {
-                        numArray2[index1] = mySet.SpecialBonus[SpecialID()].Index[index2];
-                        strArray2[index1] = mySet.SpecialBonus[SpecialID()].Name[index2];
-                        ++index1;
-                    }
-
-                mySet.SpecialBonus[SpecialID()].Name = new string[numArray2.Length - 1 + 1];
-                mySet.SpecialBonus[SpecialID()].Index = new int[strArray2.Length - 1 + 1];
-                var num2 = numArray2.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
-                {
-                    mySet.SpecialBonus[SpecialID()].Index[index2] = numArray2[index2];
-                    mySet.SpecialBonus[SpecialID()].Name[index2] = strArray2[index2];
-                }
-
-                if (mySet.SpecialBonus[SpecialID()].Index.Length < 1)
-                    mySet.SpecialBonus[SpecialID()].Special = -1;
-            }
-
-            DisplayBonus();
-            DisplayBonusText();
-        }
-
-        private void lvBonusList_DoubleClick(object sender, EventArgs e)
-        {
-            if (lvBonusList.SelectedIndices.Count < 1)
-                return;
-            var index = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvBonusList.SelectedItems[0].Tag)));
-            if (index < 0)
-            {
-                MessageBox.Show("Tag was less than 0!");
-            }
-            else
-            {
-                if (isBonus())
-                {
-                    var bonus = mySet.Bonus;
-                    var bonusArName = Array.Empty<string>();
-                    var bonusArIndex = Array.Empty<int>();
-                    Array.Copy(bonus[BonusID()].Name, bonusArName, bonus[BonusID()].Name.Length + 1);
-                    Array.Copy(bonus[BonusID()].Index, bonusArIndex, bonus[BonusID()].Index.Length + 1);
-                    bonus[BonusID()].Name = bonusArName;
-                    bonus[BonusID()].Index = bonusArIndex;
-                    //mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
-                    //mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
-                    mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
-                    mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
-                    mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex + 2;
-                }
-                else if (isSpecial())
-                {
-                    var spBonus = mySet.SpecialBonus;
-                    var spBonusArName = Array.Empty<string>();
-                    var spBonusArIndex = Array.Empty<int>();
-                    mySet.SpecialBonus[SpecialID()].Special = SpecialID();
-                    Array.Copy(spBonus[SpecialID()].Name, spBonusArName, spBonus[SpecialID()].Name.Length + 1);
-                    Array.Copy(spBonus[SpecialID()].Index, spBonusArIndex, spBonus[SpecialID()].Index.Length + 1);
-                    spBonus[SpecialID()].Name = spBonusArName;
-                    spBonus[SpecialID()].Index = spBonusArIndex;
-                    // mySet.SpecialBonus[SpecialID()].Name = (string[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
-                    // mySet.SpecialBonus[SpecialID()].Index = (int[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
-                    mySet.SpecialBonus[SpecialID()].Name[mySet.SpecialBonus[SpecialID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
-                    mySet.SpecialBonus[SpecialID()].Index[mySet.SpecialBonus[SpecialID()].Index.Length - 1] = index;
-                }
-
-                DisplayBonus();
-                DisplayBonusText();
-            }
-        }
-
-        private void SetMaxLevel(int iValue)
-        {
-            if (decimal.Compare(new decimal(iValue), udMaxLevel.Minimum) < 0)
-                iValue = Convert.ToInt32(udMaxLevel.Minimum);
-            if (decimal.Compare(new decimal(iValue), udMaxLevel.Maximum) > 0)
-                iValue = Convert.ToInt32(udMaxLevel.Maximum);
-            udMaxLevel.Value = new decimal(iValue);
-        }
-
-        private void SetMinLevel(int iValue)
-        {
-            if (decimal.Compare(new decimal(iValue), udMinLevel.Minimum) < 0)
-                iValue = Convert.ToInt32(udMinLevel.Minimum);
-            if (decimal.Compare(new decimal(iValue), udMinLevel.Maximum) > 0)
-                iValue = Convert.ToInt32(udMinLevel.Maximum);
-            udMinLevel.Value = new decimal(iValue);
-        }
-
-        private int SpecialID()
-        {
-            return cbSlotCount.SelectedIndex - (mySet.Enhancements.Length - 1);
-        }
-
-        private void txtAlternate_TextChanged(object sender, EventArgs e)
-        {
-            if (isBonus())
-                mySet.Bonus[BonusID()].AltString = txtAlternate.Text;
-            else if (isSpecial())
-                mySet.SpecialBonus[SpecialID()].AltString = txtAlternate.Text;
-            DisplayBonusText();
-        }
-
-        private void txtDesc_TextChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            mySet.Desc = txtDesc.Text;
-        }
-
-        private void txtInternal_TextChanged(object sender, EventArgs e)
-
-        {
-            if (Loading)
-                return;
-            mySet.Uid = txtInternal.Text;
-        }
-
-        private void txtNameFull_TextChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            mySet.DisplayName = txtNameFull.Text;
-        }
-
-        private void txtNameShort_TextChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            mySet.ShortName = txtNameShort.Text;
-        }
-
-        private void udMaxLevel_Leave(object sender, EventArgs e)
-        {
-            SetMaxLevel((int) Math.Round(Convert.ToDecimal(udMaxLevel.Text)));
-            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
-        }
-
-        private void udMaxLevel_ValueChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
-            udMinLevel.Maximum = udMaxLevel.Value;
-        }
-
-        private void udMinLevel_Leave(object sender, EventArgs e)
-        {
-            SetMinLevel((int) Math.Round(Convert.ToDecimal(udMinLevel.Text)));
-            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
-        }
-
-        private void udMinLevel_ValueChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
-            udMaxLevel.Minimum = udMinLevel.Value;
+            return (cbSlotCount.SelectedIndex >= MySet.Enhancements.Length - 1) & (cbSlotCount.SelectedIndex <
+                MySet.Enhancements.Length + MySet.Enhancements.Length - 1);
         }
 
         private void TxtBonusFilter_TextChanged(object sender, EventArgs e)

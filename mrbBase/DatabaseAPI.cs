@@ -1318,17 +1318,17 @@ namespace mrbBase
         {
             foreach (var power in Database.Power)
             {
-                if (power.GetPowerSet().SetType == Enums.ePowerSetType.Primary || power.GetPowerSet().SetType == Enums.ePowerSetType.Secondary || power.GetPowerSet().SetType == Enums.ePowerSetType.Pool || power.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                if (power.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary)
                 {
-                    var Boosts = new List<string>();
+                    var boosts = new List<string>();
                     if (power.BoostsAllowed.Length <= 0 && power.Enhancements.Length > 0)
                     {
                         foreach (var enh in power.Enhancements)
                         {
-                            Boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
+                            boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
                         }
 
-                        power.BoostsAllowed = Boosts.ToArray();
+                        power.BoostsAllowed = boosts.ToArray();
                     }
                 }
             }
@@ -1336,8 +1336,6 @@ namespace mrbBase
 
         public static void SaveMainDatabase(ISerialize serializer, string iPath = "")
         {
-            //MergeDatabaseFile();
-            //Task.Delay(1500);
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
             {
@@ -1349,7 +1347,6 @@ namespace mrbBase
                 CheckEhcBoosts();
                 path = Files.SelectDataFileSave(Files.MxdbFileDB, iPath);
             }
-
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1365,11 +1362,14 @@ namespace mrbBase
 
             try
             {
+                UpdateDbModified();
                 writer.Write(MainDbName);
                 writer.Write(Database.Version);
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
+                writer.Write(Database.PageVol);
+                writer.Write(Database.PageVolText);
                 writer.Write("BEGIN:ARCHETYPES");
                 Database.ArchetypeVersion.StoreTo(writer);
                 //Console.WriteLine(Database.ArchetypeVersion);
@@ -1418,6 +1418,14 @@ namespace mrbBase
             }
         }
 
+        private static void UpdateDbModified()
+        {
+            Database.Date = DateTime.Now;
+            var dateSplit = Database.Date.ToString("MM/dd/yyyy").Split('/');
+            var verString = $"{dateSplit[2]}.{dateSplit[0]}{dateSplit[1]}";
+            Database.Version = double.Parse(verString);
+        }
+
         private static void saveEnts()
         {
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
@@ -1455,7 +1463,7 @@ namespace mrbBase
                     MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
                 }
 
-                Database.Version = reader.ReadSingle();
+                Database.Version = reader.ReadDouble();
                 var year = reader.ReadInt32();
                 if (year > 0)
                 {
@@ -1469,6 +1477,8 @@ namespace mrbBase
                 }
 
                 Database.Issue = reader.ReadInt32();
+                Database.PageVol = reader.ReadInt32();
+                Database.PageVolText = reader.ReadString();
                 if (reader.ReadString() != "BEGIN:ARCHETYPES")
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
@@ -1587,11 +1597,11 @@ namespace mrbBase
             }
         }
 
-        private static float GetDatabaseVersion(string fp)
+        private static double GetDatabaseVersion(string fp)
         {
             var fName = fp;
-            var num1 = -1f;
-            float num2;
+            double num1 = -1;
+            double num2;
             if (!File.Exists(fName))
             {
                 num2 = num1;
@@ -1605,8 +1615,11 @@ namespace mrbBase
                         try
                         {
                             if (binaryReader.ReadString() != "Mids' Hero Designer Database MK II")
+                            {
                                 MessageBox.Show("Expected MHD header, got something else!");
-                            num1 = binaryReader.ReadSingle();
+                            }
+
+                            num1 = binaryReader.ReadDouble();
                         }
                         catch (Exception ex)
                         {

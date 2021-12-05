@@ -725,6 +725,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
             this.lvSubSub.OwnerDraw = true;
+            this.lvSubSub.ShowItemToolTips = true;
             this.lvSubSub.Size = new System.Drawing.Size(275, 275);
             this.lvSubSub.TabIndex = 144;
             this.lvSubSub.UseCompatibleStateImageBehavior = false;
@@ -766,7 +767,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(143, 19);
             this.Label10.TabIndex = 152;
-            this.Label10.Text = "Override GlobalChanceMod:";
+            this.Label10.Text = "Override:";
             this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtOverride
@@ -1356,7 +1357,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkIgnoreScale.TabIndex = 176;
             this.chkIgnoreScale.Text = "Ignore Scaling For Effect";
             this.chkIgnoreScale.UseVisualStyleBackColor = true;
-            this.chkIgnoreScale.CheckedChanged += new EventHandler(this.chkIgnoreScale_CheckChanged);
+            this.chkIgnoreScale.CheckedChanged += new System.EventHandler(this.chkIgnoreScale_CheckChanged);
             // 
             // frmPowerEffect
             // 

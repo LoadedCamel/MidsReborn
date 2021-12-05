@@ -2519,7 +2519,7 @@ namespace Mids_Reborn.Forms
             dvLastPower = powerIdx;
             dvLastNoLev = NoLevel;
             fData?.UpdateData(dvLastPower);
-            var num1 = -1;
+            var powIndex = -1;
             if (MainModule.MidsController.Toon.Locked)
             {
                 var num2 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
@@ -2527,28 +2527,28 @@ namespace Mids_Reborn.Forms
                 {
                     if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
                         continue;
-                    num1 = index;
+                    powIndex = index;
                     break;
                 }
             }
 
             DataViewLocked = Lock;
-            if (num1 > -1)
+            if (powIndex > -1)
             {
-                var basePower = MainModule.MidsController.Toon.GetBasePower(num1);
-                var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(num1);
+                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex);
+                var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(powIndex);
                 if (basePower != null && enhancedPower != null)
                 {
-                    myDataView.SetData(basePower, enhancedPower, NoLevel, DataViewLocked, num1);
+                    myDataView.SetData(basePower, enhancedPower, NoLevel, DataViewLocked, powIndex);
                 }
                 else
                 {
-                    myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel, DataViewLocked, num1);
+                    myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, NoLevel, DataViewLocked, powIndex);
                 }
             }
             else
             {
-                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel, DataViewLocked, num1);
+                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, NoLevel, DataViewLocked, powIndex);
             }
             
             if (!Lock || dvAnchored.Visible)
@@ -3338,8 +3338,7 @@ namespace Mids_Reborn.Forms
                         pnlGFX.Update();
                         pnlGFX.Refresh();
                     }
-                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
-                             (e.Button == MouseButtons.Left))
+                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                     {
                         if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
                             !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
@@ -3361,8 +3360,7 @@ namespace Mids_Reborn.Forms
 
                             MidsContext.Character.Validate();
                         }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() &&
-                                 !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                         {
                             if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
                             {
@@ -3373,8 +3371,7 @@ namespace Mids_Reborn.Forms
                                 MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
                             }
                         }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                                 MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                         {
                             if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                             {
@@ -4930,11 +4927,11 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
             else
             {
-                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
         }
 

@@ -223,12 +223,6 @@
     <Compile Include="Forms\WindowMenuItems\frmPrestige.Designer.cs">
       <DependentUpon>frmPrestige.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WindowMenuItems\Totals.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WindowMenuItems\Totals.Designer.cs">
-      <DependentUpon>Totals.cs</DependentUpon>
-    </Compile>
     <Compile Include="GenFreebies.cs" />
     <Compile Include="BuildImportTools.cs" />
     <Compile Include="Forms\frmColorOptions.cs">
@@ -243,12 +237,6 @@
     <Compile Include="Forms\frmInitializing.Designer.cs">
       <DependentUpon>frmInitializing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.Designer.cs">
-      <DependentUpon>frmSetListingPvP.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\JsonImport\frmJsonImportMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,23 +244,17 @@
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainUILogic.cs" />
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.Designer.cs">
-      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.Designer.cs">
-      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.Designer.cs">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.Designer.cs">
+      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmMMPowers.cs">
       <SubType>Form</SubType>
@@ -303,9 +285,6 @@
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmAccolade.Designer.cs">
       <DependentUpon>frmAccolade.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.Designer.cs">
-      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.Designer.cs">
       <DependentUpon>frmSalvageEdit.cs</DependentUpon>
@@ -419,9 +398,6 @@
     <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
       <DependentUpon>PowersControl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\WindowMenuItems\Totals.resx">
-      <DependentUpon>Totals.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
       <DependentUpon>PowerList.cs</DependentUpon>
     </EmbeddedResource>
@@ -2340,9 +2316,6 @@
     <EmbeddedResource Include="Forms\frmTeam.resx">
       <DependentUpon>frmTeam.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.resx">
-      <DependentUpon>frmSetListingPvP.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -2355,14 +2328,11 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.resx">
       <DependentUpon>frmEditAttribMod.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.resx">
-      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.resx">
-      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
+      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
@@ -2492,9 +2462,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\frmSetFind.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2603,10 +2570,6 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.resx">
       <DependentUpon>frmSalvageEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
-      <DependentUpon>frmSetEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSetFind.resx">
       <DependentUpon>frmSetFind.cs</DependentUpon>
     </EmbeddedResource>
@@ -2702,7 +2665,7 @@
       <Version>1.3.6</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
-      <Version>5.15.3</Version>
+      <Version>5.15.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
@@ -2714,16 +2677,19 @@
       <Version>106.13.0</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
-      <Version>19.3.0.48</Version>
+      <Version>19.3.0.56</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Licensing">
-      <Version>19.3.0.48</Version>
+      <Version>19.3.0.56</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.SfListView.WinForms">
+      <Version>19.3.0.56</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Shared.Base">
-      <Version>19.3.0.48</Version>
+      <Version>19.3.0.56</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Tools.Windows">
-      <Version>19.3.0.48</Version>
+      <Version>19.3.0.56</Version>
     </PackageReference>
     <PackageReference Include="Zstandard2.Net">
       <Version>1.4.4</Version>

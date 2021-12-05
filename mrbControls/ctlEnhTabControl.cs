@@ -52,7 +52,7 @@ namespace mrbControls
 
         public ctlEnhTabControl()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTMxMjE2QDMxMzkyZTMzMmUzMFlHcjdJU1R1YTVodjdadXBsWkQraGtIQVJmMitSSXVsNytuK2NCeXg5RjA9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTQyNTM5QDMxMzkyZTMzMmUzMGErM3R4akxDVTI4WkNtWmZ1TEpvZEpXeUhvcEJva3B4blhwTHRMV3R4SXM9");
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
             DrawItem += DrawItems;

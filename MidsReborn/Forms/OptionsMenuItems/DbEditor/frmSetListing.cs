@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using mrbBase;
@@ -38,74 +39,102 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++num1;
             items[5] = Convert.ToString(num1);
 
-            var setContainsPvPFX = false;
+            var setContainsPvPfx = false;
             for (var i = 0; i < enhancementSet.Bonus.Length; i++)
             {
-                foreach (var b in enhancementSet.Bonus[i].Index)
+                if (enhancementSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
                 {
-                    var p = DatabaseAPI.Database.Power[b];
-                    if (!p.FullName.ToLowerInvariant().Contains("pvp")) continue;
-
-                    setContainsPvPFX = true;
-                    break;
+                    setContainsPvPfx = true;
                 }
 
-                if (setContainsPvPFX) break;
+                if (setContainsPvPfx) break;
             }
 
-            items[6] = setContainsPvPFX ? "X" : "";
+            items[6] = setContainsPvPfx ? "X" : "";
             lvSets.Items.Add(new ListViewItem(items, Index));
             lvSets.Items[lvSets.Items.Count - 1].Selected = true;
             lvSets.Items[lvSets.Items.Count - 1].EnsureVisible();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
-
         {
             var iSet = new EnhancementSet();
-            using var frmSetEdit = new frmSetEditNEW(ref iSet);
-            var num = (int) frmSetEdit.ShowDialog();
-            if (frmSetEdit.DialogResult != DialogResult.OK)
-                return;
-            DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.mySet));
+            var isPvP = MessageBox.Show(@"Will this set be used with PvP?", "", MessageBoxButtons.YesNo);
+            switch (isPvP)
+            {
+                case DialogResult.Yes:
+                {
+                    using var frmSetEdit = new FrmSetEditPvP(ref iSet);
+                    var num = (int)frmSetEdit.ShowDialog();
+                    if (frmSetEdit.DialogResult != DialogResult.OK)
+                        return;
+                    DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));
+                    break;
+                }
+                case DialogResult.No:
+                {
+                    using var frmSetEdit = new FrmSetEdit(ref iSet);
+                    var num = (int)frmSetEdit.ShowDialog();
+                    if (frmSetEdit.DialogResult != DialogResult.OK)
+                        return;
+                    DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));
+                    break;
+                }
+            }
             ImageUpdate();
             AddListItem(DatabaseAPI.Database.EnhancementSets.Count - 1);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
-
         {
             Hide();
         }
 
         private void btnClone_Click(object sender, EventArgs e)
-
         {
             if (lvSets.SelectedIndices.Count <= 0)
                 return;
             var iSet = new EnhancementSet(DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]]);
             iSet.DisplayName += " Copy";
-            using var frmSetEdit = new frmSetEditNEW(ref iSet);
-            var num = (int) frmSetEdit.ShowDialog();
-            if (frmSetEdit.DialogResult != DialogResult.OK)
-                return;
-            DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.mySet));
+            var setContainsPvPfx = false;
+            for (var i = 0; i < iSet.Bonus.Length; i++)
+            {
+                if (iSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
+                {
+                    setContainsPvPfx = true;
+                }
+
+                if (setContainsPvPfx) break;
+            }
+
+            if (setContainsPvPfx)
+            {
+                using var frmSetEdit = new FrmSetEditPvP(ref iSet);
+                frmSetEdit.ShowDialog();
+                if (frmSetEdit.DialogResult != DialogResult.OK)
+                    return;
+                DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));
+            }
+            else
+            {
+                using var frmSetEdit = new FrmSetEdit(ref iSet);
+                frmSetEdit.ShowDialog();
+                if (frmSetEdit.DialogResult != DialogResult.OK)
+                    return;
+                DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));
+            }
             ImageUpdate();
             AddListItem(DatabaseAPI.Database.EnhancementSets.Count - 1);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
-
         {
-            if (lvSets.SelectedIndices.Count <= 0 ||
-                MessageBox.Show($"Really delete Set: {lvSets.SelectedItems[0].Text}?", "Are you sure?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (lvSets.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Set: {lvSets.SelectedItems[0].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var selectedIndex = lvSets.SelectedIndices[0];
             if (DatabaseAPI.Database.EnhancementSets[selectedIndex].Enhancements.Length > 0)
             {
-                MessageBox.Show("You need to remove all enhancements from this set before you can delete the set!",
-                    "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(@"You need to remove all enhancements from this set before you can delete the set!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -122,7 +151,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnDown_Click(object sender, EventArgs e)
-
         {
             if (lvSets.SelectedIndices.Count <= 0)
                 return;
@@ -137,8 +165,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.EnhancementSets[selectedIndex + 1] = new EnhancementSet(enhancementSetArray[0]);
             DatabaseAPI.Database.EnhancementSets[selectedIndex] = new EnhancementSet(enhancementSetArray[1]);
             DatabaseAPI.MatchEnhancementIDs();
-            var listViewItem1 = (ListViewItem) lvSets.Items[selectedIndex].Clone();
-            var listViewItem2 = (ListViewItem) lvSets.Items[selectedIndex + 1].Clone();
+            var listViewItem1 = (ListViewItem)lvSets.Items[selectedIndex].Clone();
+            var listViewItem2 = (ListViewItem)lvSets.Items[selectedIndex + 1].Clone();
             lvSets.Items[selectedIndex] = listViewItem2;
             lvSets.Items[selectedIndex + 1] = listViewItem1;
             lvSets.Items[selectedIndex + 1].Selected = true;
@@ -146,7 +174,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
-
         {
             if (lvSets.SelectedIndices.Count <= 0)
                 return;
@@ -159,22 +186,57 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var setNameIndex = enhancementSets.FindIndex(x => x.DisplayName == setName);*/
             var iSet = enhancementSets[selectedIndex2];
             enhancementSets[selectedIndex2] = iSet;
-            using var frmSetEdit = new frmSetEditNEW(ref iSet);
-            var num = (int) frmSetEdit.ShowDialog();
-            if (frmSetEdit.DialogResult != DialogResult.OK)
-                return;
-            if (frmSetEdit.mySet.Uid != DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid)
+
+
+            var setContainsPvPfx = false;
+            for (var i = 0; i < iSet.Bonus.Length; i++)
             {
-                flag = true;
-                uidOld = DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid;
+                if (iSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
+                {
+                    setContainsPvPfx = true;
+                }
+
+                if (setContainsPvPfx) break;
             }
 
-            DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]] = new EnhancementSet(frmSetEdit.mySet);
-            ImageUpdate();
-            UpdateListItem(selectedIndex1);
-            if (!flag)
-                return;
-            RenameIOSet(uidOld, frmSetEdit.mySet.Uid);
+            if (setContainsPvPfx)
+            {
+                using var frmSetEdit = new FrmSetEditPvP(ref iSet);
+                frmSetEdit.ShowDialog();
+                if (frmSetEdit.DialogResult != DialogResult.OK)
+                    return;
+                if (frmSetEdit.MySet.Uid != DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid)
+                {
+                    flag = true;
+                    uidOld = DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid;
+                }
+
+                DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]] = new EnhancementSet(frmSetEdit.MySet);
+                ImageUpdate();
+                UpdateListItem(selectedIndex1);
+                if (!flag)
+                    return;
+                RenameIOSet(uidOld, frmSetEdit.MySet.Uid);
+            }
+            else
+            {
+                using var frmSetEdit = new FrmSetEdit(ref iSet);
+                frmSetEdit.ShowDialog();
+                if (frmSetEdit.DialogResult != DialogResult.OK)
+                    return;
+                if (frmSetEdit.MySet.Uid != DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid)
+                {
+                    flag = true;
+                    uidOld = DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]].Uid;
+                }
+
+                DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]] = new EnhancementSet(frmSetEdit.MySet);
+                ImageUpdate();
+                UpdateListItem(selectedIndex1);
+                if (!flag)
+                    return;
+                RenameIOSet(uidOld, frmSetEdit.MySet.Uid);
+            }
             DatabaseAPI.MatchEnhancementIDs();
         }
 
@@ -186,7 +248,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void btnUp_Click(object sender, EventArgs e)
-
         {
             if (lvSets.SelectedIndices.Count <= 0)
                 return;
@@ -201,8 +262,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.EnhancementSets[selectedIndex - 1] = new EnhancementSet(enhancementSetArray[0]);
             DatabaseAPI.Database.EnhancementSets[selectedIndex] = new EnhancementSet(enhancementSetArray[1]);
             DatabaseAPI.MatchEnhancementIDs();
-            var listViewItem1 = (ListViewItem) lvSets.Items[selectedIndex].Clone();
-            var listViewItem2 = (ListViewItem) lvSets.Items[selectedIndex - 1].Clone();
+            var listViewItem1 = (ListViewItem)lvSets.Items[selectedIndex].Clone();
+            var listViewItem2 = (ListViewItem)lvSets.Items[selectedIndex - 1].Clone();
             lvSets.Items[selectedIndex] = listViewItem2;
             lvSets.Items[selectedIndex - 1] = listViewItem1;
             lvSets.Items[selectedIndex - 1].Selected = true;
@@ -271,24 +332,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         [DebuggerStepThrough]
         private void lvSets_DoubleClick(object sender, EventArgs e)
-
         {
             btnEdit_Click(RuntimeHelpers.GetObjectValue(sender), e);
         }
 
         private void lvSets_SelectedIndexChanged(object sender, EventArgs e)
-
         {
         }
 
         private void NoReload_CheckedChanged(object sender, EventArgs e)
-
         {
             ImageUpdate();
         }
 
         private static void RenameIOSet(string uidOld, string uidNew)
-
         {
             var num = DatabaseAPI.Database.Enhancements.Length - 1;
             for (var index = 0; index <= num; ++index)
@@ -311,7 +368,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (enhancementSet.Bonus[index].Index.Length > 0)
                     ++num1;
             strArray[5] = Convert.ToString(num1);
-            
+
             var setContainsPvPFX = false;
             for (var i = 0; i < enhancementSet.Bonus.Length; i++)
             {
