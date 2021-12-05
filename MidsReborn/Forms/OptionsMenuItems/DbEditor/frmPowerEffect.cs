@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Jace;
 using mrbBase;
@@ -73,9 +72,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             UpdateConditionalTypes();
-            UpdateFXText();
             InitSelectedItems();
             Loading = false;
+            UpdateFXText();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -1740,49 +1739,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading) return;
             myFX.MagnitudeExpression = txtMagExpression.Text;
-            if (myFX.MagnitudeExpression.Contains("///"))
-            {
-                var chunks = myFX.MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
-                var err1 = "";
-                var err2 = "";
-                try
-                {
-                    _ = myFX.ParseMagnitudeExpression(0);
-                }
-                catch (ParseException ex)
-                {
-                    err1 = $"Error (Mag chunk): {ex.Message}";
-                }
-                catch (InvalidOperationException)
-                {
-                    err1 = "";
-                }
-
-                if (chunks.Length == 2)
-                {
-                    try
-                    {
-                        _ = myFX.ParseMagnitudeExpression(1);
-                    }
-                    catch (ParseException ex)
-                    {
-                        err2 = $"Error (Probability chunk): {ex.Message}";
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        err2 = "";
-                    }
-                }
-
-                if (err1 == "" & err2 == "")
-                {
-                    label8.Text = "";
-                }
-                else
-                {
-                    label8.Text = string.Join(" | ", new string[] { err1, err2 });
-                }
-            }
             UpdateFXText();
         }
     }
