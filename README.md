@@ -1,13 +1,13 @@
 #### Active Development Team Members
 - Crytilis aka Metalios
 - Bopper
-- Feles Noctis
 - Zed
 
 #### In-Active Development Team Members
 - Maslow
 - Pine
 - Procat
+- Feles Noctis
 
 #### Official Discord Server
 https://discord.gg/pG5TCEg
