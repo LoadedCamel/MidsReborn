@@ -48,8 +48,6 @@ namespace Mids_Reborn.Forms
 
         public bool DbChangeRequested { get; set; }
 
-        private long popupLastOpenTime;
-
         public frmMain()
         {
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
