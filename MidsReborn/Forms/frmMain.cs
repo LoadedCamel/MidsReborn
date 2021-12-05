@@ -5757,7 +5757,10 @@ namespace Mids_Reborn.Forms
 
             DoOpen(DlgOpen.FileName);
             FloatTop(true);
-            var containsPower = MidsContext.Character.CurrentBuild.Powers.Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
+            var containsPower = MidsContext.Character.CurrentBuild.Powers
+                .Where(pe => pe.Power != null)
+                .ToList()
+                .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
             if (containsPower && ActiveForm == this)
             {
                 pnlGFX.Update();
