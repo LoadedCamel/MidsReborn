@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -37,7 +38,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblDate = new System.Windows.Forms.Label();
             this.btnEditEnh = new System.Windows.Forms.Button();
             this.btnEditIOSetPvE = new System.Windows.Forms.Button();
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
             this.lblCountSalvage = new System.Windows.Forms.Label();
             this.Label6 = new System.Windows.Forms.Label();
             this.lblCountRecipe = new System.Windows.Forms.Label();
@@ -55,36 +55,41 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblCountAT = new System.Windows.Forms.Label();
             this.Label5 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
-            this.btnDate = new System.Windows.Forms.Button();
             this.btnSalvage = new System.Windows.Forms.Button();
             this.btnRecipe = new System.Windows.Forms.Button();
             this.btnEditEntity = new System.Windows.Forms.Button();
             this.btnPSBrowse = new System.Windows.Forms.Button();
-            this.txtDBVer = new System.Windows.Forms.TextBox();
             this.Label3 = new System.Windows.Forms.Label();
             this.btnFileReport = new System.Windows.Forms.Button();
             this.exportIndexes = new System.Windows.Forms.Button();
-            this.btnEditIOSetPvP = new System.Windows.Forms.Button();
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
             this.btnAttribModEdit = new System.Windows.Forms.Button();
             this.btnGCMIO = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.btnDBConverter = new System.Windows.Forms.Button();
+            this.udPageVol = new System.Windows.Forms.NumericUpDown();
+            this.txtPageVol = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtDBVer = new System.Windows.Forms.Label();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
-            this.GroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // udIssue
             // 
-            this.udIssue.Location = new System.Drawing.Point(148, 44);
+            this.udIssue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.udIssue.Location = new System.Drawing.Point(5, 33);
             this.udIssue.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.udIssue.Name = "udIssue";
-            this.udIssue.Size = new System.Drawing.Size(84, 20);
+            this.udIssue.Size = new System.Drawing.Size(194, 20);
             this.udIssue.TabIndex = 0;
             this.udIssue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.udIssue.Value = new decimal(new int[] {
@@ -97,272 +102,256 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(22, 44);
+            this.Label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label1.Location = new System.Drawing.Point(5, 2);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(120, 20);
+            this.Label1.Size = new System.Drawing.Size(194, 26);
             this.Label1.TabIndex = 2;
-            this.Label1.Text = "CoX Issue Supported:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label1.Text = "Issue Supported";
+            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label2
             // 
-            this.Label2.Location = new System.Drawing.Point(4, 16);
+            this.Label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label2.Location = new System.Drawing.Point(611, 2);
             this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(144, 20);
+            this.Label2.Size = new System.Drawing.Size(197, 26);
             this.Label2.TabIndex = 3;
-            this.Label2.Text = "Database Update Date:";
-            this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label2.Text = "Database Date:";
+            this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblDate
             // 
-            this.lblDate.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblDate.Location = new System.Drawing.Point(148, 16);
+            this.lblDate.BackColor = System.Drawing.Color.Transparent;
+            this.lblDate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lblDate.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDate.Location = new System.Drawing.Point(611, 30);
             this.lblDate.Name = "lblDate";
-            this.lblDate.Size = new System.Drawing.Size(84, 20);
+            this.lblDate.Size = new System.Drawing.Size(197, 26);
             this.lblDate.TabIndex = 4;
             this.lblDate.Text = "DD/MM/YYYY";
-            this.lblDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnEditEnh
             // 
             this.btnEditEnh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditEnh.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditEnh.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditEnh.Location = new System.Drawing.Point(48, 168);
+            this.btnEditEnh.Location = new System.Drawing.Point(665, 78);
             this.btnEditEnh.Name = "btnEditEnh";
-            this.btnEditEnh.Size = new System.Drawing.Size(160, 24);
+            this.btnEditEnh.Size = new System.Drawing.Size(160, 44);
             this.btnEditEnh.TabIndex = 5;
-            this.btnEditEnh.Text = "Enhancement Editor";
+            this.btnEditEnh.Text = "Enhancement Database Editor";
             this.btnEditEnh.UseVisualStyleBackColor = true;
             this.btnEditEnh.Click += new System.EventHandler(this.btnEditEnh_Click);
             // 
             // btnEditIOSetPvE
             // 
             this.btnEditIOSetPvE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditIOSetPvE.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditIOSetPvE.Location = new System.Drawing.Point(48, 198);
+            this.btnEditIOSetPvE.Location = new System.Drawing.Point(665, 127);
             this.btnEditIOSetPvE.Name = "btnEditIOSetPvE";
-            this.btnEditIOSetPvE.Size = new System.Drawing.Size(160, 24);
+            this.btnEditIOSetPvE.Size = new System.Drawing.Size(160, 44);
             this.btnEditIOSetPvE.TabIndex = 6;
-            this.btnEditIOSetPvE.Text = "Invention Set Editor (PvE)";
+            this.btnEditIOSetPvE.Text = "Invention Set Editor";
             this.btnEditIOSetPvE.UseVisualStyleBackColor = true;
             this.btnEditIOSetPvE.Click += new System.EventHandler(this.btnEditIOSet_Click);
             // 
-            // GroupBox1
-            // 
-            this.GroupBox1.Controls.Add(this.lblCountSalvage);
-            this.GroupBox1.Controls.Add(this.Label6);
-            this.GroupBox1.Controls.Add(this.lblCountRecipe);
-            this.GroupBox1.Controls.Add(this.Label4);
-            this.GroupBox1.Controls.Add(this.lblCountFX);
-            this.GroupBox1.Controls.Add(this.Label15);
-            this.GroupBox1.Controls.Add(this.lblCountPwr);
-            this.GroupBox1.Controls.Add(this.Label13);
-            this.GroupBox1.Controls.Add(this.lblCountPS);
-            this.GroupBox1.Controls.Add(this.Label11);
-            this.GroupBox1.Controls.Add(this.lblCountIOSet);
-            this.GroupBox1.Controls.Add(this.Label9);
-            this.GroupBox1.Controls.Add(this.lblCountEnh);
-            this.GroupBox1.Controls.Add(this.Label7);
-            this.GroupBox1.Controls.Add(this.lblCountAT);
-            this.GroupBox1.Controls.Add(this.Label5);
-            this.GroupBox1.ForeColor = System.Drawing.Color.White;
-            this.GroupBox1.Location = new System.Drawing.Point(236, 4);
-            this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(164, 218);
-            this.GroupBox1.TabIndex = 9;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Statistics:";
-            // 
             // lblCountSalvage
             // 
-            this.lblCountSalvage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountSalvage.Location = new System.Drawing.Point(88, 184);
+            this.lblCountSalvage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountSalvage.Location = new System.Drawing.Point(712, 51);
             this.lblCountSalvage.Name = "lblCountSalvage";
-            this.lblCountSalvage.Size = new System.Drawing.Size(68, 20);
+            this.lblCountSalvage.Size = new System.Drawing.Size(96, 47);
             this.lblCountSalvage.TabIndex = 20;
             this.lblCountSalvage.Text = "Count";
-            this.lblCountSalvage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountSalvage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label6
             // 
-            this.Label6.Location = new System.Drawing.Point(4, 184);
+            this.Label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label6.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label6.Location = new System.Drawing.Point(712, 2);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(84, 20);
+            this.Label6.Size = new System.Drawing.Size(96, 47);
             this.Label6.TabIndex = 19;
-            this.Label6.Text = "Salvage:";
-            this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label6.Text = "Salvage";
+            this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountRecipe
             // 
-            this.lblCountRecipe.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountRecipe.Location = new System.Drawing.Point(88, 160);
+            this.lblCountRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountRecipe.Location = new System.Drawing.Point(611, 51);
             this.lblCountRecipe.Name = "lblCountRecipe";
-            this.lblCountRecipe.Size = new System.Drawing.Size(68, 20);
+            this.lblCountRecipe.Size = new System.Drawing.Size(93, 47);
             this.lblCountRecipe.TabIndex = 18;
             this.lblCountRecipe.Text = "Count";
-            this.lblCountRecipe.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountRecipe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label4
             // 
-            this.Label4.Location = new System.Drawing.Point(4, 160);
+            this.Label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label4.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label4.Location = new System.Drawing.Point(611, 2);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(84, 20);
+            this.Label4.Size = new System.Drawing.Size(93, 47);
             this.Label4.TabIndex = 17;
-            this.Label4.Text = "Recipes:";
-            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label4.Text = "Recipes";
+            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountFX
             // 
-            this.lblCountFX.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountFX.Location = new System.Drawing.Point(88, 136);
+            this.lblCountFX.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountFX.Location = new System.Drawing.Point(510, 51);
             this.lblCountFX.Name = "lblCountFX";
-            this.lblCountFX.Size = new System.Drawing.Size(68, 20);
+            this.lblCountFX.Size = new System.Drawing.Size(93, 47);
             this.lblCountFX.TabIndex = 16;
             this.lblCountFX.Text = "Count";
-            this.lblCountFX.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountFX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label15
             // 
-            this.Label15.Location = new System.Drawing.Point(4, 136);
+            this.Label15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label15.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label15.Location = new System.Drawing.Point(510, 2);
             this.Label15.Name = "Label15";
-            this.Label15.Size = new System.Drawing.Size(84, 20);
+            this.Label15.Size = new System.Drawing.Size(93, 47);
             this.Label15.TabIndex = 15;
-            this.Label15.Text = "Power Effects:";
-            this.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label15.Text = "Power Effects";
+            this.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountPwr
             // 
-            this.lblCountPwr.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountPwr.Location = new System.Drawing.Point(88, 112);
+            this.lblCountPwr.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountPwr.Location = new System.Drawing.Point(409, 51);
             this.lblCountPwr.Name = "lblCountPwr";
-            this.lblCountPwr.Size = new System.Drawing.Size(68, 20);
+            this.lblCountPwr.Size = new System.Drawing.Size(93, 47);
             this.lblCountPwr.TabIndex = 14;
             this.lblCountPwr.Text = "Count";
-            this.lblCountPwr.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountPwr.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label13
             // 
-            this.Label13.Location = new System.Drawing.Point(4, 112);
+            this.Label13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label13.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label13.Location = new System.Drawing.Point(409, 2);
             this.Label13.Name = "Label13";
-            this.Label13.Size = new System.Drawing.Size(84, 20);
+            this.Label13.Size = new System.Drawing.Size(93, 47);
             this.Label13.TabIndex = 13;
-            this.Label13.Text = "Powers:";
-            this.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label13.Text = "Powers";
+            this.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountPS
             // 
-            this.lblCountPS.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountPS.Location = new System.Drawing.Point(88, 88);
+            this.lblCountPS.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountPS.Location = new System.Drawing.Point(308, 51);
             this.lblCountPS.Name = "lblCountPS";
-            this.lblCountPS.Size = new System.Drawing.Size(68, 20);
+            this.lblCountPS.Size = new System.Drawing.Size(93, 47);
             this.lblCountPS.TabIndex = 12;
             this.lblCountPS.Text = "Count";
-            this.lblCountPS.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountPS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label11
             // 
-            this.Label11.Location = new System.Drawing.Point(4, 88);
+            this.Label11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label11.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label11.Location = new System.Drawing.Point(308, 2);
             this.Label11.Name = "Label11";
-            this.Label11.Size = new System.Drawing.Size(84, 20);
+            this.Label11.Size = new System.Drawing.Size(93, 47);
             this.Label11.TabIndex = 11;
-            this.Label11.Text = "Powersets:";
-            this.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label11.Text = "Powersets";
+            this.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountIOSet
             // 
-            this.lblCountIOSet.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountIOSet.Location = new System.Drawing.Point(88, 64);
+            this.lblCountIOSet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountIOSet.Location = new System.Drawing.Point(207, 51);
             this.lblCountIOSet.Name = "lblCountIOSet";
-            this.lblCountIOSet.Size = new System.Drawing.Size(68, 20);
+            this.lblCountIOSet.Size = new System.Drawing.Size(93, 47);
             this.lblCountIOSet.TabIndex = 10;
             this.lblCountIOSet.Text = "Count";
-            this.lblCountIOSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountIOSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label9
             // 
-            this.Label9.Location = new System.Drawing.Point(4, 64);
+            this.Label9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label9.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label9.Location = new System.Drawing.Point(207, 2);
             this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(84, 20);
+            this.Label9.Size = new System.Drawing.Size(93, 47);
             this.Label9.TabIndex = 9;
-            this.Label9.Text = "Invention Sets:";
-            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label9.Text = "Invention Sets";
+            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountEnh
             // 
-            this.lblCountEnh.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountEnh.Location = new System.Drawing.Point(88, 40);
+            this.lblCountEnh.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountEnh.Location = new System.Drawing.Point(106, 51);
             this.lblCountEnh.Name = "lblCountEnh";
-            this.lblCountEnh.Size = new System.Drawing.Size(68, 20);
+            this.lblCountEnh.Size = new System.Drawing.Size(93, 47);
             this.lblCountEnh.TabIndex = 8;
             this.lblCountEnh.Text = "Count";
-            this.lblCountEnh.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountEnh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label7
             // 
-            this.Label7.Location = new System.Drawing.Point(4, 40);
+            this.Label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label7.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label7.Location = new System.Drawing.Point(106, 2);
             this.Label7.Name = "Label7";
-            this.Label7.Size = new System.Drawing.Size(84, 20);
+            this.Label7.Size = new System.Drawing.Size(93, 47);
             this.Label7.TabIndex = 7;
-            this.Label7.Text = "Enhancements:";
-            this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label7.Text = "Enhancements";
+            this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCountAT
             // 
-            this.lblCountAT.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblCountAT.Location = new System.Drawing.Point(88, 16);
+            this.lblCountAT.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCountAT.Location = new System.Drawing.Point(5, 51);
             this.lblCountAT.Name = "lblCountAT";
-            this.lblCountAT.Size = new System.Drawing.Size(68, 20);
+            this.lblCountAT.Size = new System.Drawing.Size(93, 47);
             this.lblCountAT.TabIndex = 6;
             this.lblCountAT.Text = "Count";
-            this.lblCountAT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCountAT.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label5
             // 
-            this.Label5.Location = new System.Drawing.Point(4, 16);
+            this.Label5.BackColor = System.Drawing.Color.Transparent;
+            this.Label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label5.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label5.Location = new System.Drawing.Point(5, 2);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(84, 20);
+            this.Label5.Size = new System.Drawing.Size(93, 47);
             this.Label5.TabIndex = 5;
-            this.Label5.Text = "Classes:";
-            this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label5.Text = "Classes";
+            this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnClose.Location = new System.Drawing.Point(236, 418);
+            this.btnClose.Location = new System.Drawing.Point(708, 334);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(164, 24);
+            this.btnClose.Size = new System.Drawing.Size(117, 31);
             this.btnClose.TabIndex = 10;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // btnDate
-            // 
-            this.btnDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnDate.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDate.Location = new System.Drawing.Point(31, 16);
-            this.btnDate.Name = "btnDate";
-            this.btnDate.Size = new System.Drawing.Size(111, 20);
-            this.btnDate.TabIndex = 13;
-            this.btnDate.Text = "Set Date";
-            this.btnDate.UseVisualStyleBackColor = true;
-            this.btnDate.Visible = false;
-            this.btnDate.Click += new System.EventHandler(this.btnDate_Click);
-            // 
             // btnSalvage
             // 
             this.btnSalvage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnSalvage.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSalvage.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvage.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSalvage.Location = new System.Drawing.Point(48, 258);
+            this.btnSalvage.Location = new System.Drawing.Point(12, 178);
             this.btnSalvage.Name = "btnSalvage";
-            this.btnSalvage.Size = new System.Drawing.Size(160, 24);
+            this.btnSalvage.Size = new System.Drawing.Size(160, 44);
             this.btnSalvage.TabIndex = 14;
             this.btnSalvage.Text = "Salvage Editor";
             this.btnSalvage.UseVisualStyleBackColor = true;
@@ -371,11 +360,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnRecipe
             // 
             this.btnRecipe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnRecipe.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipe.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecipe.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRecipe.Location = new System.Drawing.Point(48, 288);
+            this.btnRecipe.Location = new System.Drawing.Point(665, 178);
             this.btnRecipe.Name = "btnRecipe";
-            this.btnRecipe.Size = new System.Drawing.Size(160, 24);
+            this.btnRecipe.Size = new System.Drawing.Size(160, 44);
             this.btnRecipe.TabIndex = 15;
             this.btnRecipe.Text = "Recipe Editor";
             this.btnRecipe.UseVisualStyleBackColor = true;
@@ -384,11 +373,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnEditEntity
             // 
             this.btnEditEntity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditEntity.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditEntity.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditEntity.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditEntity.Location = new System.Drawing.Point(48, 138);
+            this.btnEditEntity.Location = new System.Drawing.Point(12, 128);
             this.btnEditEntity.Name = "btnEditEntity";
-            this.btnEditEntity.Size = new System.Drawing.Size(160, 24);
+            this.btnEditEntity.Size = new System.Drawing.Size(160, 44);
             this.btnEditEntity.TabIndex = 17;
             this.btnEditEntity.Text = "Entity Editor";
             this.btnEditEntity.UseVisualStyleBackColor = true;
@@ -397,32 +386,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnPSBrowse
             // 
             this.btnPSBrowse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPSBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnPSBrowse.Location = new System.Drawing.Point(48, 94);
+            this.btnPSBrowse.Location = new System.Drawing.Point(12, 78);
             this.btnPSBrowse.Name = "btnPSBrowse";
-            this.btnPSBrowse.Size = new System.Drawing.Size(160, 38);
+            this.btnPSBrowse.Size = new System.Drawing.Size(160, 44);
             this.btnPSBrowse.TabIndex = 18;
-            this.btnPSBrowse.Text = "Main Database Editor";
+            this.btnPSBrowse.Text = "Power \r\nDatabase Editor";
             this.btnPSBrowse.UseVisualStyleBackColor = true;
             this.btnPSBrowse.Click += new System.EventHandler(this.btnPSBrowse_Click);
             // 
-            // txtDBVer
-            // 
-            this.txtDBVer.Location = new System.Drawing.Point(148, 68);
-            this.txtDBVer.Name = "txtDBVer";
-            this.txtDBVer.Size = new System.Drawing.Size(84, 20);
-            this.txtDBVer.TabIndex = 21;
-            this.txtDBVer.TextChanged += new System.EventHandler(this.txtDBVer_TextChanged);
-            // 
             // Label3
             // 
-            this.Label3.Location = new System.Drawing.Point(22, 68);
+            this.Label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label3.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label3.Location = new System.Drawing.Point(409, 2);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(120, 20);
+            this.Label3.Size = new System.Drawing.Size(194, 26);
             this.Label3.TabIndex = 22;
-            this.Label3.Text = "Database Version:";
-            this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label3.Text = "Database Version";
+            this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnFileReport
             // 
@@ -430,9 +413,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFileReport.Enabled = false;
             this.btnFileReport.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFileReport.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFileReport.Location = new System.Drawing.Point(236, 388);
+            this.btnFileReport.Location = new System.Drawing.Point(12, 334);
             this.btnFileReport.Name = "btnFileReport";
-            this.btnFileReport.Size = new System.Drawing.Size(164, 24);
+            this.btnFileReport.Size = new System.Drawing.Size(120, 31);
             this.btnFileReport.TabIndex = 23;
             this.btnFileReport.Text = "File Load Report";
             this.btnFileReport.UseVisualStyleBackColor = true;
@@ -452,27 +435,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.exportIndexes.UseVisualStyleBackColor = true;
             this.exportIndexes.Visible = false;
             // 
-            // btnEditIOSetPvP
-            // 
-            this.btnEditIOSetPvP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditIOSetPvP.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditIOSetPvP.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditIOSetPvP.Location = new System.Drawing.Point(48, 228);
-            this.btnEditIOSetPvP.Name = "btnEditIOSetPvP";
-            this.btnEditIOSetPvP.Size = new System.Drawing.Size(160, 24);
-            this.btnEditIOSetPvP.TabIndex = 24;
-            this.btnEditIOSetPvP.Text = "Invention Set Editor (PvP)";
-            this.btnEditIOSetPvP.UseVisualStyleBackColor = true;
-            this.btnEditIOSetPvP.Click += new System.EventHandler(this.btnEditIOSetPvP_Click);
-            // 
             // btnExportJSON
             // 
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnExportJSON.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportJSON.Location = new System.Drawing.Point(48, 388);
+            this.btnExportJSON.Location = new System.Drawing.Point(434, 197);
             this.btnExportJSON.Name = "btnExportJSON";
-            this.btnExportJSON.Size = new System.Drawing.Size(160, 24);
+            this.btnExportJSON.Size = new System.Drawing.Size(150, 24);
             this.btnExportJSON.TabIndex = 26;
             this.btnExportJSON.Text = "JSON Export";
             this.btnExportJSON.UseVisualStyleBackColor = true;
@@ -483,9 +453,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnJsonImporter.Location = new System.Drawing.Point(48, 418);
+            this.btnJsonImporter.Location = new System.Drawing.Point(256, 197);
             this.btnJsonImporter.Name = "btnJsonImporter";
-            this.btnJsonImporter.Size = new System.Drawing.Size(160, 24);
+            this.btnJsonImporter.Size = new System.Drawing.Size(150, 24);
             this.btnJsonImporter.TabIndex = 27;
             this.btnJsonImporter.Text = "JSON Importer";
             this.btnJsonImporter.UseVisualStyleBackColor = true;
@@ -496,7 +466,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAttribModEdit.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnAttribModEdit.Location = new System.Drawing.Point(236, 258);
+            this.btnAttribModEdit.Location = new System.Drawing.Point(338, 77);
             this.btnAttribModEdit.Name = "btnAttribModEdit";
             this.btnAttribModEdit.Size = new System.Drawing.Size(164, 24);
             this.btnAttribModEdit.TabIndex = 28;
@@ -509,7 +479,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnGCMIO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnGCMIO.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGCMIO.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnGCMIO.Location = new System.Drawing.Point(236, 228);
+            this.btnGCMIO.Location = new System.Drawing.Point(338, 107);
             this.btnGCMIO.Name = "btnGCMIO";
             this.btnGCMIO.Size = new System.Drawing.Size(164, 24);
             this.btnGCMIO.TabIndex = 30;
@@ -524,7 +494,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.button1.Enabled = false;
             this.button1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button1.Location = new System.Drawing.Point(236, 358);
+            this.button1.Location = new System.Drawing.Point(338, 137);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(164, 24);
             this.button1.TabIndex = 31;
@@ -538,19 +508,132 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnDBConverter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDBConverter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDBConverter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDBConverter.Location = new System.Drawing.Point(236, 328);
+            this.btnDBConverter.Location = new System.Drawing.Point(338, 167);
             this.btnDBConverter.Name = "btnDBConverter";
             this.btnDBConverter.Size = new System.Drawing.Size(164, 24);
             this.btnDBConverter.TabIndex = 32;
-            this.btnDBConverter.Text = "DB Converter";
+            this.btnDBConverter.Text = "Convert 2.x DB to 3.x";
             this.btnDBConverter.UseVisualStyleBackColor = true;
             this.btnDBConverter.Click += new System.EventHandler(this.btnDBConverter_Click);
+            // 
+            // udPageVol
+            // 
+            this.udPageVol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.udPageVol.Location = new System.Drawing.Point(207, 33);
+            this.udPageVol.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udPageVol.Name = "udPageVol";
+            this.udPageVol.Size = new System.Drawing.Size(194, 20);
+            this.udPageVol.TabIndex = 33;
+            this.udPageVol.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.udPageVol.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udPageVol.ValueChanged += new System.EventHandler(this.udPageVol_ValueChanged);
+            this.udPageVol.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udPageVol_KeyPress);
+            // 
+            // txtPageVol
+            // 
+            this.txtPageVol.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.txtPageVol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPageVol.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPageVol.Location = new System.Drawing.Point(207, 2);
+            this.txtPageVol.Name = "txtPageVol";
+            this.txtPageVol.Size = new System.Drawing.Size(194, 26);
+            this.txtPageVol.TabIndex = 35;
+            this.txtPageVol.Text = "Page";
+            this.txtPageVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.txtPageVol.Click += new System.EventHandler(this.txtPageVol_Click);
+            this.txtPageVol.MouseLeave += new System.EventHandler(this.txtPageVol_MouseLeave);
+            this.txtPageVol.MouseHover += new System.EventHandler(this.txtPageVol_MouseHover);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.Controls.Add(this.txtDBVer, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.Label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.udIssue, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.udPageVol, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtPageVol, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lblDate, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.Label2, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.Label3, 2, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 14);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51.02041F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 48.97959F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(813, 58);
+            this.tableLayoutPanel1.TabIndex = 37;
+            // 
+            // txtDBVer
+            // 
+            this.txtDBVer.AutoSize = true;
+            this.txtDBVer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtDBVer.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDBVer.Location = new System.Drawing.Point(409, 30);
+            this.txtDBVer.Name = "txtDBVer";
+            this.txtDBVer.Size = new System.Drawing.Size(194, 26);
+            this.txtDBVer.TabIndex = 38;
+            this.txtDBVer.Text = "2021.1205";
+            this.txtDBVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
+            this.tableLayoutPanel2.ColumnCount = 8;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Controls.Add(this.lblCountSalvage, 7, 1);
+            this.tableLayoutPanel2.Controls.Add(this.Label5, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Label6, 7, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountAT, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountRecipe, 6, 1);
+            this.tableLayoutPanel2.Controls.Add(this.Label7, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Label4, 6, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountEnh, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountFX, 5, 1);
+            this.tableLayoutPanel2.Controls.Add(this.Label9, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Label15, 5, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountIOSet, 2, 1);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountPwr, 4, 1);
+            this.tableLayoutPanel2.Controls.Add(this.Label11, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Label13, 4, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblCountPS, 3, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 228);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(813, 100);
+            this.tableLayoutPanel2.TabIndex = 38;
             // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(416, 462);
+            this.ClientSize = new System.Drawing.Size(837, 373);
+            this.Controls.Add(this.tableLayoutPanel2);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.btnDBConverter);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnAttribModEdit);
@@ -558,22 +641,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnJsonImporter);
             this.Controls.Add(this.btnExportJSON);
             this.Controls.Add(this.btnFileReport);
-            this.Controls.Add(this.Label3);
-            this.Controls.Add(this.txtDBVer);
             this.Controls.Add(this.btnPSBrowse);
             this.Controls.Add(this.btnEditEntity);
             this.Controls.Add(this.btnRecipe);
             this.Controls.Add(this.btnSalvage);
-            this.Controls.Add(this.btnDate);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.GroupBox1);
             this.Controls.Add(this.btnEditIOSetPvE);
-            this.Controls.Add(this.btnEditIOSetPvP);
             this.Controls.Add(this.btnEditEnh);
-            this.Controls.Add(this.lblDate);
-            this.Controls.Add(this.Label2);
-            this.Controls.Add(this.Label1);
-            this.Controls.Add(this.udIssue);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -585,9 +659,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Database Editor";
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).EndInit();
-            this.GroupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
         System.Windows.Forms.NumericUpDown udIssue;
@@ -599,5 +675,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnAttribModEdit;
         private Button button1;
         private Button btnDBConverter;
+        private NumericUpDown udPageVol;
+        private Label txtPageVol;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label txtDBVer;
+        private TableLayoutPanel tableLayoutPanel2;
     }
 }

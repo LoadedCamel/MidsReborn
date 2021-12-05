@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Jace;
 using mrbBase;
@@ -71,10 +72,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Text = "Edit Effect";
             }
 
-            Loading = false;
             UpdateConditionalTypes();
             UpdateFXText();
             InitSelectedItems();
+            Loading = false;
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -462,7 +463,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         }
 
-        private void SelectItemByName(ListView lv, string itemName)
+        private void SelectItemByName(ctlListViewColored lv, string itemName)
         {
             for (var i = 0; i < lv.Items.Count; i++)
             {
@@ -473,6 +474,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 // Prevent crash on lv*_Leave()
                 lv.FocusedItem = lv.Items[i];
                 lv.Select();
+                lv.EnsureVisible(i);
 
                 return;
             }
@@ -505,14 +507,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 SelectItemByName(lvSubAttribute, myFX.ETModifies.ToString());
             }
+            else if (myFX.EffectType == Enums.eEffectType.PowerRedirect)
+            {
+                var group = myFX.Override.Split('.');
+                SelectItemByName(lvSubAttribute, group[0]);
+                UpdateSubSubList();
+                SelectItemByName(lvSubSub, myFX.Override);
+            }
 
-            if ((myFX.EffectType == Enums.eEffectType.Enhancement | myFX.EffectType == Enums.eEffectType.ResEffect) &
-                myFX.ETModifies == Enums.eEffectType.Mez)
+            if ((myFX.EffectType == Enums.eEffectType.Enhancement | myFX.EffectType == Enums.eEffectType.ResEffect) & myFX.ETModifies == Enums.eEffectType.Mez)
             {
                 SelectItemByName(lvSubSub, myFX.MezType.ToString());
             }
-            else if (myFX.EffectType == Enums.eEffectType.Enhancement &
-                     (myFX.ETModifies == Enums.eEffectType.Defense | myFX.ETModifies == Enums.eEffectType.Damage))
+            else if (myFX.EffectType == Enums.eEffectType.Enhancement & (myFX.ETModifies == Enums.eEffectType.Defense | myFX.ETModifies == Enums.eEffectType.Damage))
             {
                 SelectItemByName(lvSubSub, myFX.DamageType.ToString());
             }
@@ -742,9 +749,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         {
                             tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(sText);
                         }
-
                         //cbTarget.Enabled = true;
-
                         break;
                 }
             }
@@ -769,6 +774,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if ((fx.EffectType == Enums.eEffectType.ResEffect) & (fx.ETModifies == Enums.eEffectType.Mez))
             {
                 fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
+            }
+
+            if (fx.EffectType == Enums.eEffectType.PowerRedirect)
+            {
+                txtOverride.Text = lvSubSub.SelectedItems[0].Text;
             }
 
             UpdateFXText();
@@ -1478,11 +1488,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index1 = 0;
             lvSubAttribute.BeginUpdate();
             lvSubAttribute.Items.Clear();
-            var strArray = new string[0];
+            var strArray = Array.Empty<string>();
             var fx = myFX;
-            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) |
-                (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance) |
-                (fx.EffectType == Enums.eEffectType.Elusivity))
+            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) | (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance) | (fx.EffectType == Enums.eEffectType.Elusivity))
             {
                 strArray = Enum.GetNames(fx.DamageType.GetType());
                 index1 = (int)fx.DamageType;
@@ -1513,37 +1521,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.EntCreate:
+                    {
+                        strArray = new string[DatabaseAPI.Database.Entities.Length - 1 + 1];
+                        var lower = fx.Summon.ToLower();
+                        var num = DatabaseAPI.Database.Entities.Length - 1;
+                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray = new string[DatabaseAPI.Database.Entities.Length - 1 + 1];
-                            var lower = fx.Summon.ToLower();
-                            var num = DatabaseAPI.Database.Entities.Length - 1;
-                            for (var index2 = 0; index2 <= num; ++index2)
-                            {
-                                strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
-
-                            lvSubAttribute.Columns[0].Text = "Entity Name";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
+                            strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
+                            if (strArray[index2].ToLower() == lower)
+                                index1 = index2;
                         }
+
+                        lvSubAttribute.Columns[0].Text = "Entity Name";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
+                    }
                     case Enums.eEffectType.GrantPower:
+                    {
+                        strArray = new string[DatabaseAPI.Database.Power.Length - 1 + 1];
+                        var lower = fx.Summon.ToLower();
+                        var num = DatabaseAPI.Database.Power.Length - 1;
+                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray = new string[DatabaseAPI.Database.Power.Length - 1 + 1];
-                            var lower = fx.Summon.ToLower();
-                            var num = DatabaseAPI.Database.Power.Length - 1;
-                            for (var index2 = 0; index2 <= num; ++index2)
-                            {
-                                strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
-
-                            lvSubAttribute.Columns[0].Text = "Power Name";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
+                            strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
+                            if (strArray[index2].ToLower() == lower)
+                                index1 = index2;
                         }
+
+                        lvSubAttribute.Columns[0].Text = "Power Name";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
+                    }
                     case Enums.eEffectType.Enhancement:
                         strArray = Enum.GetNames(fx.EffectType.GetType());
                         index1 = (int)fx.ETModifies;
@@ -1551,21 +1559,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.GlobalChanceMod:
+                    {
+                        strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
+                        var lower = fx.Reward.ToLower();
+                        var num = DatabaseAPI.Database.EffectIds.Count - 1;
+                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
-                            var lower = fx.Reward.ToLower();
-                            var num = DatabaseAPI.Database.EffectIds.Count - 1;
-                            for (var index2 = 0; index2 <= num; ++index2)
-                            {
-                                strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
-
-                            lvSubAttribute.Columns[0].Text = "GlobalChanceMod Flag";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
+                            strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
+                            if (strArray[index2].ToLower() == lower)
+                                index1 = index2;
                         }
+
+                        lvSubAttribute.Columns[0].Text = "GlobalChanceMod Flag";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
+                    }
+
+                    case Enums.eEffectType.PowerRedirect:
+                    {
+                        var allowedTypes = new List<Enums.ePowerSetType>()
+                        {
+                            Enums.ePowerSetType.Ancillary,
+                            Enums.ePowerSetType.Incarnate,
+                            Enums.ePowerSetType.Inherent,
+                            Enums.ePowerSetType.Pet,
+                            Enums.ePowerSetType.Primary,
+                            Enums.ePowerSetType.Secondary,
+                            Enums.ePowerSetType.Pool,
+                            Enums.ePowerSetType.Temp
+                        };
+                        strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
+                        lvSubAttribute.Columns[0].Text = @"Powerset Group";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
+                    }
                 }
             }
 
@@ -1604,7 +1631,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index1 = 0;
             lvSubSub.BeginUpdate();
             lvSubSub.Items.Clear();
-            var strArray = new string[0];
+            var strArray = Array.Empty<string>();
             if (((myFX.EffectType == Enums.eEffectType.Enhancement) | (myFX.EffectType == Enums.eEffectType.ResEffect)) & (myFX.ETModifies == Enums.eEffectType.Mez))
             {
                 lvSubSub.Columns[0].Text = "Mez Type";
@@ -1621,11 +1648,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 index1 = (int)myFX.DamageType;
             }
 
+            if (myFX.EffectType == Enums.eEffectType.PowerRedirect)
+            {
+                strArray = DatabaseAPI.Database.Power.ToList().Where(x => x.GroupName == lvSubAttribute.SelectedItems[0].Text).Select(p => p.FullName).ToArray();
+                lvSubSub.Columns[0].Text = @"Power";
+                lvSubSub.Columns[0].Width = -2;
+            }
+
             if (strArray.Length > 0)
             {
                 var num = strArray.Length - 1;
                 for (var index2 = 0; index2 <= num; ++index2)
-                    lvSubSub.Items.Add(strArray[index2]);
+                {
+                    var lvSubItem = new ListViewItem(strArray[index2])
+                    {
+                        ToolTipText = strArray[index2]
+                    };
+                    lvSubSub.Items.Add(lvSubItem);
+                }
+
                 lvSubSub.Enabled = true;
             }
             else

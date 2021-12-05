@@ -1393,7 +1393,7 @@ namespace mrbBase.Base.Data_Classes
                     };
                     break;
                 case Enums.eEffectType.PowerRedirect:
-                    sBuild = $"{sEffect}{sTarget} ({Override})";
+                    sBuild = $"{sEffect}{sTarget} ({DatabaseAPI.GetPowerByFullName(Override).DisplayName})";
                     break;
                 default:
                     sBuild = $"{sMag} {sEffect}{sTarget}{sDuration}";

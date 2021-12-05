@@ -385,14 +385,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cb = sender as ComboBox;
-            if (cb?.SelectedText != null)
+            if (cb?.SelectedIndex != -1)
             {
-                var selectedItem = cb.SelectedItem.ToString();
+                var selectedItem = cb?.SelectedItem.ToString();
                 if (selectedItem != "None")
                 {
                     var subType = (Enums.eSubtype)Enum.Parse(typeof(Enums.eSubtype), selectedItem);
                     myEnh.SubTypeID = subType;
                 }
+            }
+            else
+            {
+                myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
             }
         }
 

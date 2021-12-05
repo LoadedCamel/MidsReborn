@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -17,15 +18,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     {
         private Button btnClose;
 
-        private Button btnDate;
-
         private Button btnEditEnh;
 
         private Button btnEditEntity;
 
         private Button btnEditIOSetPvE;
-
-        private Button btnEditIOSetPvP;
 
         private Button btnFileReport;
 
@@ -35,7 +32,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private Button btnSalvage;
         private Button exportIndexes;
-        private GroupBox GroupBox1;
 
 
         private bool Initialized;
@@ -59,8 +55,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label lblCountRecipe;
         private Label lblCountSalvage;
         private Label lblDate;
-
-        private TextBox txtDBVer;
 
         public frmDBEdit()
         {
@@ -94,15 +88,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private NumericUpDown UdPageVol
+        {
+            get => udPageVol;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set
+            {
+                KeyPressEventHandler pressEventHandler = udPageVol_KeyPress;
+                EventHandler eventHandler = udPageVol_ValueChanged;
+                if (udPageVol != null)
+                {
+                    udPageVol.KeyPress -= pressEventHandler;
+                    udPageVol.ValueChanged -= eventHandler;
+                }
+
+                udPageVol = value;
+                if (udPageVol == null)
+                    return;
+                udPageVol.KeyPress += pressEventHandler;
+                udPageVol.ValueChanged += eventHandler;
+            }
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             Hide();
-        }
-
-        private void btnDate_Click(object sender, EventArgs e)
-        {
-            DatabaseAPI.Database.Date = DateTime.Now;
-            DisplayInfo();
         }
 
         private void btnEditEnh_Click(object sender, EventArgs e)
@@ -124,15 +134,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 f.ShowDialog();
             }
-            DisplayInfo();
-        }
-
-        private void btnEditIOSetPvP_Click(object sender, EventArgs e)
-        {
-            using (frmSetListingPvP f = new frmSetListingPvP())
-            {
-                f.ShowDialog();
-            };
             DisplayInfo();
         }
 
@@ -168,6 +169,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (MainModule.MidsController.Toon == null) return;
             lblDate.Text = DatabaseAPI.Database.Date.ToString("MM/dd/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
+            UdPageVol.Value = Convert.ToDecimal(DatabaseAPI.Database.PageVol);
+            txtPageVol.Text = DatabaseAPI.Database.PageVolText;
             lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length, CultureInfo.InvariantCulture);
             lblCountEnh.Text = DatabaseAPI.Database.Enhancements.Length.ToString("#,###,##0");
             lblCountIOSet.Text = DatabaseAPI.Database.EnhancementSets.Count.ToString("#,###,##0");
@@ -190,9 +193,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmDBEdit_Load(object sender, EventArgs e)
         {
-            btnDate.Visible = MidsContext.Config.MasterMode;
-            txtDBVer.Enabled = MidsContext.Config.MasterMode;
             UdIssue.Enabled = MidsContext.Config.MasterMode;
+            UdPageVol.Enabled = MidsContext.Config.MasterMode;
+            txtPageVol.Enabled = MidsContext.Config.MasterMode;
             btnFileReport.Visible = MidsContext.Config.MasterMode;
             btnExportJSON.Visible = MidsContext.Config.MasterMode;
             btnJsonImporter.Visible = MidsContext.Config.MasterMode;
@@ -200,15 +203,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
             btnDBConverter.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
-        }
-
-        private void txtDBVer_TextChanged(object sender, EventArgs e)
-        {
-            var ret = float.TryParse(txtDBVer.Text, out var num);
-            if (!ret) return;
-
-            if (num < 1) num = 1;
-            DatabaseAPI.Database.Version = num;
         }
 
         private void udIssue_KeyPress(object sender, KeyPressEventArgs e)
@@ -221,6 +215,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
+        }
+
+        private void udPageVol_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!MainModule.MidsController.IsAppInitialized) return;
+            DatabaseAPI.Database.PageVol = Convert.ToInt32(UdPageVol.Value);
+        }
+
+        private void udPageVol_ValueChanged(object sender, EventArgs e)
+        {
+            if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
+            DatabaseAPI.Database.PageVol = Convert.ToInt32(UdPageVol.Value);
         }
 
         private void btnExportJSON_Click(object sender, EventArgs e)
@@ -266,6 +272,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var iParent = _frmMain;
             frmDBConvert dbConvert = new frmDBConvert(ref iParent);
             dbConvert.ShowDialog();
+        }
+
+        private void txtPageVol_MouseHover(object sender, EventArgs e)
+        {
+            txtPageVol.ForeColor = Color.Gold;
+        }
+
+        private void txtPageVol_Click(object sender, EventArgs e)
+        {
+            switch (txtPageVol.Text)
+            {
+                case "Page":
+                    txtPageVol.Text = @"Volume";
+                    break;
+                case "Volume":
+                    txtPageVol.Text = @"Page";
+                    break;
+            }
+
+            DatabaseAPI.Database.PageVolText = txtPageVol.Text;
+        }
+
+        private void txtPageVol_MouseLeave(object sender, EventArgs e)
+        {
+            txtPageVol.ForeColor = Color.White;
         }
     }
 }

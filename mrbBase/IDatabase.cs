@@ -7,9 +7,13 @@ namespace mrbBase
 {
     public interface IDatabase
     {
-        float Version { get; set; }
+        double Version { get; set; }
 
         int Issue { get; set; }
+
+        int PageVol { get; set; }
+
+        string PageVolText { get; set; }
 
         DateTime Date { get; set; }
 
