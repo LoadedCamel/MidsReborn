@@ -1376,7 +1376,6 @@ namespace Mids_Reborn
         }
 
         private bool GBPA_Pass3_EnhancePostED(ref IPower powerMath, int hIDX)
-
         {
             var okAcc = DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower]
                 .IgnoreEnhancement(Enums.eEnhance.Accuracy);

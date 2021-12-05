@@ -46,6 +46,8 @@ namespace Mids_Reborn.Forms
 
         public bool DbChangeRequested { get; set; }
 
+        private long popupLastOpenTime;
+
         public frmMain()
         {
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -2347,7 +2349,7 @@ namespace Mids_Reborn.Forms
 
         private void I9Picker_Hiding(object sender, EventArgs e)
         {
-            if (!I9Picker.Visible)
+            if (!I9Picker.Visible | DateTime.Now.Ticks - popupLastOpenTime < 1e7)
                 return;
             I9Picker.Visible = false;
             HidePopup();
@@ -3523,6 +3525,7 @@ namespace Mids_Reborn.Forms
 
                             I9Picker.Location = point;
                             I9Picker.BringToFront();
+                            popupLastOpenTime = DateTime.Now.Ticks;
                             I9Picker.Visible = true;
                             I9Picker.Select();
                             LastClickPlacedSlot = false;
@@ -5748,7 +5751,10 @@ namespace Mids_Reborn.Forms
 
             DoOpen(DlgOpen.FileName);
             FloatTop(true);
-            var containsPower = MidsContext.Character.CurrentBuild.Powers.Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
+            var containsPower = MidsContext.Character.CurrentBuild.Powers
+                .Where(pe => pe.Power != null)
+                .ToList()
+                .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
             if (containsPower && ActiveForm == this)
             {
                 pnlGFX.Update();
