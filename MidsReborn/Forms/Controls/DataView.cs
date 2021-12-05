@@ -243,7 +243,6 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         private void CompactSize()
-
         {
             var size = Size;
             info_txtSmall.Height = 16;
@@ -2441,21 +2440,7 @@ namespace Mids_Reborn.Forms.Controls
                 var dmgIdentifier = (int)dmgType;
                 fx_List1.AddItem(FastItem(names[dmgIdentifier], def1[dmgIdentifier], def2[dmgIdentifier], "%", false, true, false, false, effectMagSum));
             }
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub5 = Enums.eDamage.Energy;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub5, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub5], def1[(int)iSub5], def2[(int)iSub5], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub6 = Enums.eDamage.Melee;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub6, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub6], def1[(int)iSub6], def2[(int)iSub6], "%", false, true, false,
-                false, effectMagSum));
+
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
         }
@@ -2624,12 +2609,12 @@ namespace Mids_Reborn.Forms.Controls
             }
             else
             {
-                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tag);
+                bool iAlternate;
                 if (Math.Abs(s1.Sum - (double)s2.Sum) > float.Epsilon)
                 {
                     if (!skipBase)
                     {
-                        iValue = iValue + " (" + Utilities.FixDP(s1.Sum) + ")";
+                        iValue = iValue + $" ({Utilities.FixDP(s1.Sum)})";
                     }
 
                     iAlternate = true;
@@ -2639,8 +2624,8 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair($"Title:", iValue, iAlternate, isChance, isSpecial, Tag);
-                itemPair = new PairedList.ItemPair(title, iValue, false);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tag);
+            }
 
             return itemPair;
         }
@@ -2677,7 +2662,6 @@ namespace Mids_Reborn.Forms.Controls
             return itemPair;
         }
 
-        
         private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
         {
             var iValue = Utilities.FixDP(s2) + suffix;
