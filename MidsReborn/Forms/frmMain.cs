@@ -2351,7 +2351,7 @@ namespace Mids_Reborn.Forms
         {
             // 10 000 ticks in a millisecond / 10 000 000 ticks in a second (1.10^7)
             // Ensure the picker doesn't close instantly.
-            if (!I9Picker.Visible | DateTime.Now.Ticks - popupLastOpenTime < 1e7)
+            if (!I9Picker.Visible | DateTime.Now.Ticks - popupLastOpenTime < 1e6)
                 return;
 
             I9Picker.Visible = false;
