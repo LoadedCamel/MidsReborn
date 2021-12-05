@@ -195,5 +195,7 @@ namespace mrbBase
         bool PvXInclude();
 
         string SummonedEntityName { get; }
+
+        float ParseMagnitudeExpression(int chunk = 0);
     }
 }

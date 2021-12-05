@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Jace;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -117,7 +118,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lblAffectsCaster.Text = "";
             var power = myFX.GetPower();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
-                lblAffectsCaster.Text = @"Power also affects Self";
+                lblAffectsCaster.Text = "Power also affects Self";
             UpdateFXText();
         }
 
@@ -134,7 +135,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading || cbAttribute.SelectedIndex < 0)
                 return;
             myFX.AttribType = (Enums.eAttribType)cbAttribute.SelectedIndex;
-            //Console.WriteLine(myFX.AttribType);
+            label7.Visible = myFX.AttribType == Enums.eAttribType.Expression;
+            txtMagExpression.Visible = myFX.AttribType == Enums.eAttribType.Expression;
             UpdateFXText();
         }
 
@@ -357,6 +359,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
+
+            txtMagExpression.Text = myFX.MagnitudeExpression;
+            txtMagExpression.Visible = myFX.AttribType == Enums.eAttribType.Expression;
+            label7.Visible = myFX.AttribType == Enums.eAttribType.Expression;
         }
 
         private void FillComboBoxes()
@@ -685,6 +691,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 chkNearGround.Enabled = true;
                 chkCancelOnMiss.Enabled = true;
             }
+
             UpdateEffectSubAttribList();
             UpdateFXText();
         }
@@ -1685,6 +1692,56 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
         {
             MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
+            UpdateFXText();
+        }
+
+        private void txtMagExpression_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading) return;
+            myFX.MagnitudeExpression = txtMagExpression.Text;
+            if (myFX.MagnitudeExpression.Contains("///"))
+            {
+                var chunks = myFX.MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                var err1 = "";
+                var err2 = "";
+                try
+                {
+                    _ = myFX.ParseMagnitudeExpression(0);
+                }
+                catch (ParseException ex)
+                {
+                    err1 = $"Error (Mag chunk): {ex.Message}";
+                }
+                catch (InvalidOperationException)
+                {
+                    err1 = "";
+                }
+
+                if (chunks.Length == 2)
+                {
+                    try
+                    {
+                        _ = myFX.ParseMagnitudeExpression(1);
+                    }
+                    catch (ParseException ex)
+                    {
+                        err2 = $"Error (Probability chunk): {ex.Message}";
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        err2 = "";
+                    }
+                }
+
+                if (err1 == "" & err2 == "")
+                {
+                    label8.Text = "";
+                }
+                else
+                {
+                    label8.Text = string.Join(" | ", new string[] { err1, err2 });
+                }
+            }
             UpdateFXText();
         }
     }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using mrbBase.Base.Master_Classes;
+using Jace;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -308,6 +309,19 @@ namespace mrbBase.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
+                if (MagnitudeExpression.Contains("///") & AttribType == Enums.eAttribType.Expression)
+                {
+                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                    if (chunks.Length > 1)
+                    {
+                        var ret = ParseMagnitudeExpression2Inner(chunks[1], 0, out var parseError);
+
+                        return Math.Max(0, Math.Min(1, ret));
+                    }
+
+                    return 0;
+                }
+
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
                 {
                     var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
@@ -2810,7 +2824,6 @@ namespace mrbBase.Base.Data_Classes
         }
 
         private static string BuildCs(string iValue, string iStr, bool noComma = false)
-
         {
             if (string.IsNullOrEmpty(iValue))
                 return iStr;
@@ -2823,10 +2836,131 @@ namespace mrbBase.Base.Data_Classes
             return iStr;
         }
 
-        private float ParseMagnitudeExpression()
-
+        private string GetStacks(string powerName, List<string> pickedPowerNames)
         {
-            float num1;
+            if (!pickedPowerNames.Contains(powerName)) return "0";
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe.Power == null) continue;
+                if (pe.Power.FullName != powerName) continue;
+
+                return pe.Power.Stacks.ToString();
+            }
+
+            return "0";
+        }
+
+        private float ParseMagnitudeExpression2Inner(string magExpr, int rLevel, out bool parseError)
+        {
+            var pickedPowerNames = MidsContext.Character.CurrentBuild == null
+                ? new List<string>()
+                : MidsContext.Character.CurrentBuild.Powers == null
+                    ? new List<string>()
+                    : MidsContext.Character.CurrentBuild.Powers
+                        .Where(pe => pe.Power != null)
+                        .Select(pe => pe.Power.FullName)
+                        .ToList();
+
+            var commandsDict = new Dictionary<string, string>();
+            commandsDict.Add("power.base>activatetime", $"{power.CastTime}");
+            commandsDict.Add("power.base>areafactor", $"{power.AoEModifier}");
+            commandsDict.Add("power.base>rechargetime", $"{power.BaseRechargeTime}");
+            commandsDict.Add("if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0");
+            commandsDict.Add("if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0");
+            commandsDict.Add("rand()", $"{new Random().NextDouble()}");
+
+            var functionsDict1 = new Dictionary<Regex, MatchEvaluator>();
+            functionsDict1.Add(new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0");
+            functionsDict1.Add(new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames));
+
+            var functionsDict3 = new Dictionary<Regex, MatchEvaluator>();
+            functionsDict3.Add(new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel));
+
+            parseError = false;
+            foreach (var cmd in commandsDict)
+            {
+                magExpr = magExpr.Replace(cmd.Key, cmd.Value);
+            }
+
+            foreach (var f1 in functionsDict1)
+            {
+                magExpr = f1.Key.Replace(magExpr, f1.Value);
+            }
+
+            foreach (var f3 in functionsDict3)
+            {
+                magExpr = f3.Key.Replace(magExpr, f3.Value);
+            }
+
+            var r = new Regex(@"^[0-9\-\+\*\/\s\.\,\(\)]+$");
+            if (r.IsMatch(magExpr))
+            {
+                var mathEngine = new CalculationEngine();
+                try
+                {
+                    var ret = (float)mathEngine.Calculate(magExpr.TrimEnd('/'));
+
+                    return ret;
+                }
+                catch (ParseException)
+                {
+                    return 0;
+                }
+                catch (InvalidOperationException)
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private string ExprMinMax(string a, string b, string c, int rLevel = 0)
+        {
+            var f1 = 0.0f;
+            var f2 = 0.0f;
+            var f3 = 0.0f;
+
+            var ret1 = float.TryParse(a, out f1);
+            var ret2 = float.TryParse(b, out f2);
+            var ret3 = float.TryParse(c, out f3);
+
+            if (!ret1)
+            {
+                if (rLevel == 6) return "0";
+                var err = false;
+                f1 = ParseMagnitudeExpression2Inner(a, ++rLevel, out err);
+                if (err) return "0";
+                ret1 = true;
+            }
+
+            if (!ret2)
+            {
+                if (rLevel == 6) return "0";
+                var err = false;
+                f2 = ParseMagnitudeExpression2Inner(b, ++rLevel, out err);
+                if (err) return "0";
+                ret2 = true;
+            }
+
+            if (!ret3)
+            {
+                if (rLevel == 6) return "0";
+                var err = false;
+                f3 = ParseMagnitudeExpression2Inner(b, ++rLevel, out err);
+                if (err) return "0";
+                ret3 = true;
+            }
+
+            if (!ret1 | !ret2 | !ret3) return "0";
+
+            return $"{Math.Max(f2, Math.Min(f3, f1))}";
+        }
+
+        public float ParseMagnitudeExpression(int chunk = 0)
+        {
             if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
             {
                 var num2 = (float)((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
@@ -2835,14 +2969,24 @@ namespace mrbBase.Base.Data_Classes
                     num2 *= float.Parse(MagnitudeExpression.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1).Substring(0, 2));
                 }
 
-                num1 = num2;
+                return num2;
             }
             else
             {
-                num1 = 0.0f;
-            }
+                var parseError = false;
+                var ret = 0.0f;
+                if (MagnitudeExpression.Contains("///"))
+                {
+                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                    ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out parseError);
+                    
+                    return parseError ? 0 : ret;
+                }
 
-            return num1;
+                ret = ParseMagnitudeExpression2Inner(MagnitudeExpression, 0, out parseError);
+                
+                return parseError ? 0 : ret;
+            }
         }
 
         private string _summonedEntName;
