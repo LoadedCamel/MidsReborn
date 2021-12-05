@@ -44,6 +44,8 @@ namespace Mids_Reborn.Forms
 
         private bool gfxDrawing;
 
+        private long popupLastOpenTime;
+
         public bool DbChangeRequested { get; set; }
 
         public frmMain()
@@ -2347,8 +2349,11 @@ namespace Mids_Reborn.Forms
 
         private void I9Picker_Hiding(object sender, EventArgs e)
         {
-            if (!I9Picker.Visible)
+            // 10 000 ticks in a millisecond / 10 000 000 ticks in a second (1.10^7)
+            // Ensure the picker doesn't close instantly.
+            if (!I9Picker.Visible | DateTime.Now.Ticks - popupLastOpenTime < 1e7)
                 return;
+
             I9Picker.Visible = false;
             HidePopup();
             EnhancingSlot = -1;
@@ -3526,6 +3531,7 @@ namespace Mids_Reborn.Forms
 
                             I9Picker.Location = point;
                             I9Picker.BringToFront();
+                            popupLastOpenTime = DateTime.Now.Ticks;
                             I9Picker.Visible = true;
                             I9Picker.Select();
                             LastClickPlacedSlot = false;

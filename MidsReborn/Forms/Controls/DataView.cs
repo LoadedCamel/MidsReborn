@@ -2409,82 +2409,40 @@ namespace Mids_Reborn.Forms.Controls
             }
             //fx_lblHead1.Text = pBase.AffectsTarget(Enums.eEffectType.Defense) ? "Defense (Target)" : "Defense (Self)";
             fx_List1.ValueWidth = 55;
-            var num2 = def1.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < def1.Length; index++)
+            {
                 def1[index] *= 100f;
-            var num3 = def2.Length - 1;
-            for (var index = 0; index <= num3; ++index)
+            }
+
+            for (var index = 0; index < def2.Length; index++)
+            {
                 def2[index] *= 100f;
-            var multiple = effectMagSum.Multiple;
-            var iSub1 = Enums.eDamage.Smashing;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub1, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub1], def1[(int)iSub1], def2[(int)iSub1], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub2 = Enums.eDamage.Fire;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub2, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub2], def1[(int)iSub2], def2[(int)iSub2], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub3 = Enums.eDamage.Lethal;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub3, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub3], def1[(int)iSub3], def2[(int)iSub3], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub4 = Enums.eDamage.Cold;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub4, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub4], def1[(int)iSub4], def2[(int)iSub4], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub5 = Enums.eDamage.Energy;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub5, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub5], def1[(int)iSub5], def2[(int)iSub5], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub6 = Enums.eDamage.Melee;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub6, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub6], def1[(int)iSub6], def2[(int)iSub6], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub7 = Enums.eDamage.Negative;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub7, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub7], def1[(int)iSub7], def2[(int)iSub7], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub8 = Enums.eDamage.Ranged;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub8, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub8], def1[(int)iSub8], def2[(int)iSub8], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub9 = Enums.eDamage.Psionic;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub9, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub9], def1[(int)iSub9], def2[(int)iSub9], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub10 = Enums.eDamage.AoE;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub10, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub10], def1[(int)iSub10], def2[(int)iSub10], "%", false, true,
-                false, false,
-                effectMagSum));
+            }
+
+            var dmgTypes = new List<Enums.eDamage> {
+                Enums.eDamage.Smashing,
+                Enums.eDamage.Fire,
+                Enums.eDamage.Lethal,
+                Enums.eDamage.Cold,
+                Enums.eDamage.Energy,
+                Enums.eDamage.Melee,
+                Enums.eDamage.Negative,
+                Enums.eDamage.Ranged,
+                Enums.eDamage.Psionic,
+                Enums.eDamage.AoE
+            };
+
+            foreach (var dmgType in dmgTypes)
+            {
+                if (effectMagSum.Multiple)
+                {
+                    effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, dmgType, true));
+                }
+
+                var dmgIdentifier = (int)dmgType;
+                fx_List1.AddItem(FastItem(names[dmgIdentifier], def1[dmgIdentifier], def2[dmgIdentifier], "%", false, true, false, false, effectMagSum));
+            }
+
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
         }
@@ -2665,7 +2623,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair($"Title:", iValue, iAlternate, isChance, isSpecial, Tag);
+                itemPair = new PairedList.ItemPair($"{Title}:", iValue, iAlternate, isChance, isSpecial, Tag);
             }
 
             return itemPair;
@@ -2681,7 +2639,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             else if (Math.Abs(s1) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair($"Title:", string.Empty, false);
+                itemPair = new PairedList.ItemPair($"{Title}:", string.Empty, false);
             }
             else
             {

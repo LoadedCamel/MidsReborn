@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -456,7 +455,7 @@ namespace Mids_Reborn
             var shortFx = new Enums.ShortFX();
             var sFxSelf = new Enums.ShortFX();
 
-            for (var index1 = 0; index1 <= nBuffs.Effect.Length - 1; ++index1)
+            for (var index1 = 0; index1 < nBuffs.Effect.Length; index1++)
             {
                 var iEffect = (Enums.eEffectType) index1;
                 if (iEffect == Enums.eEffectType.Damage)
@@ -495,7 +494,7 @@ namespace Mids_Reborn
                     }
                 }
 
-                for (var shortFxIdx = 0; shortFxIdx <= shortFx.Value.Length - 1; ++shortFxIdx)
+                for (var shortFxIdx = 0; shortFxIdx < shortFx.Value.Length; shortFxIdx++)
                 {
                     if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
                         continue;
@@ -509,8 +508,8 @@ namespace Mids_Reborn
                         switch (effect.EffectType)
                         {
                             case Enums.eEffectType.Mez:
-                                if (effect.GetPower().DisplayName.Contains("Knockback Protection") || !DatabaseAPI.Database.Power[pIdx].HasProcSlotted)
-                                    nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
+                                //if (effect.GetPower().DisplayName.Contains("Knockback Protection") || DatabaseAPI.Database.Power[pIdx].HasProcSlotted)
+                                nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                                 break;
                             case Enums.eEffectType.MezResist:
                                 nBuffs.StatusResistance[(int) effect.MezType] += shortFx.Value[shortFxIdx];
@@ -637,8 +636,7 @@ namespace Mids_Reborn
             Totals.Init();
             TotalsCapped.Init();
             var canFly = false;
-            var num1 = CurrentBuild.Powers.Count;
-            for (var index1 = 0; index1 < num1; index1++)
+            for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
                 if (!(CurrentBuild.Powers[index1].StatInclude & (_buffedPower[index1] != null)))
                 {
@@ -650,8 +648,7 @@ namespace Mids_Reborn
                     Totals.EndUse += _buffedPower[index1].ToggleCost;
                 }
 
-                var num2 = _buffedPower[index1].Effects.Length;
-                for (var index2 = 0; index2 < num2; index2++)
+                for (var index2 = 0; index2 < _buffedPower[index1].Effects.Length; index2++)
                 {
                     if ((_buffedPower[index1].Effects[index2].EffectType == Enums.eEffectType.Fly) &
                         (_buffedPower[index1].Effects[index2].BuffedMag > 0.0))
@@ -1166,7 +1163,7 @@ namespace Mids_Reborn
                     _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX);
                     _refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
                 }
-            }
+            }            
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
             {
@@ -1376,7 +1373,6 @@ namespace Mids_Reborn
         }
 
         private bool GBPA_Pass3_EnhancePostED(ref IPower powerMath, int hIDX)
-
         {
             var okAcc = DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower]
                 .IgnoreEnhancement(Enums.eEnhance.Accuracy);
