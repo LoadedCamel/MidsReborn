@@ -799,8 +799,8 @@ namespace mrbBase
                     Enums.eColorSetting.ColorPowerTakenVillain => Color.FromArgb(191, 74, 56),
                     Enums.eColorSetting.ColorPowerTakenDarkVillain => Color.Maroon,
                     Enums.eColorSetting.ColorPowerHighlightVillain => Color.FromArgb(96, 64, 64),
-                    Enums.eColorSetting.ColorDamageBarBase => Color.FromArgb(0, 0, 32),
-                    Enums.eColorSetting.ColorDamageBarEnh => Color.FromArgb(0, 0, 32),
+                    Enums.eColorSetting.ColorDamageBarBase => Color.FromArgb(255,194,194),
+                    Enums.eColorSetting.ColorDamageBarEnh => Color.FromArgb(181, 0, 0),
                     _ => Color.FromArgb(0, 0, 0)
                 };
             }

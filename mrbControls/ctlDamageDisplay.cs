@@ -426,7 +426,7 @@ namespace mrbControls
 
                 if (pGraph == 0)
                 {
-                    var num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
+                    /*var num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
                     var brush2 = new SolidBrush(pFadeBaseStart);
                     var rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
                     bxBuffer.Graphics.FillRectangle(brush2, rect2);
@@ -442,7 +442,7 @@ namespace mrbControls
 
                     rect3.Height = rectangle2.Height;
                     brush = new LinearGradientBrush(rect3, pFadeEnhStart, pFadeEnhEnd, 0f);
-                    bxBuffer.Graphics.FillRectangle(brush, rect2);
+                    bxBuffer.Graphics.FillRectangle(brush, rect2);*/
                 }
                 else
                 {
