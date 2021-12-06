@@ -958,7 +958,7 @@ namespace mrbBase.Base.Data_Classes
                 var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
                 if (chunks.Length == 2)
                 {
-                    sChance = $"(variable chance: {chunks[1]})";
+                    sChance = $"variable chance: {chunks[1]}";
                 }
             }
 
@@ -1152,7 +1152,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     sDuration += " ";
                 }
-                // If .Absorbed_Interval > 0 Then
+
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                 {
                     sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds";
@@ -1164,7 +1164,7 @@ namespace mrbBase.Base.Data_Classes
                 if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
                 {
                     var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
-                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0]})";
+                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0].Replace("modifier>current", ModifierTable)})";
                 }
                 else
                 {
@@ -2880,6 +2880,15 @@ namespace mrbBase.Base.Data_Classes
             return "0";
         }
 
+        private string GetModifier(string modifierName)
+        {
+            // DatabaseAPI.NidFromUidAttribMod(ModifierTable);
+            var mod_table = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
+            if (mod_table.Count <= 0) return "0";
+
+            return mod_table[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column].ToString();
+        }
+
         private float ParseMagnitudeExpression2Inner(string magExpr, int rLevel, out bool parseError)
         {
             var pickedPowerNames = MidsContext.Character.CurrentBuild == null
@@ -2896,15 +2905,18 @@ namespace mrbBase.Base.Data_Classes
                 { "power.base>activatetime", $"{power.CastTime}" },
                 { "power.base>areafactor", $"{power.AoEModifier}" },
                 { "power.base>rechargetime", $"{power.BaseRechargeTime}" },
+                { "power.base>endcost", $"{power.EndCost}" },
                 { "if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0" },
+                { "modifier>current", GetModifier(ModifierTable) },
                 { "rand()", $"{new Random().NextDouble()}" }
             };
 
             var functionsDict1 = new Dictionary<Regex, MatchEvaluator>
             {
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
-                { new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames) }
+                { new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames) },
+                { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) }
             };
 
             var functionsDict3 = new Dictionary<Regex, MatchEvaluator>
