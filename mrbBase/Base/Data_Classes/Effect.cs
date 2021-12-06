@@ -316,7 +316,7 @@ namespace mrbBase.Base.Data_Classes
                     {
                         var ret = ParseMagnitudeExpression2Inner(chunks[1], 0, out var parseError);
 
-                        return Math.Max(0, Math.Min(1, ret));
+                        return parseError ? 0 : Math.Max(0, Math.Min(1, ret));
                     }
 
                     return 0;
@@ -953,70 +953,82 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            if (ProcsPerMinute > 0 && Probability < 0.01)
+            if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
             {
-                sChance = $"{ProcsPerMinute} PPM";
-            }
-            else if (useBaseProbability)
-            {
-                if (BaseProbability < 1)
+                var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                if (chunks.Length == 2)
                 {
-                    if (BaseProbability >= 0.01)
-                    {
-                        sChance = BaseProbability >= 0.975f
-                            ? $"{BaseProbability * 100:#0.0}% chance"
-                            : $"{BaseProbability * 100:#0}% chance";
-
-                        sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
-                    }
-                    
-                    if (EffectId != "" & EffectId != "Ones")
-                    {
-                        sChance += $"when {EffectId}";
-                    }
-
-                    if (CancelOnMiss)
-                    {
-                        sChance += ", Cancels on Miss";
-                    }
+                    sChance = $"(variable chance: {chunks[1]})";
                 }
-                /*else if (EffectId != "" & EffectId != "Ones")
-                {
-                    sChance = $"when {EffectId}";
-                }*/
             }
-            else
+
+            if (sChance == "")
             {
-                if (Probability < 1)
+                if (ProcsPerMinute > 0 && Probability < 0.01)
                 {
-                    if (Probability >= 0.01)
-                    {
-                        sChance = Probability >= 0.975f
-                            ? $"{Probability * 100:#0.0}% chance"
-                            : $"{Probability * 100:#0}% chance";
-
-                        sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
-                    }
-
-                    if (EffectId != "" & EffectId != "Ones")
-                    {
-                        sChance += $"when {EffectId}";
-                    }
-
-                    if (CancelOnMiss)
-                    {
-                        sChance += ", Cancels on Miss";
-                    }
-
-                    if (ProcsPerMinute > 0 && fromPopup)
-                    {
-                        sChance = $"{ProcsPerMinute} PPM";
-                    }
+                    sChance = $"{ProcsPerMinute} PPM";
                 }
-                /*else if (EffectId != "" & EffectId != "Ones")
+                else if (useBaseProbability)
                 {
-                    sChance = $"when {EffectId}";
-                }*/
+                    if (BaseProbability < 1)
+                    {
+                        if (BaseProbability >= 0.01)
+                        {
+                            sChance = BaseProbability >= 0.975f
+                                ? $"{BaseProbability * 100:#0.0}% chance"
+                                : $"{BaseProbability * 100:#0}% chance";
+
+                            sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
+                        }
+
+                        if (EffectId != "" & EffectId != "Ones")
+                        {
+                            sChance += $"when {EffectId}";
+                        }
+
+                        if (CancelOnMiss)
+                        {
+                            sChance += ", Cancels on Miss";
+                        }
+                    }
+                    /*else if (EffectId != "" & EffectId != "Ones")
+                    {
+                        sChance = $"when {EffectId}";
+                    }*/
+                }
+                else
+                {
+                    if (Probability < 1)
+                    {
+                        if (Probability >= 0.01)
+                        {
+                            sChance = Probability >= 0.975f
+                                ? $"{Probability * 100:#0.0}% chance"
+                                : $"{Probability * 100:#0}% chance";
+
+                            sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
+                        }
+
+                        if (EffectId != "" & EffectId != "Ones")
+                        {
+                            sChance += $"when {EffectId}";
+                        }
+
+                        if (CancelOnMiss)
+                        {
+                            sChance += ", Cancels on Miss";
+                        }
+
+                        if (ProcsPerMinute > 0 && fromPopup)
+                        {
+                            sChance = $"{ProcsPerMinute} PPM";
+                        }
+                    }
+                    /*else if (EffectId != "" & EffectId != "Ones")
+                    {
+                        sChance = $"when {EffectId}";
+                    }*/
+                }
             }
 
             var resistPresent = false;
@@ -1149,11 +1161,19 @@ namespace mrbBase.Base.Data_Classes
 
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
-                    ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
-                    : DisplayPercentage
-                        ? $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * 100)}%"
-                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag)}";
+                if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
+                {
+                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0]})";
+                }
+                else
+                {
+                    sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
+                        : DisplayPercentage
+                            ? $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * 100)}%"
+                            : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag)}";
+                }
             }
 
             if (!simple)
@@ -2871,36 +2891,31 @@ namespace mrbBase.Base.Data_Classes
                         .Select(pe => pe.Power.FullName)
                         .ToList();
 
-            var commandsDict = new Dictionary<string, string>();
-            commandsDict.Add("power.base>activatetime", $"{power.CastTime}");
-            commandsDict.Add("power.base>areafactor", $"{power.AoEModifier}");
-            commandsDict.Add("power.base>rechargetime", $"{power.BaseRechargeTime}");
-            commandsDict.Add("if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0");
-            commandsDict.Add("if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0");
-            commandsDict.Add("rand()", $"{new Random().NextDouble()}");
+            var commandsDict = new Dictionary<string, string>
+            {
+                { "power.base>activatetime", $"{power.CastTime}" },
+                { "power.base>areafactor", $"{power.AoEModifier}" },
+                { "power.base>rechargetime", $"{power.BaseRechargeTime}" },
+                { "if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0" },
+                { "if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0" },
+                { "rand()", $"{new Random().NextDouble()}" }
+            };
 
-            var functionsDict1 = new Dictionary<Regex, MatchEvaluator>();
-            functionsDict1.Add(new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0");
-            functionsDict1.Add(new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames));
+            var functionsDict1 = new Dictionary<Regex, MatchEvaluator>
+            {
+                { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames) }
+            };
 
-            var functionsDict3 = new Dictionary<Regex, MatchEvaluator>();
-            functionsDict3.Add(new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel));
+            var functionsDict3 = new Dictionary<Regex, MatchEvaluator>
+            {
+                { new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel) }
+            };
 
             parseError = false;
-            foreach (var cmd in commandsDict)
-            {
-                magExpr = magExpr.Replace(cmd.Key, cmd.Value);
-            }
-
-            foreach (var f1 in functionsDict1)
-            {
-                magExpr = f1.Key.Replace(magExpr, f1.Value);
-            }
-
-            foreach (var f3 in functionsDict3)
-            {
-                magExpr = f3.Key.Replace(magExpr, f3.Value);
-            }
+            magExpr = commandsDict.Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+            magExpr = functionsDict1.Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
+            magExpr = functionsDict3.Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
 
             var r = new Regex(@"^[0-9\-\+\*\/\s\.\,\(\)]+$");
             if (r.IsMatch(magExpr))
@@ -2929,19 +2944,14 @@ namespace mrbBase.Base.Data_Classes
 
         private string ExprMinMax(string a, string b, string c, int rLevel = 0)
         {
-            var f1 = 0.0f;
-            var f2 = 0.0f;
-            var f3 = 0.0f;
-
-            var ret1 = float.TryParse(a, out f1);
-            var ret2 = float.TryParse(b, out f2);
-            var ret3 = float.TryParse(c, out f3);
+            var ret1 = float.TryParse(a, out var f1);
+            var ret2 = float.TryParse(b, out var f2);
+            var ret3 = float.TryParse(c, out var f3);
 
             if (!ret1)
             {
                 if (rLevel == 6) return "0";
-                var err = false;
-                f1 = ParseMagnitudeExpression2Inner(a, ++rLevel, out err);
+                f1 = ParseMagnitudeExpression2Inner(a, ++rLevel, out var err);
                 if (err) return "0";
                 ret1 = true;
             }
@@ -2949,8 +2959,7 @@ namespace mrbBase.Base.Data_Classes
             if (!ret2)
             {
                 if (rLevel == 6) return "0";
-                var err = false;
-                f2 = ParseMagnitudeExpression2Inner(b, ++rLevel, out err);
+                f2 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
                 if (err) return "0";
                 ret2 = true;
             }
@@ -2958,13 +2967,10 @@ namespace mrbBase.Base.Data_Classes
             if (!ret3)
             {
                 if (rLevel == 6) return "0";
-                var err = false;
-                f3 = ParseMagnitudeExpression2Inner(b, ++rLevel, out err);
+                f3 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
                 if (err) return "0";
                 ret3 = true;
             }
-
-            if (!ret1 | !ret2 | !ret3) return "0";
 
             return $"{Math.Max(f2, Math.Min(f3, f1))}";
         }
@@ -2983,13 +2989,13 @@ namespace mrbBase.Base.Data_Classes
             }
             else
             {
-                var parseError = false;
                 var ret = 0.0f;
+                var parseError = false;
                 if (MagnitudeExpression.Contains("///"))
                 {
                     var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
                     ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out parseError);
-                    
+
                     return parseError ? 0 : ret;
                 }
 
