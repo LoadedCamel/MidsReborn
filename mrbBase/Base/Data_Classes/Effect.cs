@@ -14,7 +14,7 @@ namespace mrbBase.Base.Data_Classes
             new Regex("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower power;
-
+        public const string MagExprSeparator = "///";
 
         public Effect()
         {
@@ -309,10 +309,10 @@ namespace mrbBase.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
-                if (MagnitudeExpression.Contains("///") & AttribType == Enums.eAttribType.Expression)
+                if (MagnitudeExpression.Contains(MagExprSeparator) & AttribType == Enums.eAttribType.Expression)
                 {
-                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (chunks.Length > 1)
+                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
+                    if (chunks.Count > 1)
                     {
                         var ret = ParseMagnitudeExpression2Inner(chunks[1], 0, out var parseError);
 
@@ -955,8 +955,8 @@ namespace mrbBase.Base.Data_Classes
 
             if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
             {
-                var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
-                if (chunks.Length == 2)
+                var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
+                if (chunks.Count == 2)
                 {
                     sChance = $"variable chance: {chunks[1]}";
                 }
@@ -1163,7 +1163,11 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out var forcedMagDefault);
+                    if (forcedMagDefault)
+                    {
+                        chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
+                    }
                     sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0].Replace("modifier>current", ModifierTable)})";
                 }
                 else
@@ -2987,6 +2991,19 @@ namespace mrbBase.Base.Data_Classes
             return $"{Math.Max(f2, Math.Min(f3, f1))}";
         }
 
+        private List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault)
+        {
+            var chunks = MagnitudeExpression.Split(new string[] { MagExprSeparator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (chunks.Count == 1 & MagnitudeExpression.TrimStart().StartsWith(MagExprSeparator))
+            {
+                forcedMagDefault = true;                
+                return new List<string> { $"{Scale * nMagnitude}", chunks[0] };
+            }
+
+            forcedMagDefault = false;
+            return chunks;
+        }
+
         public float ParseMagnitudeExpression(int chunk = 0)
         {
             if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
@@ -3003,9 +3020,9 @@ namespace mrbBase.Base.Data_Classes
             {
                 var ret = 0.0f;
                 var parseError = false;
-                if (MagnitudeExpression.Contains("///"))
+                if (MagnitudeExpression.Contains(MagExprSeparator))
                 {
-                    var chunks = MagnitudeExpression.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries);
+                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
                     ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out parseError);
 
                     return parseError ? 0 : ret;

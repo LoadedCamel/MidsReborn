@@ -141,6 +141,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkIgnoreScale = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtMagExpression = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.GroupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -174,7 +175,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.GroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox3.Controls.Add(this.clbSuppression);
-            this.GroupBox3.Location = new System.Drawing.Point(1040, 150);
+            this.GroupBox3.Location = new System.Drawing.Point(1040, 176);
             this.GroupBox3.Name = "GroupBox3";
             this.GroupBox3.Size = new System.Drawing.Size(212, 283);
             this.GroupBox3.TabIndex = 107;
@@ -307,7 +308,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(1091, 548);
+            this.Label30.Location = new System.Drawing.Point(1091, 574);
             this.Label30.Name = "Label30";
             this.Label30.Size = new System.Drawing.Size(100, 20);
             this.Label30.TabIndex = 105;
@@ -327,7 +328,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbFXSpecialCase
             // 
             this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(1075, 571);
+            this.cbFXSpecialCase.Location = new System.Drawing.Point(1075, 597);
             this.cbFXSpecialCase.Name = "cbFXSpecialCase";
             this.cbFXSpecialCase.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase.TabIndex = 94;
@@ -342,7 +343,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox2.Controls.Add(this.lvConditionalBool);
             this.groupBox2.Controls.Add(this.lvConditionalType);
             this.groupBox2.Controls.Add(this.lvSubConditional);
-            this.groupBox2.Location = new System.Drawing.Point(246, 439);
+            this.groupBox2.Location = new System.Drawing.Point(246, 465);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(788, 311);
             this.groupBox2.TabIndex = 160;
@@ -542,7 +543,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // chkVariable
             // 
-            this.chkVariable.Location = new System.Drawing.Point(613, 129);
+            this.chkVariable.Location = new System.Drawing.Point(613, 155);
             this.chkVariable.Name = "chkVariable";
             this.chkVariable.Size = new System.Drawing.Size(178, 19);
             this.chkVariable.TabIndex = 126;
@@ -670,7 +671,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEffectType.FullRowSelect = true;
             this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEffectType.HideSelection = false;
-            this.lvEffectType.Location = new System.Drawing.Point(246, 158);
+            this.lvEffectType.Location = new System.Drawing.Point(246, 184);
             this.lvEffectType.LostFocusItem = -1;
             this.lvEffectType.MultiSelect = false;
             this.lvEffectType.Name = "lvEffectType";
@@ -696,7 +697,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubAttribute.FullRowSelect = true;
             this.lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubAttribute.HideSelection = false;
-            this.lvSubAttribute.Location = new System.Drawing.Point(478, 158);
+            this.lvSubAttribute.Location = new System.Drawing.Point(478, 184);
             this.lvSubAttribute.LostFocusItem = -1;
             this.lvSubAttribute.MultiSelect = false;
             this.lvSubAttribute.Name = "lvSubAttribute";
@@ -722,7 +723,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubSub.FullRowSelect = true;
             this.lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubSub.HideSelection = false;
-            this.lvSubSub.Location = new System.Drawing.Point(759, 158);
+            this.lvSubSub.Location = new System.Drawing.Point(759, 184);
             this.lvSubSub.LostFocusItem = -1;
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
@@ -745,7 +746,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label9
             // 
             this.Label9.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Label9.Location = new System.Drawing.Point(1081, 438);
+            this.Label9.Location = new System.Drawing.Point(1081, 478);
             this.Label9.Name = "Label9";
             this.Label9.Size = new System.Drawing.Size(120, 19);
             this.Label9.TabIndex = 149;
@@ -756,7 +757,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cmbEffectId.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cmbEffectId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEffectId.Location = new System.Drawing.Point(1062, 460);
+            this.cmbEffectId.Location = new System.Drawing.Point(1062, 500);
             this.cmbEffectId.Name = "cmbEffectId";
             this.cmbEffectId.Size = new System.Drawing.Size(166, 22);
             this.cmbEffectId.TabIndex = 150;
@@ -765,7 +766,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label10
             // 
             this.Label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Label10.Location = new System.Drawing.Point(1076, 494);
+            this.Label10.Location = new System.Drawing.Point(1076, 534);
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(143, 19);
             this.Label10.TabIndex = 152;
@@ -775,7 +776,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtOverride
             // 
             this.txtOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.txtOverride.Location = new System.Drawing.Point(1062, 516);
+            this.txtOverride.Location = new System.Drawing.Point(1062, 556);
             this.txtOverride.Name = "txtOverride";
             this.txtOverride.Size = new System.Drawing.Size(166, 20);
             this.txtOverride.TabIndex = 153;
@@ -827,7 +828,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel1.Controls.Add(this.cbAttribute, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.Label5, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.cbAspect, 1, 9);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 158);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 184);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 13;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -855,7 +856,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.cbModifier, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.Label6, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 439);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 465);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.55814F));
@@ -891,7 +892,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel3.Controls.Add(this.lblAffectsCaster, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.cbAffects, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.Label3, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 488);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 514);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 13;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -919,7 +920,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.91089F));
             this.tableLayoutPanel5.Controls.Add(this.cbTarget, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.label12, 0, 0);
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 557);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 583);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -958,7 +959,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel6.Controls.Add(this.Label28, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.cbFXClass, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 124);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 150);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -972,7 +973,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.panel1.Controls.Add(this.btnPaste);
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Location = new System.Drawing.Point(1040, 599);
+            this.panel1.Location = new System.Drawing.Point(1040, 625);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(212, 152);
             this.panel1.TabIndex = 167;
@@ -1006,7 +1007,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpPowerAttribs.Controls.Add(this.txtFXRadius, 1, 9);
             this.tpPowerAttribs.Controls.Add(this.txtFXArc, 1, 13);
             this.tpPowerAttribs.Controls.Add(this.txtFXMaxTargets, 1, 14);
-            this.tpPowerAttribs.Location = new System.Drawing.Point(12, 158);
+            this.tpPowerAttribs.Location = new System.Drawing.Point(12, 184);
             this.tpPowerAttribs.Name = "tpPowerAttribs";
             this.tpPowerAttribs.RowCount = 15;
             this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1276,7 +1277,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkCancelOnMiss
             // 
             this.chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkCancelOnMiss.Location = new System.Drawing.Point(12, 726);
+            this.chkCancelOnMiss.Location = new System.Drawing.Point(12, 752);
             this.chkCancelOnMiss.Name = "chkCancelOnMiss";
             this.chkCancelOnMiss.Size = new System.Drawing.Size(222, 20);
             this.chkCancelOnMiss.TabIndex = 174;
@@ -1287,7 +1288,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkStack
             // 
             this.chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.Location = new System.Drawing.Point(12, 593);
+            this.chkStack.Location = new System.Drawing.Point(12, 619);
             this.chkStack.Name = "chkStack";
             this.chkStack.Size = new System.Drawing.Size(222, 20);
             this.chkStack.TabIndex = 171;
@@ -1298,7 +1299,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkFXBuffable
             // 
             this.chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.Location = new System.Drawing.Point(12, 619);
+            this.chkFXBuffable.Location = new System.Drawing.Point(12, 645);
             this.chkFXBuffable.Name = "chkFXBuffable";
             this.chkFXBuffable.Size = new System.Drawing.Size(222, 20);
             this.chkFXBuffable.TabIndex = 169;
@@ -1309,7 +1310,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // IgnoreED
             // 
             this.IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.Location = new System.Drawing.Point(12, 645);
+            this.IgnoreED.Location = new System.Drawing.Point(12, 671);
             this.IgnoreED.Name = "IgnoreED";
             this.IgnoreED.Size = new System.Drawing.Size(222, 20);
             this.IgnoreED.TabIndex = 173;
@@ -1320,7 +1321,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkFXResistable
             // 
             this.chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.Location = new System.Drawing.Point(12, 671);
+            this.chkFXResistable.Location = new System.Drawing.Point(12, 697);
             this.chkFXResistable.Name = "chkFXResistable";
             this.chkFXResistable.Size = new System.Drawing.Size(222, 20);
             this.chkFXResistable.TabIndex = 170;
@@ -1331,7 +1332,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkNearGround
             // 
             this.chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkNearGround.Location = new System.Drawing.Point(12, 697);
+            this.chkNearGround.Location = new System.Drawing.Point(12, 723);
             this.chkNearGround.Name = "chkNearGround";
             this.chkNearGround.Size = new System.Drawing.Size(222, 20);
             this.chkNearGround.TabIndex = 172;
@@ -1342,7 +1343,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbCoDFormat
             // 
             this.cbCoDFormat.AutoSize = true;
-            this.cbCoDFormat.Location = new System.Drawing.Point(1040, 129);
+            this.cbCoDFormat.Location = new System.Drawing.Point(1040, 155);
             this.cbCoDFormat.Name = "cbCoDFormat";
             this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
             this.cbCoDFormat.TabIndex = 175;
@@ -1353,7 +1354,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkIgnoreScale
             // 
             this.chkIgnoreScale.AutoSize = true;
-            this.chkIgnoreScale.Location = new System.Drawing.Point(838, 129);
+            this.chkIgnoreScale.Location = new System.Drawing.Point(838, 155);
             this.chkIgnoreScale.Name = "chkIgnoreScale";
             this.chkIgnoreScale.Size = new System.Drawing.Size(145, 18);
             this.chkIgnoreScale.TabIndex = 176;
@@ -1364,7 +1365,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 132);
+            this.label7.Location = new System.Drawing.Point(10, 158);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(116, 14);
             this.label7.TabIndex = 177;
@@ -1373,16 +1374,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // txtMagExpression
             // 
-            this.txtMagExpression.Location = new System.Drawing.Point(132, 129);
+            this.txtMagExpression.Location = new System.Drawing.Point(132, 155);
             this.txtMagExpression.Name = "txtMagExpression";
             this.txtMagExpression.Size = new System.Drawing.Size(280, 20);
             this.txtMagExpression.TabIndex = 178;
             this.txtMagExpression.TextChanged += new System.EventHandler(this.txtMagExpression_TextChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(129, 133);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(0, 14);
+            this.label8.TabIndex = 179;
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1264, 756);
+            this.ClientSize = new System.Drawing.Size(1264, 784);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.txtMagExpression);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.chkIgnoreScale);
@@ -1543,5 +1553,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox chkIgnoreScale;
         private Label label7;
         private TextBox txtMagExpression;
+        private Label label8;
     }
 }

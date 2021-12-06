@@ -26,6 +26,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private readonly List<string> ConditionalTypes;
         private readonly List<string> ConditionalOps;
         private readonly int EffectIndex;
+        private bool ValidExpression;
 
         public frmPowerEffect(IEffect iFX, IPower fxPower, int fxIndex = 0)
         {
@@ -75,6 +76,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitSelectedItems();
             Loading = false;
             UpdateFXText();
+            CheckMagExpression();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -1740,6 +1742,64 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading) return;
             myFX.MagnitudeExpression = txtMagExpression.Text;
             UpdateFXText();
+            CheckMagExpression();
+        }
+
+        private void CheckMagExpression()
+        {
+            ValidExpression = true;
+
+            var err = "";
+            try
+            {
+                _ = myFX.ParseMagnitudeExpression(0);
+            }
+            catch (ParseException ex)
+            {
+                err = $@"{ex.Message}";
+                ValidExpression = false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                err = $@"{ex.Message}";
+                ValidExpression = false;
+            }
+
+            if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
+            {
+                try
+                {
+                    _ = myFX.ParseMagnitudeExpression(1);
+                }
+                catch (ParseException ex)
+                {
+                    if (string.IsNullOrEmpty(err))
+                    {
+                        err = $@"{ex.Message}";
+                    }
+                    else
+                    {
+                        err += $@" | {ex.Message}";
+                    }
+
+                    ValidExpression = false;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    if (string.IsNullOrEmpty(err))
+                    {
+                        err = $@"{ex.Message}";
+                    }
+                    else
+                    {
+                        err += $@" | {ex.Message}";
+                    }
+
+                    ValidExpression = false;
+                }
+            }
+
+            label8.Text = err;
         }
     }
 }
