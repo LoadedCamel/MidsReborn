@@ -1784,22 +1784,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void CheckMagExpression()
         {
+            var returnData = string.Empty;
             if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
             {
-                var retData = myFX.ParseMagnitudeExpression(out var data);
+                myFX.ParseMagnitudeExpression(out var data);
                 if (data.ErrorFound)
                 {
-                    expError.Text = $@"Expression Error: {data.ErrorString}";
+                    returnData = $@"Expression Error: {data.ErrorString}";
                 }
             }
             else
             {
-                var retData = myFX.ParseMagnitudeExpression(out var data, 1);
+                myFX.ParseMagnitudeExpression(out var data, 1);
                 if (data.ErrorFound)
                 {
-                    expError.Text = $@"Expression Error: {data.ErrorString}";
+                    returnData = $@"Expression Error: {data.ErrorString}";
                 }
             }
+
+            expError.Text = returnData;
         }
     }
 }
