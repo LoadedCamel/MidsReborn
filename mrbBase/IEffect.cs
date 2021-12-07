@@ -196,6 +196,6 @@ namespace mrbBase
 
         string SummonedEntityName { get; }
 
-        float ParseMagnitudeExpression(int chunk = 0);
+        float ParseMagnitudeExpression(out Effect.ParsedData data, int chunk = 0);
     }
 }

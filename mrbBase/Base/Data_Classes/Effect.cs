@@ -316,7 +316,7 @@ namespace mrbBase.Base.Data_Classes
                     {
                         var ret = ParseMagnitudeExpression2Inner(chunks[1], 0, out var parseError);
 
-                        return parseError ? 0 : Math.Max(0, Math.Min(1, ret));
+                        return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
                     }
 
                     return 0;
@@ -374,7 +374,7 @@ namespace mrbBase.Base.Data_Classes
                         return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
                     
                     case Enums.eAttribType.Expression:
-                        return ParseMagnitudeExpression()
+                        return ParseMagnitudeExpression(out var temp)
                                * DatabaseAPI.GetModifier(this)
                                * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
                     default:
@@ -2893,7 +2893,13 @@ namespace mrbBase.Base.Data_Classes
             return mod_table[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column].ToString();
         }
 
-        private float ParseMagnitudeExpression2Inner(string magExpr, int rLevel, out bool parseError)
+        public class ParsedData
+        {
+            public bool ErrorFound { get; set; }
+            public string ErrorString { get; set; } = string.Empty;
+        }
+
+        private float ParseMagnitudeExpression2Inner(string magExpr, int rLevel, out ParsedData parsedData)
         {
             var pickedPowerNames = MidsContext.Character.CurrentBuild == null
                 ? new List<string>()
@@ -2928,7 +2934,7 @@ namespace mrbBase.Base.Data_Classes
                 { new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel) }
             };
 
-            parseError = false;
+            parsedData = new ParsedData();
             magExpr = commandsDict.Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
             magExpr = functionsDict1.Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
             magExpr = functionsDict3.Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
@@ -2940,22 +2946,17 @@ namespace mrbBase.Base.Data_Classes
                 try
                 {
                     var ret = (float)mathEngine.Calculate(magExpr.TrimEnd('/'));
-
                     return ret;
                 }
-                catch (ParseException)
+                catch (ParseException ex)
                 {
-                    return 0;
-                }
-                catch (InvalidOperationException)
-                {
+                    parsedData.ErrorFound = true;
+                    parsedData.ErrorString = ex.Message;
                     return 0;
                 }
             }
-            else
-            {
-                return 0;
-            }
+
+            return 0;
         }
 
         private string ExprMinMax(string a, string b, string c, int rLevel = 0)
@@ -2968,24 +2969,21 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (rLevel == 6) return "0";
                 f1 = ParseMagnitudeExpression2Inner(a, ++rLevel, out var err);
-                if (err) return "0";
-                ret1 = true;
+                if (err.ErrorFound) return "0";
             }
 
             if (!ret2)
             {
                 if (rLevel == 6) return "0";
                 f2 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
-                if (err) return "0";
-                ret2 = true;
+                if (err.ErrorFound) return "0";
             }
 
             if (!ret3)
             {
                 if (rLevel == 6) return "0";
                 f3 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
-                if (err) return "0";
-                ret3 = true;
+                if (err.ErrorFound) return "0";
             }
 
             return $"{Math.Max(f2, Math.Min(f3, f1))}";
@@ -3004,8 +3002,9 @@ namespace mrbBase.Base.Data_Classes
             return chunks;
         }
 
-        public float ParseMagnitudeExpression(int chunk = 0)
+        public float ParseMagnitudeExpression(out ParsedData data, int chunk = 0)
         {
+            data = new ParsedData();
             if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
             {
                 var num2 = (float)((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
@@ -3016,22 +3015,20 @@ namespace mrbBase.Base.Data_Classes
 
                 return num2;
             }
-            else
+
+            if (string.IsNullOrWhiteSpace(MagnitudeExpression)) return 0f;
+            float ret;
+            if (MagnitudeExpression.Contains(MagExprSeparator))
             {
-                var ret = 0.0f;
-                var parseError = false;
-                if (MagnitudeExpression.Contains(MagExprSeparator))
-                {
-                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
-                    ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out parseError);
+                var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
+                ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out data);
 
-                    return parseError ? 0 : ret;
-                }
-
-                ret = ParseMagnitudeExpression2Inner(MagnitudeExpression, 0, out parseError);
-                
-                return parseError ? 0 : ret;
+                return data.ErrorFound ? 0f : ret;
             }
+
+            ret = ParseMagnitudeExpression2Inner(MagnitudeExpression, 0, out data);
+
+            return data.ErrorFound ? 0f : ret;
         }
 
         private string _summonedEntName;

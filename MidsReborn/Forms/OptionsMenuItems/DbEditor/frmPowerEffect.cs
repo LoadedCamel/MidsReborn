@@ -38,7 +38,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.reborn;
             ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-            if (iFX != null) myFX = (IEffect) iFX.Clone();
+            if (iFX != null) myFX = (IEffect)iFX.Clone();
             EffectIndex = fxIndex;
         }
 
@@ -51,7 +51,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.reborn;
             ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-            if (iFX != null) myFX = (IEffect) iFX.Clone();
+            if (iFX != null) myFX = (IEffect)iFX.Clone();
             EffectIndex = fxIndex;
         }
 
@@ -60,7 +60,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FillComboBoxes();
             DisplayEffectData();
             if (myFX.GetPower() is { } power)
-            {                
+            {
                 Text = $"Edit Effect {EffectIndex} for: {power.FullName}";
             }
             else if (myFX.Enhancement != null)
@@ -137,8 +137,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading || cbAttribute.SelectedIndex < 0)
                 return;
             myFX.AttribType = (Enums.eAttribType)cbAttribute.SelectedIndex;
-            label7.Visible = myFX.AttribType == Enums.eAttribType.Expression;
-            txtMagExpression.Visible = myFX.AttribType == Enums.eAttribType.Expression;
+            switch (myFX.AttribType)
+            {
+                case Enums.eAttribType.Expression:
+                    txtMagExpression.Enabled = true;
+                    txtProbExpression.Enabled = true;
+                    magexLabel.Enabled = true;
+                    probexLabel.Enabled = true;
+                    break;
+            }
+
             UpdateFXText();
         }
 
@@ -363,8 +371,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateEffectSubAttribList();
 
             txtMagExpression.Text = myFX.MagnitudeExpression;
-            txtMagExpression.Visible = myFX.AttribType == Enums.eAttribType.Expression;
-            label7.Visible = myFX.AttribType == Enums.eAttribType.Expression;
+            txtMagExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
+            magexLabel.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
+            txtProbExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
+            probexLabel.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
         }
 
         private void FillComboBoxes()
@@ -404,6 +414,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 cmbEffectId.Items.Add(effectId);
             }
+
             cmbEffectId.EndUpdate();
             cbFXClass.EndUpdate();
             cbFXSpecialCase.EndUpdate();
@@ -480,6 +491,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
         }
+
         private void InitSelectedItems()
         {
             if (myFX.EffectType == Enums.eEffectType.None) return;
@@ -670,7 +682,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (myFX.EffectType == Enums.eEffectType.ModifyAttrib)
             {
                 tableLayoutPanel1.Enabled = false;
-                tableLayoutPanel2.Enabled = false;
                 tableLayoutPanel3.Enabled = false;
                 tableLayoutPanel5.Enabled = false;
                 tpPowerAttribs.Visible = true;
@@ -686,7 +697,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 tableLayoutPanel1.Enabled = true;
-                tableLayoutPanel2.Enabled = true;
                 tableLayoutPanel3.Enabled = true;
                 tableLayoutPanel5.Enabled = true;
                 tpPowerAttribs.Visible = false;
@@ -750,6 +760,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         {
                             tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(sText);
                         }
+
                         //cbTarget.Enabled = true;
                         break;
                 }
@@ -768,10 +779,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
             }
+
             if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Damage) | (fx.ETModifies == Enums.eEffectType.Defense))
             {
                 fx.DamageType = (Enums.eDamage)lvSubSub.SelectedIndices[0];
             }
+
             if ((fx.EffectType == Enums.eEffectType.ResEffect) & (fx.ETModifies == Enums.eEffectType.Mez))
             {
                 fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
@@ -882,6 +895,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 myFX.BaseProbability = num;
                 //lblProb.Text = $"({fx.BaseProbability * 100:###0}%)";
             }
+
             UpdateFXText();
         }
 
@@ -969,6 +983,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModAccuracy = num;
             UpdateFXText();
         }
+
         private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -977,6 +992,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModActivatePeriod = num;
             UpdateFXText();
         }
+
         private void txtFXArc_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -985,6 +1001,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModArc = num;
             UpdateFXText();
         }
+
         private void txtFXCastTime_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -993,12 +1010,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModCastTime = num;
             UpdateFXText();
         }
+
         private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading) return;
             myFX.AtrModEffectArea = (Enums.eEffectArea)cbFXEffectArea.SelectedIndex;
             UpdateFXText();
         }
+
         private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1007,6 +1026,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModEnduranceCost = num;
             UpdateFXText();
         }
+
         private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1015,6 +1035,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModInterruptTime = num;
             UpdateFXText();
         }
+
         private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1023,6 +1044,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModMaxTargets = num;
             UpdateFXText();
         }
+
         private void txtFXRadius_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1031,6 +1053,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModRadius = num;
             UpdateFXText();
         }
+
         private void txtFXRange_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1039,6 +1062,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModRange = num;
             UpdateFXText();
         }
+
         private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1047,6 +1071,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myFX.AtrModRechargeTime = num;
             UpdateFXText();
         }
+
         private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
@@ -1078,7 +1103,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var lvControl = (ctlListViewColored) sender;
+            var lvControl = (ctlListViewColored)sender;
             if (lvControl.Enabled)
             {
                 if (e.Item.Selected)
@@ -1105,6 +1130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 e.Item.ForeColor = SystemColors.GrayText;
             }
+
             e.DrawBackground();
             e.DrawText();
         }
@@ -1211,10 +1237,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvActiveConditionals.SelectedItems.Count <= 0) return;
 
             foreach (var cVp in myFX.ActiveConditionals
-                .Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name)).ToList())
+                         .Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name)).ToList())
             {
                 myFX.ActiveConditionals.Remove(cVp);
             }
+
             lvActiveConditionals.SelectedItems[0].Remove();
             UpdateFXText();
         }
@@ -1270,6 +1297,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     {
                         lvConditionalBool.Items.Add(num.ToString());
                     }
+
                     lvConditionalBool.Columns[0].Text = @"# of Members";
                     lvConditionalBool.EndUpdate();
                     break;
@@ -1301,6 +1329,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
+
                     lvConditionalBool.Size = new Size(97, 259);
                     lvConditionalBool.Location = new Point(460, 14);
                     lvConditionalOp.Visible = false;
@@ -1330,6 +1359,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
+
                     lvConditionalBool.Size = new Size(97, 259);
                     lvConditionalBool.Location = new Point(460, 14);
                     lvConditionalOp.Visible = false;
@@ -1399,6 +1429,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     {
                         lvSubConditional.Items.Add(member);
                     }
+
                     lvConditionalOp.Columns[0].Text = @"Members are?";
                     lvSubConditional.Columns[0].Text = @"Team Members";
                     lvSubConditional.Columns[0].Width = -2;
@@ -1447,6 +1478,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         break;
                 }
             }
+
             lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
             lvActiveConditionals.Columns[0].Width = -2;
             lvActiveConditionals.Columns[1].Text = "";
@@ -1477,7 +1509,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvConditionalOp.Items.Count != 0) return;
 
-            
+
             foreach (var op in ConditionalOps)
             {
                 lvConditionalOp.Items.Add(op);
@@ -1710,7 +1742,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var searchPowerName = sf.SearchTerms.PowerName.ToLowerInvariant();
 
             var n = lvSubConditional.Items.Count;
-            
+
             for (var i = 0; i < n; i++)
             {
                 var lvItem = lvSubConditional.Items[i].Text.ToLowerInvariant();
@@ -1720,7 +1752,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     {
                         lvSubConditional.Items[i].Selected = true;
                         lvSubConditional.Items[i].EnsureVisible();
-                        
+
                         return;
                     }
                 }
@@ -1745,61 +1777,29 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             CheckMagExpression();
         }
 
+        private void AssignExpError(string error)
+        {
+            expError.Text = error;
+        }
+
         private void CheckMagExpression()
         {
-            ValidExpression = true;
-
-            var err = "";
-            try
-            {
-                _ = myFX.ParseMagnitudeExpression(0);
-            }
-            catch (ParseException ex)
-            {
-                err = $@"{ex.Message}";
-                ValidExpression = false;
-            }
-            catch (InvalidOperationException ex)
-            {
-                err = $@"{ex.Message}";
-                ValidExpression = false;
-            }
-
             if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
             {
-                try
+                var retData = myFX.ParseMagnitudeExpression(out var data);
+                if (data.ErrorFound)
                 {
-                    _ = myFX.ParseMagnitudeExpression(1);
-                }
-                catch (ParseException ex)
-                {
-                    if (string.IsNullOrEmpty(err))
-                    {
-                        err = $@"{ex.Message}";
-                    }
-                    else
-                    {
-                        err += $@" | {ex.Message}";
-                    }
-
-                    ValidExpression = false;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    if (string.IsNullOrEmpty(err))
-                    {
-                        err = $@"{ex.Message}";
-                    }
-                    else
-                    {
-                        err += $@" | {ex.Message}";
-                    }
-
-                    ValidExpression = false;
+                    expError.Text = $@"Expression Error: {data.ErrorString}";
                 }
             }
-
-            label8.Text = err;
+            else
+            {
+                var retData = myFX.ParseMagnitudeExpression(out var data, 1);
+                if (data.ErrorFound)
+                {
+                    expError.Text = $@"Expression Error: {data.ErrorString}";
+                }
+            }
         }
     }
 }

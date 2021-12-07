@@ -38,7 +38,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
-            this.GroupBox3 = new System.Windows.Forms.GroupBox();
             this.clbSuppression = new System.Windows.Forms.CheckedListBox();
             this.Label26 = new System.Windows.Forms.Label();
             this.txtFXProb = new System.Windows.Forms.TextBox();
@@ -97,14 +96,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label11 = new System.Windows.Forms.Label();
             this.txtPPM = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.cbModifier = new System.Windows.Forms.ComboBox();
             this.Label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.cbTarget = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tpPowerAttribs = new System.Windows.Forms.TableLayoutPanel();
             this.txtMaxTargets = new System.Windows.Forms.Label();
@@ -139,23 +136,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.cbCoDFormat = new System.Windows.Forms.CheckBox();
             this.chkIgnoreScale = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.magexLabel = new System.Windows.Forms.Label();
             this.txtMagExpression = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
-            this.GroupBox3.SuspendLayout();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txtProbExpression = new System.Windows.Forms.TextBox();
+            this.probexLabel = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.expError = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tpPowerAttribs.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPaste
             // 
-            this.btnPaste.Location = new System.Drawing.Point(43, 54);
+            this.btnPaste.Location = new System.Drawing.Point(48, 35);
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(135, 26);
             this.btnPaste.TabIndex = 116;
@@ -164,47 +170,36 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(43, 22);
+            this.btnCopy.Location = new System.Drawing.Point(48, 3);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(135, 26);
             this.btnCopy.TabIndex = 115;
             this.btnCopy.Text = "Copy Effect Data";
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
-            // GroupBox3
-            // 
-            this.GroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupBox3.Controls.Add(this.clbSuppression);
-            this.GroupBox3.Location = new System.Drawing.Point(1040, 176);
-            this.GroupBox3.Name = "GroupBox3";
-            this.GroupBox3.Size = new System.Drawing.Size(212, 283);
-            this.GroupBox3.TabIndex = 107;
-            this.GroupBox3.TabStop = false;
-            this.GroupBox3.Text = "Suppress Effect When:";
-            // 
             // clbSuppression
             // 
             this.clbSuppression.CheckOnClick = true;
             this.clbSuppression.FormattingEnabled = true;
-            this.clbSuppression.Location = new System.Drawing.Point(6, 17);
+            this.clbSuppression.Location = new System.Drawing.Point(6, 21);
             this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(200, 259);
+            this.clbSuppression.Size = new System.Drawing.Size(220, 274);
             this.clbSuppression.TabIndex = 0;
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
             // 
             // Label26
             // 
             this.Label26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label26.Location = new System.Drawing.Point(3, 158);
+            this.Label26.Location = new System.Drawing.Point(3, 162);
             this.Label26.Name = "Label26";
-            this.Label26.Size = new System.Drawing.Size(76, 26);
+            this.Label26.Size = new System.Drawing.Size(76, 27);
             this.Label26.TabIndex = 101;
             this.Label26.Text = "Probability %:";
             this.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXProb
             // 
-            this.txtFXProb.Location = new System.Drawing.Point(85, 161);
+            this.txtFXProb.Location = new System.Drawing.Point(85, 165);
             this.txtFXProb.Name = "txtFXProb";
             this.txtFXProb.Size = new System.Drawing.Size(100, 20);
             this.txtFXProb.TabIndex = 156;
@@ -214,19 +209,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label25
             // 
             this.Label25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label25.Location = new System.Drawing.Point(3, 132);
+            this.Label25.Location = new System.Drawing.Point(3, 135);
             this.Label25.Name = "Label25";
-            this.Label25.Size = new System.Drawing.Size(76, 26);
+            this.Label25.Size = new System.Drawing.Size(76, 27);
             this.Label25.TabIndex = 100;
             this.Label25.Text = "Delay Time:";
             this.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXDelay
             // 
-            this.txtFXDelay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXDelay.Location = new System.Drawing.Point(85, 135);
+            this.txtFXDelay.Location = new System.Drawing.Point(85, 138);
             this.txtFXDelay.Name = "txtFXDelay";
-            this.txtFXDelay.Size = new System.Drawing.Size(140, 20);
+            this.txtFXDelay.Size = new System.Drawing.Size(65, 20);
             this.txtFXDelay.TabIndex = 84;
             this.txtFXDelay.Text = "0";
             this.txtFXDelay.TextChanged += new System.EventHandler(this.txtFXDelay_TextChanged);
@@ -235,9 +229,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label24
             // 
             this.Label24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label24.Location = new System.Drawing.Point(3, 106);
+            this.Label24.Location = new System.Drawing.Point(3, 108);
             this.Label24.Name = "Label24";
-            this.Label24.Size = new System.Drawing.Size(76, 26);
+            this.Label24.Size = new System.Drawing.Size(76, 27);
             this.Label24.TabIndex = 99;
             this.Label24.Text = "Ticks:";
             this.Label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -245,7 +239,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtFXTicks
             // 
             this.txtFXTicks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXTicks.Location = new System.Drawing.Point(85, 109);
+            this.txtFXTicks.Location = new System.Drawing.Point(85, 111);
             this.txtFXTicks.Name = "txtFXTicks";
             this.txtFXTicks.Size = new System.Drawing.Size(140, 20);
             this.txtFXTicks.TabIndex = 83;
@@ -259,7 +253,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Label23.Location = new System.Drawing.Point(3, 54);
             this.Label23.Name = "Label23";
-            this.Label23.Size = new System.Drawing.Size(76, 26);
+            this.Label23.Size = new System.Drawing.Size(76, 27);
             this.Label23.TabIndex = 98;
             this.Label23.Text = "Duration:";
             this.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -278,9 +272,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label22
             // 
             this.Label22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label22.Location = new System.Drawing.Point(3, 80);
+            this.Label22.Location = new System.Drawing.Point(3, 81);
             this.Label22.Name = "Label22";
-            this.Label22.Size = new System.Drawing.Size(76, 26);
+            this.Label22.Size = new System.Drawing.Size(76, 27);
             this.Label22.TabIndex = 97;
             this.Label22.Text = "Magnitude:";
             this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -288,7 +282,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtFXMag
             // 
             this.txtFXMag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXMag.Location = new System.Drawing.Point(85, 83);
+            this.txtFXMag.Location = new System.Drawing.Point(85, 84);
             this.txtFXMag.Name = "txtFXMag";
             this.txtFXMag.Size = new System.Drawing.Size(140, 20);
             this.txtFXMag.TabIndex = 80;
@@ -298,37 +292,35 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label28
             // 
-            this.Label28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label28.Location = new System.Drawing.Point(3, 0);
+            this.Label28.Location = new System.Drawing.Point(3, 35);
             this.Label28.Name = "Label28";
-            this.Label28.Size = new System.Drawing.Size(81, 28);
+            this.Label28.Size = new System.Drawing.Size(81, 22);
             this.Label28.TabIndex = 104;
             this.Label28.Text = "Display Priority:";
-            this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(1091, 574);
+            this.Label30.Location = new System.Drawing.Point(6, 238);
             this.Label30.Name = "Label30";
-            this.Label30.Size = new System.Drawing.Size(100, 20);
+            this.Label30.Size = new System.Drawing.Size(220, 20);
             this.Label30.TabIndex = 105;
             this.Label30.Text = "Old Special Case:";
-            this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cbFXClass
             // 
-            this.cbFXClass.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbFXClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXClass.Location = new System.Drawing.Point(90, 3);
+            this.cbFXClass.Location = new System.Drawing.Point(85, 35);
             this.cbFXClass.Name = "cbFXClass";
-            this.cbFXClass.Size = new System.Drawing.Size(99, 22);
+            this.cbFXClass.Size = new System.Drawing.Size(121, 22);
             this.cbFXClass.TabIndex = 93;
             this.cbFXClass.SelectedIndexChanged += new System.EventHandler(this.cbFXClass_SelectedIndexChanged);
             // 
             // cbFXSpecialCase
             // 
             this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(1075, 597);
+            this.cbFXSpecialCase.Location = new System.Drawing.Point(48, 269);
             this.cbFXSpecialCase.Name = "cbFXSpecialCase";
             this.cbFXSpecialCase.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase.TabIndex = 94;
@@ -343,9 +335,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox2.Controls.Add(this.lvConditionalBool);
             this.groupBox2.Controls.Add(this.lvConditionalType);
             this.groupBox2.Controls.Add(this.lvSubConditional);
-            this.groupBox2.Location = new System.Drawing.Point(246, 465);
+            this.groupBox2.Location = new System.Drawing.Point(246, 450);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(788, 311);
+            this.groupBox2.Size = new System.Drawing.Size(940, 434);
             this.groupBox2.TabIndex = 160;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Conditionals";
@@ -382,9 +374,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // removeConditional
             // 
-            this.removeConditional.Location = new System.Drawing.Point(563, 279);
+            this.removeConditional.Location = new System.Drawing.Point(563, 399);
             this.removeConditional.Name = "removeConditional";
-            this.removeConditional.Size = new System.Drawing.Size(219, 29);
+            this.removeConditional.Size = new System.Drawing.Size(371, 29);
             this.removeConditional.TabIndex = 165;
             this.removeConditional.Text = "Remove Selected Conditional";
             this.removeConditional.UseVisualStyleBackColor = true;
@@ -392,7 +384,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // addConditional
             // 
-            this.addConditional.Location = new System.Drawing.Point(460, 279);
+            this.addConditional.Location = new System.Drawing.Point(460, 399);
             this.addConditional.Name = "addConditional";
             this.addConditional.Size = new System.Drawing.Size(97, 29);
             this.addConditional.TabIndex = 164;
@@ -413,7 +405,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvActiveConditionals.LostFocusItem = -1;
             this.lvActiveConditionals.MultiSelect = false;
             this.lvActiveConditionals.Name = "lvActiveConditionals";
-            this.lvActiveConditionals.Size = new System.Drawing.Size(219, 259);
+            this.lvActiveConditionals.Size = new System.Drawing.Size(371, 379);
             this.lvActiveConditionals.TabIndex = 163;
             this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
             this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
@@ -431,7 +423,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // columnHeader6
             // 
             this.columnHeader6.Text = "Value";
-            this.columnHeader6.Width = 45;
+            this.columnHeader6.Width = 46;
             // 
             // lvConditionalBool
             // 
@@ -445,7 +437,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvConditionalBool.MultiSelect = false;
             this.lvConditionalBool.Name = "lvConditionalBool";
             this.lvConditionalBool.OwnerDraw = true;
-            this.lvConditionalBool.Size = new System.Drawing.Size(97, 259);
+            this.lvConditionalBool.Size = new System.Drawing.Size(97, 379);
             this.lvConditionalBool.TabIndex = 162;
             this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
             this.lvConditionalBool.View = System.Windows.Forms.View.Details;
@@ -470,7 +462,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvConditionalType.MultiSelect = false;
             this.lvConditionalType.Name = "lvConditionalType";
             this.lvConditionalType.OwnerDraw = true;
-            this.lvConditionalType.Size = new System.Drawing.Size(116, 294);
+            this.lvConditionalType.Size = new System.Drawing.Size(116, 414);
             this.lvConditionalType.TabIndex = 161;
             this.lvConditionalType.UseCompatibleStateImageBehavior = false;
             this.lvConditionalType.View = System.Windows.Forms.View.Details;
@@ -496,7 +488,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubConditional.MultiSelect = false;
             this.lvSubConditional.Name = "lvSubConditional";
             this.lvSubConditional.OwnerDraw = true;
-            this.lvSubConditional.Size = new System.Drawing.Size(326, 294);
+            this.lvSubConditional.Size = new System.Drawing.Size(326, 414);
             this.lvSubConditional.TabIndex = 160;
             this.lvSubConditional.UseCompatibleStateImageBehavior = false;
             this.lvSubConditional.View = System.Windows.Forms.View.Details;
@@ -514,7 +506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(111, 109);
+            this.btnOK.Location = new System.Drawing.Point(131, 67);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(96, 36);
             this.btnOK.TabIndex = 119;
@@ -524,7 +516,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(3, 109);
+            this.btnCancel.Location = new System.Drawing.Point(3, 67);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(96, 36);
             this.btnCancel.TabIndex = 118;
@@ -534,16 +526,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lblEffectDescription
             // 
             this.lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblEffectDescription.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEffectDescription.ForeColor = System.Drawing.Color.Navy;
             this.lblEffectDescription.Location = new System.Drawing.Point(12, 9);
             this.lblEffectDescription.Name = "lblEffectDescription";
-            this.lblEffectDescription.Size = new System.Drawing.Size(1240, 112);
+            this.lblEffectDescription.Size = new System.Drawing.Size(1412, 115);
             this.lblEffectDescription.TabIndex = 120;
-            this.lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblEffectDescription.UseMnemonic = false;
             // 
             // chkVariable
             // 
-            this.chkVariable.Location = new System.Drawing.Point(613, 155);
+            this.chkVariable.Location = new System.Drawing.Point(6, 80);
             this.chkVariable.Name = "chkVariable";
             this.chkVariable.Size = new System.Drawing.Size(178, 19);
             this.chkVariable.TabIndex = 126;
@@ -567,7 +561,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Label2.Location = new System.Drawing.Point(3, 0);
             this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(76, 28);
+            this.Label2.Size = new System.Drawing.Size(76, 27);
             this.Label2.TabIndex = 128;
             this.Label2.Text = "Percentage:";
             this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -576,9 +570,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.Label1.AutoSize = true;
             this.Label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label1.Location = new System.Drawing.Point(3, 28);
+            this.Label1.Location = new System.Drawing.Point(3, 27);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(76, 26);
+            this.Label1.Size = new System.Drawing.Size(76, 27);
             this.Label1.TabIndex = 130;
             this.Label1.Text = "Scale:";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -586,7 +580,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtFXScale
             // 
             this.txtFXScale.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXScale.Location = new System.Drawing.Point(85, 31);
+            this.txtFXScale.Location = new System.Drawing.Point(85, 30);
             this.txtFXScale.Name = "txtFXScale";
             this.txtFXScale.Size = new System.Drawing.Size(140, 20);
             this.txtFXScale.TabIndex = 129;
@@ -617,9 +611,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label4
             // 
             this.Label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label4.Location = new System.Drawing.Point(3, 210);
+            this.Label4.Location = new System.Drawing.Point(3, 216);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(76, 28);
+            this.Label4.Size = new System.Drawing.Size(76, 27);
             this.Label4.TabIndex = 134;
             this.Label4.Text = "AttribType:";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -628,7 +622,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbAttribute.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbAttribute.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAttribute.Location = new System.Drawing.Point(85, 213);
+            this.cbAttribute.Location = new System.Drawing.Point(85, 219);
             this.cbAttribute.Name = "cbAttribute";
             this.cbAttribute.Size = new System.Drawing.Size(140, 22);
             this.cbAttribute.TabIndex = 133;
@@ -637,9 +631,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label5
             // 
             this.Label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label5.Location = new System.Drawing.Point(3, 238);
+            this.Label5.Location = new System.Drawing.Point(3, 243);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(76, 28);
+            this.Label5.Size = new System.Drawing.Size(76, 32);
             this.Label5.TabIndex = 136;
             this.Label5.Text = "Aspect:";
             this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -648,7 +642,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbAspect.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAspect.Location = new System.Drawing.Point(85, 241);
+            this.cbAspect.Location = new System.Drawing.Point(85, 246);
             this.cbAspect.Name = "cbAspect";
             this.cbAspect.Size = new System.Drawing.Size(140, 22);
             this.cbAspect.TabIndex = 135;
@@ -671,12 +665,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEffectType.FullRowSelect = true;
             this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEffectType.HideSelection = false;
-            this.lvEffectType.Location = new System.Drawing.Point(246, 184);
+            this.lvEffectType.Location = new System.Drawing.Point(246, 127);
             this.lvEffectType.LostFocusItem = -1;
             this.lvEffectType.MultiSelect = false;
             this.lvEffectType.Name = "lvEffectType";
             this.lvEffectType.OwnerDraw = true;
-            this.lvEffectType.Size = new System.Drawing.Size(226, 275);
+            this.lvEffectType.Size = new System.Drawing.Size(280, 320);
             this.lvEffectType.TabIndex = 141;
             this.lvEffectType.UseCompatibleStateImageBehavior = false;
             this.lvEffectType.View = System.Windows.Forms.View.Details;
@@ -697,12 +691,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubAttribute.FullRowSelect = true;
             this.lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubAttribute.HideSelection = false;
-            this.lvSubAttribute.Location = new System.Drawing.Point(478, 184);
+            this.lvSubAttribute.Location = new System.Drawing.Point(532, 127);
             this.lvSubAttribute.LostFocusItem = -1;
             this.lvSubAttribute.MultiSelect = false;
             this.lvSubAttribute.Name = "lvSubAttribute";
             this.lvSubAttribute.OwnerDraw = true;
-            this.lvSubAttribute.Size = new System.Drawing.Size(275, 275);
+            this.lvSubAttribute.Size = new System.Drawing.Size(275, 320);
             this.lvSubAttribute.TabIndex = 142;
             this.lvSubAttribute.UseCompatibleStateImageBehavior = false;
             this.lvSubAttribute.View = System.Windows.Forms.View.Details;
@@ -723,13 +717,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSubSub.FullRowSelect = true;
             this.lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubSub.HideSelection = false;
-            this.lvSubSub.Location = new System.Drawing.Point(759, 184);
+            this.lvSubSub.Location = new System.Drawing.Point(813, 127);
             this.lvSubSub.LostFocusItem = -1;
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
             this.lvSubSub.OwnerDraw = true;
             this.lvSubSub.ShowItemToolTips = true;
-            this.lvSubSub.Size = new System.Drawing.Size(275, 275);
+            this.lvSubSub.Size = new System.Drawing.Size(373, 320);
             this.lvSubSub.TabIndex = 144;
             this.lvSubSub.UseCompatibleStateImageBehavior = false;
             this.lvSubSub.View = System.Windows.Forms.View.Details;
@@ -745,19 +739,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label9
             // 
-            this.Label9.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Label9.Location = new System.Drawing.Point(1081, 478);
+            this.Label9.Location = new System.Drawing.Point(6, 184);
             this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(120, 19);
+            this.Label9.Size = new System.Drawing.Size(220, 19);
             this.Label9.TabIndex = 149;
             this.Label9.Text = "GlobalChanceMod Flag:";
             this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cmbEffectId
             // 
-            this.cmbEffectId.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cmbEffectId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEffectId.Location = new System.Drawing.Point(1062, 500);
+            this.cmbEffectId.Location = new System.Drawing.Point(30, 210);
             this.cmbEffectId.Name = "cmbEffectId";
             this.cmbEffectId.Size = new System.Drawing.Size(166, 22);
             this.cmbEffectId.TabIndex = 150;
@@ -765,18 +757,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label10
             // 
-            this.Label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Label10.Location = new System.Drawing.Point(1076, 534);
+            this.Label10.Location = new System.Drawing.Point(3, 142);
             this.Label10.Name = "Label10";
-            this.Label10.Size = new System.Drawing.Size(143, 19);
+            this.Label10.Size = new System.Drawing.Size(55, 19);
             this.Label10.TabIndex = 152;
             this.Label10.Text = "Override:";
-            this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtOverride
             // 
-            this.txtOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.txtOverride.Location = new System.Drawing.Point(1062, 556);
+            this.txtOverride.Location = new System.Drawing.Point(60, 142);
             this.txtOverride.Name = "txtOverride";
             this.txtOverride.Size = new System.Drawing.Size(166, 20);
             this.txtOverride.TabIndex = 153;
@@ -785,9 +775,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label11
             // 
             this.Label11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label11.Location = new System.Drawing.Point(3, 184);
+            this.Label11.Location = new System.Drawing.Point(3, 189);
             this.Label11.Name = "Label11";
-            this.Label11.Size = new System.Drawing.Size(76, 26);
+            this.Label11.Size = new System.Drawing.Size(76, 27);
             this.Label11.TabIndex = 155;
             this.Label11.Text = "PPM:";
             this.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -795,7 +785,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // txtPPM
             // 
             this.txtPPM.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPPM.Location = new System.Drawing.Point(85, 187);
+            this.txtPPM.Location = new System.Drawing.Point(85, 192);
             this.txtPPM.Name = "txtPPM";
             this.txtPPM.Size = new System.Drawing.Size(140, 20);
             this.txtPPM.TabIndex = 154;
@@ -828,47 +818,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel1.Controls.Add(this.cbAttribute, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.Label5, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.cbAspect, 1, 9);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 184);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 127);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 13;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowCount = 10;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(228, 275);
             this.tableLayoutPanel1.TabIndex = 161;
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Controls.Add(this.cbModifier, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.Label6, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 465);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.55814F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 67.44186F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(228, 43);
-            this.tableLayoutPanel2.TabIndex = 162;
-            // 
             // cbModifier
             // 
-            this.cbModifier.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbModifier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbModifier.Location = new System.Drawing.Point(3, 17);
+            this.cbModifier.Location = new System.Drawing.Point(3, 25);
             this.cbModifier.Name = "cbModifier";
             this.cbModifier.Size = new System.Drawing.Size(222, 22);
             this.cbModifier.TabIndex = 137;
@@ -876,10 +845,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label6
             // 
-            this.Label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label6.Location = new System.Drawing.Point(3, 0);
+            this.Label6.Location = new System.Drawing.Point(3, 2);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(222, 14);
+            this.Label6.Size = new System.Drawing.Size(222, 20);
             this.Label6.TabIndex = 138;
             this.Label6.Text = "Modifier Table:";
             this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -892,7 +860,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel3.Controls.Add(this.lblAffectsCaster, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.cbAffects, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.Label3, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 514);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 612);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 13;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -916,11 +884,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.08911F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.91089F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.40351F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.59649F));
             this.tableLayoutPanel5.Controls.Add(this.cbTarget, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.label12, 0, 0);
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 583);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 681);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -935,9 +903,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             "Any",
             "Mobs",
             "Players"});
-            this.cbTarget.Location = new System.Drawing.Point(96, 3);
+            this.cbTarget.Location = new System.Drawing.Point(86, 3);
             this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(129, 22);
+            this.cbTarget.Size = new System.Drawing.Size(139, 22);
             this.cbTarget.TabIndex = 166;
             this.cbTarget.SelectedIndexChanged += new System.EventHandler(this.cbTarget_IndexChanged);
             // 
@@ -946,25 +914,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label12.Location = new System.Drawing.Point(3, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(87, 33);
+            this.label12.Size = new System.Drawing.Size(77, 33);
             this.label12.TabIndex = 166;
             this.label12.Text = "Target:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tableLayoutPanel6
-            // 
-            this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.81005F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.18995F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel6.Controls.Add(this.Label28, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.cbFXClass, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 150);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 1;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(192, 28);
-            this.tableLayoutPanel6.TabIndex = 166;
             // 
             // panel1
             // 
@@ -973,9 +926,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.panel1.Controls.Add(this.btnPaste);
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Location = new System.Drawing.Point(1040, 625);
+            this.panel1.Location = new System.Drawing.Point(1192, 766);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(212, 152);
+            this.panel1.Size = new System.Drawing.Size(232, 117);
             this.panel1.TabIndex = 167;
             // 
             // tpPowerAttribs
@@ -1007,7 +960,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpPowerAttribs.Controls.Add(this.txtFXRadius, 1, 9);
             this.tpPowerAttribs.Controls.Add(this.txtFXArc, 1, 13);
             this.tpPowerAttribs.Controls.Add(this.txtFXMaxTargets, 1, 14);
-            this.tpPowerAttribs.Location = new System.Drawing.Point(12, 184);
+            this.tpPowerAttribs.Location = new System.Drawing.Point(12, 127);
             this.tpPowerAttribs.Name = "tpPowerAttribs";
             this.tpPowerAttribs.RowCount = 15;
             this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1277,9 +1230,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkCancelOnMiss
             // 
             this.chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkCancelOnMiss.Location = new System.Drawing.Point(12, 752);
+            this.chkCancelOnMiss.Location = new System.Drawing.Point(94, 138);
             this.chkCancelOnMiss.Name = "chkCancelOnMiss";
-            this.chkCancelOnMiss.Size = new System.Drawing.Size(222, 20);
+            this.chkCancelOnMiss.Size = new System.Drawing.Size(114, 20);
             this.chkCancelOnMiss.TabIndex = 174;
             this.chkCancelOnMiss.Text = "Cancel on Miss";
             this.chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1288,9 +1241,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkStack
             // 
             this.chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.Location = new System.Drawing.Point(12, 619);
+            this.chkStack.Location = new System.Drawing.Point(94, 5);
             this.chkStack.Name = "chkStack";
-            this.chkStack.Size = new System.Drawing.Size(222, 20);
+            this.chkStack.Size = new System.Drawing.Size(114, 20);
             this.chkStack.TabIndex = 171;
             this.chkStack.Text = "Effect Can Stack";
             this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1299,9 +1252,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkFXBuffable
             // 
             this.chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.Location = new System.Drawing.Point(12, 645);
+            this.chkFXBuffable.Location = new System.Drawing.Point(36, 31);
             this.chkFXBuffable.Name = "chkFXBuffable";
-            this.chkFXBuffable.Size = new System.Drawing.Size(222, 20);
+            this.chkFXBuffable.Size = new System.Drawing.Size(172, 20);
             this.chkFXBuffable.TabIndex = 169;
             this.chkFXBuffable.Text = "Ignore Buffs / Enhancements";
             this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1310,9 +1263,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // IgnoreED
             // 
             this.IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.Location = new System.Drawing.Point(12, 671);
+            this.IgnoreED.Location = new System.Drawing.Point(126, 57);
             this.IgnoreED.Name = "IgnoreED";
-            this.IgnoreED.Size = new System.Drawing.Size(222, 20);
+            this.IgnoreED.Size = new System.Drawing.Size(82, 20);
             this.IgnoreED.TabIndex = 173;
             this.IgnoreED.Text = "Ignore ED";
             this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1321,9 +1274,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkFXResistable
             // 
             this.chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.Location = new System.Drawing.Point(12, 697);
+            this.chkFXResistable.Location = new System.Drawing.Point(76, 83);
             this.chkFXResistable.Name = "chkFXResistable";
-            this.chkFXResistable.Size = new System.Drawing.Size(222, 20);
+            this.chkFXResistable.Size = new System.Drawing.Size(132, 20);
             this.chkFXResistable.TabIndex = 170;
             this.chkFXResistable.Text = "Effect is Unresistible";
             this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1332,9 +1285,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkNearGround
             // 
             this.chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkNearGround.Location = new System.Drawing.Point(12, 723);
+            this.chkNearGround.Location = new System.Drawing.Point(36, 109);
             this.chkNearGround.Name = "chkNearGround";
-            this.chkNearGround.Size = new System.Drawing.Size(222, 20);
+            this.chkNearGround.Size = new System.Drawing.Size(172, 20);
             this.chkNearGround.TabIndex = 172;
             this.chkNearGround.Text = "Target must be Near Ground";
             this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1343,18 +1296,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbCoDFormat
             // 
             this.cbCoDFormat.AutoSize = true;
-            this.cbCoDFormat.Location = new System.Drawing.Point(1040, 155);
+            this.cbCoDFormat.BackColor = System.Drawing.Color.Transparent;
+            this.cbCoDFormat.Location = new System.Drawing.Point(1286, 12);
             this.cbCoDFormat.Name = "cbCoDFormat";
             this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
             this.cbCoDFormat.TabIndex = 175;
             this.cbCoDFormat.Text = "Use CoD effect format";
-            this.cbCoDFormat.UseVisualStyleBackColor = true;
+            this.cbCoDFormat.UseVisualStyleBackColor = false;
             this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
             // 
             // chkIgnoreScale
             // 
             this.chkIgnoreScale.AutoSize = true;
-            this.chkIgnoreScale.Location = new System.Drawing.Point(838, 155);
+            this.chkIgnoreScale.Location = new System.Drawing.Point(6, 106);
             this.chkIgnoreScale.Name = "chkIgnoreScale";
             this.chkIgnoreScale.Size = new System.Drawing.Size(145, 18);
             this.chkIgnoreScale.TabIndex = 176;
@@ -1362,67 +1316,147 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkIgnoreScale.UseVisualStyleBackColor = true;
             this.chkIgnoreScale.CheckedChanged += new System.EventHandler(this.chkIgnoreScale_CheckChanged);
             // 
-            // label7
+            // magexLabel
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 158);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(116, 14);
-            this.label7.TabIndex = 177;
-            this.label7.Text = "Magnitude Expression:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.magexLabel.Enabled = false;
+            this.magexLabel.Location = new System.Drawing.Point(3, 50);
+            this.magexLabel.Name = "magexLabel";
+            this.magexLabel.Size = new System.Drawing.Size(222, 25);
+            this.magexLabel.TabIndex = 177;
+            this.magexLabel.Text = "Magnitude Expression:";
+            this.magexLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtMagExpression
             // 
-            this.txtMagExpression.Location = new System.Drawing.Point(132, 155);
+            this.txtMagExpression.Enabled = false;
+            this.txtMagExpression.Location = new System.Drawing.Point(3, 78);
             this.txtMagExpression.Name = "txtMagExpression";
-            this.txtMagExpression.Size = new System.Drawing.Size(280, 20);
+            this.txtMagExpression.Size = new System.Drawing.Size(222, 20);
             this.txtMagExpression.TabIndex = 178;
             this.txtMagExpression.TextChanged += new System.EventHandler(this.txtMagExpression_TextChanged);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label8);
+            this.panel2.Controls.Add(this.Label28);
+            this.panel2.Controls.Add(this.chkVariable);
+            this.panel2.Controls.Add(this.cbFXClass);
+            this.panel2.Controls.Add(this.chkIgnoreScale);
+            this.panel2.Controls.Add(this.cmbEffectId);
+            this.panel2.Controls.Add(this.Label10);
+            this.panel2.Controls.Add(this.Label9);
+            this.panel2.Controls.Add(this.txtOverride);
+            this.panel2.Controls.Add(this.Label30);
+            this.panel2.Controls.Add(this.cbFXSpecialCase);
+            this.panel2.Location = new System.Drawing.Point(1192, 127);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(232, 320);
+            this.panel2.TabIndex = 179;
+            // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(129, 133);
+            this.label8.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(6, 5);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(0, 14);
-            this.label8.TabIndex = 179;
+            this.label8.Size = new System.Drawing.Size(220, 15);
+            this.label8.TabIndex = 180;
+            this.label8.Text = "Effect Options";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            this.label13.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(3, 3);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(220, 15);
+            this.label13.TabIndex = 181;
+            this.label13.Text = "Effect Suppression (When)";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtProbExpression
+            // 
+            this.txtProbExpression.Enabled = false;
+            this.txtProbExpression.Location = new System.Drawing.Point(3, 130);
+            this.txtProbExpression.Name = "txtProbExpression";
+            this.txtProbExpression.Size = new System.Drawing.Size(222, 20);
+            this.txtProbExpression.TabIndex = 183;
+            // 
+            // probexLabel
+            // 
+            this.probexLabel.Enabled = false;
+            this.probexLabel.Location = new System.Drawing.Point(3, 103);
+            this.probexLabel.Name = "probexLabel";
+            this.probexLabel.Size = new System.Drawing.Size(222, 24);
+            this.probexLabel.TabIndex = 182;
+            this.probexLabel.Text = "Probability Expression:";
+            this.probexLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label13);
+            this.panel4.Controls.Add(this.clbSuppression);
+            this.panel4.Location = new System.Drawing.Point(1192, 453);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(232, 307);
+            this.panel4.TabIndex = 182;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.chkStack);
+            this.panel5.Controls.Add(this.chkNearGround);
+            this.panel5.Controls.Add(this.chkFXResistable);
+            this.panel5.Controls.Add(this.IgnoreED);
+            this.panel5.Controls.Add(this.chkFXBuffable);
+            this.panel5.Controls.Add(this.chkCancelOnMiss);
+            this.panel5.Location = new System.Drawing.Point(12, 720);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(228, 164);
+            this.panel5.TabIndex = 183;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.txtProbExpression);
+            this.panel3.Controls.Add(this.probexLabel);
+            this.panel3.Controls.Add(this.magexLabel);
+            this.panel3.Controls.Add(this.txtMagExpression);
+            this.panel3.Controls.Add(this.Label6);
+            this.panel3.Controls.Add(this.cbModifier);
+            this.panel3.Location = new System.Drawing.Point(12, 450);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(228, 161);
+            this.panel3.TabIndex = 184;
+            // 
+            // expError
+            // 
+            this.expError.BackColor = System.Drawing.Color.Transparent;
+            this.expError.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.expError.ForeColor = System.Drawing.Color.Red;
+            this.expError.Location = new System.Drawing.Point(48, 12);
+            this.expError.Name = "expError";
+            this.expError.Size = new System.Drawing.Size(1202, 30);
+            this.expError.TabIndex = 185;
+            this.expError.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1264, 784);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.txtMagExpression);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.chkIgnoreScale);
+            this.ClientSize = new System.Drawing.Size(1437, 895);
+            this.Controls.Add(this.expError);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel5);
+            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.cbCoDFormat);
-            this.Controls.Add(this.chkCancelOnMiss);
-            this.Controls.Add(this.chkStack);
-            this.Controls.Add(this.chkFXBuffable);
-            this.Controls.Add(this.IgnoreED);
-            this.Controls.Add(this.chkFXResistable);
-            this.Controls.Add(this.chkNearGround);
             this.Controls.Add(this.tpPowerAttribs);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.tableLayoutPanel6);
             this.Controls.Add(this.tableLayoutPanel5);
-            this.Controls.Add(this.chkVariable);
             this.Controls.Add(this.tableLayoutPanel3);
-            this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.txtOverride);
-            this.Controls.Add(this.Label10);
-            this.Controls.Add(this.cmbEffectId);
-            this.Controls.Add(this.Label9);
             this.Controls.Add(this.lvSubSub);
             this.Controls.Add(this.lvSubAttribute);
             this.Controls.Add(this.lvEffectType);
             this.Controls.Add(this.lblEffectDescription);
-            this.Controls.Add(this.GroupBox3);
-            this.Controls.Add(this.Label30);
-            this.Controls.Add(this.cbFXSpecialCase);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -1431,17 +1465,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Effect";
-            this.GroupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tpPowerAttribs.ResumeLayout(false);
             this.tpPowerAttribs.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1464,7 +1501,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         CheckedListBox clbSuppression;
         ComboBox cmbEffectId;
         ColumnHeader ColumnHeader1;
-        GroupBox GroupBox3;
         Label Label1;
         Label Label10;
         Label Label11;
@@ -1491,14 +1527,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         TextBox txtOverride;
         TextBox txtPPM;
         private TableLayoutPanel tableLayoutPanel1;
-        private TableLayoutPanel tableLayoutPanel2;
         private ComboBox cbModifier;
         private Label Label6;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel5;
         private ComboBox cbTarget;
         private Label label12;
-        private TableLayoutPanel tableLayoutPanel6;
         private Panel panel1;
         private TableLayoutPanel tpPowerAttribs;
         private Label txtMaxTargets;
@@ -1551,8 +1585,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox chkNearGround;
         private CheckBox cbCoDFormat;
         private CheckBox chkIgnoreScale;
-        private Label label7;
+        private Label magexLabel;
         private TextBox txtMagExpression;
+        private Panel panel2;
         private Label label8;
+        private Label label13;
+        private TextBox txtProbExpression;
+        private Label probexLabel;
+        private Panel panel4;
+        private Panel panel5;
+        private Panel panel3;
+        private Label expError;
     }
 }
