@@ -121,6 +121,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             };
             iFX.SetPower(myPower);
             using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             var effectList = myPower.Effects.ToList();
@@ -136,6 +137,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
@@ -167,6 +169,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
 
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
 

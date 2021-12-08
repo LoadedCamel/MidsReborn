@@ -197,5 +197,7 @@ namespace mrbBase
         string SummonedEntityName { get; }
 
         float ParseMagnitudeExpression(out Effect.ParsedData data, int chunk = 0);
+
+        List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault);
     }
 }

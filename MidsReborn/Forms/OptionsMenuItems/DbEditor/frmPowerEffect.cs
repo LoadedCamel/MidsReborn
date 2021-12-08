@@ -7,8 +7,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Jace;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -26,7 +26,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private readonly List<string> ConditionalTypes;
         private readonly List<string> ConditionalOps;
         private readonly int EffectIndex;
-        private bool ValidExpression;
 
         public frmPowerEffect(IEffect iFX, IPower fxPower, int fxIndex = 0)
         {
@@ -77,6 +76,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Loading = false;
             UpdateFXText();
             CheckMagExpression();
+
+            cbExprCommands.DataSource = Effect.ExprCommandsList;
+            foreach (Control control in Controls)
+            {
+                if (!control.HasChildren) continue;
+                foreach (Control child in control.Controls)
+                {
+                    child.GotFocus += On_ChildFocus;
+                    child.LostFocus += On_ChildLostFocus;
+                }
+            }
+
+            GotFocus += On_ChildFocus;
+            LostFocus += On_ChildLostFocus;
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -370,7 +383,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
 
-            txtMagExpression.Text = myFX.MagnitudeExpression;
+            var magExprChunks = myFX.SplitMagnitudeExpression(myFX.MagnitudeExpression, out _);
+            txtMagExpression.Text = magExprChunks.Count > 0 ? magExprChunks[0] : "";
+            txtProbExpression.Text = magExprChunks.Count == 2 ? magExprChunks[1] : "";
             txtMagExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
             magexLabel.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
             txtProbExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
@@ -386,6 +401,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAspect.BeginUpdate();
             cbModifier.BeginUpdate();
             cbAffects.BeginUpdate();
+            cbExprCommands.BeginUpdate();
             cbFXClass.Items.Clear();
             cbFXSpecialCase.Items.Clear();
             cmbEffectId.BeginUpdate();
@@ -395,6 +411,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAspect.Items.Clear();
             cbModifier.Items.Clear();
             cbAffects.Items.Clear();
+            cbExprCommands.Items.Clear();
             cbFXClass.Items.AddRange(Enum.GetNames(myFX.EffectClass.GetType()));
             cbFXSpecialCase.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
             UpdateConditionalTypes();
@@ -415,6 +432,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 cmbEffectId.Items.Add(effectId);
             }
 
+            foreach (var exprCmd in Effect.ExprCommandsList)
+            {
+                cbExprCommands.Items.Add(exprCmd);
+            }
+
             cmbEffectId.EndUpdate();
             cbFXClass.EndUpdate();
             cbFXSpecialCase.EndUpdate();
@@ -423,7 +445,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAspect.EndUpdate();
             cbModifier.EndUpdate();
             cbAffects.EndUpdate();
-            /*var strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
+            cbExprCommands.EndUpdate();
+            /*var strArray = new string[DatabaseAPI.Database.EffectIds.Count];
             var num2 = DatabaseAPI.Database.EffectIds.Count - 1;
             for (var index = 0; index <= num2; ++index)
                 strArray[index] = Convert.ToString(DatabaseAPI.Database.EffectIds[index]);
@@ -1554,37 +1577,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.EntCreate:
-                    {
-                        strArray = new string[DatabaseAPI.Database.Entities.Length - 1 + 1];
-                        var lower = fx.Summon.ToLower();
-                        var num = DatabaseAPI.Database.Entities.Length - 1;
-                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
-                            if (strArray[index2].ToLower() == lower)
-                                index1 = index2;
-                        }
+                            strArray = new string[DatabaseAPI.Database.Entities.Length];
+                            var lower = fx.Summon.ToLower();
+                            var num = DatabaseAPI.Database.Entities.Length - 1;
+                            for (var index2 = 0; index2 <= num; ++index2)
+                            {
+                                strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
+                                if (strArray[index2].ToLower() == lower)
+                                    index1 = index2;
+                            }
 
-                        lvSubAttribute.Columns[0].Text = "Entity Name";
-                        lvSubAttribute.Columns[0].Width = -2;
-                        break;
-                    }
+                            lvSubAttribute.Columns[0].Text = "Entity Name";
+                            lvSubAttribute.Columns[0].Width = -2;
+                            break;
+                        }
                     case Enums.eEffectType.GrantPower:
-                    {
-                        strArray = new string[DatabaseAPI.Database.Power.Length - 1 + 1];
-                        var lower = fx.Summon.ToLower();
-                        var num = DatabaseAPI.Database.Power.Length - 1;
-                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
-                            if (strArray[index2].ToLower() == lower)
-                                index1 = index2;
-                        }
+                            strArray = new string[DatabaseAPI.Database.Power.Length];
+                            var lower = fx.Summon.ToLower();
+                            var num = DatabaseAPI.Database.Power.Length;
+                            for (var index2 = 0; index2 < num; index2++)
+                            {
+                                strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
+                                if (strArray[index2].ToLower() == lower)
+                                    index1 = index2;
+                            }
 
-                        lvSubAttribute.Columns[0].Text = "Power Name";
-                        lvSubAttribute.Columns[0].Width = -2;
-                        break;
-                    }
+                            lvSubAttribute.Columns[0].Text = "Power Name";
+                            lvSubAttribute.Columns[0].Width = -2;
+                            break;
+                        }
                     case Enums.eEffectType.Enhancement:
                         strArray = Enum.GetNames(fx.EffectType.GetType());
                         index1 = (int)fx.ETModifies;
@@ -1592,25 +1615,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.GlobalChanceMod:
-                    {
-                        strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
-                        var lower = fx.Reward.ToLower();
-                        var num = DatabaseAPI.Database.EffectIds.Count - 1;
-                        for (var index2 = 0; index2 <= num; ++index2)
                         {
-                            strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
-                            if (strArray[index2].ToLower() == lower)
-                                index1 = index2;
+                            strArray = new string[DatabaseAPI.Database.EffectIds.Count];
+                            var lower = fx.Reward.ToLower();
+                            var num = DatabaseAPI.Database.EffectIds.Count;
+                            for (var index2 = 0; index2 < num; index2++)
+                            {
+                                strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
+                                if (strArray[index2].ToLower() == lower)
+                                    index1 = index2;
+                            }
+
+                            lvSubAttribute.Columns[0].Text = "GlobalChanceMod Flag";
+                            lvSubAttribute.Columns[0].Width = -2;
+                            break;
                         }
 
-                        lvSubAttribute.Columns[0].Text = "GlobalChanceMod Flag";
-                        lvSubAttribute.Columns[0].Width = -2;
-                        break;
-                    }
-
                     case Enums.eEffectType.PowerRedirect:
-                    {
-                        var allowedTypes = new List<Enums.ePowerSetType>()
+                        {
+                            var allowedTypes = new List<Enums.ePowerSetType>()
                         {
                             Enums.ePowerSetType.Ancillary,
                             Enums.ePowerSetType.Incarnate,
@@ -1621,11 +1644,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             Enums.ePowerSetType.Pool,
                             Enums.ePowerSetType.Temp
                         };
-                        strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
-                        lvSubAttribute.Columns[0].Text = @"Powerset Group";
-                        lvSubAttribute.Columns[0].Width = -2;
-                        break;
-                    }
+                            strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
+                            lvSubAttribute.Columns[0].Text = @"Powerset Group";
+                            lvSubAttribute.Columns[0].Width = -2;
+                            break;
+                        }
                 }
             }
 
@@ -1652,11 +1675,55 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateSubSubList();
         }
 
-        private void UpdateFXText()
+        private void UpdateFXText(string? senderName = "")
         {
             if (Loading)
                 return;
-            lblEffectDescription.Text = myFX.BuildEffectString();
+            if (!string.IsNullOrWhiteSpace(senderName))
+            {
+                if (IsValidExpression)
+                {
+                    lblEffectDescription.ForeColor = SystemColors.ControlText;
+                    lblEffectDescription.Text = myFX.BuildEffectString();
+                }
+                else
+                {
+                    lblEffectDescription.ForeColor = Color.Red;
+                }
+            }
+            else
+            {
+                lblEffectDescription.Text = myFX.BuildEffectString();
+            }
+        }
+
+        private bool IsValidExpression => ValidExpression();
+
+        private bool ValidExpression()
+        {
+            var returnedBool = true;
+            var returnData = string.Empty;
+            if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
+            {
+                myFX.ParseMagnitudeExpression(out var data);
+                if (data.ErrorFound)
+                {
+                    returnData = $@"Expression Error: {data.ErrorString}";
+                    returnedBool = false;
+                }
+            }
+            else
+            {
+                myFX.ParseMagnitudeExpression(out var data, 1);
+                if (data.ErrorFound)
+                {
+                    returnData = $@"Expression Error: {data.ErrorString}";
+                    returnedBool = false;
+                }
+            }
+
+            lblEffectDescription.Text = returnData;
+            return returnedBool;
         }
 
         private void UpdateSubSubList()
@@ -1769,11 +1836,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateFXText();
         }
 
-        private void txtMagExpression_TextChanged(object sender, EventArgs e)
+        private void txtExpression_TextChanged(object sender, EventArgs e)
         {
             if (Loading) return;
-            myFX.MagnitudeExpression = txtMagExpression.Text;
-            UpdateFXText();
+
+            var magExpr = txtMagExpression.Text.Trim(new char[] { '/', ' ' });
+            var probExpression = txtProbExpression.Text.Trim(new char[] { '/', ' ' });
+            var name = (sender as TextBox)?.Name;
+            myFX.MagnitudeExpression = $"{magExpr}{(string.IsNullOrEmpty(probExpression) ? "" : $"{Effect.MagExprSeparator}{probExpression}")}";
+            UpdateFXText(name);
             CheckMagExpression();
         }
 
@@ -1803,6 +1874,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             expError.Text = returnData;
+        }
+
+        private void On_ChildFocus(object sender, EventArgs e)
+        {
+            if (sender is Control control && (control.Name == "txtMagExpression" | control.Name == "txtProbExpression"))
+            {
+                lblExprCommands.Location = new Point(-12, control.Location.Y + control.Size.Height + 3);
+                cbExprCommands.Location = new Point(78, control.Location.Y + control.Size.Height + 3);
+                lblExprCommands.Visible = true;
+                cbExprCommands.Visible = true;
+                probexLabel.Visible = control.Name != "txtMagExpression";
+            }
+        }
+
+        private void On_ChildLostFocus(object sender, EventArgs e)
+        {
+            if (sender is Control { Name: "cbExprCommands" } control)
+            {
+                Task.Delay(5000);
+                if (!control.Focused)
+                {
+                    control.Visible = false;
+                    probexLabel.Visible = true;
+                }
+            }
+        }
+
+
+        private void cbExprCommands_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(cbExprCommands.Items[cbExprCommands.SelectedIndex].ToString()))
+                return;
+
+            txtMagExpression.Text += cbExprCommands.Items[cbExprCommands.SelectedIndex].ToString();
         }
     }
 }

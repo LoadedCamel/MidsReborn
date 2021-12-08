@@ -16,6 +16,24 @@ namespace mrbBase.Base.Data_Classes
         private IPower power;
         public const string MagExprSeparator = "///";
 
+        public static readonly List<string> ExprCommandsList = new List<string>
+        {
+            "power.base>activatetime",
+            "power.base>areafactor",
+            "power.base>rechargetime",
+            "power.base>endcost",
+            "effect>scale",
+            "@StdResult",
+            "if target>enttype eq 'critter'",
+            "if target>enttype eq 'player'",
+            "modifer>current",
+            "rand()",
+            "source.ownPower?(",
+            ">stacks",
+            "modifier>",
+            "minmax(",
+        };
+
         public Effect()
         {
             Validated = false;
@@ -2916,6 +2934,8 @@ namespace mrbBase.Base.Data_Classes
                 { "power.base>areafactor", $"{power.AoEModifier}" },
                 { "power.base>rechargetime", $"{power.BaseRechargeTime}" },
                 { "power.base>endcost", $"{power.EndCost}" },
+                { "effect>scale", $"{Scale}" },
+                { "@StdResult", $"{Scale}" },
                 { "if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "modifier>current", GetModifier(ModifierTable) },
@@ -2989,7 +3009,7 @@ namespace mrbBase.Base.Data_Classes
             return $"{Math.Max(f2, Math.Min(f3, f1))}";
         }
 
-        private List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault)
+        public List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault)
         {
             var chunks = MagnitudeExpression.Split(new string[] { MagExprSeparator }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (chunks.Count == 1 & MagnitudeExpression.TrimStart().StartsWith(MagExprSeparator))
