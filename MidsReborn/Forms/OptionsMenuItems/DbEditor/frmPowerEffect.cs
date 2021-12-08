@@ -1395,7 +1395,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    eArray = new[] { 6, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;

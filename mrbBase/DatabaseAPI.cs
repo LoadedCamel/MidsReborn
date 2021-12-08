@@ -206,8 +206,7 @@ namespace mrbBase
 
         private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
         {
-            if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 &&
-                !Database.Classes[nIDClass].Playable)
+            if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 && !Database.Classes[nIDClass].Playable)
                 return Array.Empty<int>();
 
 

@@ -909,7 +909,7 @@ namespace mrbControls
                 if (nidpowerset > -1)
                 {
                     int vIdx;
-                    if (DatabaseAPI.Database.Powersets[nidpowerset].SetType == Enums.ePowerSetType.Inherent)
+                    if (DatabaseAPI.Database.Powersets[nidpowerset].SetType == Enums.ePowerSetType.Inherent | DatabaseAPI.Database.Powersets[nidpowerset].SetType == Enums.ePowerSetType.Temp)
                     {
                         vIdx = DatabaseAPI.Database.Powersets[nidpowerset].Powers[idxpower].LocationIndex;
                     }
@@ -919,9 +919,7 @@ namespace mrbControls
                         for (var i = 0; i <= PowerIndex; i++)
                             if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset > -1)
                             {
-                                if (DatabaseAPI.Database
-                                        .Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType !=
-                                    Enums.ePowerSetType.Inherent)
+                                if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Inherent | DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Temp)
                                     vIdx++;
                             }
                             else
@@ -938,9 +936,7 @@ namespace mrbControls
                     for (var i = 0; i <= PowerIndex; i++)
                         if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset > -1)
                         {
-                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset]
-                                    .SetType !=
-                                Enums.ePowerSetType.Inherent)
+                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Inherent | DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Temp)
                                 vIdx++;
                         }
                         else

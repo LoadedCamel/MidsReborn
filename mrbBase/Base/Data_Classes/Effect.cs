@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,7 +28,7 @@ namespace mrbBase.Base.Data_Classes
             "@StdResult",
             "if target>enttype eq 'critter'",
             "if target>enttype eq 'player'",
-            "modifer>current",
+            "modifier>current",
             "rand()",
             "source.ownPower?(",
             ">stacks",
@@ -2897,7 +2898,10 @@ namespace mrbBase.Base.Data_Classes
                 if (pe.Power == null) continue;
                 if (pe.Power.FullName != powerName) continue;
 
-                return pe.Power.Stacks.ToString();
+                if (pe.Power.Active)
+                {
+                    return $"{pe.Power.Stacks}";
+                }
             }
 
             return "0";
@@ -2959,7 +2963,6 @@ namespace mrbBase.Base.Data_Classes
             magExpr = commandsDict.Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
             magExpr = functionsDict1.Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
             magExpr = functionsDict3.Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
-
             var r = new Regex(@"^[0-9\-\+\*\/\s\.\,\(\)]+$");
             if (r.IsMatch(magExpr))
             {
@@ -2967,6 +2970,7 @@ namespace mrbBase.Base.Data_Classes
                 try
                 {
                     var ret = (float)mathEngine.Calculate(magExpr.TrimEnd('/'));
+                    Debug.WriteLine(ret);
                     return ret;
                 }
                 catch (ParseException ex)
