@@ -2975,7 +2975,7 @@ namespace Mids_Reborn.Forms
                 drawing.Highlight = -1;
             if (skipDraw)
                 return;
-            //DoRedraw();
+            DoRedraw();
         }
 
         private void NewToon(bool init = true, bool skipDraw = false)
@@ -3023,7 +3023,7 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             info_Totals();
             FileModified = false;
-            //DoRedraw();
+            DoRedraw();
         }
 
         private void pbDynMode_Click(object sender, EventArgs e)

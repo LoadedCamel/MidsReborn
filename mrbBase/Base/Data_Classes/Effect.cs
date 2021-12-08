@@ -18,6 +18,7 @@ namespace mrbBase.Base.Data_Classes
 
         public static readonly List<string> ExprCommandsList = new List<string>
         {
+            "",
             "power.base>activatetime",
             "power.base>areafactor",
             "power.base>rechargetime",
