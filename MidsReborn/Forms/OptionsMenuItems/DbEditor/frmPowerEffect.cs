@@ -75,7 +75,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitSelectedItems();
             Loading = false;
             UpdateFXText();
-            CheckMagExpression();
 
             cbExprCommands.DataSource = Effect.ExprCommandsList;
             foreach (Control control in Controls)
@@ -1845,12 +1844,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var name = (sender as TextBox)?.Name;
             myFX.MagnitudeExpression = $"{magExpr}{(string.IsNullOrEmpty(probExpression) ? "" : $"{Effect.MagExprSeparator}{probExpression}")}";
             UpdateFXText(name);
-            CheckMagExpression();
-        }
-
-        private void AssignExpError(string error)
-        {
-            expError.Text = error;
         }
 
         private void CheckMagExpression()
@@ -1873,7 +1866,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
-            expError.Text = returnData;
+            lblEffectDescription.Text = returnData;
         }
 
         private void On_ChildFocus(object sender, EventArgs e)

@@ -33,9 +33,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem("Less Than");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.clbSuppression = new System.Windows.Forms.CheckedListBox();
@@ -54,8 +54,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbFXClass = new System.Windows.Forms.ComboBox();
             this.cbFXSpecialCase = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lvConditionalOp = new mrbControls.ctlListViewColored();
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
+            this.lvActiveConditionals = new mrbControls.ctlListViewColored();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvConditionalBool = new mrbControls.ctlListViewColored();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvConditionalType = new mrbControls.ctlListViewColored();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvSubConditional = new mrbControls.ctlListViewColored();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblEffectDescription = new System.Windows.Forms.Label();
@@ -128,27 +140,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.expError = new System.Windows.Forms.Label();
-            this.lvConditionalOp = new mrbControls.ctlListViewColored();
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvActiveConditionals = new mrbControls.ctlListViewColored();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalBool = new mrbControls.ctlListViewColored();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalType = new mrbControls.ctlListViewColored();
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubConditional = new mrbControls.ctlListViewColored();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblExprCommands = new System.Windows.Forms.Label();
+            this.cbExprCommands = new System.Windows.Forms.ComboBox();
             this.lvSubSub = new mrbControls.ctlListViewColored();
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSubAttribute = new mrbControls.ctlListViewColored();
             this.chSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvEffectType = new mrbControls.ctlListViewColored();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cbExprCommands = new System.Windows.Forms.ComboBox();
-            this.lblExprCommands = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -344,6 +343,36 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Conditionals";
             // 
+            // lvConditionalOp
+            // 
+            this.lvConditionalOp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader7});
+            this.lvConditionalOp.FullRowSelect = true;
+            this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalOp.HideSelection = false;
+            this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem7,
+            listViewItem8,
+            listViewItem9});
+            this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
+            this.lvConditionalOp.LostFocusItem = -1;
+            this.lvConditionalOp.MultiSelect = false;
+            this.lvConditionalOp.Name = "lvConditionalOp";
+            this.lvConditionalOp.OwnerDraw = true;
+            this.lvConditionalOp.Size = new System.Drawing.Size(97, 83);
+            this.lvConditionalOp.TabIndex = 166;
+            this.lvConditionalOp.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalOp.View = System.Windows.Forms.View.Details;
+            this.lvConditionalOp.Visible = false;
+            this.lvConditionalOp.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalOp.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvConditionalOp.Leave += new System.EventHandler(this.ListView_Leave);
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Stack is?";
+            this.columnHeader7.Width = 81;
+            // 
             // removeConditional
             // 
             this.removeConditional.Location = new System.Drawing.Point(563, 419);
@@ -363,6 +392,117 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.addConditional.Text = "Add Conditional";
             this.addConditional.UseVisualStyleBackColor = true;
             this.addConditional.Click += new System.EventHandler(this.addConditional_Click);
+            // 
+            // lvActiveConditionals
+            // 
+            this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader8,
+            this.columnHeader6});
+            this.lvActiveConditionals.FullRowSelect = true;
+            this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvActiveConditionals.HideSelection = false;
+            this.lvActiveConditionals.Location = new System.Drawing.Point(563, 14);
+            this.lvActiveConditionals.LostFocusItem = -1;
+            this.lvActiveConditionals.MultiSelect = false;
+            this.lvActiveConditionals.Name = "lvActiveConditionals";
+            this.lvActiveConditionals.Size = new System.Drawing.Size(371, 399);
+            this.lvActiveConditionals.TabIndex = 163;
+            this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
+            this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Active Conditional";
+            this.columnHeader5.Width = 138;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "";
+            this.columnHeader8.Width = 27;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Value";
+            this.columnHeader6.Width = 46;
+            // 
+            // lvConditionalBool
+            // 
+            this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader4});
+            this.lvConditionalBool.FullRowSelect = true;
+            this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalBool.HideSelection = false;
+            this.lvConditionalBool.Location = new System.Drawing.Point(460, 14);
+            this.lvConditionalBool.LostFocusItem = -1;
+            this.lvConditionalBool.MultiSelect = false;
+            this.lvConditionalBool.Name = "lvConditionalBool";
+            this.lvConditionalBool.OwnerDraw = true;
+            this.lvConditionalBool.Size = new System.Drawing.Size(97, 399);
+            this.lvConditionalBool.TabIndex = 162;
+            this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalBool.View = System.Windows.Forms.View.Details;
+            this.lvConditionalBool.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalBool.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvConditionalBool.Leave += new System.EventHandler(this.ListView_Leave);
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Conditional Boolean";
+            this.columnHeader4.Width = 81;
+            // 
+            // lvConditionalType
+            // 
+            this.lvConditionalType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3});
+            this.lvConditionalType.FullRowSelect = true;
+            this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalType.HideSelection = false;
+            this.lvConditionalType.Location = new System.Drawing.Point(6, 14);
+            this.lvConditionalType.LostFocusItem = -1;
+            this.lvConditionalType.MultiSelect = false;
+            this.lvConditionalType.Name = "lvConditionalType";
+            this.lvConditionalType.OwnerDraw = true;
+            this.lvConditionalType.Size = new System.Drawing.Size(116, 399);
+            this.lvConditionalType.TabIndex = 161;
+            this.lvConditionalType.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalType.View = System.Windows.Forms.View.Details;
+            this.lvConditionalType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
+            this.lvConditionalType.Leave += new System.EventHandler(this.ListView_Leave);
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Effect Conditional";
+            this.columnHeader3.Width = 102;
+            // 
+            // lvSubConditional
+            // 
+            this.lvSubConditional.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2});
+            this.lvSubConditional.FullRowSelect = true;
+            this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvSubConditional.HideSelection = false;
+            this.lvSubConditional.Location = new System.Drawing.Point(128, 14);
+            this.lvSubConditional.LostFocusItem = -1;
+            this.lvSubConditional.MultiSelect = false;
+            this.lvSubConditional.Name = "lvSubConditional";
+            this.lvSubConditional.OwnerDraw = true;
+            this.lvSubConditional.Size = new System.Drawing.Size(326, 399);
+            this.lvSubConditional.TabIndex = 160;
+            this.lvSubConditional.UseCompatibleStateImageBehavior = false;
+            this.lvSubConditional.View = System.Windows.Forms.View.Details;
+            this.lvSubConditional.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvSubConditional.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
+            this.lvSubConditional.Leave += new System.EventHandler(this.ListView_Leave);
+            this.lvSubConditional.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvSubConditional_MouseClick);
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Sub-Conditional Attribute";
+            this.columnHeader2.Width = 202;
             // 
             // btnOK
             // 
@@ -1211,157 +1351,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.panel3.Size = new System.Drawing.Size(228, 181);
             this.panel3.TabIndex = 184;
             // 
-            // expError
+            // lblExprCommands
             // 
-            this.expError.BackColor = System.Drawing.Color.Transparent;
-            this.expError.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.expError.ForeColor = System.Drawing.Color.Red;
-            this.expError.Location = new System.Drawing.Point(48, 12);
-            this.expError.Name = "expError";
-            this.expError.Size = new System.Drawing.Size(1202, 30);
-            this.expError.TabIndex = 185;
-            this.expError.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblExprCommands.Location = new System.Drawing.Point(-12, 103);
+            this.lblExprCommands.Name = "lblExprCommands";
+            this.lblExprCommands.Size = new System.Drawing.Size(84, 22);
+            this.lblExprCommands.TabIndex = 187;
+            this.lblExprCommands.Text = "Commands:";
+            this.lblExprCommands.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblExprCommands.Visible = false;
             // 
-            // lvConditionalOp
+            // cbExprCommands
             // 
-            this.lvConditionalOp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader7});
-            this.lvConditionalOp.FullRowSelect = true;
-            this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalOp.HideSelection = false;
-            this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem25,
-            listViewItem26,
-            listViewItem27});
-            this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
-            this.lvConditionalOp.LostFocusItem = -1;
-            this.lvConditionalOp.MultiSelect = false;
-            this.lvConditionalOp.Name = "lvConditionalOp";
-            this.lvConditionalOp.OwnerDraw = true;
-            this.lvConditionalOp.Size = new System.Drawing.Size(97, 83);
-            this.lvConditionalOp.TabIndex = 166;
-            this.lvConditionalOp.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalOp.View = System.Windows.Forms.View.Details;
-            this.lvConditionalOp.Visible = false;
-            this.lvConditionalOp.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalOp.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalOp.Leave += new System.EventHandler(this.ListView_Leave);
-            // 
-            // columnHeader7
-            // 
-            this.columnHeader7.Text = "Stack is?";
-            this.columnHeader7.Width = 81;
-            // 
-            // lvActiveConditionals
-            // 
-            this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader8,
-            this.columnHeader6});
-            this.lvActiveConditionals.FullRowSelect = true;
-            this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvActiveConditionals.HideSelection = false;
-            this.lvActiveConditionals.Location = new System.Drawing.Point(563, 14);
-            this.lvActiveConditionals.LostFocusItem = -1;
-            this.lvActiveConditionals.MultiSelect = false;
-            this.lvActiveConditionals.Name = "lvActiveConditionals";
-            this.lvActiveConditionals.Size = new System.Drawing.Size(371, 399);
-            this.lvActiveConditionals.TabIndex = 163;
-            this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
-            this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Active Conditional";
-            this.columnHeader5.Width = 138;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "";
-            this.columnHeader8.Width = 27;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Value";
-            this.columnHeader6.Width = 46;
-            // 
-            // lvConditionalBool
-            // 
-            this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4});
-            this.lvConditionalBool.FullRowSelect = true;
-            this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalBool.HideSelection = false;
-            this.lvConditionalBool.Location = new System.Drawing.Point(460, 14);
-            this.lvConditionalBool.LostFocusItem = -1;
-            this.lvConditionalBool.MultiSelect = false;
-            this.lvConditionalBool.Name = "lvConditionalBool";
-            this.lvConditionalBool.OwnerDraw = true;
-            this.lvConditionalBool.Size = new System.Drawing.Size(97, 399);
-            this.lvConditionalBool.TabIndex = 162;
-            this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalBool.View = System.Windows.Forms.View.Details;
-            this.lvConditionalBool.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalBool.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalBool.Leave += new System.EventHandler(this.ListView_Leave);
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Conditional Boolean";
-            this.columnHeader4.Width = 81;
-            // 
-            // lvConditionalType
-            // 
-            this.lvConditionalType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3});
-            this.lvConditionalType.FullRowSelect = true;
-            this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalType.HideSelection = false;
-            this.lvConditionalType.Location = new System.Drawing.Point(6, 14);
-            this.lvConditionalType.LostFocusItem = -1;
-            this.lvConditionalType.MultiSelect = false;
-            this.lvConditionalType.Name = "lvConditionalType";
-            this.lvConditionalType.OwnerDraw = true;
-            this.lvConditionalType.Size = new System.Drawing.Size(116, 399);
-            this.lvConditionalType.TabIndex = 161;
-            this.lvConditionalType.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalType.View = System.Windows.Forms.View.Details;
-            this.lvConditionalType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
-            this.lvConditionalType.Leave += new System.EventHandler(this.ListView_Leave);
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Effect Conditional";
-            this.columnHeader3.Width = 102;
-            // 
-            // lvSubConditional
-            // 
-            this.lvSubConditional.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this.lvSubConditional.FullRowSelect = true;
-            this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSubConditional.HideSelection = false;
-            this.lvSubConditional.Location = new System.Drawing.Point(128, 14);
-            this.lvSubConditional.LostFocusItem = -1;
-            this.lvSubConditional.MultiSelect = false;
-            this.lvSubConditional.Name = "lvSubConditional";
-            this.lvSubConditional.OwnerDraw = true;
-            this.lvSubConditional.Size = new System.Drawing.Size(326, 399);
-            this.lvSubConditional.TabIndex = 160;
-            this.lvSubConditional.UseCompatibleStateImageBehavior = false;
-            this.lvSubConditional.View = System.Windows.Forms.View.Details;
-            this.lvSubConditional.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvSubConditional.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
-            this.lvSubConditional.Leave += new System.EventHandler(this.ListView_Leave);
-            this.lvSubConditional.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvSubConditional_MouseClick);
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Sub-Conditional Attribute";
-            this.columnHeader2.Width = 202;
+            this.cbExprCommands.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbExprCommands.FormattingEnabled = true;
+            this.cbExprCommands.Location = new System.Drawing.Point(78, 103);
+            this.cbExprCommands.Name = "cbExprCommands";
+            this.cbExprCommands.Size = new System.Drawing.Size(147, 22);
+            this.cbExprCommands.TabIndex = 186;
+            this.cbExprCommands.Visible = false;
+            this.cbExprCommands.SelectedIndexChanged += new System.EventHandler(this.cbExprCommands_SelectedIndexChanged);
             // 
             // lvSubSub
             // 
@@ -1442,32 +1451,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader1.Text = "Effect Attribute";
             this.ColumnHeader1.Width = 202;
             // 
-            // cbExprCommands
-            // 
-            this.cbExprCommands.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbExprCommands.FormattingEnabled = true;
-            this.cbExprCommands.Location = new System.Drawing.Point(78, 103);
-            this.cbExprCommands.Name = "cbExprCommands";
-            this.cbExprCommands.Size = new System.Drawing.Size(147, 22);
-            this.cbExprCommands.TabIndex = 186;
-            this.cbExprCommands.Visible = false;
-            this.cbExprCommands.SelectedIndexChanged += new System.EventHandler(this.cbExprCommands_SelectedIndexChanged);
-            // 
-            // lblExprCommands
-            // 
-            this.lblExprCommands.Location = new System.Drawing.Point(-12, 103);
-            this.lblExprCommands.Name = "lblExprCommands";
-            this.lblExprCommands.Size = new System.Drawing.Size(84, 22);
-            this.lblExprCommands.TabIndex = 187;
-            this.lblExprCommands.Text = "Commands:";
-            this.lblExprCommands.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblExprCommands.Visible = false;
-            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1437, 915);
-            this.Controls.Add(this.expError);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
@@ -1621,7 +1608,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Panel panel4;
         private Panel panel5;
         private Panel panel3;
-        private Label expError;
         private Label lblExprCommands;
         private ComboBox cbExprCommands;
     }
