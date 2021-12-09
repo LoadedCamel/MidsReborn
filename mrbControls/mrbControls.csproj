@@ -258,16 +258,16 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
-      <Version>19.3.0.56</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Licensing">
-      <Version>19.3.0.56</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Shared.Base">
-      <Version>19.3.0.56</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Tools.Windows">
-      <Version>19.3.0.56</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Zstandard2.Net">
       <Version>1.4.4</Version>
