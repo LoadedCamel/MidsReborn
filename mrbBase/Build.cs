@@ -827,7 +827,7 @@ namespace mrbBase
             var powersetList = new List<IPowerset>();
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
-                if (powerset.SetType == Enums.ePowerSetType.Inherent | powerset.SetType == Enums.ePowerSetType.Temp && !powersetList.Contains(powerset))
+                if (powerset.SetType == Enums.ePowerSetType.Inherent && !powersetList.Contains(powerset))
                     powersetList.Add(powerset);
 
             foreach (var powerset in powersetList)
