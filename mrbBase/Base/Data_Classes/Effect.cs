@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -492,11 +493,7 @@ namespace mrbBase.Base.Data_Classes
                             if (!DatabaseAPI.Database.Classes[ps.nArchetype].Playable)
                                 return false;
                         }
-                        else if (ps.SetType == Enums.ePowerSetType.None
-                                 || ps.SetType == Enums.ePowerSetType.Accolade
-                                 //|| ps.SetType == Enums.ePowerSetType.Pet
-                                 || ps.SetType == Enums.ePowerSetType.SetBonus
-                                 || ps.SetType == Enums.ePowerSetType.Temp)
+                        else if (ps.SetType is Enums.ePowerSetType.None or Enums.ePowerSetType.Accolade or Enums.ePowerSetType.Pet or Enums.ePowerSetType.SetBonus or Enums.ePowerSetType.Temp)
                         {
                             return false;
                         }
@@ -532,13 +529,7 @@ namespace mrbBase.Base.Data_Classes
             set { }
         }
 
-        public bool InherentSpecial => SpecialCase == Enums.eSpecialCase.Assassination ||
-                                       SpecialCase == Enums.eSpecialCase.Hidden ||
-                                       SpecialCase == Enums.eSpecialCase.Containment ||
-                                       SpecialCase == Enums.eSpecialCase.CriticalHit ||
-                                       SpecialCase == Enums.eSpecialCase.Domination ||
-                                       SpecialCase == Enums.eSpecialCase.Scourge ||
-                                       SpecialCase == Enums.eSpecialCase.Supremacy;
+        public bool InherentSpecial => SpecialCase is Enums.eSpecialCase.Assassination or Enums.eSpecialCase.Hidden or Enums.eSpecialCase.Containment or Enums.eSpecialCase.CriticalHit or Enums.eSpecialCase.Domination or Enums.eSpecialCase.Scourge or Enums.eSpecialCase.Supremacy;
 
         public bool InherentSpecial2 => ValidateConditional("active", "Assassination") ||
                                         ValidateConditional("active", "Containment") ||
@@ -716,9 +707,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool isDamage()
         {
-            return EffectType == Enums.eEffectType.Defense || EffectType == Enums.eEffectType.DamageBuff ||
-                   EffectType == Enums.eEffectType.Resistance || EffectType == Enums.eEffectType.Damage ||
-                   EffectType == Enums.eEffectType.Elusivity;
+            return EffectType is Enums.eEffectType.Defense or Enums.eEffectType.DamageBuff or Enums.eEffectType.Resistance or Enums.eEffectType.Damage or Enums.eEffectType.Elusivity;
         }
 
         public string BuildEffectStringShort(bool noMag = false, bool simple = false, bool useBaseProbability = false)
@@ -915,7 +904,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
 
-        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false)
+        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false)
         {
             var sBuild = string.Empty;
             var sSubEffect = string.Empty;
@@ -937,6 +926,8 @@ namespace mrbBase.Base.Data_Classes
             var sSuppressShort = string.Empty;
             var sConditional = string.Empty;
             var sNearGround = string.Empty;
+            var sMagExp = string.Empty;
+            var sProbExp = string.Empty;
 
             // Some variable effect may not show that they are,
             // e.g. Kinetics Fulcrum Shift self buff effect.
@@ -972,7 +963,15 @@ namespace mrbBase.Base.Data_Classes
                 var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
                 if (chunks.Count == 2)
                 {
-                    sChance = $"variable chance: {chunks[1]} = {Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100))}%";
+                    if (editorDisplay)
+                    {
+                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100)))}% Variable Chance";
+                        sProbExp = $"Probability Expression: {chunks[1]}";
+                    }
+                    else
+                    {
+                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100)))}% chance";
+                    }
                 }
             }
 
@@ -1064,8 +1063,7 @@ namespace mrbBase.Base.Data_Classes
             {
                 case Enums.ePvX.PvE:
                     sPvx = resistPresent ? "by Mobs" : "to Mobs";
-                    if (EffectType == Enums.eEffectType.Heal & Aspect == Enums.eAspect.Abs & Mag > 0 &
-                        PvMode == Enums.ePvX.PvE)
+                    if (EffectType == Enums.eEffectType.Heal & Aspect == Enums.eAspect.Abs & Mag > 0 & PvMode == Enums.ePvX.PvE)
                     {
                         sPvx = "in PvE";
                     }
@@ -1079,6 +1077,12 @@ namespace mrbBase.Base.Data_Classes
                     if (ToWho == Enums.eToWho.Self)
                     {
                         sPvx = "in PvP";
+                    }
+                    break;
+                case Enums.ePvX.Any:
+                    if (ToWho == Enums.eToWho.Self)
+                    {
+                        sPvx = "in PvE/PvP";
                     }
                     break;
             }
@@ -1182,7 +1186,17 @@ namespace mrbBase.Base.Data_Classes
                     {
                         chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
                     }
-                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0].Replace("modifier>current", ModifierTable)} = {ParseMagnitudeExpression(out _)})";
+
+                    var mag = $"{ParseMagnitudeExpression(out _)}";
+                    if (editorDisplay)
+                    {
+                        sMag = mag.Contains("-") ? $"{decimal.Round((decimal)Math.Abs(ParseMagnitudeExpression(out _)), 2)} Variable" : $"{decimal.Round((decimal)ParseMagnitudeExpression(out _), 2)} Variable";
+                        sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
+                    }
+                    else
+                    {
+                        sMag = mag.Contains("-") ? $"{decimal.Round((decimal)Math.Abs(ParseMagnitudeExpression(out _)), 2)}" : $"{decimal.Round((decimal)ParseMagnitudeExpression(out _), 2)}";
+                    }
                 }
                 else
                 {
@@ -1447,7 +1461,6 @@ namespace mrbBase.Base.Data_Classes
                     sBuild = $"{sMag} {sEffect}{sTarget}{sDuration}";
                     break;
             }
-
             var sExtra = string.Empty;
             var sExtra2 = string.Empty;
             //(20% chance, non-resistible if target = player)
@@ -1477,15 +1490,32 @@ namespace mrbBase.Base.Data_Classes
                 sExtra = " (" + sExtra + ")";
                 sExtra2 = BuildCs(sToHit, sExtra2);
                 sExtra2 = " (" + sExtra2 + ")";
+                if (AttribType == Enums.eAttribType.Expression)
+                {
+                    if (!editorDisplay && !dvDisplay)
+                    {
+                        const string sType = " [Expression Based]";
+                        sExtra += sType;
+                        sExtra2 += sType;
+                    }
+                }
             }
 
             sExtra = BuildCs(sNearGround, sExtra);
 
             if (sExtra.Equals(" ()")) { sExtra = ""; }
 
-            return (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress)
-                .Replace("--", "-")
-                .Trim();
+            var sFinal = string.Empty;
+            if (AttribType == Enums.eAttribType.Expression && editorDisplay)
+            {
+                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\n{sProbExp}";
+            }
+            else
+            {
+                sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
+            }
+
+            return sFinal;
         }
 
         public void StoreTo(ref BinaryWriter writer)

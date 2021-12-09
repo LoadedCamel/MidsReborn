@@ -3507,7 +3507,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     if (iTip != string.Empty)
                         iTip += "\r\n";
-                    var str = pEnh.Effects[index].BuildEffectString();
+                    var str = pEnh.Effects[index].BuildEffectString(false, "", false, false, false, false, false, true);
                     if (pEnh.Effects[index].isEnhancementEffect & (pEnh.PowerType == Enums.ePowerType.Toggle))
                     {
                         ++num1;

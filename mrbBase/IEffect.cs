@@ -176,11 +176,7 @@ namespace mrbBase
 
         string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 
-        string BuildEffectString(bool Simple = false,
-            string SpecialCat = "",
-            bool noMag = false,
-            bool Grouped = false,
-            bool useBaseProbability = false, bool fromPopup = false);
+        string BuildEffectString(bool Simple = false, string SpecialCat = "", bool noMag = false, bool Grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false);
 
         void StoreTo(ref BinaryWriter writer);
 

@@ -1874,7 +1874,7 @@ namespace mrbBase.Base.Data_Classes
                         : Enums.GetGroupedDamage(iDamage, shortForm);
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("Special", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
                 }
                 else if ((effect.EffectType == Enums.eEffectType.Mez) |
                          (effect.EffectType == Enums.eEffectType.MezResist))
@@ -1908,7 +1908,7 @@ namespace mrbBase.Base.Data_Classes
 
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("None", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("None", newValue);
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.MezResist:
@@ -1962,7 +1962,7 @@ namespace mrbBase.Base.Data_Classes
                             effect.ETModifies = Enums.eEffectType.Slow;
                             str = shortForm
                                 ? effect.BuildEffectStringShort(noMag, simple)
-                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup);
+                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true);
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");
