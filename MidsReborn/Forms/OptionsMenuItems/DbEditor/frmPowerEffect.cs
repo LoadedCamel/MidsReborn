@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -382,7 +383,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
 
-            var magExprChunks = myFX.SplitMagnitudeExpression(myFX.MagnitudeExpression, out _);
+            var magExprChunks = ExpressionParser.SplitExpression(myFX, out _, false);
             txtMagExpression.Text = magExprChunks.Count > 0 ? magExprChunks[0] : "";
             txtProbExpression.Text = magExprChunks.Count == 2 ? magExprChunks[1] : "";
             txtMagExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
@@ -1702,9 +1703,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var returnedBool = true;
             var returnData = string.Empty;
-            if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
+            if (ExpressionParser.HasSeparator(myFX))
             {
-                myFX.ParseMagnitudeExpression(out var data);
+                ExpressionParser.ParseExpression(myFX, out var data);
                 if (data.ErrorFound)
                 {
                     returnData = $@"Expression Error: {data.ErrorString}";
@@ -1713,7 +1714,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                myFX.ParseMagnitudeExpression(out var data, 1);
+                ExpressionParser.ParseExpression(myFX, out var data, 1);
                 if (data.ErrorFound)
                 {
                     returnData = $@"Expression Error: {data.ErrorString}";
@@ -1722,6 +1723,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             lblEffectDescription.Text = returnData;
+
             return returnedBool;
         }
 
@@ -1839,19 +1841,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading) return;
 
-            var magExpr = txtMagExpression.Text.Trim(new char[] { '/', ' ' });
-            var probExpression = txtProbExpression.Text.Trim(new char[] { '/', ' ' });
             var name = (sender as TextBox)?.Name;
-            myFX.MagnitudeExpression = $"{magExpr}{(string.IsNullOrEmpty(probExpression) ? "" : $"{Effect.MagExprSeparator}{probExpression}")}";
+            myFX.MagnitudeExpression = ExpressionParser.AssembleExpression(txtMagExpression.Text, txtProbExpression.Text);
             UpdateFXText(name);
         }
 
         private void CheckMagExpression()
         {
             var returnData = string.Empty;
-            if (myFX.MagnitudeExpression.Contains(Effect.MagExprSeparator))
+            if (ExpressionParser.HasSeparator(myFX))
             {
-                myFX.ParseMagnitudeExpression(out var data);
+                ExpressionParser.ParseExpression(myFX, out var data);
                 if (data.ErrorFound)
                 {
                     returnData = $@"Expression Error: {data.ErrorString}";
@@ -1859,7 +1859,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                myFX.ParseMagnitudeExpression(out var data, 1);
+                ExpressionParser.ParseExpression(myFX, out var data, 1);
                 if (data.ErrorFound)
                 {
                     returnData = $@"Expression Error: {data.ErrorString}";

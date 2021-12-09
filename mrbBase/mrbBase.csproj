@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Base\Extensions\PanelExt.cs" />
     <Compile Include="Base\Extensions\ListviewExt.cs" />
+    <Compile Include="ExpressionParser.cs" />
     <Compile Include="PowersReplTable.cs" />
     <Compile Include="clsRewardCurrency.cs" />
     <Compile Include="ConfigDataSpecial.cs" />

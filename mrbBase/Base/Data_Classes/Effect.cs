@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using mrbBase;
 using mrbBase.Base.Master_Classes;
-using Jace;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -15,9 +14,8 @@ namespace mrbBase.Base.Data_Classes
             new Regex("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower power;
-        public const string MagExprSeparator = "///";
 
-        public static readonly List<string> ExprCommandsList = new List<string>
+        public static readonly List<string> ExprCommandsList = new()
         {
             "",
             "power.base>activatetime",
@@ -329,17 +327,15 @@ namespace mrbBase.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
-                if (MagnitudeExpression.Contains(MagExprSeparator) & AttribType == Enums.eAttribType.Expression)
+                if (ExpressionParser.HasSeparator(this) & AttribType == Enums.eAttribType.Expression)
                 {
-                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
-                    if (chunks.Count > 1)
-                    {
-                        var ret = ParseMagnitudeExpression2Inner(chunks[1], 0, out var parseError);
+                    var chunks = ExpressionParser.SplitExpression(this, out _);
+                    if (chunks.Count <= 1) return 0;
 
-                        return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
-                    }
+                    var ret = ExpressionParser.ParseExpression2Inner(ExpressionParser.SubExpressionToFx(chunks[1], this), 0, out var parseError);
 
-                    return 0;
+                    return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
+
                 }
 
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
@@ -373,31 +369,13 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                switch (AttribType)
+                return (EffectType == Enums.eEffectType.Damage ? -1 : 1) * AttribType switch
                 {
-                    case Enums.eAttribType.Magnitude:
-                        /*if (Math.Abs(Math_Mag) > 0.01)
-                        {
-                            return Math_Mag;
-                        }*/
-
-                        return Scale * nMagnitude
-                                     * (EffectType == Enums.eEffectType.Damage ? -1 : 1)
-                                     * DatabaseAPI.GetModifier(this);
-                    
-                    case Enums.eAttribType.Duration:
-                        /*if (Math.Abs(Math_Mag) > 0.01)
-                        {
-                            return Math_Mag;
-                        }*/
-
-                        return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
-                    
-                    case Enums.eAttribType.Expression:
-                        return ParseMagnitudeExpression(out _) * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
-                    default:
-                        return 0;
-                }
+                    Enums.eAttribType.Magnitude => Scale * nMagnitude * DatabaseAPI.GetModifier(this),
+                    Enums.eAttribType.Duration => nMagnitude,
+                    Enums.eAttribType.Expression => ExpressionParser.ParseExpression(this, out _),
+                    _ => 0
+                };
             }
         }
 
@@ -960,17 +938,17 @@ namespace mrbBase.Base.Data_Classes
 
             if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
             {
-                var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
+                var chunks = ExpressionParser.SplitExpression(this, out _);
                 if (chunks.Count == 2)
                 {
                     if (editorDisplay)
                     {
-                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100)))}% Variable Chance";
+                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ExpressionParser.ParseExpression(this, out _, 1) * 100)))}% Variable Chance";
                         sProbExp = $"Probability Expression: {chunks[1]}";
                     }
                     else
                     {
-                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100)))}% chance";
+                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ExpressionParser.ParseExpression(this, out _, 1) * 100)))}% chance";
                     }
                 }
             }
@@ -1181,21 +1159,25 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var chunks = SplitMagnitudeExpression(MagnitudeExpression, out var forcedMagDefault);
+                    var chunks = ExpressionParser.SplitExpression(this, out var forcedMagDefault);
                     if (forcedMagDefault)
                     {
                         chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
                     }
 
-                    var mag = $"{ParseMagnitudeExpression(out _)}";
+                    var mag = $"{ExpressionParser.ParseExpression(this, out _)}";
                     if (editorDisplay)
                     {
-                        sMag = mag.Contains("-") ? $"{decimal.Round((decimal)Math.Abs(ParseMagnitudeExpression(out _)), 2)} Variable" : $"{decimal.Round((decimal)ParseMagnitudeExpression(out _), 2)} Variable";
+                        sMag = mag.Contains("-")
+                            ? $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)} Variable"
+                            : $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)} Variable";
                         sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        sMag = mag.Contains("-") ? $"{decimal.Round((decimal)Math.Abs(ParseMagnitudeExpression(out _)), 2)}" : $"{decimal.Round((decimal)ParseMagnitudeExpression(out _), 2)}";
+                        sMag = mag.Contains("-")
+                            ? $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)}"
+                            : $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
                     }
                 }
                 else
@@ -2912,169 +2894,6 @@ namespace mrbBase.Base.Data_Classes
                 iStr += str;
             iStr += iValue;
             return iStr;
-        }
-
-        private string GetStacks(string powerName, List<string> pickedPowerNames)
-        {
-            if (!pickedPowerNames.Contains(powerName)) return "0";
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (pe.Power == null) continue;
-                if (pe.Power.FullName != powerName) continue;
-
-                if (pe.Power.Active)
-                {
-                    return $"{pe.VariableValue}";
-                }
-            }
-
-            return "0";
-        }
-
-        private string GetModifier(string modifierName)
-        {
-            // DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-            var modTable = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
-            return modTable.Count <= 0
-                ? "0"
-                : $"{Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])}";
-        }
-
-        public class ParsedData
-        {
-            public bool ErrorFound { get; set; }
-            public string ErrorString { get; set; } = string.Empty;
-        }
-
-        private float ParseMagnitudeExpression2Inner(string magExpr, int rLevel, out ParsedData parsedData)
-        {
-            var pickedPowerNames = MidsContext.Character.CurrentBuild == null
-                ? new List<string>()
-                : MidsContext.Character.CurrentBuild.Powers == null
-                    ? new List<string>()
-                    : MidsContext.Character.CurrentBuild.Powers
-                        .Where(pe => pe.Power != null)
-                        .Select(pe => pe.Power.FullName)
-                        .ToList();
-
-            var commandsDict = new Dictionary<string, string>
-            {
-                { "power.base>activatetime", $"{power.CastTime}" },
-                { "power.base>areafactor", $"{power.AoEModifier}" },
-                { "power.base>rechargetime", $"{power.BaseRechargeTime}" },
-                { "power.base>endcost", $"{power.EndCost}" },
-                { "effect>scale", $"{Scale}" },
-                { "@StdResult", $"{Scale}" },
-                { "if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0" },
-                { "if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0" },
-                { "modifier>current", $"{DatabaseAPI.GetModifier(this)}" },
-                { "rand()", $"{new Random().NextDouble()}" }
-            };
-
-            var functionsDict1 = new Dictionary<Regex, MatchEvaluator>
-            {
-                { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
-                { new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames) },
-                { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) }
-            };
-
-            var functionsDict3 = new Dictionary<Regex, MatchEvaluator>
-            {
-                { new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel) }
-            };
-
-            parsedData = new ParsedData();
-            magExpr = magExpr.TrimEnd('/');
-            magExpr = commandsDict.Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
-            magExpr = functionsDict1.Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
-            magExpr = functionsDict3.Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
-            var r = new Regex(@"^[0-9\-\+\*\/\s\.\(\)]+$");
-            if (!r.IsMatch(magExpr)) return 0;
-
-            var mathEngine = new CalculationEngine();
-            try
-            {
-                var ret = (float)mathEngine.Calculate(magExpr);
-                return ret;
-            }
-            catch (ParseException ex)
-            {
-                parsedData.ErrorFound = true;
-                parsedData.ErrorString = ex.Message;
-                return 0;
-            }
-        }
-
-        private string ExprMinMax(string a, string b, string c, int rLevel = 0)
-        {
-            var ret1 = float.TryParse(a, out var f1);
-            var ret2 = float.TryParse(b, out var f2);
-            var ret3 = float.TryParse(c, out var f3);
-
-            if (!ret1)
-            {
-                if (rLevel == 6) return "0";
-                f1 = ParseMagnitudeExpression2Inner(a, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            if (!ret2)
-            {
-                if (rLevel == 6) return "0";
-                f2 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            if (!ret3)
-            {
-                if (rLevel == 6) return "0";
-                f3 = ParseMagnitudeExpression2Inner(b, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            return $"{Math.Max(f2, Math.Min(f3, f1))}";
-        }
-
-        public List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault)
-        {
-            var chunks = MagnitudeExpression.Split(new[] { MagExprSeparator }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (chunks.Count == 1 & MagnitudeExpression.TrimStart().StartsWith(MagExprSeparator))
-            {
-                forcedMagDefault = true;                
-                return new List<string> { $"{Scale * nMagnitude}", chunks[0] };
-            }
-
-            forcedMagDefault = false;
-            return chunks;
-        }
-
-        public float ParseMagnitudeExpression(out ParsedData data, int chunk = 0)
-        {
-            data = new ParsedData();
-            if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
-            {
-                var num2 = (float)((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
-                if (MagnitudeExpression.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
-                {
-                    num2 *= float.Parse(MagnitudeExpression.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1).Substring(0, 2));
-                }
-
-                return num2;
-            }
-
-            if (string.IsNullOrWhiteSpace(MagnitudeExpression)) return 0f;
-            float ret;
-            if (MagnitudeExpression.Contains(MagExprSeparator))
-            {
-                var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
-                ret = ParseMagnitudeExpression2Inner(chunks[chunk], 0, out data);
-
-                return data.ErrorFound ? 0f : ret;
-            }
-
-            ret = ParseMagnitudeExpression2Inner(MagnitudeExpression, 0, out data);
-
-            return data.ErrorFound ? 0f : ret;
         }
 
         private string _summonedEntName;
