@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -394,19 +393,14 @@ namespace mrbBase.Base.Data_Classes
                         return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
                     
                     case Enums.eAttribType.Expression:
-                        return ParseMagnitudeExpression(out var temp)
-                               * DatabaseAPI.GetModifier(this)
-                               * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
+                        return ParseMagnitudeExpression(out _) * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
                     default:
                         return 0;
                 }
             }
         }
 
-        public float BuffedMag
-        {
-            get => Math.Abs(Math_Mag) > 0.01 ? Math_Mag : Mag;
-        }
+        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 & AttribType != Enums.eAttribType.Expression ? Math_Mag : Mag;
 
         public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
@@ -978,7 +972,7 @@ namespace mrbBase.Base.Data_Classes
                 var chunks = SplitMagnitudeExpression(MagnitudeExpression, out _);
                 if (chunks.Count == 2)
                 {
-                    sChance = $"variable chance: {chunks[1]}";
+                    sChance = $"variable chance: {chunks[1]} = {Math.Max(0, Math.Min(100, ParseMagnitudeExpression(out _, 1) * 100))}%";
                 }
             }
 
@@ -1188,7 +1182,7 @@ namespace mrbBase.Base.Data_Classes
                     {
                         chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
                     }
-                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0].Replace("modifier>current", ModifierTable)})";
+                    sMag = new Regex(@"^[0-9\.\-]+$").IsMatch(chunks[0]) ? chunks[0] : $"(variable mag: {chunks[0].Replace("modifier>current", ModifierTable)} = {ParseMagnitudeExpression(out _)})";
                 }
                 else
                 {
@@ -2900,7 +2894,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if (pe.Power.Active)
                 {
-                    return $"{pe.Power.Stacks}";
+                    return $"{pe.VariableValue}";
                 }
             }
 
@@ -2910,10 +2904,10 @@ namespace mrbBase.Base.Data_Classes
         private string GetModifier(string modifierName)
         {
             // DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-            var mod_table = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
-            if (mod_table.Count <= 0) return "0";
-
-            return mod_table[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column].ToString();
+            var modTable = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
+            return modTable.Count <= 0
+                ? "0"
+                : $"{Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])}";
         }
 
         public class ParsedData
@@ -2943,7 +2937,7 @@ namespace mrbBase.Base.Data_Classes
                 { "@StdResult", $"{Scale}" },
                 { "if target>enttype eq 'critter'", PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "if target>enttype eq 'player'", PvMode == Enums.ePvX.PvP ? "1" : "0" },
-                { "modifier>current", GetModifier(ModifierTable) },
+                { "modifier>current", $"{DatabaseAPI.GetModifier(this)}" },
                 { "rand()", $"{new Random().NextDouble()}" }
             };
 
@@ -2960,28 +2954,25 @@ namespace mrbBase.Base.Data_Classes
             };
 
             parsedData = new ParsedData();
+            magExpr = magExpr.TrimEnd('/');
             magExpr = commandsDict.Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
             magExpr = functionsDict1.Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
             magExpr = functionsDict3.Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
-            var r = new Regex(@"^[0-9\-\+\*\/\s\.\,\(\)]+$");
-            if (r.IsMatch(magExpr))
-            {
-                var mathEngine = new CalculationEngine();
-                try
-                {
-                    var ret = (float)mathEngine.Calculate(magExpr.TrimEnd('/'));
-                    Debug.WriteLine(ret);
-                    return ret;
-                }
-                catch (ParseException ex)
-                {
-                    parsedData.ErrorFound = true;
-                    parsedData.ErrorString = ex.Message;
-                    return 0;
-                }
-            }
+            var r = new Regex(@"^[0-9\-\+\*\/\s\.\(\)]+$");
+            if (!r.IsMatch(magExpr)) return 0;
 
-            return 0;
+            var mathEngine = new CalculationEngine();
+            try
+            {
+                var ret = (float)mathEngine.Calculate(magExpr);
+                return ret;
+            }
+            catch (ParseException ex)
+            {
+                parsedData.ErrorFound = true;
+                parsedData.ErrorString = ex.Message;
+                return 0;
+            }
         }
 
         private string ExprMinMax(string a, string b, string c, int rLevel = 0)
@@ -3016,7 +3007,7 @@ namespace mrbBase.Base.Data_Classes
 
         public List<string> SplitMagnitudeExpression(string magExpr, out bool forcedMagDefault)
         {
-            var chunks = MagnitudeExpression.Split(new string[] { MagExprSeparator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var chunks = MagnitudeExpression.Split(new[] { MagExprSeparator }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (chunks.Count == 1 & MagnitudeExpression.TrimStart().StartsWith(MagExprSeparator))
             {
                 forcedMagDefault = true;                
