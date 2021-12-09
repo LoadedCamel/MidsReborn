@@ -35,6 +35,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEnh = new System.Windows.Forms.ListView();
             this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,6 +60,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEnh.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnHeader2,
             this.ColumnHeader3,
+            this.columnHeader6,
             this.ColumnHeader4,
             this.ColumnHeader1,
             this.ColumnHeader5});
@@ -69,6 +71,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEnh.Location = new System.Drawing.Point(8, 8);
             this.lvEnh.MultiSelect = false;
             this.lvEnh.Name = "lvEnh";
+            this.lvEnh.ShowItemToolTips = true;
             this.lvEnh.Size = new System.Drawing.Size(734, 556);
             this.lvEnh.SmallImageList = this.ilEnh;
             this.lvEnh.TabIndex = 0;
@@ -84,12 +87,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader3
             // 
             this.ColumnHeader3.Text = "Type";
-            this.ColumnHeader3.Width = 72;
+            this.ColumnHeader3.Width = 65;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "LvLs";
+            this.columnHeader6.Width = 50;
             // 
             // ColumnHeader4
             // 
             this.ColumnHeader4.Text = "Effects";
-            this.ColumnHeader4.Width = 48;
+            this.ColumnHeader4.Width = 50;
             // 
             // ColumnHeader1
             // 
@@ -298,5 +306,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         CheckBox NoReload;
         private Label label1;
         private TextBox txtFilter;
+        private ColumnHeader columnHeader6;
     }
 }

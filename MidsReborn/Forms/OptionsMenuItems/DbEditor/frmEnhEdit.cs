@@ -27,26 +27,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void AddListItem(int index)
         {
-            var item = new string[7];
+            var item = new string[8];
             var enhancement = DatabaseAPI.Database.Enhancements[index];
             item[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
             item[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            item[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
-            item[3] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
-            item[5] = enhancement.UID;
-            item[6] = enhancement.LongName;
+            item[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
+            item[3] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
+            item[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
+            item[6] = enhancement.UID;
+            item[7] = enhancement.LongName;
 
             if (enhancement.nIDSet > -1)
             {
-                item[4] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
+                item[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
                 item[0] = $"{item[4]}: {item[0]}";
             }
             else
             {
-                item[4] = "";
+                item[5] = "";
             }
 
-            lvEnh.Items.Add(new ListViewItem(item, index));
+            var lvi = new ListViewItem(item, index)
+            {
+                ToolTipText = item[0]
+            };
+            lvEnh.Items.Add(lvi);
             lvEnh.Items[lvEnh.Items.Count - 1].Selected = true;
             lvEnh.Items[lvEnh.Items.Count - 1].EnsureVisible();
         }
@@ -54,8 +59,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnAdd_Click(object sender, EventArgs e)
         {
             IEnhancement iEnh = new Enhancement();
-            using var frmEnhData = new frmEnhData(ref iEnh,
-                DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
+            using var frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             var num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
@@ -88,7 +92,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             var oldEnhancement =
                 DatabaseAPI.Database.Enhancements[
-                    DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text)];
+                    DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text)];
             using var frmEnhData = new frmEnhData(ref oldEnhancement,
                 DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             var num = (int)frmEnhData.ShowDialog();
@@ -110,7 +114,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvEnh.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete enhancement: {lvEnh.SelectedItems[0].Text}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length];
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             var index1 = 0;
             var num1 = DatabaseAPI.Database.Enhancements.Length - 1;
             var enh = DatabaseAPI.Database.Enhancements[selectedIndex];
@@ -153,8 +157,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
-            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             if (selectedIndex >= lvEnh.Items.Count - 1)
                 return;
             IEnhancement[] enhancementArray =
@@ -174,7 +178,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
             //Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             //var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
             frmEnhData.ShowDialog();
@@ -219,7 +223,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
-            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             var selectedIndex = lvEnh.SelectedIndices[0];
             if (selectedIndex < 1)
                 return;
@@ -345,18 +349,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var enhancement = DatabaseAPI.Database.Enhancements[Index];
             strArray1[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
             strArray1[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            strArray1[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
-            strArray1[3] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
-            strArray1[5] = enhancement.UID;
+            strArray1[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
+            strArray1[3] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
+            strArray1[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
+            strArray1[6] = enhancement.UID;
 
             if (enhancement.nIDSet > -1)
             {
-                strArray1[4] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
+                strArray1[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
                 strArray1[0] = $"{strArray1[4]}: {strArray1[0]}";
             }
             else
             {
-                strArray1[4] = "";
+                strArray1[5] = "";
             }
 
             var num4 = strArray1.Length - 1;
