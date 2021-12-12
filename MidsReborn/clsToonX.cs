@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -299,20 +300,18 @@ namespace Mids_Reborn
 
         private void RemoveGrantEffectIndirect(ref IPower[] basePower, IPower targetPower, string summon)
         {
-            var basePowerIdx = basePower
-                .Where(bp => bp != null)
+            var basePowerPicked = basePower.Where(bp => bp != null).ToList();
+            var basePowerIdx = basePowerPicked
                 .FindIndexes(bp => bp.FullName == targetPower.FullName)
                 .ToList();
-            if (basePowerIdx.Count() > 0)
-            {
-                var fxListBase = basePower[basePowerIdx[0]].Effects.ToList();
-                var gFxIdxBase = fxListBase.FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == summon).ToList();
-                if (gFxIdxBase.Count() > 0)
-                {
-                    fxListBase.Remove(fxListBase[gFxIdxBase[0]]);
-                    basePower[basePowerIdx[0]].Effects = fxListBase.ToArray();
-                }
-            }
+            if (basePowerIdx.Count <= 0) return;
+
+            var fxListBase = basePowerPicked[basePowerIdx[0]].Effects.ToList();
+            var gFxIdxBase = fxListBase.FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == summon).ToList();
+            if (gFxIdxBase.Count <= 0) return;
+            
+            fxListBase.Remove(fxListBase[gFxIdxBase[0]]);
+            basePowerPicked[basePowerIdx[0]].Effects = fxListBase.ToArray();
         }
 
         private void ApplyGlobalEnhancements()
@@ -351,43 +350,42 @@ namespace Mids_Reborn
                         }
                     }
 
-                    if (!hasPower)
+                    if (hasPower) continue;
+                    
+                    grantedPowers.Add(new GrantedPowerInfo
                     {
-                        grantedPowers.Add(new GrantedPowerInfo
-                        {
-                            GrantPowerFX = (IEffect)gFx.Clone(),
-                            TargetPower = gPower.Clone(),
-                            SourcePower = p.Clone()
-                        });
+                        GrantPowerFX = (IEffect)gFx.Clone(),
+                        TargetPower = gPower.Clone(),
+                        SourcePower = p.Clone()
+                    });
 
-                        // Special flag to get rid of the GrantPower effect from source
-                        // Power attributes > Basic > MxD Special Flags > Ignore when setting graph scale
-                        if (gPower.SkipMax)
-                        {
-                            var fxList = p.Effects.ToList();
-                            fxList.Remove(gFx);
-                            p.Effects = fxList.ToArray();
-                            RemoveGrantEffectIndirect(ref _mathPower, p, gFx.Summon);
-                            if (MidsContext.Character.CurrentBuild.Powers != null)
-                            {
-                                var buildPowerIdx = MidsContext.Character.CurrentBuild.Powers
-                                    .Where(pe => pe.Power != null)
-                                    .FindIndexes(pe => pe.Power.FullName == p.FullName)
-                                    .ToList();
-                                if (buildPowerIdx.Count() > 0)
-                                {
-                                    var buildPower = MidsContext.Character.CurrentBuild.Powers[buildPowerIdx[0]].Power;
-                                    var gFxIdxBuild = buildPower.Effects.FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == gFx.Summon).ToList();
-                                    if (gFxIdxBuild.Count() > 0)
-                                    {
-                                        buildPower.Effects[gFxIdxBuild[0]].EffectClass = Enums.eEffectClass.Ignored;
-                                        buildPower.Effects[gFxIdxBuild[0]].Probability = 0;
-                                        buildPower.Effects[gFxIdxBuild[0]].Scale = 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // Special flag to get rid of the GrantPower effect from source
+                    // Power attributes > Basic > MxD Special Flags > Ignore when setting graph scale
+                    if (!gPower.SkipMax) continue;
+
+                    var fxList = p.Effects.ToList();
+                    fxList.Remove(gFx);
+                    p.Effects = fxList.ToArray();
+                    RemoveGrantEffectIndirect(ref _mathPower, p, gFx.Summon);
+                    if (MidsContext.Character.CurrentBuild.Powers == null) continue;
+
+                    var buildPowerPicked = MidsContext.Character.CurrentBuild.Powers
+                        .Where(pe => pe.Power != null)
+                        .ToList();
+                    var buildPowerIdx = buildPowerPicked
+                        .FindIndexes(pe => pe.Power.FullName == p.FullName)
+                        .ToList();
+                    if (buildPowerIdx.Count <= 0) continue;
+
+                    var buildPower = buildPowerPicked[buildPowerIdx[0]].Power;
+                    var gFxIdxBuild = buildPower.Effects
+                        .FindIndexes(fx => fx.EffectType == Enums.eEffectType.GrantPower & fx.Summon == gFx.Summon)
+                        .ToList();
+                    if (gFxIdxBuild.Count <= 0) continue;
+
+                    buildPower.Effects[gFxIdxBuild[0]].EffectClass = Enums.eEffectClass.Ignored;
+                    buildPower.Effects[gFxIdxBuild[0]].Probability = 0;
+                    buildPower.Effects[gFxIdxBuild[0]].Scale = 0;
                 }
             }
 
