@@ -760,6 +760,13 @@ namespace mrbBase
             ).Select(e => e.UID).ToArray();
         }
 
+        public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
+        {
+            return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
+        }
+
+        
+
         private static string[] GetATOSetsEnhUIDList()
         {
             return Database.Enhancements.Where(e =>
