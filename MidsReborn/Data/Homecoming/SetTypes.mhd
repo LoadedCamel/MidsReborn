@@ -32,8 +32,8 @@ SetID	Short	Full
 20	Teleport	Teleport
 21	DefDeb	Defense Debuff
 22	EndMod	Endurance Modification
-23	 Knockback	Knockback
-24	Taunt	Taunt
+23	Knockback	Knockback
+24	Threat	Threat
 25	ToHit	To Hit Buff
 26	ToHitDeb	To Hit Debuff
 27	PetRech	Recharge Intensive Pets
@@ -55,4 +55,8 @@ SetID	Short	Full
 43	Tanker	Tanker Archetype Sets
 44	UniversalDamage	Universal Damage
 45	Sentinel	Sentinel Archetype Sets
+46	RunNoSprint	Run (No Sprint)
+47	JumpNoSprint	Jump (No Sprint)
+48	FlightNoSprint	Flight (No Sprint)
+49	TeleportNoSprint	Teleport (No Sprint)
 End		

@@ -986,15 +986,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var tips1 = Tips;
                         var index5 = index1;
                         var index6 = index2;
-                        tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                                Strings.Format(Values[index1][index2], "##0.##") + "% base Accuracy";
+                        tips1[index5][index6] = $"{tips1[index5][index6]}\r\n {Convert.ToDecimal(Values[index1][index2]):##0.##}% base Accuracy";
+                        //tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Strings.Format(Values[index1][index2], "##0.##") + "% base Accuracy";
                         var tips2 = Tips;
                         var index7 = index1;
                         var index8 = index2;
-                        tips2[index7][index8] = tips2[index7][index8] + "\r\n  (Real Numbers style: " +
-                                                Strings.Format(Powers[index1][index2].Accuracy,
-                                                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator +
-                                                    "00") + "x)";
+                        tips2[index7][index8] = $"{tips2[index7][index8]}\r\n (Real Numbers style: {Convert.ToDecimal(Powers[index1][index2].Accuracy):##0.##}x)";
+                        //tips2[index7][index8] = tips2[index7][index8] + "\r\n  (Real Numbers style: " + Strings.Format(Powers[index1][index2].Accuracy, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x)";
                         if (num1 < (double) Values[index1][index2])
                             num1 = Values[index1][index2];
                     }
@@ -1123,8 +1121,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                               Powers[powIdx][subPowIdx].FXGetDamageString();
                     if (num1 < (double) Values[powIdx][subPowIdx])
                         num1 = Values[powIdx][subPowIdx];
-                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " - DPE: " +
-                                              Strings.Format(Values[powIdx][subPowIdx], "##0.##");
+                    Tips[powIdx][subPowIdx] = $"{Tips[powIdx][subPowIdx]} - DPE: {Convert.ToDecimal(Values[powIdx][subPowIdx]):##0.##}";
+                    //Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " - DPE: " + Strings.Format(Values[powIdx][subPowIdx], "##0.##");
                 }
 
                 ++powIdx;
@@ -1245,8 +1243,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var tips1 = Tips;
                     var index5 = index1;
                     var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " +
-                                            Strings.Format(Powers[index1][index2].EndCost, "##0.##");
+                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n End: {Convert.ToDecimal(Powers[index1][index2].EndCost):##0.##}";
+                    //tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " + Strings.Format(Powers[index1][index2].EndCost, "##0.##");
                     if (Powers[index1][index2].PowerType == Enums.ePowerType.Toggle)
                     {
                         var tips2 = Tips;
@@ -1310,12 +1308,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var tips1 = Tips;
                     var index5 = index1;
                     var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " +
-                                            Strings.Format(Values[index1][index2], "##0.##");
+                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n  End: {Convert.ToDecimal(Values[index1][index2]):##0.##}";
                     var tips2 = Tips;
                     var index7 = index1;
                     var index8 = index2;
-                    tips2[index7][index8] = tips2[index7][index8] + "/s";
+                    tips2[index7][index8] += "/s";
                     if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
@@ -1399,8 +1396,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var tips1 = Tips;
                     var index5 = index1;
                     var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " +
-                                            Strings.Format(Values[index1][index2], "##0.##") + " HP per unit of end.";
+                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n Heal: {Convert.ToDecimal(Values[index1][index2]):##0.##} HP per unit of end.";
                     if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
@@ -1448,8 +1444,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var tips1 = Tips;
                     var index5 = index1;
                     var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " +
-                                            Strings.Format(Values[index1][index2], "##0.##") + " HP/s";
+                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n Heal: {Convert.ToDecimal(Values[index1][index2]):##0.##} HP/s";
                     if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
@@ -1624,8 +1619,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var tips1 = Tips;
                     var index5 = index1;
                     var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                            Strings.Format(Values[index1][index2], "##0.##") + "s";
+                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n {Convert.ToDecimal(Values[index1][index2]):##0.##}s";
                     if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }

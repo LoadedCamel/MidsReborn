@@ -250,156 +250,73 @@ namespace Mids_Reborn
                             if (MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh <= -1)
                                 iText += formatColor("Empty", ExportConfig.Element.Slots);
                             else
-                                switch (DatabaseAPI.Database
-                                    .Enhancements[
-                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
-                                    .TypeID)
+                                switch (DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].TypeID)
                                 {
                                     case Enums.eType.Normal:
-                                        iText = LongExport
-                                            ? iText + formatColor(
-                                                DatabaseAPI.Database
-                                                    .Enhancements[
-                                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                            .Enhancement.Enh].Name, ExportConfig.Element.Slots)
-                                            : iText + formatColor(
-                                                DatabaseAPI.Database
-                                                    .Enhancements[
-                                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                            .Enhancement.Enh].ShortName, ExportConfig.Element.Slots);
+                                        if (LongExport)
+                                            iText += formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.Slots);
+                                        else
+                                            iText += formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.Slots);
                                         break;
                                     case Enums.eType.InventO:
-                                        iText = LongExport
-                                            ? iText + formatColor(
-                                                  DatabaseAPI.Database
-                                                      .Enhancements[
-                                                          MidsContext.Character.CurrentBuild.Powers[index1]
-                                                              .Slots[index2]
-                                                              .Enhancement.Enh].Name, ExportConfig.Element.IO) +
-                                              formatColor(" IO", ExportConfig.Element.IO)
-                                            : iText + formatColor(
-                                                  DatabaseAPI.Database
-                                                      .Enhancements[
-                                                          MidsContext.Character.CurrentBuild.Powers[index1]
-                                                              .Slots[index2]
-                                                              .Enhancement.Enh].ShortName, ExportConfig.Element.IO) +
-                                              formatColor("-I", ExportConfig.Element.IO);
+                                        if (LongExport)
+                                            iText = iText + formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.IO) + formatColor(" IO", ExportConfig.Element.IO);
+                                        else
+                                            iText = iText + formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.IO) + formatColor("-I", ExportConfig.Element.IO);
                                         if (exportIoLevels)
-                                            iText = !LongExport
-                                                ? iText + formatColor(
-                                                    ":" + Convert.ToString(MidsContext.Character.CurrentBuild
-                                                        .Powers[index1].Slots[index2].Enhancement.IOLevel + 1),
-                                                    ExportConfig.Element.IO)
-                                                : iText + formatColor(
-                                                    ": Level " + Convert.ToString(MidsContext.Character.CurrentBuild
-                                                        .Powers[index1].Slots[index2].Enhancement.IOLevel + 1),
-                                                    ExportConfig.Element.IO);
+                                            if (!LongExport)
+                                                iText += formatColor(":" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO);
+                                            else
+                                                iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO);
                                         break;
                                     case Enums.eType.SpecialO:
                                         if (!LongExport)
                                         {
-                                            var str4 =
-                                                DatabaseAPI.Database
-                                                    .Enhancements
-                                                        [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
-                                                    .SubTypeID != Enums.eSubtype.Hamidon
-                                                    ? DatabaseAPI.Database
-                                                        .Enhancements
-                                                            [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
-                                                        .SubTypeID != Enums.eSubtype.Hydra
-                                                        ? DatabaseAPI.Database
-                                                              .Enhancements[
-                                                                  MidsContext.Character.CurrentBuild.Powers[index1]
-                                                                      .Slots[index2].Enhancement.Enh].SubTypeID !=
-                                                          Enums.eSubtype.Titan ? "X:" : "TN:"
-                                                        : "HY:"
-                                                    : "HO:";
-                                            iText += formatColor(
-                                                str4 + DatabaseAPI.Database
-                                                    .Enhancements[
-                                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                            .Enhancement.Enh].ShortName, ExportConfig.Element.HO);
+                                            var str4 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].SubTypeID switch
+                                            {
+                                                Enums.eSubtype.DSync => "DS:",
+                                                Enums.eSubtype.Hamidon => "HO:",
+                                                Enums.eSubtype.Hydra => "HY:",
+                                                Enums.eSubtype.Titan => "TN:",
+                                                _ => "X:",
+                                            };
+                                            iText += formatColor(str4 + DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.HO);
                                             break;
                                         }
 
-                                        var str6 =
-                                            DatabaseAPI.Database
-                                                .Enhancements
-                                                    [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
-                                                .SubTypeID == Enums.eSubtype.Hamidon
-                                                ? "HamiO:"
-                                                : DatabaseAPI.Database
-                                                    .Enhancements
-                                                        [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
-                                                    .SubTypeID != Enums.eSubtype.Hydra
-                                                    ? DatabaseAPI.Database
-                                                        .Enhancements[
-                                                            MidsContext.Character.CurrentBuild.Powers[index1]
-                                                                .Slots[index2]
-                                                                .Enhancement.Enh].SubTypeID != Enums.eSubtype.Titan
-                                                        ? "Special:"
-                                                        : "Titan:"
-                                                    : "Hydra:";
-                                        iText += formatColor(
-                                            str6 + DatabaseAPI.Database
-                                                .Enhancements[
-                                                    MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                        .Enhancement.Enh].Name, ExportConfig.Element.HO);
+                                        var str6 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].SubTypeID switch
+                                        {
+                                            Enums.eSubtype.DSync => "DSync:",
+                                            Enums.eSubtype.Hamidon => "HamiO:",
+                                            Enums.eSubtype.Hydra => "Hydra:",
+                                            Enums.eSubtype.Titan => "Titan:",
+                                            _ => "Special:",
+                                        };
+                                        iText += formatColor(str6 + DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.HO);
                                         break;
                                     case Enums.eType.SetO:
                                         if (flag1)
-                                            iText = LongExport
-                                                ? iText + formatColor(
-                                                    DatabaseAPI.Database
-                                                        .EnhancementSets[
-                                                            DatabaseAPI.Database
-                                                                .Enhancements[
-                                                                    MidsContext.Character.CurrentBuild.Powers[index1]
-                                                                        .Slots[index2].Enhancement.Enh].nIDSet]
-                                                        .DisplayName + " - ", ExportConfig.Element.SetO)
-                                                : iText + formatColor(
-                                                    DatabaseAPI.Database
-                                                        .EnhancementSets[
-                                                            DatabaseAPI.Database
-                                                                .Enhancements[
-                                                                    MidsContext.Character.CurrentBuild.Powers[index1]
-                                                                        .Slots[index2].Enhancement.Enh].nIDSet]
-                                                        .ShortName + "-", ExportConfig.Element.SetO);
-                                        iText = !LongExport
-                                            ? iText + formatColor(
-                                                DatabaseAPI.Database
-                                                    .Enhancements[
-                                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                            .Enhancement.Enh].ShortName, ExportConfig.Element.SetO)
-                                            : iText + formatColor(
-                                                DatabaseAPI.Database
-                                                    .Enhancements[
-                                                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2]
-                                                            .Enhancement.Enh].Name, ExportConfig.Element.SetO);
+                                            if (LongExport)
+                                                iText += formatColor(DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].nIDSet].DisplayName + " - ", ExportConfig.Element.SetO);
+                                            else
+                                                iText += formatColor(DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].nIDSet].ShortName + "-", ExportConfig.Element.SetO);
+                                        if (!LongExport)
+                                            iText += formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.SetO);
+                                        else
+                                            iText += formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.SetO);
                                         if (LongExport)
                                         {
                                             if (exportIoLevels & flag1)
-                                                iText += formatColor(
-                                                    ": Level " + Convert.ToString(MidsContext.Character.CurrentBuild
-                                                        .Powers[index1].Slots[index2].Enhancement.IOLevel + 1),
-                                                    ExportConfig.Element.SetO);
+                                                iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                             if (exportIoLevels & !flag1)
-                                                iText += formatColor(
-                                                    ": Level " + Convert.ToString(MidsContext.Character.CurrentBuild
-                                                        .Powers[index1].Slots[index2].Enhancement.IOLevel + 1),
-                                                    ExportConfig.Element.SetO);
+                                                iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                             break;
                                         }
 
                                         if (exportIoLevels & flag1)
-                                            iText += formatColor(
-                                                ":" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1]
-                                                    .Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
+                                            iText += formatColor(":" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                         if (exportIoLevels & !flag1)
-                                            iText += formatColor(
-                                                "-S:" + Convert.ToString(MidsContext.Character.CurrentBuild
-                                                    .Powers[index1].Slots[index2].Enhancement.IOLevel + 1),
-                                                ExportConfig.Element.SetO);
+                                            iText += formatColor("-S:" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                         break;
                                 }
                         }

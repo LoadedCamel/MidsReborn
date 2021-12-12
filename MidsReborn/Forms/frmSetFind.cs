@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -41,16 +38,21 @@ namespace Mids_Reborn.Forms
             myParent = iParent;
         }
 
-        private void AddEffect(ref string[] List, ref int[] nIDList, string Effect, int nID)
+        private void AddEffect(ref string[] list, ref int[] nIDList, string effect, int nID)
         {
-            var num = List.Length - 1;
+            var num = list.Length - 1;
             for (var index = 0; index <= num; ++index)
-                if (string.Equals(List[index], Effect, StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.Equals(list[index], effect, StringComparison.OrdinalIgnoreCase))
+                {
                     return;
-            List = (string[]) Utils.CopyArray(List, new string[List.Length + 1]);
-            nIDList = (int[]) Utils.CopyArray(nIDList, new int[List.Length + 1]);
-            List[List.Length - 1] = Effect;
-            nIDList[List.Length - 1] = nID;
+                }
+            }
+
+            Array.Resize(ref list, list.Length + 1);
+            Array.Resize(ref nIDList, nIDList.Length + 1);
+            list[list.Length - 1] = effect;
+            nIDList[list.Length - 1] = nID;
         }
 
         private void AddSetString(int nIDSet, int BonusID)
@@ -137,20 +139,31 @@ namespace Mids_Reborn.Forms
                     var powerString = GetPowerString(setBonusList[index]);
                     if (text != powerString)
                         continue;
-                    var Effect =
-                        (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType !=
-                         Enums.eEffectType.HitPoints
-                            ? DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType !=
-                              Enums.eEffectType.Endurance
-                                ? Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent,
-                                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
-                                : Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag,
-                                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
-                            : Strings.Format(
-                                (float) (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag /
-                                    (double) MidsContext.Archetype.Hitpoints * 100.0),
-                                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")) + "%";
-                    AddEffect(ref List, ref nIDList, Effect, setBonusList[index]);
+
+                    string effect;
+                    if (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.HitPoints)
+                    {
+                        if (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.Endurance)
+                        {
+                            effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent):##0}";
+                        }
+                        else
+                        {
+                            effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag):##0}";
+                        }
+                    }
+                    else
+                    {
+                        effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag / (double)MidsContext.Archetype.Hitpoints * 100.0):##0}%";
+                    }
+
+
+                    // var Effect = (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.HitPoints //condition
+                    //         ? DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.Endurance 
+                    //             ? Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
+                    //             : Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
+                    //         : Strings.Format((float) (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag / (double) MidsContext.Archetype.Hitpoints * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")) + "%";
+                    AddEffect(ref List, ref nIDList, effect, setBonusList[index]);
                 }
 
                 lvMag.BeginUpdate();
@@ -178,16 +191,16 @@ namespace Mids_Reborn.Forms
             {
                 lvSet.BeginUpdate();
                 lvSet.Items.Clear();
-                var List = new string[0];
-                var nIDList = new int[0];
+                var List = Array.Empty<string>();
+                var nIDList = Array.Empty<int>();
                 var text = lvBonus.SelectedItems[0].Text;
                 var flag = lvMag.Items[0].Selected;
                 if (!flag)
                 {
-                    if (Conversion.Val(RuntimeHelpers.GetObjectValue(lvMag.SelectedItems[0].Tag)) > -1.0)
-                        AddEffect(ref List, ref nIDList,
-                            DatabaseAPI.Database.Power[Convert.ToInt32(lvMag.SelectedItems[0].Tag)].PowerName,
-                            Convert.ToInt32(lvMag.SelectedItems[0].Tag));
+                    if (Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvMag.SelectedItems[0].Tag)) > -1.0)
+                    {
+                        AddEffect(ref List, ref nIDList, DatabaseAPI.Database.Power[Convert.ToInt32(lvMag.SelectedItems[0].Tag)].PowerName, Convert.ToInt32(lvMag.SelectedItems[0].Tag));
+                    }
                 }
                 else
                 {
@@ -318,8 +331,7 @@ namespace Mids_Reborn.Forms
                         continue;
                     if (str1 != "")
                         str1 += ", ";
-                    var str3 = Strings.Trim(DatabaseAPI.Database.Power[nIDPower].Effects[index1]
-                        .BuildEffectString(true, "", true));
+                    var str3 = DatabaseAPI.Database.Power[nIDPower].Effects[index1].BuildEffectString(true, "", true).Trim();
                     if (str3.Contains("Res("))
                         str3 = str3.Replace("Res(", "Resistance(");
                     if (str3.Contains("Def("))

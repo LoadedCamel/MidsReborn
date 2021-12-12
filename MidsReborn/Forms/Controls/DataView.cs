@@ -1,26 +1,19 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Web.Profile;
 using System.Windows.Forms;
 using FastDeepCloner;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
-using Syncfusion.Windows.Forms.Grid;
-using Syncfusion.Windows.Forms.Tools;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -250,7 +243,6 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         private void CompactSize()
-
         {
             var size = Size;
             info_txtSmall.Height = 16;
@@ -293,24 +285,19 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DataView_Load(object sender, EventArgs e)
         {
-            var pmlInfo2 = pnlInfo;
-            pmlInfo2.Top = 20;
-            pmlInfo2.Left = 0;
-            var pnlFx = pnlFX;
-            pnlFx.Top = 20;
-            pnlFx.Left = 0;
-            var pnlTotal2 = pnlTotal;
-            pnlTotal2.Top = 20;
-            pnlTotal2.Left = 0;
-            var pnlEnh2 = pnlEnh;
-            pnlEnh2.Top = 20;
-            pnlEnh2.Left = 0;
-            var infoDamage = Info_Damage;
-            infoDamage.nBaseVal = 0.0f;
-            infoDamage.nEnhVal = 0.0f;
-            infoDamage.nHighBase = 0.0f;
-            infoDamage.nHighEnh = 0.0f;
-            infoDamage.nMaxEnhVal = 0.0f;
+            pnlInfo.Top = 20;
+            pnlInfo.Left = 0;
+            pnlFX.Top = 20;
+            pnlFX.Left = 0;
+            pnlTotal.Top = 20;
+            pnlTotal.Left = 0;
+            pnlEnh.Top = 20;
+            pnlEnh.Left = 0;
+            Info_Damage.nBaseVal = 0.0f;
+            Info_Damage.nEnhVal = 0.0f;
+            Info_Damage.nHighBase = 0.0f;
+            Info_Damage.nHighEnh = 0.0f;
+            Info_Damage.nMaxEnhVal = 0.0f;
             Info_txtLarge.Height = 100;
             Floating = bFloating;
             Clear();
@@ -452,26 +439,26 @@ namespace Mids_Reborn.Forms.Controls
                                                 switch (eBuffDebuff)
                                                 {
                                                     case Enums.eBuffDebuff.BuffOnly:
-                                                        afterED1[3] += effect.Mag;
+                                                        afterED1[3] += effect.BuffedMag;
                                                         break;
                                                     case Enums.eBuffDebuff.DeBuffOnly:
-                                                        afterED2[3] += effect.Mag;
+                                                        afterED2[3] += effect.BuffedMag;
                                                         break;
                                                     default:
-                                                        afterED3[3] += effect.Mag;
+                                                        afterED3[3] += effect.BuffedMag;
                                                         break;
                                                 }
                                             else
                                                 switch (eBuffDebuff)
                                                 {
                                                     case Enums.eBuffDebuff.BuffOnly:
-                                                        numArray1[3] += effect.Mag;
+                                                        numArray1[3] += effect.BuffedMag;
                                                         break;
                                                     case Enums.eBuffDebuff.DeBuffOnly:
-                                                        numArray2[3] += effect.Mag;
+                                                        numArray2[3] += effect.BuffedMag;
                                                         break;
                                                     default:
-                                                        numArray3[3] += effect.Mag;
+                                                        numArray3[3] += effect.BuffedMag;
                                                         break;
                                                 }
                                         }
@@ -480,21 +467,21 @@ namespace Mids_Reborn.Forms.Controls
                                     case Enums.eEffectType.Mez:
                                         if (effect.IgnoreED)
                                         {
-                                            afterED4[(int)effect.MezType] += effect.Mag;
+                                            afterED4[(int)effect.MezType] += effect.BuffedMag;
                                             break;
                                         }
 
-                                        numArray4[(int)effect.MezType] += effect.Mag;
+                                        numArray4[(int)effect.MezType] += effect.BuffedMag;
                                         break;
                                     default:
                                         var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString())) : 14;
                                         if (effect.IgnoreED)
                                         {
-                                            afterED3[index2] += effect.Mag;
+                                            afterED3[index2] += effect.BuffedMag;
                                             break;
                                         }
 
-                                        numArray3[index2] += effect.Mag;
+                                        numArray3[index2] += effect.BuffedMag;
                                         break;
                                 }
                             }
@@ -508,7 +495,7 @@ namespace Mids_Reborn.Forms.Controls
                                         {
                                             if (str.StartsWith("Res_Damage"))
                                             {
-                                                afterED3[18] += effect.Mag;
+                                                afterED3[18] += effect.BuffedMag;
                                                 break;
                                             }
 
@@ -517,7 +504,7 @@ namespace Mids_Reborn.Forms.Controls
                                                 continue;
                                             }
 
-                                            afterED3[2] += effect.Mag;
+                                            afterED3[2] += effect.BuffedMag;
                                             break;
                                         }
 
@@ -529,7 +516,7 @@ namespace Mids_Reborn.Forms.Controls
                                         {
                                             if (str.StartsWith("Res_Damage"))
                                             {
-                                                numArray3[18] += effect.Mag;
+                                                numArray3[18] += effect.BuffedMag;
                                                 break;
                                             }
 
@@ -538,7 +525,7 @@ namespace Mids_Reborn.Forms.Controls
                                                 continue;
                                             }
 
-                                            numArray3[2] += effect.Mag;
+                                            numArray3[2] += effect.BuffedMag;
                                             break;
                                         }
 
@@ -603,41 +590,39 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private void display_Info(bool NoLevel = false, int iEnhLvl = -1)
+        private void display_Info(bool noLevel = false, int iEnhLvl = -1)
         {
-
-            if (!NoLevel & (pBase.Level > 0))
-                info_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
+            if (!noLevel & (pBase.Level > 0))
+                info_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
             else
                 info_Title.Text = pBase.DisplayName;
             if (iEnhLvl > -1)
             {
                 var infoTitle = info_Title;
-                infoTitle.Text = infoTitle.Text + " (Slot Level " + Convert.ToString(iEnhLvl + 1) + ")";
+                infoTitle.Text = $"{infoTitle.Text} (Slot Level {iEnhLvl + 1})";
             }
 
             enhNameDisp.Text = "Enhancement Values";
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescLong) + RTF.EndRTF();
-            var Suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? string.Empty : "/s";
+            var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
             info_DataList.Clear();
-            var Tip1 = string.Empty;
+            var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
                 if ((pEnh.ToggleCost > 0.0) & (pEnh.RechargeTime + (double)pEnh.CastTime + pEnh.InterruptTime > 0.0))
-                    Tip1 = "Effective end drain per second: " +
-                           Utilities.FixDP(pEnh.ToggleCost / (pEnh.RechargeTime + pEnh.CastTime + pEnh.InterruptTime)) +
-                           "/s";
+                    tip1 = $"Effective end drain per second: {Utilities.FixDP(pEnh.ToggleCost / (pEnh.RechargeTime + pEnh.CastTime + pEnh.InterruptTime))}/s";
+
                 if ((pEnh.ToggleCost > 0.0) &
                     (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
                 {
                     var damageValue = pEnh.FXGetDamageValue();
                     if (damageValue > 0.0)
                     {
-                        if (Tip1 != string.Empty)
-                            Tip1 += "\r\n";
-                        Tip1 = Tip1 + "Effective damage per unit of end: " +
-                               Utilities.FixDP(damageValue / pEnh.ToggleCost);
+                        if (!string.IsNullOrEmpty(tip1))
+                            tip1 += "\r\n";
+
+                        tip1 = $"{tip1}Effective damage per unit of end: {Utilities.FixDP(damageValue / pEnh.ToggleCost)}";
                     }
                 }
             }
@@ -648,14 +633,18 @@ namespace Mids_Reborn.Forms.Controls
                 SetDamageTip();
             }*/
 
-            info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1, Tip1));
+            info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, suffix1, tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = false;
-            var num1 = pBase.Effects.Length - 1;
-            for (var index = 0; (index <= num1) & !flag2; ++index)
+            for (var index = 0; index < pBase.Effects.Length; index++)
+            {
                 if (pBase.Effects[index].RequiresToHitCheck)
+                {
                     flag2 = true;
+                    break;
+                }
+            }
 
             if ((pBase.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 | ((pBase.Range > 20.0) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
@@ -663,29 +652,29 @@ namespace Mids_Reborn.Forms.Controls
                 var accuracy2 = pEnh.Accuracy;
                 var num2 = MidsContext.Config.BaseAcc * pBase.Accuracy;
                 var str = string.Empty;
-                var Suffix2 = "%";
+                var suffix2 = "%";
                 if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & flag2)
                 {
                     str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
-                    Suffix2 += "*";
+                    suffix2 += "*";
                 }
 
                 if ((Math.Abs(accuracy1 - (double)accuracy2) > float.Epsilon) &
                     (Math.Abs(num2 - (double)accuracy2) > float.Epsilon))
                 {
-                    var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {Convert.ToString(pBase.Accuracy + (pEnh.Accuracy - (double)MidsContext.Config.BaseAcc).ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000"))}x{str}";
+                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (pEnh.Accuracy - (double)MidsContext.Config.BaseAcc):##0.00000}x{str}";
                     //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (pEnh.Accuracy - (double) MidsContext.Config.BaseAcc)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), pEnh.Accuracy * 100f,
-                        Suffix2, Tip2));
+                        suffix2, tip2));
                 }
                 else
                 {
-                    var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")}x{str}";
+                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
                     //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format(pBase.AccuracyMult, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0),
-                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), Suffix2, Tip2));
+                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), suffix2, tip2));
                 }
             }
             else
@@ -723,8 +712,12 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, pEnh.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItem(ShortStr("Interrupt", "Intrpt"), pEnh.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
-            var num3 = 2;
-            if (num3 > 1 && durationEffectId > -1 && (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) & (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
+            if (durationEffectId > -1 &&
+                pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
+                !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
+                   pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
+                  pBase.Effects[durationEffectId].Mag < 0))
             {
                 info_DataList.AddItem(new PairedList.ItemPair("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
@@ -732,89 +725,118 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
 
-                var iAlternate = Math.Abs(pBase.Effects[durationEffectId].Mag - (double)pEnh.Effects[durationEffectId].Mag) > float.Epsilon;
+                var iAlternate =
+                    Math.Abs(pBase.Effects[durationEffectId].BuffedMag -
+                             (double)pEnh.Effects[durationEffectId].BuffedMag) > float.Epsilon;
 
                 info_DataList.AddItem(new PairedList.ItemPair("Mag:",
-                    Convert.ToString(pEnh.Effects[durationEffectId].Mag, CultureInfo.InvariantCulture), iAlternate,
+                    Convert.ToString(pEnh.Effects[durationEffectId].BuffedMag, CultureInfo.InvariantCulture),
+                    iAlternate,
                     pBase.Effects[durationEffectId].Probability < 1.0));
-                num3 -= 2;
             }
 
             var rankedEffects = pBase.GetRankedEffects();
-            var num4 = rankedEffects.Length - 1;
-            for (var ID = 0; ID <= num4; ++ID)
+            for (var id = 0; id < rankedEffects.Length; id++)
             {
-                if (num3 <= 0 || rankedEffects[ID] <= -1)
-                    continue;
-                var rankedEffect = GetRankedEffect(rankedEffects, ID);
-                if (!((pBase.Effects[rankedEffects[ID]].Probability > 0.0) &
-                      ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[ID]].Suppression) ==
-                       Enums.eSuppress.None) &
-                      pBase.Effects[rankedEffects[ID]].CanInclude()))
-                    continue;
-                if (pBase.Effects[rankedEffects[ID]].EffectType != Enums.eEffectType.Enhancement)
+                try
                 {
-                    if (pBase.Effects[rankedEffects[ID]].EffectType != Enums.eEffectType.Mez)
-                        switch (pBase.Effects[rankedEffects[ID]].EffectType)
-                        {
-                            case Enums.eEffectType.EntCreate:
+                    if (rankedEffects[id] <= -1)
+                        continue;
+                    if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
+                        continue;
+                    var rankedEffect = GetRankedEffect(rankedEffects, id);
+                    // if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
+                    //     continue;
+                    if (!((pBase.Effects[rankedEffects[id]].Probability > 0.0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
+                        continue;
+                    if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
+                    {
+                        if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
+                            switch (pBase.Effects[rankedEffects[id]].EffectType)
+                            {
+                                case Enums.eEffectType.Recovery:
+                                    rankedEffect.Name = "Recovery";
+                                    var fxTarget = pEnh.Effects[rankedEffects[id]].ToWho switch
+                                    {
+                                        Enums.eToWho.Self => " (Self)",
+                                        Enums.eToWho.Target => " (Tgt)",
+                                        Enums.eToWho.Ally => " (Ally)",
+                                        _ => ""
+                                    };
+                                    rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}{fxTarget}";
+                                   break;
+                                
+                                case Enums.eEffectType.EntCreate:
                                 {
                                     rankedEffect.Name = "Summon";
-                                    if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
+                                    if (pBase.Effects[rankedEffects[id]].nSummon > -1)
                                     {
                                         rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
+                                            .Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
                                     }
                                     else
                                     {
-                                        rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
+                                        rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
                                         if (rankedEffect.Value.StartsWith("MastermindPets_"))
+                                        {
                                             rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                        }
+
                                         if (rankedEffect.Value.StartsWith("Pets_"))
+                                        {
                                             rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
+                                        }
+
                                         if (rankedEffect.Value.StartsWith("Villain_Pets_"))
+                                        {
                                             rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                        }
                                     }
 
-                                    --num3;
                                     break;
                                 }
-                            case Enums.eEffectType.RevokePower:
+                                case Enums.eEffectType.RevokePower:
                                 {
                                     rankedEffect.Name = "Revoke";
-                                    if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
+                                    if (pBase.Effects[rankedEffects[id]].nSummon > -1)
                                     {
                                         rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
+                                            .Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
                                     }
                                     else
                                     {
-                                        rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
+                                        rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
                                         if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                            rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                            rankedEffect.Value =
+                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Pets_"))
                                             rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                            rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                            rankedEffect.Value =
+                                                rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
                                     }
 
-                                    --num3;
                                     break;
                                 }
-                            default:
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[ID]].EffectType), Enums.GetEffectNameShort(pBase.Effects[rankedEffects[ID]].EffectType));
-                                break;
-                        }
-                    else
-                        rankedEffect.Name = ShortStr(
-                            Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[ID]].MezType),
-                            Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[ID]].MezType));
-                }
+                                default:
+                                    rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
+                                            Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                    break;
+                            }
+                        else
+                            rankedEffect.Name = ShortStr(
+                                Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType),
+                                Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType));
+                    }
 
-                info_DataList.AddItem(rankedEffect);
-                if (pBase.Effects[rankedEffects[ID]].isEnhancementEffect)
-                    info_DataList.SetUnique();
-                --num3;
+                    info_DataList.AddItem(rankedEffect);
+                    if (pBase.Effects[rankedEffects[id]].isEnhancementEffect)
+                        info_DataList.SetUnique();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}\n{ex.StackTrace}");
+                }
             }
 
             info_DataList.Draw();
@@ -830,7 +852,10 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
+            {
                 str1 += " (% only)";
+            }
+
             var damageValue1 = pBase.FXGetDamageValue();
             if (pBase.NIDSubPower.Length > 0 & damageValue1 == 0.0)
             {
@@ -849,7 +874,7 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.nMaxEnhVal = num2;
                 Info_Damage.nEnhVal = damageValue2;
                 
-                if (damageValue2 != damageValue1)
+                if (Math.Abs(damageValue2 - damageValue1) > float.Epsilon)
                 {
                     Info_Damage.Text = pEnh.FXGetDamageString() + " (" + Utilities.FixDP(damageValue1) + ")";
                 }
@@ -867,35 +892,40 @@ namespace Mids_Reborn.Forms.Controls
             if (!MidsContext.Config.DisableDataDamageGraph)
             {
                 Info_Damage.GraphType = MidsContext.Config.DataGraphType;
-                switch (MidsContext.Config.DataGraphType)
+                Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
+                /*switch (MidsContext.Config.DataGraphType)
                 {
                     case Enums.eDDGraph.Simple:
-                        var infoDamage1 = Info_Damage;
-                        infoDamage1.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage1.Style = Enums.eDDStyle.TextUnderGraph;
+                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Enhanced:
-                        var infoDamage2 = Info_Damage;
-                        infoDamage2.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage2.Style = Enums.eDDStyle.TextUnderGraph;
+                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Both:
-                        var infoDamage3 = Info_Damage;
-                        infoDamage3.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage3.Style = Enums.eDDStyle.TextUnderGraph;
+                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Stacked:
-                        var infoDamage4 = Info_Damage;
-                        infoDamage4.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage4.Style = Enums.eDDStyle.TextUnderGraph;
+                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
-                }
+                }*/
             }
             else
             {
-                var infoDamage = Info_Damage;
-                infoDamage.TextAlign = Enums.eDDAlign.Center;
-                infoDamage.Style = Enums.eDDStyle.Text;
+                Info_Damage.TextAlign = Enums.eDDAlign.Center;
+                Info_Damage.Style = Enums.eDDStyle.Text;
+            }
+
+            // Ensure pEnh has at least as many effects as pBase
+            if (pBase.Effects.Length > pEnh.Effects.Length)
+            {
+                var swappedFx = SwapExtraEffects(pBase.Effects, pEnh.Effects);
+                pBase.Effects = (IEffect[])swappedFx[0].Clone();
+                pEnh.Effects = (IEffect[])swappedFx[1].Clone();
             }
 
             lblLock.Visible = Lock & (TabPage != 2);
@@ -907,13 +937,13 @@ namespace Mids_Reborn.Forms.Controls
         private void DisplayEffects(bool noLevel = false, int iEnhLvl = -1)
         {
             if (!noLevel & (pBase.Level > 0))
-                fx_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
+                fx_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
             else
                 fx_Title.Text = pBase.DisplayName;
             if (iEnhLvl > -1)
             {
                 var fxTitle = fx_Title;
-                fxTitle.Text = fxTitle.Text + " (Slot Level " + Convert.ToString(iEnhLvl + 1) + ")";
+                fxTitle.Text = $"{fxTitle.Text} (Slot Level {iEnhLvl + 1})";
             }
 
             PairedList[] PairedListArray =
@@ -930,6 +960,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_lblHead1.Text = string.Empty;
             fx_lblHead2.Text = string.Empty;
             fx_LblHead3.Text = string.Empty;
+
             var index = EffectsDrh();
             var num1 = 0;
             var flag1 = false;
@@ -1325,12 +1356,12 @@ namespace Mids_Reborn.Forms.Controls
                         Utilities.FixDP(displayStats.HealthRegenHealthPerSec) +
                         "%\r\nHitPoints regenerated per second at level 50: " +
                         Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
-            total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{Convert.ToDecimal(displayStats.EnduranceRecoveryPercentage(false)):0.##}% ({Convert.ToDecimal(displayStats.EnduranceRecoveryNumeric):0.##}/s)", false, false, false, iTip2));
-            total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{Convert.ToDecimal(displayStats.HealthRegenPercent(false)):0.##}%", false, false, false, iTip3));
-            total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{Convert.ToDecimal(displayStats.EnduranceUsage):0.##}/s", false, false, false, iTip1));
-            total_Misc.AddItem(new PairedList.ItemPair("+ToHit:", $"{Convert.ToDecimal(displayStats.BuffToHit):0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
-            total_Misc.AddItem(new PairedList.ItemPair("+EndRdx:", $"{Convert.ToDecimal(displayStats.BuffEndRdx):0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new PairedList.ItemPair("+Recharge:", $"{Convert.ToDecimal(displayStats.BuffHaste(false) - 100.0):0.##}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.##}% ({displayStats.EnduranceRecoveryNumeric:0.##}/s)", false, false, false, iTip2));
+            total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{displayStats.HealthRegenPercent(false):0.##}%", false, false, false, iTip3));
+            total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
+            total_Misc.AddItem(new PairedList.ItemPair("+ToHit:", $"{displayStats.BuffToHit:0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
+            total_Misc.AddItem(new PairedList.ItemPair("+EndRdx:", $"{displayStats.BuffEndRdx:0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            total_Misc.AddItem(new PairedList.ItemPair("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.##}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
             total_Misc.Draw();
         }
 
@@ -1352,6 +1383,8 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DoPaint()
         {
+            if (pnlTabs.IsDisposed) return;
+
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
             var font1 = new Font("Arial", 8.55f, FontStyle.Regular);//
@@ -1449,12 +1482,17 @@ namespace Mids_Reborn.Forms.Controls
         {
             var effectMagSum1 = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum2 = pEnh.GetEffectMagSum(Enums.eEffectType.ToHit);
-            var effectMagSum12 = pBase.GetEffectMagSum(Enums.eEffectType.DamageBuff);
             var effectMagSum3 = pEnh.GetEffectMagSum(Enums.eEffectType.DamageBuff);
             var effectMagSum4 = pBase.GetEffectMagSum(Enums.eEffectType.PerceptionRadius);
             var effectMagSum5 = pEnh.GetEffectMagSum(Enums.eEffectType.PerceptionRadius);
             var effectMagSum6 = pBase.GetEffectMagSum(Enums.eEffectType.StealthRadius);
             var effectMagSum7 = pEnh.GetEffectMagSum(Enums.eEffectType.StealthRadius);
+            var effectMagSum8 = pBase.GetEffectMagSum(Enums.eEffectType.ResEffect);
+            var effectMagSum9 = pEnh.GetEffectMagSum(Enums.eEffectType.ResEffect);
+            var effectMagSum10 = pBase.GetEffectMagSum(Enums.eEffectType.Enhancement);
+            var effectMagSum11 = pEnh.GetEffectMagSum(Enums.eEffectType.Enhancement);
+            var effectMagSum12 = pBase.GetEffectMagSum(Enums.eEffectType.DamageBuff);
+            
             var effectMag1 = pBase.GetEffectMag(Enums.eEffectType.ThreatLevel);
             var effectMag2 = pEnh.GetEffectMag(Enums.eEffectType.ThreatLevel);
             var effectMag3 = pBase.GetEffectMag(Enums.eEffectType.DropToggles);
@@ -1465,15 +1503,11 @@ namespace Mids_Reborn.Forms.Controls
             var effectMag8 = pEnh.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Target);
             var effectMag9 = pBase.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Ally);
             var effectMag10 = pEnh.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Ally);
-            var effectMagSum8 = pBase.GetEffectMagSum(Enums.eEffectType.ResEffect);
-            var effectMagSum9 = pEnh.GetEffectMagSum(Enums.eEffectType.ResEffect);
-            var effectMagSum10 = pBase.GetEffectMagSum(Enums.eEffectType.Enhancement);
-            var effectMagSum11 = pEnh.GetEffectMagSum(Enums.eEffectType.Enhancement);
+            
 
             effectMagSum1.Multiply();
             effectMagSum2.Multiply();
             effectMagSum3.Multiply();
-            effectMagSum12.Multiply();
             effectMagSum4.Multiply();
             effectMagSum5.Multiply();
 
@@ -1490,6 +1524,8 @@ namespace Mids_Reborn.Forms.Controls
             effectMagSum9.Multiply();
             effectMagSum10.Multiply();
             effectMagSum11.Multiply();
+            effectMagSum12.Multiply();
+
             var str1 = string.Empty;
             if (effectMagSum10.Present)
                 str1 = pBase.Effects[effectMagSum10.Index[0]].ETModifies == Enums.eEffectType.Mez
@@ -1497,7 +1533,18 @@ namespace Mids_Reborn.Forms.Controls
                     : Enums.GetEffectNameShort(pBase.Effects[effectMagSum10.Index[0]].ETModifies);
             iList.ValueWidth = 55;
             int num1;
-            if (!(effectMagSum1.Present | effectMagSum3.Present | effectMagSum1.Present | effectMagSum4.Present | effectMagSum6.Present | effectMag1.Present | effectMag3.Present | effectMag5.Present | effectMag7.Present | effectMagSum10.Present | effectMagSum8.Present | effectMag9.Present))
+            if (!(effectMagSum1.Present |
+                  effectMagSum3.Present |
+                  effectMagSum1.Present |
+                  effectMagSum4.Present |
+                  effectMagSum6.Present |
+                  effectMag1.Present |
+                  effectMag3.Present |
+                  effectMag5.Present |
+                  effectMag7.Present |
+                  effectMagSum10.Present |
+                  effectMagSum8.Present |
+                  effectMag9.Present))
             {
                 num1 = 0;
             }
@@ -1597,9 +1644,9 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("Percept", effectMagSum4, effectMagSum5, "%", effectMagSum4));
                 if (sFXCheck(effectMagSum4))
                     iList.SetUnique();
-                if (effectMagSum6.Present)
+                if (effectMagSum6.Present && effectMagSum7.Index != null && effectMagSum7.Index.Length > 0)
                     iList.AddItem(new PairedList.ItemPair("Stealth",
-                        Convert.ToString(effectMagSum6.Sum, CultureInfo.InvariantCulture) + "ft", false, false, false,
+                        $"{effectMagSum6.Sum}ft", false, false, false,
                         pEnh.Effects[effectMagSum7.Index[0]].BuildEffectString(false, "Stealth Radius")));
                 if (sFXCheck(effectMagSum6))
                     iList.SetUnique();
@@ -1607,7 +1654,7 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("ThretLvl", effectMag1, effectMag2, "%", effectMag1));
                 if (sFXCheck(effectMag1))
                     iList.SetUnique();
-                if (effectMag3.Present)
+                if (effectMag3.Present && effectMag3.Index != null && effectMag3.Index.Length > 0)
                     iList.AddItem(FastItem("TogDrop", effectMag3, effectMag4, "%", false, false,
                         pBase.Effects[effectMag3.Index[0]].Probability < 1.0, false, effectMag3));
                 if (sFXCheck(effectMag3))
@@ -1624,29 +1671,26 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("Rchrg (Ally)", effectMag9, effectMag10, "%", effectMag9));
                 if (sFXCheck(effectMag9))
                     iList.SetUnique();
-                if (effectMagSum8.Present)
+                if (effectMagSum8.Present && effectMagSum8.Index != null && effectMagSum8.Index.Length > 0)
                 {
                     if (!effectMagSum8.Multiple)
                     {
                         if (effectMagSum8.Present)
                             iList.AddItem(FastItem(
-                                "Res(" + Enums.GetEffectNameShort(pBase.Effects[effectMagSum8.Index[0]].ETModifies) +
-                                ")",
+                                $"Res({Enums.GetEffectNameShort(pBase.Effects[effectMagSum8.Index[0]].ETModifies)})",
                                 effectMagSum8, effectMagSum9, "%", effectMagSum8));
                         if (sFXCheck(effectMagSum8))
                             iList.SetUnique();
                     }
                     else
                     {
-                        iList.AddItem(new PairedList.ItemPair("Res(Multi):",
-                            Convert.ToString(effectMagSum8.Value[0], CultureInfo.InvariantCulture) + "%", false,
-                            false, false, effectMagSum8));
+                        iList.AddItem(new PairedList.ItemPair("Res(Multi):", $"{effectMagSum8.Value[0]}%", false, false, false, effectMagSum8));
                         if (sFXCheck(effectMagSum8))
                             iList.SetUnique();
                     }
                 }
 
-                if (effectMagSum10.Present & (str1 != string.Empty))
+                if (effectMagSum10.Present & str1 != string.Empty)
                 {
                     var str2 = !string.Equals(str1, "EnduranceDiscount", StringComparison.OrdinalIgnoreCase)
                         ? !string.Equals(str1, "RechargeTime", StringComparison.OrdinalIgnoreCase)
@@ -1670,19 +1714,17 @@ namespace Mids_Reborn.Forms.Controls
                                         ? CapString(str3, 7)
                                         : "RechRdx"
                                     : "EndRdx";
-                                var str5 = string.Empty;
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Target)
-                                    str5 = " (Tgt)";
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Self)
-                                    str5 = " (Self)";
-                                if (pEnh.Effects[effectMagSum10.Index[index]].ToWho == Enums.eToWho.Ally)
-                                    str5 = " (Ally)";
+                                var str5 = pEnh.Effects[effectMagSum10.Index[index]].ToWho switch
+                                {
+                                    Enums.eToWho.Target => " (Tgt)",
+                                    Enums.eToWho.Self => " (Self)",
+                                    Enums.eToWho.Ally => " (Ally)",
+                                    _ => ""
+                                };
+
                                 if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
                                     continue;
-                                iList.AddItem(new PairedList.ItemPair("+" + str4 + ":",
-                                    Convert.ToString(effectMagSum10.Value[index], CultureInfo.InvariantCulture) + "%" +
-                                    str5, false, false, false,
-                                    pEnh.Effects[effectMagSum10.Index[index]].BuildEffectString()));
+                                iList.AddItem(new PairedList.ItemPair($"+{str4}:", $"{effectMagSum11.Value[index]}%{str5}", false, false, false, pEnh.Effects[effectMagSum11.Index[index]].BuildEffectString()));
                                 if (pEnh.Effects[effectMagSum10.Index[index]].isEnhancementEffect)
                                     iList.SetUnique();
                             }
@@ -1696,27 +1738,26 @@ namespace Mids_Reborn.Forms.Controls
                                 if (string.Equals(pEnh.Effects[effectMagSum10.Index[iIndex]].Special, "RechargeTime",
                                     StringComparison.OrdinalIgnoreCase))
                                 {
-                                    var str4 = string.Empty;
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Target)
-                                        str4 = " (Tgt)";
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Self)
-                                        str4 = " (Self)";
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Ally)
-                                        str4 = " (Ally)";
+                                    var str4 = pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho switch
+                                    {
+                                        Enums.eToWho.Target => " (Tgt)",
+                                        Enums.eToWho.Self => " (Self)",
+                                        Enums.eToWho.Ally => " (Ally)",
+                                        _ => ""
+                                    };
+                                    
                                     iList.AddItem(new PairedList.ItemPair("+RechRdx:",
-                                        Convert.ToString(effectMagSum10.Value[iIndex], CultureInfo.InvariantCulture) +
-                                        "%" + str4, false, false, false,
-                                        pEnh.Effects[effectMagSum10.Index[iIndex]].BuildEffectString()));
-                                    if (pEnh.Effects[effectMagSum10.Index[iIndex]].isEnhancementEffect)
+                                        $"{effectMagSum11.Value[iIndex]}%{str4}", false, false, false,
+                                        pEnh.Effects[effectMagSum11.Index[iIndex]].BuildEffectString()));
+                                    if (pEnh.Effects[effectMagSum11.Index[iIndex]].isEnhancementEffect)
                                         iList.SetUnique();
                                     effectMagSum10.Remove(iIndex);
                                 }
                                 else
                                 {
                                     if (num3 == -1)
-                                        num3 = (int)Math.Round(effectMagSum10.Value[0]);
-                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)effectMagSum10.Value[iIndex]) >
-                                                           float.Epsilon))
+                                        num3 = (int)Math.Round(effectMagSum11.Value[0]);
+                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)effectMagSum11.Value[iIndex]) > float.Epsilon))
                                         num3 = -2;
                                     ++iIndex;
                                 }
@@ -1725,20 +1766,17 @@ namespace Mids_Reborn.Forms.Controls
                             {
                                 var iValue = "Varies";
                                 if (num3 > 0)
-                                    iValue = num3 + "%";
-                                if (effectMagSum10.Multiple)
+                                    iValue = $"{num3}%";
+                                if (effectMagSum11.Multiple)
                                 {
-                                    iList.AddItem(new PairedList.ItemPair("+" + str3 + ":", iValue, false, false,
-                                        false, effectMagSum10));
+                                    iList.AddItem(new PairedList.ItemPair($"+{str3}:", iValue, false, false, false, effectMagSum11));
                                 }
                                 else
                                 {
                                     var str4 = CapString(pBase.Effects[effectMagSum10.Index[0]].Special, 7);
                                     if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0)
                                     {
-                                        iList.AddItem(
-                                            new PairedList.ItemPair("+" + str4 + ":", iValue, false, false, false,
-                                                effectMagSum10));
+                                        iList.AddItem(new PairedList.ItemPair($"+{str4}:", iValue, false, false, false, effectMagSum11));
                                         if (sFXCheck(effectMagSum10))
                                             iList.SetUnique();
                                     }
@@ -1746,11 +1784,9 @@ namespace Mids_Reborn.Forms.Controls
                             }
                         }
                     }
-                    else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0)
+                    else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0 && effectMagSum11.Value != null)
                     {
-                        iList.AddItem(new PairedList.ItemPair("+" + str2 + ":",
-                            Convert.ToString(effectMagSum10.Value[0], CultureInfo.InvariantCulture) + "%", false,
-                            false, false, effectMagSum10));
+                        iList.AddItem(new PairedList.ItemPair($"+{str2}:", $"{effectMagSum11.Value[0]}%", false, false, false, effectMagSum11));
                         if (sFXCheck(effectMagSum10))
                             iList.SetUnique();
                     }
@@ -1906,15 +1942,30 @@ namespace Mids_Reborn.Forms.Controls
             var num1 = pBase.Effects.Length - 1;
             for (var iIndex = 0; iIndex <= num1; ++iIndex)
             {
-                if ((pBase.Effects[iIndex].EffectType == Enums.eEffectType.Damage) & (pBase.Effects[iIndex].DamageType == Enums.eDamage.Special) & (pBase.Effects[iIndex].ToWho == Enums.eToWho.Self) & (pBase.Effects[iIndex].Probability > 0.0) & ((pBase.Effects[iIndex].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None))
+                if ((pBase.Effects[iIndex].EffectType == Enums.eEffectType.Damage) &
+                    (pBase.Effects[iIndex].DamageType == Enums.eDamage.Special) &
+                    (pBase.Effects[iIndex].ToWho == Enums.eToWho.Self) &
+                    (pBase.Effects[iIndex].Probability > 0.0) &
+                    ((pBase.Effects[iIndex].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None))
                 {
-                    shortFx.Add(iIndex, pBase.Effects[iIndex].Mag);
+                    shortFx.Add(iIndex, pBase.Effects[iIndex].BuffedMag);
                 }
             }
 
             iList.ValueWidth = 55;
             int num2;
-            if (!(shortFx.Present | BaseSFX1.Present | BaseSFX2.Present | BaseSFX5.Present | BaseSFX4.Present | BaseSFX6.Present | BaseSFX7.Present | BaseSFX8.Present | BaseSFX9.Present | BaseSFX10.Present | BaseSFX11.Present | BaseSFX12.Present))
+            if (!(shortFx.Present |
+                BaseSFX1.Present |
+                BaseSFX2.Present |
+                BaseSFX5.Present |
+                BaseSFX4.Present |
+                BaseSFX6.Present |
+                BaseSFX7.Present |
+                BaseSFX8.Present |
+                BaseSFX9.Present |
+                BaseSFX10.Present |
+                BaseSFX11.Present |
+                BaseSFX12.Present))
             {
                 num2 = 0;
             }
@@ -1983,22 +2034,21 @@ namespace Mids_Reborn.Forms.Controls
         {
             var flag = iList.ItemCount == 0;
             var num1 = 0;
-            var num2 = pBase.Effects.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < pBase.Effects.Length; index++)
             {
                 if (!((pBase.Effects[index].EffectType == Enums.eEffectType.GlobalChanceMod) & (pBase.Effects[index].Probability > 0.0)))
                 {
                     continue;
                 }
 
-                var iTip = string.Empty + pEnh.Effects[index].BuildEffectString();
-                var iValue = Convert.ToString(pBase.Effects[index].MagPercent, CultureInfo.InvariantCulture) + "%";
+                var iTip = pEnh.Effects[index].BuildEffectString();
+                var iValue = $"{pBase.Effects[index].MagPercent}%";
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
                     iValue = "(suppressed)";
                 }
 
-                var iItem = new PairedList.ItemPair(pBase.Effects[index].Reward + ":", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
+                var iItem = new PairedList.ItemPair($"{pBase.Effects[index].Reward}:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
                 iList.AddItem(iItem);
                 ++num1;
             }
@@ -2054,7 +2104,7 @@ namespace Mids_Reborn.Forms.Controls
                 for (var index = 0; index <= num; ++index)
                     if (pBase.Effects[shortFx6.Index[index]].Special
                         .IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
-                        shortFx7.Add(shortFx6.Index[index], pBase.Effects[shortFx6.Index[index]].Mag);
+                        shortFx7.Add(shortFx6.Index[index], pBase.Effects[shortFx6.Index[index]].BuffedMag);
             }
 
             iList.ValueWidth = 55;
@@ -2108,6 +2158,48 @@ namespace Mids_Reborn.Forms.Controls
             return num1;
         }
 
+        // Move the extra effects from the longest array (pBase) to the shortest (pEnh),
+        // Resulting in pEnh always being the longest one.
+        private List<IEffect[]> SwapExtraEffects(IEffect[] baseEffects, IEffect[] enhEffects)
+        {
+            var enhFxList = enhEffects.ToList();
+            for (var i = enhEffects.Length; i < baseEffects.Length; i++)
+            {
+                enhFxList.Add((IEffect)baseEffects[i].Clone());
+            }
+
+            var baseFxList = new List<IEffect>();
+            for (var i = 0; i < enhEffects.Length; i++)
+            {
+                baseFxList.Add((IEffect)baseEffects[i].Clone());
+            }
+
+            baseEffects = baseFxList.ToArray();
+            enhEffects = enhFxList.ToArray();
+
+            return new List<IEffect[]> { baseEffects, enhEffects };
+        }
+
+        private List<Enums.ShortFX[]> SwapExtraEffects(Enums.ShortFX[] baseEffects, Enums.ShortFX[] enhEffects)
+        {
+            var enhFxList = enhEffects.ToList();
+            for (var i = enhEffects.Length; i < baseEffects.Length; i++)
+            {
+                enhFxList.Add((Enums.ShortFX)baseEffects[i].Clone());
+            }
+
+            var baseFxList = new List<Enums.ShortFX>();
+            for (var i = 0; i < enhEffects.Length; i++)
+            {
+                baseFxList.Add((Enums.ShortFX)baseEffects[i].Clone());
+            }
+
+            baseEffects = baseFxList.ToArray();
+            enhEffects = enhFxList.ToArray();
+
+            return new List<Enums.ShortFX[]> { baseEffects, enhEffects };
+        }
+
         private int effects_Status(Label iLabel, PairedList iList)
         {
             var eMezShort = Enums.eMezShort.None;
@@ -2142,26 +2234,27 @@ namespace Mids_Reborn.Forms.Controls
             var names = Enum.GetNames(eMezShort.GetType());
             if (shortFx3.Present)
             {
-                var num2 = pBase.Effects.Length - 1;
-                for (var iTagID = 0; iTagID <= num2; ++iTagID)
+                for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
                 {
                     if (!((pBase.Effects[iTagID].EffectType == Enums.eEffectType.Mez) &
                           (pBase.Effects[iTagID].Probability > 0.0) &
                           pBase.Effects[iTagID].CanInclude()) || !pEnh.Effects[iTagID].PvXInclude())
                         continue;
-                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_)) ? " - " + pEnh.Effects[iTagID].Duration.ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "s" : string.Empty;
-                    if (pBase.Effects[iTagID].Mag > 0.0)
+                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_))
+                        ? $" - {pEnh.Effects[iTagID].Duration:#0.#}s"
+                        : "";
+                    if (pBase.Effects[iTagID].BuffedMag > 0.0)
                     {
                         var iAlternate2 =
                             (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
-                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double)pBase.Effects[iTagID].Mag) > float.Epsilon));
-                        var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].Mag) + str;
+                             (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
+                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
-                        var iItem = new PairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();
@@ -2169,12 +2262,11 @@ namespace Mids_Reborn.Forms.Controls
                     else if ((pBase.Effects[iTagID].MezType == Enums.eMez.ToggleDrop) &
                              (pBase.Effects[iTagID].Probability > 0.0))
                     {
-                        var iValue = Convert.ToString(pBase.Effects[iTagID].Probability * 100f,
-                            CultureInfo.InvariantCulture) + "%";
+                        var iValue = $"{pBase.Effects[iTagID].Probability * 100f}%";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0%";
-                        var iItem = new PairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();
@@ -2185,13 +2277,13 @@ namespace Mids_Reborn.Forms.Controls
                             (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
-                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double)pBase.Effects[iTagID].Mag) > float.Epsilon));
-                        var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].Mag) + str;
+                             (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
+                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
                         var iItem = new PairedList.ItemPair(
-                            CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
+                            $"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2,
                             pBase.Effects[iTagID].Probability < 1.0,
                             pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
@@ -2206,30 +2298,42 @@ namespace Mids_Reborn.Forms.Controls
             if (!shortFx1.Present)
                 return num1;
             {
-                var num2 = pBase.Effects.Length - 1;
-                for (var iTagID = 0; iTagID <= num2; ++iTagID)
+                if (pEnh.Effects.Length < pBase.Effects.Length)
+                {
+                    var swappedFX = SwapExtraEffects(pBase.Effects, pEnh.Effects);
+                    pBase.Effects = (IEffect[])swappedFX[0].Clone();
+                    pEnh.Effects = (IEffect[])swappedFX[1].Clone();
+                }
+
+                for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
                 {
                     if (!(((pBase.Effects[iTagID].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
                           ((pBase.Effects[iTagID].PvMode != Enums.ePvX.PvE) & MidsContext.Config.Inc.DisablePvE)) ||
                         !((pBase.Effects[iTagID].EffectType == Enums.eEffectType.MezResist) &
                           (pBase.Effects[iTagID].Probability > 0.0)))
                         continue;
+
                     var str = (double)pEnh.Effects[iTagID].Duration >= 15.0
-                        ? " - " + Utilities.FixDP(pEnh.Effects[iTagID].Duration) + "s"
-                        : string.Empty;
-                    var iValue = Convert.ToString(pBase.Effects[iTagID].MagPercent, CultureInfo.InvariantCulture) +
-                                 "%" + str;
+                        ? $" - {Utilities.FixDP(pEnh.Effects[iTagID].Duration)}s"
+                        : "";
+                    var iValue = $"{pBase.Effects[iTagID].MagPercent}%{str}";
                     if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                    {
                         iValue = "0%";
+                    }
+
                     var iItem = new PairedList.ItemPair(
-                        CapString("-" + names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, false,
-                        false, iTagID);
+                        CapString($"-{names[(int)pBase.Effects[iTagID].MezType]}", 7) + ":", iValue, false, false, false, iTagID);
                     iList.AddItem(iItem);
                     if (pBase.Effects[iTagID].isEnhancementEffect)
+                    {
                         iList.SetUnique();
+                    }
+
                     ++num1;
                 }
             }
+
             return num1;
         }
 
@@ -2243,9 +2347,7 @@ namespace Mids_Reborn.Forms.Controls
                 if (!((pBase.Effects[index].EffectType == Enums.eEffectType.EntCreate) &
                       (pBase.Effects[index].Probability > 0.0)))
                     continue;
-                var iValue = pEnh.Effects[index].nSummon <= -1
-                    ? pEnh.Effects[index].Summon
-                    : DatabaseAPI.Database.Entities[pEnh.Effects[index].nSummon].DisplayName;
+                var iValue = pEnh.Effects[index].SummonedEntityName;
                 if (iValue.StartsWith("MastermindPets_"))
                     iValue = iValue.Replace("MastermindPets_", string.Empty);
                 if (iValue.StartsWith("Pets_"))
@@ -2305,82 +2407,40 @@ namespace Mids_Reborn.Forms.Controls
             }
             //fx_lblHead1.Text = pBase.AffectsTarget(Enums.eEffectType.Defense) ? "Defense (Target)" : "Defense (Self)";
             fx_List1.ValueWidth = 55;
-            var num2 = def1.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < def1.Length; index++)
+            {
                 def1[index] *= 100f;
-            var num3 = def2.Length - 1;
-            for (var index = 0; index <= num3; ++index)
+            }
+
+            for (var index = 0; index < def2.Length; index++)
+            {
                 def2[index] *= 100f;
-            var multiple = effectMagSum.Multiple;
-            var iSub1 = Enums.eDamage.Smashing;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub1, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub1], def1[(int)iSub1], def2[(int)iSub1], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub2 = Enums.eDamage.Fire;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub2, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub2], def1[(int)iSub2], def2[(int)iSub2], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub3 = Enums.eDamage.Lethal;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub3, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub3], def1[(int)iSub3], def2[(int)iSub3], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub4 = Enums.eDamage.Cold;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub4, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub4], def1[(int)iSub4], def2[(int)iSub4], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub5 = Enums.eDamage.Energy;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub5, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub5], def1[(int)iSub5], def2[(int)iSub5], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub6 = Enums.eDamage.Melee;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub6, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub6], def1[(int)iSub6], def2[(int)iSub6], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub7 = Enums.eDamage.Negative;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub7, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub7], def1[(int)iSub7], def2[(int)iSub7], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub8 = Enums.eDamage.Ranged;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub8, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub8], def1[(int)iSub8], def2[(int)iSub8], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub9 = Enums.eDamage.Psionic;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub9, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub9], def1[(int)iSub9], def2[(int)iSub9], "%", false, true, false,
-                false, effectMagSum));
-            if (sFXCheck(effectMagSum))
-                fx_List1.SetUnique();
-            var iSub10 = Enums.eDamage.AoE;
-            if (multiple)
-                effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub10, true));
-            fx_List1.AddItem(FastItem(names[(int)iSub10], def1[(int)iSub10], def2[(int)iSub10], "%", false, true,
-                false, false,
-                effectMagSum));
+            }
+
+            var dmgTypes = new List<Enums.eDamage> {
+                Enums.eDamage.Smashing,
+                Enums.eDamage.Fire,
+                Enums.eDamage.Lethal,
+                Enums.eDamage.Cold,
+                Enums.eDamage.Energy,
+                Enums.eDamage.Melee,
+                Enums.eDamage.Negative,
+                Enums.eDamage.Ranged,
+                Enums.eDamage.Psionic,
+                Enums.eDamage.AoE
+            };
+
+            foreach (var dmgType in dmgTypes)
+            {
+                if (effectMagSum.Multiple)
+                {
+                    effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, dmgType, true));
+                }
+
+                var dmgIdentifier = (int)dmgType;
+                fx_List1.AddItem(FastItem(names[dmgIdentifier], def1[dmgIdentifier], def2[dmgIdentifier], "%", false, true, false, false, effectMagSum));
+            }
+
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
         }
@@ -2490,35 +2550,35 @@ namespace Mids_Reborn.Forms.Controls
                 false, false, shortFx));
         }
 
-        private static PairedList.ItemPair FastItem(string Title, Enums.ShortFX s1, Enums.ShortFX s2, string Suffix, Enums.ShortFX Tag)
+        private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, Enums.ShortFX tag)
         {
-            return FastItem(Title, s1, s2, Suffix, false, false, false, false, Tag);
+            return FastItem(title, s1, s2, suffix, false, false, false, false, tag);
         }
 
-        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, string Tip) {
-            return FastItem(Title, s1, s2, Suffix, false, false, false, false, Tip);
+        private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, string tip) {
+            return FastItem(title, s1, s2, suffix, false, false, false, false, tip);
         }
         
-        private static PairedList.ItemPair FastItem(string Title, Enums.ShortFX s1, Enums.ShortFX s2, string Suffix, bool SkipBase, bool AlwaysShow, bool isChance, bool isSpecial, string Tip)
+        private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
         {
-            var iValue = Utilities.FixDP(s2.Sum) + Suffix;
+            var iValue = Utilities.FixDP(s2.Sum) + suffix;
             PairedList.ItemPair iItem;
-            if ((Math.Abs(s1.Sum) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
             {
                 iItem = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
             else if (Math.Abs(s1.Sum) < float.Epsilon)
             {
-                iItem = new PairedList.ItemPair(Title + ":", string.Empty, false);
+                iItem = new PairedList.ItemPair(title + ":", string.Empty, false);
             }
             else
             {
                 bool iAlternate;
                 if (Math.Abs(s1.Sum - (double)s2.Sum) > float.Epsilon)
                 {
-                    if (!SkipBase)
+                    if (!skipBase)
                     {
-                        var iValue2 = $"({Utilities.FixDP(s2.Sum)}{Suffix})";
+                        var iValue2 = $"({Utilities.FixDP(s2.Sum)}{suffix})";
                         iValue += iValue2.Replace("%", "");
                     }
 
@@ -2529,31 +2589,34 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                iItem = new PairedList.ItemPair($"{Title}:", iValue, iAlternate, isChance, isSpecial, Tip);
+                iItem = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
             }
 
             return iItem;
         }
 
-        private static PairedList.ItemPair FastItem(string Title, Enums.ShortFX s1, Enums.ShortFX s2, string Suffix, bool SkipBase, bool AlwaysShow, bool isChance, bool isSpecial, Enums.ShortFX Tag)
+        private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, Enums.ShortFX tag)
         {
-            var iValue = Utilities.FixDP(s2.Sum) + Suffix;
+            var iValue = Utilities.FixDP(s2.Sum) + suffix;
             PairedList.ItemPair itemPair;
-            if ((Math.Abs(s1.Sum) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
             {
                 itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
             else if (Math.Abs(s1.Sum) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair(Title + ":", string.Empty, false);
+                itemPair = new PairedList.ItemPair(title + ":", string.Empty, false);
             }
             else
             {
                 bool iAlternate;
                 if (Math.Abs(s1.Sum - (double)s2.Sum) > float.Epsilon)
                 {
-                    if (!SkipBase)
-                        iValue = iValue + " (" + Utilities.FixDP(s1.Sum) + ")";
+                    if (!skipBase)
+                    {
+                        iValue = iValue + $" ({Utilities.FixDP(s1.Sum)})";
+                    }
+
                     iAlternate = true;
                 }
                 else
@@ -2561,31 +2624,31 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, Tag);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tag);
             }
 
             return itemPair;
         }
 
-        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, bool SkipBase, bool AlwaysShow, bool isChance, bool isSpecial, Enums.ShortFX Tag)
+        private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, Enums.ShortFX tag)
         {
-            var iValue = Utilities.FixDP(s2) + Suffix;
+            var iValue = Utilities.FixDP(s2) + suffix;
             PairedList.ItemPair itemPair;
-            if ((Math.Abs(s1) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
             {
                 itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
             else if (Math.Abs(s1) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair(Title + ":", string.Empty, false);
+                itemPair = new PairedList.ItemPair($"Title:", string.Empty, false);
             }
             else
             {
                 bool iAlternate;
                 if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
-                    if (!SkipBase)
-                        iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
+                    if (!skipBase)
+                        iValue = $"{iValue} ({Utilities.FixDP(s1)})";
                     iAlternate = true;
                 }
                 else
@@ -2593,32 +2656,31 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, Tag);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tag);
             }
 
             return itemPair;
         }
 
-        
-        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, bool SkipBase, bool AlwaysShow, bool isChance, bool isSpecial, string Tip)
+        private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
         {
-            var iValue = Utilities.FixDP(s2) + Suffix;
+            var iValue = Utilities.FixDP(s2) + suffix;
             PairedList.ItemPair itemPair;
-            if ((Math.Abs(s1) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
             {
                 itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
             else if (Math.Abs(s1) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair(Title + ":", string.Empty, false);
+                itemPair = new PairedList.ItemPair(title, string.Empty, false);
             }
             else
             {
                 bool iAlternate;
                 if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
-                    if (!SkipBase)
-                        iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
+                    if (!skipBase)
+                        iValue = $"{iValue} ({Utilities.FixDP(s1)})";
                     iAlternate = true;
                 }
                 else
@@ -2626,17 +2688,17 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, Tip);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
             }
 
             return itemPair;
         }
 
-        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, bool SkipBase = false, bool AlwaysShow = false, bool isChance = false, bool isSpecial = false, int TagID = -1, int maxDecimal = -1)
+        private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false, int tagId = -1, int maxDecimal = -1)
         {
-            var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + Suffix : Utilities.FixDP(s2, maxDecimal) + Suffix;
+            var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
             PairedList.ItemPair itemPair;
-            if ((Math.Abs(s1) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
             {
                 itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
@@ -2645,8 +2707,8 @@ namespace Mids_Reborn.Forms.Controls
                 bool iAlternate;
                 if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
-                    if (!SkipBase)
-                        iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
+                    if (!skipBase)
+                        iValue = $"{iValue} ({Utilities.FixDP(s1)})";
                     iAlternate = true;
                 }
                 else
@@ -2654,17 +2716,17 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, TagID);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tagId);
             }
 
             return itemPair;
         }
 
-        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, string tip, bool SkipBase = false, bool AlwaysShow = false, bool isChance = false, bool isSpecial = false, int maxDecimal = -1)
+        private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, string tip, bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false, int maxDecimal = -1)
         {
-            var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + Suffix : Utilities.FixDP(s2, maxDecimal) + Suffix;
+            var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
             PairedList.ItemPair itemPair;
-            if ((Math.Abs(s1) < float.Epsilon) & !AlwaysShow)
+            if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
             {
                 itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
@@ -2673,7 +2735,7 @@ namespace Mids_Reborn.Forms.Controls
                 bool iAlternate;
                 if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
-                    if (!SkipBase)
+                    if (!skipBase)
                         iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
                     iAlternate = true;
                 }
@@ -2682,7 +2744,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = false;
                 }
 
-                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, tip);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
             }
 
             return itemPair;
@@ -2748,29 +2810,40 @@ namespace Mids_Reborn.Forms.Controls
             pnlEnhInactive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, rectangle1, GraphicsUnit.Pixel);
         }
 
+        private static string ConvertNewlinesToRTF(string str)
+        {
+            return str
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", RTF.Crlf());
+        }
+
         private static string GetEnhancementStringLongRTF(I9Slot iEnh)
         {
-            var iStr = iEnh.GetEnhancementStringLong();
-            if (iStr != string.Empty)
-                iStr = RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic(iStr) + RTF.Color(RTF.ElementID.Text);
-            return iStr;
+            var str = iEnh.GetEnhancementStringLong();
+            if (!string.IsNullOrEmpty(str))
+                str = RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic(ConvertNewlinesToRTF(str)) + RTF.Color(RTF.ElementID.Text);
+
+            return str;
         }
 
         private static string GetEnhancementStringRTF(I9Slot iEnh)
         {
             var str = iEnh.GetEnhancementString();
-            if (str != string.Empty)
-                str = RTF.Color(RTF.ElementID.Enhancement) + str + RTF.Color(RTF.ElementID.Text);
+            if (!string.IsNullOrEmpty(str))
+                str = RTF.Color(RTF.ElementID.Enhancement) + ConvertNewlinesToRTF(str) + RTF.Color(RTF.ElementID.Text);
+
             return str;
         }
 
         private PairedList.ItemPair GetRankedEffect(int[] Index, int ID)
         {
             var Title = string.Empty;
-            var shortFx = new Enums.ShortFX();
-            var s2 = new Enums.ShortFX();
-            var Tag2 = new Enums.ShortFX();
+            var shortFxBase = new Enums.ShortFX();
+            var shortFxEnh = new Enums.ShortFX();
+            var tag2 = new Enums.ShortFX();
             var Suffix = string.Empty;
+
             if (Index[ID] > -1)
             {
                 var eEffectTypeShort = Enums.eEffectTypeShort.None;
@@ -2790,123 +2863,122 @@ namespace Mids_Reborn.Forms.Controls
                 if (pBase.Effects[Index[ID]].DelayedTime > 5.0)
                     flag = true;
                 var names = Enum.GetNames(eEffectTypeShort.GetType());
-                Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Enhancement
-                    ? pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
-                        ? names[(int)pBase.Effects[Index[ID]].EffectType]
-                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType)
-                    : pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.EnduranceDiscount
-                        ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.RechargeTime
-                            ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Mez
-                                ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Mez
-                                    ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Defense
-                                        ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Resistance
-                                            ? CapString(
-                                                Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(),
-                                                    pBase.Effects[Index[ID]].ETModifies), 7)
-                                            : "Enh(Res)"
-                                        : "Enh(Def)"
-                                    : "Enh(" + Enum.GetName(Enums.eMezShort.None.GetType(),
-                                        pBase.Effects[Index[ID]].MezType) + ")"
-                                : "+Effects"
-                            : "+Rechg"
-                        : "+EndRdx";
+                if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement)
+                {
+                    Title = pBase.Effects[Index[ID]].ETModifies switch
+                    {
+                        Enums.eEffectType.EnduranceDiscount => "+EndRdx",
+                        Enums.eEffectType.RechargeTime => "+Rechg",
+                        Enums.eEffectType.Mez => pBase.Effects[Index[ID]].MezType == Enums.eMez.None
+                            ? "+Effects"
+                            : $"Enh({Enum.GetName(Enums.eMezShort.None.GetType(), pBase.Effects[Index[ID]].MezType)})",
+                        Enums.eEffectType.Defense => "Enh(Def)",
+                        Enums.eEffectType.Resistance => "Enh(Res)",
+                        _ => CapString(Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(), pBase.Effects[Index[ID]].ETModifies), 7)
+                    };
+                }
+                else
+                {
+                    Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez ? names[(int)pBase.Effects[Index[ID]].EffectType] : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
+                }
+                
                 string temp = string.Empty;
                 switch (pBase.Effects[Index[ID]].EffectType)
                 {
                     case Enums.eEffectType.HitPoints:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
-                        Tag2.Assign(shortFx);
-                        shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                        s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
+                        tag2.Assign(shortFxBase);
+                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Heal:
-                        if (pBase.Effects[Index[ID]].Mag <= 1)
+                        if (pBase.Effects[Index[ID]].BuffedMag <= 1)
                         {
-                            temp = $"{pBase.Effects[Index[ID]].Mag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
-                            shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                            s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Absorb:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Endurance:
-                        if (pBase.Effects[Index[ID]].Mag < -0.01 && pBase.Effects[Index[ID]].Mag > -1)
+                        if (pBase.Effects[Index[ID]].BuffedMag < -0.01 && pBase.Effects[Index[ID]].BuffedMag > -1)
                         {
-                            temp = $"{pBase.Effects[Index[ID]].Mag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Regeneration:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Sum *= 100;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Sum *= 100;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Null:
-                        if (pBase.Effects[Index[ID]].Mag < 1)
+                        if (pBase.Effects[Index[ID]].BuffedMag < 1)
                         {
-                            temp = $"{pBase.Effects[Index[ID]].Mag:P2}";
-                            shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            s2.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
-                            Tag2.Assign(shortFx);
+                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
+                            shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
+                            tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.ToHit:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Fly:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Recovery:
-                        shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
-                        s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFx.Sum *= 100f;
-                        s2.Sum *= 100f;
-                        Tag2.Assign(shortFx);
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Sum *= 100f;
+                        shortFxEnh.Sum *= 100f;
+                        tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     default:
@@ -2914,9 +2986,9 @@ namespace Mids_Reborn.Forms.Controls
                             ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
                              (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
+                            tag2.Assign(shortFxBase);
                             Suffix = "s";
                         }
                         /*else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
@@ -2925,48 +2997,61 @@ namespace Mids_Reborn.Forms.Controls
                             s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
                             Tag2.Assign(shortFx);
                         }*/
-                        else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MezResist) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.RechargeTime) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedRunning) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedJumping) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.JumpHeight) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.PerceptionRadius) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
+                        // Set list of effects below that are treated as percentages
+                        // Base and enhanced values will be multiplied by 100
+                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MezResist |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.RechargeTime |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedRunning |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedJumping |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.JumpHeight |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.PerceptionRadius |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxFlySpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxRunSpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxJumpSpeed |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Jumppack |
+                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.GlobalChanceMod)
                         {
-                            if (!pBase.Effects[Index[ID]].Absorbed_Effect)
+                            /*if (!pBase.Effects[Index[ID]].Absorbed_Effect)
                             {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
                                 shortFx.Multiply();
                                 s2.Multiply();
                                 Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
                             }
                             else
                             {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
                                 s2.Multiply();
                                 Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
-                            }
+                            }*/
+
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
+                            shortFxBase.Multiply();
+                            shortFxEnh.Multiply();
+                            tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
+                            tag2.Assign(shortFxBase);
                         }
                         else
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                            Tag2.Assign(shortFx);
+                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                            shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
+                            tag2.Assign(shortFxBase);
                         }
 
                         break;
@@ -2977,72 +3062,60 @@ namespace Mids_Reborn.Forms.Controls
                     Suffix = "%";
                 }
 
-                if (!((pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target) & (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self) & (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally)))
+                Suffix += pBase.Effects[Index[ID]].ToWho switch
                 {
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target)
-                        Suffix += " (Tgt)";
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self)
-                        Suffix += " (Self)";
-                    if (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally)
-                        Suffix += " (Ally)";
-                }
+                    Enums.eToWho.Target => " (Tgt)",
+                    Enums.eToWho.Self => " (Self)",
+                    Enums.eToWho.Ally => " (Ally)",
+                    _ => ""
+                };
 
                 if (flag)
                     return FastItem("", 0.0f, 0.0f, string.Empty);
             }
 
-            var num1 = shortFx.Index.Length - 1;
-            for (var index = 0; index < num1; index++)
+            for (var index = 0; index < shortFxEnh.Index.Length - 1; index++)
             {
-                if (shortFx.Index[index] <= -1 || !pBase.Effects[shortFx.Index[index]].DisplayPercentage)
+                if (shortFxEnh.Index[index] <= -1 || !pBase.Effects[shortFxEnh.Index[index]].DisplayPercentage)
                     continue;
-                shortFx.Value[index] *= 100f;
-                shortFx.ReSum();
-                break;
-            }
+                if (shortFxEnh.Value[index] > 1)
+                    continue;
 
-            var num2 = s2.Index.Length - 1;
-            for (var index = 0; index < num2; index++)
-            {
-                if (s2.Index[index] <= -1 || !pBase.Effects[s2.Index[index]].DisplayPercentage)
-                    continue;
-                s2.Value[index] *= 100f;
-                if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.Absorb)
+                if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.Absorb)
                 {
                     //Fixes the Absorb display to correctly show the percentage
-                    s2.Sum = float.Parse(s2.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
+                    shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
                 }
-                else if (pBase.Effects[s2.Index[index]].EffectType == Enums.eEffectType.ToHit)
+                else if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.ToHit)
                 {
                     //Fixes the ToHit display to correctly show the percentage
-                    if (pBase.Effects[s2.Index[index]].Stacking == Enums.eStacking.Yes)
+                    if (pBase.Effects[shortFxEnh.Index[index]].Stacking == Enums.eStacking.Yes)
                     {
                         var overage = pBase.Effects[Index[ID]].Ticks * 0.05f;
-                        s2.Sum -= overage;
-                        s2.Sum /= 2;
+                        shortFxEnh.Sum -= overage;
+                        shortFxEnh.Sum /= 2;
                     }
                 }
                 else
                 {
-                    s2.ReSum();
+                    shortFxEnh.ReSum();
                 }
 
                 break;
             }
 
-            string iTip;
-            iTip = GetToolTip(s2);
+            var iTip = GetToolTip(shortFxEnh);
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
-                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
+                return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
             }
 
             if (pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None)
             {
-                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
+                return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
             }
 
-            return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
+            return FastItem(Title, shortFxBase, shortFxEnh, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
         }
 
         public void Init()
@@ -3119,7 +3192,7 @@ namespace Mids_Reborn.Forms.Controls
             string str1;
             if (Tag2.Present)
             {
-                var numArray = new int[0];
+                var numArray = Array.Empty<int>();
                 var empty2 = string.Empty;
                 IPower power = new Power(pEnh);
                 var num1 = Tag2.Index.Length - 1;
@@ -3129,7 +3202,7 @@ namespace Mids_Reborn.Forms.Controls
                         power.Effects[Tag2.Index[index1]].EffectType == Enums.eEffectType.None)
                         continue;
                     var empty3 = string.Empty;
-                    var returnMask = new int[0];
+                    var returnMask = Array.Empty<int>();
                     power.GetEffectStringGrouped(Tag2.Index[index1], ref empty3, ref returnMask, false, false);
                     if (returnMask.Length <= 0)
                         continue;
@@ -3161,20 +3234,8 @@ namespace Mids_Reborn.Forms.Controls
             {
                 str1 = tooltip;
             }
-
-            object[] Arguments = { str1 };
-            bool[] CopyBack = { true };
-
-
-            NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
-
-            if (!CopyBack[0])
-            {
-            }
-            else
-            {
-                var str2 = (string)Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
-            }
+            
+            dbTip.SetToolTip((Control)Sender, str1);
         }
 
 
@@ -3446,7 +3507,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     if (iTip != string.Empty)
                         iTip += "\r\n";
-                    var str = pEnh.Effects[index].BuildEffectString();
+                    var str = pEnh.Effects[index].BuildEffectString(false, "", false, false, false, false, false, true);
                     if (pEnh.Effects[index].isEnhancementEffect & (pEnh.PowerType == Enums.ePowerType.Toggle))
                     {
                         ++num1;
@@ -3480,28 +3541,96 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.SetTip(iTip);
         }
 
-        public void SetData(IPower iBase, IPower iEnhanced, bool noLevel = false, bool Locked = false,
-            int iHistoryIDX = -1)
+        private Power GetPowerRedirectParent(IPower pSrc)
+        {
+            var pSrcRedirectParent = new Power();
+            pSrcRedirectParent.FullName = "";
+            foreach (var p in DatabaseAPI.Database.Power)
+            {
+                if (p.GetPowerSet().SetType != Enums.ePowerSetType.Primary &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Secondary &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Pool &
+                    p.GetPowerSet().SetType != Enums.ePowerSetType.Ancillary)
+                {
+                    continue;
+                }
+
+                foreach (var fx in p.Effects)
+                {
+                    if (fx.EffectType != Enums.eEffectType.PowerRedirect)
+                        continue;
+
+                    if (fx.Override != pSrc.FullName)
+                        continue;
+
+                    pSrcRedirectParent = new Power(DatabaseAPI.GetPowerByFullName(p.FullName));
+                }
+            }
+
+            return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
+        }
+
+        /*private void MergeRedirectEffects(ref IPower pSrc, IPower pSub = null, int rLevel = 0)
+        {
+            // Merge pSub effects into pSrc and follow redirects
+            // (up to 5 levels recursion)
+            // Look for redirects in pSrc and follow any if pSub == null
+
+            if (pSub == null)
+            {
+                foreach (var fx in pSrc.Effects)
+                {
+                    if (fx.EffectType == Enums.eEffectType.PowerRedirect) continue;
+
+                    // Check conditionals/GCM
+                    pSub = DatabaseAPI.GetPowerByFullName(fx.Override);
+                    if (pSub == null) continue;
+                        
+                    if (rLevel < 5) MergeRedirectEffects(ref pSrc, pSub, ++rLevel);
+                }
+            }
+            else
+            {
+                pSrc.Accuracy = pSub.Accuracy;
+                pSrc.ActivatePeriod = pSub.ActivatePeriod;
+                pSrc.Arc = pSub.Arc;
+                pSrc.CastTime = pSub.CastTime;
+                pSrc.EffectArea = pSub.EffectArea;
+                pSrc.EndCost = pSub.EndCost;
+                pSrc.InterruptTime = pSub.InterruptTime;
+                pSrc.MaxTargets = pSub.MaxTargets;
+                pSrc.Radius = pSub.Radius;
+                pSrc.Range = pSub.Range;
+                pSrc.RechargeTime = pSub.RechargeTime;
+                pSrc.RangeSecondary = pSub.RangeSecondary;
+                pSrc.IgnoreEnh = (Enums.eEnhance[])pSub.IgnoreEnh.Clone();
+                pSrc.Ignore_Buff = (Enums.eEnhance[])pSub.Ignore_Buff.Clone();
+
+                foreach (var fx in pSub.Effects)
+                {
+                    if (fx.EffectType != Enums.eEffectType.PowerRedirect)
+                    {
+                        // Check conditionals/GCM
+                        if (rLevel < 5) MergeRedirectEffects(ref pSrc, pSub, ++rLevel);
+                    }
+
+                    var srcEffects = pSrc.Effects.ToList();
+                    srcEffects.Add(fx);
+                    pSrc.Effects = srcEffects.ToArray();
+                }
+            }
+        }*/
+
+        public void SetData(IPower iBase, IPower iEnhanced, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
         {
             if (iBase == null)
                 return;
-            Lock = Locked;
-            pBase = new Power(iBase);
-            if (iEnhanced != null)
-                if (iEnhanced.Effects.Length == iBase.Effects.Length)
-                {
-                    pEnh = new Power(iEnhanced);
-                }
-                else
-                {
-                    pEnh = new Power(iBase);
-                }
-            else
-            {
-                pEnh = new Power(iBase);
-            }
+            Lock = locked;
 
-            HistoryIDX = iHistoryIDX;
+            pBase = new Power(iBase);
+            pEnh = iEnhanced != null ? iEnhanced.Effects.Length == iBase.Effects.Length ? new Power(iEnhanced) : new Power(iBase) : new Power(iBase);
+
+            HistoryIDX = iHistoryIdx;
             SetDamageTip();
             DisplayData(noLevel);
             SizeRefresh();
@@ -3534,28 +3663,29 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             var iStr1 = string.Empty;
             var str2 = string.Empty;
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO) |
-                (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO))
-                iStr1 = RTF.Color(RTF.ElementID.Invention) + "Invention Level: " + Convert.ToString(iEnh.IOLevel + 1) +
-                        Enums.GetRelativeString(iEnh.RelativeLevel, false) + RTF.Color(RTF.ElementID.Text);
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO) |
-                (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SpecialO))
+            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO))
+            {
+                iStr1 = RTF.Color(RTF.ElementID.Invention) + "Invention Level: " + Convert.ToString(iEnh.IOLevel + 1) + Enums.GetRelativeString(iEnh.RelativeLevel, false) + RTF.Color(RTF.ElementID.Text);
+            }
+
+            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO) | (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SpecialO))
             {
                 if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
                 {
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
+                    {
                         iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) &
-                        (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
-                        str2 = str2 + RTF.Color(RTF.ElementID.Enhancement) +
-                               Strings.Format(
-                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
-                               "% chance of ";
+                    }
+
+                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
+                    {
+
+                        str2 = $"{str2}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
+                    }
                 }
                 else
                 {
-                    iStr1 = iStr1 + RTF.Color(RTF.ElementID.Enhancement) +
-                            "Hamidon/Synthetic Hamidon Origin Enhancement";
+                    iStr1 = iStr1 + RTF.Color(RTF.ElementID.Enhancement) + "Hamidon/Synthetic Hamidon Origin Enhancement";
                 }
             }
             else
@@ -3568,8 +3698,7 @@ namespace Mids_Reborn.Forms.Controls
             string iStr2;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
-                iStr2 = str2 + GetEnhancementStringLongRTF(iEnh) + "\r\n" +
-                        EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
+                iStr2 = str2 + GetEnhancementStringLongRTF(iEnh) + "\r\n" + EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
             }
             else
             {
@@ -3579,8 +3708,7 @@ namespace Mids_Reborn.Forms.Controls
                 iStr2 = str3 + GetEnhancementStringLongRTF(iEnh);
             }
 
-            info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr1) + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) +
-                                "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
+            info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr1) + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr2) + RTF.EndRTF();
         }
 
@@ -3604,12 +3732,10 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
                         iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) &
-                        (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
-                        str1 = str1 + RTF.Color(RTF.ElementID.Enhancement) +
-                               Strings.Format(
-                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
-                               "% chance of ";
+                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
+                    {
+                        str1 = $"{str1}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
+                    }
                 }
                 else
                 {
@@ -3626,7 +3752,11 @@ namespace Mids_Reborn.Forms.Controls
             string iStr2;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
-                iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
+                // Fix strange white "-2" showing at the end of the enhancement long text
+                /*iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
+                        EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);*/
+
+                iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + "\r\n" +
                         EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
             }
             else
@@ -3748,8 +3878,8 @@ namespace Mids_Reborn.Forms.Controls
             if (iSet < 0)
             {
                 info_Title.Text = "No Enhancement";
-                Info_txtLarge.Text = string.Empty;
-                info_txtSmall.Text = string.Empty;
+                Info_txtLarge.Text = "";
+                info_txtSmall.Text = "";
             }
             else
             {
@@ -3760,14 +3890,10 @@ namespace Mids_Reborn.Forms.Controls
                     str1 += RTF.Crlf();
                 var str2 = DatabaseAPI.Database.EnhancementSets[iSet].LevelMin !=
                            DatabaseAPI.Database.EnhancementSets[iSet].LevelMax
-                    ? Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1) + " to " +
-                      Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1)
-                    : Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1);
-                info_txtSmall.Rtf = RTF.StartRTF() +
-                                    str1 + RTF.Color(RTF.ElementID.Invention) + "Level: " + str2 +
-                                    RTF.Color(RTF.ElementID.Text) +
-                                    RTF.EndRTF();
-                Info_txtLarge.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(iSet) + RTF.EndRTF();
+                    ? $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1} to {DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1}"
+                    : $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1}";
+                info_txtSmall.Rtf = $"{RTF.StartRTF()}{str1}{RTF.Color(RTF.ElementID.Invention)}Level: {str2}{RTF.Color(RTF.ElementID.Text)}{RTF.EndRTF()}";
+                Info_txtLarge.Rtf = $"{RTF.StartRTF()}{EnhancementSetCollection.GetSetInfoLongRTF(iSet)}{RTF.EndRTF()}";
             }
         }
 
@@ -3812,8 +3938,14 @@ namespace Mids_Reborn.Forms.Controls
             {
                 var shortFxArray1 = Power.SplitFX(ref BaseSFX, ref pBase);
                 var shortFxArray2 = Power.SplitFX(ref EnhSFX, ref pEnh);
-                var num1 = shortFxArray1.Length - 1;
-                for (var index = 0; index <= num1; ++index)
+                if (shortFxArray2.Length < shortFxArray1.Length)
+                {
+                    var swappedFX = SwapExtraEffects(shortFxArray1, shortFxArray2);
+                    shortFxArray1 = (Enums.ShortFX[])swappedFX[0].Clone();
+                    shortFxArray2 = (Enums.ShortFX[])swappedFX[1].Clone();
+                }
+                
+                for (var index = 0; index < shortFxArray1.Length; index++)
                 {
                     if (!shortFxArray1[index].Present)
                         continue;
@@ -3826,10 +3958,10 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         Suffix = "%";
                         var effect = pEnh.Effects[shortFxArray1[index].Index[0]];
-                        if (((effect.EffectType == Enums.eEffectType.Heal) |
-                             (effect.EffectType == Enums.eEffectType.Endurance) |
-                             (effect.EffectType == Enums.eEffectType.Damage)) &
-                            (pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur))
+                        if ((effect.EffectType == Enums.eEffectType.Heal |
+                             effect.EffectType == Enums.eEffectType.Endurance |
+                             effect.EffectType == Enums.eEffectType.Damage) &
+                            pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur)
                         {
                             num2 *= 100f;
                             num3 *= 100f;
@@ -3848,9 +3980,9 @@ namespace Mids_Reborn.Forms.Controls
                         }
                     }
 
-                    var Title = Enums.GetEffectNameShort(pEnh.Effects[shortFxArray1[index].Index[0]].EffectType);
+                    var title = Enums.GetEffectNameShort(pEnh.Effects[shortFxArray1[index].Index[0]].EffectType);
                     if (SpecialTitle != string.Empty)
-                        Title = SpecialTitle;
+                        title = SpecialTitle;
                     var s1 = num2;
                     var s2 = num3;
                     if ((pEnh.Effects[shortFxArray1[index].Index[0]].Suppression & MidsContext.Config.Suppression) !=
@@ -3860,7 +3992,7 @@ namespace Mids_Reborn.Forms.Controls
                         s2 = 0.0f;
                     }
 
-                    iList.AddItem(FastItem(Title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
+                    iList.AddItem(FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
                     if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
                         iList.SetUnique();
                 }
@@ -3907,6 +4039,5 @@ namespace Mids_Reborn.Forms.Controls
             var moved = Moved;
             moved?.Invoke();
         }
-
     }
 }

@@ -2,9 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Extensions;
 
@@ -41,8 +38,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var database = DatabaseAPI.Database;
-            var salvageArray =
-                (Salvage[]) Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+            //var salvageArray = (Salvage[]) Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+            var salvageArray = Array.Empty<Salvage>();
+            Array.Copy(database.Salvage, salvageArray, database.Salvage.Length + 1);
             database.Salvage = salvageArray;
             DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
             AddListItem(DatabaseAPI.Database.Salvage.Length - 1);
@@ -97,8 +95,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var strArray2 = strArray1[index].Split(chArray);
                 if (strArray2.Length <= 7) continue;
                 var database = DatabaseAPI.Database;
-                var salvageArray = (Salvage[]) Utils.CopyArray(database.Salvage,
-                    new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+                //var salvageArray = (Salvage[]) Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+                var salvageArray = Array.Empty<Salvage>();
+                Array.Copy(database.Salvage, salvageArray, database.Salvage.Length + 1);
                 database.Salvage = salvageArray;
                 DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
                 var salvage = DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1];
@@ -125,7 +124,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 salvage.Origin = strArray2[9].IndexOf("Magic", StringComparison.Ordinal) <= -1
                     ? Salvage.SalvageOrigin.Tech
                     : Salvage.SalvageOrigin.Magic;
-                salvage.Rarity = (Recipe.RecipeRarity) Math.Round(Conversion.Val(strArray2[6]) - 1.0);
+                salvage.Rarity = (Recipe.RecipeRarity) Math.Round(Convert.ToDouble(strArray2[6]) - 1.0);
             }
 
             FillList();
@@ -133,7 +132,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.SaveSalvage(MyApplication.GetSerializer());
+            DatabaseAPI.SaveSalvage(Serializer.GetSerializer());
             Close();
         }
 

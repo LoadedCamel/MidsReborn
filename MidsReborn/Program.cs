@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms;
-using Mids_Reborn.UIv2;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn
@@ -16,7 +15,7 @@ namespace Mids_Reborn
         [STAThread]
         private static void Main()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzczMTM1QDMxMzgyZTM0MmUzME9URGZHeHFrdFFwZlhxQnZITjlreGZGek96bldQRGpPSmFDd3VWQ1lBaUU9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTQyNTM5QDMxMzkyZTMzMmUzMGErM3R4akxDVTI4WkNtWmZ1TEpvZEpXeUhvcEJva3B4blhwTHRMV3R4SXM9");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             MidsContext.AssertVersioning();

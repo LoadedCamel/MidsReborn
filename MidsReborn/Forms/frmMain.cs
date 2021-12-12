@@ -19,7 +19,6 @@ using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -29,7 +28,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace Mids_Reborn.Forms
 {
-    public partial class frmMain : Form
+    public sealed partial class frmMain : Form
     {
         private frmInitializing _frmInitializing;
 
@@ -43,6 +42,10 @@ namespace Mids_Reborn.Forms
 
         private bool loading;
 
+        private bool gfxDrawing;
+
+        private long popupLastOpenTime;
+
         public bool DbChangeRequested { get; set; }
 
         public frmMain()
@@ -54,24 +57,25 @@ namespace Mids_Reborn.Forms
                     var fInfo = new FileInfo(Files.GetConfigFilename(false));
                     if (fInfo.Length > 0)
                     {
-                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        ConfigData.Initialize(Serializer.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
-                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                         }
                     }
                     else
                     {
                         var tempConfig = new ConfigData();
-                        tempConfig.Save(MyApplication.GetSerializer(), Files.GetConfigFilename(false));
-                        tempConfig.SaveConfig(MyApplication.GetSerializer());
-                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        tempConfig.Save(Serializer.GetSerializer(), Files.GetConfigFilename(false));
+                        tempConfig.SaveConfig(Serializer.GetSerializer());
+                        ConfigData.Initialize(Serializer.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
-                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                         }
                     }
                 }
+
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -105,7 +109,7 @@ namespace Mids_Reborn.Forms
                 DbChangeRequested = false;
             }
 
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
@@ -155,7 +159,7 @@ namespace Mids_Reborn.Forms
 
         public bool petWindowFlag { get; set; }
 
-        private List<string> MMPets { get; } = new List<string>();
+        private List<string> MMPets { get; set; } = new List<string>();
 
         // store the instance for reuse, as these things are called per draw/redraw
         private Lazy<ComboBoxT<Archetype>> CbtAT =>
@@ -176,6 +180,11 @@ namespace Mids_Reborn.Forms
         private Lazy<ComboBoxT<string>> CbtPool3 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool3));
 
         internal clsDrawX Drawing => drawing;
+
+        private void InitializeDv()
+        {
+            Info_Power(llPrimary.Items[0].nIDPower);
+        }
 
         private I9Picker I9Picker
         {
@@ -210,7 +219,7 @@ namespace Mids_Reborn.Forms
         // [Zed 06/01/20]
         // Input: argv: string[] Command line parameters, value: argument value to look for, caseSensitive: bool, perform case (in)sensitive lookup
         // Output: bool, target value has (not) been found
-        private bool findCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
+        private bool FindCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
         {
             // Only inspect first 10 arguments,
             // skip first argument (aka %0), since it is the executable path.
@@ -221,7 +230,7 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    if (argv[i].ToLower() == value.ToLower()) return true;
+                    if (string.Equals(argv[i], value, StringComparison.CurrentCultureIgnoreCase)) return true;
                 }
 
             return false;
@@ -232,7 +241,7 @@ namespace Mids_Reborn.Forms
         // Output: Usable filename (trimmed out of quotes)
         // Note: not checked here, but a valid file name should be either a local path name (X:\...) or a UNC resource name (\\server\share\...)
         // Integrate Environment.GetCommandLineArgs().Skip(1); directly here?
-        private string formatFilenameFromParameter(string clFilename)
+        private string FormatFilenameFromParameter(string clFilename)
         {
             return clFilename.Replace("\"", string.Empty);
         }
@@ -246,7 +255,7 @@ namespace Mids_Reborn.Forms
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
-
+                
                 var height1 = 0;
                 var width1 = 0;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
@@ -294,7 +303,7 @@ namespace Mids_Reborn.Forms
                 }
 
                 var args = Environment.GetCommandLineArgs();
-                if (findCommandLineParameter(args, "RECOVERY"))
+                if (FindCommandLineParameter(args, "RECOVERY"))
                 {
                     MessageBox.Show(
                         "As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.",
@@ -304,7 +313,7 @@ namespace Mids_Reborn.Forms
                     return;
                 }
 
-                if (findCommandLineParameter(args, "MASTERMODE=YES"))
+                if (FindCommandLineParameter(args, "MASTERMODE=YES"))
                 {
                     MidsContext.Config.MasterMode = true;
                 }
@@ -314,13 +323,20 @@ namespace Mids_Reborn.Forms
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 var loadedFromArgs = false;
+                var prevLastFileNameCfg = MidsContext.Config.LastFileName;
+                var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
                 if (args.Length > 1)
                 {
-                    var clFilename = formatFilenameFromParameter(args[1]).Trim();
-                    if (File.Exists(clFilename) && !DoOpen(clFilename))
+                    // [Zed 08/26/21]
+                    // Instead of directly trying to load a build when an argument is passed from command line,
+                    // set the build full path into the config and pretend it's going to be loaded
+                    // like it is build you had open on previous run.
+                    var clFilename = FormatFilenameFromParameter(args[1]).Trim();
+                    if (File.Exists(clFilename))
                     {
                         loadedFromArgs = true;
-                        PowerModified(false);
+                        MidsContext.Config.DisableLoadLastFileOnStart = false;
+                        MidsContext.Config.LastFileName = clFilename;
                     }
                 }
 
@@ -336,6 +352,14 @@ namespace Mids_Reborn.Forms
 
                 if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded)
                     PowerModified(true);
+
+                // Build loaded from a file set as argument from the command line: done
+                // Restore config variables to their original values.
+                if (loadedFromArgs)
+                {
+                    MidsContext.Config.LastFileName = prevLastFileNameCfg;
+                    MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
+                }
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
@@ -359,8 +383,7 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Location = cbAncillary.Location;
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
-                if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) &
-                    (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
+                if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
                 {
                     var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
                     var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
@@ -375,8 +398,7 @@ namespace Mids_Reborn.Forms
                     width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
                 }
 
-                if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height &&
-                    MidsContext.Config.LastSize.Height >= MinimumSize.Height)
+                if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
                     height1 = MidsContext.Config.LastSize.Height;
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
@@ -427,6 +449,7 @@ namespace Mids_Reborn.Forms
                 UpdateControls(true);
                 CenterToScreen();
                 UpdatePoolsPanelSize();
+                InitializeDv();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -789,8 +812,8 @@ namespace Mids_Reborn.Forms
                 return;
             MidsContext.Character.Origin = cbOrigin.SelectedIndex;
             I9Gfx.SetOrigin(cbOrigin.SelectedItem.ToStringOrNull());
-            if (drawing != null)
-                DoRedraw();
+            // if (drawing != null)
+            //     DoRedraw();
             DisplayName();
         }
 
@@ -1360,15 +1383,17 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             FloatUpdate(true);
 
-            
-
             return true;
         }
 
         public void DoRedraw()
         {
             if (drawing == null) return;
-            
+            if (gfxDrawing) return;
+
+            gfxDrawing = true;
+            var t = Stopwatch.StartNew();
+
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
@@ -1381,10 +1406,13 @@ namespace Mids_Reborn.Forms
             // Prevent horizontal scrollbar to appear
             pnlGFX.Width = flowWidth - 26; // - 10;
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
-            pnlGFX.Update();
-            pnlGFXFlow.Update();
             NoResizeEvent = false;
             drawing.FullRedraw();
+            pnlGFXFlow.Invalidate();
+            gfxDrawing = false;
+
+            t.Stop();
+            Debug.WriteLine($"frmMain.DoRedraw(): {t.ElapsedMilliseconds:###0.##} ms");
         }
 
         private void DoResize(bool forceResize = false)
@@ -1412,14 +1440,20 @@ namespace Mids_Reborn.Forms
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
-            pnlGFX = (PictureBox)pnlGfx;
+            pnlGFX = (pnlGFX)pnlGfx;
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
             drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             ReArrange(false);
-            pnlGFX.Update();
-            pnlGFX.Refresh();
+            //pnlGFX.Update();
+            //pnlGFX.Refresh();
             NoResizeEvent = true;
             DoRedraw();
+        }
+
+        public void DoRefresh()
+        {
+            pnlGFX.Invalidate();
+            //pnlGFX.Update(); // Invalidate + Update force synchronous update
         }
 
         private bool doSave()
@@ -1441,20 +1475,26 @@ namespace Mids_Reborn.Forms
             {
                 DlgSave.FileName = FileIO.StripPath(LastFileName);
                 if (DlgSave.FileName.Length > 3 && DlgSave.FileName.ToUpper().EndsWith(".TXT"))
+                {
                     DlgSave.FileName = DlgSave.FileName.Substring(0, DlgSave.FileName.Length - 3) + DlgSave.DefaultExt;
-                DlgSave.InitialDirectory =
-                    LastFileName.Substring(0, LastFileName.LastIndexOf("\\", StringComparison.Ordinal));
+                }
+
+                DlgSave.InitialDirectory = LastFileName.Substring(0, LastFileName.LastIndexOf("\\", StringComparison.Ordinal));
             }
             else if (!string.IsNullOrWhiteSpace(MidsContext.Character.Name))
             {
                 if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
+                {
                     DlgSave.FileName = MidsContext.Character.Name + " - Arachnos " + MidsContext.Character.Powersets[0]
                         .DisplayName
                         .Replace(" Training", string.Empty).Replace("Arachnos ", string.Empty);
+                }
                 else
+                {
                     DlgSave.FileName = MidsContext.Character.Name + " - " +
                                        MidsContext.Character.Archetype.DisplayName + " (" +
                                        MidsContext.Character.Powersets[0].DisplayName + ")";
+                }
             }
             else if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
             {
@@ -1466,8 +1506,7 @@ namespace Mids_Reborn.Forms
             {
                 DlgSave.FileName = MidsContext.Character.Archetype.DisplayName;
                 var dlgSave = DlgSave;
-                dlgSave.FileName = dlgSave.FileName + " - " + MidsContext.Character.Powersets[0].DisplayName + " - " +
-                                   MidsContext.Character.Powersets[1].DisplayName;
+                dlgSave.FileName = dlgSave.FileName + " - " + MidsContext.Character.Powersets[0].DisplayName + " - " + MidsContext.Character.Powersets[1].DisplayName;
             }
 
             if (DlgSave.ShowDialog() == DialogResult.OK)
@@ -2024,10 +2063,10 @@ namespace Mids_Reborn.Forms
         private void frmMain_Closed(object sender, EventArgs e)
         {
             MidsContext.Config.LastSize = Size;
-            MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             if (MidsContext.Config.DiscordEnabled is true)
             {
-                MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
+                MidsContext.ConfigSp.SaveConfig(Serializer.GetSerializer());
             }
         }
 
@@ -2089,6 +2128,7 @@ namespace Mids_Reborn.Forms
             if (!NoResizeEvent & MainModule.MidsController.IsAppInitialized & Visible)
                 MidsContext.Config.LastSize = Size;
             UpdateControls();
+            DoRedraw();
         }
 
         internal void DoCalcOptUpdates()
@@ -2309,8 +2349,11 @@ namespace Mids_Reborn.Forms
 
         private void I9Picker_Hiding(object sender, EventArgs e)
         {
-            if (!I9Picker.Visible)
+            // 10 000 ticks in a millisecond / 10 000 000 ticks in a second (1.10^7)
+            // Ensure the picker doesn't close instantly.
+            if (!I9Picker.Visible | DateTime.Now.Ticks - popupLastOpenTime < 1e6)
                 return;
+
             I9Picker.Visible = false;
             HidePopup();
             EnhancingSlot = -1;
@@ -2481,7 +2524,7 @@ namespace Mids_Reborn.Forms
             dvLastPower = powerIdx;
             dvLastNoLev = NoLevel;
             fData?.UpdateData(dvLastPower);
-            var num1 = -1;
+            var powIndex = -1;
             if (MainModule.MidsController.Toon.Locked)
             {
                 var num2 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
@@ -2489,21 +2532,35 @@ namespace Mids_Reborn.Forms
                 {
                     if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
                         continue;
-                    num1 = index;
+                    powIndex = index;
                     break;
                 }
             }
 
             DataViewLocked = Lock;
-            if (num1 > -1)
-                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1),
-                    MainModule.MidsController.Toon.GetEnhancedPower(num1),
-                    NoLevel, DataViewLocked, num1);
+            if (powIndex > -1)
+            {
+                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex);
+                var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(powIndex);
+                if (basePower != null && enhancedPower != null)
+                {
+                    myDataView.SetData(basePower, enhancedPower, NoLevel, DataViewLocked, powIndex);
+                }
+                else
+                {
+                    myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, NoLevel, DataViewLocked, powIndex);
+                }
+            }
             else
-                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(num1, powerIdx), null, NoLevel,
-                    DataViewLocked, num1);
+            {
+                myDataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, NoLevel, DataViewLocked, powIndex);
+            }
+            
             if (!Lock || dvAnchored.Visible)
+            {
                 return;
+            }
+
             FloatingDataForm.Activate();
         }
 
@@ -2655,6 +2712,11 @@ namespace Mids_Reborn.Forms
             HidePopup();
         }
 
+        private void llALL_ItemClick_RefreshGfx()
+        {
+            DoRefresh();
+        }
+
         private void llAncillary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Item.ItemState == ListLabelV3.LLItemState.Heading)
@@ -2669,6 +2731,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llAncillary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2703,6 +2767,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool0_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2730,6 +2796,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool1_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2757,6 +2825,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool2_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2784,6 +2854,8 @@ namespace Mids_Reborn.Forms
                     return;
                 Info_Power(Item.nIDPower, -1, false, true);
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPool3_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2812,6 +2884,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llPrimary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -2842,6 +2916,8 @@ namespace Mids_Reborn.Forms
                     Info_Power(Item.nIDPower, -1, false, true);
                     break;
             }
+
+            llALL_ItemClick_RefreshGfx();
         }
 
         private void llSecondary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
@@ -3267,8 +3343,7 @@ namespace Mids_Reborn.Forms
                         pnlGFX.Update();
                         pnlGFX.Refresh();
                     }
-                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
-                             (e.Button == MouseButtons.Left))
+                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                     {
                         if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
                             !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
@@ -3290,8 +3365,7 @@ namespace Mids_Reborn.Forms
 
                             MidsContext.Character.Validate();
                         }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() &&
-                                 !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                         {
                             if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
                             {
@@ -3302,8 +3376,7 @@ namespace Mids_Reborn.Forms
                                 MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
                             }
                         }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                                 MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                         {
                             if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                             {
@@ -3404,8 +3477,14 @@ namespace Mids_Reborn.Forms
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
+                            //var t = Stopwatch.StartNew();
                             I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
+                            //t.Stop();
+                            //Debug.WriteLine($"Repeat last enhancement - EnhancementPicked(): {t.ElapsedMilliseconds} ms");
+                            //t.Restart();
                             EnhancementModified();
+                            //t.Stop();
+                            //Debug.WriteLine($"Repeat last enhancement - EnhancementModified(): {t.ElapsedMilliseconds} ms");
                         }
                         else if ((e.Button == MouseButtons.Right) & (slotID > -1) && ModifierKeys != Keys.Shift)
                         {
@@ -3449,6 +3528,7 @@ namespace Mids_Reborn.Forms
 
                             I9Picker.Location = point;
                             I9Picker.BringToFront();
+                            popupLastOpenTime = DateTime.Now.Ticks;
                             I9Picker.Visible = true;
                             I9Picker.Select();
                             LastClickPlacedSlot = false;
@@ -4687,14 +4767,13 @@ namespace Mids_Reborn.Forms
                     Width = workingArea.Width - initialWidth;
                 }
             }*/
-            Height = 857;
             switch (MidsContext.Config.Columns)
             {
                 case 2:
                     Width = 1071;
                     break;
                 case 3:
-                    Width = 1280;
+                    Width = 1344;
                     break;
                 case 4:
                     Width = 1588;
@@ -4854,11 +4933,11 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
             else
             {
-                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
         }
 
@@ -5035,9 +5114,6 @@ namespace Mids_Reborn.Forms
                         }
 
                         I9Popup.SetPopup(iPopup);
-                        //Debug.WriteLine($"rectangle.Y: {rectangle.Y}, I9Popup.Height: {I9Popup.Height}, rectangle.Height: {rectangle.Height} -- frmMain.InnerHeight:{ClientSize.Height - MenuBar.Height}");
-                        //Debug.WriteLine($"rectangle.Bottom: {rectangle.Bottom}, frmMain.Height: {ClientSize.Height - MenuBar.Height}");
-                        //Debug.WriteLine($"Diff: {rectangle.Bottom - (ClientSize.Height - MenuBar.Height)}");
                         if (vAlign == VerticalAlignment.Bottom)
                         {
                             rectangle.Y -= rectangle.Height;
@@ -5171,15 +5247,19 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                MMPets.Clear();
-                var CurrentPowers = MidsContext.Character.CurrentBuild.Powers;
-                foreach (var item in CurrentPowers)
-                {
-                    var PetExists = Enum.GetNames(typeof(Enums.eMMpets)).Contains(item.Name.Replace(" ", "_"));
-                    if (PetExists) MMPets.Add(item.Name);
-                }
+                // Zed: added check on level so hidden Henchmen powers (*_H) don't get in,
+                // leading to duplicates.
+                MMPets = MidsContext.Character.CurrentBuild.Powers == null
+                    ? new List<string>()
+                    : MidsContext.Character.CurrentBuild.Powers
+                    .Where(e =>
+                        e is { Power: { } } &&
+                        Enum.GetNames(typeof(Enums.eMMpets)).Contains(e.Name.Replace(" ", "_")) &
+                        e.Power.Level > 0)
+                    .Select(e => e.Name)
+                    .ToList();
 
-                var isEmpty = !MMPets.Any();
+                var isEmpty = MMPets.Count <= 0;
                 if (!isEmpty)
                 {
                     fMMPets = new frmMMPowers(this, MMPets)
@@ -5368,7 +5448,7 @@ namespace Mids_Reborn.Forms
             var frmCalcOpt = new frmCalcOpt(ref iParent);
             if (frmCalcOpt.ShowDialog(this) == DialogResult.OK)
             {
-                var serializer = MyApplication.GetSerializer();
+                var serializer = Serializer.GetSerializer();
                 MidsContext.Config.SaveConfig(serializer);
                 UpdateControls();
                 UpdateOtherFormsFonts();
@@ -5674,7 +5754,10 @@ namespace Mids_Reborn.Forms
 
             DoOpen(DlgOpen.FileName);
             FloatTop(true);
-            var containsPower = MidsContext.Character.CurrentBuild.Powers.Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
+            var containsPower = MidsContext.Character.CurrentBuild.Powers
+                .Where(pe => pe.Power != null)
+                .ToList()
+                .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
             if (containsPower && ActiveForm == this)
             {
                 pnlGFX.Update();
@@ -6217,7 +6300,7 @@ namespace Mids_Reborn.Forms
                 tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
                 if (MidsContext.Config.DiscordEnabled is true)
                 {
-                    ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                    ConfigDataSpecial.Initialize(Serializer.GetSerializer());
                     if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
                     {
                         MidsContext.ConfigSp.IsInitialized = true;
@@ -6721,8 +6804,8 @@ namespace Mids_Reborn.Forms
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
-            MidsContext.Character.CurrentBuild.LastPower =
-                24; //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+            MidsContext.Character.CurrentBuild.LastPower = 24;
+            //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
             var k = 0;
@@ -6730,8 +6813,12 @@ namespace Mids_Reborn.Forms
             try
             {
                 for (k = 0; k < listPowers.Count; k++)
+                {
                     if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    {
                         PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -6748,12 +6835,17 @@ namespace Mids_Reborn.Forms
                     if (pe.Power == null) continue; // Not picked power will be in the list, but not instanciated!
                     var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
                     if (pList.Length == 0) continue;
+                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
 
                     p = pList.First();
-                    while (pe.Slots.Length < p.Slots.Length) pe.AddSlot(MidsContext.Character.MaxLevel);
+                    while (pe.Slots.Length < p.Slots.Length)
+                    {
+                        pe.AddSlot(MidsContext.Character.MaxLevel);
+                    }
 
                     p.Slots.CopyTo(pe.Slots, 0);
                     for (i = 0; i < pe.Slots.Length; i++)
+                    {
                         if (i == 0)
                         {
                             pe.Slots[i].Level = pe.Level;
@@ -6763,6 +6855,7 @@ namespace Mids_Reborn.Forms
                             pe.Slots[i].Level = sl.PickSlot();
                             pickedSlots++;
                         }
+                    }
                 }
             }
             catch (Exception ex)

@@ -819,7 +819,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var num2 = effect.Mag;
+                var num2 = effect.BuffedMag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     num2 *= effect.Probability;
@@ -898,7 +898,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var effectMag = effect.Mag;
+                var effectMag = effect.BuffedMag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     effectMag *= effect.Probability;
@@ -1634,7 +1634,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var mag = Effects[iIndex].Mag;
+                var mag = Effects[iIndex].BuffedMag;
                 if (Effects[iIndex].Ticks > 1 && Effects[iIndex].Stacking == Enums.eStacking.Yes)
                 {
                     mag *= Effects[iIndex].Ticks;
@@ -1693,7 +1693,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var mag = Effects[iIndex].Mag;
+                var mag = Effects[iIndex].BuffedMag;
                 if (Effects[iIndex].Ticks > 1)
                 {
                     mag *= Effects[iIndex].Ticks;
@@ -1874,7 +1874,7 @@ namespace mrbBase.Base.Data_Classes
                         : Enums.GetGroupedDamage(iDamage, shortForm);
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("Special", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
                 }
                 else if ((effect.EffectType == Enums.eEffectType.Mez) |
                          (effect.EffectType == Enums.eEffectType.MezResist))
@@ -1908,7 +1908,7 @@ namespace mrbBase.Base.Data_Classes
 
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("None", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("None", newValue);
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.MezResist:
@@ -1962,7 +1962,7 @@ namespace mrbBase.Base.Data_Classes
                             effect.ETModifies = Enums.eEffectType.Slow;
                             str = shortForm
                                 ? effect.BuildEffectStringShort(noMag, simple)
-                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup);
+                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true);
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");
@@ -2213,44 +2213,48 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public int[] GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
+        public List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
         {
             var intList = new List<int>();
-            int[] numArray;
-            if (iType == Enums.eType.SetO)
-            {
-                numArray = GetValidEnhancementsFromSets();
-            }
-            else
-            {
-                for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
-                {
-                    var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
-                    if (enhancement1.TypeID != iType)
-                    {
-                        continue;
-                    }
+            List<int> allowedEnh;
 
-                    var flag = false;
-                    foreach (var index2 in enhancement1.ClassID)
-                    foreach (var enhancement2 in Enhancements)
-                        if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 &&
-                            (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None ||
-                             enhancement1.SubTypeID == iSubType))
+            switch (iType)
+            {
+                case Enums.eType.SetO:
+                    allowedEnh = GetValidEnhancementsFromSets().ToList();
+                    break;
+                default:
+                    for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
+                    {
+                        var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
+                        if (enhancement1.TypeID != iType)
                         {
-                            flag = true;
+                            continue;
                         }
 
-                    if (flag)
-                    {
-                        intList.Add(index1);
-                    }
-                }
+                        var flag = false;
+                        foreach (var index2 in enhancement1.ClassID)
+                        {
+                            foreach (var enhancement2 in Enhancements)
+                            {
+                                if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None || enhancement1.SubTypeID == iSubType))
+                                {
+                                    flag = true;
+                                }
+                            }
+                        }
 
-                numArray = intList.ToArray();
+                        if (flag)
+                        {
+                            intList.Add(index1);
+                        }
+                    }
+
+                    allowedEnh = intList;
+                    break;
             }
 
-            return numArray;
+            return allowedEnh;
         }
 
         public bool IsEnhancementValid(int iEnh)

@@ -206,8 +206,7 @@ namespace mrbBase
 
         private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
         {
-            if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 &&
-                !Database.Classes[nIDClass].Playable)
+            if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 && !Database.Classes[nIDClass].Playable)
                 return Array.Empty<int>();
 
 
@@ -761,6 +760,13 @@ namespace mrbBase
             ).Select(e => e.UID).ToArray();
         }
 
+        public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
+        {
+            return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
+        }
+
+        
+
         private static string[] GetATOSetsEnhUIDList()
         {
             return Database.Enhancements.Where(e =>
@@ -807,20 +813,28 @@ namespace mrbBase
         public static string GetEnhancementBaseUIDName(string iName)
         {
             var purpleSetsEnh = GetPurpleSetsEnhUIDList();
-            var ATOSetsEnh = GetATOSetsEnhUIDList();
-            var WinterEventEnh = GetWinterEventEnhUIDList();
-            var MovieEnh = GetMovieEnhUIDList();
+            var atoSetsEnh = GetATOSetsEnhUIDList();
+            var winterEventEnh = GetWinterEventEnhUIDList();
+            var movieEnh = GetMovieEnhUIDList();
 
-            // Purple IOs
-            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
-                return iName.Replace("Superior_Attuned_", "Crafted_");
+            // Purple IOs / Superior ATOs
+            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", ""))))
+            {
+                return winterEventEnh.Any(e => e.Contains(iName)) | movieEnh.Any(e => e.Contains(iName))
+                    ? iName
+                    : iName.Replace("Superior_Attuned_", "Crafted_");
+            }
 
-            if (ATOSetsEnh.Any(e => e.Contains(iName)) || WinterEventEnh.Any(e => e.Contains(iName)) ||
-                MovieEnh.Any(e => e.Contains(iName))) return iName;
+            if (atoSetsEnh.Any(e => e.Contains(iName)) ||
+                winterEventEnh.Any(e => e.Contains(iName)) ||
+                movieEnh.Any(e => e.Contains(iName)))
+            {
+                return iName;
+            }
 
             // IOs + SpecialOs
             return iName
-                .Replace("Synthetic_", string.Empty)
+                .Replace("Synthetic_", "")
                 .Replace("Attuned_", "Crafted_")
                 .Replace("Science_", "Magic_")
                 .Replace("Mutation_", "Magic_")
@@ -1310,17 +1324,17 @@ namespace mrbBase
         {
             foreach (var power in Database.Power)
             {
-                if (power.GetPowerSet().SetType == Enums.ePowerSetType.Primary || power.GetPowerSet().SetType == Enums.ePowerSetType.Secondary || power.GetPowerSet().SetType == Enums.ePowerSetType.Pool || power.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                if (power.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary)
                 {
-                    var Boosts = new List<string>();
+                    var boosts = new List<string>();
                     if (power.BoostsAllowed.Length <= 0 && power.Enhancements.Length > 0)
                     {
                         foreach (var enh in power.Enhancements)
                         {
-                            Boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
+                            boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
                         }
 
-                        power.BoostsAllowed = Boosts.ToArray();
+                        power.BoostsAllowed = boosts.ToArray();
                     }
                 }
             }
@@ -1328,8 +1342,6 @@ namespace mrbBase
 
         public static void SaveMainDatabase(ISerialize serializer, string iPath = "")
         {
-            //MergeDatabaseFile();
-            //Task.Delay(1500);
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
             {
@@ -1341,7 +1353,6 @@ namespace mrbBase
                 CheckEhcBoosts();
                 path = Files.SelectDataFileSave(Files.MxdbFileDB, iPath);
             }
-
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1357,11 +1368,14 @@ namespace mrbBase
 
             try
             {
+                UpdateDbModified();
                 writer.Write(MainDbName);
                 writer.Write(Database.Version);
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
+                writer.Write(Database.PageVol);
+                writer.Write(Database.PageVolText);
                 writer.Write("BEGIN:ARCHETYPES");
                 Database.ArchetypeVersion.StoreTo(writer);
                 //Console.WriteLine(Database.ArchetypeVersion);
@@ -1410,6 +1424,14 @@ namespace mrbBase
             }
         }
 
+        private static void UpdateDbModified()
+        {
+            Database.Date = DateTime.Now;
+            var dateSplit = Database.Date.ToString("MM/dd/yyyy").Split('/');
+            var verString = $"{dateSplit[2]}.{dateSplit[0]}{dateSplit[1]}";
+            Database.Version = double.Parse(verString);
+        }
+
         private static void saveEnts()
         {
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
@@ -1447,7 +1469,7 @@ namespace mrbBase
                     MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
                 }
 
-                Database.Version = reader.ReadSingle();
+                Database.Version = reader.ReadDouble();
                 var year = reader.ReadInt32();
                 if (year > 0)
                 {
@@ -1461,6 +1483,8 @@ namespace mrbBase
                 }
 
                 Database.Issue = reader.ReadInt32();
+                Database.PageVol = reader.ReadInt32();
+                Database.PageVolText = reader.ReadString();
                 if (reader.ReadString() != "BEGIN:ARCHETYPES")
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
@@ -1579,11 +1603,11 @@ namespace mrbBase
             }
         }
 
-        private static float GetDatabaseVersion(string fp)
+        private static double GetDatabaseVersion(string fp)
         {
             var fName = fp;
-            var num1 = -1f;
-            float num2;
+            double num1 = -1;
+            double num2;
             if (!File.Exists(fName))
             {
                 num2 = num1;
@@ -1597,8 +1621,11 @@ namespace mrbBase
                         try
                         {
                             if (binaryReader.ReadString() != "Mids' Hero Designer Database MK II")
+                            {
                                 MessageBox.Show("Expected MHD header, got something else!");
-                            num1 = binaryReader.ReadSingle();
+                            }
+
+                            num1 = binaryReader.ReadDouble();
                         }
                         catch (Exception ex)
                         {
@@ -2463,12 +2490,14 @@ namespace mrbBase
                 Database.SpecialEnhStringLong[1] = "Hamidon Origin";
                 Database.SpecialEnhStringLong[2] = "Hydra Origin";
                 Database.SpecialEnhStringLong[3] = "Titan Origin";
-                Database.SpecialEnhStringLong[4] = "Yin's Talisman";
+                Database.SpecialEnhStringLong[4] = "D-Sync Origin";
+                //Database.SpecialEnhStringLong[5] = "Yin's Talisman";
                 Database.SpecialEnhStringShort[0] = "None";
                 Database.SpecialEnhStringShort[1] = "HO";
                 Database.SpecialEnhStringShort[2] = "TnO";
                 Database.SpecialEnhStringShort[3] = "HyO";
-                Database.SpecialEnhStringShort[4] = "YinO";
+                Database.SpecialEnhStringShort[4] = "DSyncO";
+                //Database.SpecialEnhStringShort[5] = "YinO";
             }
             catch (Exception ex)
             {

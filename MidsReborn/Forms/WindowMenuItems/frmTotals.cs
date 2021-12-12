@@ -8,7 +8,6 @@ using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -206,11 +205,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
+        /*string PM(float iValue, string iFormat, string iSuff)
+        {
+            if (iValue >= 0.0)
+            {
+                if (iValue <= 0.0)
+                    return "+0" + iSuff;
+                else
+                    return "+" + Strings.Format(iValue, iFormat) + iSuff;
+            }
+            else
+                return Strings.Format(iValue, iFormat) + iSuff;
+        }*/
+
         string PM(float iValue, string iFormat, string iSuff)
         {
-            return (double) iValue >= 0.0
-                ? ((double) iValue <= 0.0 ? "+0" + iSuff : "+" + Strings.Format(iValue, iFormat) + iSuff)
-                : Strings.Format(iValue, iFormat) + iSuff;
+            if (!(iValue >= 0.0)) return $"{string.Format(iFormat, iValue)}{iSuff}";
+            return iValue <= 0.0 ? $"+0{iSuff}" : $"+{string.Format(iFormat,iValue)}{iSuff}";
         }
 
         void RbSpeedCheckedChanged(object sender, EventArgs e)
@@ -225,7 +236,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.FeetPerSecond;
             else if (rbMSec.Checked)
                 MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.MetersPerSecond;
-            UpdateData();
+            //UpdateData();
         }
 
         static void SetFontDataSingle(ref ctlMultiGraph iGraph)
@@ -439,42 +450,48 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public void UpdateData()
         {
-            string[] names1 = Enum.GetNames(Enums.eDamage.None.GetType());
+            var names1 = Enum.GetNames(Enums.eDamage.None.GetType());
             pbClose.Refresh();
             pbTopMost.Refresh();
             tab0.Refresh();
             tab1.Refresh();
-            Statistics displayStats = MidsContext.Character.DisplayStats;
+            var displayStats = MidsContext.Character.DisplayStats;
             graphDef.Clear();
-            int num1 = names1.Length - 1;
-            for (int dType = 1; dType <= num1; ++dType)
+            var num1 = names1.Length - 1;
+            for (var dType = 1; dType <= num1; ++dType)
             {
                 if (!(dType != 9 & dType != 7))
                     continue;
-                string iTip = Strings.Format(displayStats.Defense(dType), "##0.##") + "% " + names1[dType] + " defense";
-                graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.##") + "%",
-                    displayStats.Defense(dType), 0.0f, iTip);
+                var iTip = $"{Convert.ToDecimal(displayStats.Defense(dType)):##0.##}% {names1[dType]} defense";
+                //graphDef.AddItem($"{names1[dType]}:|{Convert.ToDecimal(displayStats.Defense(dType)):##0.##}% {names1[dType]}", displayStats.Defense(dType), 0.0f, iTip);
+                graphDef.AddItem($"{names1[dType]}:| {displayStats.Defense(dType):##0.##}%", displayStats.Defense(dType), 0.0f, iTip);
+                //var iTip = Strings.Format(displayStats.Defense(dType), "##0.##") + "% " + names1[dType] + " defense";
+                //graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.##") + "%", displayStats.Defense(dType), 0.0f, iTip);
             }
 
             graphDef.Max = 100f;
             graphDef.Draw();
-            string str1 = MidsContext.Character.Archetype.DisplayName + " resistance cap: " +
-                          Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
+            var str1 = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {Convert.ToDecimal(MidsContext.Character.Archetype.ResCap * 100):###0}%";
+            //var str1 = MidsContext.Character.Archetype.DisplayName + " resistance cap: " + Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
             graphRes.Clear();
-            int dType1 = 1;
+            var dType1 = 1;
             do
             {
                 if (dType1 != 9)
                 {
                     string iTip;
                     if (MidsContext.Character.TotalsCapped.Res[dType1] < (double) MidsContext.Character.Totals.Res[dType1])
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " + names1[dType1] +
-                               " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%";
+                    {
+                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):##0.##}% {names1[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):##0.##}%";
+                        //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " + names1[dType1] + " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%";
+                    }
                     else
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " + names1[dType1] +
-                               " resistance. (" + str1 + ")";
-                    graphRes.AddItem(names1[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%",
-                        displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
+                    {
+                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):##0.##}% {names1[dType1]} resistance. ({str1})";
+                        //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " + names1[dType1] + " resistance. (" + str1 + ")";
+                    }
+                    graphRes.AddItem($"{names1[dType1]}:|{Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):##0.##} %", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
+                    //graphRes.AddItem(names1[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
                 }
 
                 ++dType1;
@@ -482,69 +499,81 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             graphRes.Max = 100f;
             graphRes.Draw();
-            string iTip1 = "";
-            string str2 = "Time to go from 0-100% end: " + Utilities.FixDP(displayStats.EnduranceTimeToFull) + "s.";
+            var iTip1 = "";
+            var str2 = "Time to go from 0-100% end: " + Utilities.FixDP(displayStats.EnduranceTimeToFull) + "s.";
             if (Math.Abs(displayStats.EnduranceRecoveryPercentage(false) - displayStats.EnduranceRecoveryPercentage(true)) > 0.01)
-                str2 = str2 + "\r\nCapped from a total of: " + Strings.Format(displayStats.EnduranceRecoveryPercentage(true), "###0") + "%.";
-            string iTip2 = str2 + "\r\nHover the mouse over the End Drain stats for more info.";
+            {
+                str2 += $"\r\nCapped from a total of: {Convert.ToDecimal(displayStats.EnduranceRecoveryPercentage(true)):###0}%.";
+                //str2 = str2 + "\r\nCapped from a total of: " + Strings.Format(displayStats.EnduranceRecoveryPercentage(true), "###0") + "%.";
+            }
+
+            var iTip2 = $"{str2}\r\nHover the mouse of the End Drain stats for more info.";
+            //var iTip2 = str2 + "\r\nHover the mouse over the End Drain stats for more info.";
             if (displayStats.EnduranceRecoveryNet > 0.0)
             {
                 iTip1 = "Net Endurance Gain (Recovery - Drain): " + Utilities.FixDP(displayStats.EnduranceRecoveryNet) + "/s.";
                 if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > 0.01)
-                    iTip1 = iTip1 + "\r\nTime to go from 0-100% end (using net gain): " +
-                            Utilities.FixDP(displayStats.EnduranceTimeToFullNet) + "s.";
+                {
+                    iTip1 = iTip1 + "\r\nTime to go from 0-100% end (using net gain): " + Utilities.FixDP(displayStats.EnduranceTimeToFullNet) + "s.";
+                }
             }
             else if (displayStats.EnduranceRecoveryNet < 0.0)
-                iTip1 = "With current end drain, you will lose end at a rate of: " + Utilities.FixDP(displayStats.EnduranceRecoveryLossNet) +
-                        "/s.\r\nFrom 100% you would run out of end in: " + Utilities.FixDP(displayStats.EnduranceTimeToZero) + "s.";
+            {
+                iTip1 = "With current end drain, you will lose end at a rate of: " + Utilities.FixDP(displayStats.EnduranceRecoveryLossNet) + "/s.\r\nFrom 100% you would run out of end in: " + Utilities.FixDP(displayStats.EnduranceTimeToZero) + "s.";
+            }
 
             graphMaxEnd.Clear();
-            string iTip3 = "Base Endurance: 100\r\nCurrent Max End: " + Utilities.FixDP(displayStats.EnduranceMaxEnd);
+            var iTip3 = "Base Endurance: 100\r\nCurrent Max End: " + Utilities.FixDP(displayStats.EnduranceMaxEnd);
             if (MidsContext.Character.Totals.EndMax > 0.0)
-                iTip3 = iTip3 + "\r\nYour maximum endurance has been increased by " + Utilities.FixDP(displayStats.EnduranceMaxEnd - 100f) +
-                        "%";
+            {
+                iTip3 = iTip3 + "\r\nYour maximum endurance has been increased by " + Utilities.FixDP(displayStats.EnduranceMaxEnd - 100f) + "%";
+            }
+
             graphMaxEnd.AddItem("Max End:|" + Utilities.FixDP(displayStats.EnduranceMaxEnd) + "%", displayStats.EnduranceMaxEnd, 0.0f, iTip3);
             graphMaxEnd.Max = 150f;
             graphMaxEnd.MarkerValue = 100f;
             graphMaxEnd.Draw();
             graphDrain.Clear();
-            graphDrain.AddItem("EndUse:|" + Strings.Format(MidsContext.Character.Totals.EndUse, "##0.##") + "/s",
-                MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, iTip1);
+            graphDrain.AddItem($"EndUse:|{Convert.ToDecimal(MidsContext.Character.Totals.EndUse):##0.##}/s", MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, iTip1);
+            //graphDrain.AddItem("EndUse:|" + Strings.Format(MidsContext.Character.Totals.EndUse, "##0.##") + "/s", MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, iTip1);
             graphDrain.Max = 4f;
             graphDrain.Draw();
             graphRec.Clear();
-            graphRec.AddItem(
-                "EndRec:|" + Strings.Format(displayStats.EnduranceRecoveryPercentage(false), "###0") + "% (" +
-                Strings.Format(displayStats.EnduranceRecoveryNumeric, "##0.##") + "/s)", displayStats.EnduranceRecoveryPercentage(false),
-                displayStats.EnduranceRecoveryPercentage(true), iTip2);
+            graphRec.AddItem($"EndRec:|{Convert.ToDecimal(displayStats.EnduranceRecoveryPercentage(false)):###0}% ({Convert.ToDecimal(displayStats.EnduranceRecoveryNumeric):##0.##}/s)", displayStats.EnduranceRecoveryPercentage(false), displayStats.EnduranceRecoveryPercentage(true), iTip2);
+            //graphRec.AddItem("EndRec:|" + Strings.Format(displayStats.EnduranceRecoveryPercentage(false), "###0") + "% (" + Strings.Format(displayStats.EnduranceRecoveryNumeric, "##0.##") + "/s)", displayStats.EnduranceRecoveryPercentage(false), displayStats.EnduranceRecoveryPercentage(true), iTip2);
             graphRec.Max = 400f;
             graphRec.MarkerValue = 100f;
             graphRec.Draw();
-            string iTip4 = "Time to go from 0-100% health: " + Utilities.FixDP(displayStats.HealthRegenTimeToFull) +
-                           "s.\r\nHealth regenerated per second: " + Utilities.FixDP(displayStats.HealthRegenHealthPerSec) +
-                           "%\r\nHitPoints regenerated per second at level 50: " + Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
+            var iTip4 = "Time to go from 0-100% health: " + Utilities.FixDP(displayStats.HealthRegenTimeToFull) + "s.\r\nHealth regenerated per second: " + Utilities.FixDP(displayStats.HealthRegenHealthPerSec) + "%\r\nHitPoints regenerated per second at level 50: " + Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
             if (Math.Abs(displayStats.HealthRegenPercent(false) - displayStats.HealthRegenPercent(true)) > 0.01)
-                iTip4 = iTip4 + "\r\nCapped from a total of: " + Strings.Format(displayStats.HealthRegenPercent(true), "###0") + "%.";
+            {
+                iTip4 += $"\r\nCapped from a total of: {Convert.ToDecimal(displayStats.HealthRegenPercent(true)):###0}%.";
+                //iTip4 = iTip4 + "\r\nCapped from a total of: " + Strings.Format(displayStats.HealthRegenPercent(true), "###0") + "%.";
+            }
+
             graphRegen.Clear();
-            graphRegen.AddItem("Regeneration:|" + Strings.Format(displayStats.HealthRegenPercent(false), "###0") + "%",
-                displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
+            graphRegen.AddItem($"Regeneration:|{Convert.ToDecimal(displayStats.HealthRegenPercent(false)):###0}%", displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
+            //graphRegen.AddItem("Regeneration:|" + Strings.Format(displayStats.HealthRegenPercent(false), "###0") + "%", displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
             graphRegen.Max = graphRegen.GetMaxValue();
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();
             graphHP.Clear();
-            string iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " +
-                           Convert.ToString(displayStats.HealthHitpointsNumeric(false));
+            var iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " + Convert.ToString(displayStats.HealthHitpointsNumeric(false));
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
-                iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.##") + ")";
-            graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.##") + "%",
-                displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
+            {
+                iTip5 += $"\r\n(Capped from a total of: {Convert.ToDecimal(displayStats.HealthHitpointsNumeric(true)):###0.##})";
+                //iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.##") + ")";
+            }
+
+            graphHP.AddItem($"Max HP:|{Convert.ToDecimal(displayStats.HealthHitpointsPercentage):###0.##}%", displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
+            //graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.##") + "%", displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
             graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap / (double) MidsContext.Character.Archetype.Hitpoints * 100.0);
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
             graphMovement.Clear();
-            Enums.eSpeedMeasure speedFormat = MidsContext.Config.SpeedFormat;
-            string rateDisp = " MPH";
-            string lengthDisp = " m";
+            var speedFormat = MidsContext.Config.SpeedFormat;
+            var rateDisp = "MPH";
+            var lengthDisp = " m";
             switch (speedFormat)
             {
                 case Enums.eSpeedMeasure.FeetPerSecond:
@@ -565,120 +594,127 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     break;
             }
 
-            string formatSpeed(float iSpeed) => Strings.Format(displayStats.Speed(iSpeed, speedFormat), "##0.##") + rateDisp + ".";
-            string formatDistance(float iSpeed) => Strings.Format(displayStats.Distance(iSpeed, speedFormat), "##0.##");
+            //string formatSpeed(float iSpeed) => Strings.Format(displayStats.Speed(iSpeed, speedFormat), "##0.##") + rateDisp + ".";
+            string formatSpeed(float iSpeed) => $"{Convert.ToDecimal(displayStats.Speed(iSpeed, speedFormat)):##0.##}{rateDisp}.";
+            //string formatDistance(float iSpeed) => Strings.Format(displayStats.Distance(iSpeed, speedFormat), "##0.##");
+            string formatDistance(float iSpeed) => $"{Convert.ToDecimal(displayStats.Distance(iSpeed, speedFormat)):##0.##}";
 
-            string strCap = "This has been capped at the maximum in-game speed.\r\nUncapped speed: ";
-            string fltTip = "Base Flight Speed: " + formatSpeed(31.5f);
-            string jmpTip2 = "Base Jump Height: " + formatDistance(4f);
-            string iTip8 = "Base Run Speed: " + formatSpeed(21f);
+            var strCap = "This has been capped at the maximum in-game speed.\r\nUncapped speed: ";
+            var fltTip = "Base Flight Speed: " + formatSpeed(31.5f);
+            var jmpTip2 = "Base Jump Height: " + formatDistance(4f);
+            var iTip8 = "Base Run Speed: " + formatSpeed(21f);
 
             if (A_GT_B(displayStats.MovementFlySpeed(speedFormat, true), displayStats.MovementFlySpeed(speedFormat, false)))
-                fltTip = fltTip + "\r\n" + strCap +
-                         Strings.Format(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat), "##0.##") + rateDisp + ".";
+            {
+                fltTip += $"\r\n{strCap}{Convert.ToDecimal(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat)):##0.##}{rateDisp}.";
+                //fltTip = fltTip + "\r\n" + strCap + Strings.Format(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat), "##0.##") + rateDisp + ".";
+            }
             else if (Math.Abs(displayStats.MovementFlySpeed(speedFormat, false)) < float.Epsilon)
+            {
                 fltTip += "\r\nYou have no active flight powers.";
-            string jumpTip = "Base Jump Speed: " + formatSpeed(21f);
-            if (A_GT_B(displayStats.MovementJumpSpeed(speedFormat, true), displayStats.MovementJumpSpeed(speedFormat, false)))
-                jumpTip = jumpTip + "\r\n" + strCap + formatSpeed(MidsContext.Character.Totals.JumpSpd);
-            if (A_GT_B(displayStats.MovementRunSpeed(speedFormat, true), displayStats.MovementRunSpeed(speedFormat, false)))
-                iTip8 = iTip8 + "\r\n" + strCap + formatSpeed(MidsContext.Character.Totals.RunSpd);
-            string jmpHtTip = !(speedFormat == Enums.eSpeedMeasure.FeetPerSecond | speedFormat == Enums.eSpeedMeasure.MilesPerHour)
-                ? jmpTip2 + " m."
-                : jmpTip2 + " ft.";
+            }
 
-            void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) =>
-                graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp,
-                    dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
+            var jumpTip = "Base Jump Speed: " + formatSpeed(21f);
+            if (A_GT_B(displayStats.MovementJumpSpeed(speedFormat, true), displayStats.MovementJumpSpeed(speedFormat, false)))
+            {
+                jumpTip = jumpTip + "\r\n" + strCap + formatSpeed(MidsContext.Character.Totals.JumpSpd);
+            }
+
+            if (A_GT_B(displayStats.MovementRunSpeed(speedFormat, true), displayStats.MovementRunSpeed(speedFormat, false)))
+            {
+                iTip8 = iTip8 + "\r\n" + strCap + formatSpeed(MidsContext.Character.Totals.RunSpd);
+            }
+
+            string jmpHtTip;
+            if (!(speedFormat == Enums.eSpeedMeasure.FeetPerSecond | speedFormat == Enums.eSpeedMeasure.MilesPerHour))
+            {
+                jmpHtTip = jmpTip2 + " m.";
+            }
+            else
+            {
+                jmpHtTip = jmpTip2 + " ft.";
+            }
+
+            void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) => graphMovement.AddItem($"{title}{Convert.ToDecimal(dispStatsF(speedFormat, false)):##0.##}{rateDisp}", dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
+            //void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) => graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp, dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
 
             AddGrphMovement("Run:|", displayStats.MovementRunSpeed, iTip8);
             AddGrphMovement("Jump:|", displayStats.MovementJumpSpeed, jumpTip);
             //this.graphMovement.AddItem("Run:|" + Strings.Format(displayStats.MovementRunSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
             //this.graphMovement.AddItem("Jump:|" + Strings.Format(displayStats.MovementJumpSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
-            graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp,
-                displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-                displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
+            graphMovement.AddItem($"Jump Height:|{Convert.ToDecimal(displayStats.MovementJumpHeight(speedFormat)):##0.##}{lengthDisp}", displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
+            //graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
             //this.graphMovement.AddItem("Fly:|" + Strings.Format(displayStats.MovementFlySpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
 
             //AddGrphMovement("Jump Height:|", (x,_) => displayStats.MovementJumpHeight(x), jmpHtTip);
-            AddGrphMovement("Fly:|", displayStats.MovementFlySpeed, fltTip);
+            AddGrphMovement($"Fly:|",displayStats.MovementFlySpeed, fltTip);
 
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
             graphToHit.Clear();
-            graphToHit.AddItem("ToHit:|" + PM(displayStats.BuffToHit, "##0.##", "%"), displayStats.BuffToHit, 0.0f,
-                "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
+            graphToHit.AddItem($"ToHit:|{Convert.ToDecimal(displayStats.BuffToHit):##0.##}%", displayStats.BuffToHit, 0.0f, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100f;
             graphToHit.Draw();
             graphAcc.Clear();
-            graphAcc.AddItem("Accuracy:|" + PM(displayStats.BuffAccuracy, "##0.##", "%"), displayStats.BuffAccuracy, 0.0f,
-                "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
+            graphAcc.AddItem($"Accuracy:|{Convert.ToDecimal(displayStats.BuffAccuracy):##0.##}%", displayStats.BuffAccuracy, 0.0f, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
             graphAcc.Max = 100f;
             graphAcc.Draw();
             graphDam.Clear();
-            string str7 = "";
+            var str7 = "";
             if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
-                str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true)) + "% to " +
-                       Convert.ToString(displayStats.BuffDamage(false)) + "%";
-            graphDam.AddItem("Damage:|" + PM(displayStats.BuffDamage(false) - 100f, "##0.##", "%"), displayStats.BuffDamage(false),
-                displayStats.BuffDamage(true),
-                "This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included." +
-                str7);
+            {
+                str7 = $"\r\n\nDamage Capped from {displayStats.BuffDamage(true)}% to {displayStats.BuffDamage(false)}%";
+                //str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true)) + "% to " + Convert.ToString(displayStats.BuffDamage(false)) + "%";
+            }
+
+            graphDam.AddItem($"Damage:|{Convert.ToDecimal(displayStats.BuffDamage(false) - 100f):##0.##}%", displayStats.BuffDamage(false), displayStats.BuffDamage(true), "This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included." + str7);
             graphDam.Max = MidsContext.Character.Archetype.DamageCap * 100f;
             graphDam.MarkerValue = 100f;
             graphDam.Draw();
             graphHaste.Clear();
-            string str8 = "";
+            var str8 = "";
             if (A_GT_B(displayStats.BuffHaste(true), displayStats.BuffHaste(false)))
-                str8 = "\r\n\r\nRecharge Speed Capped from " + Convert.ToString(displayStats.BuffHaste(true)) + "% to " +
-                       Convert.ToString(displayStats.BuffHaste(false)) + "%";
-            graphHaste.AddItem("Haste:|" + PM(displayStats.BuffHaste(false) - 100f, "##0.##", "%"), displayStats.BuffHaste(false),
-                displayStats.BuffHaste(true),
-                "This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included." +
-                str8);
+            {
+                str8 = $"\r\n\r\nRecharge Speed Capped from {displayStats.BuffHaste(true)}% to {displayStats.BuffHaste(false)}%";
+                //str8 = "\r\n\r\nRecharge Speed Capped from " + Convert.ToString(displayStats.BuffHaste(true)) + "% to " + Convert.ToString(displayStats.BuffHaste(false)) + "%";
+            }
+
+            graphHaste.AddItem($"Haste:|{Convert.ToDecimal(displayStats.BuffHaste(false) - 100f):##0.##}%", displayStats.BuffHaste(false), displayStats.BuffHaste(true), "This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included." + str8);
             graphHaste.MarkerValue = 100f;
-            float haste = displayStats.BuffHaste(true);
+            var haste = displayStats.BuffHaste(true);
             graphHaste.Max = haste <= 380.0 ? (haste <= 280.0 ? 300f : 400f) : 500f;
             graphHaste.Draw();
             graphEndRdx.Clear();
-            graphEndRdx.AddItem("EndRdx:|" + PM(displayStats.BuffEndRdx, "##0.##", "%"), displayStats.BuffEndRdx, displayStats.BuffEndRdx,
-                "This effect is applied to powers in addition to endurance reduction enhancements.");
+            graphEndRdx.AddItem($"EndRdx:|{Convert.ToDecimal(displayStats.BuffEndRdx):##0.##}%", displayStats.BuffEndRdx, displayStats.BuffEndRdx, "This effect is applied to powers in addition to endurance reduction enhancements.");
             graphEndRdx.Max = 200f;
             graphEndRdx.Draw();
             graphStealth.Clear();
-            graphStealth.AddItem("PvE:|" + Strings.Format(MidsContext.Character.Totals.StealthPvE, "##0") + " ft",
-                MidsContext.Character.Totals.StealthPvE, 0.0f,
-                "This is subtracted from a critter's perception to work out if they can see you.");
-            graphStealth.AddItem("PvP:|" + Strings.Format(MidsContext.Character.Totals.StealthPvP, "##0") + " ft",
-                MidsContext.Character.Totals.StealthPvP, 0.0f,
-                "This is subtracted from a player's perception to work out if they can see you.");
-            graphStealth.AddItem("Perception:|" + Strings.Format(displayStats.Perception(false), "###0") + " ft",
-                displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
+            graphStealth.AddItem($"PvE:|{Convert.ToDecimal(MidsContext.Character.Totals.StealthPvE):##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a mob's perception to work out if they can see you.");
+            graphStealth.AddItem($"PvE:|{Convert.ToDecimal(MidsContext.Character.Totals.StealthPvP):##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
+            graphStealth.AddItem($"Perception:|{Convert.ToDecimal(displayStats.Perception(false)):###0} ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
+            //graphStealth.AddItem("PvE:|" + Strings.Format(MidsContext.Character.Totals.StealthPvE, "##0") + " ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a critter's perception to work out if they can see you.");
+            //graphStealth.AddItem("PvP:|" + Strings.Format(MidsContext.Character.Totals.StealthPvP, "##0") + " ft", MidsContext.Character.Totals.StealthPvP, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
+            //graphStealth.AddItem("Perception:|" + Strings.Format(displayStats.Perception(false), "###0") + " ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
-            string iTip10 = "This affects how critters prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
-                            MidsContext.Character.Archetype.DisplayName + " base Threat Level of " +
-                            Strings.Format((float) (MidsContext.Character.Archetype.BaseThreat * 100.0), "##0") +
-                            "% is included in this figure.";
-            float nBase = displayStats.ThreatLevel + 200f;
+            var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {Convert.ToDecimal(MidsContext.Character.Archetype.BaseThreat * 100.0):###}% is included in this figure.";
+            //var iTip10 = "This affects how critters prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe " + MidsContext.Character.Archetype.DisplayName + " base Threat Level of " + Strings.Format((float) (MidsContext.Character.Archetype.BaseThreat * 100.0), "##0") + "% is included in this figure.";
+            var nBase = displayStats.ThreatLevel + 200f;
             graphThreat.Clear();
-            graphThreat.AddItem("Threat Level:|" + Strings.Format(displayStats.ThreatLevel, "##0") + "%", nBase, 0.0f, iTip10);
+            graphThreat.AddItem($"Threat Level:|{Convert.ToDecimal(displayStats.ThreatLevel):##0}%", nBase, 0.0f, iTip10);
             graphThreat.MarkerValue = (float) (MidsContext.Character.Archetype.BaseThreat * 100.0 + 200.0);
             graphThreat.Max = 800f;
             graphThreat.Draw();
             graphElusivity.Clear();
-            float sElusivity = MidsContext.Character.Totals.ElusivityMax;
-            graphElusivity.AddItem("Elusivity:|" + Strings.Format((float) (sElusivity * 100.0), "##0.##") + "%",
-                sElusivity * 100f, 0.0f, "This effect resists accuracy buffs of enemies attacking you.");
+            var sElusivity = MidsContext.Character.Totals.ElusivityMax;
+            graphElusivity.AddItem($"Elusivity:|{Convert.ToDecimal(sElusivity * 100.0):##0.##}%", sElusivity * 100f, 0.0f, "This effect resists accuracy buffs of enemies attacking you.");
             graphElusivity.Max = 100f;
             graphElusivity.Draw();
             if (Math.Abs(graphAcc.Font.Size - (double) MidsContext.Config.RtFont.PairedBase) > float.Epsilon)
                 SetFonts();
-            Character.TotalStatistics totals = MidsContext.Character.Totals;
-            string str9 = "\r\nStatus protection prevents you being affected by a status effect such as" +
-                          "\r\na Hold until the magnitude of the effect exceeds that of the protection.";
-            string str10 = "\r\nStatus resistance reduces the time you are affected by a status effect such as" +
-                           "\r\na Hold. Note that 100% resistance would make a 10s effect last 5s, and not 0s.";
+            var totals = MidsContext.Character.Totals;
+            var str9 = "\r\nStatus protection prevents you being affected by a status effect such as" + "\r\na Hold until the magnitude of the effect exceeds that of the protection.";
+            var str10 = "\r\nStatus resistance reduces the time you are affected by a status effect such as" + "\r\na Hold. Note that 100% resistance would make a 10s effect last 5s, and not 0s.";
             graphSProt.Clear();
             graphSRes.Clear();
             Enums.eMez[] eMezArray =
@@ -686,8 +722,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized, Enums.eMez.Knockback, Enums.eMez.Repel,
                 Enums.eMez.Confused, Enums.eMez.Terrorized, Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
             };
-            string[] names2 = Enum.GetNames(eMezArray[0].GetType());
-            string[] names3 = Enum.GetNames(eMezArray[0].GetType());
+            var names2 = Enum.GetNames(eMezArray[0].GetType());
+            var names3 = Enum.GetNames(eMezArray[0].GetType());
             names2[2] = "Hold";
             names2[3] = "Immob";
             names2[1] = "Confuse";
@@ -696,42 +732,58 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             names3[1] = "Confuse";
             names3[12] = "Fear (Terrorized)";
             names3[4] = "Knockback and Knockup";
-            int num3 = 5;
-            int num4 = eMezArray.Length - 1;
-            for (int index = 0; index <= num4; ++index)
+            var num3 = 5;
+            var num4 = eMezArray.Length - 1;
+            for (var index = 0; index <= num4; ++index)
             {
                 string iTip11;
                 if (Math.Abs(totals.Mez[(int) eMezArray[index]]) < float.Epsilon)
+                {
                     iTip11 = "You have no protection from " + names3[(int) eMezArray[index]] + " effects.\r\n" + str9;
+                }
                 else
-                    iTip11 = "You have mag " + Strings.Format((float) -(double) totals.Mez[(int) eMezArray[index]], "##0.##") +
-                             " protection from " + names3[(int) eMezArray[index]] + " effects.\r\n" + str9;
-                graphSProt.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(-totals.Mez[(int) eMezArray[index]], "##0.##"),
-                    -totals.Mez[(int) eMezArray[index]], 0.0f, iTip11);
-                float num5 = (float) (100.0 / (1.0 + totals.MezRes[(int) eMezArray[index]] / 100.0));
+                {
+                    iTip11 = $"You have mag {Convert.ToDecimal(totals.Mez[(int)eMezArray[index]]):##0.##} protection from {names3[(int)eMezArray[index]]} effects.\r\n{str9}";
+                    //iTip11 = "You have mag " + Strings.Format((float) -(double) totals.Mez[(int) eMezArray[index]], "##0.##") + " protection from " + names3[(int) eMezArray[index]] + " effects.\r\n" + str9;
+                }
+
+                graphSProt.AddItem($"{names2[(int)eMezArray[index]]}:|{Convert.ToDecimal(totals.Mez[(int)eMezArray[index]]):##0.##}", totals.Mez[(int)eMezArray[index]], 0.0f, iTip11);
+                //graphSProt.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(-totals.Mez[(int) eMezArray[index]], "##0.##"), -totals.Mez[(int) eMezArray[index]], 0.0f, iTip11);
+                var num5 = (float) (100.0 / (1.0 + totals.MezRes[(int) eMezArray[index]] / 100.0));
                 string str11;
-                if (eMezArray[index] != Enums.eMez.Knockback & eMezArray[index] != Enums.eMez.Knockup & eMezArray[index] != Enums.eMez.Repel &
-                    eMezArray[index] != Enums.eMez.Teleport)
+                if (eMezArray[index] != Enums.eMez.Knockback & eMezArray[index] != Enums.eMez.Knockup & eMezArray[index] != Enums.eMez.Repel & eMezArray[index] != Enums.eMez.Teleport)
                 {
                     if (totals.MezRes[(int) eMezArray[index]] > (double) num3)
+                    {
                         num3 = (int) Math.Round(totals.MezRes[(int) eMezArray[index]]);
-                    str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will last " + Strings.Format(num5, "##0.##") +
-                            "% of their full duration.\r\n" + str10;
+                    }
+
+                    str11 = $"\r\n{names3[(int)eMezArray[index]]} effects will last {Convert.ToDecimal(num5):##0.##}% of their full duration.\r\n{str10}";
+                    //str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will last " + Strings.Format(num5, "##0.##") + "% of their full duration.\r\n" + str10;
                 }
                 else if (eMezArray[index] == Enums.eMez.Teleport)
+                {
                     str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will be resisted.\r\n" + str10;
+                }
                 else
-                    str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will have " + Strings.Format(num5, "##0.##") +
-                            "% of their full effect.\r\n" + str10;
+                {
+                    str11 = $"\r\n{names3[(int)eMezArray[index]]} effects will have {Convert.ToDecimal(num5):##0.##}% of their full effect.\r\n{str10}";
+                   // str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will have " + Strings.Format(num5, "##0.##") + "% of their full effect.\r\n" + str10;
+                }
 
                 string iTip12;
                 if (Math.Abs(totals.MezRes[(int) eMezArray[index]]) < float.Epsilon)
+                {
                     iTip12 = "You have no resistance to " + names3[(int) eMezArray[index]] + " effects.\r\n" + str10;
+                }
                 else
-                    iTip12 = "You have " + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "% resistance to " +
-                             names3[(int) eMezArray[index]] + " effects." + str11;
-                graphSRes.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "%",
-                    totals.MezRes[(int) eMezArray[index]], 0.0f, iTip12);
+                {
+                    iTip12 = $"You have {Convert.ToDecimal(totals.Mez[(int)eMezArray[index]]):##0.##}% resistance to {names3[(int)eMezArray[index]]} effects.{str11}";
+                    //iTip12 = "You have " + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "% resistance to " + names3[(int) eMezArray[index]] + " effects." + str11;
+                }
+
+                graphSRes.AddItem($"{names2[(int)eMezArray[index]]}:|{Convert.ToDecimal(totals.MezRes[(int)eMezArray[index]]):##0.##}%", totals.MezRes[(int)eMezArray[index]], 0.0f, iTip12);
+                //graphSRes.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "%", totals.MezRes[(int) eMezArray[index]], 0.0f, iTip12);
             }
 
             graphSProt.Max = graphSProt.GetMaxValue();
@@ -744,19 +796,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery, Enums.eEffectType.PerceptionRadius,
                 Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning
             };
-            int num6 = eEffectTypeArray.Length - 1;
-            for (int index = 0; index <= num6; ++index)
+            var num6 = eEffectTypeArray.Length - 1;
+            for (var index = 0; index <= num6; ++index)
             {
                 string iTip11;
                 if (Math.Abs(totals.DebuffRes[(int) eEffectTypeArray[index]] - 0.0f) < 0.001)
+                {
                     iTip11 = "You have no resistance to " + Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
+                }
                 else
-                    iTip11 = "You have " + Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "% resistance to " +
-                             Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
-                graphSDeb.AddItem(
-                    Enums.GetEffectName(eEffectTypeArray[index]) + ":|" +
-                    Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "%",
-                    totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
+                {
+                    iTip11 = $"You have {Convert.ToDecimal(totals.DebuffRes[(int)eMezArray[index]]):##0.##}% resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs.";
+                    //iTip11 = "You have " + Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "% resistance to " + Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
+                }
+
+                graphSDeb.AddItem($"{Enums.GetEffectName(eEffectTypeArray[index])}:|{Convert.ToDecimal(totals.DebuffRes[(int)eEffectTypeArray[index]]):##0.##}%", totals.DebuffRes[(int)eEffectTypeArray[index]], 0.0f, iTip11);
+                //graphSDeb.AddItem(Enums.GetEffectName(eEffectTypeArray[index]) + ":|" + Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "%", totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
             }
 
             graphSDeb.Max = graphSDeb.GetMaxValue() + 1f;

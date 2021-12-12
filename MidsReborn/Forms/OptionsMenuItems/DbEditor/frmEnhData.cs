@@ -1,17 +1,16 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEnhData : Form
     {
@@ -22,6 +21,7 @@ namespace Mids_Reborn.Forms
         private ExtendedBitmap bxClass;
         private ExtendedBitmap bxClassList;
         private bool Loading;
+        private bool EnhClassesSelectorOpen = false;
 
         public frmEnhData(ref IEnhancement iEnh, int newStaticIndex)
         {
@@ -68,13 +68,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
-
         {
             EffectList_Add();
         }
 
         private void btnAddFX_Click(object sender, EventArgs e)
-
         {
             IEffect iFx = new Effect();
             using var frmPowerEffect = new frmPowerEffect(iFx);
@@ -110,11 +108,9 @@ namespace Mids_Reborn.Forms
             enh.Effect = sEffects;
             ListSelectedEffects();
             lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
-
         }
 
         private void btnAutoFill_Click(object sender, EventArgs e)
-
         {
             var eEnhance = Enums.eEnhance.None;
             var eEnhanceShort = Enums.eEnhanceShort.None;
@@ -180,14 +176,12 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
-
         {
             DialogResult = DialogResult.Cancel;
             Hide();
         }
 
         private void btnDown_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndices.Count <= 0)
                 return;
@@ -205,7 +199,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
-
         {
             EditClick();
         }
@@ -256,7 +249,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnEditPowerData3_Click(object sender, EventArgs e)
-
         {
             var enh = myEnh;
             var power = enh.GetPower();
@@ -272,7 +264,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnImage_Click(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -294,7 +285,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnNoImage_Click(object sender, EventArgs e)
-
         {
             myEnh.Image = "";
             SetTypeIcons();
@@ -308,7 +298,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -337,7 +326,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnUp_Click(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndices.Count <= 0)
                 return;
@@ -355,7 +343,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbMutEx_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -363,7 +350,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbRecipe_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (cbRecipe.SelectedIndex > 0)
             {
@@ -378,7 +364,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbSched_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -388,7 +373,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -399,9 +383,21 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
-
         {
-            myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
+            var cb = sender as ComboBox;
+            if (cb?.SelectedIndex != -1)
+            {
+                var selectedItem = cb?.SelectedItem.ToString();
+                if (selectedItem != "None")
+                {
+                    var subType = (Enums.eSubtype)Enum.Parse(typeof(Enums.eSubtype), selectedItem);
+                    myEnh.SubTypeID = subType;
+                }
+            }
+            else
+            {
+                myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
+            }
         }
 
         private void chkSuperior_CheckedChanged(object sender, EventArgs e)
@@ -409,12 +405,27 @@ namespace Mids_Reborn.Forms
             if (Loading)
                 return;
             myEnh.Superior = chkSuperior.Checked;
-            if (chkSuperior.Checked)
+            if (txtInternal.Text.Contains("Attuned"))
             {
-                myEnh.LevelMin = 49;
+                myEnh.LevelMin = 0;
+                myEnh.LevelMax = 0;
+                udMinLevel.Minimum = 1;
+                udMinLevel.Maximum = 53;
+                udMinLevel.Value = 1;
+                udMaxLevel.Minimum = 1;
+                udMaxLevel.Maximum = 53;
+                udMaxLevel.Value = 1;
+            }
+            else
+            {
+                myEnh.LevelMin = 9;
                 myEnh.LevelMax = 49;
-                udMinLevel.Value = new decimal(50);
-                udMaxLevel.Value = new decimal(50);
+                udMinLevel.Minimum = 1;
+                udMinLevel.Maximum = 53;
+                udMinLevel.Value = 10;
+                udMaxLevel.Minimum = 1;
+                udMaxLevel.Maximum = 53;
+                udMaxLevel.Value = 50;
             }
 
             chkUnique.Checked = true;
@@ -468,7 +479,9 @@ namespace Mids_Reborn.Forms
                     break;
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
-                    cbSubType.SelectedIndex = (int)myEnh.SubTypeID;
+                    var type = Enum.GetName(typeof(Enums.eSubtype), myEnh.SubTypeID);
+                    Debug.WriteLine(type);
+                    cbSubType.SelectedItem = type;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;
                     cbRecipe.SelectedIndex = 0;
@@ -649,18 +662,16 @@ namespace Mids_Reborn.Forms
 
         private void DrawClassList()
         {
-            using var bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
+            bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
             var enhPadding1 = EnhPadding;
             var enhPadding2 = EnhPadding;
             var num1 = 0;
             using var solidBrush = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxClassList.Graphics.FillRectangle(solidBrush, bxClassList.ClipRect);
-            var num2 = DatabaseAPI.Database.EnhancementClasses.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxClassList.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(index),
-                    GraphicsUnit.Pixel);
+                bxClassList.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(index), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + EnhPadding;
                 ++num1;
                 if (num1 != EnhAcross)
@@ -857,15 +868,16 @@ namespace Mids_Reborn.Forms
 
         private void FillSubTypeList()
         {
-            var names = Enum.GetNames(Enums.eSubtype.None.GetType());
+            //var names = Enum.GetNames(Enums.eSubtype.None.GetType());
+            var names = Enum.GetNames(typeof(Enums.eSubtype)).ToList();
             cbSubType.BeginUpdate();
-            cbSubType.Items.Clear();
-            cbSubType.Items.AddRange(names);
+            //cbSubType.Items.Clear();
+            cbSubType.DataSource = names;
+            //cbSubType.Items.AddRange(names);
             cbSubType.EndUpdate();
         }
 
         private void frmEnhData_Load(object sender, EventArgs e)
-
         {
             FillSetList();
             FillEffectList();
@@ -907,13 +919,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void lstAvailable_DoubleClick(object sender, EventArgs e)
-
         {
             EffectList_Add();
         }
 
         private void lstSelected_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             DisplayEnhanceData();
             tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem, CultureInfo.InvariantCulture));
@@ -925,24 +935,27 @@ namespace Mids_Reborn.Forms
         }
 
         private void PickerExpand()
-
         {
-            if (gbClass.Width == 84)
+            if (!EnhClassesSelectorOpen)
             {
+                btnEditPowerData.Visible = false;
                 gbClass.Width = 272;
                 gbClass.Left -= 188;
                 lblClass.Width = 256;
+                pnlClassList.Refresh();
+                EnhClassesSelectorOpen = true;
             }
             else
             {
+                btnEditPowerData.Visible = true;
                 gbClass.Width = 84;
                 gbClass.Left = 596;
                 lblClass.Width = pnlClass.Width;
+                EnhClassesSelectorOpen = false;
             }
         }
 
         private void pnlClass_MouseDown(object sender, MouseEventArgs e)
-
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -994,7 +1007,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void pnlClass_MouseMove(object sender, MouseEventArgs e)
-
         {
             var num1 = -1;
             var num2 = -1;
@@ -1024,7 +1036,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void pnlClass_Paint(object sender, PaintEventArgs e)
-
         {
             if (bxClass == null)
                 return;
@@ -1032,7 +1043,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void pnlClassList_MouseDown(object sender, MouseEventArgs e)
-
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -1068,12 +1078,10 @@ namespace Mids_Reborn.Forms
 
                     if (flag)
                         return;
-                    var enh = myEnh;
-                    //var numArray = (int[]) Utils.CopyArray(enh.ClassID, new int[myEnh.ClassID.Length + 1]);
-                    var numArray = new int[myEnh.ClassID.Length + 1];
-                    Array.Copy(enh.ClassID, numArray, myEnh.ClassID.Length + 1);
-                    enh.ClassID = numArray;
-                    myEnh.ClassID[myEnh.ClassID.Length - 1] = num5;
+
+                    var classIdList = myEnh.ClassID.ToList();
+                    classIdList.Add(num5);
+                    myEnh.ClassID = classIdList.ToArray();
                     Array.Sort(myEnh.ClassID);
                     DrawClasses();
                 }
@@ -1081,7 +1089,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void pnlClassList_MouseMove(object sender, MouseEventArgs e)
-
         {
             var num1 = -1;
             var num2 = -1;
@@ -1105,7 +1112,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void pnlClassList_Paint(object sender, PaintEventArgs e)
-
         {
             if (bxClassList == null)
                 return;
@@ -1113,7 +1119,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void rbBuffDebuff_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading || lstSelected.SelectedIndex <= -1)
                 return;
@@ -1129,7 +1134,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void rbMod_CheckedChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -1188,35 +1192,29 @@ namespace Mids_Reborn.Forms
                 ? new ExtendedBitmap(30, 30)
                 : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeRegular.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.InventO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.InventO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeIO.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SpecialO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SpecialO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeHO.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeSet.Image = new Bitmap(extendedBitmap1.Bitmap);
         }
 
         private void StaticIndex_TextChanged(object sender, EventArgs e)
-
         {
             myEnh.StaticIndex = Convert.ToInt32(StaticIndex.Text, CultureInfo.InvariantCulture);
         }
 
         private void txtDesc_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1224,7 +1222,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtInternal_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1232,7 +1229,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtModOther_TextChanged(object sender, EventArgs e)
-
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
@@ -1242,7 +1238,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtNameFull_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1251,7 +1246,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtNameShort_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1259,7 +1253,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtProb_Leave(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1267,7 +1260,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void txtProb_TextChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1280,7 +1272,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void type_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -1327,34 +1318,30 @@ namespace Mids_Reborn.Forms
         }
 
         private void udMaxLevel_Leave(object sender, EventArgs e)
-
         {
             SetMaxLevel(Convert.ToInt32(udMaxLevel.Text));
-            myEnh.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
+            myEnh.LevelMax = Convert.ToInt32(udMaxLevel.Value) - 1;
         }
 
         private void udMaxLevel_ValueChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
-            myEnh.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
+            myEnh.LevelMax = Convert.ToInt32(udMaxLevel.Value) - 1;
             udMinLevel.Maximum = udMaxLevel.Value;
         }
 
         private void udMinLevel_Leave(object sender, EventArgs e)
-
         {
             SetMinLevel(Convert.ToInt32(udMinLevel.Text));
-            myEnh.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+            myEnh.LevelMin = Convert.ToInt32(udMinLevel.Value) - 1;
         }
 
         private void udMinLevel_ValueChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
-            myEnh.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+            myEnh.LevelMin = Convert.ToInt32(udMinLevel.Value) - 1;
             udMaxLevel.Minimum = udMinLevel.Value;
         }
 

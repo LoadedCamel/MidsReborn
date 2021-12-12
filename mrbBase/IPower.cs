@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using mrbBase.Base.Data_Classes;
 
@@ -241,7 +242,7 @@ namespace mrbBase
             bool onlyTarget = false,
             bool onlyAlly = false,
             bool maxMode = false);
-
+        
         Enums.ShortFX GetDamageMagSum(
             Enums.eEffectType iEffect,
             Enums.eDamage iSub,
@@ -284,7 +285,7 @@ namespace mrbBase
 
         void ApplyGrantPowerEffects();
 
-        int[] GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None);
+        List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None);
 
         bool IsEnhancementValid(int iEnh);
 

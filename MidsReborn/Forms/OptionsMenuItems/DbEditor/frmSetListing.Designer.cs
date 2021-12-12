@@ -40,6 +40,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnClone = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
@@ -65,7 +66,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader3,
             this.ColumnHeader4,
             this.ColumnHeader5,
-            this.ColumnHeader6});
+            this.ColumnHeader6,
+            this.columnHeader7});
             this.lvSets.FullRowSelect = true;
             this.lvSets.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSets.HideSelection = false;
@@ -73,7 +75,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSets.Location = new System.Drawing.Point(16, 16);
             this.lvSets.MultiSelect = false;
             this.lvSets.Name = "lvSets";
-            this.lvSets.Size = new System.Drawing.Size(600, 520);
+            this.lvSets.Size = new System.Drawing.Size(684, 520);
             this.lvSets.SmallImageList = this.ilSets;
             this.lvSets.TabIndex = 0;
             this.lvSets.UseCompatibleStateImageBehavior = false;
@@ -111,11 +113,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader6.Text = "FX";
             this.ColumnHeader6.Width = 53;
             // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Has PvP FX";
+            this.columnHeader7.Width = 76;
+            // 
             // btnClone
             // 
             this.btnClone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnClone.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClone.Location = new System.Drawing.Point(624, 132);
+            this.btnClone.Location = new System.Drawing.Point(706, 132);
             this.btnClone.Name = "btnClone";
             this.btnClone.Size = new System.Drawing.Size(75, 23);
             this.btnClone.TabIndex = 32;
@@ -128,7 +135,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(375, 544);
+            this.btnCancel.Location = new System.Drawing.Point(457, 544);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(193, 32);
             this.btnCancel.TabIndex = 31;
@@ -141,7 +148,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnSave.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(588, 544);
+            this.btnSave.Location = new System.Drawing.Point(670, 544);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(112, 32);
             this.btnSave.TabIndex = 30;
@@ -153,7 +160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEdit.Location = new System.Drawing.Point(624, 172);
+            this.btnEdit.Location = new System.Drawing.Point(706, 172);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
             this.btnEdit.TabIndex = 29;
@@ -165,7 +172,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDelete.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.Location = new System.Drawing.Point(624, 211);
+            this.btnDelete.Location = new System.Drawing.Point(706, 211);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 28;
@@ -177,7 +184,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnAdd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(624, 92);
+            this.btnAdd.Location = new System.Drawing.Point(706, 92);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 27;
@@ -189,7 +196,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDown.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDown.Location = new System.Drawing.Point(624, 44);
+            this.btnDown.Location = new System.Drawing.Point(706, 44);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(75, 23);
             this.btnDown.TabIndex = 26;
@@ -201,7 +208,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnUp.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUp.Location = new System.Drawing.Point(624, 16);
+            this.btnUp.Location = new System.Drawing.Point(706, 16);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(75, 23);
             this.btnUp.TabIndex = 25;
@@ -223,7 +230,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(706, 584);
+            this.ClientSize = new System.Drawing.Size(793, 584);
             this.Controls.Add(this.NoReload);
             this.Controls.Add(this.btnClone);
             this.Controls.Add(this.btnCancel);
@@ -240,7 +247,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Name = "frmSetListing";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "PvE Invention Set Editor";
+            this.Text = "Invention Sets";
             this.ResumeLayout(false);
 
         }
@@ -263,5 +270,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         ImageList ilSets;
         ListView lvSets;
         CheckBox NoReload;
+        private ColumnHeader columnHeader7;
     }
 }

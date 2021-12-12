@@ -908,7 +908,7 @@ namespace mrbBase
             DefDebuff,
             EndMod,
             Knockback,
-            Taunt,
+            Threat,
             ToHit,
             ToHitDeb,
             PetRech,
@@ -929,7 +929,11 @@ namespace mrbBase
             Stalker,
             Tanker,
             UniversalDamage,
-            Sentinel
+            Sentinel,
+            RunNoSprint,
+            JumpNoSprint,
+            FlightNoSprint,
+            TeleportNoSprint
         }
 
         public enum eSpecialCase
@@ -1047,7 +1051,8 @@ namespace mrbBase
             None,
             Hamidon,
             Hydra,
-            Titan
+            Titan,
+            DSync
         }
 
         public enum eSummonEntity
@@ -1501,7 +1506,7 @@ namespace mrbBase
 
         public static string[] StringToArray(string iStr)
         {
-            var strArray1 = new string[0];
+            var strArray1 = Array.Empty<string>();
             string[] strArray2;
             if (iStr == null)
             {
@@ -1697,15 +1702,19 @@ namespace mrbBase
             {
                 if (Value == null)
                 {
-                    Value = new float[0];
-                    Index = new int[0];
+                    Value = Array.Empty<float>();
+                    Index = Array.Empty<int>();
                     Sum = 0.0f;
                 }
 
-                Array.Resize(ref Value, Value.Length + 1);
-                Array.Resize(ref Index, Index.Length + 1);
-                Value[Value.Length - 1] = iValue;
-                Index[Index.Length - 1] = iIndex;
+                var values = Value.ToList();
+                values.Add(iValue);
+                Value = values.ToArray();
+
+                var indexes = Index.ToList();
+                indexes.Add(iIndex);
+                Index = indexes.ToArray();
+                
                 Sum += iValue;
             }
 
@@ -1737,8 +1746,8 @@ namespace mrbBase
                 }
                 else
                 {
-                    Index = new int[0];
-                    Value = new float[0];
+                    Index = Array.Empty<int>();
+                    Value = Array.Empty<float>();
                     Sum = 0.0f;
                 }
             }

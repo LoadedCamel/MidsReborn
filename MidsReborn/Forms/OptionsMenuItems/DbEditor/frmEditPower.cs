@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -6,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -122,6 +121,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             };
             iFX.SetPower(myPower);
             using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             var effectList = myPower.Effects.ToList();
@@ -137,6 +137,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
@@ -168,6 +169,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
 
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -323,6 +325,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
                 }
 
+                myPower.BoostsAllowed = myPower.Enhancements
+                    .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
+                    .ToArray();
+
                 DialogResult = DialogResult.OK;
                 Hide();
             }
@@ -332,7 +338,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPrListing.SelectedItems.Count < 1)
                 return;
-            var num = (int) Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
+            var num = Convert.ToInt32(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag));
+            //var num = Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             var flag = lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1;
             var index1 = num;
             var index2 = index1 + 1;
@@ -409,7 +416,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPrListing.SelectedItems.Count < 1)
                 return;
-            var num = (int) Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
+            var num = Convert.ToInt32(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag));
+            //var num = (int) Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             var flag = lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1;
             if (num < 1)
                 return;
@@ -459,7 +467,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (string.Equals(myPower.UIDSubPower[index], b, StringComparison.OrdinalIgnoreCase))
                     return;
             var power = myPower;
-            var strArray = (string[]) Utils.CopyArray(power.UIDSubPower, new string[myPower.UIDSubPower.Length + 1]);
+            var strArray = Array.Empty<string>();
+            Array.Copy(power.UIDSubPower, strArray, power.UIDSubPower.Length + 1);
+            //var strArray = (string[]) Utils.CopyArray(power.UIDSubPower, new string[myPower.UIDSubPower.Length + 1]);
             power.UIDSubPower = strArray;
             myPower.UIDSubPower[myPower.UIDSubPower.Length - 1] = b;
             SPFillList();
@@ -1147,16 +1157,28 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void FillTab_Attribs()
         {
             var power = myPower;
-            var Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###";
+            // var Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###";
+            // txtLevel.Text = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
+            // txtAcc.Text = Strings.Format(power.Accuracy, Style);
+            // txtInterrupt.Text = Strings.Format(power.InterruptTime, Style);
+            // txtCastTime.Text = Strings.Format(power.CastTimeReal, Style);
+            // txtRechargeTime.Text = Strings.Format(power.RechargeTime, Style);
+            // txtActivate.Text = Strings.Format(power.ActivatePeriod, Style);
+            // txtEndCost.Text = Strings.Format(power.EndCost, Style);
+            // txtRange.Text = Strings.Format(power.Range, Style);
+            // txtRangeSec.Text = Strings.Format(power.RangeSecondary, Style);
+
             txtLevel.Text = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
-            txtAcc.Text = Strings.Format(power.Accuracy, Style);
-            txtInterrupt.Text = Strings.Format(power.InterruptTime, Style);
-            txtCastTime.Text = Strings.Format(power.CastTimeReal, Style);
-            txtRechargeTime.Text = Strings.Format(power.RechargeTime, Style);
-            txtActivate.Text = Strings.Format(power.ActivatePeriod, Style);
-            txtEndCost.Text = Strings.Format(power.EndCost, Style);
-            txtRange.Text = Strings.Format(power.Range, Style);
-            txtRangeSec.Text = Strings.Format(power.RangeSecondary, Style);
+            txtAcc.Text = $@"{Convert.ToDecimal(power.Accuracy):##0.###}";
+            txtInterrupt.Text = $@"{Convert.ToDecimal(power.InterruptTime):##0.###}";
+            txtCastTime.Text = $@"{Convert.ToDecimal(power.CastTimeReal):##0.###}";
+            txtRechargeTime.Text = $@"{Convert.ToDecimal(power.RechargeTime):##0.###}";
+            txtActivate.Text = $@"{Convert.ToDecimal(power.ActivatePeriod):##0.###}";
+            txtEndCost.Text = $@"{Convert.ToDecimal(power.EndCost):##0.###}";
+            txtRange.Text = $@"{Convert.ToDecimal(power.Range):##0.###}";
+            txtRangeSec.Text = $@"{Convert.ToDecimal(power.RangeSecondary):##0.###}";
+
+
             txtRadius.Text = Convert.ToString(power.Radius, CultureInfo.InvariantCulture);
             txtArc.Text = Convert.ToString(power.Arc, CultureInfo.InvariantCulture);
             txtMaxTargets.Text = Convert.ToString(power.MaxTargets, CultureInfo.InvariantCulture);
@@ -1543,9 +1565,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var num1 = -1;
             var num2 = -1;
             var num3 = enhAcross - 1;
-            for (var index = 0; index <= num3; ++index)
-                if ((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))
-                    num1 = index;
+            for (var index = 0; index < enhAcross; index++)
+            {
+                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))) continue;
+                
+                num1 = index;
+                break;
+            }
+
             var num4 = 0;
             do
             {
@@ -1558,17 +1585,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((index1 <= DatabaseAPI.Database.EnhancementClasses.Length - 1) & (num1 > -1) & (num2 > -1)))
                 return;
             var flag = false;
-            var num5 = myPower.Enhancements.Length - 1;
-            for (var index2 = 0; index2 <= num5; ++index2)
-                if (myPower.Enhancements[index2] == DatabaseAPI.Database.EnhancementClasses[index1].ID)
+            foreach (var pEnh in myPower.Enhancements)
+            {
+                if (pEnh == DatabaseAPI.Database.EnhancementClasses[index1].ID)
+                {
                     flag = true;
+                    break;
+                }
+            }
 
-            if (flag)
-                return;
-            var power = myPower;
-            var numArray = (int[]) Utils.CopyArray(power.Enhancements, new int[myPower.Enhancements.Length + 1]);
-            power.Enhancements = numArray;
-            myPower.Enhancements[myPower.Enhancements.Length - 1] = DatabaseAPI.Database.EnhancementClasses[index1].ID;
+            if (flag) return;
+
+            var enhList = myPower.Enhancements.ToList();
+            enhList.Add(DatabaseAPI.Database.EnhancementClasses[index1].ID);
+            myPower.Enhancements = enhList.ToArray();
             Array.Sort(myPower.Enhancements);
             RedrawEnhList();
         }
@@ -1597,31 +1627,35 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void pbEnhancements_MouseDown(object sender, MouseEventArgs e)
         {
-            var num1 = -1;
-            var length = myPower.Enhancements.Length;
-            for (var index = 0; index <= length; ++index)
-                if ((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))
-                    num1 = index;
-            var num2 = num1;
-            if (!((num2 < myPower.Enhancements.Length) & (num1 > -1)))
-                return;
-            var power = myPower;
-            var numArray = new int[power.Enhancements.Length];
-            var num3 = power.Enhancements.Length - 1;
-            for (var index = 0; index <= num3; ++index)
-                numArray[index] = power.Enhancements[index];
-            var index1 = 0;
-            power.Enhancements = new int[power.Enhancements.Length - 1];
-            var num4 = numArray.Length - 1;
-            for (var index2 = 0; index2 <= num4; ++index2)
+            var enhIdx = -1;
+            for (var index = 0; index < myPower.Enhancements.Length; index++)
             {
-                if (index2 == num2)
-                    continue;
-                power.Enhancements[index1] = numArray[index2];
-                ++index1;
+                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))) continue;
+                
+                enhIdx = index;
+                break;
             }
 
-            Array.Sort(power.Enhancements);
+            if (!((enhIdx < myPower.Enhancements.Length) & (enhIdx > -1))) return;
+            
+            var numArray = new int[myPower.Enhancements.Length];
+            for (var index = 0; index < myPower.Enhancements.Length; index++)
+            {
+                numArray[index] = myPower.Enhancements[index];
+            }
+
+            var index1 = 0;
+            myPower.Enhancements = new int[myPower.Enhancements.Length - 1];
+            var num4 = numArray.Length - 1;
+            for (var index2 = 0; index2 < numArray.Length; index2++)
+            {
+                if (index2 == enhIdx)
+                    continue;
+                myPower.Enhancements[index1] = numArray[index2];
+                index1++;
+            }
+
+            Array.Sort(myPower.Enhancements);
             RedrawEnhList();
         }
 
@@ -1647,11 +1681,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (flag | (myPower.SetTypes.Length > 10))
                 return;
-            var power = myPower;
-            var eSetTypeArray =
-                (Enums.eSetType[]) Utils.CopyArray(power.SetTypes, new Enums.eSetType[myPower.SetTypes.Length + 1]);
-            power.SetTypes = eSetTypeArray;
-            myPower.SetTypes[myPower.SetTypes.Length - 1] = (Enums.eSetType) invSetListIndex;
+            var eSetTypeList = myPower.SetTypes.ToList();
+            eSetTypeList.Add((Enums.eSetType)invSetListIndex);
+            myPower.SetTypes = eSetTypeList.ToArray();
             Array.Sort(myPower.SetTypes);
             DrawAcceptedSets();
         }
@@ -1738,26 +1770,34 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FillAdvAtrList();
         }
 
+        private string[][] AddEmptyToJagged(string[][] originalArray)
+        {
+            var jaggedList = originalArray.Select(x => x.ToList()).ToList();
+            jaggedList.Add(new List<string> { "Empty", "" });
+            string[][] output = jaggedList.Select(a => a.ToArray()).ToArray();
+            return output;
+        }
+
         private void rbPrAdd_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("If this power is required to be present, click 'Yes'.\r\nIf this power is NOT required to be present, click 'No'.", "Query", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
-                myPower.Requires.PowerIDNot = (string[][]) Utils.CopyArray(myPower.Requires.PowerIDNot,
-                    new string[myPower.Requires.PowerIDNot.Length + 1][]);
-                myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1] = new string[2];
-                myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][0] = "Empty";
-                myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][1] = "";
+                // myPower.Requires.PowerIDNot = (string[][]) Utils.CopyArray(myPower.Requires.PowerIDNot, new string[myPower.Requires.PowerIDNot.Length + 1][]);
+                // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1] = new string[2];
+                // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][0] = "Empty";
+                // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][1] = "";
+                myPower.Requires.PowerIDNot = AddEmptyToJagged(myPower.Requires.PowerIDNot);
                 FillTab_Req();
                 lvPrListing.Items[lvPrListing.Items.Count - 1].Selected = true;
                 lvPrListing.Items[lvPrListing.Items.Count - 1].EnsureVisible();
             }
             else
             {
-                myPower.Requires.PowerID = (string[][]) Utils.CopyArray(myPower.Requires.PowerID,
-                    new string[myPower.Requires.PowerID.Length + 1][]);
-                myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1] = new string[2];
-                myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1][0] = "Empty";
-                myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1][1] = "";
+                // myPower.Requires.PowerID = (string[][]) Utils.CopyArray(myPower.Requires.PowerID, new string[myPower.Requires.PowerID.Length + 1][]);
+                // myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1] = new string[2];
+                // myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1][0] = "Empty";
+                // myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1][1] = "";
+                myPower.Requires.PowerID = AddEmptyToJagged(myPower.Requires.PowerID);
                 FillTab_Req();
                 lvPrListing.Items[myPower.Requires.PowerID.Length - 1].Selected = true;
                 lvPrListing.Items[myPower.Requires.PowerID.Length - 1].EnsureVisible();
@@ -1776,8 +1816,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPrListing.SelectedItems.Count < 1)
                 return;
-            var num1 = (int) Math.Round(
-                Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
+            var num1 = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
                 var strArray1 = new string[myPower.Requires.PowerIDNot.Length][];
@@ -1945,8 +1984,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPrListing.SelectedIndices.Count < 1)
                 return;
-            var index = (int) Math.Round(
-                Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
+            var index = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             ReqDisplayPower(lvPrListing.SelectedIndices[0] <= myPower.Requires.PowerID.Length - 1
                 ? !rbPrPowerA.Checked ? myPower.Requires.PowerID[index][1] : myPower.Requires.PowerID[index][0]
                 : !rbPrPowerA.Checked
@@ -2009,8 +2047,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             var str = lvPrGroup.SelectedItems[0].Text + "." + lvPrSet.SelectedItems[0].Text + "." +
                       lvPrPower.SelectedItems[0].Text;
-            var index = (int) Math.Round(
-                Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
+            var index = (int) Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
                 if (rbPrPowerA.Checked)
@@ -2090,12 +2127,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkBuffCycle.Enabled = power.PowerType == Enums.ePowerType.Click;
             chkAlwaysToggle.Enabled = power.PowerType == Enums.ePowerType.Toggle;
             if ((power.ActivatePeriod > 0.0) & (power.PowerType == Enums.ePowerType.Toggle))
-                lblEndCost.Text = "(" + Strings.Format((float) (power.EndCost / (double) power.ActivatePeriod),
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "/s)";
+            {
+                lblEndCost.Text = $@"{Convert.ToDecimal(power.EndCost / power.ActivatePeriod):##0.##}/s";
+                //lblEndCost.Text = "(" + Strings.Format((float) (power.EndCost / (double) power.ActivatePeriod), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "/s)";
+            }
             else
+            {
                 lblEndCost.Text = "";
-            lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) MidsContext.Config.BaseAcc * 100.0),
-                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
+            }
+
+            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.BaseAcc * 100.0):##0.##}%)";
+            //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) MidsContext.Config.BaseAcc * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
         }
 
         private void SetFullName()

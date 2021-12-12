@@ -1154,6 +1154,7 @@ namespace mrbControls
                                         1 => "Hamidon/Synthetic Hamidon enhancements.",
                                         2 => "Rewards from the Sewer Trial.",
                                         3 => "Rewards from the Eden Trial.",
+                                        4 => "Rewards from the Aeon Strike Force.",
                                         _ => ""
                                     };
 
@@ -1232,26 +1233,11 @@ namespace mrbControls
                                     DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet]
                                         .LevelMax)
                                 {
-                                    str2 = " (" + Convert.ToString(
-                                        DatabaseAPI.Database
-                                            .EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin +
-                                        1) + ")";
+                                    str2 = $" ({DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin + 1})";
                                 }
                                 else
                                 {
-                                    str2 = string.Concat(" (",
-                                        Convert.ToString(DatabaseAPI.Database
-                                                             .EnhancementSets[
-                                                                 DatabaseAPI.Database.Enhancements[tId].nIDSet]
-                                                             .LevelMin +
-                                                         1),
-                                        "-",
-                                        Convert.ToString(DatabaseAPI.Database
-                                                             .EnhancementSets[
-                                                                 DatabaseAPI.Database.Enhancements[tId].nIDSet]
-                                                             .LevelMax +
-                                                         1),
-                                        ")");
+                                    str2 = $" ({DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin + 1}-{DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMax + 1})";
                                     if (DatabaseAPI.Database.Enhancements[tId].Unique) text += " (Unique)";
                                 }
 
@@ -1318,10 +1304,10 @@ namespace mrbControls
             return array;
         }
 
-        private static int[] GetValidEnhancements(int iPowerIDX, Enums.eType iType, Enums.eSubtype iSubType = 0)
+        private static List<int> GetValidEnhancements(int iPowerIDX, Enums.eType iType, Enums.eSubtype iSubType = 0)
         {
             return iPowerIDX < 0
-                ? Array.Empty<int>()
+                ? new List<int>()
                 : DatabaseAPI.Database.Power[iPowerIDX].GetValidEnhancements(iType, iSubType);
         }
 
@@ -1341,8 +1327,8 @@ namespace mrbControls
             UI.SpecialTypes = (int[]) Enum.GetValues(eSubtype.GetType());
             Enums.eEnhGrade eEnhGrade = 0;
             UI.NOGrades = (int[]) Enum.GetValues(eEnhGrade.GetType());
-            UI.NO = GetValidEnhancements(_nPowerIDX, Enums.eType.Normal);
-            UI.IO = GetValidEnhancements(_nPowerIDX, Enums.eType.InventO);
+            UI.NO = GetValidEnhancements(_nPowerIDX, Enums.eType.Normal).ToArray();
+            UI.IO = GetValidEnhancements(_nPowerIDX, Enums.eType.InventO).ToArray();
             UI.Initial.GradeID = _lastGrade;
             UI.Initial.RelLevel = _lastRelativeLevel;
             UI.Initial.SpecialID = _lastSpecial;
@@ -1357,17 +1343,17 @@ namespace mrbControls
                 if (DatabaseAPI.Database.Enhancements[_mySlot.Enh].SubTypeID != 0)
                 {
                     UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO,
-                        DatabaseAPI.Database.Enhancements[_mySlot.Enh].SubTypeID);
+                        DatabaseAPI.Database.Enhancements[_mySlot.Enh].SubTypeID).ToArray();
                     UI.Initial.SpecialID = DatabaseAPI.Database.Enhancements[_mySlot.Enh].SubTypeID;
                 }
                 else
                 {
-                    UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.Initial.SpecialID);
+                    UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.Initial.SpecialID).ToArray();
                 }
             }
             else
             {
-                UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.Initial.SpecialID);
+                UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.Initial.SpecialID).ToArray();
             }
 
             UI.SetTypes = GetValidSetTypes(_nPowerIDX);
@@ -1485,7 +1471,7 @@ namespace mrbControls
             UI.View.SpecialID = iSubType;
             if (_nPowerIDX > 0)
             {
-                UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.View.SpecialID);
+                UI.SpecialO = GetValidEnhancements(_nPowerIDX, Enums.eType.SpecialO, UI.View.SpecialID).ToArray();
             }
             else if ((UI.Initial.SpecialID == UI.View.SpecialID) & ((int) UI.Initial.TabID == 3))
             {

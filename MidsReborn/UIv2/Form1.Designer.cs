@@ -34,6 +34,7 @@ namespace Mids_Reborn.UIv2
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BGImage = new System.Windows.Forms.PictureBox();
             this.MainPanel = new mrbControls.ctlPanel();
+            this.label12 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.Ancillary_Powers = new mrbControls.ctlPowerList();
             this.cbAncillary = new mrbControls.ctlCombo();
@@ -85,6 +86,7 @@ namespace Mids_Reborn.UIv2
             // MainPanel
             // 
             this.MainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.MainPanel.Controls.Add(this.label12);
             this.MainPanel.Controls.Add(this.button2);
             this.MainPanel.Controls.Add(this.Ancillary_Powers);
             this.MainPanel.Controls.Add(this.cbAncillary);
@@ -118,6 +120,16 @@ namespace Mids_Reborn.UIv2
             this.MainPanel.Name = "MainPanel";
             this.MainPanel.Size = new System.Drawing.Size(1375, 976);
             this.MainPanel.TabIndex = 3;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.Silver;
+            this.label12.Location = new System.Drawing.Point(770, 381);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(51, 16);
+            this.label12.TabIndex = 36;
+            this.label12.Text = "label12";
             // 
             // button2
             // 
@@ -496,7 +508,7 @@ namespace Mids_Reborn.UIv2
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(50, 75);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 16);
+            this.label4.Size = new System.Drawing.Size(52, 16);
             this.label4.TabIndex = 11;
             this.label4.Text = "Origin:";
             // 
@@ -523,7 +535,7 @@ namespace Mids_Reborn.UIv2
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(21, 45);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 16);
+            this.label3.Size = new System.Drawing.Size(81, 16);
             this.label3.TabIndex = 9;
             this.label3.Text = "Archetype:";
             // 
@@ -542,7 +554,7 @@ namespace Mids_Reborn.UIv2
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(50, 17);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 16);
+            this.label2.Size = new System.Drawing.Size(52, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "Name:";
             // 
@@ -657,5 +669,6 @@ namespace Mids_Reborn.UIv2
         private ctlCombo cbAncillary;
         private Label label11;
         private Button button2;
+        private Label label12;
     }
 }

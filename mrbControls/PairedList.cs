@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -292,7 +293,14 @@ namespace mrbControls
 
         public void AddItem(ItemPair iItem)
         {
-            _myItems.Add(new ItemPair(iItem));
+            try
+            {
+                _myItems.Add(new ItemPair(iItem));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("PairedList.AddItem(): Illegal item add call");
+            }
         }
 
         public void Clear(bool Redraw = false)

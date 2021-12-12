@@ -8,7 +8,7 @@
     <RootNamespace>Mids_Reborn</RootNamespace>
     <AssemblyName>MidsReborn</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -41,7 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <NoWarn>CS1690, CS0169, CA1823, CA2213</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -53,7 +53,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -80,7 +80,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>mrbasign.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
@@ -236,12 +237,6 @@
     <Compile Include="Forms\frmInitializing.Designer.cs">
       <DependentUpon>frmInitializing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.Designer.cs">
-      <DependentUpon>frmSetListingPvP.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\JsonImport\frmJsonImportMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,23 +244,17 @@
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainUILogic.cs" />
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.Designer.cs">
-      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.Designer.cs">
-      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.Designer.cs">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.Designer.cs">
+      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmMMPowers.cs">
       <SubType>Form</SubType>
@@ -296,9 +285,6 @@
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmAccolade.Designer.cs">
       <DependentUpon>frmAccolade.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.Designer.cs">
-      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.Designer.cs">
       <DependentUpon>frmSalvageEdit.cs</DependentUpon>
@@ -375,7 +361,7 @@
     <Compile Include="Forms\frmEnhMiniPick.Designer.cs">
       <DependentUpon>frmEnhMiniPick.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmEnhData.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.Designer.cs">
       <DependentUpon>frmEnhData.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
@@ -387,11 +373,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Serializer.cs" />
     <Compile Include="UIv2\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UIv2\Form1.designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList.Designer.cs">
+      <DependentUpon>PowerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList_Test.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowerList_Test.Designer.cs">
+      <DependentUpon>PowerList_Test.cs</DependentUpon>
     </Compile>
     <Compile Include="UIv2\v2Controls\PowersControl.cs">
       <SubType>Component</SubType>
@@ -399,84 +398,87 @@
     <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
       <DependentUpon>PowersControl.cs</DependentUpon>
     </Compile>
-    <Content Include="Images\Classes\1.png">
+    <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
+      <DependentUpon>PowerList.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Images\Classes\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\10.png">
+    </None>
+    <None Include="Images\Classes\10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\11.png">
+    </None>
+    <None Include="Images\Classes\11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\12.png">
+    </None>
+    <None Include="Images\Classes\12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\13.png">
+    </None>
+    <None Include="Images\Classes\13.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\14.png">
+    </None>
+    <None Include="Images\Classes\14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\15.png">
+    </None>
+    <None Include="Images\Classes\15.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\16.png">
+    </None>
+    <None Include="Images\Classes\16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\17.png">
+    </None>
+    <None Include="Images\Classes\17.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\18.png">
+    </None>
+    <None Include="Images\Classes\18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\19.png">
+    </None>
+    <None Include="Images\Classes\19.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\2.png">
+    </None>
+    <None Include="Images\Classes\2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\20.png">
+    </None>
+    <None Include="Images\Classes\20.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\21.png">
+    </None>
+    <None Include="Images\Classes\21.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\22.png">
+    </None>
+    <None Include="Images\Classes\22.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\23.png">
+    </None>
+    <None Include="Images\Classes\23.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\24.png">
+    </None>
+    <None Include="Images\Classes\24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\25.png">
+    </None>
+    <None Include="Images\Classes\25.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\26.png">
+    </None>
+    <None Include="Images\Classes\26.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\3.png">
+    </None>
+    <None Include="Images\Classes\3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\4.png">
+    </None>
+    <None Include="Images\Classes\4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\5.png">
+    </None>
+    <None Include="Images\Classes\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\6.png">
+    </None>
+    <None Include="Images\Classes\6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\7.png">
+    </None>
+    <None Include="Images\Classes\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\8.png">
+    </None>
+    <None Include="Images\Classes\8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Classes\9.png">
+    </None>
+    <None Include="Images\Classes\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Data\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -521,1711 +523,1752 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Images\defaultAvatar.png" />
-    <Content Include="Images\Enhancements\Acc.png">
+    <None Include="Images\Enhancements\Acc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AnalyzeWeakness.png">
+    </None>
+    <None Include="Images\Enhancements\AnalyzeWeakness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Annihilation.png">
+    </None>
+    <None Include="Images\Enhancements\Annihilation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Arachnos1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Arachnos1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Arachnos2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Arachnos2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Blaster1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Blaster1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Blaster2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Blaster2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Brute1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Brute1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Brute2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Brute2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Controller1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Controller1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Controller2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Controller2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Corruptor1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Corruptor1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Corruptor2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Corruptor2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Defender1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Defender1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Defender2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Defender2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Dominator1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Dominator1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Dominator2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Dominator2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Kheldian1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Kheldian1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Kheldian2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Kheldian2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Mastermind1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Mastermind1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Mastermind2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Mastermind2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Overwhelming_Force.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Overwhelming_Force.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Scrapper1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Scrapper1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Scrapper2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Scrapper2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Sentinel1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Sentinel1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Sentinel2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Sentinel2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Stalker1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Stalker1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Stalker2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Stalker2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Tanker1.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Tanker1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\AO_Tanker2.png">
+    </None>
+    <None Include="Images\Enhancements\AO_Tanker2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Artillery.png">
+    </None>
+    <None Include="Images\Enhancements\Artillery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Basilisk.png">
+    </None>
+    <None Include="Images\Enhancements\Basilisk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Bombardment.png">
+    </None>
+    <None Include="Images\Enhancements\Bombardment.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\CallToArms.png">
+    </None>
+    <None Include="Images\Enhancements\CallToArms.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Class_Sentinel.png">
+    </None>
+    <None Include="Images\Enhancements\Class_Sentinel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\CloudSenses.png">
+    </None>
+    <None Include="Images\Enhancements\CloudSenses.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Confuse.png">
+    </None>
+    <None Include="Images\Enhancements\Confuse.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Damage.png">
+    </None>
+    <None Include="Images\Enhancements\Damage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\DamRes.png">
+    </None>
+    <None Include="Images\Enhancements\DamRes.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Defbuff.png">
+    </None>
+    <None Include="Images\Enhancements\Defbuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\DefDebuff.png">
+    </None>
+    <None Include="Images\Enhancements\DefDebuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\eMarksman.png">
+    </None>
+    <None Include="Images\Enhancements\dsync.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EndMod.png">
+    </None>
+    <None Include="Images\Enhancements\eMarksman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EndRdx.png">
+    </None>
+    <None Include="Images\Enhancements\EndMod.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EO_Avalanche.png">
+    </None>
+    <None Include="Images\Enhancements\EndRdx.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EO_BlisteringCold.png">
+    </None>
+    <None Include="Images\Enhancements\EO_Avalanche.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EO_Entomb.png">
+    </None>
+    <None Include="Images\Enhancements\EO_BlisteringCold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\EO_WintersBite.png">
+    </None>
+    <None Include="Images\Enhancements\EO_Entomb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Eradication.png">
+    </None>
+    <None Include="Images\Enhancements\EO_WintersBite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\ExpedientReinforcement.png">
+    </None>
+    <None Include="Images\Enhancements\Eradication.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Fear.png">
+    </None>
+    <None Include="Images\Enhancements\ExpedientReinforcement.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Fly.png">
+    </None>
+    <None Include="Images\Enhancements\Fear.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\FuryoftheGladiator.png">
+    </None>
+    <None Include="Images\Enhancements\Fly.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Heal.png">
+    </None>
+    <None Include="Images\Enhancements\FuryoftheGladiator.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOCentriole.png">
+    </None>
+    <None Include="Images\Enhancements\Heal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOCytoskeleton.png">
+    </None>
+    <None Include="Images\Enhancements\HOCentriole.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOEndoplasm.png">
+    </None>
+    <None Include="Images\Enhancements\HOCytoskeleton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOEnzyme.png">
+    </None>
+    <None Include="Images\Enhancements\HOEndoplasm.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOGolgi.png">
+    </None>
+    <None Include="Images\Enhancements\HOEnzyme.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Hold.png">
+    </None>
+    <None Include="Images\Enhancements\HOGolgi.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOLysosome.png">
+    </None>
+    <None Include="Images\Enhancements\Hold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOMembrane.png">
+    </None>
+    <None Include="Images\Enhancements\HOLysosome.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOMicrofilament.png">
+    </None>
+    <None Include="Images\Enhancements\HOMembrane.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HONucleolus.png">
+    </None>
+    <None Include="Images\Enhancements\HOMicrofilament.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HOPeroxisome.png">
+    </None>
+    <None Include="Images\Enhancements\HONucleolus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HORibosome.png">
+    </None>
+    <None Include="Images\Enhancements\HOPeroxisome.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYAntiProton.png">
+    </None>
+    <None Include="Images\Enhancements\HORibosome.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYDelta.png">
+    </None>
+    <None Include="Images\Enhancements\HYAntiProton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYElectron.png">
+    </None>
+    <None Include="Images\Enhancements\HYDelta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYGluon.png">
+    </None>
+    <None Include="Images\Enhancements\HYElectron.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYGraviton.png">
+    </None>
+    <None Include="Images\Enhancements\HYGluon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYNeutrino.png">
+    </None>
+    <None Include="Images\Enhancements\HYGraviton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYNeutron.png">
+    </None>
+    <None Include="Images\Enhancements\HYNeutrino.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYPositron.png">
+    </None>
+    <None Include="Images\Enhancements\HYNeutron.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYProton.png">
+    </None>
+    <None Include="Images\Enhancements\Hypersonic.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYQuark.png">
+    </None>
+    <None Include="Images\Enhancements\HYPositron.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\HYTheta.png">
+    </None>
+    <None Include="Images\Enhancements\HYProton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Immob.png">
+    </None>
+    <None Include="Images\Enhancements\HYQuark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Intan.png">
+    </None>
+    <None Include="Images\Enhancements\HYTheta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Interrupt.png">
+    </None>
+    <None Include="Images\Enhancements\Ice_Mistrals_Torment.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\IO_SuddenAcceleration.png">
+    </None>
+    <None Include="Images\Enhancements\Immob.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Jump.png">
+    </None>
+    <None Include="Images\Enhancements\Intan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Knock.png">
+    </None>
+    <None Include="Images\Enhancements\Interrupt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Lockdown.png">
+    </None>
+    <None Include="Images\Enhancements\IO_SuddenAcceleration.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Obliteration.png">
+    </None>
+    <None Include="Images\Enhancements\Jump.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Power_Transfer.png">
+    </None>
+    <None Include="Images\Enhancements\Knock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Preemptive_Optimization.png">
+    </None>
+    <None Include="Images\Enhancements\Launch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\PreventiveMedicine.png">
+    </None>
+    <None Include="Images\Enhancements\Lockdown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Range.png">
+    </None>
+    <None Include="Images\Enhancements\Obliteration.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\ReactiveDefenses.png">
+    </None>
+    <None Include="Images\Enhancements\Power_Transfer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Recharge.png">
+    </None>
+    <None Include="Images\Enhancements\Preemptive_Optimization.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Run.png">
+    </None>
+    <None Include="Images\Enhancements\PreventiveMedicine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAbsoluteAmazement.png">
+    </None>
+    <None Include="Images\Enhancements\Range.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAchillesHeel.png">
+    </None>
+    <None Include="Images\Enhancements\ReactiveDefenses.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAdjustedTargetting.png">
+    </None>
+    <None Include="Images\Enhancements\Recharge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAdrenalAdj.png">
+    </None>
+    <None Include="Images\Enhancements\Run.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAegis.png">
+    </None>
+    <None Include="Images\Enhancements\sAbsoluteAmazement.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAirBurst.png">
+    </None>
+    <None Include="Images\Enhancements\sAchillesHeel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sAnnoyance.png">
+    </None>
+    <None Include="Images\Enhancements\sAdjustedTargetting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Arachnos1.png">
+    </None>
+    <None Include="Images\Enhancements\sAdrenalAdj.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Arachnos2.png">
+    </None>
+    <None Include="Images\Enhancements\sAegis.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Blaster1.png">
+    </None>
+    <None Include="Images\Enhancements\sAirBurst.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Blaster2.png">
+    </None>
+    <None Include="Images\Enhancements\sAnnoyance.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Brute1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Arachnos1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Brute2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Arachnos2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Controller1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Blaster1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Controller2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Blaster2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Corruptor1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Brute1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Corruptor2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Brute2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Defender1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Controller1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Defender2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Controller2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Dominator1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Corruptor1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Dominator2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Corruptor2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Kheldian1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Defender1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Kheldian2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Defender2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Mastermind1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Dominator1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Mastermind2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Dominator2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Scrapper.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Kheldian1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Scrapper1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Kheldian2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Scrapper2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Mastermind1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Sentinel1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Mastermind2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Sentinel2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Scrapper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Stalker1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Scrapper1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Stalker2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Scrapper2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Tanker1.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Sentinel1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SAO_Tanker2.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Sentinel2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sApocalypse.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Stalker1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sArmageddon.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Stalker2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBefuddlingAUra.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Tanker1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBlistering_Cold.png">
+    </None>
+    <None Include="Images\Enhancements\SAO_Tanker2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBloodMandate.png">
+    </None>
+    <None Include="Images\Enhancements\sApocalypse.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBoneSnap.png">
+    </None>
+    <None Include="Images\Enhancements\sArmageddon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBrilliantLeadership.png">
+    </None>
+    <None Include="Images\Enhancements\sBefuddlingAUra.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sBruisingBlow.png">
+    </None>
+    <None Include="Images\Enhancements\sBlistering_Cold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCacophony.png">
+    </None>
+    <None Include="Images\Enhancements\sBloodMandate.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCalibratedAcc.png">
+    </None>
+    <None Include="Images\Enhancements\sBoneSnap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCallOfTheSandman.png">
+    </None>
+    <None Include="Images\Enhancements\sBrilliantLeadership.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCelerity.png">
+    </None>
+    <None Include="Images\Enhancements\sBruisingBlow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCleavingBlow.png">
+    </None>
+    <None Include="Images\Enhancements\sCacophony.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCoercivePersuasion.png">
+    </None>
+    <None Include="Images\Enhancements\sCalibratedAcc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCommandingPresence.png">
+    </None>
+    <None Include="Images\Enhancements\sCallOfTheSandman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCrushingImpact.png">
+    </None>
+    <None Include="Images\Enhancements\sCelerity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sCurtailSpeed.png">
+    </None>
+    <None Include="Images\Enhancements\sCleavingBlow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDampenedSpirits.png">
+    </None>
+    <None Include="Images\Enhancements\sCoercivePersuasion.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDarkWatcher.png">
+    </None>
+    <None Include="Images\Enhancements\sCommandingPresence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDebilitativeAction.png">
+    </None>
+    <None Include="Images\Enhancements\sCrushingImpact.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDecimation.png">
+    </None>
+    <None Include="Images\Enhancements\sCurtailSpeed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDeflatedEgo.png">
+    </None>
+    <None Include="Images\Enhancements\sDampenedSpirits.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDetonation.png">
+    </None>
+    <None Include="Images\Enhancements\sDarkWatcher.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDevastation.png">
+    </None>
+    <None Include="Images\Enhancements\sDebilitativeAction.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDiscouragingWords.png">
+    </None>
+    <None Include="Images\Enhancements\sDecimation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sDoctoredWounds.png">
+    </None>
+    <None Include="Images\Enhancements\sDeflatedEgo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEdictOfTheMaster.png">
+    </None>
+    <None Include="Images\Enhancements\sDetonation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEfficiencyAdaptor.png">
+    </None>
+    <None Include="Images\Enhancements\sDevastation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEncouragedAcc.png">
+    </None>
+    <None Include="Images\Enhancements\sDiscouragingWords.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEnergyManip.png">
+    </None>
+    <None Include="Images\Enhancements\sDoctoredWounds.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEnfeebledOperation.png">
+    </None>
+    <None Include="Images\Enhancements\sEdictOfTheMaster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEntropicChaos.png">
+    </None>
+    <None Include="Images\Enhancements\sEfficiencyAdaptor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SEO_Avalanche.png">
+    </None>
+    <None Include="Images\Enhancements\sEncouragedAcc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SEO_BlisteringCold.png">
+    </None>
+    <None Include="Images\Enhancements\sEnergyManip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SEO_Entomb.png">
+    </None>
+    <None Include="Images\Enhancements\sEnfeebledOperation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SEO_WintersBite.png">
+    </None>
+    <None Include="Images\Enhancements\sEntropicChaos.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sEssenceOfCurare.png">
+    </None>
+    <None Include="Images\Enhancements\SEO_Avalanche.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sExecutionersContract.png">
+    </None>
+    <None Include="Images\Enhancements\SEO_BlisteringCold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sExploitVuln.png">
+    </None>
+    <None Include="Images\Enhancements\SEO_Entomb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sExploitWeakness.png">
+    </None>
+    <None Include="Images\Enhancements\SEO_WintersBite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sExplosiveStrike.png">
+    </None>
+    <None Include="Images\Enhancements\sEssenceOfCurare.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sExtremeMeasures.png">
+    </None>
+    <None Include="Images\Enhancements\sExecutionersContract.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFarStrike.png">
+    </None>
+    <None Include="Images\Enhancements\sExploitVuln.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFocusedSmite.png">
+    </None>
+    <None Include="Images\Enhancements\sExploitWeakness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sForceFeedback.png">
+    </None>
+    <None Include="Images\Enhancements\sExplosiveStrike.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFortunateHyp.png">
+    </None>
+    <None Include="Images\Enhancements\sExtremeMeasures.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFreeBird.png">
+    </None>
+    <None Include="Images\Enhancements\sFarStrike.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFrozen_Blast.png">
+    </None>
+    <None Include="Images\Enhancements\sFocusedSmite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sFuryoftheGladiator.png">
+    </None>
+    <None Include="Images\Enhancements\sForceFeedback.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGaussianSF.png">
+    </None>
+    <None Include="Images\Enhancements\sFortunateHyp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGhostWidowsEmbrace.png">
+    </None>
+    <None Include="Images\Enhancements\sFreeBird.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGiftOfTheAncients.png">
+    </None>
+    <None Include="Images\Enhancements\sFrozen_Blast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGladiatorsArmor.png">
+    </None>
+    <None Include="Images\Enhancements\sFuryoftheGladiator.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGladiatorsJavelin.png">
+    </None>
+    <None Include="Images\Enhancements\sGaussianSF.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGladiatorsNet.png">
+    </None>
+    <None Include="Images\Enhancements\sGhostWidowsEmbrace.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGladiatorsStrike.png">
+    </None>
+    <None Include="Images\Enhancements\sGiftOfTheAncients.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGlimpseOfTheAbyss.png">
+    </None>
+    <None Include="Images\Enhancements\sGladiatorsArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sGravAnchor.png">
+    </None>
+    <None Include="Images\Enhancements\sGladiatorsJavelin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sHarmonizedHealing.png">
+    </None>
+    <None Include="Images\Enhancements\sGladiatorsNet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sHecatomb.png">
+    </None>
+    <None Include="Images\Enhancements\sGladiatorsStrike.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sHibernation.png">
+    </None>
+    <None Include="Images\Enhancements\sGlimpseOfTheAbyss.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\ShieldBreaker.png">
+    </None>
+    <None Include="Images\Enhancements\sGravAnchor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sHorror.png">
+    </None>
+    <None Include="Images\Enhancements\sHarmonizedHealing.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sImpededSwiftness.png">
+    </None>
+    <None Include="Images\Enhancements\sHecatomb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sImperviousSkin.png">
+    </None>
+    <None Include="Images\Enhancements\sHibernation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sImperviumArmor.png">
+    </None>
+    <None Include="Images\Enhancements\ShieldBreaker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sInducedComa.png">
+    </None>
+    <None Include="Images\Enhancements\sHorror.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\SiphonInsight.png">
+    </None>
+    <None Include="Images\Enhancements\sImpededSwiftness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sJaunt.png">
+    </None>
+    <None Include="Images\Enhancements\sImperviousSkin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sJavelinVolley.png">
+    </None>
+    <None Include="Images\Enhancements\sImperviumArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sKarma.png">
+    </None>
+    <None Include="Images\Enhancements\sInducedComa.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sKineticCombat.png">
+    </None>
+    <None Include="Images\Enhancements\SiphonInsight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sKineticCrash.png">
+    </None>
+    <None Include="Images\Enhancements\sJaunt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sKismet.png">
+    </None>
+    <None Include="Images\Enhancements\sJavelinVolley.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Sleep.png">
+    </None>
+    <None Include="Images\Enhancements\sKarma.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sLethargicRepose.png">
+    </None>
+    <None Include="Images\Enhancements\sKineticCombat.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Slow.png">
+    </None>
+    <None Include="Images\Enhancements\sKineticCrash.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sLuckOfTheGambler.png">
+    </None>
+    <None Include="Images\Enhancements\sKismet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMaelstromsFury.png">
+    </None>
+    <None Include="Images\Enhancements\Sleep.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMakosBite.png">
+    </None>
+    <None Include="Images\Enhancements\sLethargicRepose.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMalaisesIllusions.png">
+    </None>
+    <None Include="Images\Enhancements\Slow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMiracle.png">
+    </None>
+    <None Include="Images\Enhancements\sLuckOfTheGambler.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMockingBeratement.png">
+    </None>
+    <None Include="Images\Enhancements\sMaelstromsFury.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sMultiStrike.png">
+    </None>
+    <None Include="Images\Enhancements\sMakosBite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sNeuronicShutdown.png">
+    </None>
+    <None Include="Images\Enhancements\sMalaisesIllusions.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sNightmare.png">
+    </None>
+    <None Include="Images\Enhancements\sMiracle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sNuminasConvalesence.png">
+    </None>
+    <None Include="Images\Enhancements\sMockingBeratement.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sOverwhelming.png">
+    </None>
+    <None Include="Images\Enhancements\sMultiStrike.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPacingOfTheTurtle.png">
+    </None>
+    <None Include="Images\Enhancements\sNeuronicShutdown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPanacea.png">
+    </None>
+    <None Include="Images\Enhancements\sNightmare.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sParalytic.png">
+    </None>
+    <None Include="Images\Enhancements\sNuminasConvalesence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPerfectZinger.png">
+    </None>
+    <None Include="Images\Enhancements\sOverwhelming.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPerformanceSHift.png">
+    </None>
+    <None Include="Images\Enhancements\sPacingOfTheTurtle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPerplex.png">
+    </None>
+    <None Include="Images\Enhancements\sPanacea.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPositronsBlast.png">
+    </None>
+    <None Include="Images\Enhancements\sParalytic.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPoundingSlugfest.png">
+    </None>
+    <None Include="Images\Enhancements\sPerfectZinger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sPulverizingFisticuffs.png">
+    </None>
+    <None Include="Images\Enhancements\sPerformanceSHift.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sQuickfoot.png">
+    </None>
+    <None Include="Images\Enhancements\sPerplex.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRagnarok.png">
+    </None>
+    <None Include="Images\Enhancements\sPositronsBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRazzleDazzle.png">
+    </None>
+    <None Include="Images\Enhancements\sPoundingSlugfest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sReactiveArmor.png">
+    </None>
+    <None Include="Images\Enhancements\sPulverizingFisticuffs.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRectifiedReticle.png">
+    </None>
+    <None Include="Images\Enhancements\sQuickfoot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRedFortune.png">
+    </None>
+    <None Include="Images\Enhancements\sRagnarok.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRegenerativeTissue.png">
+    </None>
+    <None Include="Images\Enhancements\sRazzleDazzle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRoothingGrasp.png">
+    </None>
+    <None Include="Images\Enhancements\sReactiveArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRopeADope.png">
+    </None>
+    <None Include="Images\Enhancements\sRectifiedReticle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sRuin.png">
+    </None>
+    <None Include="Images\Enhancements\sRedFortune.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSalvo.png">
+    </None>
+    <None Include="Images\Enhancements\sRegenerativeTissue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSciroccosDervish.png">
+    </None>
+    <None Include="Images\Enhancements\sRoothingGrasp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSerendipity.png">
+    </None>
+    <None Include="Images\Enhancements\sRopeADope.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sShieldWall.png">
+    </None>
+    <None Include="Images\Enhancements\sRuin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSmashingHaymaker.png">
+    </None>
+    <None Include="Images\Enhancements\sSalvo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSoaring.png">
+    </None>
+    <None Include="Images\Enhancements\sSciroccosDervish.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSoulboaundAll.png">
+    </None>
+    <None Include="Images\Enhancements\sSerendipity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSoverignRight.png">
+    </None>
+    <None Include="Images\Enhancements\sShieldWall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSpaceTimeManipulation.png">
+    </None>
+    <None Include="Images\Enhancements\sSmashingHaymaker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSpringfoot.png">
+    </None>
+    <None Include="Images\Enhancements\sSoaring.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sStagger.png">
+    </None>
+    <None Include="Images\Enhancements\sSoulboaundAll.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSteadfastProtection.png">
+    </None>
+    <None Include="Images\Enhancements\sSoverignRight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sStingOfTheManticore.png">
+    </None>
+    <None Include="Images\Enhancements\sSpaceTimeManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sStupefy.png">
+    </None>
+    <None Include="Images\Enhancements\sSpringfoot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sSuddenAcceleration.png">
+    </None>
+    <None Include="Images\Enhancements\sStagger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTemperedReadiness.png">
+    </None>
+    <None Include="Images\Enhancements\sSteadfastProtection.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTempest.png">
+    </None>
+    <None Include="Images\Enhancements\sStingOfTheManticore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sThunderstrike.png">
+    </None>
+    <None Include="Images\Enhancements\sStupefy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTitaniumCoating.png">
+    </None>
+    <None Include="Images\Enhancements\sSuddenAcceleration.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTouchOfDeath.png">
+    </None>
+    <None Include="Images\Enhancements\sTemperedReadiness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTouchofLadyGray.png">
+    </None>
+    <None Include="Images\Enhancements\sTempest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTrapOfTheHunter.png">
+    </None>
+    <None Include="Images\Enhancements\sThunderstrike.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTriage.png">
+    </None>
+    <None Include="Images\Enhancements\sTitaniumCoating.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sTriumphantInsult.png">
+    </None>
+    <None Include="Images\Enhancements\sTouchOfDeath.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Stun.png">
+    </None>
+    <None Include="Images\Enhancements\sTouchofLadyGray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\suBlistering_Cold.png">
+    </None>
+    <None Include="Images\Enhancements\sTrapOfTheHunter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\suFrozen_Blast.png">
+    </None>
+    <None Include="Images\Enhancements\sTriage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sUnboundedLeap.png">
+    </None>
+    <None Include="Images\Enhancements\sTriumphantInsult.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sUnbreakableConstraint.png">
+    </None>
+    <None Include="Images\Enhancements\Stun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sUndermined.png">
+    </None>
+    <None Include="Images\Enhancements\suBlistering_Cold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sUnquestioningLoyalty.png">
+    </None>
+    <None Include="Images\Enhancements\suFrozen_Blast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sUnspeakableTerror.png">
+    </None>
+    <None Include="Images\Enhancements\sUnboundedLeap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sVolleyFire.png">
+    </None>
+    <None Include="Images\Enhancements\sUnbreakableConstraint.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\sVolleyOfVelocity.png">
+    </None>
+    <None Include="Images\Enhancements\sUndermined.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Synapse_Shock.png">
+    </None>
+    <None Include="Images\Enhancements\sUnquestioningLoyalty.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Taunt.png">
+    </None>
+    <None Include="Images\Enhancements\sUnspeakableTerror.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TheftOfEssence.png">
+    </None>
+    <None Include="Images\Enhancements\sVolleyFire.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNAmethyst.png">
+    </None>
+    <None Include="Images\Enhancements\sVolleyOfVelocity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNCalcite.png">
+    </None>
+    <None Include="Images\Enhancements\Synapse_Shock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNCitrine.png">
+    </None>
+    <None Include="Images\Enhancements\Taunt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNDiamond.png">
+    </None>
+    <None Include="Images\Enhancements\TheftOfEssence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNGypsum.png">
+    </None>
+    <None Include="Images\Enhancements\Threat.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNKyanite.png">
+    </None>
+    <None Include="Images\Enhancements\Thrust.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNPeridont.png">
+    </None>
+    <None Include="Images\Enhancements\TNAmethyst.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNQuartz.png">
+    </None>
+    <None Include="Images\Enhancements\TNCalcite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNSelenite.png">
+    </None>
+    <None Include="Images\Enhancements\TNCitrine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNTanzenite.png">
+    </None>
+    <None Include="Images\Enhancements\TNDiamond.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TNZeolite.png">
+    </None>
+    <None Include="Images\Enhancements\TNGypsum.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\ToHitBuff.png">
+    </None>
+    <None Include="Images\Enhancements\TNKyanite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\ToHitDebuff.png">
+    </None>
+    <None Include="Images\Enhancements\TNPeridont.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\TouchOfNictus.png">
+    </None>
+    <None Include="Images\Enhancements\TNQuartz.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\UD_Overwhelming_Force.png">
+    </None>
+    <None Include="Images\Enhancements\TNSelenite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\UnbreakableGuard.png">
+    </None>
+    <None Include="Images\Enhancements\TNTanzenite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\WintersGift.png">
+    </None>
+    <None Include="Images\Enhancements\TNZeolite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Enhancements\Zephyr.png">
+    </None>
+    <None Include="Images\Enhancements\ToHitBuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Newslot.png">
+    </None>
+    <None Include="Images\Enhancements\ToHitDebuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Arachnos_Soldier.png">
+    </None>
+    <None Include="Images\Enhancements\TouchOfNictus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Arachnos_Widow.png">
+    </None>
+    <None Include="Images\Enhancements\UD_Overwhelming_Force.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Blaster.png">
+    </None>
+    <None Include="Images\Enhancements\UnbreakableGuard.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Boss_Henchman.png">
+    </None>
+    <None Include="Images\Enhancements\Warp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Brute.png">
+    </None>
+    <None Include="Images\Enhancements\WintersGift.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Controller.png">
+    </None>
+    <None Include="Images\Enhancements\Zephyr.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Corruptor.png">
+    </None>
+    <None Include="Images\Newslot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Defender.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Arachnos_Soldier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Dominator.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Arachnos_Widow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Lt_Henchman.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Blaster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Mastermind.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Boss_Henchman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Minion_Henchman.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Brute.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Minion_Pets.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Controller.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Peacebringer.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Corruptor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Scrapper.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Defender.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Sentinel.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Dominator.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Stalker.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Lt_Henchman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Tanker.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Mastermind.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Class_Warshade.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Minion_Henchman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Magic.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Minion_Pets.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Mutation.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Peacebringer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Natural.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Scrapper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Science.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Sentinel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\OriginAT\Technology.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Stalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\Class.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Tanker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\HO.png">
+    </None>
+    <None Include="Images\OriginAT\Class_Warshade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\IO.png">
+    </None>
+    <None Include="Images\OriginAT\Magic.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\MagDO.png">
+    </None>
+    <None Include="Images\OriginAT\Mutation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\MagSO.png">
+    </None>
+    <None Include="Images\OriginAT\Natural.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\MutDO.png">
+    </None>
+    <None Include="Images\OriginAT\Science.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\MutSO.png">
+    </None>
+    <None Include="Images\OriginAT\Technology.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\NatDO.png">
+    </None>
+    <None Include="Images\Overlay\Class.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\NatSO.png">
+    </None>
+    <None Include="Images\Overlay\HO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\OldClass.png">
+    </None>
+    <None Include="Images\Overlay\IO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\Recipe.png">
+    </None>
+    <None Include="Images\Overlay\MagDO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\SciDO.png">
+    </None>
+    <None Include="Images\Overlay\MagSO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\SciSO.png">
+    </None>
+    <None Include="Images\Overlay\MutDO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\TechDO.png">
+    </None>
+    <None Include="Images\Overlay\MutSO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\TechSO.png">
+    </None>
+    <None Include="Images\Overlay\NatDO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Overlay\Training.png">
+    </None>
+    <None Include="Images\Overlay\NatSO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\AquaBlast.png">
+    </None>
+    <None Include="Images\Overlay\OldClass.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Archery.png">
+    </None>
+    <None Include="Images\Overlay\Recipe.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ArcticMastery.png">
+    </None>
+    <None Include="Images\Overlay\SciDO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\AssaultRifle.png">
+    </None>
+    <None Include="Images\Overlay\SciSO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BattleAxe.png">
+    </None>
+    <None Include="Images\Overlay\TechDO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BeamRifle.png">
+    </None>
+    <None Include="Images\Overlay\TechSO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BeastMastery.png">
+    </None>
+    <None Include="Images\Overlay\Training.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BioArmor.png">
+    </None>
+    <None Include="Images\Powersets\AquaBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\blaster_ninja_training.png">
+    </None>
+    <None Include="Images\Powersets\Archery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BodyMastery.png">
+    </None>
+    <None Include="Images\Powersets\ArcticMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\BroadSword.png">
+    </None>
+    <None Include="Images\Powersets\AssaultRifle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ChargeMastery.png">
+    </None>
+    <None Include="Images\Powersets\BattleAxe.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ChillMastery.png">
+    </None>
+    <None Include="Images\Powersets\BeamRifle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ClawsHero.png">
+    </None>
+    <None Include="Images\Powersets\BeastMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ClawsVillain.png">
+    </None>
+    <None Include="Images\Powersets\BioArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ColdDomination.png">
+    </None>
+    <None Include="Images\Powersets\blaster_ninja_training.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ColdMastery.png">
+    </None>
+    <None Include="Images\Powersets\BodyMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkArmor.png">
+    </None>
+    <None Include="Images\Powersets\BroadSword.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkBlast.png">
+    </None>
+    <None Include="Images\Powersets\ChargeMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkMastery.png">
+    </None>
+    <None Include="Images\Powersets\ChillMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkMelee.png">
+    </None>
+    <None Include="Images\Powersets\ClawsHero.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkMeleeStalker.png">
+    </None>
+    <None Include="Images\Powersets\ClawsVillain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarkMiasma.png">
+    </None>
+    <None Include="Images\Powersets\ColdDomination.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarknessAffinity.png">
+    </None>
+    <None Include="Images\Powersets\ColdMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarknessAssault.png">
+    </None>
+    <None Include="Images\Powersets\DarkArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarknessControl.png">
+    </None>
+    <None Include="Images\Powersets\DarkBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DarknessMastery.png">
+    </None>
+    <None Include="Images\Powersets\DarkMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DemonSummoning.png">
+    </None>
+    <None Include="Images\Powersets\DarkMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Devices.png">
+    </None>
+    <None Include="Images\Powersets\DarkMeleeStalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DualBlades.png">
+    </None>
+    <None Include="Images\Powersets\DarkMiasma.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DualBladesStalker.png">
+    </None>
+    <None Include="Images\Powersets\DarknessAffinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\DualPistols.png">
+    </None>
+    <None Include="Images\Powersets\DarknessAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EarthControl.png">
+    </None>
+    <None Include="Images\Powersets\DarknessControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElecBlast.png">
+    </None>
+    <None Include="Images\Powersets\DarknessMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricalMastery.png">
+    </None>
+    <None Include="Images\Powersets\DemonSummoning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricArmor.png">
+    </None>
+    <None Include="Images\Powersets\Devices.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricControl.png">
+    </None>
+    <None Include="Images\Powersets\DualBlades.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricityManipulation.png">
+    </None>
+    <None Include="Images\Powersets\DualBladesStalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricityMastery.png">
+    </None>
+    <None Include="Images\Powersets\DualPistols.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ElectricMelee.png">
+    </None>
+    <None Include="Images\Powersets\EarthControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Empathy.png">
+    </None>
+    <None Include="Images\Powersets\EarthManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyAssault.png">
+    </None>
+    <None Include="Images\Powersets\ElecBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyAura.png">
+    </None>
+    <None Include="Images\Powersets\ElectricalMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyBlast.png">
+    </None>
+    <None Include="Images\Powersets\ElectricArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyManipulation.png">
+    </None>
+    <None Include="Images\Powersets\ElectricControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyMastery.png">
+    </None>
+    <None Include="Images\Powersets\ElectricityManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyMelee.png">
+    </None>
+    <None Include="Images\Powersets\ElectricityMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\EnergyMeleeStalker.png">
+    </None>
+    <None Include="Images\Powersets\ElectricMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Experimentation.png">
+    </None>
+    <None Include="Images\Powersets\Empathy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FieldMastery.png">
+    </None>
+    <None Include="Images\Powersets\EnergyAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FieryMelee.png">
+    </None>
+    <None Include="Images\Powersets\EnergyAura.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Fighting.png">
+    </None>
+    <None Include="Images\Powersets\EnergyBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireAssault.png">
+    </None>
+    <None Include="Images\Powersets\EnergyManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireBlast.png">
+    </None>
+    <None Include="Images\Powersets\EnergyMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireControl.png">
+    </None>
+    <None Include="Images\Powersets\EnergyMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireManipulation.png">
+    </None>
+    <None Include="Images\Powersets\EnergyMeleeStalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireMastery.png">
+    </None>
+    <None Include="Images\Powersets\Experimentation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FireMastery2.png">
+    </None>
+    <None Include="Images\Powersets\FieldMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Fitness.png">
+    </None>
+    <None Include="Images\Powersets\FieryMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FlameMastery.png">
+    </None>
+    <None Include="Images\Powersets\Fighting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Flight.png">
+    </None>
+    <None Include="Images\Powersets\FireAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\FlireShield.png">
+    </None>
+    <None Include="Images\Powersets\FireBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ForceField.png">
+    </None>
+    <None Include="Images\Powersets\FireControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ForceMastery.png">
+    </None>
+    <None Include="Images\Powersets\FireManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ForceofWill.png">
+    </None>
+    <None Include="Images\Powersets\FireMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\GravityControl.png">
+    </None>
+    <None Include="Images\Powersets\FireMastery2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Inh_Conditioning.png">
+    </None>
+    <None Include="Images\Powersets\Fitness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Bane.png">
+    </None>
+    <None Include="Images\Powersets\FlameMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Crab.png">
+    </None>
+    <None Include="Images\Powersets\Flight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_ElecStalker.png">
+    </None>
+    <None Include="Images\Powersets\FlireShield.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Fortunata.png">
+    </None>
+    <None Include="Images\Powersets\ForceField.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Nightwidow.png">
+    </None>
+    <None Include="Images\Powersets\ForceMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Soldier.png">
+    </None>
+    <None Include="Images\Powersets\ForceofWill.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Pri_Widow.png">
+    </None>
+    <None Include="Images\Powersets\GravityControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Bane.png">
+    </None>
+    <None Include="Images\Powersets\i12_Inh_Conditioning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Crab.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Bane.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_ElecAssault.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Crab.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Fortunata.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_ElecStalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Nightwidow.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Fortunata.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Soldier.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Nightwidow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\i12_Sec_Widow.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Soldier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceArmor.png">
+    </None>
+    <None Include="Images\Powersets\i12_Pri_Widow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceAssault.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Bane.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceBlast.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Crab.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceControl.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_ElecAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceManipulation.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Fortunata.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceMastery.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Nightwidow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IceMelee.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Soldier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\IllusionControl.png">
+    </None>
+    <None Include="Images\Powersets\i12_Sec_Widow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Invisibility.png">
+    </None>
+    <None Include="Images\Powersets\IceArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Invulnerability.png">
+    </None>
+    <None Include="Images\Powersets\IceAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Katana.png">
+    </None>
+    <None Include="Images\Powersets\IceBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\KineticMelee.png">
+    </None>
+    <None Include="Images\Powersets\IceControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\KineticMeleeStalker.png">
+    </None>
+    <None Include="Images\Powersets\IceManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Kinetics.png">
+    </None>
+    <None Include="Images\Powersets\IceMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Leadership.png">
+    </None>
+    <None Include="Images\Powersets\IceMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Leaping.png">
+    </None>
+    <None Include="Images\Powersets\IllusionControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\LuminousAura.png">
+    </None>
+    <None Include="Images\Powersets\Invisibility.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\LuminousBlast.png">
+    </None>
+    <None Include="Images\Powersets\Invulnerability.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MartialArtsHero.png">
+    </None>
+    <None Include="Images\Powersets\Katana.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MartialArtsVillain.png">
+    </None>
+    <None Include="Images\Powersets\KineticMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MartialAssault.png">
+    </None>
+    <None Include="Images\Powersets\KineticMeleeStalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MartialCombat.png">
+    </None>
+    <None Include="Images\Powersets\Kinetics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Medicine.png">
+    </None>
+    <None Include="Images\Powersets\Leadership.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Mercenaries.png">
+    </None>
+    <None Include="Images\Powersets\Leaping.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MindControl.png">
+    </None>
+    <None Include="Images\Powersets\LuminousAura.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\MunitionsMastery.png">
+    </None>
+    <None Include="Images\Powersets\LuminousBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\NatureAffinity.png">
+    </None>
+    <None Include="Images\Powersets\MartialArtsHero.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Necromancy.png">
+    </None>
+    <None Include="Images\Powersets\MartialArtsVillain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\NinjaBlade.png">
+    </None>
+    <None Include="Images\Powersets\MartialAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Ninjas.png">
+    </None>
+    <None Include="Images\Powersets\MartialCombat.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Ninjitsu.png">
+    </None>
+    <None Include="Images\Powersets\Medicine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PainDom.png">
+    </None>
+    <None Include="Images\Powersets\Mercenaries.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronDMGBuff.png">
+    </None>
+    <None Include="Images\Powersets\MindControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronDrain.png">
+    </None>
+    <None Include="Images\Powersets\MunitionsMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronHold.png">
+    </None>
+    <None Include="Images\Powersets\NatureAffinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronRanged.png">
+    </None>
+    <None Include="Images\Powersets\Necromancy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronShield.png">
+    </None>
+    <None Include="Images\Powersets\NinjaBlade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronSnipe.png">
+    </None>
+    <None Include="Images\Powersets\Ninjas.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PatronSummon.png">
+    </None>
+    <None Include="Images\Powersets\Ninjitsu.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PlantControl.png">
+    </None>
+    <None Include="Images\Powersets\PainDom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Poison.png">
+    </None>
+    <None Include="Images\Powersets\PatronDMGBuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PowerMastery.png">
+    </None>
+    <None Include="Images\Powersets\PatronDrain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Presence.png">
+    </None>
+    <None Include="Images\Powersets\PatronHold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PrimalForcesMastery.png">
+    </None>
+    <None Include="Images\Powersets\PatronRanged.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsiMeleeHero.png">
+    </None>
+    <None Include="Images\Powersets\PatronShield.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsiMeleeVillain.png">
+    </None>
+    <None Include="Images\Powersets\PatronSnipe.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsionicAssault.png">
+    </None>
+    <None Include="Images\Powersets\PatronSummon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsionicMastery.png">
+    </None>
+    <None Include="Images\Powersets\PlantControl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsionicMelee.png">
+    </None>
+    <None Include="Images\Powersets\Poison.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsychicBlast.png">
+    </None>
+    <None Include="Images\Powersets\PowerMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PsychicMastery.png">
+    </None>
+    <None Include="Images\Powersets\Presence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\PyreMastery.png">
+    </None>
+    <None Include="Images\Powersets\PrimalForcesMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\RadiationArmor.png">
+    </None>
+    <None Include="Images\Powersets\PsiMeleeHero.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\RadiationBlast.png">
+    </None>
+    <None Include="Images\Powersets\PsiMeleeVillain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\RadiationEmission.png">
+    </None>
+    <None Include="Images\Powersets\PsionicAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\RadiationMelee.png">
+    </None>
+    <None Include="Images\Powersets\PsionicMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Regeneration.png">
+    </None>
+    <None Include="Images\Powersets\PsionicMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Robotics.png">
+    </None>
+    <None Include="Images\Powersets\PsychicBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SavageMelee %282%29.png">
+    </None>
+    <None Include="Images\Powersets\PsychicMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SavageMelee.png">
+    </None>
+    <None Include="Images\Powersets\PyreMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ShieldDef.png">
+    </None>
+    <None Include="Images\Powersets\RadiationArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ShockTherapy.png">
+    </None>
+    <None Include="Images\Powersets\RadiationBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SonicAttack.png">
+    </None>
+    <None Include="Images\Powersets\RadiationEmission.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SonicManipulation.png">
+    </None>
+    <None Include="Images\Powersets\RadiationMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SonicResonance.png">
+    </None>
+    <None Include="Images\Powersets\Regeneration.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Sorcery.png">
+    </None>
+    <None Include="Images\Powersets\Robotics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SpinesHero.png">
+    </None>
+    <None Include="Images\Powersets\SavageMelee %282%29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SpinesVillain.png">
+    </None>
+    <None Include="Images\Powersets\SavageMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StaffFighting.png">
+    </None>
+    <None Include="Images\Powersets\SeismicBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StoneArmor.png">
+    </None>
+    <None Include="Images\Powersets\ShieldDef.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StoneMastery.png">
+    </None>
+    <None Include="Images\Powersets\ShockTherapy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StoneMelee.png">
+    </None>
+    <None Include="Images\Powersets\SonicAttack.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StormSummon.png">
+    </None>
+    <None Include="Images\Powersets\SonicManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\StreetJustice.png">
+    </None>
+    <None Include="Images\Powersets\SonicResonance.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SuperReflexes.png">
+    </None>
+    <None Include="Images\Powersets\Sorcery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SuperSpeed.png">
+    </None>
+    <None Include="Images\Powersets\SpinesHero.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\SuperStrength.png">
+    </None>
+    <None Include="Images\Powersets\SpinesVillain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Teleportation.png">
+    </None>
+    <None Include="Images\Powersets\StaffFighting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\test.png">
+    </None>
+    <None Include="Images\Powersets\StoneArmor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ThermalRadiation.png">
+    </None>
+    <None Include="Images\Powersets\StoneArmor_Scrapper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\ThornyAssault.png">
+    </None>
+    <None Include="Images\Powersets\StoneArmor_Stalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Thugs.png">
+    </None>
+    <None Include="Images\Powersets\StoneMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\TimeManipulation.png">
+    </None>
+    <None Include="Images\Powersets\StoneMelee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\TitanWeapons.png">
+    </None>
+    <None Include="Images\Powersets\StoneMelee_Stalker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Traps.png">
+    </None>
+    <None Include="Images\Powersets\StormSummon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\TrickArrow.png">
+    </None>
+    <None Include="Images\Powersets\StreetJustice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\UmbralAura.png">
+    </None>
+    <None Include="Images\Powersets\SuperReflexes.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\UmbralBlast.png">
+    </None>
+    <None Include="Images\Powersets\SuperSpeed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\WarMace.png">
+    </None>
+    <None Include="Images\Powersets\SuperStrength.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\WaterBlast.png">
+    </None>
+    <None Include="Images\Powersets\Teleportation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\WeaponMastery.png">
+    </None>
+    <None Include="Images\Powersets\test.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Willpower.png">
+    </None>
+    <None Include="Images\Powersets\ThermalRadiation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Powersets\Windcontrol.png">
+    </None>
+    <None Include="Images\Powersets\ThornyAssault.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot0.png">
+    </None>
+    <None Include="Images\Powersets\Thugs.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot1.png">
+    </None>
+    <None Include="Images\Powersets\TimeManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot2.png">
+    </None>
+    <None Include="Images\Powersets\TitanWeapons.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot3.png">
+    </None>
+    <None Include="Images\Powersets\Traps.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot4.png">
+    </None>
+    <None Include="Images\Powersets\TrickArrow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pSlot5.png">
+    </None>
+    <None Include="Images\Powersets\UmbralAura.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\AccDefDeb.png">
+    </None>
+    <None Include="Images\Powersets\UmbralBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\AccHeal.png">
+    </None>
+    <None Include="Images\Powersets\WarMace.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\AccToHitDeb.png">
+    </None>
+    <None Include="Images\Powersets\WaterBlast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Arachnos.png">
+    </None>
+    <None Include="Images\Powersets\WeaponMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Blaster.png">
+    </None>
+    <None Include="Images\Powersets\Willpower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Brute.png">
+    </None>
+    <None Include="Images\Powersets\Windcontrol.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Confuse.png">
+    </None>
+    <None Include="Images\pSlot0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Controller.png">
+    </None>
+    <None Include="Images\pSlot1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Corruptor.png">
+    </None>
+    <None Include="Images\pSlot2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Damage.png">
+    </None>
+    <None Include="Images\pSlot3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\DefDebuff.png">
+    </None>
+    <None Include="Images\pSlot4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Defender.png">
+    </None>
+    <None Include="Images\pSlot5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Defense.png">
+    </None>
+    <None Include="Images\Sets\AccDefDeb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Dominator.png">
+    </None>
+    <None Include="Images\Sets\AccHeal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\DualO.png">
+    </None>
+    <None Include="Images\Sets\AccToHitDeb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\EndMod.png">
+    </None>
+    <None Include="Images\Sets\Arachnos.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Fear.png">
+    </None>
+    <None Include="Images\Sets\Blaster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Flight.png">
+    </None>
+    <None Include="Images\Sets\Brute.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Hamidon.png">
+    </None>
+    <None Include="Images\Sets\Confuse.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\HamiO.png">
+    </None>
+    <None Include="Images\Sets\Controller.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Heal.png">
+    </None>
+    <None Include="Images\Sets\Corruptor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Hold.png">
+    </None>
+    <None Include="Images\Sets\Damage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Hydra.png">
+    </None>
+    <None Include="Images\Sets\DefDebuff.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Immob.png">
+    </None>
+    <None Include="Images\Sets\Defender.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\InventO.png">
+    </None>
+    <None Include="Images\Sets\Defense.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Jump.png">
+    </None>
+    <None Include="Images\Sets\Dominator.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Kheldian.png">
+    </None>
+    <None Include="Images\Sets\DSync.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Knockback.png">
+    </None>
+    <None Include="Images\Sets\DualO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Mastermind.png">
+    </None>
+    <None Include="Images\Sets\EndMod.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\MeleeAoE.png">
+    </None>
+    <None Include="Images\Sets\Fear.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\MeleeST.png">
+    </None>
+    <None Include="Images\Sets\Flight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\None.png">
+    </None>
+    <None Include="Images\Sets\Hamidon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Normal.png">
+    </None>
+    <None Include="Images\Sets\HamiO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\PetRech.png">
+    </None>
+    <None Include="Images\Sets\Heal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Pets.png">
+    </None>
+    <None Include="Images\Sets\Hold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\RangedAoE.png">
+    </None>
+    <None Include="Images\Sets\Hydra.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\RangedST.png">
+    </None>
+    <None Include="Images\Sets\Immob.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Resistance.png">
+    </None>
+    <None Include="Images\Sets\InventO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Run.png">
+    </None>
+    <None Include="Images\Sets\Jump.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Scrapper.png">
+    </None>
+    <None Include="Images\Sets\Kheldian.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Sentinel.png">
+    </None>
+    <None Include="Images\Sets\Knockback.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\SetO.png">
+    </None>
+    <None Include="Images\Sets\Mastermind.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\SingleO.png">
+    </None>
+    <None Include="Images\Sets\MeleeAoE.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Sleep.png">
+    </None>
+    <None Include="Images\Sets\MeleeST.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Slow.png">
+    </None>
+    <None Include="Images\Sets\None.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Snipe.png">
+    </None>
+    <None Include="Images\Sets\Normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Stalker.png">
+    </None>
+    <None Include="Images\Sets\PetRech.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Stun.png">
+    </None>
+    <None Include="Images\Sets\Pets.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Tanker.png">
+    </None>
+    <None Include="Images\Sets\RangedAoE.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Taunt.png">
+    </None>
+    <None Include="Images\Sets\RangedST.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Teleport.png">
+    </None>
+    <None Include="Images\Sets\Resistance.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Titan.png">
+    </None>
+    <None Include="Images\Sets\Run.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\ToHit.png">
+    </None>
+    <None Include="Images\Sets\Scrapper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\ToHitDeb.png">
+    </None>
+    <None Include="Images\Sets\Sentinel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\TrainingO.png">
+    </None>
+    <None Include="Images\Sets\SetO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Travel.png">
+    </None>
+    <None Include="Images\Sets\SingleO.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\UniversalDamage.png">
+    </None>
+    <None Include="Images\Sets\Sleep.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Sets\Untyped.png">
+    </None>
+    <None Include="Images\Sets\Slow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Unknown.png">
+    </None>
+    <None Include="Images\Sets\Snipe.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="mrbasign.pfx" />
+    </None>
+    <None Include="Images\Sets\Stalker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Stun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Tanker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Taunt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Teleport.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Titan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Threat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\ToHit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\ToHitDeb.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\TrainingO.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Travel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\UniversalDamage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Sets\Untyped.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Images\Unknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\enhData.png" />
     <None Include="Resources\PictureBox1.Image.png" />
     <None Include="Resources\pbTitle.Image.png" />
@@ -2273,9 +2316,6 @@
     <EmbeddedResource Include="Forms\frmTeam.resx">
       <DependentUpon>frmTeam.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.resx">
-      <DependentUpon>frmSetListingPvP.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -2288,14 +2328,11 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.resx">
       <DependentUpon>frmEditAttribMod.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.resx">
-      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.resx">
-      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
+      <DependentUpon>frmSetEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
@@ -2316,7 +2353,7 @@
       <DependentUpon>frmTotalsV2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="reborn.ico" />
-    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -2369,7 +2406,7 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditPowerset.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmEnhData.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEnhEdit.cs">
@@ -2426,9 +2463,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\frmSetFind.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2445,8 +2479,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainModule.cs" />
-    <Compile Include="My\MyApplication.cs" />
-    <Compile Include="My\Resources\Resources.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2480,8 +2512,9 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditPowerset.resx">
       <DependentUpon>frmEditPowerset.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmEnhData.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEnhData.resx">
       <DependentUpon>frmEnhData.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEnhEdit.resx">
       <DependentUpon>frmEnhEdit.cs</DependentUpon>
@@ -2538,10 +2571,6 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.resx">
       <DependentUpon>frmSalvageEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
-      <DependentUpon>frmSetEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSetFind.resx">
       <DependentUpon>frmSetFind.cs</DependentUpon>
     </EmbeddedResource>
@@ -2570,9 +2599,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Enhancements\eMarksman.png">
+    <None Include="Images\Enhancements\eMarksman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="lib\zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2634,10 +2663,10 @@
       <Version>2.8.0.16</Version>
     </PackageReference>
     <PackageReference Include="FastDeepCloner">
-      <Version>1.3.5</Version>
+      <Version>1.3.6</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
-      <Version>5.15.3</Version>
+      <Version>5.15.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
@@ -2646,19 +2675,22 @@
       <Version>1.3.0</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
-      <Version>106.12.0</Version>
+      <Version>106.15.0</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
-      <Version>18.4.0.31</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Licensing">
-      <Version>18.4.0.31</Version>
+      <Version>19.3.0.57</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.SfListView.WinForms">
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Shared.Base">
-      <Version>18.4.0.31</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Tools.Windows">
-      <Version>18.4.0.31</Version>
+      <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Zstandard2.Net">
       <Version>1.4.4</Version>

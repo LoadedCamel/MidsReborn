@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
-using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbControls;
@@ -53,7 +52,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void BusyMsg(string sMessage)
         {
-            using frmBusy bFrm = new frmBusy();
+            using var bFrm = new frmBusy();
             bFrm.Show(this);
             bFrm.SetMessage(sMessage);
         }
@@ -76,11 +75,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnAddNewTable_Click(object sender, EventArgs e)
         {
-            string tableName = "";
-            DialogResult r = InputBox("Add modifier table", "New modifier table name:", ref tableName);
+            var tableName = "";
+            var r = InputBox("Add modifier table", "New modifier table name:", ref tableName);
             if (r == DialogResult.Cancel) return;
 
-            Modifiers.ModifierTable table = new Modifiers.ModifierTable(Database.Instance.Classes.Length)
+            var table = new Modifiers.ModifierTable(Database.Instance.Classes.Length)
             {
                 BaseIndex = TempAttribMods.Modifier.Count - 1, // Zed: This may not be correct, but this field is not used anywhere.
                 ID = tableName
@@ -112,14 +111,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             TempAttribMods.Revision = Convert.ToInt32(lblRevision.Text);
             TempAttribMods.RevisionDate = Convert.ToDateTime(lblRevisionDate.Text);
             Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
-            //Database.Instance.AttribMods.Store(MyApplication.GetSerializer());
+            //Database.Instance.AttribMods.Store(Serializer.GetSerializer());
             //DatabaseAPI.UpdateModifiersDict(Database.Instance.AttribMods.Modifier);
 
             // This one barely shows up.
             // May only be needed if one has Mids on a ZIP drive!
             BusyMsg("Saving newly imported Attribute Modifiers...");
             Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
-            DatabaseAPI.Database.AttribMods?.Store(MyApplication.GetSerializer());
+            DatabaseAPI.Database.AttribMods?.Store(Serializer.GetSerializer());
             BusyHide();
             //MessageBox.Show($@"Attribute Modifiers have been saved.", @"Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;
@@ -128,7 +127,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnImportJson_Click(object sender, EventArgs e)
         {
-            using OpenFileDialog f = new OpenFileDialog()
+            using var f = new OpenFileDialog()
             {
                 Title = "Select JSON source",
                 DefaultExt = "json",
@@ -139,12 +138,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Multiselect = false
             };
 
-            DialogResult r = f.ShowDialog();
+            var r = f.ShowDialog();
             if (r != DialogResult.OK) return;
 
-            Modifiers? m = new Modifiers();
-            string src = File.ReadAllText(f.FileName);
-            JsonSerializerSettings jsonOpt = new JsonSerializerSettings
+            var m = new Modifiers();
+            var src = File.ReadAllText(f.FileName);
+            var jsonOpt = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 NullValueHandling = NullValueHandling.Ignore,
@@ -193,8 +192,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            int nAt = m.Modifier[0].Table.Count;
-            int nMods = m.Modifier.Count;
+            var nAt = m.Modifier[0].Table.Count;
+            var nMods = m.Modifier.Count;
 
             r = MessageBox.Show(
                 Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + "/Entit" + (nAt != 1 ? "ies" : "y") + " found,\n" +
@@ -215,21 +214,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
         {
             // http://csharphelper.com/blog/2014/09/use-an-event-handler-for-multiple-controls-in-c/
-            if (!(sender is Label lbl)) return;
+            if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Highlight;
         }
 
         private void dgCellsLabel_MouseLeave(object sender, EventArgs e)
         {
-            if (!(sender is Label lbl)) return;
+            if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Control;
         }
 
         private void dgCellsLabel_Click(object sender, EventArgs e)
         {
-            if (!(sender is Label lbl)) return;
-            MouseEventArgs? ev = e as MouseEventArgs;
-            using EditableLabel editor = new EditableLabel
+            if (sender is not Label lbl) return;
+            var ev = e as MouseEventArgs;
+            using var editor = new EditableLabel
             {
                 Location = lbl.PointToScreen(new Point(ev.X + 13, ev.Y + 5)),
                 Text = lbl.Text
@@ -238,22 +237,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (editor.ShowDialog() != DialogResult.OK) return;
 
             lbl.Text = editor.Text;
-            if (!float.TryParse(lbl.Text, out float dummy)) return;
+            if (!float.TryParse(lbl.Text, out var dummy)) return;
             TempAttribMods
                 .Modifier[listBoxTables.SelectedIndex]
                 .Table[Convert.ToInt32(lbl.Name.Substring(6), null)][cbArchetype.SelectedIndex] =
                 (float)Convert.ToDecimal(lbl.Text, null);
+            DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
         private void lblRevision_ValueChanged(object sender, EventArgs e)
         {
-            bool res = int.TryParse(lblRevision.Text.Trim(), out TempAttribMods.Revision);
+            var res = int.TryParse(lblRevision.Text.Trim(), out TempAttribMods.Revision);
             lblRevision.Text = res ? lblRevision.Text.Trim() : Convert.ToString(TempAttribMods.Revision, null);
         }
 
         private void lblRevisionDate_Leave(object sender, EventArgs e)
         {
-            bool res = DateTime.TryParseExact(
+            var res = DateTime.TryParseExact(
                 lblRevisionDate.Text.Trim(),
                 "MM/dd/yyyy",
                 CultureInfo.InvariantCulture,
@@ -286,14 +286,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         // To be done later: move this to a separate class/user control
         private static DialogResult InputBox(string title, string promptText, ref string value)
         {
-            using Label label = new Label()
+            using var label = new Label()
             {
                 Text = promptText,
                 AutoSize = true,
                 Bounds = new Rectangle(9, 10, 372, 13)
             };
 
-            using TextBox textBox = new TextBox()
+            using var textBox = new TextBox()
             {
                 Text = value,
                 TextAlign = HorizontalAlignment.Left,
@@ -301,7 +301,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Bounds = new Rectangle(12, 26, 372, 20)
             };
 
-            using Button buttonOk = new Button()
+            using var buttonOk = new Button()
             {
                 Text = "OK",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
@@ -310,7 +310,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            using Button buttonCancel = new Button()
+            using var buttonCancel = new Button()
             {
                 Text = "Cancel",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
@@ -319,7 +319,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            using Form inputBoxFrm = new Form()
+            using var inputBoxFrm = new Form()
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 StartPosition = FormStartPosition.CenterScreen,
@@ -332,7 +332,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             inputBoxFrm.Controls.AddRange(new Control[] {label, textBox, buttonOk, buttonCancel});
 
-            DialogResult dialogResult = inputBoxFrm.ShowDialog();
+            var dialogResult = inputBoxFrm.ShowDialog();
             value = textBox.Text;
 
             return dialogResult;
@@ -429,7 +429,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             int i;
             
-            List<float> dataSeries = new List<float>();
+            var dataSeries = new List<float>();
             for (i = 0; i < TempAttribMods.Modifier[modIdx].Table.Count; i++)
             {
                 if (TempAttribMods.Modifier[modIdx].Table[i].Count > 0)
