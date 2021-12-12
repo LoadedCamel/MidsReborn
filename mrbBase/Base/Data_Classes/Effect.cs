@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1165,19 +1166,34 @@ namespace mrbBase.Base.Data_Classes
                         chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
                     }
 
-                    var mag = $"{ExpressionParser.ParseExpression(this, out _)}";
+                    var mag = Math.Abs(ExpressionParser.ParseExpression(this, out _));
+                    var absAllowed = new List<Enums.eEffectType>
+                    {
+                        Enums.eEffectType.Damage,
+                        Enums.eEffectType.DamageBuff,
+                        Enums.eEffectType.Defense,
+                        Enums.eEffectType.Resistance
+                    };
+
                     if (editorDisplay)
                     {
-                        sMag = mag.Contains("-")
-                            ? $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)} Variable"
-                            : $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)} Variable";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
+                        {
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)} Variable";
+                        }
+                        else
+                        {
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)} Variable";
+                        }
+
                         sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        sMag = mag.Contains("-")
-                            ? $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)}"
-                            : $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType)) 
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)}";
+                        else
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
                     }
                 }
                 else
@@ -1735,8 +1751,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value));
                 }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
-                         condition == "Stacks")
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Stacks")
                 {
                     switch (cVal[0])
                     {
