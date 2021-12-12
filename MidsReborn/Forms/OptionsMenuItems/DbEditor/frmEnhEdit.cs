@@ -21,7 +21,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmEnhEdit_Load;
             InitializeComponent();
             Name = nameof(frmEnhEdit);
-            // var componentResourceManager = new ComponentResourceManager(typeof(frmEnhEdit));
             Icon = Resources.reborn;
         }
 
@@ -30,9 +29,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var item = new string[8];
             var enhancement = DatabaseAPI.Database.Enhancements[index];
             item[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
-            item[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
+            item[1] = Enum.GetName(typeof(Enums.eType), enhancement.TypeID);
             item[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
-            item[3] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
+            item[3] = $"{enhancement.Effect.Length}";
             item[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
             item[6] = enhancement.UID;
             item[7] = enhancement.LongName;
@@ -40,7 +39,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (enhancement.nIDSet > -1)
             {
                 item[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                item[0] = $"{item[4]}: {item[0]}";
+                item[0] = $"{item[5]}: {item[0]}";
             }
             else
             {
@@ -66,7 +65,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var database = DatabaseAPI.Database;
             var enhancementArray = Array.Empty<IEnhancement>();
             Array.Copy(database.Enhancements, enhancementArray, DatabaseAPI.Database.Enhancements.Length + 1);
-            //var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements, new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
             database.Enhancements = enhancementArray;
             var newEnhancement = new Enhancement(frmEnhData.myEnh) { IsNew = true };
             DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] = newEnhancement;
@@ -101,7 +99,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var database = DatabaseAPI.Database;
             var enhancementArray = Array.Empty<IEnhancement>();
             Array.Copy(database.Enhancements, enhancementArray, DatabaseAPI.Database.Enhancements.Length + 1);
-            //var enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements, new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
             database.Enhancements = enhancementArray;
             DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] =
                 new Enhancement(frmEnhData.myEnh) { IsNew = true, StaticIndex = -1 };
@@ -345,19 +342,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void UpdateListItem(int Index)
         {
-            var strArray1 = new string[6];
+            var strArray1 = new string[7];
             var enhancement = DatabaseAPI.Database.Enhancements[Index];
             strArray1[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
-            strArray1[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
+            strArray1[1] = Enum.GetName(typeof(Enums.eType), enhancement.TypeID);
             strArray1[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
-            strArray1[3] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
+            strArray1[3] = $"{enhancement.Effect.Length}";
             strArray1[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
             strArray1[6] = enhancement.UID;
 
             if (enhancement.nIDSet > -1)
             {
                 strArray1[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                strArray1[0] = $"{strArray1[4]}: {strArray1[0]}";
+                strArray1[0] = $"{strArray1[5]}: {strArray1[0]}";
             }
             else
             {
