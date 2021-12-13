@@ -40,7 +40,10 @@
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
-	<ItemGroup>
+  <PropertyGroup>
+    <ApplicationIcon>reborn.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
     <Compile Include="clsBuildSalvageSummary.cs" />
     <Compile Include="clsShoppingCheckList.cs" />
@@ -734,7 +737,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-	  <Content Include="lib\zlib1.dll">
+    <Content Include="lib\zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
