@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1341,8 +1342,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var isChecked = false;
                 var num2 = myPower.Requires.ClassName.Length - 1;
                 for (var index2 = 0; index2 <= num2; ++index2)
-                    if (string.Equals(DatabaseAPI.Database.Classes[index1].ClassName,
-                        myPower.Requires.ClassName[index2], StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(DatabaseAPI.Database.Classes[index1].ClassName, myPower.Requires.ClassName[index2], StringComparison.OrdinalIgnoreCase))
                         isChecked = true;
                 clbClassReq.Items.Add(DatabaseAPI.Database.Classes[index1].ClassName, isChecked);
             }
@@ -1405,6 +1405,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 txtVisualLocation.ReadOnly = true;
             }
 
+            foreach (var boost in myPower.BoostsAllowed)
+            {
+                Debug.WriteLine(boost);
+            }
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -1892,8 +1896,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             for (var index = 0; index <= num; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect,
-                    I9Gfx.GetImageRect(GetClassByID(myPower.Enhancements[index])), GraphicsUnit.Pixel);
+                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(GetClassByID(myPower.Enhancements[index])), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + enhPadding;
             }
 
@@ -1918,11 +1921,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var height = size.Height - 1;
             graphics.DrawRectangle(pen, 0, 0, width, height);
             var num2 = DatabaseAPI.Database.EnhancementClasses.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var ecIndex = 0; ecIndex <= num2; ++ecIndex)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxEnhPicker.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(index),
-                    GraphicsUnit.Pixel);
+                bxEnhPicker.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(ecIndex), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + enhPadding;
                 ++num1;
                 if (num1 != enhAcross)

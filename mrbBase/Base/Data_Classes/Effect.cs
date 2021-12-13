@@ -478,11 +478,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
                         flag = true;
                     }
@@ -492,7 +492,7 @@ namespace mrbBase.Base.Data_Classes
                         {
                             for (var index = 0; index <= power.Effects.Length - 1; ++index)
                             {
-                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target | power.Effects[index].ToWho == Enums.eToWho.Ally) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
+                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
                                 {
                                     return false;
                                 }
@@ -705,7 +705,6 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eToWho.Target => " to Tgt",
                     Enums.eToWho.Self => " to Slf",
-                    Enums.eToWho.Ally => " to Ally",
                     _ => str3
                 },
                 _ => str3
@@ -928,7 +927,6 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eToWho.Target => " to Target",
                     Enums.eToWho.Self => " to Self",
-                    Enums.eToWho.Ally => " to Ally",
                     _ => sTarget
                 };
                 if (RequiresToHitCheck)
@@ -1059,7 +1057,7 @@ namespace mrbBase.Base.Data_Classes
                     }
                     break;
                 case Enums.ePvX.Any:
-                    if (ToWho == Enums.eToWho.Self)
+                    if (ToWho == Enums.eToWho.Self & MidsContext.Config.ShowSelfBuffsAny)
                     {
                         sPvx = "in PvE/PvP";
                     }

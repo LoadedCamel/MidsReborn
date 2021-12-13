@@ -623,6 +623,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             }
 
             cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
+            chkShowSelfBuffsAny.Checked = MidsContext.Config.ShowSelfBuffsAny;
 
             ResumeLayout();
         }
@@ -882,6 +883,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
         {
             lblDatabaseLoc.Text = Files.FDefaultPath;
+        }
+
+        private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
+        {
+            MidsContext.Config.ShowSelfBuffsAny = chkShowSelfBuffsAny.Checked;
         }
     }
 }

@@ -1070,17 +1070,12 @@ namespace mrbBase.Base.Data_Classes
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Ally) & (Effects[index1].Mag < 0.0))
-                    {
-                        numArray1[index1] += 10;
-                    }
-
                     if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Ally) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
@@ -1557,14 +1552,14 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                if (iEffect == Enums.eEffectType.Mez && (Effects[iIndex].ToWho != Enums.eToWho.Target || Effects[iIndex].ToWho != Enums.eToWho.Ally))
+                if (iEffect == Enums.eEffectType.Mez && Effects[iIndex].ToWho != Enums.eToWho.Target)
                 {
                     if ((Enums.eMez) subType == Effects[iIndex].MezType || subType < 0)
                     {
                         shortFx.Add(iIndex, Effects[iIndex].Mag);
                     }
                 }
-                else if (Effects[iIndex].ToWho is not (Enums.eToWho.Target or Enums.eToWho.Ally))
+                else if (Effects[iIndex].ToWho is not Enums.eToWho.Target)
                 {
                     shortFx.Add(iIndex, Effects[iIndex].Mag);
                 }
@@ -1573,39 +1568,25 @@ namespace mrbBase.Base.Data_Classes
             return shortFx;
         }
 
-        public Enums.ShortFX GetEffectMagSum(
-            Enums.eEffectType iEffect,
-            bool includeDelayed = false,
-            bool onlySelf = false,
-            bool onlyTarget = false,
-            bool onlyAlly = false,
-            bool maxMode = false)
+        public Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false)
         {
             var shortFx = new Enums.ShortFX();
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
                 bool flag = false;
-                if (!onlySelf & !onlyAlly && Effects[iIndex].ToWho == Enums.eToWho.Target)
+                if (!onlySelf && Effects[iIndex].ToWho == Enums.eToWho.Target)
                 {
                     flag = true;
                 }
-                else if (!onlyTarget & !onlyAlly && Effects[iIndex].ToWho == Enums.eToWho.Self)
+                else if (!onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Self)
                 {
                     flag = true;
                 }
-                else if (!onlySelf & !onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Ally)
+                else if (onlySelf && Effects[iIndex].ToWho != Enums.eToWho.Target)
                 {
                     flag = true;
                 }
-                else if (onlySelf && Effects[iIndex].ToWho != Enums.eToWho.Ally && Effects[iIndex].ToWho != Enums.eToWho.Target)
-                {
-                    flag = true;
-                }
-                else if (onlyTarget && Effects[iIndex].ToWho != Enums.eToWho.Ally && Effects[iIndex].ToWho != Enums.eToWho.Self)
-                {
-                    flag = true;
-                }
-                else if (onlyAlly && Effects[iIndex].ToWho != Enums.eToWho.Self && Effects[iIndex].ToWho != Enums.eToWho.Target)
+                else if (onlyTarget && Effects[iIndex].ToWho != Enums.eToWho.Self)
                 {
                     flag = true;
                 }
@@ -1735,17 +1716,6 @@ namespace mrbBase.Base.Data_Classes
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
                 if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Self)
-                {
-                    return true;
-                }
-
-            return false;
-        }
-
-        public bool AffectsAlly(Enums.eEffectType iEffect)
-        {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-                if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Ally)
                 {
                     return true;
                 }
@@ -2046,7 +2016,7 @@ namespace mrbBase.Base.Data_Classes
 
                     if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
                     {
-                        effect.ToWho = Enums.eToWho.Ally;
+                        effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
                         {
                             effect.Scale *= stacking;
@@ -2107,7 +2077,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
                 {
-                    effect.ToWho = Enums.eToWho.Ally;
+                    effect.ToWho = Enums.eToWho.Target;
                     if (effect.Stacking == Enums.eStacking.Yes)
                     {
                         effect.Scale *= stacking;
@@ -2200,7 +2170,7 @@ namespace mrbBase.Base.Data_Classes
                         }
                         else if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
                         {
-                            Effects[index2].ToWho = Enums.eToWho.Ally;
+                            Effects[index2].ToWho = Enums.eToWho.Target;
                         }
 
                         Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;

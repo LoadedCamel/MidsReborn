@@ -760,7 +760,6 @@ namespace Mids_Reborn.Forms.Controls
                                     {
                                         Enums.eToWho.Self => " (Self)",
                                         Enums.eToWho.Target => " (Tgt)",
-                                        Enums.eToWho.Ally => " (Ally)",
                                         _ => ""
                                     };
                                     rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}{fxTarget}";
@@ -1501,9 +1500,7 @@ namespace Mids_Reborn.Forms.Controls
             var effectMag6 = pEnh.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Self);
             var effectMag7 = pBase.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Target);
             var effectMag8 = pEnh.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Target);
-            var effectMag9 = pBase.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Ally);
-            var effectMag10 = pEnh.GetEffectMag(Enums.eEffectType.RechargeTime, Enums.eToWho.Ally);
-            
+
 
             effectMagSum1.Multiply();
             effectMagSum2.Multiply();
@@ -1517,8 +1514,6 @@ namespace Mids_Reborn.Forms.Controls
             effectMag6.Multiply();
             effectMag7.Multiply();
             effectMag8.Multiply();
-            effectMag9.Multiply();
-            effectMag10.Multiply();
 
             effectMagSum8.Multiply();
             effectMagSum9.Multiply();
@@ -1543,8 +1538,7 @@ namespace Mids_Reborn.Forms.Controls
                   effectMag5.Present |
                   effectMag7.Present |
                   effectMagSum10.Present |
-                  effectMagSum8.Present |
-                  effectMag9.Present))
+                  effectMagSum8.Present))
             {
                 num1 = 0;
             }
@@ -1667,10 +1661,6 @@ namespace Mids_Reborn.Forms.Controls
                     iList.AddItem(FastItem("Rchrg (Self)", effectMag5, effectMag6, "%", effectMag5));
                 if (sFXCheck(effectMag5))
                     iList.SetUnique();
-                if (effectMag9.Present)
-                    iList.AddItem(FastItem("Rchrg (Ally)", effectMag9, effectMag10, "%", effectMag9));
-                if (sFXCheck(effectMag9))
-                    iList.SetUnique();
                 if (effectMagSum8.Present && effectMagSum8.Index != null && effectMagSum8.Index.Length > 0)
                 {
                     if (!effectMagSum8.Multiple)
@@ -1718,7 +1708,6 @@ namespace Mids_Reborn.Forms.Controls
                                 {
                                     Enums.eToWho.Target => " (Tgt)",
                                     Enums.eToWho.Self => " (Self)",
-                                    Enums.eToWho.Ally => " (Ally)",
                                     _ => ""
                                 };
 
@@ -1742,7 +1731,6 @@ namespace Mids_Reborn.Forms.Controls
                                     {
                                         Enums.eToWho.Target => " (Tgt)",
                                         Enums.eToWho.Self => " (Self)",
-                                        Enums.eToWho.Ally => " (Ally)",
                                         _ => ""
                                     };
                                     
@@ -1982,17 +1970,10 @@ namespace Mids_Reborn.Forms.Controls
                             pBase.AffectsSelf(Enums.eEffectType.Recovery) |
                             pBase.AffectsSelf(Enums.eEffectType.Endurance) |
                             pBase.AffectsSelf(Enums.eEffectType.Absorb);
-                var flag3 = pBase.AffectsAlly(Enums.eEffectType.Heal) | pBase.AffectsAlly(Enums.eEffectType.HitPoints) |
-                            pBase.AffectsAlly(Enums.eEffectType.Regeneration) |
-                            pBase.AffectsAlly(Enums.eEffectType.Recovery) |
-                            pBase.AffectsAlly(Enums.eEffectType.Endurance) |
-                            pBase.AffectsAlly(Enums.eEffectType.Absorb);
-                if (flag1 & !flag2 && !flag3)
+                if (flag1 & !flag2)
                     iLabel.Text = @"Health / Endurance (Target)";
-                else if (flag2 & !flag3 && !flag1)
+                else if (flag2 & !flag1)
                     iLabel.Text = @"Health / Endurance (Self)";
-                else if (flag3 & !flag2 && !flag1)
-                    iLabel.Text = @"Health / Endurance (Ally)";
                 else
                     iLabel.Text = @"Health / Endurance";
                 if (shortFx.Present)
@@ -2017,13 +1998,10 @@ namespace Mids_Reborn.Forms.Controls
                 SplitFX_AddToList(ref BaseSFX3, ref EnhSFX3, ref iList);
                 SplitFX_AddToList(ref BaseSFX5, ref EnhSFX5, ref iList, "Regen(S)");
                 SplitFX_AddToList(ref BaseSFX4, ref EnhSFX4, ref iList, "Regen(T)");
-                SplitFX_AddToList(ref BaseSFX10, ref EnhSFX10, ref iList, "Regen(A)");
                 SplitFX_AddToList(ref BaseSFX6, ref EnhSFX6, ref iList, "Recvry(S)");
                 SplitFX_AddToList(ref BaseSFX7, ref EnhSFX7, ref iList, "Recvry(T)");
-                SplitFX_AddToList(ref BaseSFX11, ref EnhSFX11, ref iList, "Recvry(A)");
                 SplitFX_AddToList(ref BaseSFX9, ref EnhSFX9, ref iList, "End (Tgt)");
                 SplitFX_AddToList(ref BaseSFX8, ref EnhSFX8, ref iList, "End (Self)");
-                SplitFX_AddToList(ref BaseSFX12, ref EnhSFX12, ref iList, "End (Ally)");
                 num2 = iList.ItemCount;
             }
 
@@ -2221,10 +2199,6 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     iLabel.Text = @"Status Effects (Target)";
                 }
-                else if (pBase.AffectsAlly(Enums.eEffectType.MezResist) | pBase.AffectsAlly(Enums.eEffectType.Mez))
-                {
-                    iLabel.Text = @"Status Effects (Ally)";
-                }
                 else
                 {
                     iLabel.Text = @"Status Effects (Self)";
@@ -2397,10 +2371,6 @@ namespace Mids_Reborn.Forms.Controls
             {
                 fx_lblHead1.Text = @"Defense (Target)";
             }
-            else if (pBase.AffectsAlly(Enums.eEffectType.Defense))
-            {
-                fx_lblHead1.Text = @"Defense (Ally)";
-            }
             else if (pBase.AffectsSelf(Enums.eEffectType.Defense))
             {
                 fx_lblHead1.Text = @"Defense (Self)";
@@ -2483,10 +2453,6 @@ namespace Mids_Reborn.Forms.Controls
             if (pBase.AffectsTarget(Enums.eEffectType.Resistance))
             {
                 label.Text = @"Resistance (Target)";
-            }
-            else if (pBase.AffectsAlly(Enums.eEffectType.Resistance))
-            {
-                label.Text = @"Resistance (Ally)";
             }
             else if (pBase.AffectsSelf(Enums.eEffectType.Resistance))
             {
@@ -2850,14 +2816,12 @@ namespace Mids_Reborn.Forms.Controls
                 var flag = false;
                 var onlySelf = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self;
                 var onlyTarget = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target;
-                var onlyAlly = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally;
                 if (ID > 0)
                 {
                     flag = (pBase.Effects[Index[ID]].EffectType == pBase.Effects[Index[ID - 1]].EffectType) &
                            (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self) &
                            (pBase.Effects[Index[ID - 1]].ToWho == Enums.eToWho.Self) &
-                           (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target) &
-                           (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Ally);
+                           (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target);
                 }
 
                 if (pBase.Effects[Index[ID]].DelayedTime > 5.0)
@@ -2886,8 +2850,8 @@ namespace Mids_Reborn.Forms.Controls
                 switch (pBase.Effects[Index[ID]].EffectType)
                 {
                     case Enums.eEffectType.HitPoints:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         tag2.Assign(shortFxBase);
                         shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
@@ -2903,8 +2867,8 @@ namespace Mids_Reborn.Forms.Controls
                         }
                         else
                         {
-                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
-                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                             shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                             shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                             tag2.Assign(shortFxBase);
@@ -2912,8 +2876,8 @@ namespace Mids_Reborn.Forms.Controls
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Absorb:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
                         tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
@@ -2927,16 +2891,16 @@ namespace Mids_Reborn.Forms.Controls
                         }
                         else
                         {
-                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
-                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget));
                             tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Regeneration:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget));
                         shortFxBase.Sum *= 100f;
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget));
                         shortFxEnh.Sum *= 100;
                         tag2.Assign(shortFxBase);
                         Suffix = "%";
@@ -2951,31 +2915,31 @@ namespace Mids_Reborn.Forms.Controls
                         }
                         else
                         {
-                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
-                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget, onlyAlly));
+                            shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget));
+                            shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Null, false, onlySelf, onlyTarget));
                             tag2.Assign(shortFxBase);
                         }
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.ToHit:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.ToHit, false, onlySelf, onlyTarget));
                         shortFxBase.Sum *= 100f;
                         shortFxEnh.Sum *= 100f;
                         tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Fly:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Fly, false, onlySelf, onlyTarget));
                         shortFxBase.Sum *= 100f;
                         shortFxEnh.Sum *= 100f;
                         tag2.Assign(shortFxBase);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Recovery:
-                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
-                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget, onlyAlly));
+                        shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget));
+                        shortFxEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Recovery, false, onlySelf, onlyTarget));
                         shortFxBase.Sum *= 100f;
                         shortFxEnh.Sum *= 100f;
                         tag2.Assign(shortFxBase);
@@ -3019,27 +2983,12 @@ namespace Mids_Reborn.Forms.Controls
                                  pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Jumppack |
                                  pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.GlobalChanceMod)
                         {
-                            /*if (!pBase.Effects[Index[ID]].Absorbed_Effect)
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
-                                shortFx.Multiply();
-                                s2.Multiply();
-                                Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
-                            }
-                            else
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
-                                s2.Multiply();
-                                Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly, false));
-                            }*/
-
+                           
                             shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
                             shortFxEnh.Add(Index[ID], pEnh.Effects[Index[ID]].BuffedMag);
                             shortFxBase.Multiply();
                             shortFxEnh.Multiply();
-                            tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, onlyAlly));
+                            tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {
@@ -3066,7 +3015,6 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Enums.eToWho.Target => " (Tgt)",
                     Enums.eToWho.Self => " (Self)",
-                    Enums.eToWho.Ally => " (Ally)",
                     _ => ""
                 };
 

@@ -2380,7 +2380,7 @@ namespace mrbBase
             }
 
             using var streamReader = new StreamReader(path);
-            Database.EnhancementClasses = new Enums.sEnhClass[0];
+            Database.EnhancementClasses = Array.Empty<Enums.sEnhClass>();
             try
             {
                 if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))

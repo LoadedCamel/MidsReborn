@@ -76,6 +76,7 @@ namespace mrbBase
             DiscordEnabled = false;
             Registered = 0;
             DiscordAuthorized = false;
+            ShowSelfBuffsAny = false;
             InitializeComponent();
         }
 
@@ -189,6 +190,8 @@ namespace mrbBase
         public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
+
+        public bool ShowSelfBuffsAny { get; set; }
 
         public string DefaultSaveFolderOverride
         {

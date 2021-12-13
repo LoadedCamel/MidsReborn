@@ -394,12 +394,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var endCost = enhancedPower.EndCost;
             var effectMag1 = enhancedPower.GetEffectMag(Enums.eEffectType.DamageBuff, Enums.eToWho.Self);
             var effectMag2 = enhancedPower.GetEffectMag(Enums.eEffectType.Resistance, Enums.eToWho.Target);
-            var effectMag3 = enhancedPower.GetEffectMag(Enums.eEffectType.DamageBuff, Enums.eToWho.Ally);
-            var effectMag4 = enhancedPower.GetEffectMag(Enums.eEffectType.Resistance, Enums.eToWho.Ally);
             effectMag1.Multiply();
             effectMag2.Multiply();
-            effectMag3.Multiply();
-            effectMag4.Multiply();
             var num2 = damageValue / num1;
             string[] strArray;
             if (Math.Abs(damageValue) > float.Epsilon)
@@ -410,8 +406,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     endCost.ToString(CultureInfo.InvariantCulture),
                     effectMag1.Sum.ToString(CultureInfo.InvariantCulture),
                     effectMag2.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag3.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag4.Sum.ToString(CultureInfo.InvariantCulture),
                     powerLocation.ToString()
                 };
             else
@@ -422,8 +416,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     endCost.ToString(CultureInfo.InvariantCulture),
                     effectMag1.Sum.ToString(CultureInfo.InvariantCulture),
                     effectMag2.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag3.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag4.Sum.ToString(CultureInfo.InvariantCulture),
                     powerLocation.ToString()
                 };
             return strArray;

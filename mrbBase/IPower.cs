@@ -235,13 +235,7 @@ namespace mrbBase
 
         Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 
-        Enums.ShortFX GetEffectMagSum(
-            Enums.eEffectType iEffect,
-            bool includeDelayed = false,
-            bool onlySelf = false,
-            bool onlyTarget = false,
-            bool onlyAlly = false,
-            bool maxMode = false);
+        Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false);
         
         Enums.ShortFX GetDamageMagSum(
             Enums.eEffectType iEffect,
@@ -253,8 +247,6 @@ namespace mrbBase
         bool AffectsTarget(Enums.eEffectType iEffect);
 
         bool AffectsSelf(Enums.eEffectType iEffect);
-
-        bool AffectsAlly(Enums.eEffectType iEffect);
 
         bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
 
