@@ -1,19 +1,19 @@
-Enhancement Classes						
-Version:	1.100					
-Date:	25/02/08					
-						
-Notes:						
-Export from Excel as Tab-Delimited Text as 'EClasses.mhd'						
-The Index value matches the enhancement/class index in the powerset database.						
-"Do NOT change any existing index values, or powers will allow slotting of the wrong enhancements."						
-New classes should be added at the end of the list. 'End' MUST appear below the final class index.						
-						
-Index	Name	Short	Class	Description		
-1	Accuracy	Acc	Accuracy_Boost	Increases the accuracy of a power.		
-2	Activation Decrease	ActRdx	Interrupt_Boost	Decreases interrupt time of powers that can be interrupted.		
-3	Confuse Duration	Conf	Confuse_Boost	Increasees the duration of a Confuse power.		
-4	Damage Increase	Dmg	Damage_Boost	Increases the Damage done by a power.		
-5	Defense Buff	DefBuff	Buff_Defense_Boost	Enhances the effectiveness of defense buffs		
+Enhancement Classes				
+Version:	1.1			
+Date:	25/02/08			
+				
+Notes:				
+Export from Excel as Tab-Delimited Text as 'EClasses.mhd'				
+The Index value matches the enhancement/class index in the powerset database.				
+Do NOT change any existing index values, or powers will allow slotting of the wrong enhancements.				
+New classes should be added at the end of the list. 'End' MUST appear below the final class index.				
+				
+Index	Name	Short	Class	Description
+1	Accuracy	Acc	Accuracy_Boost	Increases the accuracy of a power.
+2	Activation Decrease	ActRdx	Interrupt_Boost	Decreases interrupt time of powers that can be interrupted.
+3	Confuse Duration	Conf	Confuse_Boost	Increasees the duration of a Confuse power.
+4	Damage Increase	Dmg	Damage_Boost	Increases the Damage done by a power.
+5	Defense Buff	DefBuff	Buff_Defense_Boost	Enhances the effectiveness of defense buffs
 6	Defense Debuff	DefDeb	Debuff_Defense_Boost	Enhances the effectiveness of defense debuffs.
 7	Endurance Modification	EndMod	Recovery_Boost	Enhances Endurance Drain or Recovery powers.
 8	Endurance Reduction	EndRdx	EnduranceDiscount_Boost	Decreases the endurance cost of a power.
@@ -35,4 +35,10 @@ Index	Name	Short	Class	Description
 24	Taunt Duration	Taunt	Taunt_Boost	Increases the duration a taunted target will stay on you.
 25	To Hit Buff	ToHit	Buff_ToHit_Boost	Enhances the effectiveness of accuracy buffs.
 26	To Hit Debuff	ToHitDeb	Debuff_ToHit_Boost	Enhances the effectiveness of accuracy debuffs.
+27	Alpha Incarnate	AlphInc	Incarnate_Alpha_Boost	Applies Alpha incarnate effects on a power.
+28	Destiny Incarnate	DstnyInc	Incarnate_Destiny_Boost	Applies Destiny incarnate effects on a power.
+29	Hybrid Incarnate	HybrdInc	Incarnate_Hybrid_Boost	Applies Hybrid incarnate effects on a power.
+30	Interface Incarnate	IntrfInc	Incarnate_Interface_Boost	Applies Interface incarnate effects on a power.
+31	Judgement Incarnate	JgmntInc	Incarnate_Judgement_Boost	Applies Judgement incarnate effects on a power.
+32	Lore Incarnate	LoreInc	Incarnate_Lore_Boost	Applies Lore incarnate effects on a power.
 End				

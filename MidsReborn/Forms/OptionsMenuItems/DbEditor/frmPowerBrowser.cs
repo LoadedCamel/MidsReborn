@@ -225,35 +225,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            // Zed - 04/11/21 - disabled diffing
-            /*if (!Debugger.IsAttached)
-            {
-                BusyMsg(@"Re-Indexing && Saving...");
-                foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
-                Array.Sort(DatabaseAPI.Database.Power);
-                var serializer = Serializer.GetSerializer();
-                DatabaseAPI.AssignStaticIndexValues(serializer, false);
-                DatabaseAPI.MatchAllIDs();
-                DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-                BusyHide();
-                DialogResult = DialogResult.OK;
-                Hide();
-            }
-            else
-            {
-                foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
-                Array.Sort(DatabaseAPI.Database.Power);
-                var serializer = Serializer.GetSerializer();
-                DatabaseAPI.AssignStaticIndexValues(serializer, false);
-                DatabaseAPI.MatchAllIDs();
-                var iParent = this;
-                using var diffForm = new frmDBDiffing(serializer, iParent);
-                diffForm.Closed += diffForm_Closed;
-                diffForm.ShowDialog(this);
-            }*/
-
             BusyMsg(@"Re-Indexing && Saving...");
-            foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
+            foreach (var power in DatabaseAPI.Database.Power)
+            {
+                power.BaseRechargeTime = power.RechargeTime;
+            }
+
             Array.Sort(DatabaseAPI.Database.Power);
             var serializer = Serializer.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);

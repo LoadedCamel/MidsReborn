@@ -116,7 +116,7 @@ namespace Mids_Reborn
                     taskArray[5] = Task.Run(I9Gfx.LoadBorders);
                     taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
                     taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
-                    taskArray[8] = Task.Run(I9Gfx.LoadClasses);
+                    taskArray[8] = Task.Run(() => I9Gfx.LoadClasses());
                     Task.WaitAll(taskArray);
 
                     MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(path));
@@ -266,7 +266,7 @@ namespace Mids_Reborn
                 taskArray[5] = Task.Run(I9Gfx.LoadBorders);
                 taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
                 taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
-                taskArray[8] = Task.Run(I9Gfx.LoadClasses);
+                taskArray[8] = Task.Run(() => I9Gfx.LoadClasses());
                 Task.WaitAll(taskArray);
 
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));

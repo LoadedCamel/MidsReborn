@@ -1085,7 +1085,6 @@ namespace mrbBase
             Unspecified,
             Target,
             Self,
-            Ally,
             All
         }
 
