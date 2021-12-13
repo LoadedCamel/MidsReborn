@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1028,12 +1027,15 @@ namespace Mids_Reborn
 
                 if (disqualified)
                     continue;
+
                 var power1 = effect1.Absorbed_Effect & (effect1.Absorbed_Power_nID > -1)
                     ? DatabaseAPI.Database.Power[effect1.Absorbed_Power_nID]
                     : power;
-                var isAllowed = powerMath.BoostsAllowed.Any(pmb => power1.BoostsAllowed.Any(pba => pba == pmb));
+                //var isAllowed = powerMath.BoostsAllowed.Any(pmb => power1.BoostsAllowed.Any(pba => pba == pmb));
+                var isAllowed = powerMath.BoostsAllowed.Intersect(power1.BoostsAllowed).Any();
                 if (!isAllowed)
                     continue;
+
                 if (effectType == Enums.eEffectType.Enhancement &&
                     (effect1.EffectType == Enums.eEffectType.DamageBuff ||
                      effect1.EffectType == Enums.eEffectType.Enhancement))
@@ -1045,21 +1047,21 @@ namespace Mids_Reborn
                     {
                         case Enums.eEffectType.Accuracy:
                             if (incAcc)
-                                powerMath.Accuracy += effect1.Mag;
+                                powerMath.Accuracy += effect1.BuffedMag;
                             continue;
                         case Enums.eEffectType.EnduranceDiscount:
                             if (incEndDisc)
-                                powerMath.EndCost += effect1.Mag;
+                                powerMath.EndCost += effect1.BuffedMag;
                             continue;
                         case Enums.eEffectType.InterruptTime:
-                            powerMath.InterruptTime += effect1.Mag;
+                            powerMath.InterruptTime += effect1.BuffedMag;
                             continue;
                         case Enums.eEffectType.Range:
-                            powerMath.Range += effect1.Mag;
+                            powerMath.Range += effect1.BuffedMag;
                             continue;
                         case Enums.eEffectType.RechargeTime:
                             if (incRech)
-                                powerMath.RechargeTime += effect1.Mag;
+                                powerMath.RechargeTime += effect1.BuffedMag;
                             continue;
                         default:
                             HandleDefaultIncarnateEnh(ref powerMath, effect1, _buffedPower[hIDX].Effects);
