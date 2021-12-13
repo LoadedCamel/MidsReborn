@@ -1026,15 +1026,6 @@ namespace Mids_Reborn
 
                 //var isAllowed = powerMath.BoostsAllowed.Any(pmb => power1.BoostsAllowed.Any(pba => pba == pmb));
                 var isAllowed = powerMath.BoostsAllowed.Intersect(power1.BoostsAllowed).Any();
-                foreach (var boost in powerMath.BoostsAllowed)
-                {
-                    Debug.WriteLine($"powerMath Boost: {boost} - Allowed: {isAllowed}");
-                }
-
-                foreach (var boost in power1.BoostsAllowed)
-                {
-                    Debug.WriteLine($"power1 Boost: {boost}  - Allowed: {isAllowed}");
-                }
                 if (!isAllowed)
                     continue;
                 if (effectType == Enums.eEffectType.Enhancement && effect1.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement)
