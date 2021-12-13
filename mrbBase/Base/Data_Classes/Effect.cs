@@ -1059,7 +1059,7 @@ namespace mrbBase.Base.Data_Classes
                     }
                     break;
                 case Enums.ePvX.Any:
-                    if (ToWho == Enums.eToWho.Self)
+                    if (ToWho == Enums.eToWho.Self & MidsContext.Config.ShowSelfBuffsAny)
                     {
                         sPvx = "in PvE/PvP";
                     }
