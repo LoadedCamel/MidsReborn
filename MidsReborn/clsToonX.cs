@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -648,7 +649,7 @@ namespace Mids_Reborn
                 for (var index2 = 0; index2 < _buffedPower[index1].Effects.Length; index2++)
                 {
                     if ((_buffedPower[index1].Effects[index2].EffectType == Enums.eEffectType.Fly) &
-                        (_buffedPower[index1].Effects[index2].BuffedMag > 0.0))
+                        (_buffedPower[index1].Effects[index2].Mag > 0.0))
                     {
                         canFly = true;
                     }
@@ -968,7 +969,147 @@ namespace Mids_Reborn
             }
         }
 
-        private void GBPA_ApplyIncarnateEnhancements(
+        private void GBPA_ApplyIncarnateEnhancements(ref IPower powerMath, int hIDX, IPower power, bool ignoreED, ref Enums.eEffectType effectType)
+        {
+            if (powerMath == null)
+                return;
+            if (power == null)
+                return;
+            if (power.Effects.Length == 0)
+                return;
+            if (!powerMath.Slottable)
+                return;
+
+            for (var effIdx = 0; effIdx <= power.Effects.Length - 1; ++effIdx)
+            {
+                var effect1 = power.Effects[effIdx];
+                var disqualified = false;
+                if (effect1.EffectClass == Enums.eEffectClass.Ignored)
+                {
+                    disqualified = true;
+                }
+                else
+                {
+                    switch (effectType)
+                    {
+                        case Enums.eEffectType.Enhancement when effect1.EffectType != Enums.eEffectType.Enhancement && effect1.EffectType != Enums.eEffectType.DamageBuff:
+                            disqualified = true;
+                            break;
+                        case Enums.eEffectType.GrantPower when effect1.EffectType is Enums.eEffectType.Enhancement or Enums.eEffectType.DamageBuff:
+                            disqualified = true;
+                            break;
+                        default:
+                        {
+                            if (effect1.IgnoreED != ignoreED)
+                            {
+                                disqualified = true;
+                            }
+                            else if (power.PowerType != Enums.ePowerType.GlobalBoost && (!effect1.Absorbed_Effect || effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
+                            {
+                                disqualified = true;
+                            }
+                            else if (effect1.EffectType == Enums.eEffectType.GrantPower && effect1.Absorbed_Effect)
+                            {
+                                disqualified = true;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                if (disqualified)
+                    continue;
+                var power1 = (effect1.Absorbed_Effect & (effect1.Absorbed_Power_nID > -1)) switch
+                {
+                    true => DatabaseAPI.Database.Power[effect1.Absorbed_Power_nID],
+                    _ => power
+                };
+
+                var isAllowed = powerMath.BoostsAllowed.Any(pmb => power1.BoostsAllowed.Any(pba => pba == pmb));
+                if (!isAllowed)
+                    continue;
+                if (effectType == Enums.eEffectType.Enhancement && effect1.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement)
+                {
+                    var incAcc = powerMath.IgnoreEnhancement(Enums.eEnhance.Accuracy);
+                    var incRech = powerMath.IgnoreEnhancement(Enums.eEnhance.RechargeTime);
+                    var incEndDisc = powerMath.IgnoreEnhancement(Enums.eEnhance.EnduranceDiscount);
+                    switch (effect1.ETModifies)
+                    {
+                        case Enums.eEffectType.Accuracy:
+                        {
+                            if (incAcc)
+                            {
+                                powerMath.Accuracy += effect1.Mag;
+                            }
+
+                            continue;
+                        }
+                        case Enums.eEffectType.EnduranceDiscount:
+                        {
+                            if (incEndDisc)
+                            {
+                                powerMath.EndCost += effect1.Mag;
+                            }
+
+                            continue;
+                        }
+                        case Enums.eEffectType.InterruptTime:
+                            powerMath.InterruptTime += effect1.Mag;
+                            continue;
+                        case Enums.eEffectType.Range:
+                            powerMath.Range += effect1.Mag;
+                            continue;
+                        case Enums.eEffectType.RechargeTime:
+                        {
+                            if (incRech)
+                            {
+                                powerMath.RechargeTime += effect1.Mag;
+                            }
+
+                            continue;
+                        }
+                        default:
+                            HandleDefaultIncarnateEnh(ref powerMath, effect1, _buffedPower[hIDX].Effects);
+                            break;
+                    }
+                }
+                else if (effect1.EffectType == Enums.eEffectType.GrantPower)
+                {
+                    HandleGrantPowerIncarnate(ref powerMath, effect1, _buffedPower, effIdx, Archetype, hIDX);
+                }
+                else
+                {
+                    powerMath.AbsorbEffects(power, effect1.Duration, 0.0f, Archetype, 1, true, effIdx, effIdx);
+                    for (var index2 = powerMath.Effects.Length; index2 <= powerMath.Effects.Length - 1; ++index2)
+                    {
+                        powerMath.Effects[index2].ToWho = Enums.eToWho.Target;
+                        powerMath.Effects[index2].Absorbed_Effect = true;
+                        powerMath.Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
+                        powerMath.Effects[index2].BaseProbability *= effect1.BaseProbability;
+                        powerMath.Effects[index2].Ticks = effect1.Ticks;
+                    }
+
+                    if (hIDX <= -1)
+                        continue;
+                    {
+                        var length2 = _buffedPower[hIDX].Effects.Length;
+                        _buffedPower[hIDX].AbsorbEffects(power, effect1.Duration, 0.0f, Archetype, 1, true, effIdx,
+                            effIdx);
+                        for (var index2 = length2; index2 <= _buffedPower[hIDX].Effects.Length - 1; ++index2)
+                        {
+                            _buffedPower[hIDX].Effects[index2].ToWho = effect1.ToWho;
+                            _buffedPower[hIDX].Effects[index2].Absorbed_Effect = true;
+                            _buffedPower[hIDX].Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
+                            _buffedPower[hIDX].Effects[index2].BaseProbability *= effect1.BaseProbability;
+                            _buffedPower[hIDX].Effects[index2].Ticks = effect1.Ticks;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*private void GBPA_ApplyIncarnateEnhancements(
             ref IPower powerMath,
             int hIDX,
             IPower power,
@@ -1047,21 +1188,21 @@ namespace Mids_Reborn
                     {
                         case Enums.eEffectType.Accuracy:
                             if (incAcc)
-                                powerMath.Accuracy += effect1.BuffedMag;
+                                powerMath.Accuracy += effect1.Mag;
                             continue;
                         case Enums.eEffectType.EnduranceDiscount:
                             if (incEndDisc)
-                                powerMath.EndCost += effect1.BuffedMag;
+                                powerMath.EndCost += effect1.Mag;
                             continue;
                         case Enums.eEffectType.InterruptTime:
-                            powerMath.InterruptTime += effect1.BuffedMag;
+                            powerMath.InterruptTime += effect1.Mag;
                             continue;
                         case Enums.eEffectType.Range:
-                            powerMath.Range += effect1.BuffedMag;
+                            powerMath.Range += effect1.Mag;
                             continue;
                         case Enums.eEffectType.RechargeTime:
                             if (incRech)
-                                powerMath.RechargeTime += effect1.BuffedMag;
+                                powerMath.RechargeTime += effect1.Mag;
                             continue;
                         default:
                             HandleDefaultIncarnateEnh(ref powerMath, effect1, _buffedPower[hIDX].Effects);
@@ -1101,7 +1242,7 @@ namespace Mids_Reborn
                     }
                 }
             }
-        }
+        }*/
 
         private IPower GBPA_ApplyPowerOverride(ref IPower ret)
         {
