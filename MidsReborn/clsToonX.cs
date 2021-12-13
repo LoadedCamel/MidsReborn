@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -619,13 +618,11 @@ namespace Mids_Reborn
                             // Particle shielding does not.
                             if (index1 == (int)Enums.eStatType.Absorb & effect.DisplayPercentage)
                             {
-                                shortFx.Value[shortFxIdx] = shortFx.Value[shortFxIdx] * MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
+                                shortFx.Value[shortFxIdx] *= MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
                             }
 
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                         }
-
-                        nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                     }
                 }
             }
