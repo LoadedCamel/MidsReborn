@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -318,9 +319,8 @@ namespace Mids_Reborn
             var grantedPowers = new List<GrantedPowerInfo>();
             
             // Fetch buffed powers that are non empty, non incarnates
-            var mainPowers = _buffedPower
-                .Where(p => p != null && p.StaticIndex >= 0 && !p.FullName.StartsWith("Incarnate"))
-                .ToList();
+            var allowedSets = new List<Enums.ePowerSetType> { Enums.ePowerSetType.Ancillary, Enums.ePowerSetType.Pool, Enums.ePowerSetType.Primary, Enums.ePowerSetType.Secondary };
+            var mainPowers = _mathPower.Where(p => p is { StaticIndex: >= 0 } && allowedSets.Any(x => x == p.GetPowerSet().SetType)).ToList();
 
             // Inventory and collect GrantPower effects that lead to GlobalBoost powers
             foreach (var p in mainPowers)
@@ -1181,8 +1181,7 @@ namespace Mids_Reborn
                           (CurrentBuild.Powers[index2].NIDPower > -1)))
                         continue;
                     var effectType = Enums.eEffectType.GrantPower;
-                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false,
-                        ref effectType);
+                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false, ref effectType);
                 }
             }
 
@@ -1640,7 +1639,6 @@ namespace Mids_Reborn
             _mathPower = new IPower[CurrentBuild.Powers.Count];
             GBPA_Pass0_InitializePowerArray();
             GenerateModifyEffectsArray();
-            ApplyGlobalEnhancements();
             GenerateBuffData(ref _selfEnhance, true);
             for (var hIDX = 0; hIDX <= _mathPower.Length - 1; ++hIDX)
             {
@@ -1662,7 +1660,7 @@ namespace Mids_Reborn
                     GBPA_Pass6_MultiplyPostBuff(ref _mathPower[index], ref _buffedPower[index]);
                 }
             }
-
+            ApplyGlobalEnhancements();
             GBD_Totals();
         }
 
