@@ -2606,7 +2606,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             else if (Math.Abs(s1) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair($"Title:", string.Empty, false);
+                itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
             }
             else
             {
@@ -3871,11 +3871,7 @@ namespace Mids_Reborn.Forms.Controls
                 ResetSize();
         }
 
-        private bool SplitFX_AddToList(
-            ref Enums.ShortFX BaseSFX,
-            ref Enums.ShortFX EnhSFX,
-            ref PairedList iList,
-            string SpecialTitle = "")
+        private bool SplitFX_AddToList(ref Enums.ShortFX BaseSFX, ref Enums.ShortFX EnhSFX, ref PairedList iList, string SpecialTitle = "")
         {
             bool flag;
             if (!BaseSFX.Present)
