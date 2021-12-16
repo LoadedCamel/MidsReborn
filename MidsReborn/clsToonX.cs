@@ -14,6 +14,7 @@ using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
+using Syncfusion.WinForms.GridCommon.Collections.Generic;
 
 namespace Mids_Reborn
 {
@@ -784,27 +785,46 @@ namespace Mids_Reborn
                 if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
                     continue;
                 var hasPower = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect.Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower || CurrentBuild.Powers[iIndex].ProcInclude && DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].IsProc)
+                if (!hasPower || CurrentBuild.Powers[iIndex].ProcInclude)
                     continue;
                 var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
                 var enh = DatabaseAPI.Database.Enhancements[enhIndex];
                 var power1 = enh?.GetPower();
                 if (power1 == null)
                     return false;
-                for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
+                if (enh.IsProc)
                 {
-                    var effect = power1.Effects[index2];
-                    //if (power1.Effects[index2].EffectType == Enums.eEffectType.Enhancement)
-                    //    continue;
-                    var toAdd = (IEffect) effect.Clone();
-                    toAdd.isEnhancementEffect = true;
-                    toAdd.ToWho = effect.ToWho;
-                    toAdd.Absorbed_Effect = true;
-                    toAdd.Ticks = effect.Ticks;
-                    toAdd.Buffable = false;
-                    iPower.Effects = iPower.Effects.Append(toAdd).ToArray();
-                    if (enh.GetPower().Effects[index2].EffectType == Enums.eEffectType.GrantPower)
-                        iPower.HasGrantPowerEffect = true;
+                    for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
+                    {
+                        var effect = power1.Effects[index2];
+                        var toAdd = (IEffect)effect.Clone();
+                        toAdd.isEnhancementEffect = true;
+                        toAdd.IgnoreScaling = true;
+                        toAdd.ToWho = effect.ToWho;
+                        toAdd.Absorbed_Effect = true;
+                        toAdd.Ticks = effect.Ticks;
+                        toAdd.Buffable = false;
+                        iPower.Effects = iPower.Effects.Append(toAdd).ToArray();
+                        if (enh.GetPower().Effects[index2].EffectType == Enums.eEffectType.GrantPower)
+                            iPower.HasGrantPowerEffect = true;
+                    }
+                }
+                else
+                {
+                    for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
+                    {
+                        var effect = power1.Effects[index2];
+                        var toAdd = (IEffect)effect.Clone();
+                        toAdd.isEnhancementEffect = true;
+                        toAdd.IgnoreScaling = false;
+                        toAdd.ToWho = effect.ToWho;
+                        toAdd.Absorbed_Effect = true;
+                        toAdd.Ticks = effect.Ticks;
+                        toAdd.Buffable = false;
+                        iPower.Effects = iPower.Effects.Append(toAdd).ToArray();
+                        if (enh.GetPower().Effects[index2].EffectType == Enums.eEffectType.GrantPower)
+                            iPower.HasGrantPowerEffect = true;
+                    }
                 }
             }
 

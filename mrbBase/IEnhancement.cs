@@ -60,6 +60,8 @@ namespace mrbBase
 
         bool IsProc { get; set; }
 
+        bool IsScalable { get; set; }
+
         bool Superior { get; set; }
 
         string LongName { get; }

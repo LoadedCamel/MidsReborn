@@ -1060,22 +1060,22 @@ namespace mrbBase.Base.Data_Classes
                         numArray1[index1] += -100;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].Mag > 0.0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].BuffedMag > 0.0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].Mag < 0.0))
+                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag < 0.0))
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag > 0.0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].BuffedMag > 0.0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
@@ -1305,7 +1305,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
-                        if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination") && MidsContext.Character.Domination)
+                        if (Effects[index].BuffedMag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination") && MidsContext.Character.Domination)
                         {
                             applies = true;
                         }
@@ -1368,7 +1368,7 @@ namespace mrbBase.Base.Data_Classes
                 if (isEntCreate & (Effects[index].EffectType != Enums.eEffectType.EntCreate) &
                     ((Effects[index].Duration < (double) duration) | (Math.Abs(duration) < 0.01) |
                      (Effects[index].DelayedTime > (double) delayTime) |
-                     ((Effects[index].Mag < 0.0) & (Effects[index].ToWho == Enums.eToWho.Self))))
+                     ((Effects[index].BuffedMag < 0.0) & (Effects[index].ToWho == Enums.eToWho.Self))))
                 {
                     applies = false;
                 }
@@ -1381,7 +1381,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if ((eEffectType == Enums.eEffectType.Mez) & (mag < 0.0) &
                     ((Effects[index].EffectType == Enums.eEffectType.Resistance) |
-                     (Effects[index].EffectType == Enums.eEffectType.Regeneration)) & (Effects[index].Mag > 0.0))
+                     (Effects[index].EffectType == Enums.eEffectType.Regeneration)) & (Effects[index].BuffedMag > 0.0))
                 {
                     applies = true;
                 }
@@ -1405,7 +1405,7 @@ namespace mrbBase.Base.Data_Classes
                     : Effects[index].Absorbed_Duration;
                 isDmg = Effects[index].EffectType == Enums.eEffectType.Damage;
                 eEffectType = Effects[index].EffectType;
-                mag = Effects[index].Mag;
+                mag = Effects[index].BuffedMag;
                 buffable = Effects[index].Buffable;
                 if (Effects[index].SpecialCase == Enums.eSpecialCase.Defiance || Effects[index].ValidateConditional("active", "Defiance"))
                 {
@@ -1432,15 +1432,15 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (!((Effects[index].EffectType == Enums.eEffectType.Defense) & (Effects[index].Probability > 0.0) &
                       Effects[index].CanInclude()) ||
-                    !((buffDebuff == 0) | ((buffDebuff < 0) & (Effects[index].Mag < 0.0)) |
-                      ((buffDebuff > 0) & (Effects[index].Mag > 0.0))) ||
+                    !((buffDebuff == 0) | ((buffDebuff < 0) & (Effects[index].BuffedMag < 0.0)) |
+                      ((buffDebuff > 0) & (Effects[index].BuffedMag > 0.0))) ||
                     (Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None ||
                     !((Effects[index].PvMode == ePvX) | (Effects[index].PvMode == Enums.ePvX.Any)))
                 {
                     continue;
                 }
 
-                numArray[(int) Effects[index].DamageType] += Effects[index].Mag;
+                numArray[(int) Effects[index].DamageType] += Effects[index].BuffedMag;
                 if (Effects[index].DamageType != Enums.eDamage.None)
                 {
                     flag = true;
@@ -1474,7 +1474,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                resists[(int) Effects[index].DamageType] += Effects[index].Mag;
+                resists[(int) Effects[index].DamageType] += Effects[index].BuffedMag;
                 if (Effects[index].DamageType != Enums.eDamage.None)
                 {
                     hasDamage = true;
@@ -1556,12 +1556,12 @@ namespace mrbBase.Base.Data_Classes
                 {
                     if ((Enums.eMez) subType == Effects[iIndex].MezType || subType < 0)
                     {
-                        shortFx.Add(iIndex, Effects[iIndex].Mag);
+                        shortFx.Add(iIndex, Effects[iIndex].BuffedMag);
                     }
                 }
                 else if (Effects[iIndex].ToWho is not Enums.eToWho.Target)
                 {
-                    shortFx.Add(iIndex, Effects[iIndex].Mag);
+                    shortFx.Add(iIndex, Effects[iIndex].BuffedMag);
                 }
             }
 
@@ -1644,7 +1644,7 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var mag = Effects[iIndex].Mag;
+                var mag = Effects[iIndex].BuffedMag;
                 if ((PowerType == Enums.ePowerType.Toggle) & Effects[iIndex].isEnhancementEffect)
                 {
                     mag /= 10f;
@@ -1727,7 +1727,7 @@ namespace mrbBase.Base.Data_Classes
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
             {
-                if (!((Effects[index].EffectType == iEffect) & (Effects[index].Mag > 0.0)) ||
+                if (!((Effects[index].EffectType == iEffect) & (Effects[index].BuffedMag > 0.0)) ||
                     (Effects[index].EffectType == Enums.eEffectType.Damage) &
                     (Effects[index].DamageType == Enums.eDamage.Special))
                 {
@@ -1799,7 +1799,7 @@ namespace mrbBase.Base.Data_Classes
             foreach (var index in Effects)
             {
                 index.Math_Duration = index.Duration;
-                index.Math_Mag = index.Mag;
+                index.Math_Mag = index.BuffedMag;
             }
         }
 
@@ -1871,7 +1871,7 @@ namespace mrbBase.Base.Data_Classes
 
                     effect.MezType = Enums.eMez.None;
                     var newValue = Enums.GetGroupedMez(iMez, shortForm);
-                    if (newValue == "Knocked" && effect.Mag < 0.0)
+                    if (newValue == "Knocked" && effect.BuffedMag < 0.0)
                     {
                         newValue = "Knockback Protection";
                     }
@@ -1890,7 +1890,7 @@ namespace mrbBase.Base.Data_Classes
 
                             break;
                         }
-                        case Enums.eEffectType.Mez when (newValue == "Mez") & (effect.Mag < 0.0):
+                        case Enums.eEffectType.Mez when (newValue == "Mez") & (effect.BuffedMag < 0.0):
                             str = str.Replace("Mez", "Status Protection").Replace("-", string.Empty);
                             break;
                         case Enums.eEffectType.Mez:
@@ -2375,7 +2375,7 @@ namespace mrbBase.Base.Data_Classes
                 (!((Effects[iID1].EffectType == Effects[iID2].EffectType) &
                    (Effects[iID1].ETModifies == Effects[iID2].ETModifies) &
                    (Effects[iID1].MezType == Effects[iID2].MezType)) ||
-                 Math.Abs(Effects[iID1].Mag - Effects[iID2].Mag) >= 0.01 && Effects[iID1].ToWho != Effects[iID2].ToWho);
+                 Math.Abs(Effects[iID1].BuffedMag - Effects[iID2].BuffedMag) >= 0.01 && Effects[iID1].ToWho != Effects[iID2].ToWho);
         }
 
         public static Enums.ShortFX[] SplitFX(ref Enums.ShortFX iSfx, ref IPower iPower)

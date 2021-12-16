@@ -100,6 +100,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label11 = new System.Windows.Forms.Label();
             this.gbFlags = new System.Windows.Forms.GroupBox();
             this.chkProc = new System.Windows.Forms.CheckBox();
+            this.chkScalable = new System.Windows.Forms.CheckBox();
             this.gbBasic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).BeginInit();
@@ -359,7 +360,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSet.Location = new System.Drawing.Point(8, 20);
             this.cbSet.Name = "cbSet";
-            this.cbSet.Size = new System.Drawing.Size(168, 22);
+            this.cbSet.Size = new System.Drawing.Size(356, 22);
             this.cbSet.TabIndex = 13;
             this.cbSet.SelectedIndexChanged += new System.EventHandler(this.cbSet_SelectedIndexChanged);
             // 
@@ -368,7 +369,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.gbSet.Controls.Add(this.cbSet);
             this.gbSet.Location = new System.Drawing.Point(496, 8);
             this.gbSet.Name = "gbSet";
-            this.gbSet.Size = new System.Drawing.Size(184, 52);
+            this.gbSet.Size = new System.Drawing.Size(372, 52);
             this.gbSet.TabIndex = 14;
             this.gbSet.TabStop = false;
             this.gbSet.Text = "Invention Origin Set:";
@@ -413,7 +414,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.gbEffects.Controls.Add(this.lblSched);
             this.gbEffects.Location = new System.Drawing.Point(4, 210);
             this.gbEffects.Name = "gbEffects";
-            this.gbEffects.Size = new System.Drawing.Size(584, 284);
+            this.gbEffects.Size = new System.Drawing.Size(584, 303);
             this.gbEffects.TabIndex = 15;
             this.gbEffects.TabStop = false;
             this.gbEffects.Text = "Effects:";
@@ -657,9 +658,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(596, 434);
+            this.btnOK.Location = new System.Drawing.Point(594, 451);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(84, 28);
+            this.btnOK.Size = new System.Drawing.Size(272, 28);
             this.btnOK.TabIndex = 16;
             this.btnOK.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -667,9 +668,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(596, 466);
+            this.btnCancel.Location = new System.Drawing.Point(594, 485);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(84, 28);
+            this.btnCancel.Size = new System.Drawing.Size(272, 28);
             this.btnCancel.TabIndex = 17;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -681,14 +682,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.gbClass.Controls.Add(this.pnlClass);
             this.gbClass.Location = new System.Drawing.Point(596, 178);
             this.gbClass.Name = "gbClass";
-            this.gbClass.Size = new System.Drawing.Size(84, 252);
+            this.gbClass.Size = new System.Drawing.Size(272, 268);
             this.gbClass.TabIndex = 18;
             this.gbClass.TabStop = false;
             this.gbClass.Text = "Class(es):";
             // 
             // lblClass
             // 
-            this.lblClass.Location = new System.Drawing.Point(8, 232);
+            this.lblClass.BackColor = System.Drawing.SystemColors.Control;
+            this.lblClass.ForeColor = System.Drawing.Color.Black;
+            this.lblClass.Location = new System.Drawing.Point(8, 248);
             this.lblClass.Name = "lblClass";
             this.lblClass.Size = new System.Drawing.Size(68, 16);
             this.lblClass.TabIndex = 2;
@@ -696,17 +699,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // pnlClassList
             // 
             this.pnlClassList.BackColor = System.Drawing.Color.Black;
-            this.pnlClassList.Location = new System.Drawing.Point(84, 16);
+            this.pnlClassList.Location = new System.Drawing.Point(11, 16);
             this.pnlClassList.Name = "pnlClassList";
-            this.pnlClassList.Size = new System.Drawing.Size(180, 212);
+            this.pnlClassList.Size = new System.Drawing.Size(180, 230);
             this.pnlClassList.TabIndex = 1;
             // 
             // pnlClass
             // 
             this.pnlClass.BackColor = System.Drawing.Color.Black;
-            this.pnlClass.Location = new System.Drawing.Point(8, 16);
+            this.pnlClass.Location = new System.Drawing.Point(196, 16);
             this.pnlClass.Name = "pnlClass";
-            this.pnlClass.Size = new System.Drawing.Size(68, 212);
+            this.pnlClass.Size = new System.Drawing.Size(68, 230);
             this.pnlClass.TabIndex = 0;
             // 
             // ImagePicker
@@ -734,7 +737,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbMutEx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMutEx.Location = new System.Drawing.Point(10, 80);
             this.cbMutEx.Name = "cbMutEx";
-            this.cbMutEx.Size = new System.Drawing.Size(168, 22);
+            this.cbMutEx.Size = new System.Drawing.Size(354, 22);
             this.cbMutEx.TabIndex = 21;
             this.tTip.SetToolTip(this.cbMutEx, "(Currently only apllicable to Stealth IOs");
             this.cbMutEx.SelectedIndexChanged += new System.EventHandler(this.cbMutEx_SelectedIndexChanged);
@@ -795,6 +798,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // gbFlags
             // 
+            this.gbFlags.Controls.Add(this.chkScalable);
             this.gbFlags.Controls.Add(this.chkProc);
             this.gbFlags.Controls.Add(this.chkUnique);
             this.gbFlags.Controls.Add(this.chkSuperior);
@@ -802,7 +806,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.gbFlags.Controls.Add(this.Label8);
             this.gbFlags.Location = new System.Drawing.Point(496, 66);
             this.gbFlags.Name = "gbFlags";
-            this.gbFlags.Size = new System.Drawing.Size(184, 111);
+            this.gbFlags.Size = new System.Drawing.Size(372, 111);
             this.gbFlags.TabIndex = 28;
             this.gbFlags.TabStop = false;
             this.gbFlags.Text = "Enhancement Flags";
@@ -810,20 +814,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // chkProc
             // 
             this.chkProc.AutoSize = true;
-            this.chkProc.Location = new System.Drawing.Point(96, 18);
+            this.chkProc.Location = new System.Drawing.Point(185, 16);
             this.chkProc.Name = "chkProc";
             this.chkProc.Size = new System.Drawing.Size(48, 18);
             this.chkProc.TabIndex = 22;
             this.chkProc.Text = "Proc";
             this.chkProc.UseVisualStyleBackColor = true;
-            this.chkProc.CheckedChanged += new EventHandler(chkProc_CheckedChanged);
+            this.chkProc.CheckedChanged += new System.EventHandler(this.chkProc_CheckedChanged);
+            // 
+            // chkScalable
+            // 
+            this.chkScalable.AutoSize = true;
+            this.chkScalable.Location = new System.Drawing.Point(185, 39);
+            this.chkScalable.Name = "chkScalable";
+            this.chkScalable.Size = new System.Drawing.Size(92, 18);
+            this.chkScalable.TabIndex = 23;
+            this.chkScalable.Text = "Allow Scaling";
+            this.chkScalable.UseVisualStyleBackColor = true;
             // 
             // frmEnhData
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(686, 501);
+            this.ClientSize = new System.Drawing.Size(873, 525);
             this.Controls.Add(this.gbFlags);
             this.Controls.Add(this.Label11);
             this.Controls.Add(this.StaticIndex);
@@ -934,5 +948,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         NumericUpDown udMinLevel;
         private GroupBox gbFlags;
         private CheckBox chkProc;
+        private CheckBox chkScalable;
     }
 }

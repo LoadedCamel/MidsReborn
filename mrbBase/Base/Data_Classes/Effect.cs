@@ -1554,7 +1554,6 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(IgnoreED);
             writer.Write(Override);
             writer.Write(ProcsPerMinute);
-
             writer.Write((int)PowerAttribs);
             writer.Write(AtrOrigAccuracy);
             writer.Write(AtrOrigActivatePeriod);
@@ -1568,7 +1567,6 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(AtrOrigRange);
             writer.Write(AtrOrigRechargeTime);
             writer.Write(AtrOrigSecondaryRange);
-
             writer.Write(AtrModAccuracy);
             writer.Write(AtrModActivatePeriod);
             writer.Write(AtrModArc);
