@@ -235,31 +235,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var bonusPower = lvBonusList.SelectedItems[0].Text;
                     var bonusMode = bonusPower.Contains("(PVP Only)") ? Enums.ePvX.PvP : Enums.ePvX.Any;
                     MySet.Bonus[BonusId()].PvMode = bonusMode;
-                    var bonus = MySet.Bonus;
-                    var bonusArName = Array.Empty<string>();
-                    var bonusArIndex = Array.Empty<int>();
-                    Array.Copy(bonus[BonusId()].Name, bonusArName, bonus[BonusId()].Name.Length + 1);
-                    Array.Copy(bonus[BonusId()].Index, bonusArIndex, bonus[BonusId()].Index.Length + 1);
-                    bonus[BonusId()].Name = bonusArName;
-                    bonus[BonusId()].Index = bonusArIndex;
-                    // mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
-                    // mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
+                    Array.Resize(ref MySet.Bonus[BonusId()].Name, MySet.Bonus[BonusId()].Name.Length + 1);
+                    Array.Resize(ref MySet.Bonus[BonusId()].Index, MySet.Bonus[BonusId()].Index.Length + 1);
                     MySet.Bonus[BonusId()].Name[MySet.Bonus[BonusId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     MySet.Bonus[BonusId()].Index[MySet.Bonus[BonusId()].Index.Length - 1] = index;
                 }
                 else if (IsSpecial())
                 {
-                    // mySet.SpecialBonus[SpecialID()].Special = SpecialID();
-                    // mySet.SpecialBonus[SpecialID()].Name = (string[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
-                    // mySet.SpecialBonus[SpecialID()].Index = (int[]) Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
-                    var spBonus = MySet.SpecialBonus;
-                    var spBonusArName = Array.Empty<string>();
-                    var spBonusArIndex = Array.Empty<int>();
                     MySet.SpecialBonus[SpecialId()].Special = SpecialId();
-                    Array.Copy(spBonus[SpecialId()].Name, spBonusArName, spBonus[SpecialId()].Name.Length + 1);
-                    Array.Copy(spBonus[SpecialId()].Index, spBonusArIndex, spBonus[SpecialId()].Index.Length + 1);
-                    spBonus[SpecialId()].Name = spBonusArName;
-                    spBonus[SpecialId()].Index = spBonusArIndex;
+                    Array.Resize(ref MySet.SpecialBonus[SpecialId()].Name, MySet.SpecialBonus[SpecialId()].Name.Length + 1);
+                    Array.Resize(ref MySet.SpecialBonus[SpecialId()].Index, MySet.SpecialBonus[SpecialId()].Index.Length + 1);
                     MySet.SpecialBonus[SpecialId()].Name[MySet.SpecialBonus[SpecialId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     MySet.SpecialBonus[SpecialId()].Index[MySet.SpecialBonus[SpecialId()].Index.Length - 1] = index;
                 }

@@ -91,19 +91,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 FX = (IEffect)frmPowerEffect.myFX.Clone()
             });
             effects[effects.Count - 1].FX.isEnhancementEffect = true;
-
-            /*var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
-            Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
-            enh.Effect = sEffectArray;
-            var effect = myEnh.Effect;
-            var index = myEnh.Effect.Length - 1;
-            effect[index].Mode = Enums.eEffMode.FX;
-            effect[index].Enhance.ID = -1;
-            effect[index].Enhance.SubID = -1;
-            effect[index].Multiplier = 1f;
-            effect[index].Schedule = Enums.eSchedule.A;
-            effect[index].FX = (IEffect) frmPowerEffect.myFX.Clone();
-            effect[index].FX.isEnhancementEffect = true;*/
             var sEffects = effects.ToArray();
             enh.Effect = sEffects;
             ListSelectedEffects();
@@ -433,16 +420,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void chkUnique_CheckedChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
+            if (Loading) return;
             myEnh.Unique = chkUnique.Checked;
         }
 
         private void chkProc_CheckedChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
+            if (Loading) return;
             myEnh.IsProc = chkProc.Checked;
+        }
+
+        private void chkScalable_CheckChanged(object sender, EventArgs e)
+        {
+            if (Loading) return;
+            myEnh.IsScalable = chkScalable.Checked;
         }
 
         private void DisplayAll()
@@ -461,6 +452,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbMutEx.SelectedIndex = (int)myEnh.MutExID;
             chkSuperior.Checked = myEnh.Superior;
             chkProc.Checked = myEnh.IsProc;
+            chkScalable.Checked = myEnh.IsScalable;
             switch (myEnh.TypeID)
             {
                 case Enums.eType.Normal:

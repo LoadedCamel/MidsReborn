@@ -625,8 +625,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 case "Endurance" when barIndex == (int) Enums.eBarType.EndRec:
                     tooltipText = (sValueOverCap > sValueMainBar
-                                      ? $"{sValueOverCap:##0.##}/s End., capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
-                                      : $"{sValueMainBar:##0.##}/s End. ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
+                                      ? $"{sValueOverCap:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(true):##0.##}%), capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
+                                      : $"{sValueMainBar:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
                                   ) +
                                   $"\r\nBase: {sValueBase:##0.##}/s";
                     break;
