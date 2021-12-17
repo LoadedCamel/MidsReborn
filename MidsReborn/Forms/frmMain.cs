@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using FastDeepCloner;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
@@ -2540,7 +2541,13 @@ namespace Mids_Reborn.Forms
             DataViewLocked = Lock;
             if (powIndex > -1)
             {
-                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex);
+                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex).Clone();
+                if (basePower != null)
+                {
+                    var fxListBase = basePower.Effects.Where(fx => !fx.isEnhancementEffect);
+                    basePower.Effects = fxListBase.ToArray();
+                }
+
                 var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(powIndex);
                 if (basePower != null && enhancedPower != null)
                 {

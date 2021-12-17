@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -3507,7 +3506,9 @@ namespace Mids_Reborn.Forms.Controls
             Lock = locked;
 
             pBase = new Power(iBase);
-            pEnh = iEnhanced != null ? iEnhanced.Effects.Length == iBase.Effects.Length ? new Power(iEnhanced) : new Power(iBase) : new Power(iBase);
+            pEnh = iEnhanced != null
+                ? new Power(iEnhanced) 
+                : new Power(iBase);
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();
