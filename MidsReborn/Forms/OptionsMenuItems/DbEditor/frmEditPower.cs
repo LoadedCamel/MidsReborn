@@ -2294,7 +2294,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
             {
-                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+                lblEndCost.Text = $"{power.EndCost / power.ActivatePeriod:##0.##}/s";
             }
             else
             {

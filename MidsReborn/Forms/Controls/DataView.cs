@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -631,6 +632,10 @@ namespace Mids_Reborn.Forms.Controls
                 effect.UpdateAttrib();
                 SetDamageTip();
             }*/
+            if (pBase.FullName.Contains("Voltaic_Sentinel"))
+            {
+                Debug.WriteLine($"DataView (2): pBase.ToggleCost={pBase.ToggleCost}, pBase.ActivatePeriod={pBase.ActivatePeriod}, pBase.EndCost={pBase.EndCost}");
+            }
 
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, suffix1, tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
@@ -3509,6 +3514,14 @@ namespace Mids_Reborn.Forms.Controls
             pEnh = iEnhanced != null
                 ? new Power(iEnhanced) 
                 : new Power(iBase);
+
+            // Data sent to the Dataview may differ from DB.
+            var dbPower = DatabaseAPI.GetPowerByFullName(pBase.FullName);
+            if (dbPower != null)
+            {
+                pBase.ActivatePeriod = dbPower.ActivatePeriod;
+                pEnh.ActivatePeriod = dbPower.ActivatePeriod;
+            }
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();
