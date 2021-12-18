@@ -632,11 +632,6 @@ namespace Mids_Reborn.Forms.Controls
                 effect.UpdateAttrib();
                 SetDamageTip();
             }*/
-            if (pBase.FullName.Contains("Voltaic_Sentinel"))
-            {
-                Debug.WriteLine($"DataView (2): pBase.ToggleCost={pBase.ToggleCost}, pBase.ActivatePeriod={pBase.ActivatePeriod}, pBase.EndCost={pBase.EndCost}");
-            }
-
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, suffix1, tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
@@ -742,8 +737,8 @@ namespace Mids_Reborn.Forms.Controls
             var rankedEffects = pBase.GetRankedEffects();
             for (var id = 0; id < rankedEffects.Length; id++)
             {
-                try
-                {
+                //try
+                //{
                     if (rankedEffects[id] <= -1)
                         continue;
                     if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
@@ -835,11 +830,11 @@ namespace Mids_Reborn.Forms.Controls
                     info_DataList.AddItem(rankedEffect);
                     if (pBase.Effects[rankedEffects[id]].isEnhancementEffect)
                         info_DataList.SetUnique();
-                }
+                /*}
                 catch (Exception ex)
                 {
                     MessageBox.Show($"{ex.Message}\n{ex.StackTrace}");
-                }
+                }*/
             }
 
             info_DataList.Draw();
@@ -3008,31 +3003,34 @@ namespace Mids_Reborn.Forms.Controls
                     return FastItem("", 0.0f, 0.0f, string.Empty);
             }
 
-            for (var index = 0; index < shortFxEnh.Index.Length - 1; index++)
+            for (var index = 0; index < shortFxEnh.Index.Length; index++)
             {
+                if (shortFxEnh.Index[index] >= pBase.Effects.Length)
+                    continue;
                 if (shortFxEnh.Index[index] <= -1 || !pBase.Effects[shortFxEnh.Index[index]].DisplayPercentage)
                     continue;
                 if (shortFxEnh.Value[index] > 1)
                     continue;
 
-                if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.Absorb)
+                switch (pBase.Effects[shortFxEnh.Index[index]].EffectType)
                 {
-                    //Fixes the Absorb display to correctly show the percentage
-                    shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
-                }
-                else if (pBase.Effects[shortFxEnh.Index[index]].EffectType == Enums.eEffectType.ToHit)
-                {
-                    //Fixes the ToHit display to correctly show the percentage
-                    if (pBase.Effects[shortFxEnh.Index[index]].Stacking == Enums.eStacking.Yes)
-                    {
-                        var overage = pBase.Effects[Index[ID]].Ticks * 0.05f;
-                        shortFxEnh.Sum -= overage;
-                        shortFxEnh.Sum /= 2;
-                    }
-                }
-                else
-                {
-                    shortFxEnh.ReSum();
+                    case Enums.eEffectType.Absorb:
+                        //Fixes the Absorb display to correctly show the percentage
+                        shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
+                        break;
+                    case Enums.eEffectType.ToHit:
+                        //Fixes the ToHit display to correctly show the percentage
+                        if (pBase.Effects[shortFxEnh.Index[index]].Stacking == Enums.eStacking.Yes)
+                        {
+                            var overage = pBase.Effects[Index[ID]].Ticks * 0.05f;
+                            shortFxEnh.Sum -= overage;
+                            shortFxEnh.Sum /= 2;
+                        }
+
+                        break;
+                    default:
+                        shortFxEnh.ReSum();
+                        break;
                 }
 
                 break;
