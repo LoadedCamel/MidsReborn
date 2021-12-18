@@ -11,7 +11,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public partial class PatchNotes : Form
     {
-        private frmMain _parent;
+        private readonly frmMain _parent;
         private bool ReadNotes { get; set; }
         public string Type { get; set; }
         public string Version { get; set; }
@@ -31,20 +31,16 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             using var client = new WebClient();
             var stream = client.OpenRead(src);
-            if (stream != null)
+            if (stream == null) return 0;
+            using var reader = new StreamReader(stream);
+            var i = 0;
+            string result;
+            while ((result = reader.ReadLine()) != null)
             {
-                using var reader = new StreamReader(stream);
-                int i = 0;
-                string result;
-                while ((result = reader.ReadLine()) != null)
-                {
-                    i++;
-                    if (result.Contains($"## {Type} [{Version}]"))
-                    {
-                        var startLine = i + 1;
-                        return startLine;
-                    }
-                }
+                i++;
+                if (!result.Contains($"## {Type} [{Version}]")) continue;
+                var startLine = i + 1;
+                return startLine;
             }
 
             return 0;
@@ -57,11 +53,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 case "App":
                     ChangeLog = MidsContext.Config.AppChangeLog;
-                    Text = $"Viewing \"MRB {Version}\" Patch Notes";
+                    Text = $@"Viewing ""MRB {Version}"" Patch Notes";
                     break;
                 case "Database":
                     ChangeLog = MidsContext.Config.DbChangeLog;
-                    Text = $"Viewing \"{Type} {Version}\" Patch Notes";
+                    Text = $@"Viewing ""{Type} {Version}"" Patch Notes";
                     break;
             }
             if (ReadNotes)
@@ -69,29 +65,27 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 closeUpdate.Text = @"UPDATE";
             }
 
-            int startLine = GetStartingLine(ChangeLog);
+            var startLine = GetStartingLine(ChangeLog);
             richTextBox1.ForeColor = Color.AliceBlue;
             using var client = new WebClient();
             var stream = client.OpenRead(ChangeLog);
             if (stream == null) return;
             using var reader = new StreamReader(stream);
             var builder = new StringBuilder(richTextBox1.Text);
-            int i = 0;
+            var i = 0;
             string result;
 
             while ((result = reader.ReadLine()) != null)
             {
                 i++;
-                if (i >= startLine)
+                if (i < startLine) continue;
+                var regMatch = new Regex("(##.*\\[.*\\])");
+                if (regMatch.IsMatch(result))
                 {
-                    var regMatch = new Regex("(##.*\\[.*\\])");
-                    if (regMatch.IsMatch(result))
-                    {
-                        break;
-                    }
-
-                    builder.AppendFormat($"{result}\r\n");
+                    break;
                 }
+
+                builder.AppendFormat($"{result}\r\n");
             }
 
             richTextBox1.Text = builder.ToString();
@@ -110,10 +104,10 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 switch(Type)
                 {
                     case "App":
-                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.App, Version, _parent);
+                        clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version);
                         break;
                     case "Database":
-                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.Database, Version, _parent);
+                        clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version);
                         break;
                 }
                 Close();

@@ -73,9 +73,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.Designer.cs">
       <DependentUpon>frmDBConvert.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UpdateSystem\DbUpdate.cs" />
-    <Compile Include="Forms\UpdateSystem\AppUpdate.cs" />
-    <Compile Include="Forms\UpdateSystem\clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
     <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
@@ -93,6 +90,20 @@
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProgress.Designer.cs">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\AppUpdate.cs" />
+    <Compile Include="Forms\UpdateSystem\DbUpdate.cs" />
+    <Compile Include="Forms\UpdateSystem\PatchNotes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchNotes.Designer.cs">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UpdateSystem\PatchQuery.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,24 +115,6 @@
     </Compile>
     <Compile Include="Forms\UpdateSystem\UpdateQuery.Designer.cs">
       <DependentUpon>UpdateQuery.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmProgress.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmProgress.Designer.cs">
-      <DependentUpon>frmProgress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UpdateSystem\PatchNotes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UpdateSystem\PatchNotes.Designer.cs">
-      <DependentUpon>PatchNotes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UpdateSystem\Updater.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UpdateSystem\Updater.Designer.cs">
-      <DependentUpon>Updater.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmIncarnates.cs">
       <SubType>Form</SubType>
@@ -358,11 +351,20 @@
     <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
       <DependentUpon>PowersControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\PatchQuery.resx">
+      <DependentUpon>PatchQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\UpdateQuery.resx">
+      <DependentUpon>UpdateQuery.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
       <DependentUpon>PowerList.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Images\*\*.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -384,9 +386,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.resx">
       <DependentUpon>frmRestoreHidden.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateSystem\PatchQuery.resx">
-      <DependentUpon>PatchQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmIncarnates.resx">
       <DependentUpon>frmIncarnates.cs</DependentUpon>
@@ -439,9 +438,6 @@
     <EmbeddedResource Include="Forms\Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateSystem\UpdateQuery.resx">
-      <DependentUpon>UpdateQuery.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProgress.resx">
       <DependentUpon>frmProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -474,12 +470,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
       <DependentUpon>frmSetEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
-      <DependentUpon>PatchNotes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateSystem\Updater.resx">
-      <DependentUpon>Updater.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmPrestige.resx">
       <DependentUpon>frmPrestige.cs</DependentUpon>
@@ -756,6 +746,10 @@
       <Project>{8b762616-ca1e-428a-a62d-e17dd738712d}</Project>
       <Name>mrbControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MRBUpdater\MRBUpdater.csproj">
+      <Project>{28498C36-633E-4953-9652-D6D6F719E0BF}</Project>
+      <Name>MRBUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Homecoming\bbcode.mhd">
@@ -819,9 +813,6 @@
       <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Licensing">
-      <Version>19.3.0.57</Version>
-    </PackageReference>
-    <PackageReference Include="Syncfusion.SfListView.WinForms">
       <Version>19.3.0.57</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Shared.Base">
