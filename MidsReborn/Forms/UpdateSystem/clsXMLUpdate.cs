@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Windows.Forms;
+using mrbBase;
+using MRBUpdater;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -68,20 +73,26 @@ namespace Mids_Reborn.Forms.UpdateSystem
             
         }
 
-        public static void Update(Enum type, string updateVersion, frmMain parent)
+        public static void Update(string path, string updateVersion)
         {
             try
             {
-                using var updateForm = new Updater(parent)
+                var startInfo = new ProcessStartInfo
                 {
-                    Type = type?.ToString(),
-                    VersionText = updateVersion,
+                    UseShellExecute = true,
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    WorkingDirectory = Application.StartupPath,
+                    FileName = @"MRBUpdater.exe",
+                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id}"
                 };
-                updateForm.ShowDialog();
+
+                Process.Start(startInfo);
+
+
             }
-            catch
+            catch (Exception e)
             {
-                // Ignored
+                Debug.WriteLine(e);
             }
         }
 
