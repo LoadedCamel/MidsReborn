@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -235,73 +234,62 @@ namespace mrbBase
             return str1;
         }
 
-        public string GetEnhancementStringLong()
+        private string GetEffectsStringLong(IEnhancement enhancement, IPower enhBoostPower)
         {
-            string str1;
-            if (Enh < 0)
+            var str1 = "";
+            var stringBuilder = new StringBuilder();
+            var flag1 = false;
+            var flag2 = false;
+            var flag3 = false;
+            var flag4 = false;
+            var flag5 = false;
+
+            foreach (var sEffect in enhancement.Effect)
             {
-                str1 = string.Empty;
-            }
-            else
-            {
-                var stringBuilder = new StringBuilder();
-                var flag1 = false;
-                var flag2 = false;
-                var flag3 = false;
-                var flag4 = false;
-                var flag5 = false;
-                var enhancement = DatabaseAPI.Database.Enhancements[Enh];
-                if (enhancement.Effect.Length == 0)
+                switch (sEffect.Mode)
                 {
-                    str1 = enhancement.Desc;
-                }
-                else
-                {
-                    foreach (var sEffect in enhancement.Effect)
-                        switch (sEffect.Mode)
+                    case Enums.eEffMode.FX:
+                        flag1 = true;
+                        break;
+                    case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
                         {
-                            case Enums.eEffMode.FX:
-                                flag1 = true;
-                                break;
-                            case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
+                            var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
+                            if (Math.Abs(sEffect.Multiplier) > float.Epsilon)
                             {
-                                var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
-                                if (Math.Abs(sEffect.Multiplier) > float.Epsilon)
-                                {
-                                    scheduleMult = (float)Math.Round(scheduleMult * sEffect.Multiplier * 1000) / 1000;
-                                }
+                                scheduleMult = (float)Math.Round(scheduleMult * sEffect.Multiplier * 1000) / 1000;
+                            }
 
-                                var id = (Enums.eEnhance) sEffect.Enhance.ID;
-                                string str2;
-                                if (id == Enums.eEnhance.Mez)
-                                {
-                                    var subId = (Enums.eMez) sEffect.Enhance.SubID;
-                                    str2 = Enum.GetName(subId.GetType(), subId);
-                                }
-                                else
-                                {
-                                    str2 = Enum.GetName(id.GetType(), id);
-                                }
+                            var id = (Enums.eEnhance)sEffect.Enhance.ID;
+                            string str2;
+                            if (id == Enums.eEnhance.Mez)
+                            {
+                                var subId = (Enums.eMez)sEffect.Enhance.SubID;
+                                str2 = Enum.GetName(subId.GetType(), subId);
+                            }
+                            else
+                            {
+                                str2 = Enum.GetName(id.GetType(), id);
+                            }
 
-                                switch (sEffect.Enhance.ID)
-                                {
-                                    case 7:
-                                    case 8:
-                                    case 17:
-                                        str2 = !flag2 ? "Heal" : string.Empty;
-                                        flag2 = true;
-                                        break;
-                                    case 10:
-                                    case 11 when !flag5:
-                                        str2 = !flag3 ? "Jump" : string.Empty;
-                                        flag3 = true;
-                                        break;
-                                    case 5:
-                                    case 16:
-                                        str2 = !flag4 ? "EndMod" : string.Empty;
-                                        flag4 = true;
-                                        break;
-                                    default:
+                            switch (sEffect.Enhance.ID)
+                            {
+                                case 7:
+                                case 8:
+                                case 17:
+                                    str2 = !flag2 ? "Heal" : string.Empty;
+                                    flag2 = true;
+                                    break;
+                                case 10:
+                                case 11 when !flag5:
+                                    str2 = !flag3 ? "Jump" : string.Empty;
+                                    flag3 = true;
+                                    break;
+                                case 5:
+                                case 16:
+                                    str2 = !flag4 ? "EndMod" : string.Empty;
+                                    flag4 = true;
+                                    break;
+                                default:
                                     {
                                         if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) &
                                              (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly ? 0 :
@@ -314,119 +302,128 @@ namespace mrbBase
 
                                         break;
                                     }
-                                }
-
-                                if (!string.IsNullOrEmpty(str2))
-                                {
-                                    if (stringBuilder.Length > 0)
-                                        stringBuilder.Append("\n");
-                                    stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2,
-                                        Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule),
-                                        (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo),
-                                        Math.Abs(sEffect.Multiplier) > float.Epsilon &
-                                        MidsContext.Config.CoDEffectFormat &
-                                        sEffect.Multiplier != 1 &
-                                        sEffect.Multiplier != 0.625 &
-                                        sEffect.Multiplier != 0.5 &
-                                        sEffect.Multiplier != 0.4375
-                                            ? $" [x{sEffect.Multiplier}]"
-                                            : "");
-                                }
-
-                                break;
                             }
-                            case Enums.eEffMode.PowerEnh:
-                                break;
-                            case Enums.eEffMode.PowerProc:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+
+                            if (!string.IsNullOrEmpty(str2))
+                            {
+                                if (stringBuilder.Length > 0)
+                                    stringBuilder.Append("\n");
+                                stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2,
+                                    Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule),
+                                    (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo),
+                                    Math.Abs(sEffect.Multiplier) > float.Epsilon &
+                                    MidsContext.Config.CoDEffectFormat &
+                                    sEffect.Multiplier != 1 &
+                                    sEffect.Multiplier != 0.625 &
+                                    sEffect.Multiplier != 0.5 &
+                                    sEffect.Multiplier != 0.4375
+                                        ? $" [x{sEffect.Multiplier}]"
+                                        : "");
+                            }
+
+                            break;
                         }
-
-                    if (!flag1)
-                    {
-                        str1 = stringBuilder.ToString();
-                    }
-                    else
-                    {
-                        IPower power = new Power(enhancement.GetPower());
-                        power.ApplyGrantPowerEffects();
-                        var returnMask = new int[0];
-                        for (var index1 = 0; index1 <= power.Effects.Length - 1; ++index1)
-                            if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
-                            {
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true));
-                                var empty = string.Empty;
-                                for (var idEffect = 0; idEffect <= power.Effects.Length - 1; ++idEffect)
-                                {
-                                    power.Effects[idEffect].Stacking = Enums.eStacking.Yes;
-                                    power.Effects[idEffect].Buffable = true;
-                                    if (power.Effects[idEffect].Absorbed_EffectID == index1)
-                                    {
-                                        power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true);
-                                    }
-
-                                    if (returnMask.Length <= 0)
-                                    {
-                                        continue;
-                                    }
-
-                                    if (stringBuilder.Length > 0)
-                                    {
-                                        stringBuilder.Append("\n");
-                                    }
-
-                                    stringBuilder.AppendFormat("  {0}", empty);
-                                    break;
-                                }
-
-                                for (var index2 = 0; index2 <= power.Effects.Length - 1; ++index2)
-                                {
-                                    var flag6 = false;
-                                    for (var index3 = 0; index3 <= returnMask.Length - 1; ++index3)
-                                    {
-                                        if (returnMask[index3] != index2)
-                                            continue;
-                                        flag6 = true;
-                                        break;
-                                    }
-
-                                    if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
-                                    {
-                                        continue;
-                                    }
-
-                                    if (stringBuilder.Length > 0)
-                                    {
-                                        stringBuilder.Append("\n");
-                                    }
-
-                                    power.Effects[index2].Stacking = Enums.eStacking.Yes;
-                                    power.Effects[index2].Buffable = true;
-                                    stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true));
-                                }
-                            }
-                            else if (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
-                            {
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false,true));
-                            }
-
-                        str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
-                    }
+                    case Enums.eEffMode.PowerEnh:
+                        break;
+                    case Enums.eEffMode.PowerProc:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
+            if (!flag1)
+            {
+                str1 = stringBuilder.ToString();
+            }
+            else
+            {
+                IPower power = new Power(enhBoostPower);
+                power.ApplyGrantPowerEffects();
+                var returnMask = Array.Empty<int>();
+                for (var index1 = 0; index1 < power.Effects.Length; index1++)
+                {
+                    if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
+                    {
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.Append("\n");
+                        }
+
+                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true));
+                        var empty = string.Empty;
+                        for (var idEffect = 0; idEffect < power.Effects.Length; idEffect++)
+                        {
+                            power.Effects[idEffect].Stacking = Enums.eStacking.Yes;
+                            power.Effects[idEffect].Buffable = true;
+                            if (power.Effects[idEffect].Absorbed_EffectID == index1)
+                            {
+                                power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true);
+                            }
+
+                            if (returnMask.Length <= 0)
+                            {
+                                continue;
+                            }
+
+                            if (stringBuilder.Length > 0)
+                            {
+                                stringBuilder.Append("\n");
+                            }
+
+                            stringBuilder.AppendFormat("  {0}", empty);
+                            break;
+                        }
+
+                        for (var index2 = 0; index2 < power.Effects.Length; index2++)
+                        {
+                            var flag6 = false;
+                            foreach (var m in returnMask)
+                            {
+                                if (m != index2)
+                                    continue;
+                                flag6 = true;
+                                break;
+                            }
+
+                            if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
+                            {
+                                continue;
+                            }
+
+                            if (stringBuilder.Length > 0)
+                            {
+                                stringBuilder.Append("\n");
+                            }
+
+                            power.Effects[index2].Stacking = Enums.eStacking.Yes;
+                            power.Effects[index2].Buffable = true;
+                            stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true));
+                        }
+                    }
+                    else if (!power.Effects[index1].Absorbed_Effect) // (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
+                    {
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.Append("\n");
+                        }
+
+                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true));
+                    }
+                }
+
+                str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+            }
+
             return str1;
+        }
+
+        public string GetEnhancementStringLong()
+        {
+            if (Enh < 0) return string.Empty;
+
+            var enhancement = DatabaseAPI.Database.Enhancements[Enh];
+            return GetEffectsStringLong(enhancement, enhancement.GetPower());
         }
 
         public string GetRelativeString(bool onlySign)
