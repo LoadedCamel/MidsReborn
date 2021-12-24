@@ -1427,8 +1427,10 @@ namespace mrbBase
         private static void UpdateDbModified()
         {
             Database.Date = DateTime.Now;
-            var dateSplit = Database.Date.ToString("MM/dd/yyyy").Split('/');
-            var verString = $"{dateSplit[2]}.{dateSplit[0]}{dateSplit[1]}";
+            var dbVerString = $"{Database.Version}";
+            var revString = $"{dbVerString.Substring(dbVerString.Length - 2)}";
+            var incRev = $"{int.Parse(revString) + 1:D2}";
+            var verString = $"{Database.Date:yy.MM}{incRev}";
             Database.Version = double.Parse(verString);
         }
 
