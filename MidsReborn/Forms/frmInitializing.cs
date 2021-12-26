@@ -65,7 +65,7 @@ namespace Mids_Reborn.Forms
     }
 
     // https://stackoverflow.com/questions/5522337/c-sharp-picturebox-transparent-background-doesnt-seem-to-work
-    public class TransparentLabel : Label
+    public sealed class TransparentLabel : Label
     {
         public TransparentLabel()
         {
@@ -111,7 +111,7 @@ namespace Mids_Reborn.Forms
         }
     }
 
-    public class TransparentPictureBox : Control
+    public sealed class TransparentPictureBox : Control
     {
         private readonly Timer _refresher;
         private Image _image;

@@ -2354,7 +2354,7 @@ namespace mrbControls
             vcRowsPowers = checked(vcPowers / vcCols);
         }
 
-        private Size GetRequiredDrawingArea()
+        public Size GetRequiredDrawingArea()
         {
             var maxY = -1;
             var maxX = -1;

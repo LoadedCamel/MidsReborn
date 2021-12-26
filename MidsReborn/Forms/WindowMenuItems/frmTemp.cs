@@ -36,6 +36,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public frmTemp(frmMain iParent, List<IPower> iPowers)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
             Load += frmTemp_Load;
             _locked = false;
             InitializeComponent();
@@ -183,7 +186,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index]).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index], 0).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 
@@ -226,7 +229,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 0).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 

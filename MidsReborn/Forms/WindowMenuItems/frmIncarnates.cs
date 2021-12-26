@@ -22,6 +22,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public frmIncarnates(ref frmMain iParent)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
             Load += frmIncarnate_Load;
             myPowers = Array.Empty<IPower>();
             Locked = false;

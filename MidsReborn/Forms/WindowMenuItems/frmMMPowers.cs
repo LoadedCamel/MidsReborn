@@ -41,6 +41,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public frmMMPowers(frmMain iParent, List<string> PetPowersList)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
             Load += frmMMPowers_Load;
             _locked = false;
             InitializeComponent();

@@ -1434,7 +1434,12 @@ namespace Mids_Reborn.Forms
             NoResizeEvent = prevScale >= 1 & scale >= 1;
             if (NoResizeEvent & !forceResize) return;
             scale = Math.Min(scale, 1);
-            var drawingHeight = (int)Math.Round(drawingArea.Height * scale);
+            //var drawingHeight = (int)Math.Round(drawingArea.Height * scale);
+            int drawingHeight;
+            if (drawing.bxBuffer.Size.Height > pnlGFX.Height)
+                drawingHeight = 2400;
+            else
+                drawingHeight = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Width = drawingWidth;
             pnlGFX.Height = drawingHeight;
 
@@ -4749,7 +4754,7 @@ namespace Mids_Reborn.Forms
         private void SetFormWidth(bool ToFull = false)
         {
             NoResizeEvent = true;
-            /*var initialWidth = Width - ClientSize.Width;
+            var initialWidth = Width - ClientSize.Width;
             //int modifiedWidth;
             if (!MainModule.MidsController.IsAppInitialized)
             {
@@ -4773,8 +4778,8 @@ namespace Mids_Reborn.Forms
                     workingArea = Screen.FromControl(this).WorkingArea;
                     Width = workingArea.Width - initialWidth;
                 }
-            }*/
-            switch (MidsContext.Config.Columns)
+            }
+            /*switch (MidsContext.Config.Columns)
             {
                 case 2:
                     Width = 1071;
@@ -4791,7 +4796,7 @@ namespace Mids_Reborn.Forms
                 case 6:
                     Width = 1900;
                     break;
-            }
+            }*/
             NoResizeEvent = false;
             DoResize();
         }

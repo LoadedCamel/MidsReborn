@@ -2041,7 +2041,7 @@ namespace Mids_Reborn.Forms
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new Size(1342, 1001);
@@ -2078,7 +2078,6 @@ namespace Mids_Reborn.Forms
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
             this.MinimumSize = new System.Drawing.Size(800, 600);
-            //this.MinimumSize = new System.Drawing.Size(1342, 1001);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hero Designer";
