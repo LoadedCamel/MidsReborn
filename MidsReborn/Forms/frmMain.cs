@@ -1409,7 +1409,8 @@ namespace Mids_Reborn.Forms
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
             NoResizeEvent = false;
             drawing.FullRedraw();
-            pnlGFXFlow.Invalidate();
+            //pnlGFXFlow.Invalidate();
+            pnlGFX.Refresh();
             gfxDrawing = false;
 
             t.Stop();
@@ -1458,8 +1459,8 @@ namespace Mids_Reborn.Forms
 
         public void DoRefresh()
         {
-            pnlGFX.Invalidate();
-            //pnlGFX.Update(); // Invalidate + Update force synchronous update
+            drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
+            pnlGFX.Refresh();
         }
 
         private bool doSave()
@@ -2300,6 +2301,10 @@ namespace Mids_Reborn.Forms
             e.RelativeLevel = I9Picker.UI.View.RelLevel;
             if (EnhancingSlot <= -1)
                 return;
+            // Let popup visible when repeating enhancement
+            if (!gfxDrawing)
+                HidePopup();
+
             var enhChanged = false;
             if (MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | (e.Enh < 0))
             {
@@ -2325,7 +2330,8 @@ namespace Mids_Reborn.Forms
                 {
                     if (e.Enh > -1)
                     {
-                        if (!hasProc && power.HasProc() && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 || DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                        // if (!hasProc && power.HasProc && ...) ??
+                        if (!hasProc && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 || DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
                         {
                             power.StatInclude = true;
                         }
@@ -2343,7 +2349,8 @@ namespace Mids_Reborn.Forms
                 }
 
                 I9Picker.Visible = false;
-                PowerModified(true);
+                if (!gfxDrawing)
+                    PowerModified(true);
                 if (EnhancingPower > -1)
                     RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
             }
@@ -3490,13 +3497,16 @@ namespace Mids_Reborn.Forms
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
                             //var t = Stopwatch.StartNew();
+                            gfxDrawing = true;
                             I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
+                            gfxDrawing = false;
                             //t.Stop();
                             //Debug.WriteLine($"Repeat last enhancement - EnhancementPicked(): {t.ElapsedMilliseconds} ms");
                             //t.Restart();
                             EnhancementModified();
                             //t.Stop();
                             //Debug.WriteLine($"Repeat last enhancement - EnhancementModified(): {t.ElapsedMilliseconds} ms");
+                            drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
                         }
                         else if ((e.Button == MouseButtons.Right) & (slotID > -1) && ModifierKeys != Keys.Shift)
                         {
@@ -3565,19 +3575,8 @@ namespace Mids_Reborn.Forms
             pnlGFXFlow.Focus();
         }
 
-        // Ensure the bottom part of main UI is visible when scrolling down.
-        private void pnlGFXFlow_Scroll(object sender, ScrollEventArgs e)
-        {
-            var delta = e.NewValue - e.OldValue;
-            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll & delta > 0)
-            {
-                // pnlGFX.Refresh() ?
-                pnlGFXFlow.Refresh();
-            }
-        }
-
         // if we are loading a file, the file isn't modified when this method is called
-        internal void PowerModified(bool markModified)
+        internal void PowerModified(bool markModified, bool redraw = true)
         {
             var index = -1;
             MainModule.MidsController.Toon.Complete = false;
@@ -3612,9 +3611,12 @@ namespace Mids_Reborn.Forms
             if ((index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
-            DoRedraw();
-            Application.DoEvents();
-            UpdateControls();
+            if (redraw)
+            {
+                DoRedraw();
+                Application.DoEvents();
+                UpdateControls();
+            }
             RefreshInfo();
             UpdateModeInfo();
             pbDynMode.Refresh();
