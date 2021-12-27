@@ -1194,13 +1194,20 @@ namespace mrbBase.Base.Data_Classes
                             sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
                     }
                 }
+                else if (EffectType == Enums.eEffectType.PerceptionRadius)
+                {
+                    var perceptionDistance = Statistics.BasePerception * BuffedMag;
+                    sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
+                        : DisplayPercentage
+                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
+                            : $"{perceptionDistance}ft";
+                }
                 else
                 {
                     sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
-                        : DisplayPercentage
-                            ? $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * 100)}%"
-                            : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag)}";
+                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
             }
 
