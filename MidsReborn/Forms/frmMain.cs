@@ -1391,7 +1391,7 @@ namespace Mids_Reborn.Forms
             var drawingWidth = pnlGFXFlow.Width - 30;
             var prevScale = prevDrawingWidth / (double)drawingArea.Width;
             var scale = drawingWidth / (double)drawingArea.Width;
-            NoResizeEvent = prevScale >= 1 & scale >= 1;
+            NoResizeEvent = prevScale >= 2 & scale >= 2;
             if (NoResizeEvent & !forceResize) return;
             scale = Math.Max(scale, 2);
             int drawingHeight;
