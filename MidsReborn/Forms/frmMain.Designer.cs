@@ -2150,7 +2150,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsSetFind;
         ToolStripMenuItem tsHCMRBForum;
         ToolStripMenuItem tsGitHubCrytilis;
-        //ToolStripMenuItem tsGitHubImaginary;
         ToolStripMenuItem tsUpdateCheck;
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;

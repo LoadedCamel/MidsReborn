@@ -113,7 +113,6 @@ namespace Mids_Reborn.Forms
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
             Application.EnableVisualStyles();
-            foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
             if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
 
             //disable menus that are no longer hooked up, but probably should be hooked back up
@@ -679,15 +678,6 @@ namespace Mids_Reborn.Forms
                 frmTotalsV2.SetTitle(fTotals2);
         }
 
-        /*private Rectangle CalculatePowerPoolBounds(ref ComboBox cbCtl)
-        {
-            return new Rectangle(
-                cbCtl.Bounds.X + poolsPanel.Location.X,
-                cbCtl.Bounds.Y + poolsPanel.Location.Y - 16, // + poolsPanel.VerticalScroll.Value,
-                0, // cbCtl.Bounds.Width,
-                0); // cbCtl.Bounds.Height
-        }*/
-
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized)
@@ -787,7 +777,6 @@ namespace Mids_Reborn.Forms
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
-            //SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             using var solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
@@ -813,8 +802,6 @@ namespace Mids_Reborn.Forms
                 return;
             MidsContext.Character.Origin = cbOrigin.SelectedIndex;
             I9Gfx.SetOrigin(cbOrigin.SelectedItem.ToStringOrNull());
-            // if (drawing != null)
-            //     DoRedraw();
             DisplayName();
         }
 
@@ -1370,10 +1357,6 @@ namespace Mids_Reborn.Forms
             petsButton.Visible = MidsContext.Character.Archetype.DisplayName == "Mastermind";
             petsButton.Enabled = MidsContext.Character.Archetype.DisplayName == "Mastermind";
 
-            //NewDraw();
-            //UpdateControls();
-            //SetFormHeight();
-            //PerformAutoScale();
             myDataView.Clear();
             MidsContext.Character.ResetLevel();
             PowerModified(false);
@@ -1395,13 +1378,11 @@ namespace Mids_Reborn.Forms
             pnlGFX.Update();
             pnlGFXFlow.Update();
             NoResizeEvent = false;
-            Debug.WriteLine($"Power Count: {MidsContext.Character.CurrentBuild.Powers.Count}");
             drawing.FullRedraw();
         }
 
         private void DoResize(bool forceResize = false)
         {
-            //lblHero.Width = ibRecipe.Left - 4;
             if (drawing == null) return;
             var prevDrawingWidth = pnlGFX.Width;
             var clientWidth = ClientSize.Width - pnlGFXFlow.Left;
@@ -1410,7 +1391,6 @@ namespace Mids_Reborn.Forms
             pnlGFXFlow.Height = clientHeight;
             var drawingArea = drawing.GetDrawingArea();
             var drawingWidth = pnlGFXFlow.Width - 30;
-            // Zed: fix for drawing area turning black if scale is >= 1
             var prevScale = prevDrawingWidth / (double)drawingArea.Width;
             var scale = drawingWidth / (double)drawingArea.Width;
             NoResizeEvent = prevScale >= 1 & scale >= 1;
@@ -3150,12 +3130,6 @@ namespace Mids_Reborn.Forms
             if (MidsContext.EnhCheckMode) return;
             if (!(!LastClickPlacedSlot && dragStartSlot >= 0)) return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
-            // no idea what pnlGFX_MouseDoubleClick represents, marking modified as it would have before the added arg
-            /*var powerEntryArray = DeepCopyPowerList();
-            RearrangeAllSlotsInBuild(powerEntryArray, true);
-            ShallowCopyPowerList(powerEntryArray);
-            PowerModified(false);
-            DoRedraw();*/
             PowerModified(true);
             FileModified = true;
             DoneDblClick = true;
@@ -3224,8 +3198,6 @@ namespace Mids_Reborn.Forms
             {
                 var index = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 var sIDX = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                //var index = drawing.WhichSlot(e.X, e.Y);
-                //var sIDX = drawing.WhichEnh(e.X, e.Y);
                 if ((index < 0) | (index >= MidsContext.Character.CurrentBuild.Powers.Count))
                 {
                     HidePopup();
@@ -3267,8 +3239,6 @@ namespace Mids_Reborn.Forms
         private void RedrawSinglePower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
-            //var powerPos = drawing.PowerPosition(powerEntry, true);
-            //drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height * 2 + (int)Math.Ceiling(6 * drawing.ScaleValue)));
             pnlGFX.Refresh();
             if (refreshInfo) RefreshInfo();
         }
@@ -3479,16 +3449,11 @@ namespace Mids_Reborn.Forms
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
-                            //var t = Stopwatch.StartNew();
                             gfxDrawing = true;
                             I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
                             gfxDrawing = false;
-                            //t.Stop();
-                            //Debug.WriteLine($"Repeat last enhancement - EnhancementPicked(): {t.ElapsedMilliseconds} ms");
-                            //t.Restart();
                             EnhancementModified();
-                            //t.Stop();
-                            //Debug.WriteLine($"Repeat last enhancement - EnhancementModified(): {t.ElapsedMilliseconds} ms");
+                            
                             drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
                         }
                         else if ((e.Button == MouseButtons.Right) & (slotID > -1) && ModifierKeys != Keys.Shift)
@@ -4773,24 +4738,6 @@ namespace Mids_Reborn.Forms
                     Width = workingArea.Width - initialWidth;
                 }
             }
-            /*switch (MidsContext.Config.Columns)
-            {
-                case 2:
-                    Width = 1071;
-                    break;
-                case 3:
-                    Width = 1344;
-                    break;
-                case 4:
-                    Width = 1588;
-                    break;
-                case 5:
-                    Width = 1849;
-                    break;
-                case 6:
-                    Width = 1900;
-                    break;
-            }*/
             NoResizeEvent = false;
             DoResize();
         }
@@ -5408,25 +5355,6 @@ namespace Mids_Reborn.Forms
             MidsContext.Config.Tips = new Tips();
         }
 
-        /*void tsBug_Click(object sender, EventArgs e)
-        {
-            string at = "ATFailed";
-            string pri = "PriFailed";
-            string sec = "SecFailed";
-            try
-            {
-                at = MidsContext.Character.Archetype.DisplayName;
-                pri = MidsContext.Character.Powersets[0].DisplayName;
-                sec = MidsContext.Character.Powersets[1].DisplayName;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            clsXMLUpdate.BugReport(at, pri, sec, string.Empty);
-        }*/
-
         private void tsClearAllEnh_Click(object sender, EventArgs e)
         {
             FloatTop(false);
@@ -5621,59 +5549,6 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        /*private async void tsExportDiscord_Click(object sender, EventArgs e)
-        {
-            void ShowConfigError(string field)
-                => MessageBox.Show($"{field} must be filled out in configuration before discord exports will function",
-                    "Discord is not configured");
-
-            if (exportDiscordInProgress)
-            {
-                MessageBox.Show("Another discord export is in progress, might be stuck");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(MidsContext.Config.DSelServer))
-            {
-                ShowConfigError("Server");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(MidsContext.Config.DChannel))
-            {
-                // tired of typing this
-                if (Debugger.IsAttached) MidsContext.Config.DChannel = "feature-testing";
-                ShowConfigError("Channel");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(MidsContext.Config.DNickName))
-            {
-                ShowConfigError("NickName");
-                return;
-            }
-
-            if (!MidsContext.Config.CheckedStats.Any())
-            {
-                ShowConfigError("Stat Boxes");
-                return;
-            }
-
-            exportDiscordInProgress = true;
-            try
-            {
-                await Clshook.DiscordExport();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-            }
-            finally
-            {
-                exportDiscordInProgress = false;
-            }
-        }*/
-
         private void tsExportLong_Click(object sender, EventArgs e)
         {
             FloatTop(false);
@@ -5773,9 +5648,6 @@ namespace Mids_Reborn.Forms
 
         private void tsFilePrint_Click(object sender, EventArgs e)
         {
-            // Fix for issue #42
-            // //using var frmPrint = new frmPrint();
-            //frmPrint.Show();
             new frmPrint().Show();
         }
 
@@ -5844,22 +5716,6 @@ namespace Mids_Reborn.Forms
             RefreshInfo();
             FloatUpdate();
         }
-
-        /*private void tsHelp_Click(object sender, EventArgs e)
-        {
-            using var frmReadme = new frmReadme(OS.GetApplicationPath() + "readme.rtf")
-            {
-                BtnClose =
-                {
-                    IA = drawing.pImageAttributes,
-                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
-                }
-            };
-            FloatTop(false);
-            frmReadme.ShowDialog(this);
-            FloatTop(true);
-        }*/
 
         private void tsHelperLong_Click(object sender, EventArgs e)
         {
@@ -5989,33 +5845,6 @@ namespace Mids_Reborn.Forms
         {
             clsXMLUpdate.CheckUpdate(this);
         }
-
-        /*private void ForceReinstall()
-        {
-            try
-            {
-                var path = MidsContext.Config.UpdatePath;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    MessageBox.Show("Unable to check for updates, no update path found");
-                    return;
-                }
-
-                // prove it is also a valid URI
-                if (Uri.TryCreate(path, UriKind.Absolute, out var _)) {
-                    AutoUpdater.Mandatory = true;
-                    AutoUpdater.UpdateMode = Mode.ForcedDownload;
-                    AutoUpdater.Start(path);
-                } else
-                    MessageBox.Show("Unable to check for updates, bad update path found : " + path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }*/
-
-        //void tsForceReinstall_Click(object sender, EventArgs e) => ForceReinstall();
 
         private void tsViewSelected()
         {
@@ -6348,7 +6177,6 @@ namespace Mids_Reborn.Forms
 
             if (cbAT.SelectedItem == null)
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
-            //else if (Operators.ConditionalCompareObjectNotEqual(NewLateBinding.LateGet(cbAT.SelectedItem, null, "Idx", new object[0], null, (System.Type[])null, null), MidsContext.Character.Archetype.Idx, false))
             else if (cbAT.SelectedItem.Idx != MidsContext.Character.Archetype.Idx)
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
             ibPvX.Checked = MidsContext.Config.Inc.DisablePvE;
@@ -6431,7 +6259,6 @@ namespace Mids_Reborn.Forms
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
             foreach (var llControl in Controls.OfType<ListLabelV3>().Concat(poolsPanel.Controls.OfType<ListLabelV3>()))
-            //foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
                 llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);

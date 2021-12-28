@@ -2376,11 +2376,10 @@ namespace mrbControls
                 Size result = default;
                 if ((maxX > -1) & (maxY > -1))
                 {
-                    Debug.WriteLine($"MaxX: {maxX}\nMaxY: {maxY}");
                     var size = new Size(maxX + SzPower.Width, maxY + SzPower.Height + PaddingY);
                     result = size;
                 }
-                /*else
+                else
                 {
                     if (vcCols != 5)
                     {
@@ -2394,9 +2393,8 @@ namespace mrbControls
                         var size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + PaddingY + OffsetInherent);
                         result = size;
                     }
-                }*/
+                }
 
-                Debug.WriteLine(result);
                 return result;
             }
         }
