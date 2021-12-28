@@ -429,7 +429,6 @@ namespace Mids_Reborn.Forms
                     tsAdvFreshInstall.Visible = true;
                     tsAdvResetTips.Visible = true;
                 }
-                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 Show();
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
@@ -447,6 +446,7 @@ namespace Mids_Reborn.Forms
                 PriSec_ExpandChanged(true);
                 loading = false;
                 UpdateControls(true);
+                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 CenterToScreen();
                 UpdatePoolsPanelSize();
                 InitializeDv();
