@@ -1375,8 +1375,6 @@ namespace Mids_Reborn.Forms
             if (drawing == null) return;
             NoResizeEvent = true;
             pnlGFX.Width = pnlGFXFlow.Width - 26;
-            pnlGFX.Update();
-            pnlGFXFlow.Update();
             NoResizeEvent = false;
             drawing.FullRedraw();
         }
