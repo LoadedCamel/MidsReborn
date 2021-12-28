@@ -148,7 +148,7 @@ namespace mrbControls
                 }
 
                 ColorSwitch();
-                InitColumns = MidsContext.Config.Columns; 
+                InitColumns = MidsContext.Config.Columns;
                 SzPower = bxPower[0].Size;
                 foreach (var pg in bxPower)
                 {
@@ -161,7 +161,8 @@ namespace mrbControls
                     pg.Graphics.PageUnit = GraphicsUnit.Pixel;
                 }
                 szSlot = new Size(30, 30);
-                szBuffer = GetMaxDrawingArea();
+                // szBuffer = GetMaxDrawingArea();
+                szBuffer = GetRequiredDrawingArea();
                 var size = new Size(szBuffer.Width, szBuffer.Height);
                 bxBuffer = new ExtendedBitmap(size);
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
@@ -194,7 +195,7 @@ namespace mrbControls
 
         public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null && MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
 
-       public int Columns
+        public int Columns
         {
             set
             {
@@ -631,7 +632,7 @@ namespace mrbControls
                     }
                     else
                     {
-                         brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
                     }
 
                     procGraphics.FillEllipse(brush3, procRect);
@@ -857,8 +858,8 @@ namespace mrbControls
 
         private PathGradientBrush MakePathBrush(Rectangle iRect, PointF iCenter, Color iColor1, Color icolor2)
         {
-            var num = (float) (iRect.Left + iRect.Width * 0.5);
-            var num2 = (float) (iRect.Top + iRect.Height * 0.5);
+            var num = (float)(iRect.Left + iRect.Width * 0.5);
+            var num2 = (float)(iRect.Top + iRect.Height * 0.5);
             var graphicsPath = new GraphicsPath();
             graphicsPath.AddEllipse(iRect);
             PathGradientBrush pathGradientBrush;
@@ -878,8 +879,8 @@ namespace mrbControls
                 pathGradientBrush2 = pathGradientBrush;
             }
 
-            var centerPoint = new PointF((float) (num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))),
-                (float) (num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
+            var centerPoint = new PointF((float)(num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))),
+                (float)(num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
             pathGradientBrush2.CenterPoint = centerPoint;
             return pathGradientBrush;
         }
@@ -892,6 +893,7 @@ namespace mrbControls
             DrawPowers();
             var location = new Point(0, 0);
             OutputUnscaled(ref bxBuffer, location);
+            bxBuffer.Bitmap.Save("tst.bmp");
             GC.Collect();
         }
 
@@ -1000,7 +1002,7 @@ namespace mrbControls
                         point = PowerPosition(GetVisualIDX(i));
                     else
                         point = PowerPosition(i);
-                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + (PaddingY/2))
+                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + (PaddingY / 2))
                         return i;
                 }
 
@@ -1022,7 +1024,7 @@ namespace mrbControls
                     else
                         point = PowerPosition(i);
 
-                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + (PaddingY/2))
+                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + (PaddingY / 2))
                         continue;
                     oPower = i;
                     break;
@@ -1141,15 +1143,15 @@ namespace mrbControls
             {
                 // Enable scaling
                 Scaling = true;
-                if ((double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height)
+                if ((double)drawingArea.Width / iSize.Width > drawingArea.Height / (double)iSize.Height)
                 {
                     // Shrink to fit width
-                    ScaleValue = (float) (drawingArea.Width / (double) iSize.Width);
+                    ScaleValue = (float)(drawingArea.Width / (double)iSize.Width);
                 }
                 else
                 {
                     // Fit height
-                    ScaleValue = (float) (drawingArea.Height / (double) iSize.Height);
+                    ScaleValue = (float)(drawingArea.Height / (double)iSize.Height);
                 }
 
                 ResetTarget();
@@ -1205,7 +1207,7 @@ namespace mrbControls
             }
             else
             {
-                iValue = checked((int) Math.Round(iValue / ScaleValue));
+                iValue = checked((int)Math.Round(iValue / ScaleValue));
                 result = iValue;
             }
 
@@ -1223,7 +1225,7 @@ namespace mrbControls
             }
             else
             {
-                iValue = checked((int) Math.Round(iValue * ScaleValue));
+                iValue = checked((int)Math.Round(iValue * ScaleValue));
                 result = iValue;
             }
 
@@ -1261,10 +1263,10 @@ namespace mrbControls
                 }
                 else
                 {
-                    iValue.X = (int) Math.Round(iValue.X / ScaleValue);
-                    iValue.Y = (int) Math.Round(iValue.Y / ScaleValue);
-                    iValue.Width = (int) Math.Round(iValue.Width / ScaleValue);
-                    iValue.Height = (int) Math.Round(iValue.Height / ScaleValue);
+                    iValue.X = (int)Math.Round(iValue.X / ScaleValue);
+                    iValue.Y = (int)Math.Round(iValue.Y / ScaleValue);
+                    iValue.Width = (int)Math.Round(iValue.Width / ScaleValue);
+                    iValue.Height = (int)Math.Round(iValue.Height / ScaleValue);
                     result = iValue;
                 }
 
@@ -1280,10 +1282,10 @@ namespace mrbControls
             {
                 if (!Scaling)
                     return iValue;
-                iValue.X = (int) Math.Round(iValue.X / ScaleValue);
-                iValue.Y = (int) Math.Round(iValue.Y / ScaleValue);
-                iValue.Width = (int) Math.Round(iValue.Width / ScaleValue);
-                iValue.Height = (int) Math.Round(iValue.Height / ScaleValue);
+                iValue.X = (int)Math.Round(iValue.X / ScaleValue);
+                iValue.Y = (int)Math.Round(iValue.Y / ScaleValue);
+                iValue.Width = (int)Math.Round(iValue.Width / ScaleValue);
+                iValue.Height = (int)Math.Round(iValue.Height / ScaleValue);
                 return iValue;
             }
         }
@@ -1339,7 +1341,7 @@ namespace mrbControls
                     {
                         if (!bypassIa) colorMatrix[r, c] = pColorMatrix[r, c];
 
-                        colorMatrix[r, c] = (float) (colorMatrix[r, c] / 1.5);
+                        colorMatrix[r, c] = (float)(colorMatrix[r, c] / 1.5);
 
                         c++;
                     } while (c <= 2);
@@ -1390,7 +1392,7 @@ namespace mrbControls
                         //controls shading of inherents
                         if (!BypassIA) tCM[r, c] = (pColorMatrix[r, c] + tMM[r, c]) / 2f;
 
-                        if (Grey) tCM[r, c] = (float) (tCM[r, c] / 1.5);
+                        if (Grey) tCM[r, c] = (float)(tCM[r, c] / 1.5);
 
                         c++;
                     } while (c <= 2);
@@ -2293,18 +2295,18 @@ namespace mrbControls
             return CRtoXY(crPos.X, crPos.Y, ignorePadding);
         }
 
-        private Point CRtoXY(int iCol, int iRow, bool ignorePadding=false)
+        private Point CRtoXY(int iCol, int iRow, bool ignorePadding = false)
         {
             // Convert a column/row location to the top left XY co-ord of a power entry
             // 3 Columns, 15 Rows
             return new Point(
                 iCol * (SzPower.Width + PaddingX * (ignorePadding ? 0 : 1)),
-                iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue): 0))) + (iRow >= vcRowsPowers ? OffsetInherent : 0));
+                iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue) : 0))) + (iRow >= vcRowsPowers ? OffsetInherent : 0));
         }
 
         public Size GetDrawingArea()
         {
-            var result = (Size) PowerPosition(vcPowers - 1);
+            var result = (Size)PowerPosition(vcPowers - 1);
             checked
             {
                 result.Width += SzPower.Width;
@@ -2327,12 +2329,12 @@ namespace mrbControls
         {
             var cols = vcCols;
             MiniSetCol(6);
-            var result = (Size) PowerPosition(vcPowers - 1);
+            var result = (Size)PowerPosition(vcPowers - 1);
             MiniSetCol(2);
             var inherentGrid = GetInherentGrid();
             checked
             {
-                var size = (Size) CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
+                var size = (Size)CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
                 if (size.Height > result.Height) result.Height = size.Height;
 
                 if (size.Width > result.Width) result.Width = size.Width;
@@ -2351,7 +2353,7 @@ namespace mrbControls
             if ((cols < 2) | (cols > 6))
                 return;
             vcCols = cols;
-            vcRowsPowers = checked(vcPowers / vcCols);
+            vcRowsPowers = vcPowers / vcCols;
         }
 
         public Size GetRequiredDrawingArea()
@@ -2363,8 +2365,7 @@ namespace mrbControls
                 var num4 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                 for (var i = 0; i <= num4; i++)
                 {
-                    if (!((MidsContext.Character.CurrentBuild.Powers[i].IDXPower > -1) |
-                          MidsContext.Character.CurrentBuild.Powers[i].Chosen))
+                    if (!((MidsContext.Character.CurrentBuild.Powers[i].IDXPower > -1) | MidsContext.Character.CurrentBuild.Powers[i].Chosen))
                         continue;
                     var point = PowerPosition(i);
                     if (point.X > maxX) maxX = point.X;
@@ -2372,13 +2373,14 @@ namespace mrbControls
                     if (point.Y > maxY) maxY = point.Y;
                 }
 
-                Size result;
+                Size result = default;
                 if ((maxX > -1) & (maxY > -1))
                 {
+                    Debug.WriteLine($"MaxX: {maxX}\nMaxY: {maxY}");
                     var size = new Size(maxX + SzPower.Width, maxY + SzPower.Height + PaddingY);
                     result = size;
                 }
-                else
+                /*else
                 {
                     if (vcCols != 5)
                     {
@@ -2392,8 +2394,9 @@ namespace mrbControls
                         var size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + PaddingY + OffsetInherent);
                         result = size;
                     }
-                }
+                }*/
 
+                Debug.WriteLine(result);
                 return result;
             }
         }

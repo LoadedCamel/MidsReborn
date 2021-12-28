@@ -430,7 +430,7 @@ namespace Mids_Reborn.Forms
                     tsAdvFreshInstall.Visible = true;
                     tsAdvResetTips.Visible = true;
                 }
-
+                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 Show();
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
@@ -1390,37 +1390,19 @@ namespace Mids_Reborn.Forms
         public void DoRedraw()
         {
             if (drawing == null) return;
-            if (gfxDrawing) return;
-
-            gfxDrawing = true;
-            var t = Stopwatch.StartNew();
-
             NoResizeEvent = true;
-            var width = pnlGFXFlow.Width;
-            var scale = 1.0;
-            var drawingArea = drawing.GetDrawingArea();
-            var flowWidth = width;
-            if (flowWidth < drawingArea.Width)
-            {
-                scale = flowWidth / (double)drawingArea.Width;
-            }
-            // Prevent horizontal scrollbar to appear
-            pnlGFX.Width = flowWidth - 26; // - 10;
-            pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
+            pnlGFX.Width = pnlGFXFlow.Width - 26;
+            pnlGFX.Update();
+            pnlGFXFlow.Update();
             NoResizeEvent = false;
+            Debug.WriteLine($"Power Count: {MidsContext.Character.CurrentBuild.Powers.Count}");
             drawing.FullRedraw();
-            pnlGFX.Refresh();
-            gfxDrawing = false;
-
-            t.Stop();
-            Debug.WriteLine($"frmMain.DoRedraw(): {t.ElapsedMilliseconds:###0.##} ms");
         }
 
         private void DoResize(bool forceResize = false)
         {
             //lblHero.Width = ibRecipe.Left - 4;
             if (drawing == null) return;
-
             var prevDrawingWidth = pnlGFX.Width;
             var clientWidth = ClientSize.Width - pnlGFXFlow.Left;
             var clientHeight = ClientSize.Height - pnlGFXFlow.Top;
@@ -1433,8 +1415,20 @@ namespace Mids_Reborn.Forms
             var scale = drawingWidth / (double)drawingArea.Width;
             NoResizeEvent = prevScale >= 1 & scale >= 1;
             if (NoResizeEvent & !forceResize) return;
-            scale = Math.Min(scale, 1);
-            pnlGFX.Size = drawingArea;
+            scale = Math.Max(scale, 2);
+            int drawingHeight;
+            pnlGFX.Width = drawingWidth;
+            if (MidsContext.Character.CurrentBuild.Powers.Count < 41)
+            {
+                drawingHeight = drawingArea.Height;
+                pnlGFX.Height = drawingHeight;
+            }
+            else
+            {
+                drawingHeight = (int)Math.Round(drawingArea.Height * scale);
+                pnlGFX.Height = drawingHeight;
+            }
+
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
@@ -3556,6 +3550,15 @@ namespace Mids_Reborn.Forms
                         }
                     }
                 }
+            }
+        }
+
+        private void pnlGFXFlow_Scroll(object sender, ScrollEventArgs e)
+        {
+            var delta = e.NewValue - e.OldValue;
+            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll & delta > 0)
+            {
+                pnlGFXFlow.Refresh();
             }
         }
 

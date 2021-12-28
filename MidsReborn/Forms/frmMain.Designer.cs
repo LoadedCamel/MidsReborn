@@ -1679,6 +1679,7 @@ namespace Mids_Reborn.Forms
             this.pnlGFXFlow.Size = new System.Drawing.Size(687, 891);
             this.pnlGFXFlow.TabIndex = 112;
             this.pnlGFXFlow.MouseEnter += new System.EventHandler(this.pnlGFXFlow_MouseEnter);
+            this.pnlGFXFlow.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGFXFlow_Scroll);
             // 
             // llAncillary
             // 
