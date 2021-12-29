@@ -21,36 +21,29 @@ namespace mrbBase
         {
             return new Dictionary<string, string>
             {
+                { "power.base>activateperiod", $"{sourceFx.GetPower().ActivatePeriod}"},
                 { "power.base>activatetime", $"{sourceFx.GetPower().CastTime}" },
                 { "power.base>areafactor", $"{sourceFx.GetPower().AoEModifier}" },
                 { "power.base>rechargetime", $"{sourceFx.GetPower().BaseRechargeTime}" },
                 { "power.base>endcost", $"{sourceFx.GetPower().EndCost}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", $"{sourceFx.Scale}" },
-                { "if target>enttype eq 'critter'", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
-                { "if target>enttype eq 'player'", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
+                { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
+                { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "rand()", $"{new Random().NextDouble()}" }
             };
         }
 
-        private static Dictionary<Regex, MatchEvaluator> FunctionsDict1(ICollection<string> pickedPowerNames)
+        private static Dictionary<Regex, MatchEvaluator> FunctionsDict1(IEffect sourceFx, ICollection<string> pickedPowerNames)
         {
             return new Dictionary<Regex, MatchEvaluator>
             {
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"([a-zA-Z\-_\.]+)>stacks"), e => GetStacks(e.Groups[1].Value, pickedPowerNames) },
-                { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) }
-            };
-        }
-
-        private static Dictionary<Regex, MatchEvaluator> FunctionsDict3(IEffect sourceFx, int rLevel)
-        {
-            return new Dictionary<Regex, MatchEvaluator>
-            {
-                {
-                    new Regex(@"minmax\(([0-9\-\.]+)\,\s*([0-9\-\.]+)\,\s*([0-9\-\.]+)\)"), e => ExprMinMax(sourceFx, e.Groups[1].Value, e.Groups[2].Value, e.Groups[3].Value, rLevel)
-                }
+                { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
+                { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" }
             };
         }
 
@@ -69,42 +62,6 @@ namespace mrbBase
             }
 
             return "0";
-        }
-
-        private static string ExprMinMax(IEffect sourceFx, string a, string b, string c, int rLevel = 0)
-        {
-            var ret1 = float.TryParse(a, out var f1);
-            var ret2 = float.TryParse(b, out var f2);
-            var ret3 = float.TryParse(c, out var f3);
-
-            if (!ret1)
-            {
-                if (rLevel == 6) return "0";
-                var subFx = (IEffect)sourceFx.Clone();
-                subFx.MagnitudeExpression = a;
-                f1 = ParseExpression2Inner(subFx, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            if (!ret2)
-            {
-                if (rLevel == 6) return "0";
-                var subFx = (IEffect)sourceFx.Clone();
-                subFx.MagnitudeExpression = b;
-                f2 = ParseExpression2Inner(subFx, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            if (!ret3)
-            {
-                if (rLevel == 6) return "0";
-                var subFx = (IEffect)sourceFx.Clone();
-                subFx.MagnitudeExpression = c;
-                f3 = ParseExpression2Inner(subFx, ++rLevel, out var err);
-                if (err.ErrorFound) return "0";
-            }
-
-            return $"{Math.Max(f2, Math.Min(f3, f1))}";
         }
 
         private static string GetModifier(string modifierName)
@@ -172,17 +129,17 @@ namespace mrbBase
             {
                 var chunks = SplitExpression(sourceFx, out _);
 
-                ret = ParseExpression2Inner(SubExpressionToFx(chunks[chunk], sourceFx), 0, out data);
+                ret = ParseExpression2(SubExpressionToFx(chunks[chunk], sourceFx), out data);
 
                 return data.ErrorFound ? 0f : ret;
             }
 
-            ret = ParseExpression2Inner(SubExpressionToFx(sourceFx.MagnitudeExpression, sourceFx), 0, out data);
+            ret = ParseExpression2(SubExpressionToFx(sourceFx.MagnitudeExpression, sourceFx), out data);
 
             return data.ErrorFound ? 0f : ret;
         }
 
-        public static float ParseExpression2Inner(IEffect sourceFx, int rLevel, out ParsedData parsedData)
+        public static float ParseExpression2(IEffect sourceFx, out ParsedData parsedData)
         {
             var pickedPowerNames = MidsContext.Character.CurrentBuild == null
                 ? new List<string>()
@@ -194,14 +151,20 @@ namespace mrbBase
                         .ToList();
 
             parsedData = new ParsedData();
-            var magExpr = sourceFx.MagnitudeExpression.TrimEnd('/');
-            magExpr = CommandsDict(sourceFx).Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
-            magExpr = FunctionsDict1(pickedPowerNames).Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
-            magExpr = FunctionsDict3(sourceFx, rLevel).Aggregate(magExpr, (current, f3) => f3.Key.Replace(current, f3.Value));
-            var r = new Regex(@"^[0-9\-\+\*\/\s\.\(\)]+$");
-            if (!r.IsMatch(magExpr)) return 0;
-
             var mathEngine = new CalculationEngine();
+            var magExpr = sourceFx.MagnitudeExpression.TrimEnd('/');
+
+            // Constants
+            magExpr = CommandsDict(sourceFx).Aggregate(magExpr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+
+            // Non-numeric functions
+            magExpr = FunctionsDict1(sourceFx, pickedPowerNames).Aggregate(magExpr, (current, f1) => f1.Key.Replace(current, f1.Value));
+
+            // Numeric functions
+            mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
+            mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
+            mathEngine.AddFunction("minmax", (a, b, c) => Math.Max(b, Math.Min(c, a)));
+
             try
             {
                 var ret = (float)mathEngine.Calculate(magExpr);
@@ -209,6 +172,13 @@ namespace mrbBase
                 return ret;
             }
             catch (ParseException ex)
+            {
+                parsedData.ErrorFound = true;
+                parsedData.ErrorString = ex.Message;
+
+                return 0;
+            }
+            catch (VariableNotDefinedException ex)
             {
                 parsedData.ErrorFound = true;
                 parsedData.ErrorString = ex.Message;

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using mrbBase;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -19,19 +17,24 @@ namespace mrbBase.Base.Data_Classes
         public static readonly List<string> ExprCommandsList = new()
         {
             "",
+            "power.base>activateperiod",
             "power.base>activatetime",
             "power.base>areafactor",
             "power.base>rechargetime",
             "power.base>endcost",
             "effect>scale",
             "@StdResult",
-            "if target>enttype eq 'critter'",
-            "if target>enttype eq 'player'",
+            "ifPvE",
+            "ifPvP",
             "modifier>current",
             "rand()",
             "source.ownPower?(",
             ">stacks",
             "modifier>",
+            "powerGroupIn(",
+            "powerGroupNotIn(",
+            "eq(",
+            "ne(",
             "minmax(",
         };
 
@@ -333,10 +336,9 @@ namespace mrbBase.Base.Data_Classes
                     var chunks = ExpressionParser.SplitExpression(this, out _);
                     if (chunks.Count <= 1) return 0;
 
-                    var ret = ExpressionParser.ParseExpression2Inner(ExpressionParser.SubExpressionToFx(chunks[1], this), 0, out var parseError);
+                    var ret = ExpressionParser.ParseExpression2(ExpressionParser.SubExpressionToFx(chunks[1], this), out var parseError);
 
                     return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
-
                 }
 
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
