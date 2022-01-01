@@ -597,6 +597,11 @@ namespace mrbBase
             return powersetList.ToArray();
         }
 
+        // public static List<IPowerset> GetPowersetsByGroup(string group)
+        // {
+        //     return new List<IPowerset>();
+        // }
+
         public static int ToDisplayIndex(IPowerset iPowerset, IPowerset[] iIndexes)
         {
             for (var index = 0; index <= iIndexes.Length - 1; ++index)

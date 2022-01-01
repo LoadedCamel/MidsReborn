@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -808,6 +809,8 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(Stacks);
             writer.Write(VariableStart);
         }
+
+        public PowerEntry? GetPowerEntry(bool whenActive = false) => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this && x.Power.Active == whenActive);
 
         public float FXGetDamageValue()
         {
@@ -1846,8 +1849,7 @@ namespace mrbBase.Base.Data_Classes
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
                         : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
                 }
-                else if ((effect.EffectType == Enums.eEffectType.Mez) |
-                         (effect.EffectType == Enums.eEffectType.MezResist))
+                else if ((effect.EffectType == Enums.eEffectType.Mez) | (effect.EffectType == Enums.eEffectType.MezResist))
                 {
                     var iMez = new bool[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                     for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)

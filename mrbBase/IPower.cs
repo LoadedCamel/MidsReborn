@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -206,6 +207,8 @@ namespace mrbBase
         IPowerset GetPowerSet();
 
         void StoreTo(ref BinaryWriter writer);
+
+        PowerEntry? GetPowerEntry(bool whenActive = false);
 
         float FXGetDamageValue();
 
