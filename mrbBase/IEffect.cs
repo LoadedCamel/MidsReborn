@@ -7,6 +7,8 @@ namespace mrbBase
 {
     public interface IEffect : IComparable, ICloneable
     {
+        double Rand { get; }
+
         int UniqueID { get; set; }
 
         float Probability { get; set; }

@@ -38,6 +38,8 @@ namespace mrbBase.Base.Data_Classes
             "minmax(",
         };
 
+        public double Rand => new Random().NextDouble();
+
         public Effect()
         {
             Validated = false;

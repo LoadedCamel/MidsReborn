@@ -31,7 +31,8 @@ namespace mrbBase
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
-                { "rand()", $"{new Random().NextDouble()}" }
+                { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
+                { "rand()", $"{sourceFx.Rand}" }
             };
         }
 
