@@ -152,7 +152,7 @@ namespace mrbBase
                         .ToList();
 
             parsedData = new ParsedData();
-            var mathEngine = new CalculationEngine();
+            var mathEngine = CalculationEngine.New<double>();
             var magExpr = sourceFx.MagnitudeExpression.TrimEnd('/');
 
             // Constants
