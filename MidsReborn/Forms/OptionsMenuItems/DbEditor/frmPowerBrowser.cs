@@ -69,7 +69,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case 0:
                 {
-                    var inputResult = InputBox.Show("Enter a name for the Powerset Group", "New Powerset Group", "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
                     if (inputResult.OK)
                     {
                         var iPsg = new PowersetGroup(inputResult.Text);
@@ -94,7 +94,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
                     database.Classes = archetypeArray;
                     DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
-
+                    Sort(0);
                     break;
                 }
             }
@@ -125,6 +125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 database.Classes = archetypeArray;
                 DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
                 UpdateLists(lvGroup.Items.Count - 1);
+                Sort(0);
             }
         }
 
@@ -228,10 +229,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void btnClassSort_Click(object sender, EventArgs e)
+        private void Sort(int type)
         {
             BusyMsg("Re-Indexing...");
-            Array.Sort(DatabaseAPI.Database.Classes);
+            switch (type)
+            {
+                case 0:
+                {
+                    Array.Sort(DatabaseAPI.Database.Classes);
+                    break;
+                }
+                case 1:
+                {
+                    Array.Sort(DatabaseAPI.Database.Powersets);
+                    break;
+                }
+                case 2:
+                {
+                    Array.Sort(DatabaseAPI.Database.Power);
+                        break;
+                }
+            }
             DatabaseAPI.MatchAllIDs();
             UpdateLists();
             BusyHide();
@@ -309,6 +327,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             powerList.Add(new Power(frmEditPower.myPower) { IsNew = true });
             database.Power = powerList.ToArray();
             UpdateLists();
+            Sort(2);
         }
 
         private void btnPowerClone_Click(object sender, EventArgs e)
@@ -336,7 +355,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 powerList.Add(newPower);
                 DatabaseAPI.Database.Power = powerList.ToArray();
                 
-                //Add the power to the power set otherwise we'll get issues later when upting the UI.
+                //Add the power to the power set otherwise we'll get issues later when updating the UI.
                 if (newPower.PowerSetID > -1)
                 {
                     var powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
@@ -349,6 +368,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 UpdateLists(lvGroup.SelectedIndices[0], lvSet.SelectedIndices[0]);
+                Sort(2);
             }
         }
 
@@ -388,6 +408,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 List_Powers(selIdx);
+                Sort(2);
             }
         }
 
@@ -461,15 +482,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 RefreshLists();
             }
-        }
-
-        private void btnPowerSort_Click(object sender, EventArgs e)
-        {
-            BusyMsg("Re-Indexing...");
-            Array.Sort(DatabaseAPI.Database.Power);
-            DatabaseAPI.MatchAllIDs();
-            UpdateLists();
-            BusyHide();
         }
 
         private void btnPowerUp_Click(object sender, EventArgs e)
@@ -577,6 +589,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             psList.Add(new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = psList.Count + 1 });
             DatabaseAPI.Database.Powersets = psList.ToArray();
             UpdateLists();
+            Sort(1);
         }
 
         private void btnSetDelete_Click(object sender, EventArgs e)
@@ -651,16 +664,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 RefreshLists(-1, Powerset);
                 BusyHide();
             }
-        }
-
-        private void btnSetSort_Click(object sender, EventArgs e)
-
-        {
-            BusyMsg("Re-Indexing...");
-            Array.Sort(DatabaseAPI.Database.Powersets);
-            DatabaseAPI.MatchAllIDs();
-            UpdateLists();
-            BusyHide();
         }
 
         private void BuildATImageList()
@@ -786,7 +789,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 btnClassClone,
                 btnClassDown,
                 btnClassEdit,
-                btnClassSort,
                 btnClassUp
             };
             switch (cbFilter.SelectedIndex)
