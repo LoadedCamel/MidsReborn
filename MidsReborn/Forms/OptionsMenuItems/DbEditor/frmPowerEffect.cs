@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -150,14 +149,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading || cbAttribute.SelectedIndex < 0)
                 return;
             myFX.AttribType = (Enums.eAttribType)cbAttribute.SelectedIndex;
-            switch (myFX.AttribType)
+            if (myFX.AttribType == Enums.eAttribType.Expression)
             {
-                case Enums.eAttribType.Expression:
-                    txtMagExpression.Enabled = true;
-                    txtProbExpression.Enabled = true;
-                    magexLabel.Enabled = true;
-                    probexLabel.Enabled = true;
-                    break;
+                txtMagExpression.Enabled = true;
+                txtProbExpression.Enabled = true;
+                magexLabel.Enabled = true;
+                probexLabel.Enabled = true;
+                chkIgnoreScale.Enabled = false;
+            }
+            else
+            {
+                txtMagExpression.Enabled = false;
+                txtProbExpression.Enabled = false;
+                magexLabel.Enabled = false;
+                probexLabel.Enabled = false;
+                chkIgnoreScale.Enabled = true;
+                cbExprCommands.Visible = false;
+                lblExprCommands.Visible = false;
             }
 
             UpdateFXText();
@@ -350,6 +358,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbFXClass.SelectedIndex = (int)myFX.EffectClass;
             chkVariable.Checked = myFX.VariableModifiedOverride;
             chkIgnoreScale.Checked = myFX.IgnoreScaling;
+            chkIgnoreScale.Enabled = myFX.AttribType != Enums.eAttribType.Expression;
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
             var names1 = Enum.GetNames(myFX.Suppression.GetType());

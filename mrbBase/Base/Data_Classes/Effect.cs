@@ -27,6 +27,7 @@ namespace mrbBase.Base.Data_Classes
             "ifPvE",
             "ifPvP",
             "modifier>current",
+            "maxEndurance",
             "rand()",
             "source.ownPower?(",
             ">stacks",
@@ -392,17 +393,18 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num = AttribType switch
+                switch (AttribType)
                 {
-                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration - 0.0f) > 0.01
-                        ? Math_Duration
-                        : nDuration,
-                    Enums.eAttribType.Duration => Math.Abs(Math_Duration - 0.0f) <= 0.01
-                        ? Scale * DatabaseAPI.GetModifier(this)
-                        : Math_Duration,
-                    _ => 0.0f
-                };
-                return num;
+                    case Enums.eAttribType.Magnitude:
+                    case Enums.eAttribType.Expression:
+                        return Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration;
+                    case Enums.eAttribType.Duration:
+                        return Math.Abs(Math_Duration) <= 0.01
+                            ? Scale * DatabaseAPI.GetModifier(this)
+                            : Math_Duration;
+                    default:
+                        return 0.0f;
+                }
             }
         }
 
@@ -455,7 +457,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public bool VariableModified //
+        public bool VariableModified
         {
             get
             {
@@ -521,6 +523,11 @@ namespace mrbBase.Base.Data_Classes
                                         ValidateConditional("active", "Scourge") ||
                                         ValidateConditional("active", "Supremacy");
 
+        public bool IgnoreScaling
+        {
+            get => AttribType == Enums.eAttribType.Expression || _IgnoreScaling;
+            set => _IgnoreScaling = value;
+        }
 
         public float BaseProbability { get; set; }
 
@@ -596,7 +603,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool VariableModifiedOverride { get; set; }
 
-        public bool IgnoreScaling { get; set; }
+        private bool _IgnoreScaling;
 
         public bool isEnhancementEffect { get; set; }
 
@@ -1128,16 +1135,12 @@ namespace mrbBase.Base.Data_Classes
             if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
             {
                 sDuration = string.Empty;
-                var sForOver = " for ";
-                switch (EffectType)
+                var sForOver = EffectType switch
                 {
-                    case Enums.eEffectType.Damage:
-                        sForOver = " over ";
-                        break;
-                    case Enums.eEffectType.SilentKill:
-                        sForOver = " in ";
-                        break;
-                }
+                    Enums.eEffectType.Damage => " over ",
+                    Enums.eEffectType.SilentKill => " in ",
+                    _ => " for "
+                };
 
                 if (Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
                 {
