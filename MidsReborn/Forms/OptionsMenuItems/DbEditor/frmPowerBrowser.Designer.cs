@@ -46,7 +46,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ilAT = new System.Windows.Forms.ImageList(this.components);
             this.cbFilter = new System.Windows.Forms.ComboBox();
             this.Label1 = new System.Windows.Forms.Label();
-            this.btnPowerSort = new System.Windows.Forms.Button();
             this.ilPower = new System.Windows.Forms.ImageList(this.components);
             this.btnPowerUp = new System.Windows.Forms.Button();
             this.btnPowerDown = new System.Windows.Forms.Button();
@@ -54,17 +53,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnPowerDelete = new System.Windows.Forms.Button();
             this.btnPowerClone = new System.Windows.Forms.Button();
             this.btnPowerEdit = new System.Windows.Forms.Button();
-            this.btnSetSort = new System.Windows.Forms.Button();
             this.btnSetEdit = new System.Windows.Forms.Button();
             this.btnSetDelete = new System.Windows.Forms.Button();
             this.btnSetAdd = new System.Windows.Forms.Button();
             this.btnClassClone = new System.Windows.Forms.Button();
-            this.btnClassSort = new System.Windows.Forms.Button();
             this.btnClassEdit = new System.Windows.Forms.Button();
             this.btnClassDelete = new System.Windows.Forms.Button();
             this.btnClassAdd = new System.Windows.Forms.Button();
             this.pnlGroup = new System.Windows.Forms.Panel();
-            this.btnClassUp = new System.Windows.Forms.Button();
             this.btnClassDown = new System.Windows.Forms.Button();
             this.pnlSet = new System.Windows.Forms.Panel();
             this.btnPSUp = new System.Windows.Forms.Button();
@@ -77,6 +73,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.btnManageHiddenPowers = new System.Windows.Forms.Button();
             this.btnMassOp = new System.Windows.Forms.Button();
+            this.btnClassUp = new System.Windows.Forms.Button();
             this.pnlGroup.SuspendLayout();
             this.pnlSet.SuspendLayout();
             this.pnlPower.SuspendLayout();
@@ -92,10 +89,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvPower.FullRowSelect = true;
             this.lvPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvPower.HideSelection = false;
-            this.lvPower.Location = new System.Drawing.Point(587, 37);
+            this.lvPower.Location = new System.Drawing.Point(802, 37);
             this.lvPower.MultiSelect = false;
             this.lvPower.Name = "lvPower";
-            this.lvPower.Size = new System.Drawing.Size(454, 429);
+            this.lvPower.Size = new System.Drawing.Size(543, 429);
             this.lvPower.TabIndex = 21;
             this.lvPower.UseCompatibleStateImageBehavior = false;
             this.lvPower.View = System.Windows.Forms.View.Details;
@@ -105,16 +102,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader3
             // 
             this.ColumnHeader3.Text = "Power";
-            this.ColumnHeader3.Width = 206;
+            this.ColumnHeader3.Width = 291;
             // 
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Name";
-            this.ColumnHeader5.Width = 180;
+            this.ColumnHeader5.Width = 185;
             // 
             // ColumnHeader7
             // 
             this.ColumnHeader7.Text = "Level";
+            this.ColumnHeader7.Width = 63;
             // 
             // lvSet
             // 
@@ -127,10 +125,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvSet.FullRowSelect = true;
             this.lvSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSet.HideSelection = false;
-            this.lvSet.Location = new System.Drawing.Point(251, 37);
+            this.lvSet.Location = new System.Drawing.Point(358, 37);
             this.lvSet.MultiSelect = false;
             this.lvSet.Name = "lvSet";
-            this.lvSet.Size = new System.Drawing.Size(330, 429);
+            this.lvSet.Size = new System.Drawing.Size(434, 429);
             this.lvSet.SmallImageList = this.ilPS;
             this.lvSet.TabIndex = 20;
             this.lvSet.UseCompatibleStateImageBehavior = false;
@@ -141,12 +139,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader1
             // 
             this.ColumnHeader1.Text = "Set";
-            this.ColumnHeader1.Width = 129;
+            this.ColumnHeader1.Width = 196;
             // 
             // ColumnHeader4
             // 
             this.ColumnHeader4.Text = "Name";
-            this.ColumnHeader4.Width = 133;
+            this.ColumnHeader4.Width = 174;
             // 
             // ColumnHeader6
             // 
@@ -169,7 +167,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvGroup.Location = new System.Drawing.Point(12, 37);
             this.lvGroup.MultiSelect = false;
             this.lvGroup.Name = "lvGroup";
-            this.lvGroup.Size = new System.Drawing.Size(233, 429);
+            this.lvGroup.Size = new System.Drawing.Size(340, 429);
             this.lvGroup.SmallImageList = this.ilAT;
             this.lvGroup.TabIndex = 19;
             this.lvGroup.UseCompatibleStateImageBehavior = false;
@@ -207,16 +205,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label1.Text = "Filter By:";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnPowerSort
-            // 
-            this.btnPowerSort.Location = new System.Drawing.Point(293, 44);
-            this.btnPowerSort.Name = "btnPowerSort";
-            this.btnPowerSort.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerSort.TabIndex = 26;
-            this.btnPowerSort.Text = "Re-Sort";
-            this.btnPowerSort.UseVisualStyleBackColor = true;
-            this.btnPowerSort.Click += new System.EventHandler(this.btnPowerSort_Click);
-            // 
             // ilPower
             // 
             this.ilPower.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -225,7 +213,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerUp
             // 
-            this.btnPowerUp.Location = new System.Drawing.Point(3, 15);
+            this.btnPowerUp.Location = new System.Drawing.Point(3, 3);
             this.btnPowerUp.Name = "btnPowerUp";
             this.btnPowerUp.Size = new System.Drawing.Size(75, 23);
             this.btnPowerUp.TabIndex = 28;
@@ -235,7 +223,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerDown
             // 
-            this.btnPowerDown.Location = new System.Drawing.Point(3, 44);
+            this.btnPowerDown.Location = new System.Drawing.Point(3, 32);
             this.btnPowerDown.Name = "btnPowerDown";
             this.btnPowerDown.Size = new System.Drawing.Size(75, 23);
             this.btnPowerDown.TabIndex = 29;
@@ -245,7 +233,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerAdd
             // 
-            this.btnPowerAdd.Location = new System.Drawing.Point(374, 15);
+            this.btnPowerAdd.Location = new System.Drawing.Point(463, 3);
             this.btnPowerAdd.Name = "btnPowerAdd";
             this.btnPowerAdd.Size = new System.Drawing.Size(75, 23);
             this.btnPowerAdd.TabIndex = 30;
@@ -255,7 +243,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerDelete
             // 
-            this.btnPowerDelete.Location = new System.Drawing.Point(293, 15);
+            this.btnPowerDelete.Location = new System.Drawing.Point(382, 3);
             this.btnPowerDelete.Name = "btnPowerDelete";
             this.btnPowerDelete.Size = new System.Drawing.Size(75, 23);
             this.btnPowerDelete.TabIndex = 31;
@@ -265,7 +253,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerClone
             // 
-            this.btnPowerClone.Location = new System.Drawing.Point(374, 44);
+            this.btnPowerClone.Location = new System.Drawing.Point(301, 32);
             this.btnPowerClone.Name = "btnPowerClone";
             this.btnPowerClone.Size = new System.Drawing.Size(75, 23);
             this.btnPowerClone.TabIndex = 33;
@@ -275,7 +263,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPowerEdit
             // 
-            this.btnPowerEdit.Location = new System.Drawing.Point(374, 73);
+            this.btnPowerEdit.Location = new System.Drawing.Point(301, 3);
             this.btnPowerEdit.Name = "btnPowerEdit";
             this.btnPowerEdit.Size = new System.Drawing.Size(75, 23);
             this.btnPowerEdit.TabIndex = 32;
@@ -283,19 +271,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnPowerEdit.UseVisualStyleBackColor = true;
             this.btnPowerEdit.Click += new System.EventHandler(this.btnPowerEdit_Click);
             // 
-            // btnSetSort
-            // 
-            this.btnSetSort.Location = new System.Drawing.Point(169, 44);
-            this.btnSetSort.Name = "btnSetSort";
-            this.btnSetSort.Size = new System.Drawing.Size(75, 23);
-            this.btnSetSort.TabIndex = 35;
-            this.btnSetSort.Text = "Re-Sort";
-            this.btnSetSort.UseVisualStyleBackColor = true;
-            this.btnSetSort.Click += new System.EventHandler(this.btnSetSort_Click);
-            // 
             // btnSetEdit
             // 
-            this.btnSetEdit.Location = new System.Drawing.Point(250, 44);
+            this.btnSetEdit.Location = new System.Drawing.Point(192, 3);
             this.btnSetEdit.Name = "btnSetEdit";
             this.btnSetEdit.Size = new System.Drawing.Size(75, 23);
             this.btnSetEdit.TabIndex = 40;
@@ -305,7 +283,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnSetDelete
             // 
-            this.btnSetDelete.Location = new System.Drawing.Point(169, 15);
+            this.btnSetDelete.Location = new System.Drawing.Point(273, 3);
             this.btnSetDelete.Name = "btnSetDelete";
             this.btnSetDelete.Size = new System.Drawing.Size(75, 23);
             this.btnSetDelete.TabIndex = 39;
@@ -315,7 +293,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnSetAdd
             // 
-            this.btnSetAdd.Location = new System.Drawing.Point(250, 15);
+            this.btnSetAdd.Location = new System.Drawing.Point(354, 3);
             this.btnSetAdd.Name = "btnSetAdd";
             this.btnSetAdd.Size = new System.Drawing.Size(75, 23);
             this.btnSetAdd.TabIndex = 38;
@@ -325,7 +303,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnClassClone
             // 
-            this.btnClassClone.Location = new System.Drawing.Point(153, 44);
+            this.btnClassClone.Location = new System.Drawing.Point(98, 32);
             this.btnClassClone.Name = "btnClassClone";
             this.btnClassClone.Size = new System.Drawing.Size(75, 23);
             this.btnClassClone.TabIndex = 46;
@@ -333,19 +311,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnClassClone.UseVisualStyleBackColor = true;
             this.btnClassClone.Click += new System.EventHandler(this.btnClassClone_Click);
             // 
-            // btnClassSort
-            // 
-            this.btnClassSort.Location = new System.Drawing.Point(72, 44);
-            this.btnClassSort.Name = "btnClassSort";
-            this.btnClassSort.Size = new System.Drawing.Size(75, 23);
-            this.btnClassSort.TabIndex = 42;
-            this.btnClassSort.Text = "Re-Sort";
-            this.btnClassSort.UseVisualStyleBackColor = true;
-            this.btnClassSort.Click += new System.EventHandler(this.btnClassSort_Click);
-            // 
             // btnClassEdit
             // 
-            this.btnClassEdit.Location = new System.Drawing.Point(153, 73);
+            this.btnClassEdit.Location = new System.Drawing.Point(98, 3);
             this.btnClassEdit.Name = "btnClassEdit";
             this.btnClassEdit.Size = new System.Drawing.Size(75, 23);
             this.btnClassEdit.TabIndex = 45;
@@ -355,7 +323,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnClassDelete
             // 
-            this.btnClassDelete.Location = new System.Drawing.Point(72, 15);
+            this.btnClassDelete.Location = new System.Drawing.Point(179, 3);
             this.btnClassDelete.Name = "btnClassDelete";
             this.btnClassDelete.Size = new System.Drawing.Size(75, 23);
             this.btnClassDelete.TabIndex = 44;
@@ -365,7 +333,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnClassAdd
             // 
-            this.btnClassAdd.Location = new System.Drawing.Point(153, 15);
+            this.btnClassAdd.Location = new System.Drawing.Point(260, 3);
             this.btnClassAdd.Name = "btnClassAdd";
             this.btnClassAdd.Size = new System.Drawing.Size(75, 23);
             this.btnClassAdd.TabIndex = 43;
@@ -380,27 +348,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pnlGroup.Controls.Add(this.btnClassDown);
             this.pnlGroup.Controls.Add(this.btnClassClone);
             this.pnlGroup.Controls.Add(this.btnClassDelete);
-            this.pnlGroup.Controls.Add(this.btnClassSort);
             this.pnlGroup.Controls.Add(this.btnClassAdd);
             this.pnlGroup.Controls.Add(this.btnClassEdit);
-            this.pnlGroup.Location = new System.Drawing.Point(12, 494);
+            this.pnlGroup.Location = new System.Drawing.Point(12, 497);
             this.pnlGroup.Name = "pnlGroup";
-            this.pnlGroup.Size = new System.Drawing.Size(233, 105);
+            this.pnlGroup.Size = new System.Drawing.Size(340, 68);
             this.pnlGroup.TabIndex = 47;
-            // 
-            // btnClassUp
-            // 
-            this.btnClassUp.Location = new System.Drawing.Point(3, 15);
-            this.btnClassUp.Name = "btnClassUp";
-            this.btnClassUp.Size = new System.Drawing.Size(64, 23);
-            this.btnClassUp.TabIndex = 47;
-            this.btnClassUp.Text = "Up";
-            this.btnClassUp.UseVisualStyleBackColor = true;
-            this.btnClassUp.Click += new System.EventHandler(this.btnClassUp_Click);
             // 
             // btnClassDown
             // 
-            this.btnClassDown.Location = new System.Drawing.Point(3, 44);
+            this.btnClassDown.Location = new System.Drawing.Point(3, 32);
             this.btnClassDown.Name = "btnClassDown";
             this.btnClassDown.Size = new System.Drawing.Size(64, 23);
             this.btnClassDown.TabIndex = 48;
@@ -414,17 +371,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pnlSet.Controls.Add(this.btnPSUp);
             this.pnlSet.Controls.Add(this.btnPSDown);
             this.pnlSet.Controls.Add(this.btnSetDelete);
-            this.pnlSet.Controls.Add(this.btnSetSort);
             this.pnlSet.Controls.Add(this.btnSetAdd);
             this.pnlSet.Controls.Add(this.btnSetEdit);
-            this.pnlSet.Location = new System.Drawing.Point(251, 494);
+            this.pnlSet.Location = new System.Drawing.Point(358, 497);
             this.pnlSet.Name = "pnlSet";
-            this.pnlSet.Size = new System.Drawing.Size(330, 105);
+            this.pnlSet.Size = new System.Drawing.Size(434, 68);
             this.pnlSet.TabIndex = 48;
             // 
             // btnPSUp
             // 
-            this.btnPSUp.Location = new System.Drawing.Point(3, 15);
+            this.btnPSUp.Location = new System.Drawing.Point(3, 3);
             this.btnPSUp.Name = "btnPSUp";
             this.btnPSUp.Size = new System.Drawing.Size(75, 23);
             this.btnPSUp.TabIndex = 41;
@@ -434,7 +390,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnPSDown
             // 
-            this.btnPSDown.Location = new System.Drawing.Point(3, 44);
+            this.btnPSDown.Location = new System.Drawing.Point(3, 32);
             this.btnPSDown.Name = "btnPSDown";
             this.btnPSDown.Size = new System.Drawing.Size(75, 23);
             this.btnPSDown.TabIndex = 42;
@@ -447,35 +403,34 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pnlPower.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlPower.Controls.Add(this.btnPowerClone);
             this.pnlPower.Controls.Add(this.btnPowerUp);
-            this.pnlPower.Controls.Add(this.btnPowerSort);
             this.pnlPower.Controls.Add(this.btnPowerDown);
             this.pnlPower.Controls.Add(this.btnPowerEdit);
             this.pnlPower.Controls.Add(this.btnPowerDelete);
             this.pnlPower.Controls.Add(this.btnPowerAdd);
-            this.pnlPower.Location = new System.Drawing.Point(587, 494);
+            this.pnlPower.Location = new System.Drawing.Point(798, 497);
             this.pnlPower.Name = "pnlPower";
-            this.pnlPower.Size = new System.Drawing.Size(454, 105);
+            this.pnlPower.Size = new System.Drawing.Size(543, 68);
             this.pnlPower.TabIndex = 49;
             // 
             // lblSet
             // 
-            this.lblSet.Location = new System.Drawing.Point(251, 467);
+            this.lblSet.Location = new System.Drawing.Point(355, 469);
             this.lblSet.Name = "lblSet";
-            this.lblSet.Size = new System.Drawing.Size(326, 24);
+            this.lblSet.Size = new System.Drawing.Size(437, 24);
             this.lblSet.TabIndex = 50;
             this.lblSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblPower
             // 
-            this.lblPower.Location = new System.Drawing.Point(587, 467);
+            this.lblPower.Location = new System.Drawing.Point(799, 469);
             this.lblPower.Name = "lblPower";
-            this.lblPower.Size = new System.Drawing.Size(400, 24);
+            this.lblPower.Size = new System.Drawing.Size(542, 24);
             this.lblPower.TabIndex = 51;
             this.lblPower.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(855, 607);
+            this.btnOK.Location = new System.Drawing.Point(1209, 571);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(132, 32);
             this.btnOK.TabIndex = 52;
@@ -485,7 +440,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(717, 607);
+            this.btnCancel.Location = new System.Drawing.Point(1071, 571);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(132, 32);
             this.btnCancel.TabIndex = 53;
@@ -503,7 +458,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnManageHiddenPowers
             // 
-            this.btnManageHiddenPowers.Location = new System.Drawing.Point(473, 605);
+            this.btnManageHiddenPowers.Location = new System.Drawing.Point(660, 571);
             this.btnManageHiddenPowers.Name = "btnManageHiddenPowers";
             this.btnManageHiddenPowers.Size = new System.Drawing.Size(132, 32);
             this.btnManageHiddenPowers.TabIndex = 55;
@@ -513,7 +468,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnMassOp
             // 
-            this.btnMassOp.Location = new System.Drawing.Point(335, 605);
+            this.btnMassOp.Location = new System.Drawing.Point(522, 571);
             this.btnMassOp.Name = "btnMassOp";
             this.btnMassOp.Size = new System.Drawing.Size(132, 32);
             this.btnMassOp.TabIndex = 56;
@@ -522,10 +477,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnMassOp.Visible = false;
             this.btnMassOp.Click += new System.EventHandler(this.btnMassOp_Click);
             // 
+            // btnClassUp
+            // 
+            this.btnClassUp.Location = new System.Drawing.Point(3, 3);
+            this.btnClassUp.Name = "btnClassUp";
+            this.btnClassUp.Size = new System.Drawing.Size(64, 23);
+            this.btnClassUp.TabIndex = 47;
+            this.btnClassUp.Text = "Up";
+            this.btnClassUp.UseVisualStyleBackColor = true;
+            this.btnClassUp.Click += new System.EventHandler(this.btnClassUp_Click);
+            // 
             // frmPowerBrowser
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1053, 651);
+            this.ClientSize = new System.Drawing.Size(1356, 612);
             this.Controls.Add(this.btnMassOp);
             this.Controls.Add(this.btnManageHiddenPowers);
             this.Controls.Add(this.Label2);
@@ -563,22 +528,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Button btnClassDelete;
         Button btnClassDown;
         Button btnClassEdit;
-        Button btnClassSort;
-        Button btnClassUp;
         Button btnOK;
         Button btnPowerAdd;
         Button btnPowerClone;
         Button btnPowerDelete;
         Button btnPowerDown;
         Button btnPowerEdit;
-        Button btnPowerSort;
         Button btnPowerUp;
         Button btnPSDown;
         Button btnPSUp;
         Button btnSetAdd;
         Button btnSetDelete;
         Button btnSetEdit;
-        Button btnSetSort;
         ComboBox cbFilter;
         ColumnHeader ColumnHeader1;
         ColumnHeader ColumnHeader2;
@@ -602,5 +563,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Panel pnlSet;
         private Button btnManageHiddenPowers;
         private Button btnMassOp;
+        private Button btnClassUp;
     }
 }
