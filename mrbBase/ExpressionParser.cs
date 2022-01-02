@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using mrbBase.Base.Master_Classes;
@@ -32,7 +33,8 @@ namespace mrbBase
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
-                { "rand()", $"{sourceFx.Rand}" }
+                { "rand()", $"{sourceFx.Rand}" },
+                { "source>powerscaler", $"{sourceFx.GetPower().GetPowerEntry()?.VariableValue}" }
             };
         }
 
@@ -174,6 +176,14 @@ namespace mrbBase
             }
             catch (ParseException ex)
             {
+                Debug.WriteLine($"Power: {sourceFx.GetPower().FullName}\nExpr: {magExpr}");
+                var effects = sourceFx.GetPower().Effects;
+                for (var index = 0; index < effects.Length; index++)
+                {
+                    var effect = effects[index];
+                    Debug.WriteLine($"Effect #{index}: {effect.AttribType}");
+                }
+                Debug.WriteLine($"\r\n");
                 parsedData.ErrorFound = true;
                 parsedData.ErrorString = ex.Message;
 

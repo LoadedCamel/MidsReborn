@@ -208,7 +208,7 @@ namespace mrbBase
 
         void StoreTo(ref BinaryWriter writer);
 
-        PowerEntry? GetPowerEntry(bool whenActive = false);
+        PowerEntry? GetPowerEntry();
 
         float FXGetDamageValue();
 

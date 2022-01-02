@@ -810,7 +810,7 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(VariableStart);
         }
 
-        public PowerEntry? GetPowerEntry(bool whenActive = false) => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this && x.Power.Active == whenActive);
+        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
 
         public float FXGetDamageValue()
         {
@@ -1324,8 +1324,7 @@ namespace mrbBase.Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Math.Abs(Effects[index].Probability - 1f) < 0.01) & isDmg &
-                    (Effects[index].EffectType == Enums.eEffectType.Mez))
+                if ((Math.Abs(Effects[index].Probability - 1f) < 0.01) & isDmg & (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     applies = true;
                 }
