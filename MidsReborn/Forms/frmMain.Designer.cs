@@ -1965,12 +1965,12 @@ namespace Mids_Reborn.Forms
             // 
             // ibMode
             // 
-            this.sbMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.sbMode.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sbMode.Location = new System.Drawing.Point(244, 80);
             this.sbMode.Name = "sbMode";
             this.sbMode.Size = new System.Drawing.Size(105, 22);
             this.sbMode.TabIndex = 122;
-            this.sbMode.ForeColor = Color.WhiteSmoke;
+            this.sbMode.ForeColor = Color.White;
             this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
             this.sbMode.SwitchedState = mrbControls.SwitchButton.SwitchState.None;
             this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
