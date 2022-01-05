@@ -1,15 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using mrbControls.Properties;
-using Syncfusion.Windows.Forms.Tools.Navigation;
 
 namespace mrbControls
 {
