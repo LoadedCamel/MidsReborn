@@ -34,7 +34,7 @@ namespace mrbBase
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
-                { "source>powerscaler", $"{sourceFx.GetPower().GetPowerEntry()?.VariableValue}" }
+                { "source", $"{sourceFx.GetPower().FullName}" }
             };
         }
 
@@ -52,18 +52,23 @@ namespace mrbBase
 
         private static string GetStacks(string powerName, ICollection<string> pickedPowerNames)
         {
-            if (!pickedPowerNames.Contains(powerName)) return "0";
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            PowerEntry target = null;
+            if (powerName.Contains("Redirects") || powerName.Contains("Pets"))
             {
-                if (pe.Power == null) continue;
-                if (pe.Power.FullName != powerName) continue;
-
-                if (pe.Power.Active)
+                var displayName = string.Empty;
+                var power = DatabaseAPI.GetPowerByFullName(powerName);
+                if (power != null)
                 {
-                    return $"{pe.VariableValue}";
+                    displayName = power.DisplayName;
                 }
+
+                target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == displayName);
+                if (target != null) return $"{target.VariableValue}";
             }
 
+            if (!pickedPowerNames.Contains(powerName)) return "0";
+            target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
+            if (target != null && target.Power.Active) return $"{target.VariableValue}";
             return "0";
         }
 

@@ -633,8 +633,7 @@ namespace Mids_Reborn.Forms.Controls
                 SetDamageTip();
             }*/
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, suffix1, tip1));
-            var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
-                        DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
+            var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = false;
             for (var index = 0; index < pBase.Effects.Length; index++)
             {
@@ -853,8 +852,9 @@ namespace Mids_Reborn.Forms.Controls
             {
                 str1 += " (% only)";
             }
-
+            
             var damageValue1 = pBase.FXGetDamageValue();
+            Debug.WriteLine($"{pBase.FullName}\n\t{damageValue1}");
             if (pBase.NIDSubPower.Length > 0 & damageValue1 == 0.0)
             {
                 lblDmg.Text = string.Empty;
@@ -865,7 +865,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             else
             {
-                lblDmg.Text = $"{str1}:";
+                lblDmg.Text = $@"{str1}:";
                 var damageValue2 = pEnh.FXGetDamageValue();
                 var num2 = damageValue1 * (1f + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
                 Info_Damage.nBaseVal = damageValue1;

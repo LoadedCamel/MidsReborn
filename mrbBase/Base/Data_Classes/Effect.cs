@@ -29,6 +29,7 @@ namespace mrbBase.Base.Data_Classes
             "modifier>current",
             "maxEndurance",
             "rand()",
+            "source",
             "source.ownPower?(",
             ">stacks",
             "modifier>",

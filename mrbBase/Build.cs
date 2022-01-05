@@ -893,13 +893,14 @@ namespace mrbBase
                     {
                         if (!silent)
                         {
-                            MessageBox.Show($"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", "Unable To Slot Enhancement");
+                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
                         }
                         return false;
                     }
 
                     if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
                     {
+                        Debug.WriteLine(enhancement.UID);
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {
