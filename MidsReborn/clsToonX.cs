@@ -140,14 +140,29 @@ namespace Mids_Reborn
                 var i = -1;
                 switch (MidsContext.Config.BuildMode)
                 {
+                    case Enums.dmModes.LevelUp:
+                    {
+                        i = GetFirstAvailablePowerIndex(DatabaseAPI.Database.Power[powerID].Level - 1);
+                        if (i < 0)
+                            message = "You cannot place any additional powers unless you first remove one.";
+                        else if (CurrentBuild.Powers[i].Level > Level)
+                            i = -1;
+                        else if (!TestPower(powerID))
+                            i = -1;
+                        break;
+                    }
                     case Enums.dmModes.Normal:
+                    {
                         i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
                             DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
+                    }
                     case Enums.dmModes.Respec:
+                    {
                         i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
                             DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
+                    }
                 }
 
                 var flag2 = false;
@@ -2509,10 +2524,15 @@ namespace Mids_Reborn
             var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
             var flag1 = inToonHistory > -1;
             var num1 = Level;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal && RequestedLevel > -1)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal && RequestedLevel > -1) 
+            {
                 num1 = RequestedLevel;
+            }
             else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec && RequestedLevel > -1)
+            {
                 num1 = RequestedLevel;
+            }
+
             var nLevel = num1;
             if (flag1)
                 nLevel = CurrentBuild.Powers[inToonHistory].Level;

@@ -205,10 +205,10 @@ namespace mrbBase.Base.Data_Classes
                     if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
-                /*else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
                 {
                     return true;
-                }*/
+                }
 
                 return false;
             }

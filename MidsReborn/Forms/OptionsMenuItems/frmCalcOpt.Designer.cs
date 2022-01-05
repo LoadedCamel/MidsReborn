@@ -467,7 +467,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.chkHighVis.TabIndex = 69;
             this.chkHighVis.Text = "Use High-Visiblity text on the build view";
             this.myTip.SetToolTip(this.chkHighVis, "Draw white text with a black outline on the build view (power bars on the right o" +
-        "f the screen)");
+                                                   "f the screen)");
             // 
             // Label36
             // 

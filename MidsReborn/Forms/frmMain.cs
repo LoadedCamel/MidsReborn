@@ -474,11 +474,23 @@ namespace Mids_Reborn.Forms
 
         //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
 
-        private void ibMode_ButtonClicked()
+        private void sbMode_ButtonClicked(object sender, EventArgs eventArgs)
         {
             if (MainModule.MidsController.Toon == null)
                 return;
-            MidsContext.Config.BuildMode = MidsContext.Config.BuildMode != Enums.dmModes.Normal ? Enums.dmModes.Normal : Enums.dmModes.Respec;
+            switch (sbMode.SwitchedState)
+            {
+                case SwitchButton.SwitchState.StateA:
+                    MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
+                    break;
+                case SwitchButton.SwitchState.StateB:
+                    MidsContext.Config.BuildMode = Enums.dmModes.Normal;
+                    break;
+                case SwitchButton.SwitchState.StateC:
+                    MidsContext.Config.BuildMode = Enums.dmModes.Respec;
+                    break;
+            }
+
             if (!DatabaseAPI.LoadLevelsDatabase()) return;
             MidsContext.Character.ResetLevel();
             PowerModified(markModified: false);
@@ -488,13 +500,21 @@ namespace Mids_Reborn.Forms
 
         private void UpdateModeInfo()
         {
+            if (sbMode.SwitchedState == SwitchButton.SwitchState.None) sbMode.SwitchedState = SwitchButton.SwitchState.StateA;
             switch (MidsContext.Config.BuildMode)
             {
+                case Enums.dmModes.LevelUp:
+                    sbMode.SwitchText.StateA = !MainModule.MidsController.Toon.Complete ? $"Level-Up: {MidsContext.Character.Level + 1}" : @"Level-Up";
+                    if (sbMode.DisplayText != sbMode.SwitchText.StateA)
+                    {
+                        sbMode.DisplayText = !MainModule.MidsController.Toon.Complete ? $"Level-Up: {MidsContext.Character.Level + 1}" : @"Level-Up";
+                    }
+                    break;
                 case Enums.dmModes.Normal:
-                    ibMode.TextOff = "Normal";
+                    sbMode.SwitchText.StateB = @"Normal";
                     break;
                 case Enums.dmModes.Respec:
-                    ibMode.TextOff = "Respec";
+                    sbMode.SwitchText.StateC = @"Respec";
                     break;
             }
         }
@@ -1203,12 +1223,22 @@ namespace Mids_Reborn.Forms
 
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
             var str3 = ch.Name + ": ";
+            if ((MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) & (str1 != ""))
+            {
+                str3 = str3 + "Level " + level + str1 + " ";
+            }
 
             var str4 = str3 + ch.Archetype.Origin[ch.Origin] + " " + ch.Archetype.DisplayName;
             if (MainModule.MidsController.Toon.Locked)
+            {
                 str4 = str4 + " (" + ch.Powersets[0].DisplayName + " / " + ch.Powersets[1].DisplayName + ")" + str2;
+            }
+
             if (MidsContext.Config.ExempLow < MidsContext.Config.ExempHigh)
+            {
                 str4 = str4 + " - Exemped from " + MidsContext.Config.ExempHigh + " to " + MidsContext.Config.ExempLow;
+            }
+
             lblHero.Text = str4;
             if (txtName.Text == ch.Name)
                 return;
@@ -3008,7 +3038,7 @@ namespace Mids_Reborn.Forms
 
         private void pbDynMode_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null)
+            if (MainModule.MidsController.Toon == null || MidsContext.Config.BuildMode != Enums.dmModes.Normal || MidsContext.Config.BuildMode != Enums.dmModes.Respec)
                 return;
             MidsContext.Config.BuildOption = MidsContext.Config.BuildOption == Enums.dmItem.Power
                 ? Enums.dmItem.Slot
@@ -3128,6 +3158,11 @@ namespace Mids_Reborn.Forms
             if (MidsContext.EnhCheckMode) return;
             if (!(!LastClickPlacedSlot && dragStartSlot >= 0)) return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
+            var powerEntryArray = DeepCopyPowerList();
+            RearrangeAllSlotsInBuild(powerEntryArray, true);
+            ShallowCopyPowerList(powerEntryArray);
+            PowerModified(false);
+            DoRedraw();
             PowerModified(true);
             FileModified = true;
             DoneDblClick = true;
@@ -3392,13 +3427,18 @@ namespace Mids_Reborn.Forms
                     }
                     else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Shift) & (slotID > -1))
                     {
+                        if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+                        {
+                            MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
+                            MidsContext.Character.ResetLevel();
+                        }
                         MainModule.MidsController.Toon.BuildSlot(hIDPower, slotID);
                         PowerModified(true);
                         LastClickPlacedSlot = false;
                     }
                     else
                     {
-                        if (e.Button == MouseButtons.Left)
+                        if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                         {
                             if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                             {
@@ -3427,11 +3467,11 @@ namespace Mids_Reborn.Forms
                                 if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
                                 {
                                     // adding a slot by itself doesn't really change the build substantially without an enh going into it
-                                    /*var powerEntryArray = DeepCopyPowerList();
-                                    RearrangeAllSlotsInBuild(powerEntryArray, true);
-                                    ShallowCopyPowerList(powerEntryArray);
-                                    PowerModified(false);
-                                    DoRedraw();*/
+                                    // var powerEntryArray = DeepCopyPowerList();
+                                    // RearrangeAllSlotsInBuild(powerEntryArray, true);
+                                    // ShallowCopyPowerList(powerEntryArray);
+                                    // PowerModified(false);
+                                    // DoRedraw();
                                     PowerModified(false);
                                     LastClickPlacedSlot = true;
                                     //MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);
@@ -6055,7 +6095,7 @@ namespace Mids_Reborn.Forms
             {
                 ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain,
                 prestigeButton, ibTotals, ibTeam, ibSlotLevels,
-                ibPopup, ibRecipe, ibAccolade, ibMode
+                ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
             {
@@ -6072,6 +6112,10 @@ namespace Mids_Reborn.Forms
                         MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
                 }
             }
+
+            sbMode.Image = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap;
+            sbMode.HoverImage = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap;
+
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
@@ -6271,7 +6315,13 @@ namespace Mids_Reborn.Forms
             llSecondary.SuspendRedraw = false;
             if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
+            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+            {
+                UpdateDMBuffer();
+                pbDynMode.Refresh();
+            }
 
+            sbMode.Outline.Enabled = true;
             DoResize();
             NoUpdate = false;
         }
@@ -6284,7 +6334,7 @@ namespace Mids_Reborn.Forms
                 dmBuffer = new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
             Enums.ePowerState ePowerState;
             string iStr;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
             {
                 if (MidsContext.Config.BuildOption == Enums.dmItem.Slot)
                 {
@@ -6313,6 +6363,11 @@ namespace Mids_Reborn.Forms
 
             if (MainModule.MidsController.Toon.Complete)
             {
+                if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+                {
+                    ePowerState = Enums.ePowerState.Used;
+                }
+
                 iStr = "Complete";
             }
 

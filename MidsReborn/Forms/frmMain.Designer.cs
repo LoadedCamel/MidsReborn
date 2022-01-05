@@ -35,6 +35,7 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.components = new System.ComponentModel.Container();
             this.txtName = new System.Windows.Forms.TextBox();
             this.cbAT = new System.Windows.Forms.ComboBox();
@@ -207,7 +208,7 @@ namespace Mids_Reborn.Forms
             this.ibTotals = new ImageButton();
             this.ibSlotLevels = new ImageButton();
             this.ibTeam = new ImageButton();
-            this.ibMode = new ImageButton();
+            this.sbMode = new SwitchButton();
             this.ibSets = new ImageButton();
             this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
@@ -1964,17 +1965,16 @@ namespace Mids_Reborn.Forms
             // 
             // ibMode
             // 
-            this.ibMode.Checked = false;
-            this.ibMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibMode.Location = new System.Drawing.Point(244, 80);
-            this.ibMode.Name = "ibTeam";
-            this.ibMode.Size = new System.Drawing.Size(105, 22);
-            this.ibMode.TabIndex = 122;
-            this.ibMode.TextOff = "Normal";
-            this.ibMode.TextOn = "Respec";
-            this.ibMode.Toggle = false;
-            this.ibMode.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibMode_ButtonClicked);
+            this.sbMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.sbMode.Location = new System.Drawing.Point(244, 80);
+            this.sbMode.Name = "sbMode";
+            this.sbMode.Size = new System.Drawing.Size(105, 22);
+            this.sbMode.TabIndex = 122;
+            this.sbMode.ForeColor = Color.WhiteSmoke;
+            this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
+            this.sbMode.SwitchedState = mrbControls.SwitchButton.SwitchState.None;
+            this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
+            this.sbMode.Click += new EventHandler(this.sbMode_ButtonClicked);
             // 
             // ibSets
             // 
@@ -2051,7 +2051,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.lblLockedSecondary);
             this.Controls.Add(this.ibTotals);
             this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.ibMode);
+            this.Controls.Add(this.sbMode);
             this.Controls.Add(this.ibSets);
             this.Controls.Add(this.pbDynMode);
             this.Controls.Add(this.topPanel);
@@ -2191,7 +2191,7 @@ namespace Mids_Reborn.Forms
         ctlPopUp I9Popup;
         ImageButton ibAccolade;
         ImageButton ibTeam;
-        ImageButton ibMode;
+        SwitchButton sbMode;
         ImageButton ibPopup;
         ImageButton ibPvX;
         ImageButton ibRecipe;

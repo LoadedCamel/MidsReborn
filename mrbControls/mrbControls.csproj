@@ -55,6 +55,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SwitchButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SwitchButton.Designer.cs">
+      <DependentUpon>SwitchButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="pnlGFX.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -207,6 +213,11 @@
     <Compile Include="ctlLayeredBarPb.Designer.cs">
       <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlCombo.resx">
@@ -241,6 +252,10 @@
     <EmbeddedResource Include="ImageButton.resources" />
     <EmbeddedResource Include="PairedList.resx">
       <DependentUpon>PairedList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resources" />
   </ItemGroup>
@@ -279,6 +294,11 @@
       <Name>mrbBase</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\pSlot2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pSlot3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

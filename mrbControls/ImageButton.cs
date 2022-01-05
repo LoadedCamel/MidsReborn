@@ -11,49 +11,34 @@ using mrbBase.Base.Display;
 
 namespace mrbControls
 {
-    // Token: 0x0200001C RID: 28
     [DefaultEvent("ButtonClicked")]
     [DesignerGenerated]
     public class ImageButton : UserControl
     {
-        // Token: 0x0200001D RID: 29
-        // (Invoke) Token: 0x060001C6 RID: 454
         public delegate void ButtonClickedEventHandler();
 
-        // Token: 0x040000CC RID: 204
         private ExtendedBitmap bxAltImage;
 
-        // Token: 0x040000CB RID: 203
         private ExtendedBitmap bxImage;
 
-        // Token: 0x040000CD RID: 205
         private ExtendedBitmap bxOut;
 
-        // Token: 0x040000D4 RID: 212
         private PictureBox Knockout;
 
-        // Token: 0x040000D5 RID: 213
         private Point KnockoutLocation;
 
-        // Token: 0x040000D3 RID: 211
         private ImageAttributes myIA;
 
-        // Token: 0x040000D1 RID: 209
         private bool pAltState;
 
-        // Token: 0x040000CE RID: 206
         private string pTextOff;
 
-        // Token: 0x040000CF RID: 207
         private string pTextOn;
 
-        // Token: 0x040000D0 RID: 208
         private bool pToggle;
 
-        // Token: 0x040000D2 RID: 210
         private bool pTogState;
 
-        // Token: 0x060001B7 RID: 439 RVA: 0x0001079C File Offset: 0x0000E99C
         public ImageButton()
         {
             MouseDown += ImageButton_MouseDown;
@@ -77,9 +62,6 @@ namespace mrbControls
             InitializeComponent();
         }
 
-        // Token: 0x17000059 RID: 89
-        // (get) Token: 0x060001A9 RID: 425 RVA: 0x0001059C File Offset: 0x0000E79C
-        // (set) Token: 0x060001AA RID: 426 RVA: 0x000105B4 File Offset: 0x0000E7B4
         public string TextOff
         {
             get => pTextOff;
@@ -90,9 +72,6 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700005A RID: 90
-        // (get) Token: 0x060001AB RID: 427 RVA: 0x000105C8 File Offset: 0x0000E7C8
-        // (set) Token: 0x060001AC RID: 428 RVA: 0x000105E0 File Offset: 0x0000E7E0
         public string TextOn
         {
             get => pTextOn;
@@ -103,9 +82,6 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700005B RID: 91
-        // (get) Token: 0x060001AD RID: 429 RVA: 0x000105F4 File Offset: 0x0000E7F4
-        // (set) Token: 0x060001AE RID: 430 RVA: 0x0001060C File Offset: 0x0000E80C
         public bool Toggle
         {
             get => pToggle;
@@ -116,9 +92,6 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700005C RID: 92
-        // (get) Token: 0x060001AF RID: 431 RVA: 0x00010620 File Offset: 0x0000E820
-        // (set) Token: 0x060001B0 RID: 432 RVA: 0x00010638 File Offset: 0x0000E838
         public bool Checked
         {
             get => pAltState;
@@ -129,15 +102,11 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700005D RID: 93
-        // (set) Token: 0x060001B1 RID: 433 RVA: 0x00010649 File Offset: 0x0000E849
         public ImageAttributes IA
         {
             set => myIA = value;
         }
 
-        // Token: 0x1700005E RID: 94
-        // (set) Token: 0x060001B2 RID: 434 RVA: 0x00010654 File Offset: 0x0000E854
         public Bitmap ImageOff
         {
             set
@@ -149,8 +118,7 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700005F RID: 95
-        // (set) Token: 0x060001B3 RID: 435 RVA: 0x000106CC File Offset: 0x0000E8CC
+        
         public Bitmap ImageOn
         {
             set
@@ -162,8 +130,7 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x17000060 RID: 96
-        // (set) Token: 0x060001B4 RID: 436 RVA: 0x00010744 File Offset: 0x0000E944
+        
         public PictureBox KnockoutPB
         {
             set
@@ -173,9 +140,7 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x17000061 RID: 97
-        // (get) Token: 0x060001B5 RID: 437 RVA: 0x00010758 File Offset: 0x0000E958
-        // (set) Token: 0x060001B6 RID: 438 RVA: 0x00010770 File Offset: 0x0000E970
+        
         public Point KnockoutLocationPoint
         {
             get => KnockoutLocation;
@@ -186,15 +151,13 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x040000CA RID: 202
+        
         private IContainer Components { get; }
 
-        // Token: 0x14000008 RID: 8
-        // (add) Token: 0x060001A7 RID: 423 RVA: 0x00010566 File Offset: 0x0000E766
-        // (remove) Token: 0x060001A8 RID: 424 RVA: 0x00010580 File Offset: 0x0000E780
+        
         public event ButtonClickedEventHandler ButtonClicked;
 
-        // Token: 0x060001B8 RID: 440 RVA: 0x0001089C File Offset: 0x0000EA9C
+        
         [DebuggerNonUserCode]
         protected override void Dispose(bool disposing)
         {
@@ -208,7 +171,7 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x060001B9 RID: 441 RVA: 0x000108EC File Offset: 0x0000EAEC
+        
         [DebuggerStepThrough]
         private void InitializeComponent()
         {
@@ -220,7 +183,6 @@ namespace mrbControls
             ResumeLayout(false);
         }
 
-        // Token: 0x060001BA RID: 442 RVA: 0x00010938 File Offset: 0x0000EB38
         private void Redraw()
         {
             if (IsDisposed) return;
@@ -229,7 +191,6 @@ namespace mrbControls
             if (bxOut.Bitmap != null) CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
         }
 
-        // Token: 0x060001BB RID: 443 RVA: 0x0001097A File Offset: 0x0000EB7A
         public void SetImages(ImageAttributes ia, Bitmap imageOff, Bitmap imageOn)
         {
             IA = ia;
@@ -238,19 +199,16 @@ namespace mrbControls
             Redraw();
         }
 
-        // Token: 0x060001BC RID: 444 RVA: 0x0001099C File Offset: 0x0000EB9C
         private void ImageButton_BackColorChanged(object sender, EventArgs e)
         {
             Redraw();
         }
 
-        // Token: 0x060001BD RID: 445 RVA: 0x000109A6 File Offset: 0x0000EBA6
         private void ImageButton_FontChanged(object sender, EventArgs e)
         {
             Redraw();
         }
 
-        // Token: 0x060001BE RID: 446 RVA: 0x000109B0 File Offset: 0x0000EBB0
         private void Draw()
         {
             var stringFormat = new StringFormat();
@@ -294,8 +252,7 @@ namespace mrbControls
                         Image bitmap = bxImage.Bitmap;
                         var location = new Point(0, 0);
                         var bounds = new Rectangle(location, bxOut.Size);
-                        graphics2.DrawImage(bitmap, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height,
-                            GraphicsUnit.Pixel, myIA);
+                        graphics2.DrawImage(bitmap, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height, GraphicsUnit.Pixel, myIA);
                     }
                     else
                     {
@@ -349,9 +306,7 @@ namespace mrbControls
             DrawOutlineText(iStr, bounds3, whiteSmoke, outline, font, outlineSpace, ref graphics6);
         }
 
-        // Token: 0x060001BF RID: 447 RVA: 0x00010E10 File Offset: 0x0000F010
-        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont,
-            float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
+        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont, float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
         {
             var stringFormat = new StringFormat(StringFormatFlags.NoWrap)
             {
@@ -384,7 +339,6 @@ namespace mrbControls
             target.DrawString(iStr, bFont, brush, layoutRectangle, stringFormat);
         }
 
-        // Token: 0x060001C0 RID: 448 RVA: 0x00010FEC File Offset: 0x0000F1EC
         private void ImageButton_MouseDown(object sender, MouseEventArgs e)
         {
             if (!pToggle)
@@ -399,7 +353,6 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x060001C1 RID: 449 RVA: 0x00011028 File Offset: 0x0000F228
         private void ImageButton_MouseLeave(object sender, EventArgs e)
         {
             if (!pToggle)
@@ -414,7 +367,6 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x060001C2 RID: 450 RVA: 0x00011064 File Offset: 0x0000F264
         private void ImageButton_MouseUp(object sender, MouseEventArgs e)
         {
             if (!pToggle)
@@ -432,14 +384,12 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x060001C3 RID: 451 RVA: 0x00011168 File Offset: 0x0000F368
         private void ImageButton_Paint(object sender, PaintEventArgs e)
         {
             if (bxOut == null) Draw();
             if (bxOut != null) e.Graphics.DrawImage(bxOut.Bitmap, 0, 0);
         }
 
-        // Token: 0x060001C4 RID: 452 RVA: 0x000111BC File Offset: 0x0000F3BC
         private void ImageButton_SizeChanged(object sender, EventArgs e)
         {
             if ((Size.Width != 105) | (Size.Height != 22))

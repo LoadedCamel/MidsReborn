@@ -1748,16 +1748,17 @@ namespace mrbBase
 
         public static bool LoadLevelsDatabase(string iPath = "")
         {
-            var path = string.Empty;
+            string path = string.Empty;
             switch (MidsContext.Config.BuildMode)
             {
-                case Enums.dmModes.Normal:
+                case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
                     path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileNLevels) : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
                     break;
                 case Enums.dmModes.Respec:
                     path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileRLevels) : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
                     break;
             }
+
             Database.Levels = new LevelMap[0];
             StreamReader iStream;
             try
