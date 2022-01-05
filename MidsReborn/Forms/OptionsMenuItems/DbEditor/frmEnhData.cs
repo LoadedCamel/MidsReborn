@@ -472,7 +472,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
                     var type = Enum.GetName(typeof(Enums.eSubtype), myEnh.SubTypeID);
-                    Debug.WriteLine(type);
+                    //Debug.WriteLine(type);
                     cbSubType.SelectedItem = type;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;

@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -1977,8 +1978,8 @@ namespace mrbBase.Base.Data_Classes
                     }
             }
 
-            if ((((double) num2 > 0.0 ? 1 : 0) &
-                 ((double) nDuration < 0.01 ? 1 : (double) nDuration > (double) num2 ? 1 : 0)) != 0)
+            if (((num2 > 0.0 ? 1 : 0) &
+                 (nDuration < 0.01 ? 1 : nDuration > num2 ? 1 : 0)) != 0)
             {
                 nDuration = num2;
             }
@@ -2015,7 +2016,8 @@ namespace mrbBase.Base.Data_Classes
                         effect.SetTicks(nDuration, source.ActivatePeriod);
                     }
 
-                    if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) &
+                        (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2025,7 +2027,8 @@ namespace mrbBase.Base.Data_Classes
                     }
 
                     
-                    if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) &
+                        (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)

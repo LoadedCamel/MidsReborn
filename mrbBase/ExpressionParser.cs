@@ -176,14 +176,7 @@ namespace mrbBase
             }
             catch (ParseException ex)
             {
-                Debug.WriteLine($"Power: {sourceFx.GetPower().FullName}\nExpr: {magExpr}");
-                var effects = sourceFx.GetPower().Effects;
-                for (var index = 0; index < effects.Length; index++)
-                {
-                    var effect = effects[index];
-                    Debug.WriteLine($"Effect #{index}: {effect.AttribType}");
-                }
-                Debug.WriteLine($"\r\n");
+                //Debug.WriteLine($"Power: {sourceFx.GetPower().FullName}\nExpr: {magExpr}");
                 parsedData.ErrorFound = true;
                 parsedData.ErrorString = ex.Message;
 

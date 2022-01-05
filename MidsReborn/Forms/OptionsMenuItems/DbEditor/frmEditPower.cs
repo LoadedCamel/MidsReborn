@@ -1405,10 +1405,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 txtVisualLocation.ReadOnly = true;
             }
 
-            foreach (var boost in myPower.BoostsAllowed)
+            /*foreach (var boost in myPower.BoostsAllowed)
             {
                 Debug.WriteLine(boost);
-            }
+            }*/
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
