@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -423,7 +424,20 @@ namespace mrbBase
             if (Enh < 0) return string.Empty;
 
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
-            return GetEffectsStringLong(enhancement, enhancement.GetPower());
+            var enhPowerEffects = GetEffectsStringLong(enhancement, enhancement.GetPower());
+            if (enhancement.nIDSet < 0 | !string.IsNullOrWhiteSpace(enhPowerEffects.Trim()))
+                return enhPowerEffects;
+
+            var enhSet = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
+            var enhPosInSet = Array.IndexOf(enhSet.Enhancements, Enh);
+            if (enhPosInSet < 0)
+                return string.Empty;
+
+            var setBonusesForEnh = enhSet.SpecialBonus[enhPosInSet];
+
+            return setBonusesForEnh.Index
+                .Select(idx => DatabaseAPI.Database.Power[idx])
+                .Aggregate("", (current1, p) => p.Effects.Aggregate(current1, (current, fx) => current + $"{(current != "" ? "\n" : "")}{fx.BuildEffectString(true, "", false, false, false, true)}"));
         }
 
         public string GetRelativeString(bool onlySign)
