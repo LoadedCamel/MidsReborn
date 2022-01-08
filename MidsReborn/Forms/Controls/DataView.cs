@@ -854,7 +854,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             
             var damageValue1 = pBase.FXGetDamageValue();
-            Debug.WriteLine($"{pBase.FullName}\n\t{damageValue1}");
+            //Debug.WriteLine($"{pBase.FullName}\n\t{pBase.GetPowerEntry()?.StatInclude}");
             if (pBase.NIDSubPower.Length > 0 & damageValue1 == 0.0)
             {
                 lblDmg.Text = string.Empty;

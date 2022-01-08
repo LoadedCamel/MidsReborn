@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -465,15 +466,13 @@ namespace mrbBase.Base.Data_Classes
                 bool flag;
                 if (VariableModifiedOverride)
                 {
-                    flag = false;
+                    flag = true;
                 }
                 else
                 {
                     if (power != null)
                     {
                         var ps = power.GetPowerSet();
-                        if (ps == null)
-                            return false;
                         if (ps.nArchetype > -1)
                         {
                             if (!DatabaseAPI.Database.Classes[ps.nArchetype].Playable)
@@ -524,11 +523,7 @@ namespace mrbBase.Base.Data_Classes
                                         ValidateConditional("active", "Scourge") ||
                                         ValidateConditional("active", "Supremacy");
 
-        public bool IgnoreScaling
-        {
-            get => AttribType == Enums.eAttribType.Expression || _IgnoreScaling;
-            set => _IgnoreScaling = value;
-        }
+        public bool IgnoreScaling { get; set; }
 
         public float BaseProbability { get; set; }
 
@@ -603,8 +598,6 @@ namespace mrbBase.Base.Data_Classes
         public int nIDClassName { get; set; }
 
         public bool VariableModifiedOverride { get; set; }
-
-        private bool _IgnoreScaling;
 
         public bool isEnhancementEffect { get; set; }
 
@@ -2834,7 +2827,9 @@ namespace mrbBase.Base.Data_Classes
                 if (Reward != effect.Reward)
                     return string.CompareOrdinal(Reward, effect.Reward);
                 if (MagnitudeExpression != effect.MagnitudeExpression)
+                {
                     return string.CompareOrdinal(MagnitudeExpression, effect.MagnitudeExpression);
+                }
 
                 //EffectType is the same, go more detailed.
                 if (effect.isDamage())

@@ -155,7 +155,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 txtProbExpression.Enabled = true;
                 magexLabel.Enabled = true;
                 probexLabel.Enabled = true;
-                chkIgnoreScale.Enabled = false;
+                chkIgnoreScale.Enabled = true;
             }
             else
             {
@@ -358,7 +358,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbFXClass.SelectedIndex = (int)myFX.EffectClass;
             chkVariable.Checked = myFX.VariableModifiedOverride;
             chkIgnoreScale.Checked = myFX.IgnoreScaling;
-            chkIgnoreScale.Enabled = myFX.AttribType != Enums.eAttribType.Expression;
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
             var names1 = Enum.GetNames(myFX.Suppression.GetType());
@@ -435,7 +434,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
             cbAffects.Items.Add("Self");
-            cbAffects.Items.Add("Ally");
             foreach (var effectId in DatabaseAPI.Database.EffectIds)
             {
                 cmbEffectId.Items.Add(effectId);
@@ -1278,6 +1276,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateFXText();
         }
 
+        public static IEnumerable<float> FloatRange(float min, float max, float step)
+        {
+            for (int i = 0; i < int.MaxValue; i++)
+            {
+                float value = min + step * i;
+                if (value > max)
+                {
+                    break;
+                }
+                yield return value;
+            }
+        }
+
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             var powName = string.Empty;
@@ -1310,7 +1321,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.BeginUpdate();
                     if (selected != null)
                     {
-                        var stackRange = selected.VariableMin == 0 ? Enumerable.Range(selected.VariableMin, selected.VariableMax + 1) : Enumerable.Range(selected.VariableMin, selected.VariableMax);
+                        IEnumerable<float> stackRange;
+                        if (selected.VariableMin == 0)
+                            stackRange = FloatRange(selected.VariableMin, selected.VariableMax + 1, 0.1f);
+                        else
+                            stackRange = FloatRange(selected.VariableMin, selected.VariableMax, 0.1f);
 
                         foreach (var stackNum in stackRange)
                         {

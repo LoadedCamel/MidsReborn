@@ -845,7 +845,8 @@ namespace mrbBase
             Pet,
             SetBonus,
             Boost,
-            Incarnate
+            Incarnate,
+            Redirect
         }
 
         public enum ePowerState

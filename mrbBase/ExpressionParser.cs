@@ -52,22 +52,8 @@ namespace mrbBase
 
         private static string GetStacks(string powerName, ICollection<string> pickedPowerNames)
         {
-            PowerEntry target = null;
-            if (powerName.Contains("Redirects") || powerName.Contains("Pets"))
-            {
-                var displayName = string.Empty;
-                var power = DatabaseAPI.GetPowerByFullName(powerName);
-                if (power != null)
-                {
-                    displayName = power.DisplayName;
-                }
-
-                target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == displayName);
-                if (target != null) return $"{target.VariableValue}";
-            }
-
             if (!pickedPowerNames.Contains(powerName)) return "0";
-            target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
+            var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
             if (target != null && target.Power.Active) return $"{target.VariableValue}";
             return "0";
         }
@@ -171,7 +157,7 @@ namespace mrbBase
             // Numeric functions
             mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
             mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
-            mathEngine.AddFunction("minmax", (a, b, c) => Math.Max(b, Math.Min(c, a)));
+            mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b, Math.Max(c, a)));
 
             try
             {

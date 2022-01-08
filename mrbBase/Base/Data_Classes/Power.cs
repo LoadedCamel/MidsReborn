@@ -846,6 +846,11 @@ namespace mrbBase.Base.Data_Classes
                     }
                 }
 
+                if (effect.AttribType == Enums.eAttribType.Expression && effect.GetPower().FullName.Contains("Redirects"))
+                {
+                    num2 = Math.Abs(num2);
+                }
+
                 num1 += num2;
             }
 
@@ -974,6 +979,10 @@ namespace mrbBase.Base.Data_Classes
                     iNum += effectMag;
                     numArray1[(int) effect.DamageType] += effectMag;
                 }
+
+                if (effect.AttribType != Enums.eAttribType.Expression || !effect.GetPower().FullName.Contains("Redirects")) continue;
+                iNum = Math.Abs(iNum);
+                numArray1[(int)effect.DamageType] = iNum;
             }
 
             if (!(iNum > 0.0))
@@ -1020,7 +1029,6 @@ namespace mrbBase.Base.Data_Classes
 
                 str1 = str1 + " = " + Utilities.FixDP(iNum);
             }
-            
             return str1;
         }
 
