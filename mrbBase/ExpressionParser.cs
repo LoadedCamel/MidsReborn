@@ -52,10 +52,13 @@ namespace mrbBase
 
         private static string GetStacks(string powerName, ICollection<string> pickedPowerNames)
         {
-            if (!pickedPowerNames.Contains(powerName)) return "0";
             var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
-            if (target != null && target.Power.Active) return $"{target.VariableValue}";
-            return "0";
+            Debug.WriteLine($"Target power found ({powerName}): {target != null}");
+
+            if (target == null) return "0";
+            
+            Debug.WriteLine($"GetStacks({powerName}) = {target.VariableValue}");
+            return $"{target.VariableValue}";
         }
 
         private static string GetModifier(string modifierName)
@@ -159,9 +162,12 @@ namespace mrbBase
             mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
             mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b, Math.Max(c, a)));
 
+            Debug.WriteLine($"Intermediate expression: {magExpr}");
+
             try
             {
                 var ret = (float)mathEngine.Calculate(magExpr);
+                Debug.WriteLine($"Final value: {ret}");
 
                 return ret;
             }
@@ -174,6 +180,13 @@ namespace mrbBase
                 return 0;
             }
             catch (VariableNotDefinedException ex)
+            {
+                parsedData.ErrorFound = true;
+                parsedData.ErrorString = ex.Message;
+
+                return 0;
+            }
+            catch (InvalidOperationException ex)
             {
                 parsedData.ErrorFound = true;
                 parsedData.ErrorString = ex.Message;

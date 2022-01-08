@@ -3257,6 +3257,7 @@ namespace Mids_Reborn.Forms.Controls
                 num = pBase.VariableMin;
             if (num > pBase.VariableMax)
                 num = pBase.VariableMax;
+            Debug.WriteLine($"{MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.FullName}: setting stacks to {num}");
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
             /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)

@@ -811,7 +811,8 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(VariableStart);
         }
 
-        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
+        //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
+        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power.DisplayName == DisplayName);
 
         public float FXGetDamageValue()
         {
