@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using mrbBase.Base.Master_Classes;
@@ -34,7 +33,9 @@ namespace mrbBase
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
-                { "source", $"{sourceFx.GetPower().FullName}" }
+                { "source", $"{sourceFx.GetPower().FullName}" },
+                { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
+                { "base.kToHit", "0.75"}, // Value not present in MidsContext.Character.Archetype
             };
         }
 
@@ -53,12 +54,9 @@ namespace mrbBase
         private static string GetStacks(string powerName, ICollection<string> pickedPowerNames)
         {
             var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
-            Debug.WriteLine($"Target power found ({powerName}): {target != null}");
-
-            if (target == null) return "0";
-            
-            Debug.WriteLine($"GetStacks({powerName}) = {target.VariableValue}");
-            return $"{target.VariableValue}";
+            return target == null
+                ? "0"
+                : $"{target.VariableValue}";
         }
 
         private static string GetModifier(string modifierName)
@@ -160,20 +158,14 @@ namespace mrbBase
             // Numeric functions
             mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
             mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
-            mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b, Math.Max(c, a)));
-
-            Debug.WriteLine($"Intermediate expression: {magExpr}");
+            mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b > c ? b : c, Math.Max(b > c ? c : b, a)));
 
             try
             {
-                var ret = (float)mathEngine.Calculate(magExpr);
-                Debug.WriteLine($"Final value: {ret}");
-
-                return ret;
+                return (float)mathEngine.Calculate(magExpr);
             }
             catch (ParseException ex)
             {
-                //Debug.WriteLine($"Power: {sourceFx.GetPower().FullName}\nExpr: {magExpr}");
                 parsedData.ErrorFound = true;
                 parsedData.ErrorString = ex.Message;
 
