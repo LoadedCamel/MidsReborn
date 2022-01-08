@@ -1183,15 +1183,7 @@ namespace Mids_Reborn
             {
                 if (iPower.Effects[index].VariableModified & !iPower.Effects[index].IgnoreScaling)
                 {
-                    if (iPower.VariableName != "To-Hit Buff")
-                    {
-                        iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
-                    }
-                    else
-                    {
-                        var multiplier = 0.75f * CurrentBuild.Powers[hIDX].VariableValue;
-                        iPower.Effects[index].Scale += multiplier;
-                    }
+                    iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
                 }
             }
 
