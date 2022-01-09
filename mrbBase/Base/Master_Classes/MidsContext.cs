@@ -11,7 +11,7 @@ namespace mrbBase.Base.Master_Classes
         private const int AppBuildVersion = 13;
         private const int AppRevisionVersion = 2;
         public const string AppAssemblyVersion = "3.1.13.2";
-        public const string AppVersionStatus = "";
+        public const string AppVersionStatus = "Beta";
 
         public const string Title = "Mids' Reborn";
         public const string AssemblyName = "MidsReborn.exe";
