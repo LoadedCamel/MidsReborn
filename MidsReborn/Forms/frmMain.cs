@@ -2171,11 +2171,12 @@ namespace Mids_Reborn.Forms
             }
 
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            var highEnh = highBase * (1f + MidsContext.Character.TotalsCapped.BuffDam +
-                                      Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
-            if ((MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS) |
-                (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA))
+            var highEnh = highBase * (1f + MidsContext.Character.TotalsCapped.BuffDam + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
+            if ((MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS) | (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA))
+            {
                 highEnh *= 1.5f;
+            }
+
             myDataView.Info_Damage.nHighBase = highBase;
             myDataView.Info_Damage.nHighEnh = highEnh;
         }

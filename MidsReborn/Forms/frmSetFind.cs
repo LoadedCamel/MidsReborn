@@ -238,11 +238,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
             }
-
-            //t.Stop();
-            
-            //Debug.WriteLine($"BuildEffectsMap(): {t.ElapsedMilliseconds} ms");
-            //Debug.WriteLine(JsonConvert.SerializeObject(EffectsMap, Formatting.Indented));
         }
 
         private bool EffectsMapContainsPartial(fxIdentifier fxKey)

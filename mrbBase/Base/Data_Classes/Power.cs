@@ -825,6 +825,7 @@ namespace mrbBase.Base.Data_Classes
                 }
 
                 var num2 = effect.BuffedMag;
+                
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     num2 *= effect.Probability;
@@ -832,14 +833,14 @@ namespace mrbBase.Base.Data_Classes
 
                 if (PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    num2 = (float) (num2 * (double) ActivatePeriod / 10.0);
+                    num2 = (float)(num2 * (double)ActivatePeriod / 10.0);
                 }
 
                 if (effect.Ticks > 1)
                 {
                     if (effect.CancelOnMiss && MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average && effect.Probability < 1.0)
                     {
-                        num2 *= (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                        num2 *= (float)((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
                     }
                     else
                     {
@@ -847,12 +848,8 @@ namespace mrbBase.Base.Data_Classes
                     }
                 }
 
-                if (effect.AttribType == Enums.eAttribType.Expression && effect.GetPower().FullName.Contains("Redirects"))
-                {
-                    num2 = Math.Abs(num2);
-                }
-
                 num1 += num2;
+                
             }
 
             switch (MidsContext.Config.DamageMath.ReturnValue)
@@ -898,17 +895,14 @@ namespace mrbBase.Base.Data_Classes
             var iNum = 0.0f;
             foreach (var effect in Effects)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage ||
-                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
-                    !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    effect.EffectClass == Enums.eEffectClass.Ignored ||
-                    effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self ||
-                    !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
+                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self || !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
                 {
                     continue;
                 }
 
+                
                 var effectMag = effect.BuffedMag;
+
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     effectMag *= effect.Probability;
@@ -980,10 +974,6 @@ namespace mrbBase.Base.Data_Classes
                     iNum += effectMag;
                     numArray1[(int) effect.DamageType] += effectMag;
                 }
-
-                if (effect.AttribType != Enums.eAttribType.Expression || !effect.GetPower().FullName.Contains("Redirects")) continue;
-                iNum = Math.Abs(iNum);
-                numArray1[(int)effect.DamageType] = iNum;
             }
 
             if (!(iNum > 0.0))
@@ -1038,9 +1028,7 @@ namespace mrbBase.Base.Data_Classes
             var numArray1 = new int[Effects.Length];
             for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
             {
-                if (((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None) &
-                    ((!MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvP)) |
-                     (MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvE))))
+                if (((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None) & ((!MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvE))))
                 {
                     numArray1[index1] = (int) (Effects[index1].EffectClass + 1);
                     if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
@@ -1339,8 +1327,7 @@ namespace mrbBase.Base.Data_Classes
                     applies = true;
                 }
 
-                if (Effects[index].EffectType == Enums.eEffectType.Mez && Effects[index].MezType == Enums.eMez.Taunt &&
-                    Effects[index].EffectClass != Enums.eEffectClass.Primary)
+                if (Effects[index].EffectType == Enums.eEffectType.Mez && Effects[index].MezType == Enums.eMez.Taunt && Effects[index].EffectClass != Enums.eEffectClass.Primary)
                 {
                     applies = false;
                 }
@@ -1639,19 +1626,12 @@ namespace mrbBase.Base.Data_Classes
             return shortFx;
         }
 
-        public Enums.ShortFX GetDamageMagSum(
-            Enums.eEffectType iEffect,
-            Enums.eDamage iSub,
-            bool includeDelayed = false)
+        public Enums.ShortFX GetDamageMagSum(Enums.eEffectType iEffect, Enums.eDamage iSub, bool includeDelayed = false)
         {
             var shortFx = new Enums.ShortFX();
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
-                if (!Effects[iIndex].CanInclude() ||
-                    !((Effects[iIndex].EffectType == iEffect) &
-                      (Effects[iIndex].EffectClass != Enums.eEffectClass.Ignored)) ||
-                    !Effects[iIndex].PvXInclude() ||
-                    !(((Effects[iIndex].DelayedTime <= 5.0) | includeDelayed) & (Effects[iIndex].DamageType == iSub)))
+                if (!Effects[iIndex].CanInclude() || !((Effects[iIndex].EffectType == iEffect) & (Effects[iIndex].EffectClass != Enums.eEffectClass.Ignored)) || !Effects[iIndex].PvXInclude() || !(((Effects[iIndex].DelayedTime <= 5.0) | includeDelayed) & (Effects[iIndex].DamageType == iSub)))
                 {
                     continue;
                 }
@@ -1668,20 +1648,12 @@ namespace mrbBase.Base.Data_Classes
             return shortFx;
         }
 
-        public Enums.ShortFX GetEffectMag(
-            Enums.eEffectType iEffect,
-            Enums.eToWho iTarget = Enums.eToWho.Unspecified,
-            bool allowDelay = false)
+        public Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified, bool allowDelay = false)
         {
             var shortFx = new Enums.ShortFX();
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
-                if (Effects[iIndex].EffectType != iEffect ||
-                    Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                    Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() ||
-                    !(Effects[iIndex].DelayedTime <= 5.0) && !allowDelay ||
-                    iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All &&
-                    iTarget != Effects[iIndex].ToWho)
+                if (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() || !(Effects[iIndex].DelayedTime <= 5.0) && !allowDelay || iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All && iTarget != Effects[iIndex].ToWho)
                 {
                     continue;
                 }
@@ -1692,13 +1664,11 @@ namespace mrbBase.Base.Data_Classes
                     mag *= Effects[iIndex].Ticks;
                 }
 
-                if (Effects[iIndex].DisplayPercentage && (Effects[iIndex].EffectType == Enums.eEffectType.Heal ||
-                                                          Effects[iIndex].EffectType == Enums.eEffectType.HitPoints))
+                if (Effects[iIndex].DisplayPercentage && Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
                     shortFx.Add(iIndex, mag / 100f * MidsContext.Archetype.Hitpoints);
                 }
-                else if (Effects[iIndex].EffectType == Enums.eEffectType.Heal ||
-                         Effects[iIndex].EffectType == Enums.eEffectType.HitPoints)
+                else if (Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
                     shortFx.Add(iIndex, (float) (mag / (double) MidsContext.Archetype.Hitpoints * 100.0));
                 }
@@ -1716,10 +1686,12 @@ namespace mrbBase.Base.Data_Classes
         public bool AffectsTarget(Enums.eEffectType iEffect)
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
                 if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Target)
                 {
                     return true;
                 }
+            }
 
             return false;
         }
@@ -1727,10 +1699,12 @@ namespace mrbBase.Base.Data_Classes
         public bool AffectsSelf(Enums.eEffectType iEffect)
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
                 if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Self)
                 {
                     return true;
                 }
+            }
 
             return false;
         }
@@ -1739,9 +1713,7 @@ namespace mrbBase.Base.Data_Classes
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
             {
-                if (!((Effects[index].EffectType == iEffect) & (Effects[index].BuffedMag > 0.0)) ||
-                    (Effects[index].EffectType == Enums.eEffectType.Damage) &
-                    (Effects[index].DamageType == Enums.eDamage.Special))
+                if (!((Effects[index].EffectType == iEffect) & (Effects[index].BuffedMag > 0.0)) || (Effects[index].EffectType == Enums.eEffectType.Damage) & (Effects[index].DamageType == Enums.eDamage.Special))
                 {
                     continue;
                 }
@@ -1763,10 +1735,12 @@ namespace mrbBase.Base.Data_Classes
             }
 
             for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
+            {
                 if (IgnoreEnh[index] == iEffect)
                 {
                     return false;
                 }
+            }
 
             return true;
         }
@@ -1961,30 +1935,24 @@ namespace mrbBase.Base.Data_Classes
             return flag;
         }
 
-        public int[] AbsorbEffects(
-            IPower source,
-            float nDuration,
-            float nDelay,
-            Archetype archetype,
-            int stacking,
-            bool isGrantPower = false,
-            int fxid = -1,
-            int effectId = -1)
+        public int[] AbsorbEffects(IPower source, float nDuration, float nDelay, Archetype archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
             var num1 = -1;
             var length = Effects.Length;
             var array = new int[0];
             var num2 = 0.0f;
-            if (source.PowerSetID > -1 &&
-                DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
+            if (source.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
             {
                 foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID].Powers)
-                foreach (var effect in power.Effects)
-                    if ((effect.EffectType == Enums.eEffectType.SilentKill) & (effect.ToWho == Enums.eToWho.Self) &
-                        (effect.DelayedTime > 0.0))
+                {
+                    foreach (var effect in power.Effects)
                     {
-                        num2 = effect.DelayedTime;
+                        if ((effect.EffectType == Enums.eEffectType.SilentKill) & (effect.ToWho == Enums.eToWho.Self) & (effect.DelayedTime > 0.0))
+                        {
+                            num2 = effect.DelayedTime;
+                        }
                     }
+                }
             }
 
             if (((num2 > 0.0 ? 1 : 0) &
@@ -1997,14 +1965,12 @@ namespace mrbBase.Base.Data_Classes
             {
                 for (var index = 0; index <= source.Effects.Length - 1; ++index)
                 {
-                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster) &
-                        (source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
+                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster) & (source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
                     {
                         continue;
                     }
 
-                    if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate &&
-                        source.Effects[index].nSummon > -1)
+                    if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
                         Array.Resize(ref array, array.Length + 1);
                         array[array.Length - 1] = index;
@@ -2020,13 +1986,12 @@ namespace mrbBase.Base.Data_Classes
                     effect.Absorbed_Class_nID = archetype.Idx;
                     effect.Absorbed_EffectID = fxid;
                     effect.Absorbed_Power_nID = source.PowerIndex;
-                    if (source.PowerType == Enums.ePowerType.Auto_ || source.PowerType == Enums.ePowerType.Toggle)
+                    if (source.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
                     {
                         effect.SetTicks(nDuration, source.ActivatePeriod);
                     }
 
-                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) &
-                        (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2036,8 +2001,7 @@ namespace mrbBase.Base.Data_Classes
                     }
 
                     
-                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) &
-                        (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2083,7 +2047,7 @@ namespace mrbBase.Base.Data_Classes
                 effect.Absorbed_Class_nID = archetype.Idx;
                 effect.Absorbed_EffectID = fxid;
                 effect.Absorbed_Power_nID = source.PowerIndex;
-                if (source.PowerType == Enums.ePowerType.Auto_ || source.PowerType == Enums.ePowerType.Toggle)
+                if (source.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
                 {
                     effect.SetTicks(nDuration, source.ActivatePeriod);
                 }
@@ -2145,8 +2109,7 @@ namespace mrbBase.Base.Data_Classes
                 var array2 = new int[0];
                 for (var index = num2; index < Effects.Length; ++index)
                 {
-                    if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() ||
-                        Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
+                    if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
                     {
                         continue;
                     }
@@ -2163,8 +2126,7 @@ namespace mrbBase.Base.Data_Classes
                     flag = true;
                     Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
                     var length = Effects.Length;
-                    AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0.0f,
-                        MidsContext.Archetype, 1, true, array1[index1]);
+                    AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0.0f, MidsContext.Archetype, 1, true, array1[index1]);
                     for (var index2 = length; index2 < Effects.Length; ++index2)
                     {
                         if (Effects[array1[index1]].Absorbed_Power_nID > -1)
@@ -2247,8 +2209,7 @@ namespace mrbBase.Base.Data_Classes
                 return false;
             }
 
-            return GetValidEnhancements(DatabaseAPI.Database.Enhancements[iEnh].TypeID)
-                .Any(validEnhancement => validEnhancement == iEnh);
+            return GetValidEnhancements(DatabaseAPI.Database.Enhancements[iEnh].TypeID).Any(validEnhancement => validEnhancement == iEnh);
         }
 
         public void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1)
@@ -2257,7 +2218,6 @@ namespace mrbBase.Base.Data_Classes
             {
                 return;
             }
-
             var intList = new List<int>();
             for (var index = 0; index < Effects.Length; ++index)
             {
@@ -2315,7 +2275,7 @@ namespace mrbBase.Base.Data_Classes
                             Radius = power.Radius;
                             Target = power.Target;
                             ActivatePeriod = power.ActivatePeriod;
-                            if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.None || DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.Caster)
+                            if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit is Enums.eEntity.None or Enums.eEntity.Caster)
                             {
                                 continue;
                             }
@@ -2382,7 +2342,6 @@ namespace mrbBase.Base.Data_Classes
         }
 
         private bool GreOverride(int iID1, int iID2)
-
         {
             return (iID1 < 0) & (iID2 > -1) || iID2 >= 0 &&
                 (!((Effects[iID1].EffectType == Effects[iID2].EffectType) &

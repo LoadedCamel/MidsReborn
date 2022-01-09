@@ -387,7 +387,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 & AttribType != Enums.eAttribType.Expression ? Math_Mag : Mag;
+        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 & AttribType == Enums.eAttribType.Expression ? Math_Mag : Mag;
 
         public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
@@ -2856,7 +2856,7 @@ namespace mrbBase.Base.Data_Classes
                         return -1;
                     return nVariableFlag;
                 }
-                if (effect.EffectType == Enums.eEffectType.Mez || effect.EffectType == Enums.eEffectType.MezResist)
+                if (effect.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist)
                 {
                     if (MezType > effect.MezType)
                         return 1;

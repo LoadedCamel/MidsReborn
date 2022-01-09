@@ -750,6 +750,7 @@ namespace Mids_Reborn.Forms.Controls
                     if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
                     {
                         if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
+                        {
                             switch (pBase.Effects[rankedEffects[id]].EffectType)
                             {
                                 case Enums.eEffectType.Recovery:
@@ -761,15 +762,14 @@ namespace Mids_Reborn.Forms.Controls
                                         _ => ""
                                     };
                                     rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}{fxTarget}";
-                                   break;
+                                    break;
                                 
                                 case Enums.eEffectType.EntCreate:
                                 {
                                     rankedEffect.Name = "Summon";
                                     if (pBase.Effects[rankedEffects[id]].nSummon > -1)
                                     {
-                                        rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
+                                        rankedEffect.Value = DatabaseAPI.Database.Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
                                     }
                                     else
                                     {
@@ -817,9 +817,10 @@ namespace Mids_Reborn.Forms.Controls
                                 }
                                 default:
                                     rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
-                                            Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                        Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
                                     break;
                             }
+                        }
                         else
                             rankedEffect.Name = ShortStr(
                                 Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType),
@@ -854,7 +855,6 @@ namespace Mids_Reborn.Forms.Controls
             }
             
             var damageValue1 = pBase.FXGetDamageValue();
-            //Debug.WriteLine($"{pBase.FullName}\n\t{pBase.GetPowerEntry()?.StatInclude}");
             if (pBase.NIDSubPower.Length > 0 & damageValue1 == 0.0)
             {
                 lblDmg.Text = string.Empty;
@@ -3257,7 +3257,6 @@ namespace Mids_Reborn.Forms.Controls
                 num = pBase.VariableMin;
             if (num > pBase.VariableMax)
                 num = pBase.VariableMax;
-            Debug.WriteLine($"{MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.FullName}: setting stacks to {num}");
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
             /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
@@ -3513,6 +3512,7 @@ namespace Mids_Reborn.Forms.Controls
             pEnh = iEnhanced != null
                 ? new Power(iEnhanced) 
                 : new Power(iBase);
+
 
             // Data sent to the Dataview may differ from DB.
             var dbPower = DatabaseAPI.GetPowerByFullName(pBase.FullName);
