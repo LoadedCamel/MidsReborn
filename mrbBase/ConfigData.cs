@@ -123,6 +123,8 @@ namespace mrbBase
             set => _lastSize = value;
         }
 
+        public Point LastLocation { get; set; }
+
         public bool UseOldTotalsWindow { get; set; }
         public float BaseAcc { get; set; } = 0.75f;
         public bool DoNotUpdateFileAssociation { get; set; }

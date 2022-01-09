@@ -277,7 +277,6 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.IsInitialized = true;
                 }
 
-
                 if (MidsContext.Config.DiscordEnabled is true)
                 {
                     if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
@@ -383,15 +382,23 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Location = cbAncillary.Location;
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
+
+                if (!MidsContext.Config.LastLocation.IsEmpty)
+                {
+                    Location = MidsContext.Config.LastLocation;
+                }
+                else
+                {
+                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2); ;
+                }
+
                 if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
                 {
                     var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
                     var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
                     var hasValidBoth = hasMaxSize & hasValidLastSize;
                     var needsWidthReduction = Screen.PrimaryScreen.WorkingArea.Width > MaximumSize.Width ? 1 : 0;
-                    width1 = (hasValidBoth & needsWidthReduction) != 0
-                        ? MaximumSize.Width
-                        : MidsContext.Config.LastSize.Width;
+                    width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.LastSize.Width;
                 }
                 else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.LastSize.Width)
                 {
@@ -399,10 +406,16 @@ namespace Mids_Reborn.Forms
                 }
 
                 if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
+                {
                     height1 = MidsContext.Config.LastSize.Height;
+                }
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
+                {
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
+                }
+
                 Size = new Size(width1, height1);
+
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -447,7 +460,6 @@ namespace Mids_Reborn.Forms
                 loading = false;
                 UpdateControls(true);
                 setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
-                CenterToScreen();
                 UpdatePoolsPanelSize();
                 InitializeDv();
                 if (this.IsInDesignMode())
@@ -981,15 +993,23 @@ namespace Mids_Reborn.Forms
 
         private bool CloseCommand()
         {
-            if (MidsContext.Config.FirstRun) MidsContext.Config.FirstRun = false;
-                if (MainModule.MidsController.Toon == null) return false;
+            if (MidsContext.Config.FirstRun)
+            {
+                MidsContext.Config.FirstRun = false;
+            }
+
+            if (MainModule.MidsController.Toon == null)
+            {
+                return false;
+            }
 
             if (!(MainModule.MidsController.Toon.Locked & FileModified))
+            {
                 return false;
+            }
+
             FloatTop(false);
-            var msgBoxResult = MessageBox.Show("Do you wish to save your hero/villain data before quitting?",
-                "Question",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            var msgBoxResult = MessageBox.Show(@"Do you wish to save your build before closing?", @"Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             FloatTop(true);
             int num;
             switch (msgBoxResult)
@@ -2061,6 +2081,7 @@ namespace Mids_Reborn.Forms
         private void frmMain_Closed(object sender, EventArgs e)
         {
             MidsContext.Config.LastSize = Size;
+            MidsContext.Config.LastLocation = Location;
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             if (MidsContext.Config.DiscordEnabled is true)
             {
@@ -4662,7 +4683,6 @@ namespace Mids_Reborn.Forms
             pnlGFXFlow.HorizontalScroll.Visible = false;
             pnlGFXFlow.HorizontalScroll.Maximum = 0;
             pnlGFXFlow.AutoScroll = true;
-            CenterToScreen();
             //PerformAutoScale();
         }
 

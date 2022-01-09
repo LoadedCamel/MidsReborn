@@ -2079,7 +2079,7 @@ namespace Mids_Reborn.Forms
             this.MainMenuStrip = this.MenuBar;
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "frmMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Hero Designer";
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
