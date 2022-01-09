@@ -1178,21 +1178,25 @@ namespace mrbBase.Base.Data_Classes
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)} Variable";
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)} Variable";
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
 
                         sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType)) 
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)}";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
+                        {
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
+                        }
                         else
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
+                        {
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
+                        }
                     }
                 }
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
