@@ -466,13 +466,12 @@ namespace mrbBase.Base.Data_Classes
                 bool flag;
                 if (VariableModifiedOverride)
                 {
-                    flag = true;
+                    flag = false;
                 }
                 else
                 {
-                    if (power != null)
-                    {
-                        var ps = power.GetPowerSet();
+                    var ps = power?.GetPowerSet();
+                    if (ps != null)
                         if (ps.nArchetype > -1)
                         {
                             if (!DatabaseAPI.Database.Classes[ps.nArchetype].Playable)
@@ -482,7 +481,6 @@ namespace mrbBase.Base.Data_Classes
                         {
                             return false;
                         }
-                    }
 
                     if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
