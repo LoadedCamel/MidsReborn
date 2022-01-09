@@ -30,8 +30,8 @@ namespace mrbBase.Base.Data_Classes
             "modifier>current",
             "maxEndurance",
             "rand()",
-            "source",
             "source.ownPower?(",
+            "source>Max.kHitPoints",
             ">stacks",
             "modifier>",
             "powerGroupIn(",
@@ -434,19 +434,13 @@ namespace mrbBase.Base.Data_Classes
                         switch (Aspect)
                         {
                             case Enums.eAspect.Max:
-                                if (EffectType == Enums.eEffectType.HitPoints ||
-                                    EffectType == Enums.eEffectType.Endurance ||
-                                    EffectType == Enums.eEffectType.SpeedRunning ||
-                                    EffectType == Enums.eEffectType.SpeedJumping ||
-                                    EffectType == Enums.eEffectType.SpeedFlying)
+                                if (EffectType is Enums.eEffectType.HitPoints or Enums.eEffectType.Absorb or Enums.eEffectType.Endurance or Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying)
                                     return false;
                                 break;
                             case Enums.eAspect.Abs:
                                 return false;
                             case Enums.eAspect.Cur:
-                                if (EffectType == Enums.eEffectType.Mez ||
-                                    EffectType == Enums.eEffectType.StealthRadius ||
-                                    EffectType == Enums.eEffectType.StealthRadiusPlayer)
+                                if (EffectType is Enums.eEffectType.Mez or Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer)
                                     return false;
                                 break;
                         }

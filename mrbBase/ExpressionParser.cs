@@ -33,9 +33,9 @@ namespace mrbBase
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
-                { "source", $"{sourceFx.GetPower().FullName}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
                 { "base.kToHit", "0.75"}, // Value not present in MidsContext.Character.Archetype
+                { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" }
             };
         }
 
