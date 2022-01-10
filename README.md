@@ -10,7 +10,7 @@
 - Feles Noctis
 
 #### Official Discord Server
-https://discord.gg/pG5TCEg
+https://discord.gg/eAUuNQ3nxk
 
 #### Official Twitter
 https://twitter.com/midsreborn
