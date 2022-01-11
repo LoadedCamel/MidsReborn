@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -300,6 +299,7 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.nMaxEnhVal = 0.0f;
             Info_txtLarge.Height = 100;
             Floating = bFloating;
+            info_DataList.LinePadding = 1;
             Clear();
         }
 
