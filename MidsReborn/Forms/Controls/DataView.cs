@@ -300,6 +300,9 @@ namespace Mids_Reborn.Forms.Controls
             Info_txtLarge.Height = 100;
             Floating = bFloating;
             info_DataList.LinePadding = 1;
+            fx_List1.LinePadding = 1;
+            fx_List2.LinePadding = 2;
+            fx_List3.LinePadding = 3;
             Clear();
         }
 
