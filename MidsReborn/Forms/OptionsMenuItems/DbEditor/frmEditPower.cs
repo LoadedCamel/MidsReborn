@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -627,21 +626,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (scaleMin >= scaleMax)
             {
                 udScaleMin.BackColor = Color.Coral;
+                udScaleMin.ForeColor = Color.Black;
                 udScaleMax.BackColor = Color.Coral;
+                udScaleMax.ForeColor = Color.Black;
             }
             else
             {
                 udScaleMin.BackColor = SystemColors.Window;
+                udScaleMin.ForeColor = SystemColors.WindowText;
                 udScaleMax.BackColor = SystemColors.Window;
+                udScaleMax.ForeColor = SystemColors.WindowText;
             }
 
             if (scaleStart > scaleMin && scaleStart <= scaleMax)
             {
                 udScaleStart.BackColor = Color.Coral;
+                udScaleStart.ForeColor = Color.Black;
             }
             else
             {
                 udScaleStart.BackColor = SystemColors.Window;
+                udScaleStart.ForeColor = SystemColors.WindowText;
             }
         }
 
@@ -1394,6 +1399,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Req_GroupList();
             FillTab_SubPowers();
             refresh_PowerData();
+            CheckScaleValues();
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
             {

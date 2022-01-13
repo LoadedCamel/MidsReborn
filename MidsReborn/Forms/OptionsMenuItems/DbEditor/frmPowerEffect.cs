@@ -1321,15 +1321,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.BeginUpdate();
                     if (selected != null)
                     {
-                        IEnumerable<float> stackRange;
-                        if (selected.VariableMin == 0)
-                            stackRange = FloatRange(selected.VariableMin, selected.VariableMax + 1, 0.1f);
-                        else
-                            stackRange = FloatRange(selected.VariableMin, selected.VariableMax, 0.1f);
+                        var stackRange = selected.VariableMin == 0
+                            ? FloatRange(selected.VariableMin, selected.VariableMax + 1, 1)
+                            : FloatRange(selected.VariableMin, selected.VariableMax, 1);
 
                         foreach (var stackNum in stackRange)
                         {
-                            lvConditionalBool.Items.Add(stackNum.ToString());
+                            lvConditionalBool.Items.Add(stackNum.ToString(CultureInfo.InvariantCulture));
                         }
                     }
 
