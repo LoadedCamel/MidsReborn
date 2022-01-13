@@ -2224,7 +2224,7 @@ namespace Mids_Reborn.Forms.Controls
                         var iAlternate2 =
                             (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
-                            (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
+                            (!Enums.MezDurationEnhanceable(pBase.Effects[iTagID].MezType) &
                              (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
                         var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
@@ -2252,7 +2252,7 @@ namespace Mids_Reborn.Forms.Controls
                         var iAlternate2 =
                             (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
-                            (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
+                            (!Enums.MezDurationEnhanceable(pBase.Effects[iTagID].MezType) &
                              (Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon));
                         var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=

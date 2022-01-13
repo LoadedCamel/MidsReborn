@@ -28,13 +28,9 @@ namespace mrbBase
 
         public float EnduranceMaxEnd => _character.Totals.EndMax + 100f;
 
-        public float EnduranceRecoveryNumeric
-            => EnduranceRecovery(false) * (_character.Archetype.BaseRecovery * BaseMagic) *
-               (_character.TotalsCapped.EndMax / 100 + 1);
+        public float EnduranceRecoveryNumeric => EnduranceRecovery(false) * (_character.Archetype.BaseRecovery * BaseMagic) * (_character.TotalsCapped.EndMax / 100 + 1);
 
-        public float EnduranceRecoveryNumericUncapped
-            => EnduranceRecovery(true) * (_character.Archetype.BaseRecovery * BaseMagic) *
-               (_character.Totals.EndMax / 100 + 1);
+        public float EnduranceRecoveryNumericUncapped => EnduranceRecovery(true) * (_character.Archetype.BaseRecovery * BaseMagic) * (_character.Totals.EndMax / 100 + 1);
 
         public float EnduranceTimeToFull => EnduranceMaxEnd / EnduranceRecoveryNumeric;
 
@@ -48,18 +44,13 @@ namespace mrbBase
 
         public float EnduranceUsage => _character.Totals.EndUse;
 
-        public float HealthRegenHealthPerSec =>
-            (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024);
+        public float HealthRegenHealthPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024);
 
-        public float HealthRegenHPPerSec =>
-            (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024 *
-                     HealthHitpointsNumeric(false)
-                     / 100.0);
+        public float HealthRegenHPPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024 * HealthHitpointsNumeric(false) / 100.0);
 
         public float HealthRegenTimeToFull => HealthHitpointsNumeric(false) / HealthRegenHPPerSec;
 
-        public float HealthHitpointsPercentage =>
-            (float) (_character.TotalsCapped.HPMax / (double) _character.Archetype.Hitpoints * 100.0);
+        public float HealthHitpointsPercentage => (float) (_character.TotalsCapped.HPMax / (double) _character.Archetype.Hitpoints * 100.0);
 
         public float BuffToHit => _character.Totals.BuffToHit * 100f;
 
@@ -67,8 +58,7 @@ namespace mrbBase
 
         public float BuffEndRdx => _character.Totals.BuffEndRdx * 100f;
 
-        public float ThreatLevel =>
-            (float) ((_character.Totals.ThreatLevel + (double) _character.Archetype.BaseThreat) * 100.0);
+        public float ThreatLevel => (float) ((_character.Totals.ThreatLevel + (double) _character.Archetype.BaseThreat) * 100.0);
 
         private float EnduranceRecovery(bool uncapped)
         {

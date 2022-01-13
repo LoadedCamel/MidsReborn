@@ -6351,8 +6351,7 @@ namespace Mids_Reborn.Forms
         {
             if (drawing == null || MainModule.MidsController.Toon == null)
                 return;
-            if (dmBuffer == null)
-                dmBuffer = new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
+            dmBuffer ??= new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
             Enums.ePowerState ePowerState;
             string iStr;
             if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)

@@ -1348,11 +1348,9 @@ namespace mrbBase
             PowersBase = 2
         }
 
-        public static bool MezDurationEnhancable(eMez mezEnum)
+        public static bool MezDurationEnhanceable(eMez mezEnum)
         {
-            return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||
-                   mezEnum == eMez.Placate || mezEnum == eMez.Sleep || mezEnum == eMez.Stunned || mezEnum == eMez.Taunt ||
-                   mezEnum == eMez.Terrorized || mezEnum == eMez.Untouchable;
+            return mezEnum is eMez.Confused or eMez.Held or eMez.Immobilized or eMez.Placate or eMez.Sleep or eMez.Stunned or eMez.Taunt or eMez.Terrorized or eMez.Untouchable;
         }
 
         public static string GetEffectName(eEffectType iID)

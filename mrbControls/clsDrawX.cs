@@ -893,7 +893,6 @@ namespace mrbControls
             DrawPowers();
             var location = new Point(0, 0);
             OutputUnscaled(ref bxBuffer, location);
-            bxBuffer.Bitmap.Save("tst.bmp");
             GC.Collect();
         }
 

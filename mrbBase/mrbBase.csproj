@@ -55,6 +55,7 @@
     <Compile Include="HeroViewerBase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Schema.cs" />
+    <Compile Include="Stats.cs" />
     <Compile Include="ZStatus.Designer.cs">
       <DependentUpon>ZStatus.cs</DependentUpon>
     </Compile>

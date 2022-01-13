@@ -1154,8 +1154,7 @@ namespace mrbBase.Base.Data_Classes
                                 numArray1[index1] += -1;
                             }
 
-                            if ((Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf) |
-                                (Effects[index1].MezType == Enums.eMez.Untouchable))
+                            if ((Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf) | (Effects[index1].MezType == Enums.eMez.Untouchable))
                             {
                                 numArray1[index1] -= 9;
                                 continue;
