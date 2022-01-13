@@ -623,7 +623,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ret = float.TryParse(udScaleMax.Text, out var scaleMax);
             if (!ret) return;
 
-            if (scaleMin >= scaleMax)
+            if (scaleMin >= scaleMax & chkScale.Checked)
             {
                 udScaleMin.BackColor = Color.Coral;
                 udScaleMin.ForeColor = Color.Black;
@@ -638,7 +638,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 udScaleMax.ForeColor = SystemColors.WindowText;
             }
 
-            if (scaleStart > scaleMin && scaleStart <= scaleMax)
+            if (chkScale.Checked && scaleStart > scaleMin && scaleStart <= scaleMax)
             {
                 udScaleStart.BackColor = Color.Coral;
                 udScaleStart.ForeColor = Color.Black;
