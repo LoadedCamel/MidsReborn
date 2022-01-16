@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 using FastDeepCloner;
@@ -641,7 +642,8 @@ namespace Mids_Reborn
                             }
 
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
-                            if (!effect.GetPower().GetPowerEntry().CanIncludeForStats() && !effect.BuildEffectString().Contains("From Enh"))
+                            Debug.WriteLine($"Power: {effect.GetPower().FullName}\n\tEffect: {effect.BuildEffectString()}\r\n");
+                            if (IsClickPower(effect.GetPower()) & !effect.BuildEffectString().Contains("From Enh"))
                             {
                                 nBuffs.Effect[index1] -= effect.Mag;
                             }
@@ -649,6 +651,11 @@ namespace Mids_Reborn
                     }
                 }
             }
+        }
+
+        private static bool IsClickPower(IPower power)
+        {
+            return power.PowerType == Enums.ePowerType.Click && !power.ClickBuff;
         }
 
         private void GBD_Totals()
