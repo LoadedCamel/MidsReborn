@@ -812,7 +812,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
-        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power.DisplayName == DisplayName);
+        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == DisplayName);
 
         public float FXGetDamageValue()
         {
@@ -1588,11 +1588,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     flag = true;
                 }
-                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
-                    Effects[iIndex].Aspect == Enums.eAspect.Max ||
-                    (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
-                    (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
-                    !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
+                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode && Effects[iIndex].Aspect == Enums.eAspect.Max || (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
                 {
                     flag = false;
                 }
@@ -1602,13 +1598,7 @@ namespace mrbBase.Base.Data_Classes
                     flag = false;
                 }
 
-                if (!flag || !(Effects[iIndex].Probability > 0.0) ||
-                    maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max ||
-                    Effects[iIndex].EffectType != iEffect ||
-                    Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                    Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
-                    (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) ||
-                    !Effects[iIndex].PvXInclude())
+                if (!flag || !(Effects[iIndex].Probability > 0.0) || maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].EffectClass == Enums.eEffectClass.Special || (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) || !Effects[iIndex].PvXInclude())
                 {
                     continue;
                 }

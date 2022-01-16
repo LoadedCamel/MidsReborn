@@ -8,5 +8,5 @@ namespace Mids_Reborn.Forms.Controls
 		{
 			InitializeComponent();
 		}
-	}
+    }
 }

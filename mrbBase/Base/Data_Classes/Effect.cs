@@ -107,8 +107,7 @@ namespace mrbBase.Base.Data_Classes
             AtrModSecondaryRange = -1;
         }
 
-        public Effect(IPower power)
-            : this()
+        public Effect(IPower power) : this()
         {
             this.power = power;
         }
@@ -183,7 +182,6 @@ namespace mrbBase.Base.Data_Classes
                 AtrModRange = reader.ReadSingle();
                 AtrModRechargeTime = reader.ReadSingle();
                 AtrModSecondaryRange = reader.ReadSingle();
-
                 var conditionalCount = reader.ReadInt32();
                 for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
                 {
@@ -238,8 +236,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        private Effect(IEffect template)
-            : this()
+        private Effect(IEffect template) : this()
         {
             PowerFullName = template.PowerFullName;
             power = template.GetPower();
@@ -670,6 +667,8 @@ namespace mrbBase.Base.Data_Classes
         public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
 
+        public bool IsFromProc => ProcsPerMinute > 0.0f && BuildEffectString().Contains("From Enh");
+
         public int nOverride
         {
             get
@@ -839,11 +838,7 @@ namespace mrbBase.Base.Data_Classes
 
                     if (DisplayPercentage)
                     {
-                        str5 = str1 + " (" +
-                               Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 *
-                                                        (BuffedMag * (double)MidsContext.Archetype.BaseRegen *
-                                                         1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 +
-                               str2;
+                        str5 = str1 + " (" + Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 * (BuffedMag * (double)MidsContext.Archetype.BaseRegen * 1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 + str2;
                         break;
                     }
 

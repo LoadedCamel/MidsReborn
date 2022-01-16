@@ -55,6 +55,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IPSlider.Designer.cs">
+      <DependentUpon>IPSlider.cs</DependentUpon>
+    </Compile>
     <Compile Include="SwitchButton.cs">
       <SubType>UserControl</SubType>
     </Compile>

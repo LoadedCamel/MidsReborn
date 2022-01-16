@@ -641,6 +641,10 @@ namespace Mids_Reborn
                             }
 
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
+                            if (!effect.GetPower().GetPowerEntry().CanIncludeForStats() && !effect.BuildEffectString().Contains("From Enh"))
+                            {
+                                nBuffs.Effect[index1] -= effect.Mag;
+                            }
                         }
                     }
                 }
