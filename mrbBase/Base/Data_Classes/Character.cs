@@ -841,10 +841,8 @@ namespace mrbBase.Base.Data_Classes
                 if (iLevel > -1)
                     popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
                 var index2 = popupData1.Add();
-                popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f,
-                    FontStyle.Bold | FontStyle.Italic);
-                popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f,
-                    FontStyle.Bold | FontStyle.Italic);
+                popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
+                popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
                 popupData2 = popupData1;
             }
             else

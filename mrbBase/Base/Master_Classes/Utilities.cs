@@ -1,3 +1,5 @@
+using System;
+
 namespace mrbBase.Base.Master_Classes
 {
     public static class Utilities
@@ -15,6 +17,12 @@ namespace mrbBase.Base.Master_Classes
             for (var index = 0; index < maxDecimal; ++index)
                 format += "#";
             return iNum.ToString(format);
+        }
+
+        public static TV ProperEnum<T, TV>(dynamic value) where TV : struct
+        {
+            var converted = Enum.TryParse<TV>(Enum.GetName(typeof(T), (T)value), out var result);
+            return converted ? result : new TV();
         }
     }
 }

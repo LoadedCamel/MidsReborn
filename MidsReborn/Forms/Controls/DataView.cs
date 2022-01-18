@@ -153,12 +153,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public event Unlock_ClickEventHandler Unlock_Click;
 
-        private static PairedList.ItemPair BuildEDItem(
-            int index,
-            float[] value,
-            Enums.eSchedule[] schedule,
-            string Name,
-            float[] afterED)
+        private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
             var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
             var flag2 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][1];
@@ -2411,7 +2406,9 @@ namespace Mids_Reborn.Forms.Controls
                 var dmgIdentifier = (int)defType;
                 fx_List1.AddItem(FastItem(names[dmgIdentifier], def1[dmgIdentifier], def2[dmgIdentifier], "%", false, true, false, false, effectMagSum));
                 if (sFXCheck(effectMagSum))
+                {
                     fx_List1.SetUnique();
+                }
             }
         }
 
@@ -2496,7 +2493,9 @@ namespace Mids_Reborn.Forms.Controls
                 var resId = (int)resType;
                 pairedList.AddItem(FastItem(names[resId], res1[resId], res2[resId], "%", false, true, false, false, shortFx));
                 if (sFXCheck(shortFx))
+                {
                     pairedList.SetUnique();
+                }
             }
         }
 

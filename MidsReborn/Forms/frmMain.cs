@@ -3221,8 +3221,7 @@ namespace Mids_Reborn.Forms
             {
                 if (dragStartSlot == 0)
                 {
-                    MessageBox.Show(this, "You cannot change the level of any power's automatic slot.", null,
-                        MessageBoxButtons.OK);
+                    MessageBox.Show(this, "You cannot change the level of any power's automatic slot.", null, MessageBoxButtons.OK);
                     pnlGFX.AllowDrop = false;
                 }
                 else
@@ -3259,11 +3258,9 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    var e1 = new Point(e.X, e.Y);
+                    var e1 = new Point(e.X + 10, e.Y + 10);
                     ShowPopup(index, -1, sIDX, e1, new Rectangle());
-                    if (MidsContext.Character.CanPlaceSlot &
-                        (MainModule.MidsController.Toon.SlotCheck(MidsContext.Character.CurrentBuild.Powers[index]) >
-                         -1))
+                    if (MidsContext.Character.CanPlaceSlot & (MainModule.MidsController.Toon.SlotCheck(MidsContext.Character.CurrentBuild.Powers[index]) > -1))
                     {
                         drawing.HighlightSlot(index);
                         if ((index > -1) & (drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle))
@@ -4981,10 +4978,7 @@ namespace Mids_Reborn.Forms
             FloatingDataForm = null;
         }
 
-        private void ShowPopup(int nIDPowerset, int nIDClass,
-            Rectangle rBounds,
-            string extraString = "",
-            VerticalAlignment vAlign = VerticalAlignment.Top)
+        private void ShowPopup(int nIdPowerset, int nIdClass, Rectangle rBounds, string extraString = "", VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -4992,16 +4986,30 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                if (vAlign == VerticalAlignment.Center) vAlign = VerticalAlignment.Bottom;
+                if (vAlign == VerticalAlignment.Center)
+                {
+                    vAlign = VerticalAlignment.Bottom;
+                }
 
                 var bounds = I9Popup.Bounds;
                 RedrawUnderPopup(bounds);
-                if (!((nIDPowerset > -1) | (nIDClass > -1))) return;
-                if (I9Popup.psIDX != (nIDPowerset <= -1 ? nIDClass : nIDPowerset))
+                if (!((nIdPowerset > -1) | (nIdClass > -1)))
                 {
-                    var iPopup = nIDPowerset <= -1
-                        ? MidsContext.Character.Archetype.PopInfo()
-                        : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, extraString);
+                    return;
+                }
+
+                if (I9Popup.psIDX != (nIdPowerset <= -1 ? nIdClass : nIdPowerset))
+                {
+                    PopUp.PopupData iPopup;
+                    if (nIdPowerset <= -1)
+                    {
+                        iPopup = MidsContext.Character.Archetype.PopInfo();
+                    }
+                    else
+                    {
+                        iPopup = MainModule.MidsController.Toon.PopPowersetInfo(nIdPowerset, extraString);
+                    }
+
                     if (iPopup.Sections != null)
                     {
                         I9Popup.SetPopup(iPopup);
@@ -5030,19 +5038,11 @@ namespace Mids_Reborn.Forms
                 I9Popup.hIDX = -1;
                 I9Popup.eIDX = -1;
                 I9Popup.pIDX = -1;
-                I9Popup.psIDX = nIDPowerset;
+                I9Popup.psIDX = nIdPowerset;
             }
         }
 
-        private void ShowPopup(
-            int hIDX,
-            int pIDX,
-            int sIDX,
-            Point e,
-            Rectangle rBounds,
-            I9Slot eSlot = null,
-            int setIDX = -1,
-            VerticalAlignment vAlign = VerticalAlignment.Top)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -5052,73 +5052,78 @@ namespace Mids_Reborn.Forms
             {
                 var flag = false;
                 var iPopup = new PopUp.PopupData();
-                var Picker = false;
-                var PowerListing = false;
+                var picker = false;
+                var powerListing = false;
                 var bounds = I9Popup.Bounds;
-                if ((hIDX < 0) & (pIDX > -1))
+                if ((hIdx < 0) & (pIdx > -1))
                 {
-                    hIDX = MidsContext.Character.CurrentBuild.FindInToonHistory(pIDX);
+                    hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
                 }
 
                 PowerEntry powerEntry = null;
-                if (hIDX > -1)
+                if (hIdx > -1)
                 {
-                    powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDX];
+                    powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
                 }
 
-                if (!((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                if (!((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
                 {
                     return;
                 }
 
                 var rectangle = new Rectangle();
-                if ((hIDX > -1) & (sIDX < 0) & (pIDX < 0) & (eSlot == null) & (setIDX < 0))
+                if ((hIdx > -1) & (sIdx < 0) & (pIdx < 0) & (eSlot == null) & (setIdx < 0))
                 {
-                    rectangle = drawing.PowerBoundsUnScaled(hIDX);
+                    rectangle = drawing.PowerBoundsUnScaled(hIdx);
                     var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                     if (drawing.WithinPowerBar(rectangle, e1))
                     {
-                        if (powerEntry != null && powerEntry.NIDPower > -1)
-                            iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIDX, powerEntry.NIDPower);
+                        if (powerEntry is { NIDPower: > -1 })
+                        {
+                            iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, powerEntry.NIDPower);
+                        }
+
                         flag = true;
                     }
                 }
-                else if (sIDX > -1)
+                else if (sIdx > -1)
                 {
-                    rectangle = drawing.PowerBoundsUnScaled(hIDX);
+                    rectangle = drawing.PowerBoundsUnScaled(hIdx);
                     if (powerEntry != null)
-                        iPopup = Character.PopEnhInfo(powerEntry.Slots[sIDX].Enhancement,
-                            powerEntry.Slots[sIDX].Level, powerEntry);
+                    {
+                        iPopup = Character.PopEnhInfo(powerEntry.Slots[sIdx].Enhancement,
+                            powerEntry.Slots[sIdx].Level, powerEntry);
+                    }
+
                     flag = true;
                 }
-                else if (pIDX > -1)
+                else if (pIdx > -1)
                 {
                     rectangle = rBounds;
-                    iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIDX, pIDX);
+                    iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, pIdx);
                     flag = true;
-                    PowerListing = true;
+                    powerListing = true;
                 }
-                else if ((eSlot != null) & (setIDX < 0))
+                else if ((eSlot != null) & (setIdx < 0))
                 {
                     rectangle = rBounds;
                     iPopup = Character.PopEnhInfo(eSlot, -1, powerEntry);
                     flag = true;
-                    Picker = true;
+                    picker = true;
                 }
-                else if (setIDX > -1)
+                else if (setIdx > -1)
                 {
                     rectangle = rBounds;
-                    iPopup = Character.PopSetInfo(setIDX, powerEntry);
+                    iPopup = Character.PopSetInfo(setIdx, powerEntry);
                     flag = true;
-                    Picker = true;
+                    picker = true;
                 }
 
                 if (flag & (iPopup.Sections != null))
                 {
-                    if ((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) |
-                        (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1))
+                    if ((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1))
                     {
-                        if (!Picker & !PowerListing)
+                        if (!picker & !powerListing)
                         {
                             rectangle = Dilate(drawing.ScaleDown(rectangle), 2);
                             rectangle.X += pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value;
@@ -5136,7 +5141,7 @@ namespace Mids_Reborn.Forms
                         //}
 
                         PopUpVisible = true;
-                        SetPopupLocation(rectangle, PowerListing, Picker);
+                        SetPopupLocation(rectangle, powerListing, picker);
                     }
 
                     I9Popup.Visible = true;
@@ -5151,9 +5156,9 @@ namespace Mids_Reborn.Forms
                     HidePopup();
                 }
 
-                I9Popup.hIDX = hIDX;
-                I9Popup.eIDX = sIDX;
-                I9Popup.pIDX = pIDX;
+                I9Popup.hIDX = hIdx;
+                I9Popup.eIDX = sIdx;
+                I9Popup.pIDX = pIdx;
                 I9Popup.psIDX = -1;
             }
         }

@@ -1905,7 +1905,7 @@ namespace Mids_Reborn.Forms
             // I9Popup
             // 
             this.I9Popup.BackColor = System.Drawing.Color.Black;
-            this.I9Popup.BXHeight = 600;
+            this.I9Popup.BXHeight = 675;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
             this.I9Popup.Font = new System.Drawing.Font("Arial", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
@@ -1915,7 +1915,7 @@ namespace Mids_Reborn.Forms
             this.I9Popup.Name = "I9Popup";
             this.I9Popup.ScrollY = 0F;
             this.I9Popup.SectionPadding = 8;
-            this.I9Popup.Size = new System.Drawing.Size(400, 203);
+            this.I9Popup.Size = new System.Drawing.Size(450, 203);
             this.I9Popup.TabIndex = 102;
             this.I9Popup.Visible = false;
             this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);
