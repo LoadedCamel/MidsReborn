@@ -280,9 +280,9 @@ namespace mrbBase
                 }
 
                 str1 = empty1;
-                str1 = Regex.Replace(str1, @"(Defense\(Melee\), \d+% Defense\(AoE\), \d+% Defense\(Ranged\), \d+% Defense\(Smashing\), \d+% Defense\(Lethal\), \d+% Defense\(Fire\), \d+% Defense\(Cold\), \d+% Defense\(Energy\), \d+% Defense\(Negative\), \d+% Defense\(Psionic\))", @"Defense (All)");
-                str1 = Regex.Replace(str1, @"(Resistance\(Melee\), \d+% Resistance\(AoE\), \d+% Resistance\(Ranged\), \d+% Resistance\(Smashing\), \d+% Resistance\(Lethal\), \d+% Resistance\(Fire\), \d+% Resistance\(Cold\), \d+% Resistance\(Energy\), \d+% Resistance\(Negative\), \d+% Resistance\(Psionic\))", @"Resistance (All)");
-                str1 = Regex.Replace(str1, @"(MezResist\(Immobilized\).*MezResist\(Held\).*MezResist\(Stunned\).*MezResist\(Sleep\).*MezResist\(Terrorized\).*MezResist\(Confused\))", @"MezResist (All)");
+                str1 = Regex.Replace(str1, @"(Defense\(Melee\), \d+% Defense\(AoE\), \d+% Defense\(Ranged\), \d+% Defense\(Smashing\), \d+% Defense\(Lethal\), \d+% Defense\(Fire\), \d+% Defense\(Cold\), \d+% Defense\(Energy\), \d+% Defense\(Negative\), \d+% Defense\(Psionic\))", @"Defense(All)");
+                str1 = Regex.Replace(str1, @"((Resistance\(Smashing\), \d+% Resistance\(Lethal\), | Resistance\(Lethal\), \d+% Resistance\(Smashing\),) \d+% Resistance\(Fire\), \d+% Resistance\(Cold\), \d+% Resistance\(Energy\), \d+% Resistance\(Negative\), \d+% Resistance\(Psionic\), \d+% Resistance\(Toxic\))", @" Resistance(All)");
+                str1 = Regex.Replace(str1, @"(MezResist\(Immobilized\).*MezResist\(Held\).*MezResist\(Stunned\).*MezResist\(Sleep\).*MezResist\(Terrorized\).*MezResist\(Confused\))", @"MezResist(All)");
                 str1 = Regex.Replace(str1, @"(SpeedJumping.*JumpHeight.*SpeedFlying.*SpeedRunning)", @"Movement");
             }
 

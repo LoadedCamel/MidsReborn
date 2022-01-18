@@ -257,8 +257,6 @@ namespace mrbControls
                     {
                         unchecked
                         {
-                            //Debug.WriteLine($"TexT: {pData.Sections[i].Content[j].Text = pData.Sections[i].Content[j].Text}");
-                            Debug.WriteLine($"Column: {pData.Sections[i].Content[j].TextColumn}");
                             var layoutRectangle = new RectangleF(pInternalPadding + pData.Sections[i].Content[j].tIndent * Font.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + pData.Sections[i].Content[j].tIndent * Font.Size), myBX.Size.Height);
                             if (pData.Sections[i].Content[j].HasColumn)
                             {
@@ -268,7 +266,6 @@ namespace mrbControls
                             var sizeF = myBX.Graphics.MeasureString(Operators.CompareString(pData.Sections[i].Content[j].Text, "", false) == 0
                                     ? "Null String"
                                     : pData.Sections[i].Content[j].Text, pFont, layoutRectangle.Size, stringFormat);
-                            //Debug.WriteLine(sizeF.Width);
                             var brush = new SolidBrush(pData.Sections[i].Content[j].tColor);
                             layoutRectangle.Height = sizeF.Height + 1f;
                             layoutRectangle = new RectangleF(layoutRectangle.X, layoutRectangle.Y - pScroll, layoutRectangle.Width, layoutRectangle.Height);
