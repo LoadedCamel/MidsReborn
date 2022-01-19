@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.CompilerServices;
 using mrbBase.Base.Display;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -244,6 +245,7 @@ namespace mrbControls
                 stringFormat.Trimming = StringTrimming.None;
                 var num3 = 0;
                 var num4 = pData.Sections.Length - 1;
+                var maxPos = -1;
                 for (var i = num3; i <= num4; i++)
                 {
                     if (pData.Sections[i].Content == null)
@@ -266,6 +268,10 @@ namespace mrbControls
                             var sizeF = myBX.Graphics.MeasureString(Operators.CompareString(pData.Sections[i].Content[j].Text, "", false) == 0
                                     ? "Null String"
                                     : pData.Sections[i].Content[j].Text, pFont, layoutRectangle.Size, stringFormat);
+
+                            var contentTextSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].Text, pFont);
+                            if (maxPos == -1) maxPos = contentTextSize.Width;
+                            else maxPos = Math.Max(maxPos, contentTextSize.Width);
                             var brush = new SolidBrush(pData.Sections[i].Content[j].tColor);
                             layoutRectangle.Height = sizeF.Height + 1f;
                             layoutRectangle = new RectangleF(layoutRectangle.X, layoutRectangle.Y - pScroll, layoutRectangle.Width, layoutRectangle.Height);
@@ -277,9 +283,10 @@ namespace mrbControls
                                     stringFormat.Alignment = StringAlignment.Far;
                                 }
 
-                                var stringSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].TextColumn.Trim(), pFont);
-                                layoutRectangle.X = checked(pInternalPadding * 6) + checked(Width - stringSize.Width * 2) * pColumnPosition;
-                                //layoutRectangle.X = pInternalPadding + checked(Width - pInternalPadding * 2) * pColumnPosition - pInternalPadding;
+
+                                var columnStringSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].TextColumn, pFont);
+                                //layoutRectangle.X = (maxPos/2 - columnStringSize.Width) + checked(Width - columnStringSize.Width * 2);
+                                layoutRectangle.X = pInternalPadding + checked(Width - pInternalPadding * 2) * pColumnPosition;
                                 layoutRectangle.Width = Width - (pInternalPadding + layoutRectangle.X);
                                 brush = new SolidBrush(pData.Sections[i].Content[j].tColorColumn);
                                 myBX.Graphics.DrawString(pData.Sections[i].Content[j].TextColumn, pFont, brush, layoutRectangle, stringFormat);

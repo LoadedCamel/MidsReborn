@@ -213,7 +213,16 @@ namespace mrbBase
 
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false)
         {
-            var bonusItemArray = special ? SpecialBonus : Bonus;
+            BonusItem[] bonusItemArray;
+            if (special)
+            {
+                bonusItemArray = SpecialBonus;
+            }
+            else
+            {
+                bonusItemArray = Bonus;
+            }
+
             string str1;
             if ((index < 0) | (index > bonusItemArray.Length - 1))
             {

@@ -367,7 +367,6 @@ namespace Mids_Reborn
         }
 
         private string buildSetBonusListLong()
-
         {
             var str1 = formatColor(formatUnderline(formatBold("Set Bonuses:")), ExportConfig.Element.Heading) +
                        LineBreak();
@@ -379,7 +378,10 @@ namespace Mids_Reborn
                 for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     if (MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].Powers.Length <= 0)
+                    {
                         continue;
+                    }
+
                     var setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
                     var index3 = index2;
                     var str2 = str1 +
@@ -387,7 +389,8 @@ namespace Mids_Reborn
                                    formatUnderline(formatBold(DatabaseAPI.Database
                                        .EnhancementSets[setInfo[index3].SetIDX].DisplayName)), ExportConfig.Element.IO);
                     if (MidsContext.Character.CurrentBuild
-                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset > -1)
+                            .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset > -1)
+                    {
                         str2 = str2 + LineBreak() + formatColor(
                             "(" + DatabaseAPI.Database
                                 .Powersets[
@@ -398,6 +401,8 @@ namespace Mids_Reborn
                                     MidsContext.Character.CurrentBuild
                                         .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
                                         .IDXPower].DisplayName + ")", ExportConfig.Element.Power);
+                    }
+
                     var iText = "";
                     var num3 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SlottedCount - 2;
                     for (var index4 = 0; index4 <= num3; ++index4)
@@ -413,27 +418,35 @@ namespace Mids_Reborn
                         for (var index5 = 0; index5 <= num4; ++index5)
                         {
                             if (DatabaseAPI.Database
-                                .EnhancementSets[
-                                    MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                .Bonus[index4]
-                                .Index[index5] <= -1)
+                                    .EnhancementSets[
+                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                                    .Bonus[index4]
+                                    .Index[index5] <= -1)
+                            {
                                 continue;
+                            }
+
                             ++numArray[
                                 DatabaseAPI.Database
                                     .EnhancementSets[
                                         MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
                                     .Bonus[index4].Index[index5]];
                             if (numArray[
-                                DatabaseAPI.Database
-                                    .EnhancementSets[
-                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                    .Bonus[index4].Index[index5]] > 5)
+                                    DatabaseAPI.Database
+                                        .EnhancementSets[
+                                            MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                                        .Bonus[index4].Index[index5]] > 5)
+                            {
                                 flag = true;
+                            }
                         }
 
                         if (flag)
+                        {
                             str4 = formatItalic(formatColor(str4 + " (Exceeded 5 Bonus Cap)",
                                 ExportConfig.Element.Slots));
+                        }
+
                         iText = str3 + str4 + ListItemOff();
                     }
 
@@ -444,13 +457,9 @@ namespace Mids_Reborn
                         var index5 = DatabaseAPI.IsSpecialEnh(MidsContext.Character.CurrentBuild.SetBonus[index1]
                             .SetInfo[index2].EnhIndexes[index4]);
                         if (index5 > -1)
-                            iText = iText + ListItemOn() +
-                                    formatColor(
-                                        "  " + DatabaseAPI.Database
-                                            .EnhancementSets[
-                                                MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2]
-                                                    .SetIDX].GetEffectString(index5, true, true),
-                                        ExportConfig.Element.Power) + ListItemOff();
+                        {
+                            iText = iText + ListItemOn() + formatColor("  " + DatabaseAPI.Database.EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX].GetEffectString(index5, true, true), ExportConfig.Element.Power) + ListItemOff();
+                        }
                     }
 
                     str1 = str2 + List(iText);

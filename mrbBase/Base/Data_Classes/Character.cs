@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -839,7 +840,10 @@ namespace mrbBase.Base.Data_Classes
             {
                 popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f);
                 if (iLevel > -1)
+                {
                     popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                }
+
                 var index2 = popupData1.Add();
                 popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
                 popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
@@ -862,6 +866,7 @@ namespace mrbBase.Base.Data_Classes
                     case Enums.eType.SetO:
                         var iColor = PopUp.Colors.Title;
                         if (enhancement.RecipeIDX > -1)
+                        {
                             iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
                             {
                                 Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
@@ -869,6 +874,8 @@ namespace mrbBase.Base.Data_Classes
                                 Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                                 _ => iColor
                             };
+                        }
+
                         popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
                         break;
                 }
@@ -876,38 +883,31 @@ namespace mrbBase.Base.Data_Classes
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
-                        popupData1.Sections[index1]
-                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1]
-                            .Add(
-                                "Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " +
-                                iSlot.GetEnhancementString(), PopUp.Colors.Invention);
+                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(),
-                            Color.FromArgb(255, 255, 0));
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(255, 255, 0));
                         break;
                     case Enums.eType.SetO:
                         if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
                         {
-                            popupData1.Sections[index1]
-                                .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
-                                    PopUp.Colors.Invention);
+                            popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention);
                         }
                         break;
                 }
 
                 if (iLevel > -1)
+                {
                     popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                }
+
                 if (enhancement.Unique)
                 {
                     index1 = popupData1.Add();
-                    popupData1.Sections[index1]
-                        .Add(
-                            "This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.",
-                            PopUp.Colors.Text, 0.9f);
+                    popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f);
                 }
 
                 switch (enhancement.TypeID)
@@ -933,14 +933,25 @@ namespace mrbBase.Base.Data_Classes
                     case Enums.eType.SpecialO:
                     case Enums.eType.SetO:
                         if (!string.IsNullOrEmpty(enhancement.Desc))
+                        {
                             popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
+                        }
+
                         var index4 = popupData1.Add();
+                        //Debug.WriteLine(iSlot.GetEnhancementStringLong());
                         var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
                         for (var index3 = 0; index3 < strArray3.Length; index3++)
                         {
-                            var strArray2 = !enhancement.HasPowerEffect
-                                ? BreakByBracket(strArray3[index3])
-                                : new[] { strArray3[index3], string.Empty };
+                            string[] strArray2;
+                            if (!enhancement.HasPowerEffect)
+                            {
+                                strArray2 = BreakByBracket(strArray3[index3]);
+                            }
+                            else
+                            {
+                                strArray2 = new[] { strArray3[index3], string.Empty };
+                            }
+
                             var strArray4 = strArray2;
                             popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0),
                                 strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
@@ -1079,7 +1090,10 @@ namespace mrbBase.Base.Data_Classes
             {
                 strArray1[0] = iString.Substring(0, length) + ":";
                 if (iString.Length - (length + 1) > 0)
+                {
                     strArray1[1] = iString.Substring(length + 1).Replace("(", "").Replace(")", "");
+                }
+
                 strArray2 = strArray1;
             }
 
@@ -1092,52 +1106,82 @@ namespace mrbBase.Base.Data_Classes
             section1.Add("Set Bonus:", PopUp.Colors.Title);
             var num = 0;
             if (power != null)
+            {
                 for (var index = 0; index <= power.Slots.Length - 1; ++index)
+                {
                     if (power.Slots[index].Enhancement.Enh > -1 &&
                         DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].nIDSet == sIdx)
+                    {
                         ++num;
-            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1) return section1;
+                    }
+                }
+            }
+
+            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1)
+            {
+                return section1;
+            }
 
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
             {
                 var effectString = enhancementSet.GetEffectString(index, false, true, true);
                 if (string.IsNullOrEmpty(effectString))
+                {
                     continue;
+                }
+
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
+                {
                     effectString += " (PvP)";
-                if ((num >= enhancementSet.Bonus[index].Slotted) &
-                    (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
-                     ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) |
-                     (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)))
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect,
-                        0.9f);
+                }
+
+                if ((num >= enhancementSet.Bonus[index].Slotted) & (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)))
+                {
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                }
                 else if (power == null)
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect,
-                        0.9f);
+                {
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                }
                 else
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled,
-                        0.9f);
+                {
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled, 0.9f);
+                }
             }
 
             for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
                 var effectString = enhancementSet.GetEffectString(index, true, true, true);
                 if (string.IsNullOrEmpty(effectString))
+                {
                     continue;
+                }
+
                 var flag = false;
                 if (power != null)
+                {
                     foreach (var slot in power.Slots)
-                        if (slot.Enhancement.Enh > -1 && enhancementSet.SpecialBonus[index].Special > -1 &&
-                            slot.Enhancement.Enh ==
-                            enhancementSet.Enhancements[enhancementSet.SpecialBonus[index].Special])
+                    {
+                        if (slot.Enhancement.Enh > -1 && enhancementSet.SpecialBonus[index].Special > -1 && slot.Enhancement.Enh == enhancementSet.Enhancements[enhancementSet.SpecialBonus[index].Special])
+                        {
                             flag = true;
+                        }
+                    }
+                }
+
                 if (flag)
+                {
                     section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
+                }
                 else if (power == null)
+                {
                     section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
+                }
                 else
+                {
                     section1.Add("(Enh) " + effectString, PopUp.Colors.Disabled, 0.9f);
+                }
             }
 
             return section1;

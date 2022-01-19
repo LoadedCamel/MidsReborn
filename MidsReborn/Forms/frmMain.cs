@@ -5091,8 +5091,7 @@ namespace Mids_Reborn.Forms
                     rectangle = drawing.PowerBoundsUnScaled(hIdx);
                     if (powerEntry != null)
                     {
-                        iPopup = Character.PopEnhInfo(powerEntry.Slots[sIdx].Enhancement,
-                            powerEntry.Slots[sIdx].Level, powerEntry);
+                        iPopup = Character.PopEnhInfo(powerEntry.Slots[sIdx].Enhancement, powerEntry.Slots[sIdx].Level, powerEntry);
                     }
 
                     flag = true;

@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
@@ -40,21 +44,26 @@ namespace mrbBase
 
         public float GetEnhancementEffect(Enums.eEnhance iEffect, int subEnh, float mag)
         {
-            if (Enh < 0) return 0.0f;
+            if (Enh < 0)
+            {
+                return 0.0f;
+            }
 
             var num2 = 0.0f;
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
             foreach (var sEffect in enhancement.Effect)
             {
-                if (sEffect.Mode != Enums.eEffMode.Enhancement ||
-                    sEffect.BuffMode == Enums.eBuffDebuff.DeBuffOnly && !(mag <= 0.0) ||
-                    sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0) ||
-                    sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance) sEffect.Enhance.ID != iEffect ||
-                    subEnh >= 0 && subEnh != sEffect.Enhance.SubID)
+                if (sEffect.Mode != Enums.eEffMode.Enhancement || sEffect.BuffMode == Enums.eBuffDebuff.DeBuffOnly && !(mag <= 0.0) || sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0) || sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance) sEffect.Enhance.ID != iEffect || subEnh >= 0 && subEnh != sEffect.Enhance.SubID)
+                {
                     continue;
+                }
+
                 var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
                 if (Math.Abs(sEffect.Multiplier) > 0.01)
+                {
                     scheduleMult *= sEffect.Multiplier;
+                }
+
                 num2 += scheduleMult;
             }
 
@@ -62,50 +71,74 @@ namespace mrbBase
         }
 
         private float GetScheduleMult(Enums.eType iType, Enums.eSchedule iSched)
-
         {
             if (Grade < Enums.eEnhGrade.None)
+            {
                 Grade = Enums.eEnhGrade.None;
+            }
+
             if (RelativeLevel < Enums.eEnhRelative.None)
+            {
                 RelativeLevel = Enums.eEnhRelative.None;
+            }
+
             if (Grade > Enums.eEnhGrade.SingleO)
+            {
                 Grade = Enums.eEnhGrade.SingleO;
+            }
+
             if (RelativeLevel > Enums.eEnhRelative.PlusFive)
+            {
                 RelativeLevel = Enums.eEnhRelative.PlusFive;
+            }
+
             var num1 = 0.0f;
             if (IOLevel <= 0)
+            {
                 IOLevel = 0;
+            }
+
             if (IOLevel > DatabaseAPI.Database.MultIO.Length - 1)
+            {
                 IOLevel = DatabaseAPI.Database.MultIO.Length - 1;
+            }
+
             if (iSched == Enums.eSchedule.None || iSched == Enums.eSchedule.Multiple)
+            {
                 num1 = 0.0f;
+            }
             else
+            {
                 switch (iType)
                 {
                     case Enums.eType.Normal:
                         num1 = Grade switch
                         {
                             Enums.eEnhGrade.None => 0.0f,
-                            Enums.eEnhGrade.TrainingO => DatabaseAPI.Database.MultTO[0][(int) iSched],
-                            Enums.eEnhGrade.DualO => DatabaseAPI.Database.MultDO[0][(int) iSched],
-                            Enums.eEnhGrade.SingleO => DatabaseAPI.Database.MultSO[0][(int) iSched],
+                            Enums.eEnhGrade.TrainingO => DatabaseAPI.Database.MultTO[0][(int)iSched],
+                            Enums.eEnhGrade.DualO => DatabaseAPI.Database.MultDO[0][(int)iSched],
+                            Enums.eEnhGrade.SingleO => DatabaseAPI.Database.MultSO[0][(int)iSched],
                             _ => num1
                         };
                         break;
                     case Enums.eType.InventO:
-                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int) iSched];
+                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int)iSched];
                         break;
                     case Enums.eType.SpecialO:
-                        num1 = DatabaseAPI.Database.MultSO[0][(int) iSched];
+                        num1 = DatabaseAPI.Database.MultSO[0][(int)iSched];
                         break;
                     case Enums.eType.SetO:
-                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int) iSched];
+                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int)iSched];
                         break;
                 }
+            }
 
             var num2 = num1 * GetRelativeLevelMultiplier();
             if (Enh > -1 && DatabaseAPI.Database.Enhancements[Enh].Superior)
+            {
                 num2 *= 1.25f;
+            }
+
             return num2;
         }
 
@@ -220,7 +253,10 @@ namespace mrbBase
                             for (var index2 = 0; index2 <= power.Effects.Length - 1; ++index2)
                             {
                                 if (stringBuilder.Length > 0)
+                                {
                                     stringBuilder.Append(", ");
+                                }
+
                                 stringBuilder.Append(power.Effects[index2].BuildEffectString(true));
                             }
 
@@ -237,7 +273,7 @@ namespace mrbBase
 
         private string GetEffectsStringLong(IEnhancement enhancement, IPower enhBoostPower)
         {
-            var str1 = "";
+            string str1;
             var stringBuilder = new StringBuilder();
             var flag1 = false;
             var flag2 = false;
@@ -292,10 +328,7 @@ namespace mrbBase
                                     break;
                                 default:
                                     {
-                                        if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) &
-                                             (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly ? 0 :
-                                                 sEffect.Enhance.ID == 6 || sEffect.Enhance.ID == 11 ? 1 :
-                                                 sEffect.Enhance.ID == 19 ? 1 : 0)) != 0 || sEffect.Enhance.ID == 21)
+                                        if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) & (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly ? 0 : sEffect.Enhance.ID == 6 || sEffect.Enhance.ID == 11 ? 1 : sEffect.Enhance.ID == 19 ? 1 : 0)) != 0 || sEffect.Enhance.ID == 21)
                                         {
                                             str2 = !flag5 ? "Slow Movement" : string.Empty;
                                             flag5 = true;
@@ -308,18 +341,11 @@ namespace mrbBase
                             if (!string.IsNullOrEmpty(str2))
                             {
                                 if (stringBuilder.Length > 0)
+                                {
                                     stringBuilder.Append("\n");
-                                stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2,
-                                    Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule),
-                                    (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo),
-                                    Math.Abs(sEffect.Multiplier) > float.Epsilon &
-                                    MidsContext.Config.CoDEffectFormat &
-                                    sEffect.Multiplier != 1 &
-                                    sEffect.Multiplier != 0.625 &
-                                    sEffect.Multiplier != 0.5 &
-                                    sEffect.Multiplier != 0.4375
-                                        ? $" [x{sEffect.Multiplier}]"
-                                        : "");
+                                }
+
+                                stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2, Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule), (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo), (Math.Abs(sEffect.Multiplier) > float.Epsilon) & MidsContext.Config.CoDEffectFormat & (sEffect.Multiplier != 1) & (sEffect.Multiplier != 0.625) & (sEffect.Multiplier != 0.5) & (sEffect.Multiplier != 0.4375) ? $" [x{sEffect.Multiplier}]" : "");
                             }
 
                             break;
@@ -342,6 +368,7 @@ namespace mrbBase
                 IPower power = new Power(enhBoostPower);
                 power.ApplyGrantPowerEffects();
                 var returnMask = Array.Empty<int>();
+                var effectList = new List<IEffect>();
                 for (var index1 = 0; index1 < power.Effects.Length; index1++)
                 {
                     if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
@@ -382,7 +409,10 @@ namespace mrbBase
                             foreach (var m in returnMask)
                             {
                                 if (m != index2)
+                                {
                                     continue;
+                                }
+
                                 flag6 = true;
                                 break;
                             }
@@ -409,7 +439,32 @@ namespace mrbBase
                             stringBuilder.Append("\n");
                         }
 
-                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true));
+                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true);
+                        if (effectString.Contains("Null"))
+                        {
+                            var replacements = new Dictionary<string, string>
+                            {
+                                { "Def(", "Defense(" },
+                                { "Res(", "Resistance("},
+                                { "Smash", "Smashing" },
+                                { "Neg", "Negative" },
+                                { "Psi", "Psionic" },
+                                { "Rngd", "Ranged" },
+                                { ", ", "\n" }
+                            };
+                            var enhId = DatabaseAPI.GetEnhancmentByBoostName(power.FullName);
+                            var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
+                            effectString = enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true);
+                            if (effectString.Contains("Def(") || effectString.Contains("Res("))
+                            {
+                                effectString = replacements.Aggregate(effectString, (current, replacement) => current.Replace(replacement.Key, replacement.Value));
+                            }
+                        }
+
+                        if (!stringBuilder.ToString().Contains(effectString))
+                        {
+                            stringBuilder.Append(effectString);
+                        }
                     }
                 }
 
@@ -421,17 +476,24 @@ namespace mrbBase
 
         public string GetEnhancementStringLong()
         {
-            if (Enh < 0) return string.Empty;
+            if (Enh < 0)
+            {
+                return string.Empty;
+            }
 
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
             var enhPowerEffects = GetEffectsStringLong(enhancement, enhancement.GetPower());
-            if (enhancement.nIDSet < 0 | !string.IsNullOrWhiteSpace(enhPowerEffects.Trim()))
+            if ((enhancement.nIDSet < 0) | !string.IsNullOrWhiteSpace(enhPowerEffects.Trim()))
+            {
                 return enhPowerEffects;
+            }
 
             var enhSet = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
             var enhPosInSet = Array.IndexOf(enhSet.Enhancements, Enh);
             if (enhPosInSet < 0)
+            {
                 return string.Empty;
+            }
 
             var setBonusesForEnh = enhSet.SpecialBonus[enhPosInSet];
 
