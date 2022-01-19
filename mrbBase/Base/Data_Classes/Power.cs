@@ -812,7 +812,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
-        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power.DisplayName == DisplayName);
+        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == DisplayName);
 
         public float FXGetDamageValue()
         {
@@ -1588,11 +1588,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     flag = true;
                 }
-                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
-                    Effects[iIndex].Aspect == Enums.eAspect.Max ||
-                    (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
-                    (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
-                    !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
+                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode && Effects[iIndex].Aspect == Enums.eAspect.Max || (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
                 {
                     flag = false;
                 }
@@ -1602,13 +1598,7 @@ namespace mrbBase.Base.Data_Classes
                     flag = false;
                 }
 
-                if (!flag || !(Effects[iIndex].Probability > 0.0) ||
-                    maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max ||
-                    Effects[iIndex].EffectType != iEffect ||
-                    Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                    Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
-                    (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) ||
-                    !Effects[iIndex].PvXInclude())
+                if (!flag || !(Effects[iIndex].Probability > 0.0) || maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].EffectClass == Enums.eEffectClass.Special || (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) || !Effects[iIndex].PvXInclude())
                 {
                     continue;
                 }
@@ -1799,7 +1789,7 @@ namespace mrbBase.Base.Data_Classes
             else
             {
                 var str = string.Empty;
-                var array = new int[0];
+                var array = Array.Empty<int>();
                 var effect = (IEffect) Effects[idEffect].Clone();
                 if (effect.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity)
                 {
@@ -1824,12 +1814,24 @@ namespace mrbBase.Base.Data_Classes
                     }
 
                     effect.DamageType = Enums.eDamage.Special;
-                    var newValue = effect.EffectType == Enums.eEffectType.Defense
-                        ? Enums.GetGroupedDefense(iDamage, shortForm)
-                        : Enums.GetGroupedDamage(iDamage, shortForm);
-                    str = shortForm
-                        ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
+                    string? newValue;
+                    if (effect.EffectType == Enums.eEffectType.Defense)
+                    {
+                        newValue = Enums.GetGroupedDefense(iDamage, shortForm);
+                    }
+                    else
+                    {
+                        newValue = Enums.GetGroupedDamage(iDamage, shortForm);
+                    }
+
+                    if (shortForm)
+                    {
+                        str = effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue);
+                    }
+                    else
+                    {
+                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
+                    }
                 }
                 else if ((effect.EffectType == Enums.eEffectType.Mez) | (effect.EffectType == Enums.eEffectType.MezResist))
                 {
@@ -1860,9 +1862,15 @@ namespace mrbBase.Base.Data_Classes
                         newValue = "Knockback Protection";
                     }
 
-                    str = shortForm
-                        ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue)
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("None", newValue);
+                    if (shortForm)
+                    {
+                        str = effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue);
+                    }
+                    else
+                    {
+                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("None", newValue);
+                    }
+
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.MezResist:
@@ -1895,11 +1903,7 @@ namespace mrbBase.Base.Data_Classes
                     {
                         for (var index = 0; index <= Effects.Length - 1; ++index)
                         {
-                            if (Effects[index].EffectType == Enums.eEffectType.Enhancement &&
-                                (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) |
-                                (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) |
-                                (Effects[index].ETModifies == Enums.eEffectType.SpeedJumping) |
-                                (Effects[index].ETModifies == Enums.eEffectType.JumpHeight))
+                            if (Effects[index].EffectType == Enums.eEffectType.Enhancement && (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) | (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) | (Effects[index].ETModifies == Enums.eEffectType.SpeedJumping) | (Effects[index].ETModifies == Enums.eEffectType.JumpHeight))
                             {
                                 ++num;
                             }
@@ -1914,9 +1918,15 @@ namespace mrbBase.Base.Data_Classes
                             }
 
                             effect.ETModifies = Enums.eEffectType.Slow;
-                            str = shortForm
-                                ? effect.BuildEffectStringShort(noMag, simple)
-                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true);
+                            if (shortForm)
+                            {
+                                str = effect.BuildEffectStringShort(noMag, simple);
+                            }
+                            else
+                            {
+                                str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true);
+                            }
+
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");
@@ -2417,9 +2427,15 @@ namespace mrbBase.Base.Data_Classes
                 iDamage[(int) iPower.Effects[iSfx.Index[index]].DamageType] = true;
             }
 
-            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity))
-                ? Enums.GetGroupedDamage(iDamage, shortForm)
-                : Enums.GetGroupedDefense(iDamage, shortForm);
+            if (!((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity)))
+            {
+                newValue = Enums.GetGroupedDamage(iDamage, shortForm);
+            }
+            else
+            {
+                newValue = Enums.GetGroupedDefense(iDamage, shortForm);
+            }
+
             return str.Replace("%VALUE%", newValue);
         }
         /*public static List<string> SplitFXGroupTipL(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)

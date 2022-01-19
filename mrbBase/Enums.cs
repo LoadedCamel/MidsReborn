@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 
 namespace mrbBase
 {
@@ -225,6 +227,54 @@ namespace mrbBase
             Melee_Elude,
             Ranged_Elude,
             AoE_Elude
+        }
+
+        public enum eDefense
+        {
+            None,
+            All,
+            Smashing,
+            Lethal,
+            Fire,
+            Cold,
+            Energy,
+            Negative,
+            Psionic,
+            Melee,
+            Ranged,
+            AoE
+        }
+
+        public enum eResistance
+        {
+            None,
+            All,
+            Smashing,
+            Lethal,
+            Fire,
+            Cold,
+            Energy,
+            Negative,
+            Toxic,
+            Psionic
+        }
+
+        public enum eMezResist
+        { 
+            None,
+            All,
+            Confused,
+            Held,
+            Immobilized,
+            Knockback,
+            Knockup,
+            Placate,
+            Repel,
+            Sleep,
+            Stunned,
+            Taunt,
+            Terrorized,
+            Teleport,
         }
 
         public enum eDamage
@@ -1567,22 +1617,28 @@ namespace mrbBase
             else
             {
                 var str2 = "";
-                if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] &&
-                    iDamage[7])
+                if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] && iDamage[10] && iDamage[11] && iDamage[12])
+                {
                     str2 = "All";
-                else if (!iDamage[1] && !iDamage[2] && !iDamage[3] && !iDamage[4] && !iDamage[5] && !iDamage[6] &&
-                         !iDamage[8] && !iDamage[7])
-                    str2 = "All";
+                }
                 else
+                {
                     for (var index = 0; index < iDamage.Length; ++index)
                     {
                         if (!iDamage[index])
+                        {
                             continue;
-                        var str3 = shortForm ? GetDamageNameShort((eDamage) index) : GetDamageName((eDamage) index);
+                        }
+
+                        var str3 = shortForm ? GetDamageNameShort((eDamage)index) : GetDamageName((eDamage)index);
                         if (!string.IsNullOrEmpty(str2))
+                        {
                             str2 += ",";
+                        }
+
                         str2 += str3;
                     }
+                }
 
                 str1 = str2;
             }
@@ -1817,7 +1873,7 @@ namespace mrbBase
                 EffectAux = new float[Effect.Length - 1];
                 Mez = new float[Enum.GetValues(eMez.None.GetType()).Length];
                 MezRes = new float[Enum.GetValues(eMez.None.GetType()).Length];
-                Damage = new float[Enum.GetValues(eDamage.None.GetType()).Length];
+                Damage = new float[Enum.GetValues(typeof(eDamage)).Length];
                 Defense = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Resistance = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Elusivity = new float[Enum.GetValues(eDamage.None.GetType()).Length];

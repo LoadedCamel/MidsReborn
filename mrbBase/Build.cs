@@ -1004,7 +1004,10 @@ namespace mrbBase
         {
             IPower power1 = new Power();
             if (MidsContext.Config.I9.IgnoreSetBonusFX)
+            {
                 return power1;
+            }
+
             var nidPowers = DatabaseAPI.NidPowers("set_bonus");
             var setCount = new int[nidPowers.Length];
             for (var index = 0; index < setCount.Length; ++index)
@@ -1012,14 +1015,19 @@ namespace mrbBase
                 setCount[index] = 0;
             }
 
-            bool skipEffects = false;
+            var skipEffects = false;
             var effectList = new List<IEffect>();
             foreach (var setBonus in SetBonus)
+            {
                 foreach (var setInfo in setBonus.SetInfo)
+                {
                     foreach (var power in setInfo.Powers.Where(x => x > -1))
                     {
                         if (power > setCount.Length - 1)
+                        {
                             throw new IndexOutOfRangeException("power to setBonusArray");
+                        }
+
                         ++setCount[power];
                         
                         if ((DatabaseAPI.Database.Power[power].Target & Enums.eEntity.MyPet) != 0 && (DatabaseAPI.Database.Power[power].EntitiesAffected & Enums.eEntity.MyPet) != 0)
@@ -1032,6 +1040,8 @@ namespace mrbBase
                             effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));
                         }
                     }
+                }
+            }
 
             power1.Effects = effectList.ToArray();
             return power1;
@@ -1043,18 +1053,13 @@ namespace mrbBase
             var fxList = new List<IEffect>();
             foreach (var effIdx in bonusVirtualPower.Effects)
             {
-                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special))
-                    continue;
+                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special)) continue;
                 var index2 = GcsbCheck(fxList.ToArray(), effIdx);
                 if (index2 < 0)
                 {
                     var fx = (IEffect) effIdx.Clone();
                     fx.Math_Mag = effIdx.Mag;
                     fxList = fxList.Append(fx).ToList();
-                    /*Array.Resize(ref fxList, fxList.Length + 1);
-                    var index3 = fxList.Length - 1;
-                    fxList[index3] = (IEffect)effIdx.Clone();
-                    fxList[index3].Math_Mag = effIdx.Mag;*/
                 }
                 else
                 {
@@ -1140,36 +1145,34 @@ namespace mrbBase
                     }.Contains(power1.FullName);
                     foreach (var power2 in Powers)
                     {
-                        if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex)
-                            continue;
+                        if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex) continue;
                         var power3 = power2.Power;
-                        if (!power2.StatInclude || power3.MutexIgnore)
-                            continue;
+                        if (!power2.StatInclude || power3.MutexIgnore) continue;
 
-                        if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") |
-                                                    power2.Power.FullName.StartsWith("Incarnate.")))
+                        if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") | power2.Power.FullName.StartsWith("Incarnate.")))
                         {
                             continue;
                         }
 
-                        if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") &&
-                            power3.HasMutexID(index1))
+                        if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") && power3.HasMutexID(index1))
                         {
                             powerEntryList.Add(power2);
                             if (power3.MutexAuto)
+                            {
                                 mutexAuto = true;
+                            }
                         }
                         else
                         {
                             foreach (var num1 in power1.NGroupMembership)
+                            {
                                 foreach (var num2 in power3.NGroupMembership)
                                 {
-                                    if (num1 != num2)
-                                        continue;
+                                    if (num1 != num2) continue;
                                     powerEntryList.Add(power2);
-                                    if (power3.MutexAuto)
-                                        mutexAuto = true;
+                                    if (power3.MutexAuto) mutexAuto = true;
                                 }
+                            }
                         }
                     }
 
@@ -1182,36 +1185,26 @@ namespace mrbBase
                     if (doDetoggle && power1.MutexAuto)
                     {
                         foreach (var powerEntry in powerEntryList)
+                        {
                             powerEntry.StatInclude = false;
+                        }
 
                         eMutex = Enums.eMutex.NoConflict;
                     }
                     else
                     {
                         if (doDetoggle && mutexAuto && Powers[hIdx].StatInclude)
+                        {
                             Powers[hIdx].StatInclude = false;
+                        }
+
                         if (!silent && powerEntryList.Count > 0)
                         {
                             var str1 = $"{power1.DisplayName} is mutually exclusive and can't be used at the same time as the following powers:\n{string.Join(", ", powerEntryList.Select(e => e.Power.DisplayName).ToArray())}";
                             MessageBox.Show(
                                 !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
                                     ? str1 + "\n\nYou should turn off the powers listed before turning this one on."
-                                    : str1 + "\n\nThe listed powers have been turned off.", "Power Conflict");
-                            /*var empty = string.Empty;
-                            var str1 = power1.DisplayName +
-                                       " is mutually exclusive and can't be used at the same time as the following powers:\n";
-                            foreach (var powerEntry in powerEntryList)
-                            {
-                                if (!string.IsNullOrEmpty(empty))
-                                    empty += ", ";
-                                empty += powerEntry.Power.DisplayName;
-                            }
-
-                            var str2 = str1 + empty;
-                            MessageBox.Show(
-                                !doDetoggle || !power1.MutexAuto || !Powers[hIdx].StatInclude
-                                    ? str2 + "\n\nYou should turn off the powers listed before turning this one on."
-                                    : str2 + "\n\nThe listed powers have been turned off.", "Power Conflict");*/
+                                    : str1 + "\n\nThe listed powers have been turned off.", @"Power Conflict");
                         }
 
                         eMutex = powerEntryList.Count > 0

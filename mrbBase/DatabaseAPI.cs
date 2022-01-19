@@ -937,6 +937,12 @@ namespace mrbBase
                 .ToList();
         }
 
+        public static int GetEnhancmentByBoostName(string iName)
+        {
+            var enhUid = Regex.Replace(iName, ".*(.*)\\.", "");
+            return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(enhUid));
+        }
+
         public static int GetEnhancementByUIDName(string iName)
         {
             // Artillery set still use its old name for the UIDs.

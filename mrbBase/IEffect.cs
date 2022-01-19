@@ -164,8 +164,10 @@ namespace mrbBase
         float AtrModRange { get; set; }
         float AtrModRechargeTime { get; set; }
         float AtrModSecondaryRange { get; set; }
+
         List<KeyValue<string, string>> ActiveConditionals { get; set; }
         bool Validated { get; set; }
+        bool IsFromProc { get; }
         IPower GetPower();
         void SetPower(IPower power);
 
