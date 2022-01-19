@@ -49,6 +49,24 @@
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
+    <Compile Include="Forms\Controls\DataView2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\DataView2.Designer.cs">
+      <DependentUpon>DataView2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Controls\DV2TotalsPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\DV2TotalsPane.Designer.cs">
+      <DependentUpon>DV2TotalsPane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Controls\ColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\ColorSlider.Designer.cs">
+      <DependentUpon>ColorSlider.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmBuildSalvageHud.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -351,6 +369,17 @@
     <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
       <DependentUpon>PowersControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\Controls\ColorSlider.resx">
+      <DependentUpon>ColorSlider.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Controls\DataView2.resx">
+      <DependentUpon>DataView2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Controls\DV2TotalsPane.resx">
+      <DependentUpon>DV2TotalsPane.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
     </EmbeddedResource>
