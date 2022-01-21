@@ -953,8 +953,7 @@ namespace mrbBase.Base.Data_Classes
                             }
 
                             var strArray4 = strArray2;
-                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0),
-                                strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
                         }
 
                         break;
@@ -1125,7 +1124,7 @@ namespace mrbBase.Base.Data_Classes
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, false, true, true);
+                var effectString = enhancementSet.GetEffectString(index, false, true, true, true);
                 if (string.IsNullOrEmpty(effectString))
                 {
                     continue;
@@ -1133,7 +1132,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
                 {
-                    effectString += " (PvP)";
+                    effectString += " [PvP]";
                 }
 
                 if ((num >= enhancementSet.Bonus[index].Slotted) & (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)))
@@ -1152,7 +1151,22 @@ namespace mrbBase.Base.Data_Classes
 
             for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, true, true, true);
+                var checkStatus = false;
+                List<Power> specialPowers = null;
+                if (enhancementSet.SpecialBonus.Length > 0)
+                {
+                    specialPowers = enhancementSet.SpecialBonus[enhancementSet.SpecialBonus.Length - 1].Index.Length switch
+                    {
+                        0 => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 2, true),
+                        _ => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 1, true)
+                    };
+                }
+
+                if (specialPowers is { Count: 1 })
+                {
+                    if (specialPowers[0].FullName.Contains("Skin") || specialPowers[0].FullName.Contains("Aegis")) checkStatus = true;
+                }
+                var effectString = enhancementSet.GetEffectString(index, true, true, true, true, checkStatus);
                 if (string.IsNullOrEmpty(effectString))
                 {
                     continue;

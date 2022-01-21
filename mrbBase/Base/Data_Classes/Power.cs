@@ -1779,7 +1779,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         
-        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false)
+        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
         {
             bool flag;
             if ((idEffect < 0) | (idEffect > Effects.Length - 1))
@@ -1795,17 +1795,19 @@ namespace mrbBase.Base.Data_Classes
                 {
                     var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
                     for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
-                    for (var index2 = 0; index2 <= iDamage.Length - 1; ++index2)
                     {
-                        effect.DamageType = (Enums.eDamage) index2;
-                        if (effect.CompareTo(Effects[index1]) != 0)
+                        for (var index2 = 0; index2 <= iDamage.Length - 1; ++index2)
                         {
-                            continue;
-                        }
+                            effect.DamageType = (Enums.eDamage) index2;
+                            if (effect.CompareTo(Effects[index1]) != 0)
+                            {
+                                continue;
+                            }
 
-                        iDamage[index2] = true;
-                        Array.Resize(ref array, array.Length + 1);
-                        array[array.Length - 1] = index1;
+                            iDamage[index2] = true;
+                            Array.Resize(ref array, array.Length + 1);
+                            array[array.Length - 1] = index1;
+                        }
                     }
 
                     if (array.Length <= 1)
@@ -1830,24 +1832,27 @@ namespace mrbBase.Base.Data_Classes
                     }
                     else
                     {
-                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("Special", newValue);
+                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("Special", newValue);
+                        
                     }
                 }
                 else if ((effect.EffectType == Enums.eEffectType.Mez) | (effect.EffectType == Enums.eEffectType.MezResist))
                 {
                     var iMez = new bool[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                     for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
-                    for (var index2 = 0; index2 <= iMez.Length - 1; ++index2)
                     {
-                        effect.MezType = (Enums.eMez) index2;
-                        if (effect.CompareTo(Effects[index1]) != 0)
+                        for (var index2 = 0; index2 <= iMez.Length - 1; ++index2)
                         {
-                            continue;
-                        }
+                            effect.MezType = (Enums.eMez) index2;
+                            if (effect.CompareTo(Effects[index1]) != 0)
+                            {
+                                continue;
+                            }
 
-                        iMez[index2] = true;
-                        Array.Resize(ref array, array.Length + 1);
-                        array[array.Length - 1] = index1;
+                            iMez[index2] = true;
+                            Array.Resize(ref array, array.Length + 1);
+                            array[array.Length - 1] = index1;
+                        }
                     }
 
                     if (array.Length <= 1)
@@ -1868,7 +1873,7 @@ namespace mrbBase.Base.Data_Classes
                     }
                     else
                     {
-                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true).Replace("None", newValue);
+                        str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("None", newValue);
                     }
 
                     switch (effect.EffectType)
@@ -1924,7 +1929,7 @@ namespace mrbBase.Base.Data_Classes
                             }
                             else
                             {
-                                str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true);
+                                str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions);
                             }
 
                             if (BuffMode != Enums.eBuffMode.Debuff)

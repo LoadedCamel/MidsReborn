@@ -368,7 +368,6 @@ namespace mrbBase
                 IPower power = new Power(enhBoostPower);
                 power.ApplyGrantPowerEffects();
                 var returnMask = Array.Empty<int>();
-                var effectList = new List<IEffect>();
                 for (var index1 = 0; index1 < power.Effects.Length; index1++)
                 {
                     if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
@@ -439,25 +438,20 @@ namespace mrbBase
                             stringBuilder.Append("\n");
                         }
 
-                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true);
+                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
                         if (effectString.Contains("Null"))
                         {
-                            var replacements = new Dictionary<string, string>
-                            {
-                                { "Def(", "Defense(" },
-                                { "Res(", "Resistance("},
-                                { "Smash", "Smashing" },
-                                { "Neg", "Negative" },
-                                { "Psi", "Psionic" },
-                                { "Rngd", "Ranged" },
-                                { ", ", "\n" }
-                            };
                             var enhId = DatabaseAPI.GetEnhancmentByBoostName(power.FullName);
                             var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
-                            effectString = enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true);
-                            if (effectString.Contains("Def(") || effectString.Contains("Res("))
+                            if (enhSetSpecials.SpecialBonus.Length > 0)
                             {
-                                effectString = replacements.Aggregate(effectString, (current, replacement) => current.Replace(replacement.Key, replacement.Value));
+                                effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
+                                {
+                                    0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true),
+                                    _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true)
+                                };
+
+                                effectString = effectString.Replace(", ", "\n");
                             }
                         }
 
