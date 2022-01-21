@@ -893,6 +893,29 @@ namespace mrbControls
                 if (cellXy.Y == 0)
                 {
                     Ui.View.TabId = (Enums.eType)cellXy.X;
+                    switch (Ui.View.TabId)
+                    {
+                        case Enums.eType.SetO:
+                            if (Ui.SetTypes.Length > 3)
+                            {
+                                _rows = Ui.SetTypes.Length;
+                                Height = 235 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
+                                FullDraw();
+                            }
+                            break;
+                        case Enums.eType.SpecialO:
+                            if (Ui.SpecialO.Length > 9)
+                            {
+                                _rows = 5;
+                                Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length - 3 / 2);
+                                FullDraw();
+                            }
+                            break;
+                        default:
+                            _rows = 5;
+                            Height = 235;
+                            break;
+                    }
                     if ((cellXy.X == 4) & (Ui.SetTypes.Length > 0))
                     {
                         Ui.View.SetTypeId = 0;
@@ -903,28 +926,6 @@ namespace mrbControls
                     }
                     else
                     {
-                        /*switch (cellXY.X)
-                        {
-                            case 2:
-                            {
-                                if (UI.Initial.TabID == Enums.eType.Normal)
-                                    UI.Initial.TabID = Enums.eType.InventO;
-                                if (UI.View.RelLevel < Enums.eEnhRelative.Even)
-                                    UI.View.RelLevel = Enums.eEnhRelative.Even;
-                                break;
-                            }
-                            case 1:
-                            {
-                                if (UI.View.RelLevel > Enums.eEnhRelative.PlusThree)
-                                    UI.View.RelLevel = Enums.eEnhRelative.PlusThree;
-                                if (UI.Initial.TabID == Enums.eType.InventO)
-                                    UI.Initial.TabID = Enums.eType.Normal;
-                                break;
-                            }
-                            case 3 when UI.View.RelLevel > Enums.eEnhRelative.PlusTwo:
-                                UI.View.RelLevel = Enums.eEnhRelative.PlusTwo;
-                                break;
-                        }*/
                         Ui.View.RelLevel = Enums.eEnhRelative.Even;
                         if (cellXy.X == 2)
                         {
@@ -1596,22 +1597,21 @@ namespace mrbControls
 
                 _mySlotted = new int[slotted.Length - 1 + 1];
                 Array.Copy(slotted, _mySlotted, _mySlotted.Length);
-                if (Ui.SetTypes.Length > 3)
+                /*if (Ui.SetTypes.Length > 3)
                 {
                     _rows = Ui.SetTypes.Length;
-                    Height = 235 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length - 3);
+                    Height = 235 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
                 }
-                else
-                {
-                    _rows = 5;
-                    Height = 235;
-                }
-
-                if (Ui.SpecialO.Length > 9)
+                else if (Ui.SpecialO.Length > 9)
                 {
                     _rows = 5;
                     Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length - 3 / 2);
                 }
+                else
+                {*/
+                    _rows = 5;
+                    Height = 235;
+                // }
 
                 FullDraw();
             }
