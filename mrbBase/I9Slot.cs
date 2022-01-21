@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
@@ -443,15 +439,17 @@ namespace mrbBase
                         {
                             var enhId = DatabaseAPI.GetEnhancmentByBoostName(power.FullName);
                             var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
+                            var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
                             if (enhSetSpecials.SpecialBonus.Length > 0)
                             {
-                                effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
+                                /*effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
                                 {
                                     0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true),
                                     _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true)
-                                };
+                                };*/
 
-                                effectString = effectString.Replace(", ", "\n");
+                                effectString = enhSetSpecials.GetEffectString(enhIndex, true, true, true)
+                                    .Replace(", ", "\n");
                             }
                         }
 
