@@ -191,7 +191,10 @@ namespace Mids_Reborn.Forms
             get
             {
                 if (i9Picker.Height <= 235)
+                {
                     i9Picker.Height = 315;
+                }
+
                 return i9Picker;
             }
             set => i9Picker = value;
