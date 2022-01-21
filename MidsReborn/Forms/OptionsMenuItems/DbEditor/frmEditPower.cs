@@ -1685,7 +1685,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((invSetListIndex < names.Length) & (invSetListIndex > -1))) return;
             var flag = false;
             var num = myPower.SetTypes.Length - 1;
-            Debug.WriteLine($"# of SetTypes: {num}");
             for (var index = 0; index <= num; ++index)
             {
                 if (myPower.SetTypes[index] == (Enums.eSetType) invSetListIndex)
