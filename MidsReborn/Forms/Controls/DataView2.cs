@@ -25,6 +25,449 @@ namespace Mids_Reborn.Forms.Controls
             Extra
         }
 
+        private enum BuffEffectType
+        {
+            Buff,
+            Debuff,
+            NonZero,
+            Any
+        }
+
+        private class EffectVectorType
+        {
+            public Enums.eEffectType? EffectType;
+            public Enums.eMez? MezType;
+            public Enums.eDamage? DamageType;
+            public Enums.eEffectType? ETModifies;
+            public BuffEffectType VectorDirection;
+            public Enums.eToWho ToWho;
+
+            public EffectVectorType(Enums.eEffectType effectType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            {
+                EffectType = effectType;
+                VectorDirection = vectorDirection;
+                ToWho = toWho;
+            }
+
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eMez mezType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            {
+                EffectType = effectType;
+                MezType = mezType;
+                VectorDirection = vectorDirection;
+                ToWho = toWho;
+            }
+
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eDamage damageType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            {
+                EffectType = effectType;
+                DamageType = damageType;
+                VectorDirection = vectorDirection;
+                ToWho = toWho;
+            }
+            
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eEffectType etModifies, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            {
+                EffectType = effectType;
+                ETModifies = etModifies;
+                VectorDirection = vectorDirection;
+                ToWho = toWho;
+            }
+
+            public bool Validate(IEffect effect)
+            {
+                return (EffectType == null || EffectType == effect.EffectType) &&
+                       (MezType == null || MezType == effect.MezType) &&
+                       (DamageType == null || DamageType == effect.DamageType) &&
+                       (ETModifies == null || ETModifies == effect.ETModifies) &&
+                       (ToWho == Enums.eToWho.All || ToWho == effect.ToWho) &&
+                       VectorDirection switch
+                       {
+                           BuffEffectType.NonZero => Math.Abs(effect.BuffedMag) > float.Epsilon,
+                           BuffEffectType.Buff => effect.BuffedMag > 0,
+                           BuffEffectType.Debuff => effect.BuffedMag < 0,
+                           _ => true
+                       };
+            }
+        }
+
+        private static readonly List<List<EffectVectorType>> EffectVectorsGroups = new()
+        {
+            // +Defenses to Self
+            new List<EffectVectorType>
+            {
+                new(Enums.eEffectType.Resistance, BuffEffectType.Buff, Enums.eToWho.Self)
+            },
+
+            // +Resistances to Self
+            new List<EffectVectorType>
+            {
+                new(Enums.eEffectType.Defense, BuffEffectType.Buff, Enums.eToWho.Self)
+            },
+
+            // Buffs
+            new List<EffectVectorType>
+            {
+                // Need to add any other effect here ?
+                new(Enums.eEffectType.Resistance, BuffEffectType.Buff, Enums.eToWho.Target),
+                new(Enums.eEffectType.Defense, BuffEffectType.Buff, Enums.eToWho.Target),
+                new(Enums.eEffectType.Recovery, BuffEffectType.Buff),
+                new(Enums.eEffectType.Regeneration, BuffEffectType.Buff),
+                new(Enums.eEffectType.Accuracy, BuffEffectType.Buff),
+                new(Enums.eEffectType.ToHit, BuffEffectType.Buff),
+                new(Enums.eEffectType.DamageBuff, BuffEffectType.Buff),
+                new(Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, BuffEffectType.Buff),
+                new(Enums.eEffectType.StealthRadius, BuffEffectType.Buff),
+                new(Enums.eEffectType.StealthRadiusPlayer, BuffEffectType.Buff),
+                new(Enums.eEffectType.HitPoints, BuffEffectType.Buff),
+                new(Enums.eEffectType.Elusivity, BuffEffectType.Buff)
+
+            },
+
+            // Debuffs
+            new List<EffectVectorType>
+            {
+                // Need to add any other effect here ?
+                new(Enums.eEffectType.Resistance, BuffEffectType.Debuff),
+                new(Enums.eEffectType.Defense, BuffEffectType.Debuff),
+                new(Enums.eEffectType.Recovery, BuffEffectType.Debuff),
+                new(Enums.eEffectType.Regeneration, BuffEffectType.Debuff),
+                new(Enums.eEffectType.Accuracy, BuffEffectType.Debuff),
+                new(Enums.eEffectType.ToHit, BuffEffectType.Debuff),
+                new(Enums.eEffectType.DamageBuff, BuffEffectType.Debuff),
+                new(Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, BuffEffectType.Debuff),
+                new(Enums.eEffectType.HitPoints, BuffEffectType.Debuff)
+            },
+
+            // Summons & GrantPower
+            new List<EffectVectorType>
+            {
+                new(Enums.eEffectType.EntCreate, BuffEffectType.Any),
+                new(Enums.eEffectType.GrantPower, BuffEffectType.Any)
+            },
+
+            // Misc
+            new List<EffectVectorType>
+            {
+                // Heal, Endurance, Movement, MaxMovement, JumpPack, Fly, OnlyAffectSelf, MezResist, Mez, ThreatLevel
+                new(Enums.eEffectType.Heal),
+                new(Enums.eEffectType.Enhancement, Enums.eEffectType.Heal),
+                new(Enums.eEffectType.Absorb),
+                new(Enums.eEffectType.Endurance),
+                new(Enums.eEffectType.SpeedJumping),
+                new(Enums.eEffectType.SpeedFlying),
+                new(Enums.eEffectType.SpeedRunning),
+                new(Enums.eEffectType.MaxRunSpeed),
+                new(Enums.eEffectType.MaxFlySpeed),
+                new(Enums.eEffectType.MaxJumpSpeed),
+                new(Enums.eEffectType.Jumppack),
+                new(Enums.eEffectType.Fly),
+                new(Enums.eEffectType.Mez, Enums.eMez.CombatPhase), // ???
+                new(Enums.eEffectType.Mez, Enums.eMez.Confused),
+                new(Enums.eEffectType.Mez, Enums.eMez.Held),
+                new(Enums.eEffectType.Mez, Enums.eMez.Immobilized),
+                new(Enums.eEffectType.Mez, Enums.eMez.Intangible),
+                new(Enums.eEffectType.Mez, Enums.eMez.Knockback),
+                new(Enums.eEffectType.Mez, Enums.eMez.Knockup),
+                new(Enums.eEffectType.Mez, Enums.eMez.OnlyAffectsSelf),
+                new(Enums.eEffectType.Mez, Enums.eMez.Placate),
+                new(Enums.eEffectType.Mez, Enums.eMez.Repel),
+                new(Enums.eEffectType.Mez, Enums.eMez.Sleep),
+                new(Enums.eEffectType.Mez, Enums.eMez.Stunned),
+                new(Enums.eEffectType.Mez, Enums.eMez.Taunt),
+                new(Enums.eEffectType.Mez, Enums.eMez.Terrorized),
+                new(Enums.eEffectType.Mez, Enums.eMez.Untouchable),
+                new(Enums.eEffectType.MezResist),
+                new(Enums.eEffectType.Enhancement, Enums.eEffectType.Mez),
+                new(Enums.eEffectType.Enhancement, Enums.eEffectType.MezResist)
+            }
+        };
+
+        private class GroupedEffect
+        {
+            private List<Enums.eDamage> DamageTypes = new();
+            private List<Enums.eMez> MezTypes = new();
+            private List<Enums.eEffectType> ETModifiesTypes = new();
+            private readonly Enums.eEffectType EffectType;
+            private readonly Enums.eEffectType SubEffectType;
+            private readonly float BuffedMag;
+            private readonly Enums.eToWho ToWho;
+            private readonly bool DisplayPercentage;
+
+            public GroupedEffect(Enums.eEffectType effectType, float buffedMag, bool displayPercentage, Enums.eToWho toWho)
+            {
+                EffectType = effectType;
+                SubEffectType = Enums.eEffectType.None;
+                BuffedMag = buffedMag;
+                DisplayPercentage = displayPercentage;
+                ToWho = toWho;
+            }
+
+            public GroupedEffect(Enums.eEffectType effectType, Enums.eEffectType subEffectType, float buffedMag, bool displayPercentage, Enums.eToWho toWho)
+            {
+                EffectType = effectType;
+                SubEffectType = subEffectType;
+                BuffedMag = buffedMag;
+                DisplayPercentage = displayPercentage;
+                ToWho = toWho;
+            }
+
+            public void AddDamageType(Enums.eDamage vector)
+            {
+                DamageTypes.Add(vector);
+            }
+
+            public void AddMezType(Enums.eMez vector)
+            {
+                MezTypes.Add(vector);
+            }
+
+            public void AddETModifyType(Enums.eEffectType vector)
+            {
+                ETModifiesTypes.Add(vector);
+            }
+
+            public void SetVectors(List<Enums.eDamage> vectors)
+            {
+                DamageTypes = vectors;
+            }
+
+            public void SetVectors(List<Enums.eMez> vectors)
+            {
+                MezTypes = vectors;
+            }
+
+            public void SetVectors(List<Enums.eEffectType> vectors)
+            {
+                ETModifiesTypes = vectors;
+            }
+
+            // Need to handle Effect(All) cases for these
+            private string MezTypesString()
+            {
+                return string.Join(", ", MezTypes);
+            }
+
+            private string DamageTypesString()
+            {
+                return string.Join(", ", DamageTypes);
+            }
+
+            private string ETModifiesString()
+            {
+                return string.Join(", ", ETModifiesTypes);
+            }
+
+            private string ToWhoString(bool addSpace = true)
+            {
+                return ToWho switch
+                {
+                    Enums.eToWho.Self => $"{(addSpace ? " " : "")}(Self)",
+                    Enums.eToWho.Target => $"{(addSpace ? " " : "")}(Tgt)",
+                    _ => ""
+                };
+            }
+
+            public BoostType GetBoostType()
+            {
+                return BuffedMag switch
+                {
+                    > 0 => BoostType.Enhancement,
+                    < 0 => BoostType.Reduction,
+                    _ => BoostType.Equal
+                };
+            }
+
+            public override string ToString()
+            {
+                if (EffectType == Enums.eEffectType.Enhancement)
+                {
+                    switch (SubEffectType)
+                    {
+                        case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezResist:
+                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({MezTypesString()}){ToWhoString()}";
+
+                        case Enums.eEffectType.DamageBuff:
+                        case Enums.eEffectType.Resistance:
+                        case Enums.eEffectType.Elusivity:
+                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({DamageTypesString()}){ToWhoString()}";
+
+                        default:
+                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {ETModifiesString()}{ToWhoString()}";
+                    }
+                }
+
+                switch (EffectType)
+                {
+                    case Enums.eEffectType.Mez:
+                    case Enums.eEffectType.MezResist:
+                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({MezTypesString()}){ToWhoString()}";
+
+                    case Enums.eEffectType.DamageBuff:
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Elusivity:
+                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({DamageTypesString()}){ToWhoString()}";
+
+                    default:
+                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}{ToWhoString()}";
+                }
+            }
+        }
+
+        private class EffectsGroupFilter
+        {
+            private Dictionary<string, List<GroupedEffect>> _effectGroups = new();
+            private readonly List<Enums.eEffectType> _hasGroups = new()
+            {
+                Enums.eEffectType.Resistance,
+                Enums.eEffectType.Defense,
+                Enums.eEffectType.Mez,
+                Enums.eEffectType.MezResist,
+                Enums.eEffectType.Elusivity,
+                Enums.eEffectType.Enhancement
+            };
+
+            private struct FxVectorIdentifier
+            {
+                public Enums.eEffectType EffectType;
+                public Enums.eEffectType SubEffectType;
+                public Enums.eToWho ToWho;
+                public float BuffedMag;
+            }
+
+            public Dictionary<string, List<GroupedEffect>> Groups => _effectGroups;
+
+            private EffectsGroupFilter(Dictionary<string, List<GroupedEffect>> groups)
+            {
+                _effectGroups = groups;
+            }
+
+            public static EffectsGroupFilter FromPower(IPower power)
+            {
+                var groups = new List<List<GroupedEffect>>();
+                var groupsEffectTypes = new List<Dictionary<FxVectorIdentifier, int>>();
+                var fxGroups = new List<List<IEffect>>();
+                for (var i = 0; i < 6; i++)
+                {
+                    groups[i] = new List<GroupedEffect>();
+                    fxGroups[i] = new List<IEffect>();
+                    groupsEffectTypes[i] = new Dictionary<FxVectorIdentifier, int>();
+                }
+
+                // Assign effects to groups according to settings
+                foreach (var fx in power.Effects)
+                {
+                    for (var i = 0; i < EffectVectorsGroups.Count; i++)
+                    {
+                        foreach (var vector in EffectVectorsGroups[i])
+                        {
+                            if (!vector.Validate(fx)) continue;
+
+                            fxGroups[i].Add(fx);
+                        }
+                    }
+                }
+
+                // Merge similar effects
+                for (var i = 0 ; i < fxGroups.Count ; i++)
+                {
+                    foreach (var fx in fxGroups[i])
+                    {
+                        var fxIdentifier = new FxVectorIdentifier
+                        {
+                            EffectType = fx.EffectType,
+                            SubEffectType = fx.ETModifies,
+                            ToWho = fx.ToWho,
+                            BuffedMag = fx.BuffedMag
+                        };
+
+                        if (groupsEffectTypes[i].ContainsKey(fxIdentifier))
+                        {
+                            var index = groupsEffectTypes[i][fxIdentifier];
+                            switch (fx.EffectType)
+                            {
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Mez:
+                                case Enums.eEffectType.Mez:
+                                case Enums.eEffectType.MezResist:
+                                    groups[i][index].AddMezType(fx.MezType);
+                                    break;
+
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Damage:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.DamageBuff:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Resistance:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Defense:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Elusivity:
+                                case Enums.eEffectType.DamageBuff:
+                                case Enums.eEffectType.Defense:
+                                case Enums.eEffectType.Resistance:
+                                case Enums.eEffectType.Elusivity:
+                                    groups[i][index].AddDamageType(fx.DamageType);
+                                    break;
+
+                                case Enums.eEffectType.Enhancement:
+                                case Enums.eEffectType.ResEffect:
+                                    groups[i][index].AddETModifyType(fx.ETModifies);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            groupsEffectTypes[i].Add(new FxVectorIdentifier
+                            {
+                                EffectType = fx.EffectType,
+                                SubEffectType = fx.ETModifies,
+                                ToWho = fx.ToWho,
+                                BuffedMag = fx.BuffedMag
+                            }, groups[i].Count);
+
+                            groups[i].Add(fx.EffectType == Enums.eEffectType.Enhancement | fx.EffectType == Enums.eEffectType.ResEffect
+                                ? new GroupedEffect(fx.EffectType, fx.ETModifies, fx.BuffedMag, fx.DisplayPercentage, fx.ToWho)
+                                : new GroupedEffect(fx.EffectType, fx.BuffedMag, fx.DisplayPercentage, fx.ToWho));
+                            
+                            switch (fx.EffectType)
+                            {
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Mez:
+                                case Enums.eEffectType.Mez:
+                                case Enums.eEffectType.MezResist:
+                                    groups[i][groups[i].Count - 1].AddMezType(fx.MezType);
+                                    break;
+
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Damage:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.DamageBuff:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Resistance:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Defense:
+                                case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Elusivity:
+                                case Enums.eEffectType.DamageBuff:
+                                case Enums.eEffectType.Defense:
+                                case Enums.eEffectType.Resistance:
+                                case Enums.eEffectType.Elusivity:
+                                    groups[i][groups[i].Count - 1].AddDamageType(fx.DamageType);
+                                    break;
+
+                                case Enums.eEffectType.Enhancement:
+                                case Enums.eEffectType.ResEffect:
+                                    groups[i][groups[i].Count - 1].AddETModifyType(fx.ETModifies);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                var groupLabels = new List<string> { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
+                var labeledGroups = new Dictionary<string, List<GroupedEffect>>();
+                for (var i = 0; i < groups.Count; i++)
+                {
+                    labeledGroups.Add(groupLabels[i], groups[i]);
+                }
+
+                labeledGroups = labeledGroups
+                    .Where(e => e.Value.Count > 0)
+                    .ToDictionary(e => e.Key, e => e.Value);
+
+                return new EffectsGroupFilter(labeledGroups);
+            }
+        }
+
         private struct ColorRange
         {
             public Color LowerBoundColor;
@@ -109,24 +552,25 @@ namespace Mids_Reborn.Forms.Controls
 
         private void InitScaler()
         {
+            // Scales tab ? DataView2_Load ?
             if (_basePower is { VariableEnabled: true } && HistoryIdx > -1)
             {
                 FreezeScalerCB = true;
-                labelPowerScaler.Text = string.IsNullOrWhiteSpace(_basePower.VariableName)
+                labelPowerScaler1.Text = string.IsNullOrWhiteSpace(_basePower.VariableName)
                     ? "Targets"
                     : _basePower.VariableName;
-                powerScaler.Minimum = _basePower.VariableMin;
-                powerScaler.Maximum = _basePower.VariableMax;
-                powerScaler.Value = MidsContext.Character.CurrentBuild.Powers[HistoryIdx].VariableValue;
-                // TODO: show range tooltip when mouseover.
-                // TODO: show current value when moving, mousedown.
+                powerScaler1.Minimum = _basePower.VariableMin;
+                powerScaler1.Maximum = _basePower.VariableMax;
+                powerScaler1.Value = MidsContext.Character.CurrentBuild.Powers[HistoryIdx].VariableValue;
+                // Show range tooltip when mouseover ?
+                // Show current value when moving, mousedown ?
                 FreezeScalerCB = false;
-                panelPowerScaler.Visible = true;
+                panelPowerScaler1.Visible = true;
 
             }
             else
             {
-                panelPowerScaler.Visible = false;
+                panelPowerScaler1.Visible = false;
             }
         }
 
@@ -168,7 +612,7 @@ namespace Mids_Reborn.Forms.Controls
             };
         }
 
-        private static ListViewItem CreateStatLVItem(string statName, string value, BoostType boostType, string tip = "")
+        private static ListViewItem CreateStatLvItem(string statName, string value, BoostType boostType, string tip = "")
         {
             var valueColor = boostType switch
             {
@@ -196,7 +640,7 @@ namespace Mids_Reborn.Forms.Controls
             return lvItem;
         }
 
-        private static ListViewItem CreateStatLVItem()
+        private static ListViewItem CreateStatLvItem()
         {
             var lvItem = new ListViewItem
             {
@@ -226,12 +670,12 @@ namespace Mids_Reborn.Forms.Controls
             // Add basic power info
             listInfosL.BeginUpdate();
             listInfosR.BeginUpdate();
-            listInfosL.Items.Add(CreateStatLVItem("End Cost", $"{_enhancedPower.EndCost:##.##}", GetBoostType(_basePower.EndCost, _enhancedPower?.EndCost ?? _basePower.EndCost)));
-            listInfosL.Items.Add(CreateStatLVItem("Recharge", $"{_enhancedPower.RechargeTime:#####.##}s", GetBoostType(_basePower.RechargeTime, _enhancedPower?.RechargeTime ?? _basePower.RechargeTime)));
-            listInfosL.Items.Add(CreateStatLVItem("Range", $"{_enhancedPower.Range:####.##}ft", GetBoostType(_basePower.Range, _enhancedPower?.Range ?? _basePower.Range)));
-            listInfosL.Items.Add(CreateStatLVItem("Case Time", $"{_enhancedPower.CastTime:##.##}s", GetBoostType(_basePower.CastTime, _enhancedPower?.CastTime ?? _basePower.CastTime)));
+            listInfosL.Items.Add(CreateStatLvItem("End Cost", $"{_enhancedPower.EndCost:##.##}", GetBoostType(_basePower.EndCost, _enhancedPower?.EndCost ?? _basePower.EndCost)));
+            listInfosL.Items.Add(CreateStatLvItem("Recharge", $"{_enhancedPower.RechargeTime:#####.##}s", GetBoostType(_basePower.RechargeTime, _enhancedPower?.RechargeTime ?? _basePower.RechargeTime)));
+            listInfosL.Items.Add(CreateStatLvItem("Range", $"{_enhancedPower.Range:####.##}ft", GetBoostType(_basePower.Range, _enhancedPower?.Range ?? _basePower.Range)));
+            listInfosL.Items.Add(CreateStatLvItem("Case Time", $"{_enhancedPower.CastTime:##.##}s", GetBoostType(_basePower.CastTime, _enhancedPower?.CastTime ?? _basePower.CastTime)));
 
-            listInfosR.Items.Add(CreateStatLVItem("Accuracy", $"{_enhancedPower.Accuracy:P2}", GetBoostType(_basePower.Accuracy, _enhancedPower?.Accuracy ?? _basePower.Accuracy)));
+            listInfosR.Items.Add(CreateStatLvItem("Accuracy", $"{_enhancedPower.Accuracy:P2}", GetBoostType(_basePower.Accuracy, _enhancedPower?.Accuracy ?? _basePower.Accuracy)));
 
             // Check if there is a mez effect, display duration in the right column.
             var hasMez = _basePower.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez);
@@ -247,16 +691,16 @@ namespace Mids_Reborn.Forms.Controls
                     .Select(e => e.Duration)
                     .Max();
 
-                listInfosR.Items.Add(CreateStatLVItem("Duration", $"{enhancedDuration:###.##}s", GetBoostType(baseDuration, enhancedDuration)));
+                listInfosR.Items.Add(CreateStatLvItem("Duration", $"{enhancedDuration:###.##}s", GetBoostType(baseDuration, enhancedDuration)));
 
-                listInfosR.Items.Add(CreateStatLVItem());
-                listInfosR.Items.Add(CreateStatLVItem());
+                listInfosR.Items.Add(CreateStatLvItem());
+                listInfosR.Items.Add(CreateStatLvItem());
             }
             else
             {
-                listInfosR.Items.Add(CreateStatLVItem());
-                listInfosR.Items.Add(CreateStatLVItem());
-                listInfosR.Items.Add(CreateStatLVItem());
+                listInfosR.Items.Add(CreateStatLvItem());
+                listInfosR.Items.Add(CreateStatLvItem());
+                listInfosR.Items.Add(CreateStatLvItem());
             }
 
             // Misc & special effects (4 max)
@@ -287,20 +731,20 @@ namespace Mids_Reborn.Forms.Controls
                         _ => $"{fx.EffectType}"
                     };
 
-                    var enhValue = fx.EffectType switch
+                    /*var enhValue = fx.EffectType switch
                     {
                         Enums.eEffectType.Mez when fx.MezType == Enums.eMez.Knockback | fx.MezType == Enums.eMez.Knockup => fx.BuffedMag,
                         Enums.eEffectType.Mez => fx.Duration,
                         _ => fx.BuffedMag
-                    };
+                    };*/
 
                     if (i % 2 == 0)
                     {
-                        listInfosL.Items.Add(CreateStatLVItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
+                        listInfosL.Items.Add(CreateStatLvItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
                     }
                     else
                     {
-                        listInfosR.Items.Add(CreateStatLVItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
+                        listInfosR.Items.Add(CreateStatLvItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
                     }
                 }
                 else
@@ -333,11 +777,11 @@ namespace Mids_Reborn.Forms.Controls
 
                     if (i % 2 == 0)
                     {
-                        listInfosL.Items.Add(CreateStatLVItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
+                        listInfosL.Items.Add(CreateStatLvItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
                     }
                     else
                     {
-                        listInfosR.Items.Add(CreateStatLVItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
+                        listInfosR.Items.Add(CreateStatLvItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
                     }
                 }
             }
@@ -361,7 +805,49 @@ namespace Mids_Reborn.Forms.Controls
         
         private void DisplayEffects()
         {
+            var effectGroups = EffectsGroupFilter.FromPower(_enhancedPower);
+            var labels = effectGroups.Groups.Keys.ToList();
+            for (var i = 0 ; i < effectGroups.Groups.Count ; i+=2)
+            {
+                // Set group labels
+                if (i < effectGroups.Groups.Count - 1)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            lblEffectsBlock1.Text = $"{labels[i]}/{labels[i + 1]}";
+                            break;
 
+                        case 2:
+                            lblEffectsBlock2.Text = $"{labels[i]}/{labels[i + 1]}";
+                            break;
+
+                        case 4:
+                            lblEffectsBlock3.Text = $"{labels[i]}/{labels[i + 1]}";
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            lblEffectsBlock1.Text = labels[i];
+                            break;
+
+                        case 2:
+                            lblEffectsBlock2.Text = labels[i];
+                            break;
+
+                        case 4:
+                            lblEffectsBlock3.Text = labels[i];
+                            break;
+                    }
+                }
+
+                // Display GroupedEffects
+                // Convert RTF Boxes into ListViews
+            }
         }
 
         #endregion
@@ -401,6 +887,7 @@ namespace Mids_Reborn.Forms.Controls
                     tabBox.InactiveTabColor = Color.FromArgb(45, 0, 77);
                     break;
 
+                // Green and Teal colors need some refreshers.
                 case 2:
                     // L=50 / L=30
                     tabBox.ActiveTabColor = Color.Green;
@@ -411,6 +898,12 @@ namespace Mids_Reborn.Forms.Controls
                     // L=50 / L=30
                     tabBox.ActiveTabColor = Color.Teal;
                     tabBox.InactiveTabColor = Color.FromArgb(0, 77, 77);
+                    break;
+
+                case 4:
+                    // L=58 / L=35
+                    tabBox.ActiveTabColor = Color.FromArgb(148, 117, 46);
+                    tabBox.InactiveTabColor = Color.FromArgb(69, 71, 28);
                     break;
             }
         }
@@ -438,7 +931,7 @@ namespace Mids_Reborn.Forms.Controls
 
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
 
-            // TODO: display updated infos (???)
+            // Display updated infos (???)
         }
     }
 }

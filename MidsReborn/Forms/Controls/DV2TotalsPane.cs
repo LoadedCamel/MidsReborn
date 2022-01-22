@@ -6,6 +6,18 @@ using System.Windows.Forms;
 using mrbControls;
 using Syncfusion.Drawing;
 
+/* Currently bugged:
+
+The control Mids_Reborn.Forms.Controls.DV2TotalsPane has thrown an unhandled exception in the designer and has been disabled.
+
+Exception:
+Object reference not set to an instance of an object.
+
+Stack trace:
+   at Mids_Reborn.Forms.Controls.DV2TotalsPane.DrawLabels() in \MidsReborn\Forms\Controls\DV2TotalsPane.cs:line 125
+   at Mids_Reborn.Forms.Controls.DV2TotalsPane.OnPaint(PaintEventArgs e) in \MidsReborn\Forms\Controls\DV2TotalsPane.cs:line 202
+ */
+
 namespace Mids_Reborn.Forms.Controls
 {
     public partial class DV2TotalsPane : UserControl
@@ -129,10 +141,11 @@ namespace Mids_Reborn.Forms.Controls
                 BackColor = Color.Black,
                 Dock = DockStyle.Fill
             };
+
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
 
-            for (var i = 0; i < VisibleItemsCount; i++)
+            for (var i = 0; i < Math.Min(Items.Count, VisibleItemsCount); i++)
             {
                 grid.RowStyles.Add(new RowStyle(SizeType.Percent, 12));
                 var labelTag = new Label

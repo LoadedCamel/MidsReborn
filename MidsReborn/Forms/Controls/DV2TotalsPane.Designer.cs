@@ -37,9 +37,10 @@
             // 
             this.gradientPanel1.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.Black, System.Drawing.Color.Purple);
             this.gradientPanel1.Border3DStyle = System.Windows.Forms.Border3DStyle.Flat;
-            this.gradientPanel1.Location = new System.Drawing.Point(100, 0);
+            this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.gradientPanel1.Location = new System.Drawing.Point(140, 0);
             this.gradientPanel1.Name = "gradientPanel1";
-            this.gradientPanel1.Size = new System.Drawing.Size(45, 90);
+            this.gradientPanel1.Size = new System.Drawing.Size(45, 138);
             this.gradientPanel1.TabIndex = 0;
             // 
             // panel1
@@ -47,7 +48,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(101, 92);
+            this.panel1.Size = new System.Drawing.Size(134, 138);
             this.panel1.TabIndex = 1;
             // 
             // DV2TotalsPane
@@ -59,7 +60,7 @@
             this.Controls.Add(this.gradientPanel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "DV2TotalsPane";
-            this.Size = new System.Drawing.Size(146, 92);
+            this.Size = new System.Drawing.Size(185, 138);
             ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).EndInit();
             this.ResumeLayout(false);
 
