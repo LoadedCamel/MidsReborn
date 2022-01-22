@@ -34,6 +34,8 @@ namespace Mids_Reborn.Forms.Controls
             Any
         }
 
+        private static readonly List<string> GroupLabels = new() { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
+
         private class EffectVectorType
         {
             public Enums.eEffectType? EffectType;
@@ -242,15 +244,76 @@ namespace Mids_Reborn.Forms.Controls
                 ETModifiesTypes = vectors;
             }
 
-            // Need to handle Effect(All) cases for these
+            private bool ContainsMulti<T>(IEnumerable<T> items, ICollection<T> baseList)
+            {
+                return items.All(baseList.Contains);
+            }
+
+            private bool ContainsMultiOnly<T>(IEnumerable<T> items, IEnumerable<T> baseList)
+            {
+                // return new HashSet<T>(items).SetEquals(baseList);
+                return baseList.Except(items).Any();
+            }
+
             private string MezTypesString()
             {
-                return string.Join(", ", MezTypes);
+                return ContainsMultiOnly(
+                    new List<Enums.eMez>
+                    {
+                        Enums.eMez.Immobilized,
+                        Enums.eMez.Held,
+                        Enums.eMez.Stunned,
+                        Enums.eMez.Sleep,
+                        Enums.eMez.Terrorized,
+                        Enums.eMez.Confused
+                    }, MezTypes)
+                    ? "All"
+                    : string.Join(", ", MezTypes);
             }
 
             private string DamageTypesString()
             {
-                return string.Join(", ", DamageTypes);
+                var damageTypes = new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Psionic,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                };
+
+                switch (EffectType)
+                {
+                    case Enums.eEffectType.Enhancement when SubEffectType == Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Defense:
+                        if (ContainsMultiOnly(damageTypes.GetRange(0, 7), DamageTypes))
+                        {
+                            return "All Dmg";
+                        }
+                        else if (ContainsMultiOnly(damageTypes.GetRange(8, 3), DamageTypes))
+                        {
+                            return "All Pos";
+                        }
+                        else if (ContainsMultiOnly(damageTypes.GetRange(0, 7).Union(damageTypes.GetRange(8, 3)), DamageTypes))
+                        {
+                            return "All";
+                        }
+                        else
+                        {
+                            return string.Join(", ", DamageTypes);
+                        }
+
+                    default:
+                        return ContainsMultiOnly(damageTypes.GetRange(0, 8), DamageTypes)
+                            ? "All"
+                            : string.Join(", ", DamageTypes);
+                }
             }
 
             private string ETModifiesString()
@@ -499,11 +562,10 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                var groupLabels = new List<string> { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
                 var labeledGroups = new Dictionary<string, List<GroupedEffect>>();
                 for (var i = 0; i < groups.Count; i++)
                 {
-                    labeledGroups.Add(groupLabels[i], groups[i]);
+                    labeledGroups.Add(GroupLabels[i], groups[i]);
                 }
 
                 labeledGroups = labeledGroups
@@ -612,7 +674,6 @@ namespace Mids_Reborn.Forms.Controls
                 // Show current value when moving, mousedown ?
                 FreezeScalerCB = false;
                 panelPowerScaler1.Visible = true;
-
             }
             else
             {
