@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
@@ -277,6 +278,49 @@ namespace Mids_Reborn.Forms.Controls
                 };
             }
 
+            public string GetStatName()
+            {
+                if (EffectType == Enums.eEffectType.Enhancement)
+                {
+                    switch (SubEffectType)
+                    {
+                        case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezResist:
+                        case Enums.eEffectType.DamageBuff:
+                        case Enums.eEffectType.Resistance:
+                        case Enums.eEffectType.Defense:
+                        case Enums.eEffectType.Elusivity:
+                            return $"{EffectType} to {SubEffectType}";
+
+                        default:
+                            return $"{EffectType} to {ETModifiesString()}";
+                    }
+                }
+
+                switch (EffectType)
+                {
+                    case Enums.eEffectType.Mez:
+                    case Enums.eEffectType.MezResist:
+                        return $"{EffectType}({MezTypesString()}";
+
+                    case Enums.eEffectType.DamageBuff:
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Elusivity:
+                        return $"{EffectType}({DamageTypesString()})";
+
+                    default:
+                        return $"{EffectType}";
+                }
+            }
+
+            public string GetMagString()
+            {
+                return EffectType == Enums.eEffectType.Enhancement
+                    ? $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")}"
+                    : $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")}";
+            }
+
             public override string ToString()
             {
                 if (EffectType == Enums.eEffectType.Enhancement)
@@ -289,6 +333,7 @@ namespace Mids_Reborn.Forms.Controls
 
                         case Enums.eEffectType.DamageBuff:
                         case Enums.eEffectType.Resistance:
+                        case Enums.eEffectType.Defense:
                         case Enums.eEffectType.Elusivity:
                             return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({DamageTypesString()}){ToWhoString()}";
 
@@ -301,15 +346,16 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     case Enums.eEffectType.Mez:
                     case Enums.eEffectType.MezResist:
-                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({MezTypesString()}){ToWhoString()}";
+                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({MezTypesString()}){ToWhoString()}";
 
                     case Enums.eEffectType.DamageBuff:
                     case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Defense:
                     case Enums.eEffectType.Elusivity:
-                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({DamageTypesString()}){ToWhoString()}";
+                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({DamageTypesString()}){ToWhoString()}";
 
                     default:
-                        return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}{ToWhoString()}";
+                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}{ToWhoString()}";
                 }
             }
         }
@@ -809,7 +855,6 @@ namespace Mids_Reborn.Forms.Controls
             var labels = effectGroups.Groups.Keys.ToList();
             for (var i = 0 ; i < effectGroups.Groups.Count ; i+=2)
             {
-                // Set group labels
                 if (i < effectGroups.Groups.Count - 1)
                 {
                     switch (i)
@@ -844,10 +889,45 @@ namespace Mids_Reborn.Forms.Controls
                             break;
                     }
                 }
-
-                // Display GroupedEffects
-                // Convert RTF Boxes into ListViews
             }
+
+            lvEffectsBlock1L.BeginUpdate();
+            lvEffectsBlock1R.BeginUpdate();
+            lvEffectsBlock2L.BeginUpdate();
+            lvEffectsBlock2R.BeginUpdate();
+            lvEffectsBlock3L.BeginUpdate();
+            lvEffectsBlock3R.BeginUpdate();
+
+            var groupedItems = effectGroups.Groups.Values.ToList();
+            for (var i = 0; i < groupedItems.Count; i++)
+            {
+                var target = i switch
+                {
+                    0 => lvEffectsBlock1L,
+                    1 => lvEffectsBlock1R,
+                    2 => lvEffectsBlock2L,
+                    3 => lvEffectsBlock2R,
+                    4 => lvEffectsBlock3L,
+                    _ => lvEffectsBlock3R
+                };
+
+                for (var j = 0 ; j < groupedItems[i].Count; j++)
+                {
+                    var boostType = groupedItems[i][j].GetBoostType();
+                    var stat = groupedItems[i][j].GetStatName();
+                    var mag = groupedItems[i][j].GetMagString();
+                    var lvItem = CreateStatLvItem(stat, mag, boostType, $"{groupedItems[i][j]}");
+
+                    target.Items.Add(lvItem);
+                }
+            }
+
+            lvEffectsBlock1L.EndUpdate();
+            lvEffectsBlock1R.EndUpdate();
+            lvEffectsBlock2L.EndUpdate();
+            lvEffectsBlock2R.EndUpdate();
+            lvEffectsBlock3L.EndUpdate();
+            lvEffectsBlock3R.EndUpdate();
         }
 
         #endregion
