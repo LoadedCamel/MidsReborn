@@ -266,7 +266,8 @@ namespace mrbBase
             bool shortForm,
             bool simple,
             bool noMag = false,
-            bool fromPopup = false);
+            bool fromPopup = false,
+            bool ignoreConditions = false);
 
         int[] AbsorbEffects(
             IPower source,

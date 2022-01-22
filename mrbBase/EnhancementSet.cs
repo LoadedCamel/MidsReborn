@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FastDeepCloner;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
@@ -211,7 +212,7 @@ namespace mrbBase
             return ret;
         }
 
-        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false)
+        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false)
         {
             BonusItem[] bonusItemArray;
             if (special)
@@ -234,7 +235,7 @@ namespace mrbBase
             }
             else
             {
-                var empty1 = string.Empty;
+                var effectList = new List<string>();
                 for (var index1 = 0; index1 <= bonusItemArray[index].Name.Length - 1; ++index1)
                 {
                     if ((bonusItemArray[index].Index[index1] < 0) | (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
@@ -243,10 +244,10 @@ namespace mrbBase
                     }
                     var empty2 = string.Empty;
                     var returnMask = Array.Empty<int>();
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup);
+                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
                     if (!string.IsNullOrEmpty(empty2))
                     {
-                        empty1 += empty2;
+                        effectList.Add(empty2);
                     }
                     for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
                     {
@@ -264,35 +265,37 @@ namespace mrbBase
                             continue;
                         }
 
-                        if (!string.IsNullOrEmpty(empty1))
-                        {
-                            empty1 += ", ";
-                        }
-
                         string str2;
                         if (longForm)
                         {
-                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup);
+                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true);
                         }
                         else
                         {
                             str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
                         }
+                        
 
+                        if (effectList.Any(s => s == str2)) continue;
+                        
                         if (str2.Contains("EndRec"))
                         {
                             str2 = str2.Replace("EndRec", "Recovery");
                         }
 
-                        empty1 += str2;
+                        effectList.Add(str2);
                     }
                 }
 
-                str1 = empty1;
-                str1 = Regex.Replace(str1, @"(Defense\(Melee\), \d+% Defense\(AoE\), \d+% Defense\(Ranged\), \d+% Defense\(Smashing\), \d+% Defense\(Lethal\), \d+% Defense\(Fire\), \d+% Defense\(Cold\), \d+% Defense\(Energy\), \d+% Defense\(Negative\), \d+% Defense\(Psionic\))", @"Defense(All)");
-                str1 = Regex.Replace(str1, @"((Resistance\(Smashing\), \d+% Resistance\(Lethal\), | Resistance\(Lethal\), \d+% Resistance\(Smashing\),) \d+% Resistance\(Fire\), \d+% Resistance\(Cold\), \d+% Resistance\(Energy\), \d+% Resistance\(Negative\), \d+% Resistance\(Psionic\), \d+% Resistance\(Toxic\))", @" Resistance(All)");
-                str1 = Regex.Replace(str1, @"(MezResist\(Immobilized\).*MezResist\(Held\).*MezResist\(Stunned\).*MezResist\(Sleep\).*MezResist\(Terrorized\).*MezResist\(Confused\))", @"MezResist(All)");
-                str1 = Regex.Replace(str1, @"(SpeedJumping.*JumpHeight.*SpeedFlying.*SpeedRunning)", @"Movement");
+                str1 = string.Join(", ", effectList.ToArray());
+                if (bonusSection && !status)
+                {
+                    Utilities.ModifiedEffectString(ref str1, 1);
+                }
+                else
+                {
+                    Utilities.ModifiedEffectString(ref str1, 2);
+                }
             }
 
             return str1;

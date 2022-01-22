@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1681,16 +1682,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
             var names = Enum.GetNames(eSetType.GetType());
-            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1)))
-                return;
+            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1))) return;
             var flag = false;
             var num = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num; ++index)
+            {
                 if (myPower.SetTypes[index] == (Enums.eSetType) invSetListIndex)
+                {
                     flag = true;
+                }
+            }
 
-            if (flag | (myPower.SetTypes.Length > 10))
+            if (flag | (myPower.SetTypes.Length > 15))
+            {
                 return;
+            }
+
             var eSetTypeList = myPower.SetTypes.ToList();
             eSetTypeList.Add((Enums.eSetType)invSetListIndex);
             myPower.SetTypes = eSetTypeList.ToArray();
@@ -1720,18 +1727,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
             if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
+            {
                 return;
+            }
+
             var numArray = new int[myPower.SetTypes.Length];
             var num1 = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num1; ++index)
+            {
                 numArray[index] = (int) myPower.SetTypes[index];
+            }
+
             var index1 = 0;
             myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
             var num2 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
             {
                 if (index2 == invSetIndex)
+                {
                     continue;
+                }
+
                 myPower.SetTypes[index1] = (Enums.eSetType) numArray[index2];
                 ++index1;
             }

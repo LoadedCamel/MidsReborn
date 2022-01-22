@@ -191,7 +191,10 @@ namespace Mids_Reborn.Forms
             get
             {
                 if (i9Picker.Height <= 235)
+                {
                     i9Picker.Height = 315;
+                }
+
                 return i9Picker;
             }
             set => i9Picker = value;
@@ -2311,7 +2314,7 @@ namespace Mids_Reborn.Forms
 
         private void I9Picker_EnhancementPicked(I9Slot e)
         {
-            e.RelativeLevel = I9Picker.UI.View.RelLevel;
+            e.RelativeLevel = I9Picker.Ui.View.RelLevel;
             if (EnhancingSlot <= -1)
                 return;
             // Let popup visible when repeating enhancement
@@ -2391,9 +2394,9 @@ namespace Mids_Reborn.Forms
             var i9Slot = new I9Slot
             {
                 Enh = e,
-                IOLevel = I9Picker.CheckAndReturnIOLevel() - 1,
-                Grade = I9Picker.UI.View.GradeID,
-                RelativeLevel = I9Picker.UI.View.RelLevel
+                IOLevel = I9Picker.CheckAndReturnIoLevel() - 1,
+                Grade = I9Picker.Ui.View.GradeId,
+                RelativeLevel = I9Picker.Ui.View.RelLevel
             };
             myDataView.SetEnhancementPicker(i9Slot);
             ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot);
@@ -5484,7 +5487,7 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon == null)
                 return;
             if (MidsContext.Character.CurrentBuild.SetEnhRelativeLevels(newVal))
-                I9Picker.UI.Initial.RelLevel = newVal;
+                I9Picker.Ui.Initial.RelLevel = newVal;
             info_Totals();
             DoRedraw();
         }
@@ -5544,7 +5547,7 @@ namespace Mids_Reborn.Forms
             if (MidsContext.Character == null)
                 return;
             if (MidsContext.Character.CurrentBuild.SetEnhGrades(grade))
-                I9Picker.UI.Initial.GradeID = grade;
+                I9Picker.Ui.Initial.GradeId = grade;
             info_Totals();
             DoRedraw();
         }

@@ -900,7 +900,7 @@ namespace mrbBase.Base.Data_Classes
             return str5.Trim() + iStr + str4;
         }
 
-        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false)
+        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false)
         {
             var sBuild = string.Empty;
             var sSubEffect = string.Empty;
@@ -1100,42 +1100,55 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
+            if (!ignoreConditions)
             {
-                sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
-            }
-
-            if (ActiveConditionals.Count > 0)
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                var conList = new List<string>();
-                foreach (var cVp in ActiveConditionals)
+                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
                 {
-                    var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    string conditionOperator;
-                    if (cVp.Value.Equals("True")) { conditionOperator = "is "; }
-                    else if (cVp.Value.Equals("False")) { conditionOperator = "not "; }
-                    else { conditionOperator = ""; }
+                    sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+                }
 
-                    if (!condition.Equals("Stacks") && !condition.Equals("Team"))
+                if (ActiveConditionals.Count > 0)
+                {
+                    var getCondition = new Regex("(:.*)");
+                    var getConditionItem = new Regex("(.*:)");
+                    var conList = new List<string>();
+                    foreach (var cVp in ActiveConditionals)
                     {
-                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                        var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
+                        var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
+                        var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                        string conditionOperator;
+                        if (cVp.Value.Equals("True"))
+                        {
+                            conditionOperator = "is ";
+                        }
+                        else if (cVp.Value.Equals("False"))
+                        {
+                            conditionOperator = "not ";
+                        }
+                        else
+                        {
+                            conditionOperator = "";
+                        }
+
+                        if (!condition.Equals("Stacks") && !condition.Equals("Team"))
+                        {
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                        }
+                        else if (condition.Equals("Stacks"))
+                        {
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
+                        }
+                        else if (condition.Equals("Team"))
+                        {
+                            conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
+                        }
+
+                        /*conList.Add(!condition.Equals("Stacks")
+                            ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
+                            : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
+                        sConditional = string.Join(" AND ", conList);
                     }
-                    else if (condition.Equals("Stacks"))
-                    {
-                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
-                    }
-                    else if (condition.Equals("Team"))
-                    {
-                        conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
-                    }
-                    /*conList.Add(!condition.Equals("Stacks")
-                        ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
-                        : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
-                    sConditional = string.Join(" AND ", conList);
                 }
             }
 
@@ -1313,10 +1326,15 @@ namespace mrbBase.Base.Data_Classes
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
+                    {
                         sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                    }
+
                     if (!noMag)
                         sMag = $" (Mag {sMag})";
+
                     sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
+
                     break;
                 case Enums.eEffectType.MezResist:
                     sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
