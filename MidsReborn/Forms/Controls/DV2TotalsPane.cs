@@ -6,23 +6,11 @@ using System.Windows.Forms;
 using mrbControls;
 using Syncfusion.Drawing;
 
-/* Currently bugged:
-
-The control Mids_Reborn.Forms.Controls.DV2TotalsPane has thrown an unhandled exception in the designer and has been disabled.
-
-Exception:
-Object reference not set to an instance of an object.
-
-Stack trace:
-   at Mids_Reborn.Forms.Controls.DV2TotalsPane.DrawLabels() in \MidsReborn\Forms\Controls\DV2TotalsPane.cs:line 125
-   at Mids_Reborn.Forms.Controls.DV2TotalsPane.OnPaint(PaintEventArgs e) in \MidsReborn\Forms\Controls\DV2TotalsPane.cs:line 202
- */
-
 namespace Mids_Reborn.Forms.Controls
 {
     public partial class DV2TotalsPane : UserControl
     {
-        private List<Item> Items;
+        private List<Item> Items = new();
         private Color _BackgroundColorEnd;
         private int VisibleItemsCount => Math.Min(Items.Count, MaxItems);
         private const int BarHeight = 10;
@@ -90,7 +78,7 @@ namespace Mids_Reborn.Forms.Controls
         private void DrawBars()
         {
             gradientPanel1.Controls.Clear();
-            for (var i = 0; i < VisibleItemsCount; i++)
+            for (var i = 0; i < Math.Min(Items.Count, VisibleItemsCount); i++)
             {
                 var bar = new ctlLayeredBarPb
                 {
