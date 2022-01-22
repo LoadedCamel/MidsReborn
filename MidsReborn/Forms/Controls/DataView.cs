@@ -3005,10 +3005,8 @@ namespace Mids_Reborn.Forms.Controls
                     return FastItem("", 0.0f, 0.0f, string.Empty);
             }
 
-            for (var index = 0; index < shortFxEnh.Index.Length; index++)
+            for (var index = 0; index < shortFxEnh.Index.Length -1; index++)
             {
-                if (shortFxEnh.Index[index] >= pBase.Effects.Length)
-                    continue;
                 if (shortFxEnh.Index[index] <= -1 || !pBase.Effects[shortFxEnh.Index[index]].DisplayPercentage)
                     continue;
                 if (shortFxEnh.Value[index] > 1)
@@ -3037,7 +3035,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 break;
             }
-
+            
             var iTip = GetToolTip(shortFxEnh);
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
