@@ -42,6 +42,24 @@
             this.richInfoSmall = new System.Windows.Forms.RichTextBox();
             this.infoTabTitle = new System.Windows.Forms.Label();
             this.tabPageAdv2 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
+            this.lvEffectsBlock3R = new System.Windows.Forms.ListView();
+            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvEffectsBlock3L = new System.Windows.Forms.ListView();
+            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvEffectsBlock2R = new System.Windows.Forms.ListView();
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvEffectsBlock2L = new System.Windows.Forms.ListView();
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvEffectsBlock1R = new System.Windows.Forms.ListView();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvEffectsBlock1L = new System.Windows.Forms.ListView();
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblEffectsBlock3 = new System.Windows.Forms.Label();
             this.lblEffectsBlock2 = new System.Windows.Forms.Label();
             this.lblEffectsBlock1 = new System.Windows.Forms.Label();
@@ -49,14 +67,12 @@
             this.tabPageAdv3 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox8 = new System.Windows.Forms.RichTextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.dV2TotalsPane3 = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.dV2TotalsPane4 = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane2R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane2L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.label6 = new System.Windows.Forms.Label();
-            this.dV2TotalsPane2 = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.dV2TotalsPane1 = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane1R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane1L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.pnlEnhAlt = new System.Windows.Forms.Panel();
@@ -77,24 +93,12 @@
             this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.scalesTabTitle = new System.Windows.Forms.Label();
-            this.lvEffectsBlock1R = new System.Windows.Forms.ListView();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvEffectsBlock1L = new System.Windows.Forms.ListView();
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvEffectsBlock2R = new System.Windows.Forms.ListView();
-            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvEffectsBlock2L = new System.Windows.Forms.ListView();
-            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvEffectsBlock3R = new System.Windows.Forms.ListView();
-            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvEffectsBlock3L = new System.Windows.Forms.ListView();
-            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.totalsMiscEffectsR = new System.Windows.Forms.ListView();
+            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.totalsMiscEffectsL = new System.Windows.Forms.ListView();
+            this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
             this.tabBox.SuspendLayout();
             this.tabPageAdv1.SuspendLayout();
@@ -131,7 +135,7 @@
             this.tabBox.TabIndex = 0;
             this.tabBox.TabPanelBackColor = System.Drawing.Color.Black;
             this.tabBox.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRenderer2D);
-            this.tabBox.Text = "EFFECTS";
+            this.tabBox.Text = "TOTALS";
             this.tabBox.ThemeName = "TabRenderer2D";
             this.tabBox.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             this.tabBox.UseMnemonic = false;
@@ -338,6 +342,210 @@
             this.tabPageAdv2.Text = "EFFECTS";
             this.tabPageAdv2.ThemesEnabled = false;
             // 
+            // lvEffectsBlock3R
+            // 
+            this.lvEffectsBlock3R.AutoArrange = false;
+            this.lvEffectsBlock3R.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock3R.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock3R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader13,
+            this.columnHeader14});
+            this.lvEffectsBlock3R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock3R.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock3R.FullRowSelect = true;
+            this.lvEffectsBlock3R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock3R.HideSelection = false;
+            this.lvEffectsBlock3R.HoverSelection = true;
+            this.lvEffectsBlock3R.LabelWrap = false;
+            this.lvEffectsBlock3R.Location = new System.Drawing.Point(189, 373);
+            this.lvEffectsBlock3R.MultiSelect = false;
+            this.lvEffectsBlock3R.Name = "lvEffectsBlock3R";
+            this.lvEffectsBlock3R.Scrollable = false;
+            this.lvEffectsBlock3R.ShowGroups = false;
+            this.lvEffectsBlock3R.ShowItemToolTips = true;
+            this.lvEffectsBlock3R.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock3R.TabIndex = 19;
+            this.lvEffectsBlock3R.TabStop = false;
+            this.lvEffectsBlock3R.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader13
+            // 
+            this.columnHeader13.Width = 73;
+            // 
+            // columnHeader14
+            // 
+            this.columnHeader14.Width = 73;
+            // 
+            // lvEffectsBlock3L
+            // 
+            this.lvEffectsBlock3L.AutoArrange = false;
+            this.lvEffectsBlock3L.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock3L.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock3L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader15,
+            this.columnHeader16});
+            this.lvEffectsBlock3L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock3L.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock3L.FullRowSelect = true;
+            this.lvEffectsBlock3L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock3L.HideSelection = false;
+            this.lvEffectsBlock3L.HoverSelection = true;
+            this.lvEffectsBlock3L.LabelWrap = false;
+            this.lvEffectsBlock3L.Location = new System.Drawing.Point(4, 373);
+            this.lvEffectsBlock3L.MultiSelect = false;
+            this.lvEffectsBlock3L.Name = "lvEffectsBlock3L";
+            this.lvEffectsBlock3L.Scrollable = false;
+            this.lvEffectsBlock3L.ShowGroups = false;
+            this.lvEffectsBlock3L.ShowItemToolTips = true;
+            this.lvEffectsBlock3L.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock3L.TabIndex = 18;
+            this.lvEffectsBlock3L.TabStop = false;
+            this.lvEffectsBlock3L.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader15
+            // 
+            this.columnHeader15.Width = 73;
+            // 
+            // columnHeader16
+            // 
+            this.columnHeader16.Width = 73;
+            // 
+            // lvEffectsBlock2R
+            // 
+            this.lvEffectsBlock2R.AutoArrange = false;
+            this.lvEffectsBlock2R.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock2R.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock2R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader9,
+            this.columnHeader10});
+            this.lvEffectsBlock2R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock2R.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock2R.FullRowSelect = true;
+            this.lvEffectsBlock2R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock2R.HideSelection = false;
+            this.lvEffectsBlock2R.HoverSelection = true;
+            this.lvEffectsBlock2R.LabelWrap = false;
+            this.lvEffectsBlock2R.Location = new System.Drawing.Point(189, 209);
+            this.lvEffectsBlock2R.MultiSelect = false;
+            this.lvEffectsBlock2R.Name = "lvEffectsBlock2R";
+            this.lvEffectsBlock2R.Scrollable = false;
+            this.lvEffectsBlock2R.ShowGroups = false;
+            this.lvEffectsBlock2R.ShowItemToolTips = true;
+            this.lvEffectsBlock2R.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock2R.TabIndex = 17;
+            this.lvEffectsBlock2R.TabStop = false;
+            this.lvEffectsBlock2R.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Width = 73;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Width = 73;
+            // 
+            // lvEffectsBlock2L
+            // 
+            this.lvEffectsBlock2L.AutoArrange = false;
+            this.lvEffectsBlock2L.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock2L.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock2L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader11,
+            this.columnHeader12});
+            this.lvEffectsBlock2L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock2L.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock2L.FullRowSelect = true;
+            this.lvEffectsBlock2L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock2L.HideSelection = false;
+            this.lvEffectsBlock2L.HoverSelection = true;
+            this.lvEffectsBlock2L.LabelWrap = false;
+            this.lvEffectsBlock2L.Location = new System.Drawing.Point(4, 209);
+            this.lvEffectsBlock2L.MultiSelect = false;
+            this.lvEffectsBlock2L.Name = "lvEffectsBlock2L";
+            this.lvEffectsBlock2L.Scrollable = false;
+            this.lvEffectsBlock2L.ShowGroups = false;
+            this.lvEffectsBlock2L.ShowItemToolTips = true;
+            this.lvEffectsBlock2L.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock2L.TabIndex = 16;
+            this.lvEffectsBlock2L.TabStop = false;
+            this.lvEffectsBlock2L.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Width = 73;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Width = 73;
+            // 
+            // lvEffectsBlock1R
+            // 
+            this.lvEffectsBlock1R.AutoArrange = false;
+            this.lvEffectsBlock1R.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock1R.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock1R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6});
+            this.lvEffectsBlock1R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock1R.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock1R.FullRowSelect = true;
+            this.lvEffectsBlock1R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock1R.HideSelection = false;
+            this.lvEffectsBlock1R.HoverSelection = true;
+            this.lvEffectsBlock1R.LabelWrap = false;
+            this.lvEffectsBlock1R.Location = new System.Drawing.Point(189, 45);
+            this.lvEffectsBlock1R.MultiSelect = false;
+            this.lvEffectsBlock1R.Name = "lvEffectsBlock1R";
+            this.lvEffectsBlock1R.Scrollable = false;
+            this.lvEffectsBlock1R.ShowGroups = false;
+            this.lvEffectsBlock1R.ShowItemToolTips = true;
+            this.lvEffectsBlock1R.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock1R.TabIndex = 15;
+            this.lvEffectsBlock1R.TabStop = false;
+            this.lvEffectsBlock1R.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Width = 73;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Width = 73;
+            // 
+            // lvEffectsBlock1L
+            // 
+            this.lvEffectsBlock1L.AutoArrange = false;
+            this.lvEffectsBlock1L.BackColor = System.Drawing.Color.Black;
+            this.lvEffectsBlock1L.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvEffectsBlock1L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader7,
+            this.columnHeader8});
+            this.lvEffectsBlock1L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvEffectsBlock1L.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lvEffectsBlock1L.FullRowSelect = true;
+            this.lvEffectsBlock1L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvEffectsBlock1L.HideSelection = false;
+            this.lvEffectsBlock1L.HoverSelection = true;
+            this.lvEffectsBlock1L.LabelWrap = false;
+            this.lvEffectsBlock1L.Location = new System.Drawing.Point(4, 45);
+            this.lvEffectsBlock1L.MultiSelect = false;
+            this.lvEffectsBlock1L.Name = "lvEffectsBlock1L";
+            this.lvEffectsBlock1L.Scrollable = false;
+            this.lvEffectsBlock1L.ShowGroups = false;
+            this.lvEffectsBlock1L.ShowItemToolTips = true;
+            this.lvEffectsBlock1L.Size = new System.Drawing.Size(185, 144);
+            this.lvEffectsBlock1L.TabIndex = 14;
+            this.lvEffectsBlock1L.TabStop = false;
+            this.lvEffectsBlock1L.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Width = 73;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Width = 73;
+            // 
             // lblEffectsBlock3
             // 
             this.lblEffectsBlock3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -382,16 +590,16 @@
             // tabPageAdv3
             // 
             this.tabPageAdv3.BackColor = System.Drawing.Color.Green;
+            this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsR);
+            this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsL);
             this.tabPageAdv3.Controls.Add(this.label9);
             this.tabPageAdv3.Controls.Add(this.label8);
-            this.tabPageAdv3.Controls.Add(this.richTextBox7);
-            this.tabPageAdv3.Controls.Add(this.richTextBox8);
             this.tabPageAdv3.Controls.Add(this.label7);
-            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane3);
-            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane4);
+            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane2R);
+            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane2L);
             this.tabPageAdv3.Controls.Add(this.label6);
-            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane2);
-            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane1);
+            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane1R);
+            this.tabPageAdv3.Controls.Add(this.dV2TotalsPane1L);
             this.tabPageAdv3.Controls.Add(this.label5);
             this.tabPageAdv3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.tabPageAdv3.ForeColor = System.Drawing.Color.White;
@@ -430,36 +638,6 @@
             this.label8.Text = "Misc effects:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // richTextBox7
-            // 
-            this.richTextBox7.BackColor = System.Drawing.Color.Black;
-            this.richTextBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox7.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox7.DetectUrls = false;
-            this.richTextBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox7.ForeColor = System.Drawing.Color.White;
-            this.richTextBox7.Location = new System.Drawing.Point(189, 361);
-            this.richTextBox7.Name = "richTextBox7";
-            this.richTextBox7.ReadOnly = true;
-            this.richTextBox7.Size = new System.Drawing.Size(185, 128);
-            this.richTextBox7.TabIndex = 9;
-            this.richTextBox7.Text = "Stats 2";
-            // 
-            // richTextBox8
-            // 
-            this.richTextBox8.BackColor = System.Drawing.Color.Black;
-            this.richTextBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox8.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox8.DetectUrls = false;
-            this.richTextBox8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox8.ForeColor = System.Drawing.Color.White;
-            this.richTextBox8.Location = new System.Drawing.Point(4, 361);
-            this.richTextBox8.Name = "richTextBox8";
-            this.richTextBox8.ReadOnly = true;
-            this.richTextBox8.Size = new System.Drawing.Size(185, 128);
-            this.richTextBox8.TabIndex = 8;
-            this.richTextBox8.Text = "Stats 1";
-            // 
             // label7
             // 
             this.label7.BackColor = System.Drawing.Color.Green;
@@ -470,27 +648,27 @@
             this.label7.TabIndex = 6;
             this.label7.Text = "Resistance:";
             // 
-            // dV2TotalsPane3
+            // dV2TotalsPane2R
             // 
-            this.dV2TotalsPane3.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane3.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane3.Location = new System.Drawing.Point(189, 202);
-            this.dV2TotalsPane3.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane3.Name = "dV2TotalsPane3";
-            this.dV2TotalsPane3.Size = new System.Drawing.Size(185, 138);
-            this.dV2TotalsPane3.TabIndex = 5;
-            this.dV2TotalsPane3.TabStop = false;
+            this.dV2TotalsPane2R.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane2R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane2R.Location = new System.Drawing.Point(189, 202);
+            this.dV2TotalsPane2R.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane2R.Name = "dV2TotalsPane2R";
+            this.dV2TotalsPane2R.Size = new System.Drawing.Size(185, 138);
+            this.dV2TotalsPane2R.TabIndex = 5;
+            this.dV2TotalsPane2R.TabStop = false;
             // 
-            // dV2TotalsPane4
+            // dV2TotalsPane2L
             // 
-            this.dV2TotalsPane4.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane4.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane4.Location = new System.Drawing.Point(4, 202);
-            this.dV2TotalsPane4.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane4.Name = "dV2TotalsPane4";
-            this.dV2TotalsPane4.Size = new System.Drawing.Size(185, 138);
-            this.dV2TotalsPane4.TabIndex = 4;
-            this.dV2TotalsPane4.TabStop = false;
+            this.dV2TotalsPane2L.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane2L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane2L.Location = new System.Drawing.Point(4, 202);
+            this.dV2TotalsPane2L.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane2L.Name = "dV2TotalsPane2L";
+            this.dV2TotalsPane2L.Size = new System.Drawing.Size(185, 138);
+            this.dV2TotalsPane2L.TabIndex = 4;
+            this.dV2TotalsPane2L.TabStop = false;
             // 
             // label6
             // 
@@ -502,27 +680,27 @@
             this.label6.TabIndex = 3;
             this.label6.Text = "Defense:";
             // 
-            // dV2TotalsPane2
+            // dV2TotalsPane1R
             // 
-            this.dV2TotalsPane2.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane2.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane2.Location = new System.Drawing.Point(189, 45);
-            this.dV2TotalsPane2.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane2.Name = "dV2TotalsPane2";
-            this.dV2TotalsPane2.Size = new System.Drawing.Size(185, 138);
-            this.dV2TotalsPane2.TabIndex = 2;
-            this.dV2TotalsPane2.TabStop = false;
+            this.dV2TotalsPane1R.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane1R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane1R.Location = new System.Drawing.Point(189, 45);
+            this.dV2TotalsPane1R.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane1R.Name = "dV2TotalsPane1R";
+            this.dV2TotalsPane1R.Size = new System.Drawing.Size(185, 138);
+            this.dV2TotalsPane1R.TabIndex = 2;
+            this.dV2TotalsPane1R.TabStop = false;
             // 
-            // dV2TotalsPane1
+            // dV2TotalsPane1L
             // 
-            this.dV2TotalsPane1.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane1.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane1.Location = new System.Drawing.Point(4, 45);
-            this.dV2TotalsPane1.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane1.Name = "dV2TotalsPane1";
-            this.dV2TotalsPane1.Size = new System.Drawing.Size(185, 138);
-            this.dV2TotalsPane1.TabIndex = 1;
-            this.dV2TotalsPane1.TabStop = false;
+            this.dV2TotalsPane1L.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane1L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane1L.Location = new System.Drawing.Point(4, 45);
+            this.dV2TotalsPane1L.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane1L.Name = "dV2TotalsPane1L";
+            this.dV2TotalsPane1L.Size = new System.Drawing.Size(185, 138);
+            this.dV2TotalsPane1L.TabIndex = 1;
+            this.dV2TotalsPane1L.TabStop = false;
             // 
             // label5
             // 
@@ -930,209 +1108,73 @@
             this.scalesTabTitle.Text = "Title";
             this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lvEffectsBlock1R
+            // totalsMiscEffectsR
             // 
-            this.lvEffectsBlock1R.AutoArrange = false;
-            this.lvEffectsBlock1R.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock1R.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock1R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.lvEffectsBlock1R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock1R.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock1R.FullRowSelect = true;
-            this.lvEffectsBlock1R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock1R.HideSelection = false;
-            this.lvEffectsBlock1R.HoverSelection = true;
-            this.lvEffectsBlock1R.LabelWrap = false;
-            this.lvEffectsBlock1R.Location = new System.Drawing.Point(189, 45);
-            this.lvEffectsBlock1R.MultiSelect = false;
-            this.lvEffectsBlock1R.Name = "lvEffectsBlock1R";
-            this.lvEffectsBlock1R.Scrollable = false;
-            this.lvEffectsBlock1R.ShowGroups = false;
-            this.lvEffectsBlock1R.ShowItemToolTips = true;
-            this.lvEffectsBlock1R.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock1R.TabIndex = 15;
-            this.lvEffectsBlock1R.TabStop = false;
-            this.lvEffectsBlock1R.UseCompatibleStateImageBehavior = false;
+            this.totalsMiscEffectsR.AutoArrange = false;
+            this.totalsMiscEffectsR.BackColor = System.Drawing.Color.Black;
+            this.totalsMiscEffectsR.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.totalsMiscEffectsR.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader17,
+            this.columnHeader18});
+            this.totalsMiscEffectsR.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalsMiscEffectsR.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.totalsMiscEffectsR.FullRowSelect = true;
+            this.totalsMiscEffectsR.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.totalsMiscEffectsR.HideSelection = false;
+            this.totalsMiscEffectsR.HoverSelection = true;
+            this.totalsMiscEffectsR.LabelWrap = false;
+            this.totalsMiscEffectsR.Location = new System.Drawing.Point(189, 361);
+            this.totalsMiscEffectsR.MultiSelect = false;
+            this.totalsMiscEffectsR.Name = "totalsMiscEffectsR";
+            this.totalsMiscEffectsR.Scrollable = false;
+            this.totalsMiscEffectsR.ShowGroups = false;
+            this.totalsMiscEffectsR.ShowItemToolTips = true;
+            this.totalsMiscEffectsR.Size = new System.Drawing.Size(185, 128);
+            this.totalsMiscEffectsR.TabIndex = 17;
+            this.totalsMiscEffectsR.TabStop = false;
+            this.totalsMiscEffectsR.UseCompatibleStateImageBehavior = false;
             // 
-            // columnHeader5
+            // columnHeader17
             // 
-            this.columnHeader5.Width = 73;
+            this.columnHeader17.Width = 73;
             // 
-            // columnHeader6
+            // columnHeader18
             // 
-            this.columnHeader6.Width = 73;
+            this.columnHeader18.Width = 73;
             // 
-            // lvEffectsBlock1L
+            // totalsMiscEffectsL
             // 
-            this.lvEffectsBlock1L.AutoArrange = false;
-            this.lvEffectsBlock1L.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock1L.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock1L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader7,
-            this.columnHeader8});
-            this.lvEffectsBlock1L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock1L.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock1L.FullRowSelect = true;
-            this.lvEffectsBlock1L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock1L.HideSelection = false;
-            this.lvEffectsBlock1L.HoverSelection = true;
-            this.lvEffectsBlock1L.LabelWrap = false;
-            this.lvEffectsBlock1L.Location = new System.Drawing.Point(4, 45);
-            this.lvEffectsBlock1L.MultiSelect = false;
-            this.lvEffectsBlock1L.Name = "lvEffectsBlock1L";
-            this.lvEffectsBlock1L.Scrollable = false;
-            this.lvEffectsBlock1L.ShowGroups = false;
-            this.lvEffectsBlock1L.ShowItemToolTips = true;
-            this.lvEffectsBlock1L.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock1L.TabIndex = 14;
-            this.lvEffectsBlock1L.TabStop = false;
-            this.lvEffectsBlock1L.UseCompatibleStateImageBehavior = false;
+            this.totalsMiscEffectsL.AutoArrange = false;
+            this.totalsMiscEffectsL.BackColor = System.Drawing.Color.Black;
+            this.totalsMiscEffectsL.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.totalsMiscEffectsL.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader19,
+            this.columnHeader20});
+            this.totalsMiscEffectsL.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalsMiscEffectsL.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.totalsMiscEffectsL.FullRowSelect = true;
+            this.totalsMiscEffectsL.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.totalsMiscEffectsL.HideSelection = false;
+            this.totalsMiscEffectsL.HoverSelection = true;
+            this.totalsMiscEffectsL.LabelWrap = false;
+            this.totalsMiscEffectsL.Location = new System.Drawing.Point(4, 361);
+            this.totalsMiscEffectsL.MultiSelect = false;
+            this.totalsMiscEffectsL.Name = "totalsMiscEffectsL";
+            this.totalsMiscEffectsL.Scrollable = false;
+            this.totalsMiscEffectsL.ShowGroups = false;
+            this.totalsMiscEffectsL.ShowItemToolTips = true;
+            this.totalsMiscEffectsL.Size = new System.Drawing.Size(185, 128);
+            this.totalsMiscEffectsL.TabIndex = 16;
+            this.totalsMiscEffectsL.TabStop = false;
+            this.totalsMiscEffectsL.UseCompatibleStateImageBehavior = false;
             // 
-            // columnHeader7
+            // columnHeader19
             // 
-            this.columnHeader7.Width = 73;
+            this.columnHeader19.Width = 73;
             // 
-            // columnHeader8
+            // columnHeader20
             // 
-            this.columnHeader8.Width = 73;
-            // 
-            // lvEffectsBlock2R
-            // 
-            this.lvEffectsBlock2R.AutoArrange = false;
-            this.lvEffectsBlock2R.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock2R.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock2R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader9,
-            this.columnHeader10});
-            this.lvEffectsBlock2R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock2R.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock2R.FullRowSelect = true;
-            this.lvEffectsBlock2R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock2R.HideSelection = false;
-            this.lvEffectsBlock2R.HoverSelection = true;
-            this.lvEffectsBlock2R.LabelWrap = false;
-            this.lvEffectsBlock2R.Location = new System.Drawing.Point(189, 209);
-            this.lvEffectsBlock2R.MultiSelect = false;
-            this.lvEffectsBlock2R.Name = "lvEffectsBlock2R";
-            this.lvEffectsBlock2R.Scrollable = false;
-            this.lvEffectsBlock2R.ShowGroups = false;
-            this.lvEffectsBlock2R.ShowItemToolTips = true;
-            this.lvEffectsBlock2R.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock2R.TabIndex = 17;
-            this.lvEffectsBlock2R.TabStop = false;
-            this.lvEffectsBlock2R.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader9
-            // 
-            this.columnHeader9.Width = 73;
-            // 
-            // columnHeader10
-            // 
-            this.columnHeader10.Width = 73;
-            // 
-            // lvEffectsBlock2L
-            // 
-            this.lvEffectsBlock2L.AutoArrange = false;
-            this.lvEffectsBlock2L.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock2L.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock2L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader11,
-            this.columnHeader12});
-            this.lvEffectsBlock2L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock2L.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock2L.FullRowSelect = true;
-            this.lvEffectsBlock2L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock2L.HideSelection = false;
-            this.lvEffectsBlock2L.HoverSelection = true;
-            this.lvEffectsBlock2L.LabelWrap = false;
-            this.lvEffectsBlock2L.Location = new System.Drawing.Point(4, 209);
-            this.lvEffectsBlock2L.MultiSelect = false;
-            this.lvEffectsBlock2L.Name = "lvEffectsBlock2L";
-            this.lvEffectsBlock2L.Scrollable = false;
-            this.lvEffectsBlock2L.ShowGroups = false;
-            this.lvEffectsBlock2L.ShowItemToolTips = true;
-            this.lvEffectsBlock2L.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock2L.TabIndex = 16;
-            this.lvEffectsBlock2L.TabStop = false;
-            this.lvEffectsBlock2L.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader11
-            // 
-            this.columnHeader11.Width = 73;
-            // 
-            // columnHeader12
-            // 
-            this.columnHeader12.Width = 73;
-            // 
-            // lvEffectsBlock3R
-            // 
-            this.lvEffectsBlock3R.AutoArrange = false;
-            this.lvEffectsBlock3R.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock3R.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock3R.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader13,
-            this.columnHeader14});
-            this.lvEffectsBlock3R.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock3R.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock3R.FullRowSelect = true;
-            this.lvEffectsBlock3R.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock3R.HideSelection = false;
-            this.lvEffectsBlock3R.HoverSelection = true;
-            this.lvEffectsBlock3R.LabelWrap = false;
-            this.lvEffectsBlock3R.Location = new System.Drawing.Point(189, 373);
-            this.lvEffectsBlock3R.MultiSelect = false;
-            this.lvEffectsBlock3R.Name = "lvEffectsBlock3R";
-            this.lvEffectsBlock3R.Scrollable = false;
-            this.lvEffectsBlock3R.ShowGroups = false;
-            this.lvEffectsBlock3R.ShowItemToolTips = true;
-            this.lvEffectsBlock3R.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock3R.TabIndex = 19;
-            this.lvEffectsBlock3R.TabStop = false;
-            this.lvEffectsBlock3R.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader13
-            // 
-            this.columnHeader13.Width = 73;
-            // 
-            // columnHeader14
-            // 
-            this.columnHeader14.Width = 73;
-            // 
-            // lvEffectsBlock3L
-            // 
-            this.lvEffectsBlock3L.AutoArrange = false;
-            this.lvEffectsBlock3L.BackColor = System.Drawing.Color.Black;
-            this.lvEffectsBlock3L.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvEffectsBlock3L.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader15,
-            this.columnHeader16});
-            this.lvEffectsBlock3L.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvEffectsBlock3L.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lvEffectsBlock3L.FullRowSelect = true;
-            this.lvEffectsBlock3L.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvEffectsBlock3L.HideSelection = false;
-            this.lvEffectsBlock3L.HoverSelection = true;
-            this.lvEffectsBlock3L.LabelWrap = false;
-            this.lvEffectsBlock3L.Location = new System.Drawing.Point(4, 373);
-            this.lvEffectsBlock3L.MultiSelect = false;
-            this.lvEffectsBlock3L.Name = "lvEffectsBlock3L";
-            this.lvEffectsBlock3L.Scrollable = false;
-            this.lvEffectsBlock3L.ShowGroups = false;
-            this.lvEffectsBlock3L.ShowItemToolTips = true;
-            this.lvEffectsBlock3L.Size = new System.Drawing.Size(185, 144);
-            this.lvEffectsBlock3L.TabIndex = 18;
-            this.lvEffectsBlock3L.TabStop = false;
-            this.lvEffectsBlock3L.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader15
-            // 
-            this.columnHeader15.Width = 73;
-            // 
-            // columnHeader16
-            // 
-            this.columnHeader16.Width = 73;
+            this.columnHeader20.Width = 73;
             // 
             // DataView2
             // 
@@ -1172,15 +1214,13 @@
         private System.Windows.Forms.Label lblEffectsBlock1;
         private System.Windows.Forms.Label effectsTabTitle;
         private System.Windows.Forms.Label label5;
-        private DV2TotalsPane dV2TotalsPane2;
-        private DV2TotalsPane dV2TotalsPane1;
+        private DV2TotalsPane dV2TotalsPane1R;
+        private DV2TotalsPane dV2TotalsPane1L;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.RichTextBox richTextBox7;
-        private System.Windows.Forms.RichTextBox richTextBox8;
         private System.Windows.Forms.Label label7;
-        private DV2TotalsPane dV2TotalsPane3;
-        private DV2TotalsPane dV2TotalsPane4;
+        private DV2TotalsPane dV2TotalsPane2R;
+        private DV2TotalsPane dV2TotalsPane2L;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RichTextBox richTextBox9;
         private System.Windows.Forms.Label label11;
@@ -1224,5 +1264,11 @@
         private System.Windows.Forms.ListView lvEffectsBlock1L;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ListView totalsMiscEffectsR;
+        private System.Windows.Forms.ColumnHeader columnHeader17;
+        private System.Windows.Forms.ColumnHeader columnHeader18;
+        private System.Windows.Forms.ListView totalsMiscEffectsL;
+        private System.Windows.Forms.ColumnHeader columnHeader19;
+        private System.Windows.Forms.ColumnHeader columnHeader20;
     }
 }

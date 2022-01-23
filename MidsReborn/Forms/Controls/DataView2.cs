@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
@@ -996,7 +995,31 @@ namespace Mids_Reborn.Forms.Controls
         #region Totals Tab
         private void DisplayTotals()
         {
+            var displayStats = MidsContext.Character.DisplayStats;
 
+            dV2TotalsPane1L.ClearItems();
+            dV2TotalsPane1R.ClearItems();
+            var damageVectors = Enum.GetNames(typeof(Enums.eDamage));
+            for (var i = 1; i < damageVectors.Length; i++)
+            {
+                if (damageVectors[i] == "Toxic")
+                {
+                    continue;
+                }
+
+                var target = i < 6 ? dV2TotalsPane1L : dV2TotalsPane1R;
+                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.Defense(i), displayStats.Defense(0), true));
+            }
+
+            dV2TotalsPane2L.ClearItems();
+            dV2TotalsPane2R.ClearItems();
+            for (var i = 1; i < damageVectors.Length; i++)
+            {
+                var target = i < 6 ? dV2TotalsPane2L : dV2TotalsPane2R;
+                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.DamageResistance(i, false), displayStats.DamageResistance(i, true), true));
+            }
+
+            // Misc effects ??
         }
 
         #endregion
@@ -1005,7 +1028,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DisplayEnhance()
         {
-
+            
         }
 
         #endregion
