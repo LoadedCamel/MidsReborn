@@ -532,7 +532,6 @@ namespace Mids_Reborn
                                 nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                                 break;
                             case Enums.eEffectType.MezResist:
-                                effect.MezType = Enums.eMez.Afraid;
                                 nBuffs.StatusResistance[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                                 break;
                             case Enums.eEffectType.ResEffect:
