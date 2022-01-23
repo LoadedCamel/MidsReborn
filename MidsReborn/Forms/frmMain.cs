@@ -2569,13 +2569,7 @@ namespace Mids_Reborn.Forms
             DataViewLocked = Lock;
             if (powIndex > -1)
             {
-                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex).Clone();
-                if (basePower != null)
-                {
-                    var fxListBase = basePower.Effects.Where(fx => !fx.isEnhancementEffect);
-                    basePower.Effects = fxListBase.ToArray();
-                }
-
+                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex);
                 var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(powIndex);
                 if (basePower != null && enhancedPower != null)
                 {

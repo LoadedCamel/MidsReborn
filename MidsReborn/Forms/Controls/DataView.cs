@@ -890,25 +890,6 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.GraphType = MidsContext.Config.DataGraphType;
                 Info_Damage.TextAlign = Enums.eDDAlign.Center;
                 Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
-                /*switch (MidsContext.Config.DataGraphType)
-                {
-                    case Enums.eDDGraph.Simple:
-                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
-                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
-                        break;
-                    case Enums.eDDGraph.Enhanced:
-                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
-                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
-                        break;
-                    case Enums.eDDGraph.Both:
-                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
-                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
-                        break;
-                    case Enums.eDDGraph.Stacked:
-                        Info_Damage.TextAlign = Enums.eDDAlign.Center;
-                        Info_Damage.Style = Enums.eDDStyle.TextUnderGraph;
-                        break;
-                }*/
             }
             else
             {
@@ -1823,7 +1804,10 @@ namespace Mids_Reborn.Forms.Controls
                 if (!((pBase.Effects[index].EffectType == Enums.eEffectType.GrantPower) &
                       (pBase.Effects[index].Probability > 0.0) &
                       (pBase.Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
+                {
                     continue;
+                }
+
                 var iValue = "[Power]";
                 if (pEnh.Effects[index].nSummon > -1)
                 {
@@ -1833,23 +1817,32 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     var startIndex = pEnh.Effects[index].Summon.LastIndexOf(".", StringComparison.Ordinal) + 1;
                     if (startIndex < pEnh.Effects[index].Summon.Length)
+                    {
                         iValue = pEnh.Effects[index].Summon.Substring(startIndex);
+                    }
                 }
 
                 var iTip = pEnh.Effects[index].BuildEffectString();
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                {
                     iValue = "(suppressed)";
-                var iItem =
-                    new PairedList.ItemPair("GrantPwr:", iValue, false, pBase.Effects[index].Probability < 1.0,
-                        false, iTip);
+                }
+
+                var iItem = new PairedList.ItemPair("GrantPwr:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
                 iList.AddItem(iItem);
                 if (pBase.Effects[index].isEnhancementEffect)
+                {
                     iList.SetUnique();
+                }
+
                 ++num1;
             }
 
             if (num1 > 0 && flag)
+            {
                 iLabel.Text = "GrantPower Effects";
+            }
+
             return num1;
         }
 
