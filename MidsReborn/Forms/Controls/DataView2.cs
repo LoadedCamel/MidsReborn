@@ -5,18 +5,14 @@ using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
+using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace Mids_Reborn.Forms.Controls
 {
     public partial class DataView2 : UserControl
     {
-        private IPower _basePower;
-        private IPower _enhancedPower;
-        private int HistoryIdx = -1;
-        private bool NoLevel;
-        private PowerEntry BuildPowerEntry;
-        private bool FreezeScalerCB;
-
+        #region Private enums & structs
         private enum BoostType
         {
             Reduction,
@@ -33,8 +29,41 @@ namespace Mids_Reborn.Forms.Controls
             Any
         }
 
+        private struct ColorRange
+        {
+            public Color LowerBoundColor;
+            public Color UpperBoundColor;
+        }
+
+        private struct TrackGradientsScheme
+        {
+            public ColorRange ElapsedInnerColor;
+            public ColorRange ElapsedPenColorBottom;
+            public ColorRange ElapsedPenColorTop;
+        }
+        #endregion
+
+        private IPower _basePower;
+        private IPower _enhancedPower;
+        private int HistoryIdx = -1;
+        private bool NoLevel;
+        private PowerEntry BuildPowerEntry;
+        private bool FreezeScalerCB;
+
+        // Track bar colors for power scalers
+        private readonly TrackGradientsScheme TrackColors = new()
+        {
+            ElapsedInnerColor = new ColorRange { LowerBoundColor = Color.FromArgb(0, 51, 0), UpperBoundColor = Color.FromArgb(0, 128, 0) },
+            ElapsedPenColorBottom = new ColorRange { LowerBoundColor = Color.FromArgb(58, 94, 58), UpperBoundColor = Color.FromArgb(144, 238, 44) },
+            ElapsedPenColorTop = new ColorRange { LowerBoundColor = Color.FromArgb(0, 102, 51), UpperBoundColor = Color.FromArgb(0, 255, 127) }
+        };
+
+        public bool Locked;
+
+        // Group labels (effects tab)
         private static readonly List<string> GroupLabels = new() { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
 
+        #region Effect vector type sub-class
         private class EffectVectorType
         {
             public Enums.eEffectType? EffectType;
@@ -91,7 +120,9 @@ namespace Mids_Reborn.Forms.Controls
                        };
             }
         }
+        #endregion
 
+        #region Effect vector groups (effect tab)
         private static readonly List<List<EffectVectorType>> EffectVectorsGroups = new()
         {
             // +Defenses to Self
@@ -183,7 +214,9 @@ namespace Mids_Reborn.Forms.Controls
                 new(Enums.eEffectType.Enhancement, Enums.eEffectType.MezResist)
             }
         };
+        #endregion
 
+        #region Grouped effect sub-class
         private class GroupedEffect
         {
             private List<Enums.eDamage> DamageTypes = new();
@@ -421,7 +454,9 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
         }
+        #endregion
 
+        #region Effect group filter sub-class
         private class EffectsGroupFilter
         {
             private Dictionary<string, List<GroupedEffect>> _effectGroups = new();
@@ -574,28 +609,7 @@ namespace Mids_Reborn.Forms.Controls
                 return new EffectsGroupFilter(labeledGroups);
             }
         }
-
-        private struct ColorRange
-        {
-            public Color LowerBoundColor;
-            public Color UpperBoundColor;
-        }
-
-        private struct TrackGradientsScheme
-        {
-            public ColorRange ElapsedInnerColor;
-            public ColorRange ElapsedPenColorBottom;
-            public ColorRange ElapsedPenColorTop;
-        }
-
-        private readonly TrackGradientsScheme TrackColors = new()
-        {
-            ElapsedInnerColor = new ColorRange { LowerBoundColor = Color.FromArgb(0, 51, 0), UpperBoundColor = Color.FromArgb(0, 128, 0) },
-            ElapsedPenColorBottom = new ColorRange { LowerBoundColor = Color.FromArgb(58, 94, 58), UpperBoundColor = Color.FromArgb(144, 238, 44) },
-            ElapsedPenColorTop = new ColorRange { LowerBoundColor = Color.FromArgb(0, 102, 51), UpperBoundColor = Color.FromArgb(0, 255, 127) }
-        };
-
-        public bool Locked;
+        #endregion
 
         public DataView2()
         {
@@ -761,6 +775,15 @@ namespace Mids_Reborn.Forms.Controls
             );
 
             return lvItem;
+        }
+
+        private static Color InterpolateColor(decimal value, decimal valueMin, decimal valueMax, ColorRange colorRange)
+        {
+            return Color.FromArgb(
+                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.R - colorRange.LowerBoundColor.R) + colorRange.LowerBoundColor.R),
+                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.G - colorRange.LowerBoundColor.G) + colorRange.LowerBoundColor.G),
+                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.B - colorRange.LowerBoundColor.B) + colorRange.LowerBoundColor.B)
+            );
         }
 
         #region Info Tab
@@ -1026,9 +1049,109 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Enhance Tab
 
+        private string RelativeLevelString(Enums.eEnhRelative relativeLevel, bool showZero = false)
+        {
+            return relativeLevel switch
+            {
+                // Move to a separate method
+                Enums.eEnhRelative.MinusThree => "-3",
+                Enums.eEnhRelative.MinusTwo => "-2",
+                Enums.eEnhRelative.MinusOne => "-1",
+                Enums.eEnhRelative.PlusOne => "+1",
+                Enums.eEnhRelative.PlusTwo => "+2",
+                Enums.eEnhRelative.PlusThree => "+3",
+                Enums.eEnhRelative.PlusFour => "+4",
+                Enums.eEnhRelative.PlusFive => "+5",
+                _ => showZero ? "+0" : ""
+            };
+        }
+
+        private SKBitmap CreateEnhancementsBitmap(bool alternate, int flippingEnhancement = -1, int flipAngle = 0)
+        {
+            // Enhancement need to fetch the first half from alt, second half from main if flipping
+            var enhancements = BuildPowerEntry.Slots.Select(s => alternate ? s.FlippedEnhancement : s.Enhancement).ToList();
+            using var bitmap = new SKBitmap(new SKImageInfo(pnlEnhActive.Width, pnlEnhActive.Height, SKColorType.Rgba8888, SKAlphaType.Premul)); // using ?
+            using var canvas = new SKCanvas(bitmap);
+            var offsetY = (float)Math.Max(0, Math.Round((pnlEnhActive.Height - 30) / 2d));
+            var offsetX = (float)pnlEnhActive.Width - 183;
+            // flipAngle = Math.Max(0, Math.Min(90, flipAngle);
+
+            for (var i = 0 ; i < enhancements.Count ; i++)
+            {
+                if (enhancements[i].Enh <= -1) continue;
+
+                var imgIdx = DatabaseAPI.Database.Enhancements[enhancements[i].Enh].ImageIdx;
+                var enhGrade = I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhancements[i].Enh].TypeID);
+                var grade = enhancements[i].Grade; // ???
+                var sourceRect = I9Gfx.GetOverlayRect(enhGrade).ToSKRect();
+                
+                // Horizontally compress enhancement pic to mimic a 3D rotation
+                var destRect = flippingEnhancement == i
+                    ? new SKRect(offsetX + 30 * i + 15 * (float)Math.Sin(flipAngle / 180d * Math.PI),
+                        offsetY,
+                        offsetX + 30 * (i + 1) - 15 * (float)Math.Sin(flipAngle / 180d * Math.PI),
+                        offsetY + 30)
+                    : new SKRect(offsetX + 30 * i, offsetY, offsetX + 30 * (i + 1), offsetY + 30);
+
+                // Draw border
+                canvas.DrawBitmap(I9Gfx.Borders.Bitmap.ToSKBitmap(), sourceRect, destRect);
+
+                // Draw enhancement
+                canvas.DrawBitmap(I9Gfx.Enhancements[imgIdx].ToSKBitmap(), sourceRect, destRect);
+
+                // Draw enhancement level
+                var levelString = $"{enhancements[i].IOLevel}{RelativeLevelString(enhancements[i].RelativeLevel)}";
+                using var textPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    TextSize = 7,
+                    Color = SKColors.Cyan,
+                    FilterQuality = SKFilterQuality.High,
+                    HintingLevel = SKPaintHinting.Normal
+                };
+
+                using var outlinePaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    TextSize = 7,
+                    StrokeWidth = 2,
+                    Color = SKColors.Black,
+                    FilterQuality = SKFilterQuality.High,
+                    HintingLevel = SKPaintHinting.Normal
+                };
+
+                var textBounds = new SKRect();
+                textPaint.MeasureText(levelString, ref textBounds);
+                var textLocation = new SKPoint(offsetX + 30 * i + 15 - textBounds.Width / 2, offsetY);
+
+                using var textPath = textPaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
+                using var outlinePath = outlinePaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
+
+                // ???
+                canvas.DrawPath(textPath, textPaint);
+                canvas.DrawPath(outlinePath, outlinePaint);
+            }
+
+            return bitmap;
+        }
+
         private void DisplayEnhance()
         {
-            
+            using (var bitmap = new Bitmap(pnlEnhActive.Width, pnlEnhActive.Height))
+            {
+                using (var g = Graphics.FromImage(bitmap))
+                {
+                    g.DrawImageUnscaled(CreateEnhancementsBitmap(false).ToBitmap(), new Point(0, 0));
+                }
+            }
+
+            using (var bitmap = new Bitmap(pnlEnhAlt.Width, pnlEnhAlt.Height))
+            {
+                using (var g = Graphics.FromImage(bitmap))
+                {
+                    g.DrawImageUnscaled(CreateEnhancementsBitmap(true).ToBitmap(), new Point(0, 0));
+                }
+            }
         }
 
         #endregion
@@ -1072,17 +1195,6 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        #endregion
-
-        private static Color InterpolateColor(decimal value, decimal valueMin, decimal valueMax, ColorRange colorRange)
-        {
-            return Color.FromArgb(
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.R - colorRange.LowerBoundColor.R) + colorRange.LowerBoundColor.R),
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.G - colorRange.LowerBoundColor.G) + colorRange.LowerBoundColor.G),
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.B - colorRange.LowerBoundColor.B) + colorRange.LowerBoundColor.B)
-            );
-        }
-
         private void powerScaler_ValueChanged(object sender, EventArgs e)
         {
             var target = (ColorSlider)sender;
@@ -1097,5 +1209,7 @@ namespace Mids_Reborn.Forms.Controls
 
             // Display updated infos (???)
         }
+
+        #endregion
     }
 }
