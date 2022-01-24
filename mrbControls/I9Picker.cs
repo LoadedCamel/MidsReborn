@@ -369,7 +369,7 @@ namespace mrbControls
 
             var font = new Font(Name, Font.Size * num, FontStyle.Bold, Font.Unit, 0);
             _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
-            if (string.Compare(_hoverText, "", StringComparison.Ordinal) != 0)
+            if (string.Compare(_hoverTitle, "", StringComparison.Ordinal) != 0)
             {
                 _myBx.Graphics.DrawString(_hoverTitle, font, brush, layoutRectangle);
             }
@@ -378,16 +378,6 @@ namespace mrbControls
             {
                 _myBx.Graphics.DrawString(_hoverText, Font, brush, layoutRectangle2);
             }
-
-            // if (Operators.CompareString(_hoverTitle, "", false) != 0)
-            // {
-            //     _myBx.Graphics.DrawString(_hoverTitle, font, brush, layoutRectangle);
-            // }
-            //
-            // if (Operators.CompareString(_hoverText, "", false) != 0)
-            // {
-            //     _myBx.Graphics.DrawString(_hoverText, Font, brush, layoutRectangle2);
-            // }
         }
 
         private void SetInfoStrings(string title, string message)
@@ -909,22 +899,19 @@ namespace mrbControls
                             if (Ui.SetTypes.Length > 3)
                             {
                                 _rows = Ui.SetTypes.Length;
-                                Height = 95 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
-                                FullDraw();
+                                Height = 100 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
                             }
                             break;
                         case Enums.eType.SpecialO:
                             if (Ui.SpecialO.Length > 9)
                             {
                                 _rows = 5;
-                                Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length / 4);
-                                FullDraw();
+                                Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length / 4); //
                             }
                             break;
                         default:
                             _rows = 5;
                             Height = 315;
-                            FullDraw();
                             break;
                     }
                     if ((cellXy.X == 4) & (Ui.SetTypes.Length > 0))
@@ -1609,18 +1596,22 @@ namespace mrbControls
                 _mySlotted = new int[slotted.Length - 1 + 1];
                 Array.Copy(slotted, _mySlotted, _mySlotted.Length);
                 Debug.WriteLine(Height);
-                // if (Ui.SetTypes.Length > 3)
-                // {
-                //     _rows = Ui.SetTypes.Length;
-                //     Height = 235 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length - 3);
-                // }
-                // else
-                // {
-                //     _rows = 5;
-                //     Height = 235;
-                // }
-
-                //FullDraw();
+                if (Ui.SetTypes.Length > 3)
+                {
+                    _rows = Ui.SetTypes.Length;
+                    Height = 100 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
+                }
+                else if (Ui.SpecialO.Length > 9)
+                {
+                    _rows = 5;
+                    Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length / 4);
+                }
+                else
+                {
+                    _rows = 5;
+                    Height = 315;
+                }
+                FullDraw();
             }
         }
 

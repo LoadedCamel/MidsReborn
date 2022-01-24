@@ -2222,9 +2222,10 @@ namespace Mids_Reborn
                         {
                             if ((setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted) & (((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
                             {
-                                if (!string.IsNullOrWhiteSpace(enhancementSet.GetEffectString(bonusIdx, false, true, true)))
+                                var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true, false);
+                                if (!string.IsNullOrWhiteSpace(enhString))
                                 {
-                                    popupData.Sections[index1].Add(enhancementSet.GetEffectString(bonusIdx, true, true, true), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                                    popupData.Sections[index1].Add(enhString.Replace(", ", "\n"), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                                 }
                             }
                         }

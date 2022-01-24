@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -373,7 +375,7 @@ namespace mrbBase
                             stringBuilder.Append("\n");
                         }
 
-                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true));
+                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
                         var empty = string.Empty;
                         for (var idEffect = 0; idEffect < power.Effects.Length; idEffect++)
                         {
@@ -381,7 +383,7 @@ namespace mrbBase
                             power.Effects[idEffect].Buffable = true;
                             if (power.Effects[idEffect].Absorbed_EffectID == index1)
                             {
-                                power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true);
+                                power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true, true);
                             }
 
                             if (returnMask.Length <= 0)
@@ -424,7 +426,7 @@ namespace mrbBase
 
                             power.Effects[index2].Stacking = Enums.eStacking.Yes;
                             power.Effects[index2].Buffable = true;
-                            stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true));
+                            stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
                         }
                     }
                     else if (!power.Effects[index1].Absorbed_Effect) // (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
@@ -442,14 +444,17 @@ namespace mrbBase
                             var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
                             if (enhSetSpecials.SpecialBonus.Length > 0)
                             {
-                                /*effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
+                                effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
                                 {
-                                    0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true),
-                                    _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true)
-                                };*/
+                                    0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true, true),
+                                    _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true, true)
+                                };
 
-                                effectString = enhSetSpecials.GetEffectString(enhIndex, true, true, true)
-                                    .Replace(", ", "\n");
+                                if (string.IsNullOrEmpty(effectString))
+                                {
+                                    effectString = enhSetSpecials.GetEffectString(enhIndex, true, true, true, true);
+                                }
+                                effectString = effectString.Replace(", ", "\n");
                             }
                         }
 
@@ -489,9 +494,16 @@ namespace mrbBase
 
             var setBonusesForEnh = enhSet.SpecialBonus[enhPosInSet];
 
-            return setBonusesForEnh.Index
-                .Select(idx => DatabaseAPI.Database.Power[idx])
-                .Aggregate("", (current1, p) => p.Effects.Aggregate(current1, (current, fx) => current + $"{(current != "" ? "\n" : "")}{fx.BuildEffectString(true, "", false, false, false, true)}"));
+            var result = "";
+            foreach (var idx in setBonusesForEnh.Index)
+            {
+                var power = DatabaseAPI.Database.Power[idx];
+                var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
+
+                result = effectList.Count > 1 ? string.Join("\n", effectList) : effectList.ToString();
+            }
+
+            return result;
         }
 
         public string GetRelativeString(bool onlySign)
