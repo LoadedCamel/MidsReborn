@@ -1070,10 +1070,10 @@ namespace Mids_Reborn.Forms.Controls
         {
             // Enhancement need to fetch the first half from alt, second half from main if flipping
             var enhancements = BuildPowerEntry.Slots.Select(s => alternate ? s.FlippedEnhancement : s.Enhancement).ToList();
-            using var bitmap = new SKBitmap(new SKImageInfo(pnlEnhActive.Width, pnlEnhActive.Height, SKColorType.Rgba8888, SKAlphaType.Premul)); // using ?
+            using var bitmap = new SKBitmap(new SKImageInfo(skglEnhActive.Width, skglEnhActive.Height, SKColorType.Rgba8888, SKAlphaType.Premul)); // using ?
             using var canvas = new SKCanvas(bitmap);
-            var offsetY = (float)Math.Max(0, Math.Round((pnlEnhActive.Height - 30) / 2d));
-            var offsetX = (float)pnlEnhActive.Width - 183;
+            var offsetY = (float)Math.Max(0, Math.Round((skglEnhActive.Height - 30) / 2d));
+            var offsetX = (float)skglEnhActive.Width - 183;
             // flipAngle = Math.Max(0, Math.Min(90, flipAngle);
 
             for (var i = 0 ; i < enhancements.Count ; i++)
@@ -1137,7 +1137,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DisplayEnhance()
         {
-            using (var bitmap = new Bitmap(pnlEnhActive.Width, pnlEnhActive.Height))
+            /*using (var bitmap = new Bitmap(pnlEnhActive.Width, pnlEnhActive.Height))
             {
                 using (var g = Graphics.FromImage(bitmap))
                 {
@@ -1151,7 +1151,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     g.DrawImageUnscaled(CreateEnhancementsBitmap(true).ToBitmap(), new Point(0, 0));
                 }
-            }
+            }*/
         }
 
         #endregion

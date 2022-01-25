@@ -65,6 +65,12 @@
             this.lblEffectsBlock1 = new System.Windows.Forms.Label();
             this.effectsTabTitle = new System.Windows.Forms.Label();
             this.tabPageAdv3 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
+            this.totalsMiscEffectsR = new System.Windows.Forms.ListView();
+            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.totalsMiscEffectsL = new System.Windows.Forms.ListView();
+            this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -75,8 +81,8 @@
             this.dV2TotalsPane1L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.pnlEnhAlt = new System.Windows.Forms.Panel();
-            this.pnlEnhActive = new System.Windows.Forms.Panel();
+            this.skglEnhAlt = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.skglEnhActive = new SkiaSharp.Views.Desktop.SKGLControl();
             this.richTextBox9 = new System.Windows.Forms.RichTextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.enhanceTabTitle = new System.Windows.Forms.Label();
@@ -93,12 +99,6 @@
             this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.scalesTabTitle = new System.Windows.Forms.Label();
-            this.totalsMiscEffectsR = new System.Windows.Forms.ListView();
-            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.totalsMiscEffectsL = new System.Windows.Forms.ListView();
-            this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
             this.tabBox.SuspendLayout();
             this.tabPageAdv1.SuspendLayout();
@@ -135,7 +135,7 @@
             this.tabBox.TabIndex = 0;
             this.tabBox.TabPanelBackColor = System.Drawing.Color.Black;
             this.tabBox.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRenderer2D);
-            this.tabBox.Text = "TOTALS";
+            this.tabBox.Text = "ENHANCE";
             this.tabBox.ThemeName = "TabRenderer2D";
             this.tabBox.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             this.tabBox.UseMnemonic = false;
@@ -616,6 +616,74 @@
             this.tabPageAdv3.Text = "TOTALS";
             this.tabPageAdv3.ThemesEnabled = false;
             // 
+            // totalsMiscEffectsR
+            // 
+            this.totalsMiscEffectsR.AutoArrange = false;
+            this.totalsMiscEffectsR.BackColor = System.Drawing.Color.Black;
+            this.totalsMiscEffectsR.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.totalsMiscEffectsR.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader17,
+            this.columnHeader18});
+            this.totalsMiscEffectsR.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalsMiscEffectsR.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.totalsMiscEffectsR.FullRowSelect = true;
+            this.totalsMiscEffectsR.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.totalsMiscEffectsR.HideSelection = false;
+            this.totalsMiscEffectsR.HoverSelection = true;
+            this.totalsMiscEffectsR.LabelWrap = false;
+            this.totalsMiscEffectsR.Location = new System.Drawing.Point(189, 361);
+            this.totalsMiscEffectsR.MultiSelect = false;
+            this.totalsMiscEffectsR.Name = "totalsMiscEffectsR";
+            this.totalsMiscEffectsR.Scrollable = false;
+            this.totalsMiscEffectsR.ShowGroups = false;
+            this.totalsMiscEffectsR.ShowItemToolTips = true;
+            this.totalsMiscEffectsR.Size = new System.Drawing.Size(185, 128);
+            this.totalsMiscEffectsR.TabIndex = 17;
+            this.totalsMiscEffectsR.TabStop = false;
+            this.totalsMiscEffectsR.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader17
+            // 
+            this.columnHeader17.Width = 73;
+            // 
+            // columnHeader18
+            // 
+            this.columnHeader18.Width = 73;
+            // 
+            // totalsMiscEffectsL
+            // 
+            this.totalsMiscEffectsL.AutoArrange = false;
+            this.totalsMiscEffectsL.BackColor = System.Drawing.Color.Black;
+            this.totalsMiscEffectsL.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.totalsMiscEffectsL.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader19,
+            this.columnHeader20});
+            this.totalsMiscEffectsL.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalsMiscEffectsL.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.totalsMiscEffectsL.FullRowSelect = true;
+            this.totalsMiscEffectsL.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.totalsMiscEffectsL.HideSelection = false;
+            this.totalsMiscEffectsL.HoverSelection = true;
+            this.totalsMiscEffectsL.LabelWrap = false;
+            this.totalsMiscEffectsL.Location = new System.Drawing.Point(4, 361);
+            this.totalsMiscEffectsL.MultiSelect = false;
+            this.totalsMiscEffectsL.Name = "totalsMiscEffectsL";
+            this.totalsMiscEffectsL.Scrollable = false;
+            this.totalsMiscEffectsL.ShowGroups = false;
+            this.totalsMiscEffectsL.ShowItemToolTips = true;
+            this.totalsMiscEffectsL.Size = new System.Drawing.Size(185, 128);
+            this.totalsMiscEffectsL.TabIndex = 16;
+            this.totalsMiscEffectsL.TabStop = false;
+            this.totalsMiscEffectsL.UseCompatibleStateImageBehavior = false;
+            // 
+            // columnHeader19
+            // 
+            this.columnHeader19.Width = 73;
+            // 
+            // columnHeader20
+            // 
+            this.columnHeader20.Width = 73;
+            // 
             // label9
             // 
             this.label9.BackColor = System.Drawing.Color.Green;
@@ -717,8 +785,8 @@
             // tabPageAdv4
             // 
             this.tabPageAdv4.BackColor = System.Drawing.Color.Teal;
-            this.tabPageAdv4.Controls.Add(this.pnlEnhAlt);
-            this.tabPageAdv4.Controls.Add(this.pnlEnhActive);
+            this.tabPageAdv4.Controls.Add(this.skglEnhAlt);
+            this.tabPageAdv4.Controls.Add(this.skglEnhActive);
             this.tabPageAdv4.Controls.Add(this.richTextBox9);
             this.tabPageAdv4.Controls.Add(this.label11);
             this.tabPageAdv4.Controls.Add(this.enhanceTabTitle);
@@ -737,21 +805,25 @@
             this.tabPageAdv4.Text = "ENHANCE";
             this.tabPageAdv4.ThemesEnabled = false;
             // 
-            // pnlEnhAlt
+            // skglEnhAlt
             // 
-            this.pnlEnhAlt.BackColor = System.Drawing.Color.Black;
-            this.pnlEnhAlt.Location = new System.Drawing.Point(4, 477);
-            this.pnlEnhAlt.Name = "pnlEnhAlt";
-            this.pnlEnhAlt.Size = new System.Drawing.Size(369, 38);
-            this.pnlEnhAlt.TabIndex = 4;
+            this.skglEnhAlt.BackColor = System.Drawing.Color.Black;
+            this.skglEnhAlt.Location = new System.Drawing.Point(4, 477);
+            this.skglEnhAlt.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.skglEnhAlt.Name = "skglEnhAlt";
+            this.skglEnhAlt.Size = new System.Drawing.Size(369, 38);
+            this.skglEnhAlt.TabIndex = 4;
+            this.skglEnhAlt.VSync = false;
             // 
-            // pnlEnhActive
+            // skglEnhActive
             // 
-            this.pnlEnhActive.BackColor = System.Drawing.Color.Black;
-            this.pnlEnhActive.Location = new System.Drawing.Point(4, 435);
-            this.pnlEnhActive.Name = "pnlEnhActive";
-            this.pnlEnhActive.Size = new System.Drawing.Size(369, 38);
-            this.pnlEnhActive.TabIndex = 3;
+            this.skglEnhActive.BackColor = System.Drawing.Color.Black;
+            this.skglEnhActive.Location = new System.Drawing.Point(4, 435);
+            this.skglEnhActive.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.skglEnhActive.Name = "skglEnhActive";
+            this.skglEnhActive.Size = new System.Drawing.Size(369, 38);
+            this.skglEnhActive.TabIndex = 3;
+            this.skglEnhActive.VSync = false;
             // 
             // richTextBox9
             // 
@@ -1108,74 +1180,6 @@
             this.scalesTabTitle.Text = "Title";
             this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // totalsMiscEffectsR
-            // 
-            this.totalsMiscEffectsR.AutoArrange = false;
-            this.totalsMiscEffectsR.BackColor = System.Drawing.Color.Black;
-            this.totalsMiscEffectsR.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.totalsMiscEffectsR.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader17,
-            this.columnHeader18});
-            this.totalsMiscEffectsR.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalsMiscEffectsR.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.totalsMiscEffectsR.FullRowSelect = true;
-            this.totalsMiscEffectsR.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.totalsMiscEffectsR.HideSelection = false;
-            this.totalsMiscEffectsR.HoverSelection = true;
-            this.totalsMiscEffectsR.LabelWrap = false;
-            this.totalsMiscEffectsR.Location = new System.Drawing.Point(189, 361);
-            this.totalsMiscEffectsR.MultiSelect = false;
-            this.totalsMiscEffectsR.Name = "totalsMiscEffectsR";
-            this.totalsMiscEffectsR.Scrollable = false;
-            this.totalsMiscEffectsR.ShowGroups = false;
-            this.totalsMiscEffectsR.ShowItemToolTips = true;
-            this.totalsMiscEffectsR.Size = new System.Drawing.Size(185, 128);
-            this.totalsMiscEffectsR.TabIndex = 17;
-            this.totalsMiscEffectsR.TabStop = false;
-            this.totalsMiscEffectsR.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader17
-            // 
-            this.columnHeader17.Width = 73;
-            // 
-            // columnHeader18
-            // 
-            this.columnHeader18.Width = 73;
-            // 
-            // totalsMiscEffectsL
-            // 
-            this.totalsMiscEffectsL.AutoArrange = false;
-            this.totalsMiscEffectsL.BackColor = System.Drawing.Color.Black;
-            this.totalsMiscEffectsL.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.totalsMiscEffectsL.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader19,
-            this.columnHeader20});
-            this.totalsMiscEffectsL.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalsMiscEffectsL.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.totalsMiscEffectsL.FullRowSelect = true;
-            this.totalsMiscEffectsL.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.totalsMiscEffectsL.HideSelection = false;
-            this.totalsMiscEffectsL.HoverSelection = true;
-            this.totalsMiscEffectsL.LabelWrap = false;
-            this.totalsMiscEffectsL.Location = new System.Drawing.Point(4, 361);
-            this.totalsMiscEffectsL.MultiSelect = false;
-            this.totalsMiscEffectsL.Name = "totalsMiscEffectsL";
-            this.totalsMiscEffectsL.Scrollable = false;
-            this.totalsMiscEffectsL.ShowGroups = false;
-            this.totalsMiscEffectsL.ShowItemToolTips = true;
-            this.totalsMiscEffectsL.Size = new System.Drawing.Size(185, 128);
-            this.totalsMiscEffectsL.TabIndex = 16;
-            this.totalsMiscEffectsL.TabStop = false;
-            this.totalsMiscEffectsL.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader19
-            // 
-            this.columnHeader19.Width = 73;
-            // 
-            // columnHeader20
-            // 
-            this.columnHeader20.Width = 73;
-            // 
             // DataView2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1225,8 +1229,6 @@
         private System.Windows.Forms.RichTextBox richTextBox9;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label enhanceTabTitle;
-        private System.Windows.Forms.Panel pnlEnhAlt;
-        private System.Windows.Forms.Panel pnlEnhActive;
         private System.Windows.Forms.ListView listInfosR;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -1270,5 +1272,7 @@
         private System.Windows.Forms.ListView totalsMiscEffectsL;
         private System.Windows.Forms.ColumnHeader columnHeader19;
         private System.Windows.Forms.ColumnHeader columnHeader20;
+        private SkiaSharp.Views.Desktop.SKGLControl skglEnhAlt;
+        private SkiaSharp.Views.Desktop.SKGLControl skglEnhActive;
     }
 }
