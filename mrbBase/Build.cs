@@ -900,7 +900,7 @@ namespace mrbBase
 
                     if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
                     {
-                        Debug.WriteLine(enhancement.UID);
+                        //Debug.WriteLine(enhancement.UID);
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {

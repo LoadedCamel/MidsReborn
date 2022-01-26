@@ -490,6 +490,14 @@ namespace mrbBase.Base.Data_Classes
                     if (pSlotEnh != -1)
                     {
                         var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                        /*var enhList = DatabaseAPI.GetEnhancementsInSet(enhancement.nIDSet);
+                        if (enhList != null)
+                        {
+                            foreach (var enh in enhList)
+                            {
+                                Debug.WriteLine(enh);
+                            }
+                        }*/
                         if (!PEnhancementsList.Contains(enhancement.UID))
                         {
                             PEnhancementsList.Add(enhancement.UID);

@@ -1425,11 +1425,15 @@ namespace Mids_Reborn.Forms
 
         public void DoRedraw()
         {
+            //var t = new Stopwatch();
+            //t.Start();
             if (drawing == null) return;
             NoResizeEvent = true;
             pnlGFX.Width = pnlGFXFlow.Width - 26;
             NoResizeEvent = false;
             drawing.FullRedraw();
+            //t.Stop();
+            //Debug.WriteLine($"DoRedraw: {t.ElapsedMilliseconds} ms");
         }
 
         private void DoResize(bool forceResize = false)

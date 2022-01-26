@@ -72,6 +72,11 @@ namespace mrbBase
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
 
+        private static string[] WinterEventEnhancements = Array.Empty<string>();
+        private static string[] MovieEnhUIDList = Array.Empty<string>();
+        private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
+        private static string[] ATOSetsEnhUIDList = Array.Empty<string>();
+
         public static IDatabase Database
             => Base.Data_Classes.Database.Instance;
 
@@ -745,7 +750,9 @@ namespace mrbBase
 
         private static string[] GetPurpleSetsEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
+            if (PurpleSetsEnhUIDList.Length != 0) return PurpleSetsEnhUIDList;
+            
+            var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 e.RecipeIDX > -1 &&
                 Database.Recipes[e.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare &&
@@ -762,7 +769,11 @@ namespace mrbBase
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Sentinel &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Stalker &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Tanker
-            ).Select(e => e.UID).ToArray();
+            );
+                
+            PurpleSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
+
+            return PurpleSetsEnhUIDList;
         }
 
         public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
@@ -770,11 +781,16 @@ namespace mrbBase
             return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
         }
 
-        
+        public static List<string>? GetEnhancementsInSet(int niDSet)
+        {
+            return niDSet <= -1 ? null : Database.EnhancementSets[niDSet].Enhancements.Select(enh => Database.Enhancements[enh].UID).ToList();
+        }
 
         private static string[] GetATOSetsEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
+            if (ATOSetsEnhUIDList.Length != 0) return ATOSetsEnhUIDList;
+
+            var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 (
                     Database.EnhancementSets[e.nIDSet].SetType is Enums.eSetType.Arachnos
@@ -791,28 +807,40 @@ namespace mrbBase
                         or Enums.eSetType.Stalker
                         or Enums.eSetType.Tanker
                 )
-            ).Select(e => e.UID).ToArray();
+            );
+
+            ATOSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
+
+            return ATOSetsEnhUIDList;
         }
 
         private static string[] GetWinterEventEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
-                e.nIDSet > -1 &&
-                (
-                    e.UID.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Blistering_Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Frozen_Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Winters_Bite", StringComparison.OrdinalIgnoreCase) > -1
-                )
-            ).Select(e => e.UID).ToArray();
+            if (WinterEventEnhancements.Length != 0) return WinterEventEnhancements;
+
+            var enhSets = Database.EnhancementSets.Where(e =>
+                e.Uid.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Blistering_Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Frozen_Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Winters_Bite", StringComparison.OrdinalIgnoreCase) > -1
+            );
+
+            WinterEventEnhancements = (from set in enhSets from e in set.Enhancements select Database.Enhancements[e].UID).ToArray();
+
+            return WinterEventEnhancements;
         }
 
         private static string[] GetMovieEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
-                e.nIDSet > -1 && e.UID.IndexOf("Overwhelming_Force", StringComparison.OrdinalIgnoreCase) > -1
-            ).Select(e => e.UID).ToArray();
+            if (MovieEnhUIDList.Length != 0) return MovieEnhUIDList;
+
+            var enhSets = Database.EnhancementSets.Where(e =>
+                e.Uid.IndexOf("Overwhelming_Force", StringComparison.OrdinalIgnoreCase) > -1);
+
+            MovieEnhUIDList = (from set in enhSets from e in set.Enhancements select Database.Enhancements[e].UID).ToArray();
+
+            return MovieEnhUIDList;
         }
 
         public static string GetEnhancementBaseUIDName(string iName)
@@ -847,22 +875,12 @@ namespace mrbBase
                 .Replace("Mutation_", "Magic_");
         }
 
-        public static bool EnhHasCatalyst(string iName)
+        public static bool EnhHasCatalyst(string uid)
         {
-            var purpleSetsEnh = GetPurpleSetsEnhUIDList();
-            var ATOSetsEnh = GetATOSetsEnhUIDList();
-            var WinterEventEnh = GetWinterEventEnhUIDList();
-            var MovieEnh = GetMovieEnhUIDList();
+            if (string.IsNullOrEmpty(uid)) return false;
+            var setName = Regex.Replace(uid, @"(Attuned_|Superior_|Crafted_)", string.Empty);
 
-            // Purple IOs
-            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
-                return iName.IndexOf("Superior_Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
-
-            if (!ATOSetsEnh.Any(e => e.Contains(iName)) && !WinterEventEnh.Any(e => e.Contains(iName)) &&
-                !MovieEnh.Any(e => e.Contains(iName)))
-                return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
-
-            return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+            return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 3))) > 1;
         }
 
         public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()

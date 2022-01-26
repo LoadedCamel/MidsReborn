@@ -358,7 +358,7 @@ namespace mrbControls
                     iValue2.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
                     var relativeLevelNumeric = "";
                     var enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
-                    var catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
+                    var catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || enhInternalName.ToLowerInvariant().Contains("overwhelming_force");
                     // Catalysed enhancements take character level no matter what.
                     // Game does not allow boosters over enhancement catalysts.
                     if (!catalystSet & slot.Enhancement.RelativeLevel > Enums.eEnhRelative.Even & MidsContext.Config.ShowEnhRel)
