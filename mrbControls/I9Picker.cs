@@ -1595,7 +1595,6 @@ namespace mrbControls
 
                 _mySlotted = new int[slotted.Length - 1 + 1];
                 Array.Copy(slotted, _mySlotted, _mySlotted.Length);
-                Debug.WriteLine(Height);
                 if (Ui.SetTypes.Length > 3)
                 {
                     _rows = Ui.SetTypes.Length;
