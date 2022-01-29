@@ -4943,11 +4943,11 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
             else
             {
-                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
         }
 

@@ -10,18 +10,19 @@ namespace mrbBase.Base.Master_Classes
         private const int AppMinorVersion = 1;
         private const int AppBuildVersion = 13;
         private const int AppRevisionVersion = 2;
-        public const string AppAssemblyVersion = "3.1.13.2";
-        public const string AppVersionStatus = "Beta";
 
+        public static string AppAssemblyVersion { get; set; } = "3.1.13.2";
+        public static Version AppVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
+
+        public const string AppVersionStatus = "Beta";
         public const string Title = "Mids' Reborn";
-        public const string AssemblyName = "MidsReborn.exe";
-        public static int MathLevelBase = 49;
-        public static int MathLevelExemp = -1;
+
+        public const int MathLevelBase = 49;
+        public const int MathLevelExemp = -1;
 
         public static bool EnhCheckMode = false;
 
-        public static readonly Version AppVersion =
-            new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
+        //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public static Archetype Archetype;
         public static Character Character;

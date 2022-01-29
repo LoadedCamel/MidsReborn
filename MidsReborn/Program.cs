@@ -19,7 +19,9 @@ namespace Mids_Reborn
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTQyNTM5QDMxMzkyZTMzMmUzMGErM3R4akxDVTI4WkNtWmZ1TEpvZEpXeUhvcEJva3B4blhwTHRMV3R4SXM9");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            MidsContext.AssertVersioning();
+            MidsContext.AppAssemblyVersion = Application.ProductVersion;
+            MidsContext.AppVersion = Version.Parse(Application.ProductVersion);
+            //MidsContext.AssertVersioning();
             if (Debugger.IsAttached || Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 using frmMain f = new frmMain();
