@@ -7,7 +7,7 @@ using static mrbBase.Base.Master_Classes.MidsContext;
 [assembly: AssemblyCompany("LoadedCamel")]
 [assembly: AssemblyCopyright("Copyright ©2019-2022 Midsreborn.com")]
 [assembly: AssemblyDescription("Character build planner for City of Heroes")]
-[assembly: AssemblyFileVersion("3.1.16.64")]
+[assembly: AssemblyFileVersion("3.1.16.65")]
 [assembly: AssemblyProduct(AppName)]
 [assembly: AssemblyTitle(Title)]
 [assembly: AssemblyTrademark("")]
