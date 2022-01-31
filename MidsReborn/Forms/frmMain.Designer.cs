@@ -1249,7 +1249,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsBugCrytilis.Name = "tsBugCrytilis";
             this.tsBugCrytilis.Size = new System.Drawing.Size(266, 22);
-            this.tsBugCrytilis.Text = "F&ile Bug Report";
+            this.tsBugCrytilis.Text = "F&ile Issue/Suggestion Report";
             this.tsBugCrytilis.Click += new System.EventHandler(this.tsBugReportCrytilis_Click);
             // 
             // tsHCMRBForum

@@ -5477,7 +5477,10 @@ namespace Mids_Reborn.Forms
 
         private void tsBugReportCrytilis_Click(object sender, EventArgs e)
         {
-            clsXMLUpdate.BugReportCrytilis();
+            var iParent = this;
+            var frmIssues = new frmIssueReport(ref iParent);
+            frmIssues.ShowDialog(this);
+            //clsXMLUpdate.BugReportCrytilis();
         }
 
         private void OnRelativeClick(Enums.eEnhRelative newVal)
