@@ -2374,10 +2374,12 @@ namespace Mids_Reborn.Forms
                 if (EnhancingPower > -1)
                     RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
             }
-
-            I9Picker.Visible = false;
-            EnhancingSlot = -1;
-            EnhancingPower = -1;
+            else
+            {
+                I9Picker.Visible = false;
+                EnhancingSlot = -1;
+                EnhancingPower = -1;
+            }
         }
 
         private void I9Picker_Hiding(object sender, EventArgs e)
