@@ -52,7 +52,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
-                return Version > MidsContext.AppVersion;
+                return Version > MidsContext.AppFileVersion;
             }
         }
 

@@ -4943,11 +4943,11 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
             else
             {
-                Text = $@"{str2} v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
         }
 
@@ -5889,7 +5889,7 @@ namespace Mids_Reborn.Forms
                     patchNotes = new PatchNotes(this, false)
                     {
                         Type = clsXMLUpdate.UpdateType.App.ToString(),
-                        Version = MidsContext.AppVersion.ToString()
+                        Version = MidsContext.AppFileVersion.ToString()
                     };
                     patchNotes.ShowDialog();
                     break;

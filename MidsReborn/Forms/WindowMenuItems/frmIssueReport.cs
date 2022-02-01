@@ -91,7 +91,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             var body = string.Empty;
             var sb = new StringBuilder(body);
-            sb.Append($"-- This issue was submitted on behalf of {_issuerName} --\r\n\r\nOperating System: {_operatingSystem}\nApp Version: {MidsContext.AppAssemblyVersion}\nDatabase Version: {DatabaseAPI.Database.Version}\r\n");
+            sb.Append($"-- This issue was submitted on behalf of {_issuerName} --\r\n\r\nOperating System: {_operatingSystem}\nApp Version: {MidsContext.AssemblyVersion}\nDatabase Version: {DatabaseAPI.Database.Version}\r\n");
             sb.AppendLine($"\r\n{_issueDescription}");
             if (attachments != null)
             {

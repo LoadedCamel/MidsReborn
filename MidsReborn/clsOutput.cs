@@ -66,7 +66,7 @@ namespace Mids_Reborn
                 + formatCode[idFormatA].UnderlineOn == "";
             var str2 = MidsContext.Character.Alignment.ToString();
             var str3 = str1 +
-                       formatColor(formatBold($"This {str2} build was built using Mids Reborn {MidsContext.AppAssemblyVersion}"), ExportConfig.Element.Heading) + LineBreak() + formatColor(formatBold(@"https://github.com/LoadedCamel/MidsReborn"),
+                       formatColor(formatBold($"This {str2} build was built using Mids Reborn {MidsContext.AssemblyVersion}"), ExportConfig.Element.Heading) + LineBreak() + formatColor(formatBold(@"https://github.com/LoadedCamel/MidsReborn"),
                                        ExportConfig.Element.Heading) + LineBreak();
             if (iDataLink != "" && !Plain)
                 str3 = str3 + LineBreak() +

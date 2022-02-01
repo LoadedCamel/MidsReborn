@@ -401,7 +401,6 @@
     <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
       <DependentUpon>PowerList.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="generator\iAsmGenerator.exe" />
     <Content Include="Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -876,7 +875,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>cd "$(ProjectDir)generator"
-iAsmGenerator.exe $(ProjectDir) 3 1</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

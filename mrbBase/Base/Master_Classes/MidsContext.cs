@@ -8,11 +8,12 @@ namespace mrbBase.Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 1;
-        private const int AppBuildVersion = 13;
-        private const int AppRevisionVersion = 2;
+        private const int AppBuildVersion = 16;
+        private const int AppRevisionVersion = 67;
 
-        public static string AppAssemblyVersion { get; set; } = "3.1.13.2";
-        public static Version AppVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
+        public const string AssemblyVersion = "3.1.16";
+        public const string AssemblyFileVersion = "3.1.16.67";
+        public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "Beta";
         public const string Title = "Mids' Reborn";
@@ -31,15 +32,6 @@ namespace mrbBase.Base.Master_Classes
         public static ConfigData Config => ConfigData.Current;
 
         public static ConfigDataSpecial ConfigSp => ConfigDataSpecial.Current;
-
-        public static void AssertVersioning()
-        {
-            if (AppAssemblyVersion != $"{AppMajorVersion}.{AppMinorVersion}.{AppBuildVersion}.{AppRevisionVersion}")
-                throw new InvalidOperationException("Program assembly version is not internally consistent");
-            if (AppVersion.CompareTo(new Version(AppAssemblyVersion)) != 0)
-                throw new InvalidOperationException(
-                    "Program app version is not internally consistent, failing startup");
-        }
 
         public static string GetCryptedValue(string type, string name)
         {
