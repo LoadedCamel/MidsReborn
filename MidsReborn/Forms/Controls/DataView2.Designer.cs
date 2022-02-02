@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabBox = new mrbControls.ctlEnhTabControl();
             this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.listInfosR = new System.Windows.Forms.ListView();
@@ -99,6 +100,8 @@
             this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.scalesTabTitle = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
             this.tabBox.SuspendLayout();
             this.tabPageAdv1.SuspendLayout();
@@ -814,6 +817,8 @@
             this.skglEnhAlt.Size = new System.Drawing.Size(369, 38);
             this.skglEnhAlt.TabIndex = 4;
             this.skglEnhAlt.VSync = false;
+            this.skglEnhAlt.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglEnhAlt_PaintSurface);
+            this.skglEnhAlt.Click += new System.EventHandler(this.skglControl_Click);
             // 
             // skglEnhActive
             // 
@@ -824,6 +829,8 @@
             this.skglEnhActive.Size = new System.Drawing.Size(369, 38);
             this.skglEnhActive.TabIndex = 3;
             this.skglEnhActive.VSync = false;
+            this.skglEnhActive.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglEnhActive_PaintSurface);
+            this.skglEnhActive.Click += new System.EventHandler(this.skglControl_Click);
             // 
             // richTextBox9
             // 
@@ -1180,6 +1187,16 @@
             this.scalesTabTitle.Text = "Title";
             this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 1;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // DataView2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1274,5 +1291,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader20;
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhAlt;
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhActive;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer2;
     }
 }
