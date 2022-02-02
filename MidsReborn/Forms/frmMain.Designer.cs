@@ -2080,7 +2080,7 @@ namespace Mids_Reborn.Forms
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Hero Designer";
+            this.Text = "MRB";
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
             this.topPanel.ResumeLayout(false);

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using mrbBase;
@@ -9,7 +10,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
     public class DbUpdate
     {
         private static bool Mandatory { get; set; }
-        private static double Version { get; set; }
+        private static Version Version { get; set; }
         public static string ChangeLog { get; set; }
 
         public static bool IsAvailable
@@ -30,7 +31,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         {
                             case "version":
                             {
-                                Version = xmlReader.ReadElementContentAsDouble();
+                                Version = new Version(xmlReader.ReadElementContentAsString());
                                 break;
                             }
                             case "changelog":
@@ -73,7 +74,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         var patchNotes = new PatchNotes(parent, true)
                         {
                             Type = clsXMLUpdate.UpdateType.Database.ToString(),
-                            Version = Version.ToString(CultureInfo.InvariantCulture)
+                            Version = Version.ToString()
                         };
                         patchNotes.ShowDialog();
                         break;
@@ -82,13 +83,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         dbResult.Close();
                         break;
                     case DialogResult.OK:
-                        clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString(CultureInfo.InvariantCulture));
+                        clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString());
                         break;
                 }
             }
             else
             {
-                clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString(CultureInfo.InvariantCulture));
+                clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString());
             }
         }
     }

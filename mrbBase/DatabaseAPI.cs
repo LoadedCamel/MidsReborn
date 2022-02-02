@@ -61,13 +61,11 @@ namespace mrbBase
         public const int VillainAccolades = 3258;
         public const int TempPowers = 3259;
 
-        public const string MainDbName = "Mids' Hero Designer Database MK II";
+        public const string MainDbName = "Mids Reborn Powers Database";
+        private const string RecipeName = "Mids Reborn Recipe Database";
+        private const string SalvageName = "Mids Reborn Salvage Database";
+        private const string EnhancementDbName = "Mids Reborn Enhancement Database";
 
-        private const string RecipeName = "Mids' Hero Designer Recipe Database";
-
-        private const string SalvageName = "Mids' Hero Designer Salvage Database";
-
-        private const string EnhancementDbName = "Mids' Hero Designer Enhancement Database";
         private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
@@ -1399,7 +1397,7 @@ namespace mrbBase
             {
                 UpdateDbModified();
                 writer.Write(MainDbName);
-                writer.Write(Database.Version);
+                writer.Write(Database.Version.ToString());
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
@@ -1455,12 +1453,9 @@ namespace mrbBase
 
         private static void UpdateDbModified()
         {
+            var revision = Database.Version.Build + 1;
             Database.Date = DateTime.Now;
-            var dbVerString = $"{Database.Version}";
-            var revString = $"{dbVerString.Substring(dbVerString.Length - 2)}";
-            var incRev = $"{int.Parse(revString) + 1:D2}";
-            var verString = $"{Database.Date:yy.MM}{incRev}";
-            Database.Version = double.Parse(verString);
+            Database.Version = Version.Parse($"{Database.Date.Year}.{Database.Date.Month:00}.{revision}");
         }
 
         private static void saveEnts()
@@ -1495,12 +1490,12 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Database MK II")
+                if (reader.ReadString() != "Mids Reborn Powers Database")
                 {
                     MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
                 }
 
-                Database.Version = reader.ReadDouble();
+                Database.Version = Version.Parse(reader.ReadString());
                 var year = reader.ReadInt32();
                 if (year > 0)
                 {
@@ -1634,46 +1629,39 @@ namespace mrbBase
             }
         }
 
-        private static double GetDatabaseVersion(string fp)
+        private static Version GetDatabaseVersion(string fp)
         {
-            var fName = fp;
-            double num1 = -1;
-            double num2;
-            if (!File.Exists(fName))
+            var version = new Version();
+            if (!File.Exists(fp))
             {
-                num2 = num1;
+                throw new FileNotFoundException(@"Database file missing, please re-download the application.");
             }
             else
             {
-                using (var fileStream = new FileStream(fName, FileMode.Open, FileAccess.Read))
+                using var fileStream = new FileStream(fp, FileMode.Open, FileAccess.Read);
+                using (var binaryReader = new BinaryReader(fileStream))
                 {
-                    using (var binaryReader = new BinaryReader(fileStream))
+                    try
                     {
-                        try
+                        if (binaryReader.ReadString() != "Mids Reborn Powers Database")
                         {
-                            if (binaryReader.ReadString() != "Mids' Hero Designer Database MK II")
-                            {
-                                MessageBox.Show("Expected MHD header, got something else!");
-                            }
-
-                            num1 = binaryReader.ReadDouble();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                            num1 = -1f;
+                            MessageBox.Show(@"Expected MHD header, got something else!");
                         }
 
-                        binaryReader.Close();
+                        version = Version.Parse(binaryReader.ReadString());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                     }
 
-                    fileStream.Close();
+                    binaryReader.Close();
                 }
 
-                num2 = num1;
+                fileStream.Close();
             }
 
-            return num2;
+            return version;
         }
 
         public static bool LoadEffectIdsDatabase(string iPath = "")
@@ -2002,7 +1990,7 @@ namespace mrbBase
                 return;
             }
 
-            if (reader.ReadString() == "Mids' Hero Designer Recipe Database")
+            if (reader.ReadString() == "Mids Reborn Recipe Database")
             {
                 Database.RecipeSource1 = reader.ReadString();
                 Database.RecipeSource2 = reader.ReadString();
@@ -2036,7 +2024,7 @@ namespace mrbBase
             }
             else
             {
-                MessageBox.Show("Recipe Database header wasn't found, file may be corrupt!");
+                MessageBox.Show(@"Recipe Database header wasn't found, file may be corrupt!");
                 reader.Close();
                 fileStream.Close();
             }
@@ -2129,7 +2117,7 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Salvage Database")
+                if (reader.ReadString() != "Mids Reborn Salvage Database")
                 {
                     MessageBox.Show("Salvage Database header wasn't found, file may be corrupt!");
                     reader.Close();
@@ -2335,7 +2323,7 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Enhancement Database")
+                if (reader.ReadString() != "Mids Reborn Enhancement Database")
                 {
                     MessageBox.Show("Enhancement Database header wasn't found, file may be corrupt!", "Meep!");
                     reader.Close();

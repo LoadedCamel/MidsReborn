@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using FastDeepCloner;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
@@ -48,6 +47,10 @@ namespace Mids_Reborn.Forms
         private long popupLastOpenTime;
 
         public bool DbChangeRequested { get; set; }
+
+        public event EventHandler TitleUpdated;
+
+        public static frmMain MainInstance;
 
         public frmMain()
         {
@@ -84,6 +87,7 @@ namespace Mids_Reborn.Forms
                 KeyDown += frmMain_KeyDown;
                 Resize += frmMain_Maximize;
                 MouseWheel += frmMain_MouseWheel;
+                TitleUpdated += OnTitleUpdate;
                 NoUpdate = false;
                 EnhancingSlot = -1;
                 EnhancingPower = -1;
@@ -109,10 +113,9 @@ namespace Mids_Reborn.Forms
                 DoneDblClick = false;
                 DbChangeRequested = false;
             }
-
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
-            Application.EnableVisualStyles();
+            MainInstance = this;
+            //Application.EnableVisualStyles();
             if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
 
             //disable menus that are no longer hooked up, but probably should be hooked back up
@@ -127,8 +130,7 @@ namespace Mids_Reborn.Forms
 
             tmrGfx.Tick += tmrGfx_Tick;
             //adding events
-            if (Debugger.IsAttached && this.IsInDesignMode() &&
-                Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
+            if (Debugger.IsAttached && this.IsInDesignMode() && Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
                 return;
             dvAnchored = new DataView();
             Controls.Add(dvAnchored);
@@ -152,7 +154,7 @@ namespace Mids_Reborn.Forms
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
 
-            var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
             Icon = Resources.reborn;
             Name = nameof(frmMain);
         }
@@ -162,17 +164,13 @@ namespace Mids_Reborn.Forms
         private List<string> MMPets { get; set; } = new List<string>();
 
         // store the instance for reuse, as these things are called per draw/redraw
-        private Lazy<ComboBoxT<Archetype>> CbtAT =>
-            new Lazy<ComboBoxT<Archetype>>(() => new ComboBoxT<Archetype>(cbAT));
+        private Lazy<ComboBoxT<Archetype>> CbtAT => new Lazy<ComboBoxT<Archetype>>(() => new ComboBoxT<Archetype>(cbAT));
 
-        private Lazy<ComboBoxT<string>> CbtPrimary =>
-            new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPrimary));
+        private Lazy<ComboBoxT<string>> CbtPrimary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPrimary));
 
-        private Lazy<ComboBoxT<string>> CbtSecondary =>
-            new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbSecondary));
+        private Lazy<ComboBoxT<string>> CbtSecondary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbSecondary));
 
-        private Lazy<ComboBoxT<string>> CbtAncillary =>
-            new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbAncillary));
+        private Lazy<ComboBoxT<string>> CbtAncillary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbAncillary));
 
         private Lazy<ComboBoxT<string>> CbtPool0 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool0));
         private Lazy<ComboBoxT<string>> CbtPool1 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool1));
@@ -307,9 +305,7 @@ namespace Mids_Reborn.Forms
                 var args = Environment.GetCommandLineArgs();
                 if (FindCommandLineParameter(args, "RECOVERY"))
                 {
-                    MessageBox.Show(
-                        "As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.",
-                        "Recovery Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.", @"Recovery Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     clsXMLUpdate.DownloadFromDomain();
                     Application.Exit();
                     return;
@@ -4915,32 +4911,35 @@ namespace Mids_Reborn.Forms
             I9Popup.Location = new Point(x, y);
         }
 
-        private void SetTitleBar(bool Hero = true)
+        private void SetTitleBar(bool hero = true)
         {
             if (MainModule.MidsController.Toon != null)
-                Hero = MainModule.MidsController.Toon.IsHero();
+            {
+                hero = MainModule.MidsController.Toon.IsHero();
+            }
+
             var str1 = string.Empty;
             if (MainModule.MidsController.Toon != null)
             {
                 if (LastFileName != string.Empty)
                 {
                     str1 = FileIO.StripPath(LastFileName) + " - ";
-                    tsFileSave.Text = "&Save '" + FileIO.StripPath(LastFileName) + "'";
+                    tsFileSave.Text = @"&Save '" + FileIO.StripPath(LastFileName) + @"'";
                 }
                 else
                 {
-                    tsFileSave.Text = "&Save";
+                    tsFileSave.Text = @"&Save";
                 }
             }
             else
             {
-                tsFileSave.Text = "&Save";
+                tsFileSave.Text = @"&Save";
             }
 
             var str2 = str1 + MidsContext.Title;
-            if (!Hero)
+            if (!hero)
             {
-                str2 = str2.Replace(nameof(Hero), "Villain");
+                str2 = str2.Replace(nameof(hero), "Villain");
             }
 
             if (MidsContext.Config.MasterMode)
@@ -4951,6 +4950,16 @@ namespace Mids_Reborn.Forms
             {
                 Text = $@"{str2} v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
+        }
+
+        public void UpdateTitle()
+        {
+            TitleUpdated?.Invoke(this, null);
+        }
+
+        private void OnTitleUpdate(object sender, EventArgs eventArgs)
+        {
+            SetTitleBar(MidsContext.Character.IsHero());
         }
 
         private static void ShallowCopyPowerList(PowerEntry[] source)
@@ -5900,7 +5909,7 @@ namespace Mids_Reborn.Forms
                     patchNotes = new PatchNotes(this, false)
                     {
                         Type = clsXMLUpdate.UpdateType.Database.ToString(),
-                        Version = DatabaseAPI.Database.Version.ToString(CultureInfo.InvariantCulture)
+                        Version = DatabaseAPI.Database.Version.ToString()
                     };
                     patchNotes.ShowDialog();
                     break;

@@ -15,7 +15,7 @@ namespace mrbBase.Base.Master_Classes
         public const string AssemblyFileVersion = "3.1.16.67";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
-        public const string AppVersionStatus = "Beta";
+        public const string AppVersionStatus = "";
         public const string Title = "Mids' Reborn";
 
         public const int MathLevelBase = 49;

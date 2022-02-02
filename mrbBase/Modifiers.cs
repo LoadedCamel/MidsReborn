@@ -9,7 +9,6 @@ namespace mrbBase
 {
     public class Modifiers : ICloneable
     {
-        //private const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
         public List<ModifierTable> Modifier = new List<ModifierTable>();
         public int Revision;
         public DateTime RevisionDate = new DateTime(0L);

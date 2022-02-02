@@ -7,7 +7,7 @@ namespace mrbBase
 {
     public interface IDatabase
     {
-        double Version { get; set; }
+        Version Version { get; set; }
 
         int Issue { get; set; }
 
