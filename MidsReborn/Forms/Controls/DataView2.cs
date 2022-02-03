@@ -52,6 +52,7 @@ namespace Mids_Reborn.Forms.Controls
         private PowerEntry BuildPowerEntry;
         private bool FreezeScalerCB;
         private FlipAnimator _flipAnimator;
+        private static readonly SKBitmap NewSlotBitmap = FlipAnimator.Bitmaps.CreateBitmap(@"Images\Newslot.png"); // ???
 
         // Track bar colors for power scalers
         private readonly TrackGradientsScheme TrackColors = new()
@@ -623,7 +624,7 @@ namespace Mids_Reborn.Forms.Controls
                 public SKBitmap Bitmap;
                 public bool IsEmpty;
                 public bool ValidSlot;
-                public Enums.eEnhGrade EnhType; // ???
+                public Enums.eEnhGrade EnhType;
             }
 
             internal enum Tray
@@ -634,11 +635,9 @@ namespace Mids_Reborn.Forms.Controls
 
             private List<SKSlotBitmap> EnhMainBitmaps = new();
             private List<SKSlotBitmap> EnhAltBitmaps = new();
-            // private SKBitmap NewSlotBitmap;
-            // private static List<SKBitmap> BorderBitmaps = new();
             public float Val1;
             public float Val2;
-            public readonly float KerningAngle = 30;
+            public const float KerningAngle = 30;
             public int NbEnhMain => EnhMainBitmaps.Count;
             public int NbEnhAlt => EnhAltBitmaps.Count;
             public float FullCycleAngle => 180 + KerningAngle * (Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count) - 1);
@@ -686,51 +685,138 @@ namespace Mids_Reborn.Forms.Controls
                     if (angleDeg >= 0 & angleDeg < 90 | angleDeg >= 270 & angleDeg < 360)
                     {
                         using var paint = GenerateColorFilter(enhMain);
-                        //surface.Canvas.DrawBitmap(BordersBitmaps[(int)enhMain.EnhType], sourceRect, destRect, paint);
+                        // Border/level are pre-integrated in enhancement.Bitmap
                         surface.Canvas.DrawBitmap(enhMain.Bitmap, sourceRect, destRect, paint);
                     }
                     else
                     {
                         using var paint = GenerateColorFilter(enhAlt);
-                        //surface.Canvas.DrawBitmap(BordersBitmaps[(int)enhAlt.EnhType], sourceRect, destRect, paint);
                         surface.Canvas.DrawBitmap(enhAlt.Bitmap, sourceRect, destRect, paint);
                     }
 
                     return surface.Snapshot();
                 }
 
+                // Obsolete ?
                 public static SKBitmap CreateBitmap(string enhFile)
                 {
-                    // Need to read from existing bx bitmaps instead here.
                     var fs = File.OpenRead(enhFile);
                     using var fileStream = new SKManagedStream(fs);
 
                     return SKBitmap.Decode(fileStream);
                 }
+
+                public static SKBitmap CreateBitmap(int enhIndex, int ioLevel = -1, Enums.eEnhRelative relativeLevel = Enums.eEnhRelative.Even)
+                {
+                    var bitmap = new SKBitmap(new SKImageInfo(30, 30, SKColorType.Rgba8888, SKAlphaType.Premul));
+                    using var canvas = new SKCanvas(bitmap);
+
+                    var imgIdx = DatabaseAPI.Database.Enhancements[enhIndex].ImageIdx;
+                    var enhGrade = I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhIndex].TypeID); // Enums.eEnhGrade ?
+                    var sourceRect = I9Gfx.GetOverlayRect(enhGrade).ToSKRect();
+                    var destRect = new SKRect(0, 0, 30, 30);
+
+                    // Draw border
+                    canvas.DrawBitmap(I9Gfx.Borders.Bitmap.ToSKBitmap(), sourceRect, destRect);
+
+                    // Draw enhancement
+                    canvas.DrawBitmap(I9Gfx.Enhancements[imgIdx].ToSKBitmap(), sourceRect, destRect);
+
+                    // Draw enhancement level
+                    if (ioLevel == -1)
+                    {
+                        return bitmap;
+                    }
+
+                    var levelString = $"{ioLevel}{RelativeLevelString(relativeLevel)}";
+                    using var textPaint = new SKPaint
+                    {
+                        Style = SKPaintStyle.Fill,
+                        TextSize = 7,
+                        Color = SKColors.Cyan,
+                        FilterQuality = SKFilterQuality.High,
+                        HintingLevel = SKPaintHinting.Normal
+                    };
+
+                    using var outlinePaint = new SKPaint
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        TextSize = 7,
+                        StrokeWidth = 2,
+                        Color = SKColors.Black,
+                        FilterQuality = SKFilterQuality.High,
+                        HintingLevel = SKPaintHinting.Normal
+                    };
+
+                    var textBounds = new SKRect();
+                    textPaint.MeasureText(levelString, ref textBounds);
+                    var textLocation = new SKPoint(15 - textBounds.Width / 2, 1);
+
+                    using var textPath = textPaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
+                    using var outlinePath = outlinePaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
+
+                    canvas.DrawPath(textPath, textPaint);
+                    canvas.DrawPath(outlinePath, outlinePaint);
+
+                    return bitmap;
+                }
             }
 
-            public FlipAnimator()
+            public FlipAnimator(PowerEntry buildPowerEntry)
             {
-                // ???
+                for (var i = 0; i < buildPowerEntry.Slots.Length; i++)
+                {
+                    var enhSlot = buildPowerEntry.Slots[i].Enhancement;
+                    var emptySlot = enhSlot.Enh < 0;
+                    var slotBitmap = emptySlot
+                        ? NewSlotBitmap
+                        : Bitmaps.CreateBitmap(enhSlot.Enh, enhSlot.IOLevel, enhSlot.RelativeLevel);
+                    EnhMainBitmaps.Add(new SKSlotBitmap
+                    {
+                        Bitmap = slotBitmap,
+                        IsEmpty = emptySlot,
+                        ValidSlot = true, // To be done later
+                        EnhType = enhSlot.Grade
+                    });
+                }
 
+                for (var i = 0; i < buildPowerEntry.Slots.Length; i++)
+                {
+                    var enhSlot = buildPowerEntry.Slots[i].Enhancement;
+                    var emptySlot = enhSlot.Enh < 0;
+                    var slotBitmap = emptySlot
+                        ? NewSlotBitmap
+                        : Bitmaps.CreateBitmap(enhSlot.Enh, enhSlot.IOLevel, enhSlot.RelativeLevel);
+                    EnhMainBitmaps.Add(new SKSlotBitmap
+                    {
+                        Bitmap = slotBitmap,
+                        IsEmpty = emptySlot,
+                        ValidSlot = true, // To be done later
+                        EnhType = enhSlot.Grade
+                    });
+                }
+
+                // Fillers (?)
                 for (var i = Math.Min(EnhMainBitmaps.Count, EnhAltBitmaps.Count); i < Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count); i++)
                 {
                     if (EnhMainBitmaps.Count < EnhAltBitmaps.Count)
                     {
                         EnhMainBitmaps.Add(new SKSlotBitmap
                         {
-                            //Bitmap = NewSlotBitmap,
+                            Bitmap = NewSlotBitmap,
                             IsEmpty = true,
-                            ValidSlot = true
+                            ValidSlot = true,
+                            EnhType = Enums.eEnhGrade.None
                         });
                     }
                     else
                     {
                         EnhAltBitmaps.Add(new SKSlotBitmap
                         {
-                            //Bitmap = NewSlotBitmap,
+                            Bitmap = NewSlotBitmap,
                             IsEmpty = true,
-                            ValidSlot = true
+                            ValidSlot = true,
+                            EnhType = Enums.eEnhGrade.None
                         });
                     }
                 }
@@ -761,8 +847,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             InitializeComponent();
-
-            _flipAnimator = new FlipAnimator();
         }
 
         // Move the extra effects from the longest array (pBase) to the shortest (pEnh),
@@ -817,6 +901,8 @@ namespace Mids_Reborn.Forms.Controls
             var swappedFx = SwapExtraEffects(_basePower.Effects, _enhancedPower.Effects);
             _basePower.Effects = (IEffect[])swappedFx[0].Clone();
             _enhancedPower.Effects = (IEffect[])swappedFx[1].Clone();
+
+            _flipAnimator = new FlipAnimator(BuildPowerEntry);
         }
 
         private void InitScaler()
@@ -1196,7 +1282,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Enhance Tab
 
-        private string RelativeLevelString(Enums.eEnhRelative relativeLevel, bool showZero = false)
+        private static string RelativeLevelString(Enums.eEnhRelative relativeLevel, bool showZero = false)
         {
             return relativeLevel switch
             {
@@ -1210,76 +1296,6 @@ namespace Mids_Reborn.Forms.Controls
                 Enums.eEnhRelative.PlusFive => "+5",
                 _ => showZero ? "+0" : ""
             };
-        }
-
-        // Migrate to FlipAnimator.Bitmaps.CreateBitmap()
-        private SKBitmap CreateEnhancementsBitmap(bool alternate, int flippingEnhancement = -1, int flipAngle = 0)
-        {
-            // Enhancement need to fetch the first half from alt, second half from main if flipping
-            var enhancements = BuildPowerEntry.Slots.Select(s => alternate ? s.FlippedEnhancement : s.Enhancement).ToList();
-            using var bitmap = new SKBitmap(new SKImageInfo(skglEnhActive.Width, skglEnhActive.Height, SKColorType.Rgba8888, SKAlphaType.Premul)); // using ?
-            using var canvas = new SKCanvas(bitmap);
-            var offsetY = (float)Math.Max(0, Math.Round((skglEnhActive.Height - 30) / 2d));
-            var offsetX = (float)skglEnhActive.Width - 183;
-            // flipAngle = Math.Max(0, Math.Min(90, flipAngle);
-
-            for (var i = 0 ; i < enhancements.Count ; i++)
-            {
-                if (enhancements[i].Enh <= -1) continue;
-
-                var imgIdx = DatabaseAPI.Database.Enhancements[enhancements[i].Enh].ImageIdx;
-                var enhGrade = I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhancements[i].Enh].TypeID);
-                var grade = enhancements[i].Grade; // ???
-                var sourceRect = I9Gfx.GetOverlayRect(enhGrade).ToSKRect();
-                
-                // Horizontally compress enhancement pic to mimic a 3D rotation
-                var destRect = flippingEnhancement == i
-                    ? new SKRect(offsetX + 30 * i + 15 * (float)Math.Sin(flipAngle / 180d * Math.PI),
-                        offsetY,
-                        offsetX + 30 * (i + 1) - 15 * (float)Math.Sin(flipAngle / 180d * Math.PI),
-                        offsetY + 30)
-                    : new SKRect(offsetX + 30 * i, offsetY, offsetX + 30 * (i + 1), offsetY + 30);
-
-                // Draw border
-                canvas.DrawBitmap(I9Gfx.Borders.Bitmap.ToSKBitmap(), sourceRect, destRect);
-
-                // Draw enhancement
-                canvas.DrawBitmap(I9Gfx.Enhancements[imgIdx].ToSKBitmap(), sourceRect, destRect);
-
-                // Draw enhancement level
-                var levelString = $"{enhancements[i].IOLevel}{RelativeLevelString(enhancements[i].RelativeLevel)}";
-                using var textPaint = new SKPaint
-                {
-                    Style = SKPaintStyle.Fill,
-                    TextSize = 7,
-                    Color = SKColors.Cyan,
-                    FilterQuality = SKFilterQuality.High,
-                    HintingLevel = SKPaintHinting.Normal
-                };
-
-                using var outlinePaint = new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    TextSize = 7,
-                    StrokeWidth = 2,
-                    Color = SKColors.Black,
-                    FilterQuality = SKFilterQuality.High,
-                    HintingLevel = SKPaintHinting.Normal
-                };
-
-                var textBounds = new SKRect();
-                textPaint.MeasureText(levelString, ref textBounds);
-                var textLocation = new SKPoint(offsetX + 30 * i + 15 - textBounds.Width / 2, offsetY);
-
-                using var textPath = textPaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
-                using var outlinePath = outlinePaint.GetTextPath(levelString, textLocation.X, textLocation.Y);
-
-                // ???
-                canvas.DrawPath(textPath, textPaint);
-                canvas.DrawPath(outlinePath, outlinePaint);
-            }
-
-            return bitmap;
         }
 
         private void DisplayEnhance()
@@ -1354,7 +1370,7 @@ namespace Mids_Reborn.Forms.Controls
                 var skImage = FlipAnimator.Bitmaps.DrawSingle(
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Main, i),
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Alt, i),
-                    Math.Min(180, Math.Max(0, _flipAnimator.Val1 - _flipAnimator.KerningAngle * i)));
+                    Math.Min(180, Math.Max(0, _flipAnimator.Val1 - FlipAnimator.KerningAngle * i)));
                 e.Surface.Canvas.DrawImage(skImage, new SKPoint(30 + 33 * i, 30));
             }
         }
@@ -1367,7 +1383,7 @@ namespace Mids_Reborn.Forms.Controls
                 var skImage = FlipAnimator.Bitmaps.DrawSingle(
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Main, i),
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Alt, i),
-                    Math.Min(180, Math.Max(0, _flipAnimator.Val2 - _flipAnimator.KerningAngle * i)));
+                    Math.Min(180, Math.Max(0, _flipAnimator.Val2 - FlipAnimator.KerningAngle * i)));
                 e.Surface.Canvas.DrawImage(skImage, new SKPoint(30 + 33 * i, 30));
             }
         }
