@@ -615,7 +615,7 @@ namespace Mids_Reborn.Forms.Controls
         }
         #endregion
 
-        #region flip animator sub-class
+        #region Flip animator sub-class
 
         private class FlipAnimator
         {
@@ -635,8 +635,8 @@ namespace Mids_Reborn.Forms.Controls
 
             private List<SKSlotBitmap> EnhMainBitmaps = new();
             private List<SKSlotBitmap> EnhAltBitmaps = new();
-            public float Val1;
-            public float Val2;
+            public bool Active;
+            public float Angle;
             public const float KerningAngle = 30;
             public int NbEnhMain => EnhMainBitmaps.Count;
             public int NbEnhAlt => EnhAltBitmaps.Count;
@@ -697,13 +697,9 @@ namespace Mids_Reborn.Forms.Controls
                     return surface.Snapshot();
                 }
 
-                // Obsolete ?
                 public static SKBitmap CreateBitmap(string enhFile)
                 {
-                    var fs = File.OpenRead(enhFile);
-                    using var fileStream = new SKManagedStream(fs);
-
-                    return SKBitmap.Decode(fileStream);
+                    return SKBitmap.Decode(File.ReadAllBytes(enhFile));
                 }
 
                 public static SKBitmap CreateBitmap(int enhIndex, int ioLevel = -1, Enums.eEnhRelative relativeLevel = Enums.eEnhRelative.Even)
@@ -1362,7 +1358,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #endregion
 
-        private void skglEnhActive_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+        private void skglEnh_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear(SKColors.Black);
             for (var i = 0; i < Math.Max(_flipAnimator.NbEnhMain, _flipAnimator.NbEnhAlt); i++)
@@ -1370,60 +1366,38 @@ namespace Mids_Reborn.Forms.Controls
                 var skImage = FlipAnimator.Bitmaps.DrawSingle(
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Main, i),
                     _flipAnimator.GetBitmap(FlipAnimator.Tray.Alt, i),
-                    Math.Min(180, Math.Max(0, _flipAnimator.Val1 - FlipAnimator.KerningAngle * i)));
-                e.Surface.Canvas.DrawImage(skImage, new SKPoint(30 + 33 * i, 30));
-            }
-        }
-
-        private void skglEnhAlt_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            e.Surface.Canvas.Clear(SKColors.Black);
-            for (var i = 0; i < Math.Max(_flipAnimator.NbEnhMain, _flipAnimator.NbEnhAlt); i++)
-            {
-                var skImage = FlipAnimator.Bitmaps.DrawSingle(
-                    _flipAnimator.GetBitmap(FlipAnimator.Tray.Main, i),
-                    _flipAnimator.GetBitmap(FlipAnimator.Tray.Alt, i),
-                    Math.Min(180, Math.Max(0, _flipAnimator.Val2 - FlipAnimator.KerningAngle * i)));
+                    Math.Min(180, Math.Max(0, _flipAnimator.Angle - FlipAnimator.KerningAngle * i)));
                 e.Surface.Canvas.DrawImage(skImage, new SKPoint(30 + 33 * i, 30));
             }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (_flipAnimator.Val1 >= _flipAnimator.FullCycleAngle)
+            if (_flipAnimator.Angle >= _flipAnimator.FullCycleAngle)
             {
                 timer1.Stop();
                 // Swap main and alt slots
                 _flipAnimator.SwapSets();
-                _flipAnimator.Val1 = 0;
+                _flipAnimator.Angle = 0;
+                _flipAnimator.Active = false;
             }
             else
             {
-                _flipAnimator.Val1 = Math.Min(_flipAnimator.Val1 + 15, _flipAnimator.FullCycleAngle);
+                _flipAnimator.Angle = Math.Min(_flipAnimator.Angle + 15, _flipAnimator.FullCycleAngle);
                 skglEnhActive.Invalidate();
-            }
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (_flipAnimator.Val2 >= _flipAnimator.FullCycleAngle)
-            {
-                timer2.Stop();
-                //_flipAnimator.SwapSets();
-                _flipAnimator.Val2 = 0;
-            }
-            else
-            {
-                _flipAnimator.Val2 = Math.Min(_flipAnimator.Val2 + 15, _flipAnimator.FullCycleAngle);
                 skglEnhAlt.Invalidate();
             }
         }
 
         private void skglControl_Click(object sender, EventArgs e)
         {
-            // Merge timers ?
+            if (_flipAnimator.Active)
+            {
+                return;
+            }
+
+            _flipAnimator.Active = true;
             timer1.Start();
-            timer2.Start();
         }
     }
 }
