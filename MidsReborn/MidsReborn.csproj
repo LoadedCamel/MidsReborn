@@ -832,6 +832,11 @@
     <PackageReference Include="CircularProgressBar">
       <Version>2.8.0.16</Version>
     </PackageReference>
+    <PackageReference Include="Costura.Fody">
+      <Version>5.7.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="FastDeepCloner">
       <Version>1.3.6</Version>
     </PackageReference>
