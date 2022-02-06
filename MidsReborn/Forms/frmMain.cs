@@ -520,12 +520,15 @@ namespace Mids_Reborn.Forms
                     {
                         sbMode.DisplayText = !MainModule.MidsController.Toon.Complete ? $"Level-Up: {MidsContext.Character.Level + 1}" : @"Level-Up";
                     }
+                    sbMode.SwitchedState = SwitchButton.SwitchState.StateA;
                     break;
                 case Enums.dmModes.Normal:
                     sbMode.SwitchText.StateB = @"Normal";
+                    sbMode.SwitchedState = SwitchButton.SwitchState.StateB;
                     break;
                 case Enums.dmModes.Respec:
                     sbMode.SwitchText.StateC = @"Respec";
+                    sbMode.SwitchedState = SwitchButton.SwitchState.StateC;
                     break;
             }
         }
