@@ -12,7 +12,7 @@ namespace mrbBase.Base.Master_Classes
         private const int AppRevisionVersion = 70;
 
         public const string AssemblyVersion = "3.2.17";
-        public const string AssemblyFileVersion = "3.1.17.70";
+        public const string AssemblyFileVersion = "3.2.17.70";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
