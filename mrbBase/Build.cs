@@ -1223,5 +1223,474 @@ namespace mrbBase
         {
             for (var hIdx = Powers.Count - 1; hIdx >= 0; hIdx += -1) MutexV2(hIdx, true, true);
         }
+
+        #region EDFigures sub-class
+
+        public static class EDFigures
+        {
+            // Imperted and improved from DataView.cs
+            public enum EDStrength
+            {
+                None = 0,
+                Light = 1,
+                Medium = 2,
+                Strong = 3
+            }
+
+            public struct EDWeightedItem
+            {
+                public string StatName;
+                public float Value;
+                public Enums.eSchedule Schedule;
+                public EDStrength EDStrength;
+                public float PostEDValue;
+                public EDValueSettings EDSettings;
+            }
+
+            public struct EDFiguresGroups
+            {
+                public List<EDWeightedItem> Buffs;
+                public List<EDWeightedItem> Debuffs;
+                public List<EDWeightedItem> BuffDebuffs;
+                public List<EDWeightedItem> Mez;
+            }
+
+            public struct EDValueSettings
+            {
+                public EDStrength EDStrength;
+                public string PreEDValue;
+                public string PostEDValue;
+                public string ShortText;
+                public string TooltipText;
+                public bool Valid;
+            }
+
+            private static EDValueSettings BuildEDItem(float value, Enums.eSchedule schedule, string name, float afterED, bool useRtf = false)
+            {
+                var flag1 = value > (double)DatabaseAPI.Database.MultED[(int)schedule][0];
+                var flag2 = value > (double)DatabaseAPI.Database.MultED[(int)schedule][1];
+                var specialCase = value > (double)DatabaseAPI.Database.MultED[(int)schedule][2];
+
+                var ret = new EDValueSettings
+                {
+                    EDStrength = EDStrength.None,
+                    PreEDValue = "",
+                    PostEDValue = "",
+                    ShortText = "",
+                    TooltipText = "",
+                    Valid = true
+                };
+
+                if (value <= 0)
+                {
+                    ret.Valid = false;
+
+                    return ret;
+                }
+
+                var valuePercent = value * 100;
+                var valuePercentAfterED = Enhancement.ApplyED(schedule, value) * 100;
+                var postEDValue = valuePercentAfterED + afterED * 100;
+                var valueDiff = (float)Math.Round(valuePercent - valuePercentAfterED, 3);
+                var preEDValue = valuePercent + afterED * 100;
+
+                var totalEffectStr = $"Total Effect: {preEDValue:P2}\r\nWith ED Applied: {postEDValue:P2}\r\n\r\n";
+                var infoText = "";
+                var tooltipText = "";
+                var edStrength = EDStrength.None;
+                if (valueDiff > 0)
+                {
+                    infoText = $"{postEDValue:P2} (Pre-ED: {preEDValue:P2})";
+                    if (afterED > 0)
+                    {
+                        totalEffectStr += $"Amount from pre-ED sources: {valuePercent:P2}\r\n";
+                    }
+
+                    tooltipText = $"{totalEffectStr} ED reduction: {valueDiff:P2} ({valueDiff / valuePercent * 100:P2} of total)\r\n";
+
+
+                    if (specialCase)
+                    {
+                        tooltipText += $" The highest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule][2] * 100:P2}\r\n";
+                        edStrength = EDStrength.Strong;
+                    }
+                    else if (flag2)
+                    {
+                        tooltipText += $" The middle level of ED reduction is being applied.\r\nThreshold: {(DatabaseAPI.Database.MultED[(int)schedule][1] * 100):P2}\r\n";
+                        edStrength = EDStrength.Medium;
+                    }
+                    else if (flag1)
+                    {
+                        tooltipText += $" The lowest level of ED reduction is being applied.\r\nThreshold: {(DatabaseAPI.Database.MultED[(int)schedule][0] * 100):P2}\r\n";
+                        edStrength = EDStrength.Light;
+                    }
+
+                    if (afterED > 0)
+                    {
+                        tooltipText += $" Amount from post-ED sources: {Convert.ToDecimal(afterED * 100):P2}\r\n";
+                    }
+                }
+                else
+                {
+                    infoText = $"{postEDValue:P2}";
+                    if (afterED > 0)
+                    {
+                        totalEffectStr += $" Amount from post-ED sources: {Convert.ToDecimal(afterED * 100):P2}\r\n";
+                    }
+
+                    tooltipText = $"{totalEffectStr}This effect has not been affected by ED.\r\n";
+                }
+
+                // Need to add RTF output mode.
+                return new EDValueSettings
+                {
+                    PreEDValue = $"{valuePercent + afterED * 100:P2}",
+                    PostEDValue = $"{postEDValue:P2}",
+                    EDStrength = edStrength,
+                    ShortText = $"{name}: {infoText}",
+                    TooltipText = tooltipText,
+                    Valid = true
+                };
+            }
+
+            public static EDFiguresGroups GetBuffsForBuildPower(int historyIdx = -1)
+            {
+                var ret = new EDFiguresGroups
+                {
+                    Buffs = new List<EDWeightedItem>(),
+                    Debuffs = new List<EDWeightedItem>(),
+                    BuffDebuffs = new List<EDWeightedItem>(),
+                    Mez = new List<EDWeightedItem>()
+                };
+
+                if (MidsContext.Character == null)
+                {
+                    return ret;
+                }
+
+                if (historyIdx < 0)
+                {
+                    return ret;
+                }
+
+                // Need to check if historyIdx targets a valid power in build
+
+                var eEnhs = Enum.GetValues(typeof(Enums.eEnhance)).Length;
+                var eMezzes = Enum.GetValues(typeof(Enums.eMez)).Length;
+
+                var buffValues = new List<float>(eEnhs);
+                var buffSchedules = new List<Enums.eSchedule>(eEnhs);
+                var buffValuesAfterED = new List<float>(eEnhs);
+                
+                var debuffValues = new List<float>(eEnhs);
+                var debuffSchedules = new List<Enums.eSchedule>(eEnhs);
+                var debuffValuesAfterED = new List<float>(eEnhs);
+
+                var buffDebuffValues = new List<float>(eEnhs);
+                var buffDebuffSchedules = new List<Enums.eSchedule>(eEnhs);
+                var buffDebuffValuesAfterED = new List<float>(eEnhs);
+
+                var mezValues = new List<float>(eMezzes);
+                var mezSchedules = new List<Enums.eSchedule>(eEnhs);
+                var mezValuesAfterED = new List<float>(eEnhs);
+
+                for (var i = 0; i < eEnhs; i++)
+                {
+                    buffValues[i] = 0;
+                    debuffValues[i] = 0;
+                    buffDebuffValues[i] = 0;
+                    buffSchedules[i] = Enhancement.GetSchedule((Enums.eEnhance)i);
+                    debuffSchedules[i] = buffSchedules[i];
+                    buffDebuffSchedules[i] = buffSchedules[i];
+                }
+
+                debuffSchedules[(int)Enums.eEnhance.Defense] = Enums.eSchedule.A; // 3
+                for (var tSub = 0; tSub < eMezzes; tSub++)
+                {
+                    mezValues[tSub] = 0;
+                    mezSchedules[tSub] = Enhancement.GetSchedule(Enums.eEnhance.Mez, tSub);
+                }
+
+                var refPower = MidsContext.Character.CurrentBuild.Powers[historyIdx];
+                for (var index1 = 0; index1 < refPower.SlotCount; index1++)
+                {
+                    var slot = refPower.Slots[index1];
+                    if (slot.Enhancement.Enh <= -1) continue;
+
+                    var enh = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
+                    for (var index2 = 0; index2 < enh.Effect.Length; index2++)
+                    {
+                        var effects = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].Effect;
+                        if (effects[index2].Mode != Enums.eEffMode.Enhancement)
+                        {
+                            continue;
+                        }
+
+                        if (effects[index2].Enhance.ID == (int)Enums.eEnhance.Mez) // 12
+                        {
+                            mezValues[effects[index2].Enhance.SubID] += slot.Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez, effects[index2].Enhance.SubID, 1);
+                        }
+                        else
+                        {
+                            switch (enh.Effect[index2].BuffMode)
+                            {
+                                case Enums.eBuffDebuff.BuffOnly:
+                                    buffValues[effects[index2].Enhance.ID] += slot.Enhancement.GetEnhancementEffect((Enums.eEnhance)effects[index2].Enhance.ID, -1, 1);
+                                    break;
+                                case Enums.eBuffDebuff.DeBuffOnly:
+                                    if ((effects[index2].Enhance.ID != (int)Enums.eEnhance.SpeedFlying) &
+                                        (effects[index2].Enhance.ID != (int)Enums.eEnhance.SpeedRunning) &
+                                        (effects[index2].Enhance.ID != (int)Enums.eEnhance.SpeedJumping)) // 6, 19, 11
+                                    {
+                                        debuffValues[effects[index2].Enhance.ID] += slot.Enhancement.GetEnhancementEffect((Enums.eEnhance)effects[index2].Enhance.ID, -1, -1);
+                                    }
+
+                                    break;
+                                default:
+                                    buffDebuffValues[effects[index2].Enhance.ID] += slot.Enhancement.GetEnhancementEffect((Enums.eEnhance)effects[index2].Enhance.ID, -1, 1f);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var power in MidsContext.Character.CurrentBuild.Powers)
+                {
+                    if (power.Power == null || !power.StatInclude)
+                    {
+                        continue;
+                    }
+
+                    IPower power1 = new Power(power.Power);
+                    power1.AbsorbPetEffects();
+                    power1.ApplyGrantPowerEffects();
+                    foreach (var effect in power1.Effects)
+                    {
+                        if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
+                        {
+                            continue;
+                        }
+
+                        // var power2 = power1;
+                        var power2 = effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1)
+                            ? DatabaseAPI.Database.Power[effect.Absorbed_Power_nID]
+                            : new Power(power.Power);
+
+                        var eBuffDebuff = Enums.eBuffDebuff.Any;
+                        var buffDebuffFound = false;
+                        foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[historyIdx].Power.BoostsAllowed)
+                        {
+                            if (power2.BoostsAllowed.All(str2 => str1 != str2)) continue;
+
+                            if (str1.Contains("Buff"))
+                            {
+                                eBuffDebuff = Enums.eBuffDebuff.BuffOnly;
+                            }
+
+                            if (str1.Contains("Debuff"))
+                            {
+                                eBuffDebuff = Enums.eBuffDebuff.DeBuffOnly;
+                            }
+
+                            buffDebuffFound = true;
+                            break;
+
+                            //if (buffDebuffFound)
+                            //    break;
+                        }
+
+                        if (!buffDebuffFound)
+                        {
+                            continue;
+                        }
+
+                        if (effect.EffectType == Enums.eEffectType.Enhancement)
+                        {
+                            switch (effect.ETModifies)
+                            {
+                                case Enums.eEffectType.Defense:
+                                    if (effect.DamageType == Enums.eDamage.Smashing)
+                                    {
+                                        if (effect.IgnoreED)
+                                        {
+                                            switch (eBuffDebuff)
+                                            {
+                                                case Enums.eBuffDebuff.BuffOnly:
+                                                    buffValuesAfterED[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                                case Enums.eBuffDebuff.DeBuffOnly:
+                                                    debuffValuesAfterED[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                                default:
+                                                    buffDebuffValuesAfterED[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            switch (eBuffDebuff)
+                                            {
+                                                case Enums.eBuffDebuff.BuffOnly:
+                                                    buffValues[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                                case Enums.eBuffDebuff.DeBuffOnly:
+                                                    debuffValues[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                                default:
+                                                    buffDebuffValues[(int)Enums.eEnhance.Defense] += effect.BuffedMag; // 3
+                                                    break;
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                                case Enums.eEffectType.Mez:
+                                    if (effect.IgnoreED)
+                                    {
+                                        mezValuesAfterED[(int)effect.MezType] += effect.BuffedMag;
+                                        break;
+                                    }
+
+                                    mezValues[(int)effect.MezType] += effect.BuffedMag;
+                                    break;
+                                default:
+                                    var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime
+                                        ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString()))
+                                        : (int)Enums.eEnhance.RechargeTime; // 14
+                                    if (effect.IgnoreED)
+                                    {
+                                        buffDebuffValuesAfterED[index2] += effect.BuffedMag;
+                                        break;
+                                    }
+
+                                    buffDebuffValues[index2] += effect.BuffedMag;
+                                    break;
+                            }
+                        }
+                        else if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
+                        {
+                            if (effect.IgnoreED)
+                            {
+                                foreach (var str in power2.BoostsAllowed)
+                                {
+                                    if (str.StartsWith("Res_Damage"))
+                                    {
+                                        buffDebuffValuesAfterED[(int)Enums.eEnhance.Resistance] += effect.BuffedMag; // 18
+                                        break;
+                                    }
+
+                                    if (!str.StartsWith("Damage"))
+                                    {
+                                        continue;
+                                    }
+
+                                    buffDebuffValuesAfterED[(int)Enums.eEnhance.Damage] += effect.BuffedMag; // 2
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var str in power2.BoostsAllowed)
+                                {
+                                    if (str.StartsWith("Res_Damage"))
+                                    {
+                                        buffDebuffValues[(int)Enums.eEnhance.Resistance] += effect.BuffedMag; // 18
+                                        break;
+                                    }
+
+                                    if (!str.StartsWith("Damage"))
+                                    {
+                                        continue;
+                                    }
+
+                                    buffDebuffValues[(int)Enums.eEnhance.Damage] += effect.BuffedMag; // 2
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                buffValues[(int)Enums.eEnhance.HitPoints] = 0; // 8
+                debuffValues[(int)Enums.eEnhance.HitPoints] = 0; // 8
+                buffDebuffValues[(int)Enums.eEnhance.HitPoints] = 0; // 8
+
+                buffValues[(int)Enums.eEnhance.Regeneration] = 0; // 17
+                debuffValues[(int)Enums.eEnhance.Regeneration] = 0; // 17
+                buffDebuffValues[(int)Enums.eEnhance.Regeneration] = 0; // 17
+
+                buffValues[(int)Enums.eEnhance.Recovery] = 0; // 16
+                debuffValues[(int)Enums.eEnhance.Recovery] = 0; // 16
+                buffDebuffValues[(int)Enums.eEnhance.Recovery] = 0; // 16
+
+                var statNames = Enum.GetNames(typeof(Enums.eEnhance));
+                for (var i = 0; i < eEnhs; i++)
+                {
+                    if (Math.Abs(buffValues[i]) > float.Epsilon)
+                    {
+                        var edSettings = BuildEDItem(buffValues[i], buffSchedules[i], statNames[i], buffValuesAfterED[i]);
+                        ret.Buffs.Add(new EDWeightedItem
+                        {
+                            StatName = statNames[i],
+                            Value = buffValues[i],
+                            Schedule = buffSchedules[i],
+                            PostEDValue = buffValuesAfterED[i],
+                            EDStrength = edSettings.EDStrength,
+                            EDSettings = edSettings
+                        });
+                    }
+
+                    if (Math.Abs(debuffValues[i]) > float.Epsilon)
+                    {
+                        var edSettings = BuildEDItem(debuffValues[i], debuffSchedules[i], statNames[i], debuffValuesAfterED[i]);
+                        ret.Debuffs.Add(new EDWeightedItem
+                        {
+                            StatName = statNames[i],
+                            Value = debuffValues[i],
+                            Schedule = debuffSchedules[i],
+                            PostEDValue = debuffValuesAfterED[i],
+                            EDStrength = edSettings.EDStrength,
+                            EDSettings = edSettings
+                        });
+                    }
+
+                    if (Math.Abs(buffDebuffValues[i]) > float.Epsilon)
+                    {
+                        var edSettings = BuildEDItem(buffDebuffValues[i], buffDebuffSchedules[i], statNames[i], buffDebuffValuesAfterED[i]);
+                        ret.BuffDebuffs.Add(new EDWeightedItem
+                        {
+                            StatName = statNames[i],
+                            Value = buffDebuffValues[i],
+                            Schedule = buffDebuffSchedules[i],
+                            PostEDValue = buffDebuffValuesAfterED[i],
+                            EDStrength = edSettings.EDStrength,
+                            EDSettings = edSettings
+                        });
+                    }
+                }
+
+                statNames = Enum.GetNames(typeof(Enums.eMez));
+                for (var i = 0; i < eMezzes; i++)
+                {
+                    if (Math.Abs(mezValues[i]) > float.Epsilon)
+                    {
+                        var edSettings = BuildEDItem(mezValues[i], mezSchedules[i], statNames[i], mezValuesAfterED[i]);
+                        ret.Mez.Add(new EDWeightedItem
+                        {
+                            StatName = statNames[i],
+                            Value = mezValues[i],
+                            Schedule = mezSchedules[i],
+                            PostEDValue = mezValuesAfterED[i],
+                            EDStrength = edSettings.EDStrength,
+                            EDSettings = edSettings
+                        });
+                    }
+                }
+
+                return ret;
+            }
+        }
+        
+        #endregion
     }
 }

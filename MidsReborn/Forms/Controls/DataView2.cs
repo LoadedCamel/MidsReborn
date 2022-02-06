@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -15,6 +16,7 @@ namespace Mids_Reborn.Forms.Controls
     public partial class DataView2 : UserControl
     {
         #region Private enums & structs
+
         private enum BoostType
         {
             Reduction,
@@ -43,6 +45,7 @@ namespace Mids_Reborn.Forms.Controls
             public ColorRange ElapsedPenColorBottom;
             public ColorRange ElapsedPenColorTop;
         }
+
         #endregion
 
         private IPower _basePower;
@@ -52,22 +55,29 @@ namespace Mids_Reborn.Forms.Controls
         private PowerEntry BuildPowerEntry;
         private bool FreezeScalerCB;
         private FlipAnimator _flipAnimator;
-        private static readonly SKBitmap NewSlotBitmap = FlipAnimator.Bitmaps.CreateBitmap(@"Images\Newslot.png"); // ???
+
+        private static readonly SKBitmap
+            NewSlotBitmap = FlipAnimator.Bitmaps.CreateBitmap(@"Images\Newslot.png"); // ???
 
         // Track bar colors for power scalers
         private readonly TrackGradientsScheme TrackColors = new()
         {
-            ElapsedInnerColor = new ColorRange { LowerBoundColor = Color.FromArgb(0, 51, 0), UpperBoundColor = Color.FromArgb(0, 128, 0) },
-            ElapsedPenColorBottom = new ColorRange { LowerBoundColor = Color.FromArgb(58, 94, 58), UpperBoundColor = Color.FromArgb(144, 238, 44) },
-            ElapsedPenColorTop = new ColorRange { LowerBoundColor = Color.FromArgb(0, 102, 51), UpperBoundColor = Color.FromArgb(0, 255, 127) }
+            ElapsedInnerColor = new ColorRange
+                { LowerBoundColor = Color.FromArgb(0, 51, 0), UpperBoundColor = Color.FromArgb(0, 128, 0) },
+            ElapsedPenColorBottom = new ColorRange
+                { LowerBoundColor = Color.FromArgb(58, 94, 58), UpperBoundColor = Color.FromArgb(144, 238, 44) },
+            ElapsedPenColorTop = new ColorRange
+                { LowerBoundColor = Color.FromArgb(0, 102, 51), UpperBoundColor = Color.FromArgb(0, 255, 127) }
         };
 
         public bool Locked;
 
         // Group labels (effects tab)
-        private static readonly List<string> GroupLabels = new() { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
+        private static readonly List<string> GroupLabels = new()
+            { "Resistance", "Defense", "Buffs", "Debuffs", "Summons/Grants", "Misc." };
 
         #region Effect vector type sub-class
+
         private class EffectVectorType
         {
             public Enums.eEffectType? EffectType;
@@ -77,14 +87,16 @@ namespace Mids_Reborn.Forms.Controls
             public BuffEffectType VectorDirection;
             public Enums.eToWho ToWho;
 
-            public EffectVectorType(Enums.eEffectType effectType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            public EffectVectorType(Enums.eEffectType effectType,
+                BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
             {
                 EffectType = effectType;
                 VectorDirection = vectorDirection;
                 ToWho = toWho;
             }
 
-            public EffectVectorType(Enums.eEffectType effectType, Enums.eMez mezType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eMez mezType,
+                BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
             {
                 EffectType = effectType;
                 MezType = mezType;
@@ -92,15 +104,17 @@ namespace Mids_Reborn.Forms.Controls
                 ToWho = toWho;
             }
 
-            public EffectVectorType(Enums.eEffectType effectType, Enums.eDamage damageType, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eDamage damageType,
+                BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
             {
                 EffectType = effectType;
                 DamageType = damageType;
                 VectorDirection = vectorDirection;
                 ToWho = toWho;
             }
-            
-            public EffectVectorType(Enums.eEffectType effectType, Enums.eEffectType etModifies, BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
+
+            public EffectVectorType(Enums.eEffectType effectType, Enums.eEffectType etModifies,
+                BuffEffectType vectorDirection = BuffEffectType.NonZero, Enums.eToWho toWho = Enums.eToWho.All)
             {
                 EffectType = effectType;
                 ETModifies = etModifies;
@@ -124,9 +138,11 @@ namespace Mids_Reborn.Forms.Controls
                        };
             }
         }
+
         #endregion
 
         #region Effect vector groups (effect tab)
+
         private static readonly List<List<EffectVectorType>> EffectVectorsGroups = new()
         {
             // +Defenses to Self
@@ -218,9 +234,11 @@ namespace Mids_Reborn.Forms.Controls
                 new(Enums.eEffectType.Enhancement, Enums.eEffectType.MezResist)
             }
         };
+
         #endregion
 
         #region Grouped effect sub-class
+
         private class GroupedEffect
         {
             private List<Enums.eDamage> DamageTypes = new();
@@ -232,7 +250,8 @@ namespace Mids_Reborn.Forms.Controls
             private readonly Enums.eToWho ToWho;
             private readonly bool DisplayPercentage;
 
-            public GroupedEffect(Enums.eEffectType effectType, float buffedMag, bool displayPercentage, Enums.eToWho toWho)
+            public GroupedEffect(Enums.eEffectType effectType, float buffedMag, bool displayPercentage,
+                Enums.eToWho toWho)
             {
                 EffectType = effectType;
                 SubEffectType = Enums.eEffectType.None;
@@ -241,7 +260,8 @@ namespace Mids_Reborn.Forms.Controls
                 ToWho = toWho;
             }
 
-            public GroupedEffect(Enums.eEffectType effectType, Enums.eEffectType subEffectType, float buffedMag, bool displayPercentage, Enums.eToWho toWho)
+            public GroupedEffect(Enums.eEffectType effectType, Enums.eEffectType subEffectType, float buffedMag,
+                bool displayPercentage, Enums.eToWho toWho)
             {
                 EffectType = effectType;
                 SubEffectType = subEffectType;
@@ -336,7 +356,8 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             return "All Pos";
                         }
-                        else if (ContainsMultiOnly(damageTypes.GetRange(0, 7).Union(damageTypes.GetRange(8, 3)), DamageTypes))
+                        else if (ContainsMultiOnly(damageTypes.GetRange(0, 7).Union(damageTypes.GetRange(8, 3)),
+                                     DamageTypes))
                         {
                             return "All";
                         }
@@ -428,16 +449,19 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         case Enums.eEffectType.Mez:
                         case Enums.eEffectType.MezResist:
-                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({MezTypesString()}){ToWhoString()}";
+                            return
+                                $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({MezTypesString()}){ToWhoString()}";
 
                         case Enums.eEffectType.DamageBuff:
                         case Enums.eEffectType.Resistance:
                         case Enums.eEffectType.Defense:
                         case Enums.eEffectType.Elusivity:
-                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({DamageTypesString()}){ToWhoString()}";
+                            return
+                                $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {SubEffectType}({DamageTypesString()}){ToWhoString()}";
 
                         default:
-                            return $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {ETModifiesString()}{ToWhoString()}";
+                            return
+                                $"{(BuffedMag > 0 ? "+" : "")}{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType} to {ETModifiesString()}{ToWhoString()}";
                     }
                 }
 
@@ -445,25 +469,31 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     case Enums.eEffectType.Mez:
                     case Enums.eEffectType.MezResist:
-                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({MezTypesString()}){ToWhoString()}";
+                        return
+                            $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({MezTypesString()}){ToWhoString()}";
 
                     case Enums.eEffectType.DamageBuff:
                     case Enums.eEffectType.Resistance:
                     case Enums.eEffectType.Defense:
                     case Enums.eEffectType.Elusivity:
-                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({DamageTypesString()}){ToWhoString()}";
+                        return
+                            $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}({DamageTypesString()}){ToWhoString()}";
 
                     default:
-                        return $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}{ToWhoString()}";
+                        return
+                            $"{(DisplayPercentage ? $"{BuffedMag:P2}" : $"{BuffedMag:#####.##}")} {EffectType}{ToWhoString()}";
                 }
             }
         }
+
         #endregion
 
         #region Effect group filter sub-class
+
         private class EffectsGroupFilter
         {
             private Dictionary<string, List<GroupedEffect>> _effectGroups = new();
+
             private readonly List<Enums.eEffectType> _hasGroups = new()
             {
                 Enums.eEffectType.Resistance,
@@ -516,7 +546,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 // Merge similar effects
-                for (var i = 0 ; i < fxGroups.Count ; i++)
+                for (var i = 0; i < fxGroups.Count; i++)
                 {
                     foreach (var fx in fxGroups[i])
                     {
@@ -567,10 +597,12 @@ namespace Mids_Reborn.Forms.Controls
                                 BuffedMag = fx.BuffedMag
                             }, groups[i].Count);
 
-                            groups[i].Add(fx.EffectType == Enums.eEffectType.Enhancement | fx.EffectType == Enums.eEffectType.ResEffect
-                                ? new GroupedEffect(fx.EffectType, fx.ETModifies, fx.BuffedMag, fx.DisplayPercentage, fx.ToWho)
+                            groups[i].Add(fx.EffectType == Enums.eEffectType.Enhancement |
+                                          fx.EffectType == Enums.eEffectType.ResEffect
+                                ? new GroupedEffect(fx.EffectType, fx.ETModifies, fx.BuffedMag, fx.DisplayPercentage,
+                                    fx.ToWho)
                                 : new GroupedEffect(fx.EffectType, fx.BuffedMag, fx.DisplayPercentage, fx.ToWho));
-                            
+
                             switch (fx.EffectType)
                             {
                                 case Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Mez:
@@ -613,6 +645,7 @@ namespace Mids_Reborn.Forms.Controls
                 return new EffectsGroupFilter(labeledGroups);
             }
         }
+
         #endregion
 
         #region Flip animator sub-class
@@ -640,7 +673,9 @@ namespace Mids_Reborn.Forms.Controls
             public const float KerningAngle = 30;
             public int NbEnhMain => EnhMainBitmaps.Count;
             public int NbEnhAlt => EnhAltBitmaps.Count;
-            public float FullCycleAngle => 180 + KerningAngle * (Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count) - 1);
+
+            public float FullCycleAngle =>
+                180 + KerningAngle * (Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count) - 1);
 
             public static class Bitmaps
             {
@@ -702,13 +737,15 @@ namespace Mids_Reborn.Forms.Controls
                     return SKBitmap.Decode(File.ReadAllBytes(enhFile));
                 }
 
-                public static SKBitmap CreateBitmap(int enhIndex, int ioLevel = -1, Enums.eEnhRelative relativeLevel = Enums.eEnhRelative.Even)
+                public static SKBitmap CreateBitmap(int enhIndex, int ioLevel = -1,
+                    Enums.eEnhRelative relativeLevel = Enums.eEnhRelative.Even)
                 {
                     var bitmap = new SKBitmap(new SKImageInfo(30, 30, SKColorType.Rgba8888, SKAlphaType.Premul));
                     using var canvas = new SKCanvas(bitmap);
 
                     var imgIdx = DatabaseAPI.Database.Enhancements[enhIndex].ImageIdx;
-                    var enhGrade = I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhIndex].TypeID); // Enums.eEnhGrade ?
+                    var enhGrade =
+                        I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhIndex].TypeID); // Enums.eEnhGrade ?
                     var sourceRect = I9Gfx.GetOverlayRect(enhGrade).ToSKRect();
                     var destRect = new SKRect(0, 0, 30, 30);
 
@@ -793,7 +830,9 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 // Fillers (?)
-                for (var i = Math.Min(EnhMainBitmaps.Count, EnhAltBitmaps.Count); i < Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count); i++)
+                for (var i = Math.Min(EnhMainBitmaps.Count, EnhAltBitmaps.Count);
+                     i < Math.Max(EnhMainBitmaps.Count, EnhAltBitmaps.Count);
+                     i++)
                 {
                     if (EnhMainBitmaps.Count < EnhAltBitmaps.Count)
                     {
@@ -867,7 +906,8 @@ namespace Mids_Reborn.Forms.Controls
             return new List<IEffect[]> { baseEffects, enhEffects };
         }
 
-        public void SetData(IPower basePower = null, IPower enhancedPower = null, bool noLevel = false, bool locked = false, int historyIdx = -1)
+        public void SetData(IPower basePower = null, IPower enhancedPower = null, bool noLevel = false,
+            bool locked = false, int historyIdx = -1)
         {
             _basePower = basePower;
             _enhancedPower = enhancedPower;
@@ -934,7 +974,7 @@ namespace Mids_Reborn.Forms.Controls
         private string List2RTF(List<string> ls)
         {
             var ret = RTF.StartRTF();
-            for (var i = 0 ; i < ls.Count ; i++)
+            for (var i = 0; i < ls.Count; i++)
             {
                 if (i == 0)
                 {
@@ -948,12 +988,13 @@ namespace Mids_Reborn.Forms.Controls
 
             return ret;
         }
+
         #endregion
 
         private BoostType GetBoostType(float valueBase, float valueEnhanced)
         {
             var diff = valueEnhanced - valueBase;
-            
+
             return diff switch
             {
                 < 0 => BoostType.Reduction,
@@ -962,7 +1003,8 @@ namespace Mids_Reborn.Forms.Controls
             };
         }
 
-        private static ListViewItem CreateStatLvItem(string statName, string value, BoostType boostType, string tip = "")
+        private static ListViewItem CreateStatLvItem(string statName, string value, BoostType boostType,
+            string tip = "")
         {
             var valueColor = boostType switch
             {
@@ -1010,17 +1052,40 @@ namespace Mids_Reborn.Forms.Controls
         private static Color InterpolateColor(decimal value, decimal valueMin, decimal valueMax, ColorRange colorRange)
         {
             return Color.FromArgb(
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.R - colorRange.LowerBoundColor.R) + colorRange.LowerBoundColor.R),
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.G - colorRange.LowerBoundColor.G) + colorRange.LowerBoundColor.G),
-                (int)Math.Round((value - valueMin) / (valueMax - valueMin) * (colorRange.UpperBoundColor.B - colorRange.LowerBoundColor.B) + colorRange.LowerBoundColor.B)
+                (int)Math.Round(
+                    (value - valueMin) / (valueMax - valueMin) *
+                    (colorRange.UpperBoundColor.R - colorRange.LowerBoundColor.R) + colorRange.LowerBoundColor.R),
+                (int)Math.Round(
+                    (value - valueMin) / (valueMax - valueMin) *
+                    (colorRange.UpperBoundColor.G - colorRange.LowerBoundColor.G) + colorRange.LowerBoundColor.G),
+                (int)Math.Round(
+                    (value - valueMin) / (valueMax - valueMin) *
+                    (colorRange.UpperBoundColor.B - colorRange.LowerBoundColor.B) + colorRange.LowerBoundColor.B)
             );
+        }
+
+        private static string RelativeLevelString(Enums.eEnhRelative relativeLevel, bool showZero = false)
+        {
+            return relativeLevel switch
+            {
+                Enums.eEnhRelative.MinusThree => "-3",
+                Enums.eEnhRelative.MinusTwo => "-2",
+                Enums.eEnhRelative.MinusOne => "-1",
+                Enums.eEnhRelative.PlusOne => "+1",
+                Enums.eEnhRelative.PlusTwo => "+2",
+                Enums.eEnhRelative.PlusThree => "+3",
+                Enums.eEnhRelative.PlusFour => "+4",
+                Enums.eEnhRelative.PlusFive => "+5",
+                _ => showZero ? "+0" : ""
+            };
         }
 
         #region Info Tab
 
         private void DisplayInfo()
         {
-            infoTabTitle.Text = $"{(BuildPowerEntry != null ? $"[{BuildPowerEntry.Level}] " : "")}{_basePower?.DisplayName ?? "Info"}";
+            infoTabTitle.Text =
+                $"{(BuildPowerEntry != null ? $"[{BuildPowerEntry.Level}] " : "")}{_basePower?.DisplayName ?? "Info"}";
             richInfoSmall.Rtf = Text2RTF(_basePower?.DescShort ?? "");
             richInfoLarge.Rtf = Text2RTF(_basePower?.DescLong ?? "");
 
@@ -1029,12 +1094,17 @@ namespace Mids_Reborn.Forms.Controls
             // Add basic power info
             listInfosL.BeginUpdate();
             listInfosR.BeginUpdate();
-            listInfosL.Items.Add(CreateStatLvItem("End Cost", $"{_enhancedPower.EndCost:##.##}", GetBoostType(_basePower.EndCost, _enhancedPower?.EndCost ?? _basePower.EndCost)));
-            listInfosL.Items.Add(CreateStatLvItem("Recharge", $"{_enhancedPower.RechargeTime:#####.##}s", GetBoostType(_basePower.RechargeTime, _enhancedPower?.RechargeTime ?? _basePower.RechargeTime)));
-            listInfosL.Items.Add(CreateStatLvItem("Range", $"{_enhancedPower.Range:####.##}ft", GetBoostType(_basePower.Range, _enhancedPower?.Range ?? _basePower.Range)));
-            listInfosL.Items.Add(CreateStatLvItem("Case Time", $"{_enhancedPower.CastTime:##.##}s", GetBoostType(_basePower.CastTime, _enhancedPower?.CastTime ?? _basePower.CastTime)));
+            listInfosL.Items.Add(CreateStatLvItem("End Cost", $"{_enhancedPower.EndCost:##.##}",
+                GetBoostType(_basePower.EndCost, _enhancedPower?.EndCost ?? _basePower.EndCost)));
+            listInfosL.Items.Add(CreateStatLvItem("Recharge", $"{_enhancedPower.RechargeTime:#####.##}s",
+                GetBoostType(_basePower.RechargeTime, _enhancedPower?.RechargeTime ?? _basePower.RechargeTime)));
+            listInfosL.Items.Add(CreateStatLvItem("Range", $"{_enhancedPower.Range:####.##}ft",
+                GetBoostType(_basePower.Range, _enhancedPower?.Range ?? _basePower.Range)));
+            listInfosL.Items.Add(CreateStatLvItem("Case Time", $"{_enhancedPower.CastTime:##.##}s",
+                GetBoostType(_basePower.CastTime, _enhancedPower?.CastTime ?? _basePower.CastTime)));
 
-            listInfosR.Items.Add(CreateStatLvItem("Accuracy", $"{_enhancedPower.Accuracy:P2}", GetBoostType(_basePower.Accuracy, _enhancedPower?.Accuracy ?? _basePower.Accuracy)));
+            listInfosR.Items.Add(CreateStatLvItem("Accuracy", $"{_enhancedPower.Accuracy:P2}",
+                GetBoostType(_basePower.Accuracy, _enhancedPower?.Accuracy ?? _basePower.Accuracy)));
 
             // Check if there is a mez effect, display duration in the right column.
             var hasMez = _basePower.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez);
@@ -1050,7 +1120,8 @@ namespace Mids_Reborn.Forms.Controls
                     .Select(e => e.Duration)
                     .Max();
 
-                listInfosR.Items.Add(CreateStatLvItem("Duration", $"{enhancedDuration:###.##}s", GetBoostType(baseDuration, enhancedDuration)));
+                listInfosR.Items.Add(CreateStatLvItem("Duration", $"{enhancedDuration:###.##}s",
+                    GetBoostType(baseDuration, enhancedDuration)));
                 listInfosR.Items.Add(CreateStatLvItem());
                 listInfosR.Items.Add(CreateStatLvItem());
             }
@@ -1073,10 +1144,13 @@ namespace Mids_Reborn.Forms.Controls
                 Enums.eEffectType.Damage
             };
 
-            var miscEffectsIndexes = _enhancedPower.Effects.FindIndexes(e => !effectsHidden.Contains(e.EffectType)).ToList();
-            for (var i = 0 ; i < Math.Min(4, miscEffectsIndexes.Count) ; i++)
+            var miscEffectsIndexes =
+                _enhancedPower.Effects.FindIndexes(e => !effectsHidden.Contains(e.EffectType)).ToList();
+            for (var i = 0; i < Math.Min(4, miscEffectsIndexes.Count); i++)
             {
-                if (miscEffectsIndexes[i] >= _basePower.Effects.Length || _basePower.Effects[miscEffectsIndexes[i]].EffectType != _enhancedPower.Effects[miscEffectsIndexes[i]].EffectType)
+                if (miscEffectsIndexes[i] >= _basePower.Effects.Length ||
+                    _basePower.Effects[miscEffectsIndexes[i]].EffectType !=
+                    _enhancedPower.Effects[miscEffectsIndexes[i]].EffectType)
                 {
                     var fx = _enhancedPower.Effects[miscEffectsIndexes[i]];
                     var fxType = fx.EffectType switch
@@ -1098,11 +1172,13 @@ namespace Mids_Reborn.Forms.Controls
 
                     if (i % 2 == 0)
                     {
-                        listInfosL.Items.Add(CreateStatLvItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
+                        listInfosL.Items.Add(CreateStatLvItem(fxType,
+                            fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
                     }
                     else
                     {
-                        listInfosR.Items.Add(CreateStatLvItem(fxType, fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
+                        listInfosR.Items.Add(CreateStatLvItem(fxType,
+                            fx.DisplayPercentage ? $"{fx.BuffedMag:P2}" : $"{fx.BuffedMag:###.##}", BoostType.Extra));
                     }
                 }
                 else
@@ -1121,25 +1197,31 @@ namespace Mids_Reborn.Forms.Controls
 
                     var enhValue = fxEnh.EffectType switch
                     {
-                        Enums.eEffectType.Mez when fxEnh.MezType == Enums.eMez.Knockback | fxEnh.MezType == Enums.eMez.Knockup => fxEnh.BuffedMag,
+                        Enums.eEffectType.Mez when fxEnh.MezType == Enums.eMez.Knockback |
+                                                   fxEnh.MezType == Enums.eMez.Knockup => fxEnh.BuffedMag,
                         Enums.eEffectType.Mez => fxEnh.Duration,
                         _ => fxEnh.BuffedMag
                     };
 
                     var baseValue = fxBase.EffectType switch
                     {
-                        Enums.eEffectType.Mez when fxBase.MezType == Enums.eMez.Knockback | fxBase.MezType == Enums.eMez.Knockup => fxBase.BuffedMag,
+                        Enums.eEffectType.Mez when fxBase.MezType == Enums.eMez.Knockback |
+                                                   fxBase.MezType == Enums.eMez.Knockup => fxBase.BuffedMag,
                         Enums.eEffectType.Mez => fxBase.Duration,
                         _ => fxBase.BuffedMag
                     };
 
                     if (i % 2 == 0)
                     {
-                        listInfosL.Items.Add(CreateStatLvItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
+                        listInfosL.Items.Add(CreateStatLvItem(fxType,
+                            fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}",
+                            GetBoostType(baseValue, enhValue)));
                     }
                     else
                     {
-                        listInfosR.Items.Add(CreateStatLvItem(fxType, fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}", GetBoostType(baseValue, enhValue)));
+                        listInfosR.Items.Add(CreateStatLvItem(fxType,
+                            fxEnh.DisplayPercentage ? $"{enhValue:P2}" : $"{enhValue:###.##}",
+                            GetBoostType(baseValue, enhValue)));
                     }
                 }
             }
@@ -1160,12 +1242,12 @@ namespace Mids_Reborn.Forms.Controls
         #endregion
 
         #region Effects Tab
-        
+
         private void DisplayEffects()
         {
             var effectGroups = EffectsGroupFilter.FromPower(_enhancedPower);
             var labels = effectGroups.Groups.Keys.ToList();
-            for (var i = 0 ; i < effectGroups.Groups.Count ; i+=2)
+            for (var i = 0; i < effectGroups.Groups.Count; i += 2)
             {
                 if (i < effectGroups.Groups.Count - 1)
                 {
@@ -1223,7 +1305,7 @@ namespace Mids_Reborn.Forms.Controls
                     _ => lvEffectsBlock3R
                 };
 
-                for (var j = 0 ; j < groupedItems[i].Count; j++)
+                for (var j = 0; j < groupedItems[i].Count; j++)
                 {
                     var boostType = groupedItems[i][j].GetBoostType();
                     var stat = groupedItems[i][j].GetStatName();
@@ -1245,6 +1327,7 @@ namespace Mids_Reborn.Forms.Controls
         #endregion
 
         #region Totals Tab
+
         private void DisplayTotals()
         {
             var displayStats = MidsContext.Character.DisplayStats;
@@ -1260,7 +1343,8 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 var target = i < 6 ? dV2TotalsPane1L : dV2TotalsPane1R;
-                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.Defense(i), displayStats.Defense(0), true));
+                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.Defense(i),
+                    displayStats.Defense(0), true));
             }
 
             dV2TotalsPane2L.ClearItems();
@@ -1268,7 +1352,8 @@ namespace Mids_Reborn.Forms.Controls
             for (var i = 1; i < damageVectors.Length; i++)
             {
                 var target = i < 6 ? dV2TotalsPane2L : dV2TotalsPane2R;
-                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.DamageResistance(i, false), displayStats.DamageResistance(i, true), true));
+                target.AddItem(new DV2TotalsPane.Item(damageVectors[i], displayStats.DamageResistance(i, false),
+                    displayStats.DamageResistance(i, true), true));
             }
 
             // Misc effects ??
@@ -1277,29 +1362,24 @@ namespace Mids_Reborn.Forms.Controls
         #endregion
 
         #region Enhance Tab
-
-        private static string RelativeLevelString(Enums.eEnhRelative relativeLevel, bool showZero = false)
-        {
-            return relativeLevel switch
-            {
-                Enums.eEnhRelative.MinusThree => "-3",
-                Enums.eEnhRelative.MinusTwo => "-2",
-                Enums.eEnhRelative.MinusOne => "-1",
-                Enums.eEnhRelative.PlusOne => "+1",
-                Enums.eEnhRelative.PlusTwo => "+2",
-                Enums.eEnhRelative.PlusThree => "+3",
-                Enums.eEnhRelative.PlusFour => "+4",
-                Enums.eEnhRelative.PlusFive => "+5",
-                _ => showZero ? "+0" : ""
-            };
-        }
-
+        
         private void DisplayEnhance()
         {
+            // ???
             skglEnhActive.Invalidate();
             skglEnhAlt.Invalidate();
+
+            var edFiguresBuffs = Build.EDFigures.GetBuffsForBuildPower(HistoryIdx);
         }
 
+        #endregion
+
+        #region Scales Tab
+
+        private void DisplayScales()
+        {
+            skglScalesGraph.Invalidate();
+        }
         #endregion
 
         #region Event callbacks
@@ -1345,9 +1425,12 @@ namespace Mids_Reborn.Forms.Controls
         {
             var target = (ColorSlider)sender;
 
-            target.ElapsedInnerColor = InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedInnerColor);
-            target.ElapsedPenColorBottom = InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedPenColorBottom);
-            target.ElapsedPenColorTop = InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedPenColorTop);
+            target.ElapsedInnerColor = InterpolateColor(target.Value, target.Minimum, target.Maximum,
+                TrackColors.ElapsedInnerColor);
+            target.ElapsedPenColorBottom = InterpolateColor(target.Value, target.Minimum, target.Maximum,
+                TrackColors.ElapsedPenColorBottom);
+            target.ElapsedPenColorTop = InterpolateColor(target.Value, target.Minimum, target.Maximum,
+                TrackColors.ElapsedPenColorTop);
 
             if (FreezeScalerCB) return;
 
@@ -1398,6 +1481,11 @@ namespace Mids_Reborn.Forms.Controls
 
             _flipAnimator.Active = true;
             timer1.Start();
+        }
+
+        private void skglScalesGraph_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+        {
+
         }
     }
 }

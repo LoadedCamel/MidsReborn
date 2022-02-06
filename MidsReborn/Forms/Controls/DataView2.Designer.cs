@@ -84,11 +84,10 @@
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.skglEnhAlt = new SkiaSharp.Views.Desktop.SKGLControl();
             this.skglEnhActive = new SkiaSharp.Views.Desktop.SKGLControl();
-            this.richTextBox9 = new System.Windows.Forms.RichTextBox();
+            this.richEnhValues = new System.Windows.Forms.RichTextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.enhanceTabTitle = new System.Windows.Forms.Label();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.panelGraph = new System.Windows.Forms.Panel();
             this.panelPowerScaler3 = new System.Windows.Forms.Panel();
             this.lblPowerScaler3 = new System.Windows.Forms.Label();
             this.powerScaler3 = new Mids_Reborn.Forms.Controls.ColorSlider();
@@ -101,6 +100,7 @@
             this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.scalesTabTitle = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.skglScalesGraph = new SkiaSharp.Views.Desktop.SKGLControl();
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
             this.tabBox.SuspendLayout();
             this.tabPageAdv1.SuspendLayout();
@@ -137,7 +137,7 @@
             this.tabBox.TabIndex = 0;
             this.tabBox.TabPanelBackColor = System.Drawing.Color.Black;
             this.tabBox.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRenderer2D);
-            this.tabBox.Text = "ENHANCE";
+            this.tabBox.Text = "SCALES";
             this.tabBox.ThemeName = "TabRenderer2D";
             this.tabBox.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             this.tabBox.UseMnemonic = false;
@@ -789,7 +789,7 @@
             this.tabPageAdv4.BackColor = System.Drawing.Color.Teal;
             this.tabPageAdv4.Controls.Add(this.skglEnhAlt);
             this.tabPageAdv4.Controls.Add(this.skglEnhActive);
-            this.tabPageAdv4.Controls.Add(this.richTextBox9);
+            this.tabPageAdv4.Controls.Add(this.richEnhValues);
             this.tabPageAdv4.Controls.Add(this.label11);
             this.tabPageAdv4.Controls.Add(this.enhanceTabTitle);
             this.tabPageAdv4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -831,20 +831,20 @@
             this.skglEnhActive.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglEnh_PaintSurface);
             this.skglEnhActive.Click += new System.EventHandler(this.skglControl_Click);
             // 
-            // richTextBox9
+            // richEnhValues
             // 
-            this.richTextBox9.BackColor = System.Drawing.Color.Black;
-            this.richTextBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox9.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox9.ForeColor = System.Drawing.Color.White;
-            this.richTextBox9.Location = new System.Drawing.Point(4, 48);
-            this.richTextBox9.Name = "richTextBox9";
-            this.richTextBox9.ReadOnly = true;
-            this.richTextBox9.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox9.Size = new System.Drawing.Size(369, 382);
-            this.richTextBox9.TabIndex = 2;
-            this.richTextBox9.Text = "";
+            this.richEnhValues.BackColor = System.Drawing.Color.Black;
+            this.richEnhValues.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richEnhValues.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.richEnhValues.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richEnhValues.ForeColor = System.Drawing.Color.White;
+            this.richEnhValues.Location = new System.Drawing.Point(4, 48);
+            this.richEnhValues.Name = "richEnhValues";
+            this.richEnhValues.ReadOnly = true;
+            this.richEnhValues.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richEnhValues.Size = new System.Drawing.Size(369, 382);
+            this.richEnhValues.TabIndex = 2;
+            this.richEnhValues.Text = "";
             // 
             // label11
             // 
@@ -871,7 +871,7 @@
             // tabPageAdv5
             // 
             this.tabPageAdv5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(148)))), ((int)(((byte)(117)))), ((int)(((byte)(46)))));
-            this.tabPageAdv5.Controls.Add(this.panelGraph);
+            this.tabPageAdv5.Controls.Add(this.skglScalesGraph);
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler3);
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler2);
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler1);
@@ -888,15 +888,6 @@
             this.tabPageAdv5.TabIndex = 5;
             this.tabPageAdv5.Text = "SCALES";
             this.tabPageAdv5.ThemesEnabled = false;
-            // 
-            // panelGraph
-            // 
-            this.panelGraph.BackColor = System.Drawing.Color.Black;
-            this.panelGraph.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelGraph.Location = new System.Drawing.Point(4, 156);
-            this.panelGraph.Name = "panelGraph";
-            this.panelGraph.Size = new System.Drawing.Size(369, 361);
-            this.panelGraph.TabIndex = 14;
             // 
             // panelPowerScaler3
             // 
@@ -1191,6 +1182,17 @@
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // skglScalesGraph
+            // 
+            this.skglScalesGraph.BackColor = System.Drawing.Color.Black;
+            this.skglScalesGraph.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.skglScalesGraph.Location = new System.Drawing.Point(4, 156);
+            this.skglScalesGraph.Name = "skglScalesGraph";
+            this.skglScalesGraph.Size = new System.Drawing.Size(369, 361);
+            this.skglScalesGraph.TabIndex = 14;
+            this.skglScalesGraph.VSync = false;
+            this.skglScalesGraph.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglScalesGraph_PaintSurface);
+            // 
             // DataView2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1237,7 +1239,7 @@
         private DV2TotalsPane dV2TotalsPane2R;
         private DV2TotalsPane dV2TotalsPane2L;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.RichTextBox richTextBox9;
+        private System.Windows.Forms.RichTextBox richEnhValues;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label enhanceTabTitle;
         private System.Windows.Forms.ListView listInfosR;
@@ -1248,7 +1250,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv5;
         private System.Windows.Forms.Label scalesTabTitle;
-        private System.Windows.Forms.Panel panelGraph;
         private System.Windows.Forms.Panel panelPowerScaler3;
         private System.Windows.Forms.Label lblPowerScaler3;
         private ColorSlider powerScaler3;
@@ -1286,5 +1287,6 @@
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhAlt;
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhActive;
         private System.Windows.Forms.Timer timer1;
+        private SkiaSharp.Views.Desktop.SKGLControl skglScalesGraph;
     }
 }
