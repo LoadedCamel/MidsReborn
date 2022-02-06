@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +8,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
-using mrbBase.Base.Master_Classes;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace MRBUpdater
@@ -24,7 +24,7 @@ namespace MRBUpdater
         private static Uri UpdateFile { get; set; }
         private static string PackedUpdate { get; set; }
 
-        public Updater(string[] args)
+        public Updater(IReadOnlyList<string> args)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             UpdatePath = args[0];

@@ -52,7 +52,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
-                return Version > MidsContext.AppFileVersion;
+                return Convert.ToBoolean(Version.CompareTo(MidsContext.AppFileVersion));
             }
         }
 

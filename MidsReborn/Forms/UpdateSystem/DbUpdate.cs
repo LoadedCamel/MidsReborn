@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
@@ -54,7 +55,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
-                return Version > DatabaseAPI.Database.Version;
+                return Convert.ToBoolean(Version.CompareTo(DatabaseAPI.Database.Version));
             }
         }
 
