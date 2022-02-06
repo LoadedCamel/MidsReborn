@@ -1231,10 +1231,10 @@ namespace mrbBase
             // Imperted and improved from DataView.cs
             public enum EDStrength
             {
-                None = 0,
-                Light = 1,
-                Medium = 2,
-                Strong = 3
+                None,
+                Light,
+                Medium,
+                Strong
             }
 
             public struct EDWeightedItem
@@ -1341,16 +1341,31 @@ namespace mrbBase
                     tooltipText = $"{totalEffectStr}This effect has not been affected by ED.\r\n";
                 }
 
-                // Need to add RTF output mode.
-                return new EDValueSettings
-                {
-                    PreEDValue = $"{valuePercent + afterED * 100:P2}",
-                    PostEDValue = $"{postEDValue:P2}",
-                    EDStrength = edStrength,
-                    ShortText = $"{name}: {infoText}",
-                    TooltipText = tooltipText,
-                    Valid = true
-                };
+                return useRtf
+                    ? new EDValueSettings
+                    {
+                        PreEDValue = $"{valuePercent + afterED * 100:P2}",
+                        PostEDValue = $"{postEDValue:P2}",
+                        EDStrength = edStrength,
+                        ShortText = edStrength switch
+                        {
+                            EDStrength.Light => RTF.Color(RTF.ElementID.Enhancement), // Green
+                            EDStrength.Medium => RTF.Color(RTF.ElementID.Alert), // Yellow
+                            EDStrength.Strong => RTF.Color(RTF.ElementID.Warning), // Red
+                            _ => RTF.Color(RTF.ElementID.Text)
+                        } + $"{RTF.Bold(name)}: {infoText}{RTF.Color(RTF.ElementID.Text)}",
+                        TooltipText = tooltipText,
+                        Valid = true
+                    }
+                    : new EDValueSettings
+                    {
+                        PreEDValue = $"{valuePercent + afterED * 100:P2}",
+                        PostEDValue = $"{postEDValue:P2}",
+                        EDStrength = edStrength,
+                        ShortText = $"{name}: {infoText}",
+                        TooltipText = tooltipText,
+                        Valid = true
+                    };
             }
 
             public static EDFiguresGroups GetBuffsForBuildPower(int historyIdx = -1)
@@ -1368,12 +1383,25 @@ namespace mrbBase
                     return ret;
                 }
 
-                if (historyIdx < 0)
+                if (MidsContext.Character.CurrentBuild == null)
                 {
                     return ret;
                 }
 
-                // Need to check if historyIdx targets a valid power in build
+                if (MidsContext.Character.CurrentBuild.Powers == null)
+                {
+                    return ret;
+                }
+
+                if (historyIdx < 0 | historyIdx > MidsContext.Character.CurrentBuild.Powers.Count)
+                {
+                    return ret;
+                }
+
+                if (MidsContext.Character.CurrentBuild.Powers[historyIdx] == null)
+                {
+                    return ret;
+                }
 
                 var eEnhs = Enum.GetValues(typeof(Enums.eEnhance)).Length;
                 var eMezzes = Enum.GetValues(typeof(Enums.eMez)).Length;
@@ -1454,14 +1482,14 @@ namespace mrbBase
                     }
                 }
 
-                foreach (var power in MidsContext.Character.CurrentBuild.Powers)
+                foreach (var powerEntry in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    if (power.Power == null || !power.StatInclude)
+                    if (powerEntry.Power == null || !powerEntry.StatInclude)
                     {
                         continue;
                     }
 
-                    IPower power1 = new Power(power.Power);
+                    IPower power1 = new Power(powerEntry.Power);
                     power1.AbsorbPetEffects();
                     power1.ApplyGrantPowerEffects();
                     foreach (var effect in power1.Effects)
@@ -1474,7 +1502,7 @@ namespace mrbBase
                         // var power2 = power1;
                         var power2 = effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1)
                             ? DatabaseAPI.Database.Power[effect.Absorbed_Power_nID]
-                            : new Power(power.Power);
+                            : new Power(powerEntry.Power);
 
                         var eBuffDebuff = Enums.eBuffDebuff.Any;
                         var buffDebuffFound = false;
