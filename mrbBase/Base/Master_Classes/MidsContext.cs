@@ -9,10 +9,10 @@ namespace mrbBase.Base.Master_Classes
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 2;
         private const int AppBuildVersion = 17;
-        private const int AppRevisionVersion = 71;
+        private const int AppRevisionVersion = 72;
 
         public const string AssemblyVersion = "3.2.17";
-        public const string AssemblyFileVersion = "3.2.17.71";
+        public const string AssemblyFileVersion = "3.2.17.72";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
