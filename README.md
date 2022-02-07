@@ -1,19 +1,19 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/g2uaus540emwe3ox/branch/master?svg=true)](https://ci.appveyor.com/project/Crytilis/hero-designer/branch/crytilis-dev)
-
+#### Our Software Is
+<img src="https://user-images.githubusercontent.com/18664232/152843786-afbf3b7e-904f-47a5-8de0-676f9866471e.png" width="75" height="32">
 
 #### Active Development Team Members
 - Crytilis aka Metalios
 - Bopper
-- Feles Noctis
 - Zed
 
 #### In-Active Development Team Members
 - Maslow
 - Pine
 - Procat
+- Feles Noctis
 
 #### Official Discord Server
-https://discord.gg/pG5TCEg
+https://discord.gg/eAUuNQ3nxk
 
 #### Official Twitter
 https://twitter.com/midsreborn
@@ -27,10 +27,8 @@ https://twitter.com/midsreborn
 
 #### MacOS
 
-   * [Homebrew](https://brew.sh/)  
-   * [Wine](https://www.winehq.org/)  
-   * [Winetricks](https://brewformulas.org/Winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"  
+   * Use the following video guide to install on MacOSX Catalina+
+    https://youtu.be/qlRDeJ5BR9E
    
    
 
@@ -38,10 +36,8 @@ https://twitter.com/midsreborn
 
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://github.com/Winetricks/winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"    
+   * .NET 4.8 "Install with Winetricks"    
 
 
 ### Notes
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
-
->**Sorry MacOS users, but Catilina is NOT supported at this time**
