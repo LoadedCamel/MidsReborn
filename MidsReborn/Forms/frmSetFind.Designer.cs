@@ -44,6 +44,7 @@ namespace Mids_Reborn.Forms
             this.ColumnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilSets = new System.Windows.Forms.ImageList(this.components);
             this.Panel1 = new System.Windows.Forms.Panel();
+            this.SetInfo = new mrbControls.ctlPopUp();
             this.lvPowers = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -52,7 +53,8 @@ namespace Mids_Reborn.Forms
             this.cbArchetype = new System.Windows.Forms.ComboBox();
             this.ibClose = new mrbControls.ImageButton();
             this.ibTopmost = new mrbControls.ImageButton();
-            this.SetInfo = new mrbControls.ctlPopUp();
+            this.lvVector = new System.Windows.Forms.ListView();
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +67,7 @@ namespace Mids_Reborn.Forms
             this.lvBonus.Location = new System.Drawing.Point(12, 12);
             this.lvBonus.MultiSelect = false;
             this.lvBonus.Name = "lvBonus";
-            this.lvBonus.Size = new System.Drawing.Size(280, 292);
+            this.lvBonus.Size = new System.Drawing.Size(219, 292);
             this.lvBonus.TabIndex = 0;
             this.lvBonus.UseCompatibleStateImageBehavior = false;
             this.lvBonus.View = System.Windows.Forms.View.Details;
@@ -73,8 +75,8 @@ namespace Mids_Reborn.Forms
             // 
             // ColumnHeader1
             // 
-            this.ColumnHeader1.Text = "Bonus Effect";
-            this.ColumnHeader1.Width = 254;
+            this.ColumnHeader1.Text = "Effect Type";
+            this.ColumnHeader1.Width = 193;
             // 
             // lvMag
             // 
@@ -82,10 +84,10 @@ namespace Mids_Reborn.Forms
             this.ColumnHeader2});
             this.lvMag.FullRowSelect = true;
             this.lvMag.HideSelection = false;
-            this.lvMag.Location = new System.Drawing.Point(298, 12);
+            this.lvMag.Location = new System.Drawing.Point(462, 12);
             this.lvMag.MultiSelect = false;
             this.lvMag.Name = "lvMag";
-            this.lvMag.Size = new System.Drawing.Size(127, 292);
+            this.lvMag.Size = new System.Drawing.Size(140, 292);
             this.lvMag.TabIndex = 1;
             this.lvMag.UseCompatibleStateImageBehavior = false;
             this.lvMag.View = System.Windows.Forms.View.Details;
@@ -94,7 +96,7 @@ namespace Mids_Reborn.Forms
             // ColumnHeader2
             // 
             this.ColumnHeader2.Text = "Effect Strength";
-            this.ColumnHeader2.Width = 99;
+            this.ColumnHeader2.Width = 114;
             // 
             // lvSet
             // 
@@ -146,10 +148,24 @@ namespace Mids_Reborn.Forms
             this.Panel1.AutoScroll = true;
             this.Panel1.BackColor = System.Drawing.Color.Black;
             this.Panel1.Controls.Add(this.SetInfo);
-            this.Panel1.Location = new System.Drawing.Point(431, 12);
+            this.Panel1.Location = new System.Drawing.Point(638, 12);
             this.Panel1.Name = "Panel1";
             this.Panel1.Size = new System.Drawing.Size(351, 292);
             this.Panel1.TabIndex = 3;
+            // 
+            // SetInfo
+            // 
+            this.SetInfo.BXHeight = 600;
+            this.SetInfo.ColumnPosition = 0.5F;
+            this.SetInfo.ColumnRight = false;
+            this.SetInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.SetInfo.InternalPadding = 3;
+            this.SetInfo.Location = new System.Drawing.Point(0, 0);
+            this.SetInfo.Name = "SetInfo";
+            this.SetInfo.ScrollY = 0F;
+            this.SetInfo.SectionPadding = 8;
+            this.SetInfo.Size = new System.Drawing.Size(331, 203);
+            this.SetInfo.TabIndex = 0;
             // 
             // lvPowers
             // 
@@ -164,7 +180,7 @@ namespace Mids_Reborn.Forms
             this.lvPowers.MultiSelect = false;
             this.lvPowers.Name = "lvPowers";
             this.lvPowers.ShowItemToolTips = true;
-            this.lvPowers.Size = new System.Drawing.Size(460, 175);
+            this.lvPowers.Size = new System.Drawing.Size(484, 175);
             this.lvPowers.TabIndex = 6;
             this.lvPowers.UseCompatibleStateImageBehavior = false;
             this.lvPowers.View = System.Windows.Forms.View.Details;
@@ -182,12 +198,12 @@ namespace Mids_Reborn.Forms
             // columnHeader9
             // 
             this.columnHeader9.Text = "Power";
-            this.columnHeader9.Width = 135;
+            this.columnHeader9.Width = 163;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(554, 320);
+            this.label1.Location = new System.Drawing.Point(512, 319);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 14);
             this.label1.TabIndex = 7;
@@ -197,7 +213,7 @@ namespace Mids_Reborn.Forms
             // 
             this.cbArchetype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbArchetype.FormattingEnabled = true;
-            this.cbArchetype.Location = new System.Drawing.Point(611, 317);
+            this.cbArchetype.Location = new System.Drawing.Point(569, 316);
             this.cbArchetype.Name = "cbArchetype";
             this.cbArchetype.Size = new System.Drawing.Size(151, 22);
             this.cbArchetype.TabIndex = 8;
@@ -208,7 +224,8 @@ namespace Mids_Reborn.Forms
             this.ibClose.Checked = false;
             this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibClose.Location = new System.Drawing.Point(857, 540);
+            this.ibClose.Location = new System.Drawing.Point(881, 540);
+            this.ibClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibClose.Name = "ibClose";
             this.ibClose.Size = new System.Drawing.Size(105, 22);
             this.ibClose.TabIndex = 5;
@@ -221,7 +238,8 @@ namespace Mids_Reborn.Forms
             this.ibTopmost.Checked = true;
             this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTopmost.Location = new System.Drawing.Point(746, 540);
+            this.ibTopmost.Location = new System.Drawing.Point(770, 540);
+            this.ibTopmost.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibTopmost.Name = "ibTopmost";
             this.ibTopmost.Size = new System.Drawing.Size(105, 22);
             this.ibTopmost.TabIndex = 4;
@@ -229,25 +247,33 @@ namespace Mids_Reborn.Forms
             this.ibTopmost.TextOn = "Keep On Top";
             this.ibTopmost.Toggle = true;
             // 
-            // SetInfo
+            // lvVector
             // 
-            this.SetInfo.BXHeight = 600;
-            this.SetInfo.ColumnPosition = 0.5F;
-            this.SetInfo.ColumnRight = false;
-            this.SetInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.SetInfo.InternalPadding = 3;
-            this.SetInfo.Location = new System.Drawing.Point(0, 0);
-            this.SetInfo.Name = "SetInfo";
-            this.SetInfo.ScrollY = 0F;
-            this.SetInfo.SectionPadding = 8;
-            this.SetInfo.Size = new System.Drawing.Size(331, 203);
-            this.SetInfo.TabIndex = 0;
+            this.lvVector.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader10});
+            this.lvVector.Enabled = false;
+            this.lvVector.FullRowSelect = true;
+            this.lvVector.HideSelection = false;
+            this.lvVector.Location = new System.Drawing.Point(237, 12);
+            this.lvVector.MultiSelect = false;
+            this.lvVector.Name = "lvVector";
+            this.lvVector.Size = new System.Drawing.Size(219, 292);
+            this.lvVector.TabIndex = 9;
+            this.lvVector.UseCompatibleStateImageBehavior = false;
+            this.lvVector.View = System.Windows.Forms.View.Details;
+            this.lvVector.SelectedIndexChanged += new System.EventHandler(this.lvVector_SelectedIndexChanged);
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "";
+            this.columnHeader10.Width = 193;
             // 
             // frmSetFind
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(974, 574);
+            this.ClientSize = new System.Drawing.Size(1001, 574);
+            this.Controls.Add(this.lvVector);
             this.Controls.Add(this.cbArchetype);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lvPowers);
@@ -288,5 +314,7 @@ namespace Mids_Reborn.Forms
         private ColumnHeader columnHeader9;
         private Label label1;
         private ComboBox cbArchetype;
+        private ListView lvVector;
+        private ColumnHeader columnHeader10;
     }
 }

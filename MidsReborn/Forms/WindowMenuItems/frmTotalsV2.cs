@@ -559,9 +559,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void Bar_Hover(object sender)
         {
             var isPanel = false;
-            ctlLayeredBarPb trigger;
-            isPanel = false;
-            trigger = (ctlLayeredBarPb) sender;
+            var trigger = (ctlLayeredBarPb) sender;
 
             var displayStats = MidsContext.Character.DisplayStats;
             var barGroup = trigger.Group;
@@ -737,6 +735,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             valueMainBar = displayStats.BuffDamage(false);
                             valueBase = 100;
                             valueOverCap = displayStats.BuffDamage(true);
+                            break;
+
+                        default:
+                            // Assign tooltip directly from values read from bar/lv
+                            valueMainBar = sValueMainBar;
+                            valueBase = sValueBase;
+                            valueOverCap = sValueOverCap;
                             break;
                     }
 

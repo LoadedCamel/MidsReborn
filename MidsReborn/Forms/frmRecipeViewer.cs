@@ -77,7 +77,7 @@ namespace Mids_Reborn.Forms
             var enhancement = DatabaseAPI.Database.Enhancements[eIDX];
             if (enhancement.ImageIdx > -1)
             {
-                extendedBitmap.Graphics.Clear(Color.White);
+                extendedBitmap.Graphics.Clear(Color.Transparent);
                 var graphics = extendedBitmap.Graphics;
                 I9Gfx.DrawEnhancement(ref graphics, enhancement.ImageIdx, Origin.Grade.IO);
                 ilSets.Images.Add(extendedBitmap.Bitmap);
@@ -850,9 +850,13 @@ namespace Mids_Reborn.Forms
         [DebuggerStepThrough]
         private void lvPower_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
+            if (e.Item == null) return;
             if (e.Item.Index == 0)
             {
-                if (!e.Item.Tag.Equals(0) && e.Item.Checked)
+                if (lvPower.Items.Count > 0 &&
+                    e.Item.Tag != null &&
+                    !e.Item.Tag.Equals(0)
+                    && e.Item.Checked)
                 {
                     foreach (var o in lvPower.Items)
                     {

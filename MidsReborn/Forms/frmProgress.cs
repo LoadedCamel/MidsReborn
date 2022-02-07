@@ -37,14 +37,12 @@ namespace Mids_Reborn.Forms
             get => base.Text;
             set
             {
-                //Debug.WriteLine("Value: " + string.Join(", ", value));
                 if (!value.Contains("|"))
                 {
                     base.Text = value;
                 }
 
                 string[] chunks = value.Split('|');
-                //Debug.WriteLine("Chunks: " + string.Join(", ", chunks) + " (L: " + chunks.Length + ")");
                 switch (chunks.Length)
                 {
                     case 3:

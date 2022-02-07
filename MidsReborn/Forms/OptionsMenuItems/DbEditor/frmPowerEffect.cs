@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -150,14 +149,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading || cbAttribute.SelectedIndex < 0)
                 return;
             myFX.AttribType = (Enums.eAttribType)cbAttribute.SelectedIndex;
-            switch (myFX.AttribType)
+            if (myFX.AttribType == Enums.eAttribType.Expression)
             {
-                case Enums.eAttribType.Expression:
-                    txtMagExpression.Enabled = true;
-                    txtProbExpression.Enabled = true;
-                    magexLabel.Enabled = true;
-                    probexLabel.Enabled = true;
-                    break;
+                txtMagExpression.Enabled = true;
+                txtProbExpression.Enabled = true;
+                magexLabel.Enabled = true;
+                probexLabel.Enabled = true;
+                chkIgnoreScale.Enabled = true;
+            }
+            else
+            {
+                txtMagExpression.Enabled = false;
+                txtProbExpression.Enabled = false;
+                magexLabel.Enabled = false;
+                probexLabel.Enabled = false;
+                chkIgnoreScale.Enabled = true;
+                cbExprCommands.Visible = false;
+                lblExprCommands.Visible = false;
             }
 
             UpdateFXText();
@@ -426,7 +434,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
             cbAffects.Items.Add("Self");
-            cbAffects.Items.Add("Ally");
             foreach (var effectId in DatabaseAPI.Database.EffectIds)
             {
                 cmbEffectId.Items.Add(effectId);
@@ -1269,6 +1276,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateFXText();
         }
 
+        public static IEnumerable<float> FloatRange(float min, float max, float step)
+        {
+            for (int i = 0; i < int.MaxValue; i++)
+            {
+                float value = min + step * i;
+                if (value > max)
+                {
+                    break;
+                }
+                yield return value;
+            }
+        }
+
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             var powName = string.Empty;
@@ -1301,11 +1321,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.BeginUpdate();
                     if (selected != null)
                     {
-                        var stackRange = selected.VariableMin == 0 ? Enumerable.Range(selected.VariableMin, selected.VariableMax + 1) : Enumerable.Range(selected.VariableMin, selected.VariableMax);
+                        var stackRange = selected.VariableMin == 0
+                            ? FloatRange(selected.VariableMin, selected.VariableMax + 1, 1)
+                            : FloatRange(selected.VariableMin, selected.VariableMax, 1);
 
                         foreach (var stackNum in stackRange)
                         {
-                            lvConditionalBool.Items.Add(stackNum.ToString());
+                            lvConditionalBool.Items.Add(stackNum.ToString(CultureInfo.InvariantCulture));
                         }
                     }
 

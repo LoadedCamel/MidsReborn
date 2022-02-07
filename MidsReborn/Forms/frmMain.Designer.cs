@@ -35,6 +35,7 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.components = new System.ComponentModel.Container();
             this.txtName = new System.Windows.Forms.TextBox();
             this.cbAT = new System.Windows.Forms.ComboBox();
@@ -207,7 +208,7 @@ namespace Mids_Reborn.Forms
             this.ibTotals = new ImageButton();
             this.ibSlotLevels = new ImageButton();
             this.ibTeam = new ImageButton();
-            this.ibMode = new ImageButton();
+            this.sbMode = new SwitchButton();
             this.ibSets = new ImageButton();
             this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
@@ -1248,7 +1249,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsBugCrytilis.Name = "tsBugCrytilis";
             this.tsBugCrytilis.Size = new System.Drawing.Size(266, 22);
-            this.tsBugCrytilis.Text = "F&ile Bug Report";
+            this.tsBugCrytilis.Text = "F&ile Issue/Suggestion Report";
             this.tsBugCrytilis.Click += new System.EventHandler(this.tsBugReportCrytilis_Click);
             // 
             // tsHCMRBForum
@@ -1904,7 +1905,7 @@ namespace Mids_Reborn.Forms
             // I9Popup
             // 
             this.I9Popup.BackColor = System.Drawing.Color.Black;
-            this.I9Popup.BXHeight = 600;
+            this.I9Popup.BXHeight = 675;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
             this.I9Popup.Font = new System.Drawing.Font("Arial", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
@@ -1914,7 +1915,7 @@ namespace Mids_Reborn.Forms
             this.I9Popup.Name = "I9Popup";
             this.I9Popup.ScrollY = 0F;
             this.I9Popup.SectionPadding = 8;
-            this.I9Popup.Size = new System.Drawing.Size(400, 203);
+            this.I9Popup.Size = new System.Drawing.Size(450, 203);
             this.I9Popup.TabIndex = 102;
             this.I9Popup.Visible = false;
             this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);
@@ -1964,17 +1965,16 @@ namespace Mids_Reborn.Forms
             // 
             // ibMode
             // 
-            this.ibMode.Checked = false;
-            this.ibMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibMode.Location = new System.Drawing.Point(244, 80);
-            this.ibMode.Name = "ibTeam";
-            this.ibMode.Size = new System.Drawing.Size(105, 22);
-            this.ibMode.TabIndex = 122;
-            this.ibMode.TextOff = "Normal";
-            this.ibMode.TextOn = "Respec";
-            this.ibMode.Toggle = false;
-            this.ibMode.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibMode_ButtonClicked);
+            this.sbMode.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sbMode.Location = new System.Drawing.Point(244, 80);
+            this.sbMode.Name = "sbMode";
+            this.sbMode.Size = new System.Drawing.Size(105, 22);
+            this.sbMode.TabIndex = 122;
+            this.sbMode.ForeColor = Color.White;
+            this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
+            this.sbMode.SwitchedState = mrbControls.SwitchButton.SwitchState.None;
+            this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
+            this.sbMode.Click += new EventHandler(this.sbMode_ButtonClicked);
             // 
             // ibSets
             // 
@@ -2041,7 +2041,7 @@ namespace Mids_Reborn.Forms
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new Size(1342, 1001);
@@ -2051,7 +2051,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.lblLockedSecondary);
             this.Controls.Add(this.ibTotals);
             this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.ibMode);
+            this.Controls.Add(this.sbMode);
             this.Controls.Add(this.ibSets);
             this.Controls.Add(this.pbDynMode);
             this.Controls.Add(this.topPanel);
@@ -2078,10 +2078,9 @@ namespace Mids_Reborn.Forms
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
             this.MinimumSize = new System.Drawing.Size(800, 600);
-            //this.MinimumSize = new System.Drawing.Size(1342, 1001);
             this.Name = "frmMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hero Designer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "MRB";
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
             this.topPanel.ResumeLayout(false);
@@ -2151,7 +2150,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsSetFind;
         ToolStripMenuItem tsHCMRBForum;
         ToolStripMenuItem tsGitHubCrytilis;
-        //ToolStripMenuItem tsGitHubImaginary;
         ToolStripMenuItem tsUpdateCheck;
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
@@ -2193,7 +2191,7 @@ namespace Mids_Reborn.Forms
         ctlPopUp I9Popup;
         ImageButton ibAccolade;
         ImageButton ibTeam;
-        ImageButton ibMode;
+        SwitchButton sbMode;
         ImageButton ibPopup;
         ImageButton ibPvX;
         ImageButton ibRecipe;

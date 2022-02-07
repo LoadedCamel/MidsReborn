@@ -16,7 +16,8 @@ namespace mrbBase
             Text,
             Warning,
             BackgroundHero,
-            BackgroundVillain
+            BackgroundVillain,
+            Alert
         }
 
         public enum SizeID
@@ -64,7 +65,6 @@ namespace mrbBase
         }
 
         private static string GetColorTable()
-
         {
             var stringBuilder = new StringBuilder("{\\colortbl ;");
             stringBuilder.Append("\\red" + MidsContext.Config.RtFont.ColorEnhancement.R + "\\green" +
@@ -91,12 +91,12 @@ namespace mrbBase
             stringBuilder.Append("\\red" + MidsContext.Config.RtFont.ColorBackgroundVillain.R + "\\green" +
                                  MidsContext.Config.RtFont.ColorBackgroundVillain.G + "\\blue" +
                                  MidsContext.Config.RtFont.ColorBackgroundVillain.B + ";");
+            stringBuilder.Append("\\red255\\green255\\blue0;");
             stringBuilder.Append("}");
             return stringBuilder.ToString();
         }
 
         private static string GetInitialLine()
-
         {
             var stringBuilder = new StringBuilder("{\\*\\generator MHD_RTFClass;}\\viewkind4\\uc1\\pard\\f0\\fs");
             stringBuilder.Append(MidsContext.Config.RtFont.RTFBase);
@@ -108,7 +108,6 @@ namespace mrbBase
         }
 
         private static string GetFooter()
-
         {
             var stringBuilder = new StringBuilder();
             if (MidsContext.Config.RtFont.RTFBold)

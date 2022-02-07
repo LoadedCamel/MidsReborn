@@ -48,7 +48,7 @@ namespace Mids_Reborn
                 Server = server,
                 ServerChannel = channel,
                 AppName = MidsContext.AppName,
-                AppVersion = $"{MidsContext.AppVersion}",
+                AppVersion = $"{MidsContext.AssemblyVersion}",
                 Name = MidsContext.Character.Name,
                 Level = ToonLevel(),
                 Archetype = MidsContext.Character.Archetype.DisplayName,

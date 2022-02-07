@@ -624,24 +624,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ret = float.TryParse(udScaleMax.Text, out var scaleMax);
             if (!ret) return;
 
-            if (scaleMin >= scaleMax)
+            if (scaleMin >= scaleMax & chkScale.Checked)
             {
                 udScaleMin.BackColor = Color.Coral;
+                udScaleMin.ForeColor = Color.Black;
                 udScaleMax.BackColor = Color.Coral;
+                udScaleMax.ForeColor = Color.Black;
             }
             else
             {
                 udScaleMin.BackColor = SystemColors.Window;
+                udScaleMin.ForeColor = SystemColors.WindowText;
                 udScaleMax.BackColor = SystemColors.Window;
+                udScaleMax.ForeColor = SystemColors.WindowText;
             }
 
-            if (scaleStart > scaleMin && scaleStart <= scaleMax)
+            if (chkScale.Checked && scaleStart > scaleMin && scaleStart <= scaleMax)
             {
                 udScaleStart.BackColor = Color.Coral;
+                udScaleStart.ForeColor = Color.Black;
             }
             else
             {
                 udScaleStart.BackColor = SystemColors.Window;
+                udScaleStart.ForeColor = SystemColors.WindowText;
             }
         }
 
@@ -1394,6 +1400,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Req_GroupList();
             FillTab_SubPowers();
             refresh_PowerData();
+            CheckScaleValues();
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
             {
@@ -1405,10 +1412,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 txtVisualLocation.ReadOnly = true;
             }
 
-            foreach (var boost in myPower.BoostsAllowed)
+            /*foreach (var boost in myPower.BoostsAllowed)
             {
                 Debug.WriteLine(boost);
-            }
+            }*/
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
@@ -1675,16 +1682,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
             var names = Enum.GetNames(eSetType.GetType());
-            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1)))
-                return;
+            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1))) return;
             var flag = false;
             var num = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num; ++index)
+            {
                 if (myPower.SetTypes[index] == (Enums.eSetType) invSetListIndex)
+                {
                     flag = true;
+                }
+            }
 
-            if (flag | (myPower.SetTypes.Length > 10))
+            if (flag | (myPower.SetTypes.Length > 15))
+            {
                 return;
+            }
+
             var eSetTypeList = myPower.SetTypes.ToList();
             eSetTypeList.Add((Enums.eSetType)invSetListIndex);
             myPower.SetTypes = eSetTypeList.ToArray();
@@ -1714,18 +1727,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
             if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
+            {
                 return;
+            }
+
             var numArray = new int[myPower.SetTypes.Length];
             var num1 = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num1; ++index)
+            {
                 numArray[index] = (int) myPower.SetTypes[index];
+            }
+
             var index1 = 0;
             myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
             var num2 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
             {
                 if (index2 == invSetIndex)
+                {
                     continue;
+                }
+
                 myPower.SetTypes[index1] = (Enums.eSetType) numArray[index2];
                 ++index1;
             }
@@ -2294,7 +2316,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
             {
-                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+                lblEndCost.Text = $"{power.EndCost / power.ActivatePeriod:##0.##}/s";
             }
             else
             {

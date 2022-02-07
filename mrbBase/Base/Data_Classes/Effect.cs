@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using mrbBase;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -19,21 +18,30 @@ namespace mrbBase.Base.Data_Classes
         public static readonly List<string> ExprCommandsList = new()
         {
             "",
+            "power.base>activateperiod",
             "power.base>activatetime",
             "power.base>areafactor",
             "power.base>rechargetime",
             "power.base>endcost",
             "effect>scale",
             "@StdResult",
-            "if target>enttype eq 'critter'",
-            "if target>enttype eq 'player'",
+            "ifPvE",
+            "ifPvP",
             "modifier>current",
+            "maxEndurance",
             "rand()",
             "source.ownPower?(",
+            "source>Max.kHitPoints",
             ">stacks",
             "modifier>",
+            "powerGroupIn(",
+            "powerGroupNotIn(",
+            "eq(",
+            "ne(",
             "minmax(",
         };
+
+        public double Rand => new Random().NextDouble();
 
         public Effect()
         {
@@ -99,8 +107,7 @@ namespace mrbBase.Base.Data_Classes
             AtrModSecondaryRange = -1;
         }
 
-        public Effect(IPower power)
-            : this()
+        public Effect(IPower power) : this()
         {
             this.power = power;
         }
@@ -175,7 +182,6 @@ namespace mrbBase.Base.Data_Classes
                 AtrModRange = reader.ReadSingle();
                 AtrModRechargeTime = reader.ReadSingle();
                 AtrModSecondaryRange = reader.ReadSingle();
-
                 var conditionalCount = reader.ReadInt32();
                 for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
                 {
@@ -230,8 +236,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        private Effect(IEffect template)
-            : this()
+        private Effect(IEffect template) : this()
         {
             PowerFullName = template.PowerFullName;
             power = template.GetPower();
@@ -333,10 +338,9 @@ namespace mrbBase.Base.Data_Classes
                     var chunks = ExpressionParser.SplitExpression(this, out _);
                     if (chunks.Count <= 1) return 0;
 
-                    var ret = ExpressionParser.ParseExpression2Inner(ExpressionParser.SubExpressionToFx(chunks[1], this), 0, out var parseError);
+                    var ret = ExpressionParser.ParseExpression2(ExpressionParser.SubExpressionToFx(chunks[1], this), out var parseError);
 
                     return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
-
                 }
 
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
@@ -380,7 +384,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 & AttribType != Enums.eAttribType.Expression ? Math_Mag : Mag;
+        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 ? Math_Mag : Mag;
 
         public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
@@ -388,17 +392,18 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num = AttribType switch
+                switch (AttribType)
                 {
-                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration - 0.0f) > 0.01
-                        ? Math_Duration
-                        : nDuration,
-                    Enums.eAttribType.Duration => Math.Abs(Math_Duration - 0.0f) <= 0.01
-                        ? Scale * DatabaseAPI.GetModifier(this)
-                        : Math_Duration,
-                    _ => 0.0f
-                };
-                return num;
+                    case Enums.eAttribType.Magnitude:
+                    case Enums.eAttribType.Expression:
+                        return Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration;
+                    case Enums.eAttribType.Duration:
+                        return Math.Abs(Math_Duration) <= 0.01
+                            ? Scale * DatabaseAPI.GetModifier(this)
+                            : Math_Duration;
+                    default:
+                        return 0.0f;
+                }
             }
         }
 
@@ -426,19 +431,13 @@ namespace mrbBase.Base.Data_Classes
                         switch (Aspect)
                         {
                             case Enums.eAspect.Max:
-                                if (EffectType == Enums.eEffectType.HitPoints ||
-                                    EffectType == Enums.eEffectType.Endurance ||
-                                    EffectType == Enums.eEffectType.SpeedRunning ||
-                                    EffectType == Enums.eEffectType.SpeedJumping ||
-                                    EffectType == Enums.eEffectType.SpeedFlying)
+                                if (EffectType is Enums.eEffectType.HitPoints or Enums.eEffectType.Absorb or Enums.eEffectType.Endurance or Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying)
                                     return false;
                                 break;
                             case Enums.eAspect.Abs:
                                 return false;
                             case Enums.eAspect.Cur:
-                                if (EffectType == Enums.eEffectType.Mez ||
-                                    EffectType == Enums.eEffectType.StealthRadius ||
-                                    EffectType == Enums.eEffectType.StealthRadiusPlayer)
+                                if (EffectType is Enums.eEffectType.Mez or Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer)
                                     return false;
                                 break;
                         }
@@ -451,7 +450,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public bool VariableModified //
+        public bool VariableModified
         {
             get
             {
@@ -462,11 +461,8 @@ namespace mrbBase.Base.Data_Classes
                 }
                 else
                 {
-                    if (power != null)
-                    {
-                        var ps = power.GetPowerSet();
-                        if (ps == null)
-                            return false;
+                    var ps = power?.GetPowerSet();
+                    if (ps != null)
                         if (ps.nArchetype > -1)
                         {
                             if (!DatabaseAPI.Database.Classes[ps.nArchetype].Playable)
@@ -476,7 +472,6 @@ namespace mrbBase.Base.Data_Classes
                         {
                             return false;
                         }
-                    }
 
                     if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
                     {
@@ -517,6 +512,7 @@ namespace mrbBase.Base.Data_Classes
                                         ValidateConditional("active", "Scourge") ||
                                         ValidateConditional("active", "Supremacy");
 
+        public bool IgnoreScaling { get; set; }
 
         public float BaseProbability { get; set; }
 
@@ -591,8 +587,6 @@ namespace mrbBase.Base.Data_Classes
         public int nIDClassName { get; set; }
 
         public bool VariableModifiedOverride { get; set; }
-
-        public bool IgnoreScaling { get; set; }
 
         public bool isEnhancementEffect { get; set; }
 
@@ -673,6 +667,8 @@ namespace mrbBase.Base.Data_Classes
         public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
 
+        public bool IsFromProc => ProcsPerMinute > 0.0f && BuildEffectString().Contains("From Enh");
+
         public int nOverride
         {
             get
@@ -698,7 +694,10 @@ namespace mrbBase.Base.Data_Classes
             var str4 = string.Empty;
             var effectNameShort1 = Enums.GetEffectNameShort(EffectType);
             if (power is {VariableEnabled: true} && VariableModified && !IgnoreScaling)
+            {
                 str4 = " (V)";
+            }
+
             str3 = simple switch
             {
                 false => ToWho switch
@@ -712,7 +711,9 @@ namespace mrbBase.Base.Data_Classes
             if (useBaseProbability)
             {
                 if (BaseProbability < 1.0)
+                {
                     iValue = (BaseProbability * 100f).ToString("#0") + "% chance";
+                }
             }
             else if (Probability < 1.0)
             {
@@ -723,7 +724,9 @@ namespace mrbBase.Base.Data_Classes
             {
                 str1 = Utilities.FixDP(MagPercent);
                 if (DisplayPercentage)
+                {
                     str1 += "%";
+                }
             }
 
             string str5;
@@ -731,7 +734,11 @@ namespace mrbBase.Base.Data_Classes
             {
                 case Enums.eEffectType.None:
                     str5 = Special;
-                    if (Special == "Debt Protection" && !noMag) str5 = str1 + "% " + str5;
+                    if (Special == "Debt Protection" && !noMag)
+                    {
+                        str5 = str1 + "% " + str5;
+                    }
+
                     break;
                 case Enums.eEffectType.Damage:
                 case Enums.eEffectType.DamageBuff:
@@ -745,9 +752,13 @@ namespace mrbBase.Base.Data_Classes
                         {
                             str1 = Ticks + " * " + str1;
                             if (Duration > 0.0)
+                            {
                                 str2 = " over " + Utilities.FixDP(Duration) + " seconds";
+                            }
                             else if (Absorbed_Duration > 0.0)
+                            {
                                 str2 = " over " + Utilities.FixDP(Absorbed_Duration) + " seconds";
+                            }
                         }
 
                         str5 = str1 + " " + name1 + " " + effectNameShort1 + str3 + str2;
@@ -756,7 +767,10 @@ namespace mrbBase.Base.Data_Classes
 
                     var str6 = "(" + name1 + ")";
                     if (DamageType == Enums.eDamage.None)
+                    {
                         str6 = string.Empty;
+                    }
+
                     str5 = str1 + " " + effectNameShort1 + str6 + str3 + str2;
                     break;
                 case Enums.eEffectType.Endurance:
@@ -806,14 +820,20 @@ namespace mrbBase.Base.Data_Classes
                     var name2 = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0.0 && (!simple || MezType != Enums.eMez.None && MezType != Enums.eMez.Knockback &&
                         MezType != Enums.eMez.Knockup))
+                    {
                         str2 = Utilities.FixDP(Duration) + " second ";
+                    }
+
                     var str9 = " (Mag " + str1 + ")";
                     str5 = str2 + name2 + str9 + str3;
                     break;
                 case Enums.eEffectType.MezResist:
                     var name3 = Enum.GetName(MezType.GetType(), MezType);
                     if (!noMag)
+                    {
                         str1 = " " + str1;
+                    }
+
                     str5 = effectNameShort1 + "(" + name3 + ")" + str1 + str3 + str2;
                     break;
                 case Enums.eEffectType.Recovery:
@@ -842,11 +862,7 @@ namespace mrbBase.Base.Data_Classes
 
                     if (DisplayPercentage)
                     {
-                        str5 = str1 + " (" +
-                               Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 *
-                                                        (BuffedMag * (double)MidsContext.Archetype.BaseRegen *
-                                                         1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 +
-                               str2;
+                        str5 = str1 + " (" + Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 * (BuffedMag * (double)MidsContext.Archetype.BaseRegen * 1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 + str2;
                         break;
                     }
 
@@ -877,12 +893,14 @@ namespace mrbBase.Base.Data_Classes
 
             var iStr = string.Empty;
             if (!string.IsNullOrEmpty(iValue))
+            {
                 iStr = " (" + BuildCs(iValue, iStr) + ")";
+            }
+
             return str5.Trim() + iStr + str4;
         }
 
-
-        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false)
+        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false)
         {
             var sBuild = string.Empty;
             var sSubEffect = string.Empty;
@@ -1082,58 +1100,67 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
+            if (!ignoreConditions)
             {
-                sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
-            }
-
-            if (ActiveConditionals.Count > 0)
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                var conList = new List<string>();
-                foreach (var cVp in ActiveConditionals)
+                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
                 {
-                    var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    string conditionOperator;
-                    if (cVp.Value.Equals("True")) { conditionOperator = "is "; }
-                    else if (cVp.Value.Equals("False")) { conditionOperator = "not "; }
-                    else { conditionOperator = ""; }
+                    sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+                }
 
-                    if (!condition.Equals("Stacks") && !condition.Equals("Team"))
+                if (ActiveConditionals.Count > 0)
+                {
+                    var getCondition = new Regex("(:.*)");
+                    var getConditionItem = new Regex("(.*:)");
+                    var conList = new List<string>();
+                    foreach (var cVp in ActiveConditionals)
                     {
-                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                        var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
+                        var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
+                        var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                        string conditionOperator;
+                        if (cVp.Value.Equals("True"))
+                        {
+                            conditionOperator = "is ";
+                        }
+                        else if (cVp.Value.Equals("False"))
+                        {
+                            conditionOperator = "not ";
+                        }
+                        else
+                        {
+                            conditionOperator = "";
+                        }
+
+                        if (!condition.Equals("Stacks") && !condition.Equals("Team"))
+                        {
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                        }
+                        else if (condition.Equals("Stacks"))
+                        {
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
+                        }
+                        else if (condition.Equals("Team"))
+                        {
+                            conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
+                        }
+
+                        /*conList.Add(!condition.Equals("Stacks")
+                            ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
+                            : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
+                        sConditional = string.Join(" AND ", conList);
                     }
-                    else if (condition.Equals("Stacks"))
-                    {
-                        conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
-                    }
-                    else if (condition.Equals("Team"))
-                    {
-                        conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
-                    }
-                    /*conList.Add(!condition.Equals("Stacks")
-                        ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
-                        : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
-                    sConditional = string.Join(" AND ", conList);
                 }
             }
 
             if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
             {
                 sDuration = string.Empty;
-                var sForOver = " for ";
-                switch (EffectType)
+                var sForOver = EffectType switch
                 {
-                    case Enums.eEffectType.Damage:
-                        sForOver = " over ";
-                        break;
-                    case Enums.eEffectType.SilentKill:
-                        sForOver = " in ";
-                        break;
-                }
+                    Enums.eEffectType.Damage => " over ",
+                    Enums.eEffectType.SilentKill => " in ",
+                    _ => " for "
+                };
 
                 if (Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
                 {
@@ -1177,30 +1204,41 @@ namespace mrbBase.Base.Data_Classes
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)} Variable";
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)} Variable";
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
 
                         sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType)) 
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _)), 2)}";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
+                        {
+                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
+                        }
                         else
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2)}";
+                        {
+                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
+                        }
                     }
+                }
+                else if (EffectType == Enums.eEffectType.PerceptionRadius)
+                {
+                    var perceptionDistance = Statistics.BasePerception * BuffedMag;
+                    sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
+                        : DisplayPercentage
+                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
+                            : $"{perceptionDistance}ft";
                 }
                 else
                 {
                     sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
-                        : DisplayPercentage
-                            ? $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * 100)}%"
-                            : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag)}";
+                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
             }
 
@@ -1269,7 +1307,10 @@ namespace mrbBase.Base.Data_Classes
                         {
                             sSubEffect = $"({sSubEffect})";
                             if (DamageType == Enums.eDamage.None)
+                            {
                                 sSubEffect = string.Empty;
+                            }
+
                             sBuild = $"{sMag} {sEffect}{sSubEffect}{sTarget}{sDuration}";
                         }
                     }
@@ -1285,16 +1326,24 @@ namespace mrbBase.Base.Data_Classes
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
+                    {
                         sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                    }
+
                     if (!noMag)
                         sMag = $" (Mag {sMag})";
+
                     sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
+
                     break;
                 case Enums.eEffectType.MezResist:
-                    sSubEffect = Enum.GetName(MezType.GetType(), MezType);
+                    sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
                     if (noMag == false)
+                    {
                         sMag = $" {sMag}";
-                    sBuild = $"{sEffect}({sSubEffect}){sMag}{sTarget}{sDuration}";
+                    }
+
+                    sBuild = $"{sMag} {sEffect}({sSubEffect}){sTarget}{sDuration}";
                     break;
 
                 case Enums.eEffectType.ResEffect:
@@ -2819,7 +2868,9 @@ namespace mrbBase.Base.Data_Classes
                 if (Reward != effect.Reward)
                     return string.CompareOrdinal(Reward, effect.Reward);
                 if (MagnitudeExpression != effect.MagnitudeExpression)
+                {
                     return string.CompareOrdinal(MagnitudeExpression, effect.MagnitudeExpression);
+                }
 
                 //EffectType is the same, go more detailed.
                 if (effect.isDamage())
@@ -2846,7 +2897,7 @@ namespace mrbBase.Base.Data_Classes
                         return -1;
                     return nVariableFlag;
                 }
-                if (effect.EffectType == Enums.eEffectType.Mez || effect.EffectType == Enums.eEffectType.MezResist)
+                if (effect.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist)
                 {
                     if (MezType > effect.MezType)
                         return 1;

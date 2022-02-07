@@ -36,6 +36,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public frmAccolade(frmMain iParent, List<IPower> iPowers)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
             Load += frmAccolade_Load;
             _locked = false;
             InitializeComponent();

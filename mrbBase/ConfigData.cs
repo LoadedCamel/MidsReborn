@@ -55,7 +55,7 @@ namespace mrbBase
         };
 
         private string _defaultSaveFolderOverride;
-        private Size _lastSize = new Size(1072, 760);
+        private Size _lastSize = new(1342, 1001);
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
         public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
@@ -122,6 +122,8 @@ namespace mrbBase
             get => _lastSize;
             set => _lastSize = value;
         }
+
+        public Point LastLocation { get; set; }
 
         public bool UseOldTotalsWindow { get; set; }
         public float BaseAcc { get; set; } = 0.75f;

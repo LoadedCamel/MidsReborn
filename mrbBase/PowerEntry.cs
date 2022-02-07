@@ -269,17 +269,18 @@ namespace mrbBase
             Slots = new SlotEntry[0];
         }
 
-        public PopUp.Section PopSubPowerListing(
-            string sTitle,
-            Color disabledColor,
-            Color enabledColor)
+        public PopUp.Section PopSubPowerListing(string sTitle, Color disabledColor, Color enabledColor)
         {
             var section = new PopUp.Section();
             section.Add(sTitle, PopUp.Colors.Title);
             foreach (var subPower in SubPowers)
+            {
                 if (subPower.nIDPower > -1)
-                    section.Add(DatabaseAPI.Database.Power[subPower.nIDPower].DisplayName,
-                        subPower.StatInclude ? enabledColor : disabledColor, 0.9f, FontStyle.Bold, 1);
+                {
+                    section.Add(DatabaseAPI.Database.Power[subPower.nIDPower].DisplayName, subPower.StatInclude ? enabledColor : disabledColor, 0.9f, FontStyle.Bold, 1);
+                }
+            }
+
             return section;
         }
 

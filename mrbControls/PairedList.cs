@@ -16,7 +16,7 @@ namespace mrbControls
         public delegate void ItemHoverEventHandler(object sender, int index, Enums.ShortFX tagId, string tooltip = "");
         public event ItemClickEventHandler ItemClick;
         public event ItemHoverEventHandler ItemHover;
-        private readonly int _linePadding;
+        private int _linePadding;
         private ExtendedBitmap _bxBuffer;
         private int _currentHighlight;
         private bool _highlightable;
@@ -74,6 +74,12 @@ namespace mrbControls
                 _highlightable = value;
                 Draw();
             }
+        }
+
+        public int LinePadding
+        {
+            get => _linePadding;
+            set => _linePadding = value;
         }
 
         public PairedList()
@@ -176,11 +182,9 @@ namespace mrbControls
 
                 var num4 = 0;
                 var num5 = 0;
-                var num6 = 0;
                 if (_myItems != null)
                 {
-                    var num7 = _myItems.Count - 1;
-                    for (var i = num6; i <= num7; i++)
+                    for (var i = 0; i < _myItems.Count; i++)
                     {
                         //Names
                         var text = _myItems[i].Name;

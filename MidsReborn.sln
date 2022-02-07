@@ -1,9 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.202
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidsReborn", "MidsReborn\MidsReborn.csproj", "{27BD82DA-4B3E-4D6B-BAEA-BE59A28A96EB}"
 	ProjectSection(ProjectDependencies) = postProject
+		{28498C36-633E-4953-9652-D6D6F719E0BF} = {28498C36-633E-4953-9652-D6D6F719E0BF}
 		{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC} = {78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}
 	EndProjectSection
 EndProject
@@ -15,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mrbControls", "mrbControls\mrbControls.csproj", "{8B762616-CA1E-428A-A62D-E17DD738712D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mrbBase", "mrbBase\mrbBase.csproj", "{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRBUpdater", "MRBUpdater\MRBUpdater.csproj", "{28498C36-633E-4953-9652-D6D6F719E0BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +37,10 @@ Global
 		{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28498C36-633E-4953-9652-D6D6F719E0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28498C36-633E-4953-9652-D6D6F719E0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28498C36-633E-4953-9652-D6D6F719E0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28498C36-633E-4953-9652-D6D6F719E0BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

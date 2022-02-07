@@ -52,7 +52,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
-                return Version > MidsContext.AppVersion;
+                return Convert.ToBoolean(Version.CompareTo(MidsContext.AppFileVersion));
             }
         }
 
@@ -81,13 +81,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         appResult.Close();
                         break;
                     case DialogResult.OK:
-                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.App, Version.ToString(), parent);
+                        clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version.ToString());
                         break;
                 }
             }
             else
             {
-                clsXMLUpdate.Update(clsXMLUpdate.UpdateType.App, Version.ToString(), parent);
+                clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version.ToString());
             }
         }
     }

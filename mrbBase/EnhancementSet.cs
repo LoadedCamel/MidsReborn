@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using FastDeepCloner;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
@@ -209,9 +212,18 @@ namespace mrbBase
             return ret;
         }
 
-        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false)
+        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false)
         {
-            var bonusItemArray = special ? SpecialBonus : Bonus;
+            BonusItem[] bonusItemArray;
+            if (special)
+            {
+                bonusItemArray = SpecialBonus;
+            }
+            else
+            {
+                bonusItemArray = Bonus;
+            }
+
             string str1;
             if ((index < 0) | (index > bonusItemArray.Length - 1))
             {
@@ -223,41 +235,67 @@ namespace mrbBase
             }
             else
             {
-                var empty1 = string.Empty;
+                var effectList = new List<string>();
                 for (var index1 = 0; index1 <= bonusItemArray[index].Name.Length - 1; ++index1)
                 {
-                    if ((bonusItemArray[index].Index[index1] < 0) |
-                        (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
+                    if ((bonusItemArray[index].Index[index1] < 0) | (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
+                    {
                         return string.Empty;
+                    }
                     var empty2 = string.Empty;
-                    var returnMask = new int[0];
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup);
+                    var returnMask = Array.Empty<int>();
+                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
                     if (!string.IsNullOrEmpty(empty2))
-                        empty1 += empty2;
+                    {
+                        effectList.Add(empty2);
+                    }
                     for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
                     {
                         var flag = false;
                         for (var index3 = 0; index3 < returnMask.Length; index3++)
+                        {
                             if (index2 == returnMask[index3])
+                            {
                                 flag = true;
+                            }
+                        }
 
                         if (flag)
+                        {
                             continue;
-                        if (!string.IsNullOrEmpty(empty1))
-                            empty1 += ", ";
+                        }
+
                         string str2;
-                        str2 = longForm
-                            ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
-                                .BuildEffectString(true, "", false, false, false, fromPopup)
-                            : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
-                                .BuildEffectStringShort(false, true);
+                        if (longForm)
+                        {
+                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true);
+                        }
+                        else
+                        {
+                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
+                        }
+                        
+
+                        if (effectList.Any(s => s == str2)) continue;
+                        
                         if (str2.Contains("EndRec"))
+                        {
                             str2 = str2.Replace("EndRec", "Recovery");
-                        empty1 += str2;
+                        }
+
+                        effectList.Add(str2);
                     }
                 }
 
-                str1 = empty1;
+                str1 = string.Join(", ", effectList.ToArray());
+                if (bonusSection && !status)
+                {
+                    Utilities.ModifiedEffectString(ref str1, 1);
+                }
+                else
+                {
+                    Utilities.ModifiedEffectString(ref str1, 2);
+                }
             }
 
             return str1;

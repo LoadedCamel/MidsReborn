@@ -321,18 +321,11 @@ namespace Mids_Reborn.Forms
                         var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                         for (var iPower = 0; iPower <= num; ++iPower)
                         {
-                            if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) &
-                                  (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI
-                                .Database
-                                .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
-                                .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
-                                continue;
+                            if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) & (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable) continue;
                             Array.Resize(ref BaseArray, BaseArray.Length + 1);
                             Array.Resize(ref EnhArray, EnhArray.Length + 1);
                             var index = BaseArray.Length - 1;
-                            BaseArray[index] = new Power(DatabaseAPI.Database
-                                .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
-                                .Powers[MainModule.MidsController.Toon.CurrentBuild.Powers[iPower].IDXPower]);
+                            BaseArray[index] = new Power(DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MainModule.MidsController.Toon.CurrentBuild.Powers[iPower].IDXPower]);
                             EnhArray[index] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
                         }
 
@@ -342,12 +335,7 @@ namespace Mids_Reborn.Forms
                     var num1 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var iPower = 0; iPower <= num1; ++iPower)
                     {
-                        if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) &
-                              (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI
-                            .Database
-                            .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
-                            .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
-                            continue;
+                        if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) & (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable) continue;
                         Array.Resize(ref BaseArray, BaseArray.Length + 1);
                         //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
                         BaseArray[BaseArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);

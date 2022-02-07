@@ -7,6 +7,8 @@ namespace mrbBase
 {
     public interface IEffect : IComparable, ICloneable
     {
+        double Rand { get; }
+
         int UniqueID { get; set; }
 
         float Probability { get; set; }
@@ -162,8 +164,10 @@ namespace mrbBase
         float AtrModRange { get; set; }
         float AtrModRechargeTime { get; set; }
         float AtrModSecondaryRange { get; set; }
+
         List<KeyValue<string, string>> ActiveConditionals { get; set; }
         bool Validated { get; set; }
+        bool IsFromProc { get; }
         IPower GetPower();
         void SetPower(IPower power);
 
@@ -176,7 +180,7 @@ namespace mrbBase
 
         string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 
-        string BuildEffectString(bool Simple = false, string SpecialCat = "", bool noMag = false, bool Grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false);
+        string BuildEffectString(bool Simple = false, string SpecialCat = "", bool noMag = false, bool Grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false);
 
         void StoreTo(ref BinaryWriter writer);
 

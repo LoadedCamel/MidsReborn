@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using mrbBase.Base.Master_Classes;
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
 [assembly: AssemblyTitle("mrbControls")]
 [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
 [assembly: ComVisible(false)]
@@ -17,7 +17,7 @@ using mrbBase.Base.Master_Classes;
 [assembly:
     Debuggable(DebuggableAttribute.DebuggingModes.Default |
                DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
-[assembly: AssemblyCompany("RebornTeam")]
-[assembly: AssemblyCopyright("Copyright ©2019-2021 MidsReborn.com")]
+[assembly: AssemblyCompany("LoadedCamel")]
+[assembly: AssemblyCopyright("Copyright ©2019-2022 MidsReborn.com")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]

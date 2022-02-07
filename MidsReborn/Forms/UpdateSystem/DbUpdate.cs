@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
@@ -10,7 +11,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
     public class DbUpdate
     {
         private static bool Mandatory { get; set; }
-        private static float Version { get; set; }
+        private static Version Version { get; set; }
         public static string ChangeLog { get; set; }
 
         public static bool IsAvailable
@@ -31,7 +32,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         {
                             case "version":
                             {
-                                Version = xmlReader.ReadElementContentAsFloat();
+                                Version = new Version(xmlReader.ReadElementContentAsString());
                                 break;
                             }
                             case "changelog":
@@ -47,15 +48,14 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             }
                         }
                     }
-                    catch (XmlException e)
+                    catch (XmlException)
                     {
                         MessageBox.Show(@"An error occurred while attempting to read from the manifest.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Console.WriteLine($"{e.Message}\r\n{e.StackTrace}");
                         return false;
                     }
                 }
 
-                return Version > DatabaseAPI.Database.Version;
+                return Convert.ToBoolean(Version.CompareTo(DatabaseAPI.Database.Version));
             }
         }
 
@@ -67,6 +67,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 {
                     Type = clsXMLUpdate.UpdateType.Database.ToString()
                 };
+                dbResult.ShowDialog();
                 switch (dbResult.DialogResult)
                 {
                     case DialogResult.Yes:
@@ -74,7 +75,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         var patchNotes = new PatchNotes(parent, true)
                         {
                             Type = clsXMLUpdate.UpdateType.Database.ToString(),
-                            Version = Version.ToString(CultureInfo.InvariantCulture)
+                            Version = Version.ToString()
                         };
                         patchNotes.ShowDialog();
                         break;
@@ -83,13 +84,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         dbResult.Close();
                         break;
                     case DialogResult.OK:
-                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.Database, Version.ToString(CultureInfo.InvariantCulture), parent);
+                        clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString());
                         break;
                 }
             }
             else
             {
-                clsXMLUpdate.Update(clsXMLUpdate.UpdateType.Database, Version.ToString(CultureInfo.InvariantCulture), parent);
+                clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version.ToString());
             }
         }
     }

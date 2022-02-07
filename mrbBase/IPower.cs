@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -207,6 +208,8 @@ namespace mrbBase
 
         void StoreTo(ref BinaryWriter writer);
 
+        PowerEntry? GetPowerEntry();
+
         float FXGetDamageValue();
 
         string FXGetDamageString();
@@ -263,7 +266,8 @@ namespace mrbBase
             bool shortForm,
             bool simple,
             bool noMag = false,
-            bool fromPopup = false);
+            bool fromPopup = false,
+            bool ignoreConditions = false);
 
         int[] AbsorbEffects(
             IPower source,

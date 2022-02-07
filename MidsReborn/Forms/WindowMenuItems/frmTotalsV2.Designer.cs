@@ -2563,7 +2563,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar30.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.bar30.Group = "Perception";
             this.bar30.Location = new System.Drawing.Point(168, 41);
-            this.bar30.MaximumBarValue = 1000F;
+            this.bar30.MaximumBarValue = 1500F;
             this.bar30.MinimumBarValue = 0F;
             this.bar30.Name = "bar30";
             this.bar30.Size = new System.Drawing.Size(316, 13);
@@ -2587,7 +2587,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.bar29.Group = "Perception";
             this.bar29.Location = new System.Drawing.Point(168, 22);
-            this.bar29.MaximumBarValue = 100F;
+            this.bar29.MaximumBarValue = 1500F;
             this.bar29.MinimumBarValue = 0F;
             this.bar29.Name = "bar29";
             this.bar29.Size = new System.Drawing.Size(316, 13);
@@ -2612,7 +2612,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.bar28.Group = "Perception";
             this.bar28.Location = new System.Drawing.Point(168, 3);
-            this.bar28.MaximumBarValue = 100F;
+            this.bar28.MaximumBarValue = 1500F;
             this.bar28.MinimumBarValue = 0F;
             this.bar28.Name = "bar28";
             this.bar28.Size = new System.Drawing.Size(316, 13);

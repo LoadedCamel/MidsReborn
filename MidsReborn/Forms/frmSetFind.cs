@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -17,18 +16,37 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmSetFind : Form
     {
+        private struct fxIdentifier
+        {
+            public Enums.eEffectType EffectType;
+            public Enums.eDamage DamageType;
+            public Enums.eMez MezType;
+            public Enums.eEffectType ETModifies;
+            public Enums.eMez SubMezType;
+
+            public override string ToString()
+            {
+                return $"<fxIdentifier>({EffectType}, {DamageType}, {MezType}, {ETModifies}, {SubMezType})";
+            }
+        }
+
         private readonly frmMain myParent;
 
         private ImageButton ibClose;
         private ImageButton ibTopmost;
-        private int[] setBonusList;
         private ctlPopUp SetInfo;
+
+        private List<Enums.eEffectType> DisallowedEffectTypes;
+        private List<Enums.eEffectType> EnhancementOnlyEffectTypes;
+        private List<Enums.eEffectType> HasSubsEffectTypes;
+
+        // Dictionary<fxIdentifier, Dictionary<effectMagString, List<KeyValuePair<setNID, BonusID>>>>
+        private Dictionary<fxIdentifier, Dictionary<string, List<KeyValuePair<int, int>>>> EffectsMap;
 
         public frmSetFind(frmMain iParent)
         {
             FormClosed += frmSetFind_FormClosed;
             Load += frmSetFind_Load;
-            setBonusList = new int[0];
             InitializeComponent();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
             Icon = Resources.reborn;
@@ -38,33 +56,228 @@ namespace Mids_Reborn.Forms
             myParent = iParent;
         }
 
-        private void AddEffect(ref string[] list, ref int[] nIDList, string effect, int nID)
+        private void frmSetFind_Load(object sender, EventArgs e)
         {
-            var num = list.Length - 1;
-            for (var index = 0; index <= num; ++index)
-            {
-                if (string.Equals(list[index], effect, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-            }
+            //SetBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus").ToList();
+            BuildEffectsMap();
 
-            Array.Resize(ref list, list.Length + 1);
-            Array.Resize(ref nIDList, nIDList.Length + 1);
-            list[list.Length - 1] = effect;
-            nIDList[list.Length - 1] = nID;
+            #region Effect filters lists
+            
+            // Effects that are not part of set bonuses (or no one may care about)
+            DisallowedEffectTypes = new List<Enums.eEffectType>()
+            {
+                Enums.eEffectType.None,
+                Enums.eEffectType.AddBehavior,
+                Enums.eEffectType.BeastRun,
+                Enums.eEffectType.ClearDamagers,
+                Enums.eEffectType.ClearFog,
+                Enums.eEffectType.CombatModShift,
+                Enums.eEffectType.CombatPhase,
+                Enums.eEffectType.Damage,
+                Enums.eEffectType.DesignerStatus,
+                Enums.eEffectType.DropToggles,
+                Enums.eEffectType.EntCreate,
+                Enums.eEffectType.EntCreate_x,
+                Enums.eEffectType.ExclusiveVisionPhase,
+                Enums.eEffectType.ForceMove,
+                Enums.eEffectType.Glide,
+                Enums.eEffectType.GlobalChanceMod,
+                Enums.eEffectType.GrantPower,
+                Enums.eEffectType.Hoverboard,
+                Enums.eEffectType.Jumppack,
+                Enums.eEffectType.MagicCarpet,
+                Enums.eEffectType.Meter,
+                Enums.eEffectType.ModifyAttrib,
+                Enums.eEffectType.NinjaRun,
+                Enums.eEffectType.Null,
+                Enums.eEffectType.NullBool,
+                Enums.eEffectType.PowerRedirect,
+                Enums.eEffectType.RechargePower,
+                Enums.eEffectType.RevokePower,
+                Enums.eEffectType.Reward,
+                Enums.eEffectType.RewardSourceTeam,
+                Enums.eEffectType.SetCostume,
+                Enums.eEffectType.SetMode,
+                Enums.eEffectType.SetSZEValue,
+                Enums.eEffectType.SilentKill,
+                Enums.eEffectType.SteamJump,
+                Enums.eEffectType.TokenAdd,
+                Enums.eEffectType.UnsetMode,
+                Enums.eEffectType.ViewAttrib,
+                Enums.eEffectType.VisionPhase,
+                Enums.eEffectType.Walk,
+                Enums.eEffectType.XAfraid,
+                Enums.eEffectType.XAvoid,
+                Enums.eEffectType.XPDebt
+            };
+
+            // Effect types with a sub-attribute
+            HasSubsEffectTypes = new List<Enums.eEffectType>
+            {
+                Enums.eEffectType.Damage,
+                Enums.eEffectType.DamageBuff,
+                Enums.eEffectType.Defense,
+                Enums.eEffectType.Elusivity,
+                Enums.eEffectType.Enhancement,
+                Enums.eEffectType.Mez,
+                Enums.eEffectType.MezResist,
+                Enums.eEffectType.ResEffect,
+                Enums.eEffectType.Resistance
+            };
+
+            // Effects that are listed under Enhancement() only
+            // Exhaustive list?
+            EnhancementOnlyEffectTypes = new List<Enums.eEffectType>
+            {
+                Enums.eEffectType.Absorb,
+                Enums.eEffectType.Accuracy,
+                Enums.eEffectType.Heal,
+                Enums.eEffectType.RechargeTime
+            };
+            #endregion
+
+            BackColor = myParent.BackColor;
+            SetImageButtonStyle(ibClose);
+            SetImageButtonStyle(ibTopmost);
+            SetInfo.SetPopup(new PopUp.PopupData());
+            FillImageList();
+            FillEffectList();
+            FillArchetypesList();
+
+            cbArchetype.SelectedIndex = 0;
         }
 
-        private void AddSetString(int nIDSet, int BonusID)
+        private void AddEffect(ref List<string> list, ref List<int> nIDList, string effect, int nID)
+        {
+            if (list.Contains(effect)) return;
+
+            list.Add(effect);
+            nIDList.Add(nID);
+        }
+
+        private void AddEffect(ref Dictionary<string, int> list, string effect, int nID)
+        {
+            if (list.ContainsKey(effect)) return;
+
+            list.Add(effect, nID);
+        }
+
+        private void BuildEffectsMap()
+        {
+            //var t = new Stopwatch();
+            //t.Start();
+
+            EffectsMap = new Dictionary<fxIdentifier, Dictionary<string, List<KeyValuePair<int, int>>>>();
+
+            for (var s = 0; s < DatabaseAPI.Database.EnhancementSets.Count; s++)
+            {
+                var set = DatabaseAPI.Database.EnhancementSets[s];
+                for (var b = 0; b < set.Bonus.Length; b++)
+                {
+                    var bonus = set.Bonus[b];
+                    foreach (var i in bonus.Index)
+                    {
+                        foreach (var fx in DatabaseAPI.Database.Power[i].Effects)
+                        {
+                            var fxKey = fx.EffectType == Enums.eEffectType.Enhancement &
+                                        fx.ETModifies == Enums.eEffectType.Mez
+                                ? new fxIdentifier
+                                {
+                                    EffectType = fx.EffectType,
+                                    DamageType = fx.DamageType,
+                                    ETModifies = fx.ETModifies,
+                                    MezType = Enums.eMez.None,
+                                    SubMezType = fx.MezType
+                                }
+                                : new fxIdentifier
+                                {
+                                    EffectType = fx.EffectType,
+                                    DamageType = fx.DamageType,
+                                    ETModifies = fx.ETModifies,
+                                    MezType = fx.MezType,
+                                    SubMezType = Enums.eMez.None
+                                };
+
+                            string effect;
+                            float effectMag;
+                            if (fx.EffectType == Enums.eEffectType.HitPoints)
+                            {
+                                effectMag = fx.Mag / MidsContext.Archetype.Hitpoints * 100;
+                                effect = $"{decimal.Round((decimal)effectMag, 3):##0.###}%";
+                            }
+                            else if (fx.EffectType == Enums.eEffectType.Endurance)
+                            {
+                                effectMag = fx.Mag;
+                                effect = $"{decimal.Round((decimal)effectMag, 3):##0.###}%";
+                            }
+                            else
+                            {
+                                effectMag = fx.MagPercent;
+                                effect = $"{decimal.Round((decimal)effectMag, 3):##0.###}%";
+                            }
+
+                            if (!EffectsMap.ContainsKey(fxKey))
+                            {
+                                EffectsMap.Add(fxKey, new Dictionary<string, List<KeyValuePair<int, int>>>());
+                                EffectsMap[fxKey].Add(effect, new List<KeyValuePair<int, int>>());
+                                EffectsMap[fxKey][effect].Add(new KeyValuePair<int, int>(s, b));
+                            }
+                            else
+                            {
+                                if (!EffectsMap[fxKey].ContainsKey(effect))
+                                {
+                                    EffectsMap[fxKey].Add(effect, new List<KeyValuePair<int, int>>());
+                                    EffectsMap[fxKey][effect].Add(new KeyValuePair<int, int>(s, b));
+                                }
+                                else
+                                {
+                                    EffectsMap[fxKey][effect].Add(new KeyValuePair<int, int>(s, b));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool EffectsMapContainsPartial(fxIdentifier fxKey)
+        {
+            if (EffectsMap.ContainsKey(fxKey)) return true;
+
+            var keysList = EffectsMap.Keys;
+            switch (fxKey.EffectType)
+            {
+                case Enums.eEffectType.Enhancement when fxKey.ETModifies == Enums.eEffectType.Mez:
+                    return keysList.Any(e => e.EffectType == fxKey.EffectType & e.ETModifies == fxKey.ETModifies);
+
+                case Enums.eEffectType.Enhancement:
+                case Enums.eEffectType.None:
+                    return false;
+
+                case Enums.eEffectType.Damage when fxKey.DamageType == Enums.eDamage.None:
+                case Enums.eEffectType.DamageBuff when fxKey.DamageType == Enums.eDamage.None:
+                case Enums.eEffectType.Defense when fxKey.DamageType == Enums.eDamage.None:
+                case Enums.eEffectType.Resistance when fxKey.DamageType == Enums.eDamage.None:
+                case Enums.eEffectType.Elusivity when fxKey.DamageType == Enums.eDamage.None:
+                case Enums.eEffectType.Mez when fxKey.MezType == Enums.eMez.None:
+                case Enums.eEffectType.MezResist when fxKey.MezType == Enums.eMez.None:
+                case Enums.eEffectType.ResEffect when fxKey.ETModifies == Enums.eEffectType.None:
+                    return keysList.Any(e => e.EffectType == fxKey.EffectType);
+
+                default:
+                    return keysList.Any(e => e.EffectType == fxKey.EffectType);
+            }
+        }
+
+        private void AddEnhancementSet(int nIDSet, int BonusID)
         {
             lvSet.Items.Add(new ListViewItem(new[]
             {
                 DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName,
-                Convert.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1) + " - " +
-                Convert.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1),
+                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}",
                 DatabaseAPI.Database.SetTypeStringLong[(int) DatabaseAPI.Database.EnhancementSets[nIDSet].SetType],
                 BonusID >= 0
-                    ? Convert.ToString(DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID))
+                    ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)}"
                     : "Special"
             }, nIDSet));
             lvSet.Items[lvSet.Items.Count - 1].Tag = nIDSet;
@@ -72,18 +285,27 @@ namespace Mids_Reborn.Forms
 
         private void FillEffectList()
         {
-            var List = Array.Empty<string>();
-            var nIDList = Array.Empty<int>();
             lvBonus.BeginUpdate();
             lvBonus.Items.Clear();
-            var num1 = setBonusList.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-                if ((DatabaseAPI.Database.Power[setBonusList[index]].EntitiesAutoHit & Enums.eEntity.Caster) >
-                    Enums.eEntity.None)
-                    AddEffect(ref List, ref nIDList, GetPowerString(setBonusList[index]), -1);
-            var num2 = List.Length - 1;
-            for (var index = 0; index <= num2; ++index)
-                lvBonus.Items.Add(new ListViewItem(List[index]));
+
+            var fxTypeNames = Enum.GetValues(typeof(Enums.eEffectType)).Cast<Enums.eEffectType>().ToList();
+            var fxTypes = fxTypeNames
+                .Select((t, i) => new KeyValuePair<Enums.eEffectType, int>(t, i))
+                .Where(tk => !DisallowedEffectTypes.Contains(tk.Key) & !EnhancementOnlyEffectTypes.Contains(tk.Key))
+                .OrderBy(tk => $"{tk.Key}")
+                .ToList();
+
+            lvBonus.Items.Add(new ListViewItem(""));
+            lvBonus.Items[0].Tag = -1;
+            for (var i = 0; i < fxTypes.Count; i++)
+            {
+                lvBonus.Items.Add(fxTypes[i].Key.ToString() == "Endurance"
+                    ? new ListViewItem("EndMax")
+                    : new ListViewItem($"{fxTypes[i].Key}"));
+
+                lvBonus.Items[i + 1].Tag = i;
+            }
+
             lvBonus.Sorting = SortOrder.Ascending;
             lvBonus.Sort();
             if (lvBonus.Items.Count > 0)
@@ -99,13 +321,13 @@ namespace Mids_Reborn.Forms
             var height1 = imageSize1.Height;
             using var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSets.Images.Clear();
-            var num = DatabaseAPI.Database.EnhancementSets.Count;
-            for (var index = 0; index < num; index++)
-                if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
+            foreach (var set in DatabaseAPI.Database.EnhancementSets)
+            {
+                if (set.ImageIdx > -1)
                 {
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancementSet(ref graphics, DatabaseAPI.Database.EnhancementSets[index].ImageIdx);
+                    I9Gfx.DrawEnhancementSet(ref graphics, set.ImageIdx);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
@@ -118,7 +340,77 @@ namespace Mids_Reborn.Forms
                     var bitmap = new Bitmap(width2, height2);
                     images.Add(bitmap);
                 }
+            }
         }
+
+        private fxIdentifier BuildFilterFxIdentifier()
+        {
+            var lvText = lvBonus.SelectedItems[0].Text;
+            if (lvText == "EndMax")
+            {
+                lvText = "Endurance";
+            }
+
+            var ret = Enum.TryParse<Enums.eEffectType>(lvText, out var effectType);
+            if (!ret) effectType = Enums.eEffectType.None;
+            var damageType = Enums.eDamage.None;
+            var mezType = Enums.eMez.None;
+            var etModifies = Enums.eEffectType.None;
+            var mezTypeSub = Enums.eMez.None;
+            if (lvVector.SelectedItems.Count > 0)
+            {
+                var selectedVector = lvVector.SelectedItems[0].Text;
+                var chunks = new Regex(@"[\(\)]").Split(selectedVector, 2);
+                if (chunks.Length > 1)
+                {
+                    ret = Enum.TryParse(chunks[0], out etModifies);
+                    if (ret && etModifies == Enums.eEffectType.Mez)
+                    {
+                        ret = Enum.TryParse(chunks[1], out mezTypeSub);
+                        if (!ret) mezTypeSub = Enums.eMez.None;
+                    }
+                }
+                else
+                {
+                    switch (effectType)
+                    {
+                        case Enums.eEffectType.Damage:
+                        case Enums.eEffectType.DamageBuff:
+                        case Enums.eEffectType.Defense:
+                        case Enums.eEffectType.Resistance:
+                        case Enums.eEffectType.Elusivity:
+                            ret = Enum.TryParse(selectedVector, out damageType);
+                            if (!ret) damageType = Enums.eDamage.None;
+
+                            break;
+
+                        case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezResist:
+                            ret = Enum.TryParse(selectedVector, out mezType);
+                            if (!ret) mezType = Enums.eMez.None;
+
+                            break;
+
+                        case Enums.eEffectType.ResEffect:
+                        case Enums.eEffectType.Enhancement:
+                            ret = Enum.TryParse(selectedVector, out etModifies);
+                            if (!ret) etModifies = Enums.eEffectType.None;
+
+                            break;
+                    }
+                }
+            }
+
+            return new fxIdentifier
+            {
+                EffectType = effectType,
+                DamageType = damageType,
+                MezType = mezType,
+                ETModifies = etModifies,
+                SubMezType = mezTypeSub,
+            };
+        }
+
 
         private void FillMagList()
         {
@@ -128,53 +420,50 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                var List = Array.Empty<string>();
-                var nIDList = Array.Empty<int>();
-                var text = lvBonus.SelectedItems[0].Text;
-                var num1 = setBonusList.Length - 1;
-                for (var index = 0; index <= num1; ++index)
+                var filterFxIdentifier = BuildFilterFxIdentifier();
+                lvMag.BeginUpdate();
+                lvMag.Items.Clear();
+                if (EffectsMapContainsPartial(filterFxIdentifier))
                 {
-                    if (DatabaseAPI.Database.Power[setBonusList[index]].Effects.Length <= 0)
-                        continue;
-                    var powerString = GetPowerString(setBonusList[index]);
-                    if (text != powerString)
-                        continue;
-
-                    string effect;
-                    if (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.HitPoints)
+                    if (EffectsMap.ContainsKey(filterFxIdentifier))
                     {
-                        if (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.Endurance)
+                        lvMag.Items.Add("All");
+                        var mags = EffectsMap[filterFxIdentifier].Keys
+                            .OrderBy(e => Convert.ToSingle(e.TrimEnd('%')))
+                            .ToList();
+                        foreach (var mag in mags)
                         {
-                            effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent):##0}";
-                        }
-                        else
-                        {
-                            effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag):##0}";
+                            lvMag.Items.Add(new ListViewItem(mag));
                         }
                     }
                     else
                     {
-                        effect = $"{Convert.ToDecimal(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag / (double)MidsContext.Archetype.Hitpoints * 100.0):##0}%";
+                        lvMag.Items.Add("All");
+                        var mags = filterFxIdentifier.EffectType == Enums.eEffectType.Enhancement & filterFxIdentifier.ETModifies == Enums.eEffectType.Mez
+                            ? EffectsMap
+                                .Where(e => e.Key.EffectType == filterFxIdentifier.EffectType & e.Key.ETModifies == filterFxIdentifier.ETModifies)
+                                .SelectMany(e => e.Value.Keys)
+                                .Distinct()
+                                .OrderBy(e => Convert.ToSingle(e.TrimEnd('%')))
+                                .ToList()
+                            : EffectsMap
+                                .Where(e => e.Key.EffectType == filterFxIdentifier.EffectType)
+                                .SelectMany(e => e.Value.Keys)
+                                .Distinct()
+                                .OrderBy(e => Convert.ToSingle(e.TrimEnd('%')))
+                                .ToList();
+
+                        foreach (var mag in mags)
+                        {
+                            lvMag.Items.Add(new ListViewItem(mag));
+                        }
                     }
-
-
-                    // var Effect = (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.HitPoints //condition
-                    //         ? DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType != Enums.eEffectType.Endurance 
-                    //             ? Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
-                    //             : Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
-                    //         : Strings.Format((float) (DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag / (double) MidsContext.Archetype.Hitpoints * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")) + "%";
-                    AddEffect(ref List, ref nIDList, effect, setBonusList[index]);
+                }
+                else
+                {
+                    lvMag.Items.Add("None");
                 }
 
-                lvMag.BeginUpdate();
-                lvMag.Items.Clear();
-                lvMag.Items.Add("All");
-                var num2 = List.Length - 1;
-                for (var index = 0; index <= num2; ++index)
-                    lvMag.Items.Add(new ListViewItem(List[index])
-                    {
-                        Tag = nIDList[index]
-                    });
                 if (lvMag.Items.Count > 0)
                     lvMag.Items[0].Selected = true;
                 lvMag.EndUpdate();
@@ -191,65 +480,54 @@ namespace Mids_Reborn.Forms
             {
                 lvSet.BeginUpdate();
                 lvSet.Items.Clear();
-                var List = Array.Empty<string>();
-                var nIDList = Array.Empty<int>();
-                var text = lvBonus.SelectedItems[0].Text;
-                var flag = lvMag.Items[0].Selected;
-                if (!flag)
-                {
-                    if (Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvMag.SelectedItems[0].Tag)) > -1.0)
-                    {
-                        AddEffect(ref List, ref nIDList, DatabaseAPI.Database.Power[Convert.ToInt32(lvMag.SelectedItems[0].Tag)].PowerName, Convert.ToInt32(lvMag.SelectedItems[0].Tag));
-                    }
-                }
-                else
-                {
-                    var num = setBonusList.Length - 1;
-                    for (var index = 0; index <= num; ++index)
-                    {
-                        if (DatabaseAPI.Database.Power[setBonusList[index]].Effects.Length <= 0)
-                            continue;
-                        var powerString = GetPowerString(setBonusList[index]);
-                        if (text == powerString)
-                            AddEffect(ref List, ref nIDList, DatabaseAPI.Database.Power[setBonusList[index]].PowerName,
-                                setBonusList[index]);
-                    }
-                }
 
-                var num1 = DatabaseAPI.Database.EnhancementSets.Count - 1;
-                for (var nIDSet = 0; nIDSet <= num1; ++nIDSet)
+                var mag = lvMag.SelectedItems[0].Text == "All" | lvMag.SelectedItems[0].Text == "None"
+                    ? ""
+                    : lvMag.SelectedItems[0].Text;
+
+                var filterFxIdentifier = BuildFilterFxIdentifier();
+                if (EffectsMapContainsPartial(filterFxIdentifier))
                 {
-                    var num2 = DatabaseAPI.Database.EnhancementSets[nIDSet].Bonus.Length - 1;
-                    for (var BonusID = 0; BonusID <= num2; ++BonusID)
+                    var sets = new List<KeyValuePair<int, int>>();
+                    if (mag == "")
                     {
-                        var num3 = DatabaseAPI.Database.EnhancementSets[nIDSet].Bonus[BonusID].Index.Length - 1;
-                        for (var index1 = 0; index1 <= num3; ++index1)
-                        {
-                            var num4 = nIDList.Length - 1;
-                            for (var index2 = 0; index2 <= num4; ++index2)
-                                if (DatabaseAPI.Database.EnhancementSets[nIDSet].Bonus[BonusID].Index[index1] ==
-                                    nIDList[index2])
-                                    AddSetString(nIDSet, BonusID);
-                        }
+                        sets = EffectsMap
+                            .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
+                                        (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
+                                        (e.Key.ETModifies == filterFxIdentifier.ETModifies | (filterFxIdentifier.ETModifies == Enums.eEffectType.None &
+                                          filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement)) &
+                                        (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
+                                        (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None))
+                            .Select(e => e.Value
+                                .SelectMany(k => k.Value))
+                            .SelectMany(e => e)
+                            .ToList();
+                    }
+                    else
+                    {
+                        sets = EffectsMap
+                            .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
+                                        (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
+                                        (e.Key.ETModifies == filterFxIdentifier.ETModifies | (filterFxIdentifier.ETModifies == Enums.eEffectType.None &
+                                          filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement)) &
+                                        (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
+                                        (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None) &
+                                        e.Value.Keys.Contains(mag))
+                            .Select(e => e.Value
+                                .Where(k => k.Key == mag)
+                                .SelectMany(k => k.Value))
+                            .SelectMany(e => e)
+                            .ToList();
                     }
 
-                    var num5 = DatabaseAPI.Database.EnhancementSets[nIDSet].SpecialBonus.Length - 1;
-                    for (var BonusID = 0; BonusID <= num5; ++BonusID)
+                    foreach (var set in sets)
                     {
-                        var num3 = DatabaseAPI.Database.EnhancementSets[nIDSet].SpecialBonus[BonusID].Index.Length - 1;
-                        for (var index1 = 0; index1 <= num3; ++index1)
-                        {
-                            var num4 = nIDList.Length - 1;
-                            for (var index2 = 0; index2 <= num4; ++index2)
-                                if (DatabaseAPI.Database.EnhancementSets[nIDSet].SpecialBonus[BonusID].Index[index1] ==
-                                    nIDList[index2])
-                                    AddSetString(nIDSet, BonusID);
-                        }
+                        AddEnhancementSet(set.Key, set.Value);
                     }
                 }
 
                 if (lvSet.Items.Count > 0)
-                    lvSet.Items[0].Selected = true;
+                        lvSet.Items[0].Selected = true;
                 lvSet.EndUpdate();
             }
         }
@@ -268,20 +546,6 @@ namespace Mids_Reborn.Forms
             ib.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
-        }
-
-        private void frmSetFind_Load(object sender, EventArgs e)
-        {
-            setBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus");
-            BackColor = myParent.BackColor;
-            SetImageButtonStyle(ibClose);
-            SetImageButtonStyle(ibTopmost);
-            SetInfo.SetPopup(new PopUp.PopupData());
-            FillImageList();
-            FillEffectList();
-            FillArchetypesList();
-
-            cbArchetype.SelectedIndex = 0;
         }
 
         private void FillArchetypesList()
@@ -308,47 +572,42 @@ namespace Mids_Reborn.Forms
         {
             var str1 = "";
             var returnString = "";
-            var returnMask = new int[0];
+            var returnMask = Array.Empty<int>();
             DatabaseAPI.Database.Power[nIDPower]
                 .GetEffectStringGrouped(0, ref returnString, ref returnMask, true, true, true);
-            string str2;
             if (returnString != "")
             {
-                str2 = returnString;
+                return returnString;
             }
-            else
-            {
-                var num1 = DatabaseAPI.Database.Power[nIDPower].Effects.Length;
-                for (var index1 = 0; index1 < num1; index1++)
-                {
-                    var flag = false;
-                    var num2 = returnMask.Length;
-                    for (var index2 = 0; index2 < num2; index2++)
-                        if (index1 == returnMask[index2])
-                            flag = true;
 
-                    if (flag)
-                        continue;
-                    if (str1 != "")
-                        str1 += ", ";
-                    var str3 = DatabaseAPI.Database.Power[nIDPower].Effects[index1].BuildEffectString(true, "", true).Trim();
-                    if (str3.Contains("Res("))
-                        str3 = str3.Replace("Res(", "Resistance(");
-                    if (str3.Contains("Def("))
-                        str3 = str3.Replace("Def(", "Defense(");
-                    if (str3.Contains("EndRec"))
-                        str3 = str3.Replace("EndRec", "Recovery");
-                    if (str3.Contains("Endurance"))
-                        str3 = str3.Replace("Endurance", "Max End");
-                    else if (str3.Contains("End") & !str3.Contains("Max End"))
-                        str3 = str3.Replace("End", "Max End");
-                    str1 += str3;
+            for (var index1 = 0; index1 < DatabaseAPI.Database.Power[nIDPower].Effects.Length; index1++)
+            {
+                var flag = false;
+                foreach (var m in returnMask)
+                {
+                    if (index1 == m)
+                        flag = true;
                 }
 
-                str2 = str1;
+                if (flag)
+                    continue;
+                if (str1 != "")
+                    str1 += ", ";
+                var str3 = DatabaseAPI.Database.Power[nIDPower].Effects[index1].BuildEffectString(true, "", true).Trim();
+                if (str3.Contains("Res("))
+                    str3 = str3.Replace("Res(", "Resistance(");
+                if (str3.Contains("Def("))
+                    str3 = str3.Replace("Def(", "Defense(");
+                if (str3.Contains("EndRec"))
+                    str3 = str3.Replace("EndRec", "Recovery");
+                if (str3.Contains("Endurance"))
+                    str3 = str3.Replace("Endurance", "Max End");
+                else if (str3.Contains("End") & !str3.Contains("Max End"))
+                    str3 = str3.Replace("End", "Max End");
+                str1 += str3;
             }
 
-            return str2;
+            return str1;
         }
 
         private void ibClose_ButtonClicked()
@@ -364,8 +623,112 @@ namespace Mids_Reborn.Forms
             BringToFront();
         }
 
+        private void UpdateEffectSubAttribList(out bool hasSubs)
+        {
+            lvVector.BeginUpdate();
+            lvVector.Items.Clear();
+            var vectorsList = new List<string>();
+            var disallowedFxStrings = DisallowedEffectTypes
+                .Select(t => t.ToString())
+                .ToList();
+            var hasSubEffectsFxStrings = HasSubsEffectTypes
+                .Select(t => t.ToString())
+                .ToList();
+            var effectType = Enums.eEffectType.None;
+
+            if (lvBonus.SelectedItems.Count > 0)
+            {
+                Enum.TryParse(lvBonus.SelectedItems[0].Text, out effectType);
+            }
+
+            switch (effectType)
+            {
+                case Enums.eEffectType.Damage:
+                case Enums.eEffectType.DamageBuff:
+                case Enums.eEffectType.Defense:
+                case Enums.eEffectType.Resistance:
+                case Enums.eEffectType.Elusivity:
+                    vectorsList = Enum.GetNames(typeof(Enums.eDamage)).ToList();
+                    lvVector.Columns[0].Text = "Damage Type / Vector";
+
+                    break;
+
+                case Enums.eEffectType.Mez:
+                case Enums.eEffectType.MezResist:
+                    vectorsList = Enum.GetNames(typeof(Enums.eMez)).ToList();
+                    lvVector.Columns[0].Text = "Mez Type";
+
+                    break;
+
+                case Enums.eEffectType.ResEffect:
+                    
+                    vectorsList = Enum.GetNames(typeof(Enums.eEffectType))
+                        .Where(v => !disallowedFxStrings.Contains(v) & !hasSubEffectsFxStrings.Contains(v))
+                        .ToList();
+                    lvVector.Columns[0].Text = "Effect Type";
+
+                    break;
+
+                case Enums.eEffectType.Enhancement:
+                    vectorsList = Enum.GetNames(typeof(Enums.eEffectType))
+                        .Where(v => !disallowedFxStrings.Contains(v) & !hasSubEffectsFxStrings.Contains(v))
+                        .ToList();
+                    lvVector.Columns[0].Text = "Effect Type";
+
+                    break;
+
+                default:
+                    lvVector.Columns[0].Text = "";
+                    
+                    break;
+            }
+
+            if (vectorsList.Count > 0)
+            {
+                foreach (var v in vectorsList)
+                {
+                    // Coalesce Mezzes so there is no need for a subsub attribute
+                    if (v == "Mez" & (effectType == Enums.eEffectType.ResEffect |
+                                      effectType == Enums.eEffectType.Enhancement))
+                    {
+                        var subVectors = Enum.GetNames(typeof(Enums.eMez)).ToList();
+                        foreach (var sv in subVectors)
+                        {
+                            lvVector.Items.Add($"Mez({sv})");
+                        }
+
+                    }
+                    else
+                    {
+                        lvVector.Items.Add(v.Replace("None", "None / All"));
+                    }
+                }
+
+                lvVector.Enabled = true;
+                lvVector.Items[0].Selected = true;
+                lvVector.Items[0].EnsureVisible();
+                hasSubs = true;
+            }
+            else
+            {
+                lvVector.Enabled = false;
+                hasSubs = false;
+            }
+
+            lvVector.EndUpdate();
+        }
+
         [DebuggerStepThrough]
         private void lvBonus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateEffectSubAttribList(out var hasSubs);
+            if (!hasSubs)
+            {
+                FillMagList();
+            }
+        }
+
+        private void lvVector_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillMagList();
         }

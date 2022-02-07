@@ -61,16 +61,19 @@ namespace mrbBase
         public const int VillainAccolades = 3258;
         public const int TempPowers = 3259;
 
-        public const string MainDbName = "Mids' Hero Designer Database MK II";
+        public const string MainDbName = "Mids Reborn Powers Database";
+        private const string RecipeName = "Mids Reborn Recipe Database";
+        private const string SalvageName = "Mids Reborn Salvage Database";
+        private const string EnhancementDbName = "Mids Reborn Enhancement Database";
 
-        private const string RecipeName = "Mids' Hero Designer Recipe Database";
-
-        private const string SalvageName = "Mids' Hero Designer Salvage Database";
-
-        private const string EnhancementDbName = "Mids' Hero Designer Enhancement Database";
         private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
+
+        private static string[] WinterEventEnhancements = Array.Empty<string>();
+        private static string[] MovieEnhUIDList = Array.Empty<string>();
+        private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
+        private static string[] ATOSetsEnhUIDList = Array.Empty<string>();
 
         public static IDatabase Database
             => Base.Data_Classes.Database.Instance;
@@ -597,6 +600,11 @@ namespace mrbBase
             return powersetList.ToArray();
         }
 
+        // public static List<IPowerset> GetPowersetsByGroup(string group)
+        // {
+        //     return new List<IPowerset>();
+        // }
+
         public static int ToDisplayIndex(IPowerset iPowerset, IPowerset[] iIndexes)
         {
             for (var index = 0; index <= iIndexes.Length - 1; ++index)
@@ -740,7 +748,9 @@ namespace mrbBase
 
         private static string[] GetPurpleSetsEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
+            if (PurpleSetsEnhUIDList.Length != 0) return PurpleSetsEnhUIDList;
+            
+            var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 e.RecipeIDX > -1 &&
                 Database.Recipes[e.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare &&
@@ -757,7 +767,11 @@ namespace mrbBase
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Sentinel &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Stalker &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Tanker
-            ).Select(e => e.UID).ToArray();
+            );
+                
+            PurpleSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
+
+            return PurpleSetsEnhUIDList;
         }
 
         public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
@@ -765,11 +779,16 @@ namespace mrbBase
             return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
         }
 
-        
+        public static List<string>? GetEnhancementsInSet(int niDSet)
+        {
+            return niDSet <= -1 ? null : Database.EnhancementSets[niDSet].Enhancements.Select(enh => Database.Enhancements[enh].UID).ToList();
+        }
 
         private static string[] GetATOSetsEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
+            if (ATOSetsEnhUIDList.Length != 0) return ATOSetsEnhUIDList;
+
+            var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 (
                     Database.EnhancementSets[e.nIDSet].SetType is Enums.eSetType.Arachnos
@@ -786,28 +805,40 @@ namespace mrbBase
                         or Enums.eSetType.Stalker
                         or Enums.eSetType.Tanker
                 )
-            ).Select(e => e.UID).ToArray();
+            );
+
+            ATOSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
+
+            return ATOSetsEnhUIDList;
         }
 
         private static string[] GetWinterEventEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
-                e.nIDSet > -1 &&
-                (
-                    e.UID.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Blistering_Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Frozen_Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
-                    e.UID.IndexOf("Winters_Bite", StringComparison.OrdinalIgnoreCase) > -1
-                )
-            ).Select(e => e.UID).ToArray();
+            if (WinterEventEnhancements.Length != 0) return WinterEventEnhancements;
+
+            var enhSets = Database.EnhancementSets.Where(e =>
+                e.Uid.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Blistering_Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Frozen_Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.Uid.IndexOf("Winters_Bite", StringComparison.OrdinalIgnoreCase) > -1
+            );
+
+            WinterEventEnhancements = (from set in enhSets from e in set.Enhancements select Database.Enhancements[e].UID).ToArray();
+
+            return WinterEventEnhancements;
         }
 
         private static string[] GetMovieEnhUIDList()
         {
-            return Database.Enhancements.Where(e =>
-                e.nIDSet > -1 && e.UID.IndexOf("Overwhelming_Force", StringComparison.OrdinalIgnoreCase) > -1
-            ).Select(e => e.UID).ToArray();
+            if (MovieEnhUIDList.Length != 0) return MovieEnhUIDList;
+
+            var enhSets = Database.EnhancementSets.Where(e =>
+                e.Uid.IndexOf("Overwhelming_Force", StringComparison.OrdinalIgnoreCase) > -1);
+
+            MovieEnhUIDList = (from set in enhSets from e in set.Enhancements select Database.Enhancements[e].UID).ToArray();
+
+            return MovieEnhUIDList;
         }
 
         public static string GetEnhancementBaseUIDName(string iName)
@@ -842,22 +873,12 @@ namespace mrbBase
                 .Replace("Mutation_", "Magic_");
         }
 
-        public static bool EnhHasCatalyst(string iName)
+        public static bool EnhHasCatalyst(string uid)
         {
-            var purpleSetsEnh = GetPurpleSetsEnhUIDList();
-            var ATOSetsEnh = GetATOSetsEnhUIDList();
-            var WinterEventEnh = GetWinterEventEnhUIDList();
-            var MovieEnh = GetMovieEnhUIDList();
+            if (string.IsNullOrEmpty(uid)) return false;
+            var setName = Regex.Replace(uid, @"(Attuned_|Superior_|Crafted_)", string.Empty);
 
-            // Purple IOs
-            if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
-                return iName.IndexOf("Superior_Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
-
-            if (!ATOSetsEnh.Any(e => e.Contains(iName)) && !WinterEventEnh.Any(e => e.Contains(iName)) &&
-                !MovieEnh.Any(e => e.Contains(iName)))
-                return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
-
-            return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+            return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 3))) > 1;
         }
 
         public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
@@ -930,6 +951,12 @@ namespace mrbBase
             return archetype.Ancillary
                 .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
                 .ToList();
+        }
+
+        public static int GetEnhancmentByBoostName(string iName)
+        {
+            var enhUid = Regex.Replace(iName, ".*(.*)\\.", "");
+            return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(enhUid));
         }
 
         public static int GetEnhancementByUIDName(string iName)
@@ -1370,7 +1397,7 @@ namespace mrbBase
             {
                 UpdateDbModified();
                 writer.Write(MainDbName);
-                writer.Write(Database.Version);
+                writer.Write(Database.Version.ToString());
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
@@ -1426,10 +1453,9 @@ namespace mrbBase
 
         private static void UpdateDbModified()
         {
+            var revision = Database.Version.Build + 1;
             Database.Date = DateTime.Now;
-            var dateSplit = Database.Date.ToString("MM/dd/yyyy").Split('/');
-            var verString = $"{dateSplit[2]}.{dateSplit[0]}{dateSplit[1]}";
-            Database.Version = double.Parse(verString);
+            Database.Version = Version.Parse($"{Database.Date.Year}.{Database.Date.Month:00}.{revision}");
         }
 
         private static void saveEnts()
@@ -1464,12 +1490,12 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Database MK II")
+                if (reader.ReadString() != "Mids Reborn Powers Database")
                 {
                     MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
                 }
 
-                Database.Version = reader.ReadDouble();
+                Database.Version = Version.Parse(reader.ReadString());
                 var year = reader.ReadInt32();
                 if (year > 0)
                 {
@@ -1603,46 +1629,39 @@ namespace mrbBase
             }
         }
 
-        private static double GetDatabaseVersion(string fp)
+        private static Version GetDatabaseVersion(string fp)
         {
-            var fName = fp;
-            double num1 = -1;
-            double num2;
-            if (!File.Exists(fName))
+            var version = new Version();
+            if (!File.Exists(fp))
             {
-                num2 = num1;
+                throw new FileNotFoundException(@"Database file missing, please re-download the application.");
             }
             else
             {
-                using (var fileStream = new FileStream(fName, FileMode.Open, FileAccess.Read))
+                using var fileStream = new FileStream(fp, FileMode.Open, FileAccess.Read);
+                using (var binaryReader = new BinaryReader(fileStream))
                 {
-                    using (var binaryReader = new BinaryReader(fileStream))
+                    try
                     {
-                        try
+                        if (binaryReader.ReadString() != "Mids Reborn Powers Database")
                         {
-                            if (binaryReader.ReadString() != "Mids' Hero Designer Database MK II")
-                            {
-                                MessageBox.Show("Expected MHD header, got something else!");
-                            }
-
-                            num1 = binaryReader.ReadDouble();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                            num1 = -1f;
+                            MessageBox.Show(@"Expected MHD header, got something else!");
                         }
 
-                        binaryReader.Close();
+                        version = Version.Parse(binaryReader.ReadString());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                     }
 
-                    fileStream.Close();
+                    binaryReader.Close();
                 }
 
-                num2 = num1;
+                fileStream.Close();
             }
 
-            return num2;
+            return version;
         }
 
         public static bool LoadEffectIdsDatabase(string iPath = "")
@@ -1741,16 +1760,17 @@ namespace mrbBase
 
         public static bool LoadLevelsDatabase(string iPath = "")
         {
-            var path = string.Empty;
+            string path = string.Empty;
             switch (MidsContext.Config.BuildMode)
             {
-                case Enums.dmModes.Normal:
+                case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
                     path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileNLevels) : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
                     break;
                 case Enums.dmModes.Respec:
                     path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileRLevels) : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
                     break;
             }
+
             Database.Levels = new LevelMap[0];
             StreamReader iStream;
             try
@@ -1970,7 +1990,7 @@ namespace mrbBase
                 return;
             }
 
-            if (reader.ReadString() == "Mids' Hero Designer Recipe Database")
+            if (reader.ReadString() == "Mids Reborn Recipe Database")
             {
                 Database.RecipeSource1 = reader.ReadString();
                 Database.RecipeSource2 = reader.ReadString();
@@ -2004,7 +2024,7 @@ namespace mrbBase
             }
             else
             {
-                MessageBox.Show("Recipe Database header wasn't found, file may be corrupt!");
+                MessageBox.Show(@"Recipe Database header wasn't found, file may be corrupt!");
                 reader.Close();
                 fileStream.Close();
             }
@@ -2097,7 +2117,7 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Salvage Database")
+                if (reader.ReadString() != "Mids Reborn Salvage Database")
                 {
                     MessageBox.Show("Salvage Database header wasn't found, file may be corrupt!");
                     reader.Close();
@@ -2303,7 +2323,7 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids' Hero Designer Enhancement Database")
+                if (reader.ReadString() != "Mids Reborn Enhancement Database")
                 {
                     MessageBox.Show("Enhancement Database header wasn't found, file may be corrupt!", "Meep!");
                     reader.Close();

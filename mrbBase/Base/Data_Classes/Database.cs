@@ -7,7 +7,9 @@ namespace mrbBase.Base.Data_Classes
     public sealed class Database : IDatabase
     {
         public static Database Instance { get; } = new Database();
-        public double Version { get; set; }
+        public Version Version { get; set; }
+
+        public Version DbVersion { get; set; }
 
         public int Issue { get; set; }
 

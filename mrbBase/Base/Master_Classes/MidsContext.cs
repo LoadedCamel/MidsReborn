@@ -7,21 +7,23 @@ namespace mrbBase.Base.Master_Classes
     {
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
-        private const int AppMinorVersion = 1;
-        private const int AppBuildVersion = 2;
-        private const int AppRevisionVersion = 5;
-        public const string AppAssemblyVersion = "3.1.2.5";
-        public const string AppVersionStatus = "";
+        private const int AppMinorVersion = 2;
+        private const int AppBuildVersion = 17;
+        private const int AppRevisionVersion = 71;
 
+        public const string AssemblyVersion = "3.2.17";
+        public const string AssemblyFileVersion = "3.2.17.71";
+        public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
+
+        public const string AppVersionStatus = "";
         public const string Title = "Mids' Reborn";
-        public const string AssemblyName = "MidsReborn.exe";
-        public static int MathLevelBase = 49;
-        public static int MathLevelExemp = -1;
+
+        public const int MathLevelBase = 49;
+        public const int MathLevelExemp = -1;
 
         public static bool EnhCheckMode = false;
 
-        public static readonly Version AppVersion =
-            new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
+        //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public static Archetype Archetype;
         public static Character Character;
@@ -30,15 +32,6 @@ namespace mrbBase.Base.Master_Classes
         public static ConfigData Config => ConfigData.Current;
 
         public static ConfigDataSpecial ConfigSp => ConfigDataSpecial.Current;
-
-        public static void AssertVersioning()
-        {
-            if (AppAssemblyVersion != $"{AppMajorVersion}.{AppMinorVersion}.{AppBuildVersion}.{AppRevisionVersion}")
-                throw new InvalidOperationException("Program assembly version is not internally consistent");
-            if (AppVersion.CompareTo(new Version(AppAssemblyVersion)) != 0)
-                throw new InvalidOperationException(
-                    "Program app version is not internally consistent, failing startup");
-        }
 
         public static string GetCryptedValue(string type, string name)
         {

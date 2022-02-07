@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
+using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -33,12 +34,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private frmBusy BusyForm { get; set; }
         private frmDBDiffing _diffFrm;
 
-        private bool Updating;
+        private bool _updating;
 
         public frmPowerBrowser()
         {
             Load += frmPowerBrowser_Load;
-            Updating = false;
+            _updating = false;
             InitializeComponent();
             Name = nameof(frmPowerBrowser);
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
@@ -55,100 +56,135 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Hide();
         }
 
-        private void btnClassAdd_Click(object sender, EventArgs e)
-
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
         {
-            var iAT = new Archetype
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
+        }
+
+        private void btnClassAdd_Click(object sender, EventArgs e)
+        {
+            switch (cbFilter.SelectedIndex)
             {
-                ClassName = "Class_New",
-                DisplayName = "New Class"
-            };
-            using var frmEditArchetype = new frmEditArchetype(ref iAT);
-            var num = (int)frmEditArchetype.ShowDialog();
-            if (frmEditArchetype.DialogResult != DialogResult.OK)
-                return;
-            var database = DatabaseAPI.Database;
-            var archetypeArray = Array.Empty<Archetype>();
-            Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
-            //var archetypeArray = (Archetype[])Utils.CopyArray(database.Classes, new Archetype[DatabaseAPI.Database.Classes.Length + 1]);
-            database.Classes = archetypeArray;
-            DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] =
-                new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                case 0:
+                {
+                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                    if (inputResult.OK)
+                    {
+                        var iPsg = new PowersetGroup(inputResult.Text);
+                        DatabaseAPI.Database.PowersetGroups.Add(inputResult.Text, iPsg);
+                    }
+
+                    break;
+                }
+                case 1:
+                {
+                    var iAt = new Archetype
+                    {
+                        ClassName = "Class_New",
+                        DisplayName = "New Class"
+                    };
+                    using var frmEditArchetype = new frmEditArchetype(ref iAt);
+                    var num = (int)frmEditArchetype.ShowDialog();
+                    if (frmEditArchetype.DialogResult != DialogResult.OK)
+                        return;
+                    var database = DatabaseAPI.Database;
+                    var archetypeArray = Array.Empty<Archetype>();
+                    Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
+                    database.Classes = archetypeArray;
+                    DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                    Sort(0);
+                    break;
+                }
+            }
             UpdateLists(lvGroup.Items.Count - 1);
         }
 
         private void btnClassClone_Click(object sender, EventArgs e)
-
         {
             if (lvGroup.SelectedIndices.Count <= 0)
                 return;
             var index = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
             if (index < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                var iAT = new Archetype(DatabaseAPI.Database.Classes[index]);
-                iAT.ClassName += "_Clone";
-                iAT.DisplayName += " (Clone)";
-                using var frmEditArchetype = new frmEditArchetype(ref iAT);
+                var iAt = new Archetype(DatabaseAPI.Database.Classes[index]);
+                iAt.ClassName += "_Clone";
+                iAt.DisplayName += " (Clone)";
+                using var frmEditArchetype = new frmEditArchetype(ref iAt);
                 var num2 = (int)frmEditArchetype.ShowDialog();
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
                 var database = DatabaseAPI.Database;
                 var archetypeArray = Array.Empty<Archetype>();
                 Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
-                //var archetypeArray = (Archetype[])Utils.CopyArray(database.Classes, new Archetype[DatabaseAPI.Database.Classes.Length + 1]);
                 database.Classes = archetypeArray;
-                DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] =
-                    new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
                 UpdateLists(lvGroup.Items.Count - 1);
+                Sort(0);
             }
         }
 
         private void btnClassDelete_Click(object sender, EventArgs e)
         {
-            if (lvGroup.SelectedIndices.Count <= 0)
-                return;
-            var index1 = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
-            if (index1 < 0)
+            switch (cbFilter.SelectedIndex)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else if (MessageBox.Show($"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                var archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
-                var num2 = index1;
-                var index2 = 0;
-                var num3 = DatabaseAPI.Database.Classes.Length - 1;
-                for (var index3 = 0; index3 <= num3; ++index3)
+                case 0:
                 {
-                    if (index3 == num2)
-                        continue;
-                    archetypeArray[index2] = new Archetype(DatabaseAPI.Database.Classes[index3]);
-                    ++index2;
+                    if (lvGroup.SelectedIndices.Count <= 0)
+                        return;
+                    var selectedGroup = lvGroup.SelectedItems[0].Text;
+                    DatabaseAPI.Database.PowersetGroups.Remove(selectedGroup);
+                    UpdateLists(lvGroup.Items.Count - 1);
+                    break;
                 }
-
-                DatabaseAPI.Database.Classes = new Archetype[DatabaseAPI.Database.Classes.Length - 2 + 1];
-                var num4 = DatabaseAPI.Database.Classes.Length - 1;
-                for (var index3 = 0; index3 <= num4; ++index3)
-                    DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
-                var Group = 0;
-                if (lvGroup.Items.Count > 0)
+                case 1:
                 {
-                    if (lvGroup.Items.Count > num2)
-                        Group = num2;
-                    else if (lvGroup.Items.Count == num2)
-                        Group = num2 - 1;
-                }
+                    if (lvGroup.SelectedIndices.Count <= 0)
+                        return;
+                    var index1 = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
+                    if (index1 < 0)
+                    {
+                        MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                    else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        var archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
+                        var index2 = 0;
+                        var num3 = DatabaseAPI.Database.Classes.Length - 1;
+                        for (var index3 = 0; index3 <= num3; ++index3)
+                        {
+                            if (index3 == index1)
+                                continue;
+                            archetypeArray[index2] = new Archetype(DatabaseAPI.Database.Classes[index3]);
+                            ++index2;
+                        }
 
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                RefreshLists(Group, 0, 0);
-                BusyHide();
+                        DatabaseAPI.Database.Classes = new Archetype[DatabaseAPI.Database.Classes.Length - 2 + 1];
+                        var num4 = DatabaseAPI.Database.Classes.Length - 1;
+                        for (var index3 = 0; index3 <= num4; ++index3)
+                            DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
+                        var group = 0;
+                        if (lvGroup.Items.Count > 0)
+                        {
+                            if (lvGroup.Items.Count > index1)
+                                group = index1;
+                            else if (lvGroup.Items.Count == index1)
+                                group = index1 - 1;
+                        }
+
+                        BusyMsg("Re-Indexing...");
+                        DatabaseAPI.MatchAllIDs();
+                        RefreshLists(group, 0, 0);
+                        BusyHide();
+                    }
+
+                    break;
+                }
             }
         }
 
@@ -179,8 +215,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
             if (index < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -194,10 +229,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void btnClassSort_Click(object sender, EventArgs e)
+        private void Sort(int type)
         {
-            BusyMsg("Discarding Changes...");
-            Array.Sort(DatabaseAPI.Database.Classes);
+            BusyMsg("Re-Indexing...");
+            switch (type)
+            {
+                case 0:
+                {
+                    Array.Sort(DatabaseAPI.Database.Classes);
+                    break;
+                }
+                case 1:
+                {
+                    Array.Sort(DatabaseAPI.Database.Powersets);
+                    break;
+                }
+                case 2:
+                {
+                    Array.Sort(DatabaseAPI.Database.Power);
+                        break;
+                }
+            }
             DatabaseAPI.MatchAllIDs();
             UpdateLists();
             BusyHide();
@@ -242,13 +294,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             //     DatabaseAPI.Database.Classes[index].Column = index;
             // }
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
+            frmMain.MainInstance.UpdateTitle();
             BusyHide();
-            DialogResult = DialogResult.OK;
-            Hide();
-        }
-
-        private void diffForm_Closed(object sender, EventArgs e)
-        {
             DialogResult = DialogResult.OK;
             Hide();
         }
@@ -280,10 +327,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var powerList = database.Power.ToList();
             powerList.Add(new Power(frmEditPower.myPower) { IsNew = true });
             database.Power = powerList.ToArray();
-            // var powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
-            // database.Power = powerArray;
-            // DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = new Power(frmEditPower.myPower) { IsNew = true };
             UpdateLists();
+            Sort(2);
         }
 
         private void btnPowerClone_Click(object sender, EventArgs e)
@@ -291,22 +336,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (index < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                // IPower newPower = new Power(DatabaseAPI.Database.Power[index]);
-                // //Get the StaticIndex from the last power and add 1
-                // var powerList = new List<IPower>(DatabaseAPI.Database.Power);
-                // //var newStaticIndex = powerList.Max(x => x.StaticIndex) + 1;
-                // newPower.StaticIndex = powerList.Last().StaticIndex++; //newStaticIndex;
-                // newPower.FullName += "_Clone";
-                // newPower.DisplayName += " (Clone)";
-                // newPower.PowerName += "_Clone";
-                // newPower.IsNew = true;
-                // newPower.PowerIndex = DatabaseAPI.Database.Power.Length;
-
                 var database = DatabaseAPI.Database;
                 var powerList = new List<IPower>(DatabaseAPI.Database.Power);
                 var newPower = powerList.First(x => x.FullName == database.Power[index].FullName).Clone();
@@ -317,20 +350,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 newPower.IsNew = true;
                 newPower.PowerIndex = powerList.Count - 1;
 
-                //IPower newPower = new Power(DatabaseAPI.Database.Power[index]);
-
                 using var frmEditPower = new frmEditPower(newPower);
                 if (frmEditPower.ShowDialog() != DialogResult.OK) return;
                 newPower = frmEditPower.myPower;
                 powerList.Add(newPower);
                 DatabaseAPI.Database.Power = powerList.ToArray();
-                // var powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
-                // database.Power = powerArray;
-                // DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
-
-
-
-                //Add the power to the power set otherwise we'll get issues later when upting the UI.
+                
+                //Add the power to the power set otherwise we'll get issues later when updating the UI.
                 if (newPower.PowerSetID > -1)
                 {
                     var powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
@@ -340,27 +366,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     {
                         powerSet.Powers = psPowerList.ToArray();
                     }
-
-                    // powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
-                    //     powerSet.Powers = powerArray;
-                    //     powerArray[powerSet.Powers.Length - 1] = newPower;
-                    // }
                 }
 
                 UpdateLists(lvGroup.SelectedIndices[0], lvSet.SelectedIndices[0]);
+                Sort(2);
             }
         }
 
         private void btnPowerDelete_Click(object sender, EventArgs e)
         {
-            if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var powerArray = new IPower[DatabaseAPI.Database.Power.Length - 1 + 1];
             var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (num1 < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -378,16 +399,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var num4 = DatabaseAPI.Database.Power.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
                     DatabaseAPI.Database.Power[index2] = new Power(powerArray[index2]);
-                var SelIDX = -1;
+                var selIdx = -1;
                 if (lvPower.Items.Count > 0)
                 {
                     if (lvPower.Items.Count > num1)
-                        SelIDX = num1;
+                        selIdx = num1;
                     else if (lvPower.Items.Count == num1)
-                        SelIDX = num1 - 1;
+                        selIdx = num1 - 1;
                 }
 
-                List_Powers(SelIDX);
+                List_Powers(selIdx);
+                Sort(2);
             }
         }
 
@@ -398,13 +420,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvPower.SelectedIndices[0];
             if (selectedIndex >= lvPower.Items.Count - 1)
                 return;
-            var SelIDX = lvPower.SelectedIndices[0] + 1;
+            var selIdx = lvPower.SelectedIndices[0] + 1;
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[SelIDX].SubItems[3].Text);
+            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
             if ((index1 < 0) | (index2 < 0))
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -413,7 +434,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
                 DatabaseAPI.MatchAllIDs();
-                List_Powers(SelIDX);
+                List_Powers(selIdx);
                 BusyHide();
             }
         }
@@ -426,8 +447,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (index1 < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -465,15 +485,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void btnPowerSort_Click(object sender, EventArgs e)
-        {
-            BusyMsg("Re-Indexing...");
-            Array.Sort(DatabaseAPI.Database.Power);
-            DatabaseAPI.MatchAllIDs();
-            UpdateLists();
-            BusyHide();
-        }
-
         private void btnPowerUp_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedIndices.Count <= 0)
@@ -481,13 +492,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvPower.SelectedIndices[0];
             if (selectedIndex < 1)
                 return;
-            var SelIDX = lvPower.SelectedIndices[0] - 1;
+            var selIdx = lvPower.SelectedIndices[0] - 1;
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[SelIDX].SubItems[3].Text);
+            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
             if ((index1 < 0) | (index2 < 0))
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -496,7 +506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
                 DatabaseAPI.MatchAllIDs();
-                List_Powers(SelIDX);
+                List_Powers(selIdx);
                 BusyHide();
             }
         }
@@ -508,13 +518,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvSet.SelectedIndices[0];
             if (selectedIndex >= lvSet.Items.Count - 1)
                 return;
-            var SelIDX = lvSet.SelectedIndices[0] + 1;
+            var selIdx = lvSet.SelectedIndices[0] + 1;
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[SelIDX].SubItems[3].Text);
+            var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selIdx].SubItems[3].Text);
             if ((index1 < 0) | (index2 < 0))
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -523,7 +532,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
                 DatabaseAPI.MatchAllIDs();
-                List_Sets(SelIDX);
+                List_Sets(selIdx);
                 BusyHide();
             }
         }
@@ -536,13 +545,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvSet.SelectedIndices[0];
             if (selectedIndex < 1)
                 return;
-            var SelIDX = lvSet.SelectedIndices[0] - 1;
+            var selIdx = lvSet.SelectedIndices[0] - 1;
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[SelIDX].SubItems[3].Text);
+            var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selIdx].SubItems[3].Text);
             if ((index1 < 0) | (index2 < 0))
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -551,7 +559,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
                 DatabaseAPI.MatchAllIDs();
-                List_Sets(SelIDX);
+                List_Sets(selIdx);
                 BusyHide();
             }
         }
@@ -578,13 +586,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmEditPowerset.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            // var powersetArray = (IPowerset[])Utils.CopyArray(database.Powersets, new IPowerset[DatabaseAPI.Database.Powersets.Length + 1]);
-            // database.Powersets = powersetArray;
             var psList = database.Powersets.ToList();
             psList.Add(new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = psList.Count + 1 });
             DatabaseAPI.Database.Powersets = psList.ToArray();
-            //DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Powersets.Length - 1] = new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = DatabaseAPI.Database.Powersets.Length - 1 };
             UpdateLists();
+            Sort(1);
         }
 
         private void btnSetDelete_Click(object sender, EventArgs e)
@@ -594,8 +600,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.SelectedItems[0].SubItems[3].Text);
             if (index1 < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -603,9 +608,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (DatabaseAPI.Database.Powersets[index1].Powers.Length > 0)
                     str = DatabaseAPI.Database.Powersets[index1].FullName +
                           " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
-                if (MessageBox.Show(
-                    $"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?",
-                    "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
                 var powersetArray = new IPowerset[DatabaseAPI.Database.Powersets.Length - 1 + 1];
                 var index2 = 0;
@@ -622,18 +625,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var num3 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num3; ++index3)
                     DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
-                var Powerset = -1;
+                var powerset = -1;
                 if (lvSet.Items.Count > 0)
                 {
                     if (lvSet.Items.Count > index1)
-                        Powerset = index1;
+                        powerset = index1;
                     else if (lvSet.Items.Count == index1)
-                        Powerset = index1 - 1;
+                        powerset = index1 - 1;
                 }
 
                 BusyMsg("Re-Indexing...");
                 DatabaseAPI.MatchAllIDs();
-                RefreshLists(-1, Powerset);
+                RefreshLists(-1, powerset);
                 BusyHide();
             }
         }
@@ -645,8 +648,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var Powerset = DatabaseAPI.NidFromUidPowerset(lvSet.SelectedItems[0].SubItems[3].Text);
             if (Powerset < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -663,16 +665,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 RefreshLists(-1, Powerset);
                 BusyHide();
             }
-        }
-
-        private void btnSetSort_Click(object sender, EventArgs e)
-
-        {
-            BusyMsg("Re-Indexing...");
-            Array.Sort(DatabaseAPI.Database.Powersets);
-            DatabaseAPI.MatchAllIDs();
-            UpdateLists();
-            BusyHide();
         }
 
         private void BuildATImageList()
@@ -791,25 +783,59 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
 
         {
-            if (Updating)
+            if (_updating)
                 return;
+            var buttons = new List<Button>
+            {
+                btnClassClone,
+                btnClassDown,
+                btnClassEdit,
+                btnClassUp
+            };
+            switch (cbFilter.SelectedIndex)
+            {
+                case 0:
+                {
+                    foreach (Button btn in pnlGroup.Controls)
+                    {
+                        if (buttons.Any(b => b == btn))
+                        {
+                            btn.Enabled = false;
+                        }
+                    }
+
+                    lvGroup.Sorting = SortOrder.Ascending;
+                    break;
+                }
+                case 1:
+                {
+                    foreach (Button btn in pnlGroup.Controls)
+                    {
+                        if (buttons.Any(b => b == btn))
+                        {
+                            btn.Enabled = true;
+                        }
+                    }
+
+                    lvGroup.Sorting = SortOrder.None;
+                    break;
+                }
+            }
             UpdateLists();
         }
 
-        private static int[] ConcatArray(int[] iArray1, int[] iArray2)
+        private static int[] ConcatArray(IReadOnlyList<int> iArray1, IReadOnlyList<int> iArray2)
         {
             var numArray = Array.Empty<int>();
-            if (iArray1 != null && iArray2 != null)
-            {
-                var length = iArray1.Length;
-                numArray = new int[iArray1.Length + iArray2.Length - 1 + 1];
-                var num1 = length - 1;
-                for (var index = 0; index <= num1; ++index)
-                    numArray[index] = iArray1[index];
-                var num2 = iArray2.Length - 1;
-                for (var index = 0; index <= num2; ++index)
-                    numArray[length + index] = iArray2[index];
-            }
+            if (iArray1 == null || iArray2 == null) return numArray;
+            var length = iArray1.Count;
+            numArray = new int[iArray1.Count + iArray2.Count - 1 + 1];
+            var num1 = length - 1;
+            for (var index = 0; index <= num1; ++index)
+                numArray[index] = iArray1[index];
+            var num2 = iArray2.Count - 1;
+            for (var index = 0; index <= num2; ++index)
+                numArray[length + index] = iArray2[index];
 
             return numArray;
         }
@@ -841,14 +867,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                MessageBox.Show($@"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             }
         }
 
         [DebuggerStepThrough]
-        private void List_Groups(int SelIDX)
+        private void List_Groups(int selIdx)
         {
-            Updating = true;
+            _updating = true;
             lvGroup.BeginUpdate();
             lvGroup.Items.Clear();
             BuildATImageList();
@@ -874,9 +900,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                                 lvGroup.Items.Add(powersetGroup.Name);
                         }
 
-                        lvGroup.Columns[0].Text = "Group";
+                        lvGroup.Columns[0].Text = @"Group";
+                        lvGroup.Columns[0].Width = -2;
                         lvGroup.Enabled = true;
-                        pnlGroup.Enabled = false;
+                        pnlGroup.Enabled = true;
                         break;
                     }
                 case 1:
@@ -885,7 +912,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
                             lvGroup.Items.Add(new ListViewItem(DatabaseAPI.Database.Classes[imageIndex].ClassName,
                                 imageIndex));
-                        lvGroup.Columns[0].Text = "Class";
+                        lvGroup.Columns[0].Text = @"Class";
+                        lvGroup.Columns[0].Width = -2;
                         lvGroup.Enabled = true;
                         pnlGroup.Enabled = true;
                         break;
@@ -899,10 +927,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvGroup.Items.Count > 0)
             {
-                if ((lvGroup.Items.Count > SelIDX) & (SelIDX > -1))
+                if ((lvGroup.Items.Count > selIdx) & (selIdx > -1))
                 {
-                    lvGroup.Items[SelIDX].Selected = true;
-                    lvGroup.Items[SelIDX].EnsureVisible();
+                    lvGroup.Items[selIdx].Selected = true;
+                    lvGroup.Items[selIdx].EnsureVisible();
                 }
                 else
                 {
@@ -912,20 +940,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             lvGroup.EndUpdate();
-            Updating = false;
+            _updating = false;
         }
 
-        private void List_Power_AddBlock(int[] iPowers, bool DisplayFullName)
+        private void List_Power_AddBlock(IReadOnlyList<int> iPowers, bool displayFullName)
         {
             var items = new string[4];
-            if (iPowers.Length < 1)
+            if (iPowers.Count < 1)
                 return;
-            var num = iPowers.Length - 1;
+            var num = iPowers.Count - 1;
             for (var index = 0; index <= num; ++index)
             {
                 if (iPowers[index] <= -1 || DatabaseAPI.Database.Power[iPowers[index]].HiddenPower)
                     continue;
-                items[0] = !DisplayFullName
+                items[0] = !displayFullName
                     ? DatabaseAPI.Database.Power[iPowers[index]].PowerName
                     : DatabaseAPI.Database.Power[iPowers[index]].FullName;
                 items[1] = DatabaseAPI.Database.Power[iPowers[index]].DisplayName;
@@ -939,18 +967,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void List_Power_AddBlock(string[] iPowers, bool DisplayFullName)
+        private void List_Power_AddBlock(IReadOnlyList<string> iPowers, bool displayFullName)
         {
             var items = new string[4];
-            if (iPowers.Length < 1)
+            if (iPowers.Count < 1)
                 return;
-            var num = iPowers.Length - 1;
+            var num = iPowers.Count - 1;
             for (var index1 = 0; index1 <= num; ++index1)
             {
                 var index2 = DatabaseAPI.NidFromUidPower(iPowers[index1]);
                 if (index2 <= -1 || DatabaseAPI.Database.Power[index2].HiddenPower)
                     continue;
-                items[0] = !DisplayFullName
+                items[0] = !displayFullName
                     ? DatabaseAPI.Database.Power[index2].PowerName
                     : DatabaseAPI.Database.Power[index2].FullName;
                 items[1] = DatabaseAPI.Database.Power[index2].DisplayName;
@@ -960,11 +988,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void List_Powers(int SelIDX)
+        private void List_Powers(int selIdx)
         {
             var iPowers1 = Array.Empty<int>();
             var iPowers2 = Array.Empty<string>();
-            var DisplayFullName = false;
+            var displayFullName = false;
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -1030,11 +1058,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                                 continue;
 
                             Array.Resize(ref iPowers1, iPowers1.Length + 1);
-                            //iPowers1 = (int[])Utils.CopyArray(iPowers1, new int[iPowers1.Length + 1]);
                             iPowers1[iPowers1.Length - 1] = index;
                         }
 
-                        DisplayFullName = true;
+                        displayFullName = true;
                         break;
                     }
                 case 3:
@@ -1044,7 +1071,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         var num = DatabaseAPI.Database.Power.Length - 1;
                         for (var index = 0; index <= num; ++index)
                             iPowers1[index] = index;
-                        DisplayFullName = true;
+                        displayFullName = true;
                         break;
                     }
             }
@@ -1053,20 +1080,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvPower.Items.Clear();
             if (iPowers2.Length > 0)
             {
-                List_Power_AddBlock(iPowers2, DisplayFullName);
+                List_Power_AddBlock(iPowers2, displayFullName);
             }
             else
             {
-                List_Power_AddBlock(iPowers1, DisplayFullName);
+                List_Power_AddBlock(iPowers1, displayFullName);
             }
 
             BusyHide();
             if (lvPower.Items.Count > 0)
             {
-                if ((SelIDX > -1) & (SelIDX < lvPower.Items.Count))
+                if ((selIdx > -1) & (selIdx < lvPower.Items.Count))
                 {
-                    lvPower.Items[SelIDX].Selected = true;
-                    lvPower.Items[SelIDX].EnsureVisible();
+                    lvPower.Items[selIdx].Selected = true;
+                    lvPower.Items[selIdx].EnsureVisible();
                 }
                 else
                 {
@@ -1079,13 +1106,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pnlPower.Enabled = lvPower.Enabled;
         }
 
-        private void List_Sets(int SelIDX)
+        private void List_Sets(int selIdx)
         {
             var numArray1 = Array.Empty<int>();
             var numArray2 = Array.Empty<int>();
             if ((lvGroup.SelectedItems.Count == 0) & ((cbFilter.SelectedIndex == 0) | (cbFilter.SelectedIndex == 1)))
                 return;
-            Updating = true;
+            _updating = true;
             lvSet.BeginUpdate();
             lvSet.Items.Clear();
             if ((cbFilter.SelectedIndex == 0) & (lvGroup.SelectedItems.Count > 0))
@@ -1154,10 +1181,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvSet.Items.Count > 0)
             {
-                if ((lvSet.Items.Count > SelIDX) & (SelIDX > -1))
+                if ((lvSet.Items.Count > selIdx) & (selIdx > -1))
                 {
-                    lvSet.Items[SelIDX].Selected = true;
-                    lvSet.Items[SelIDX].EnsureVisible();
+                    lvSet.Items[selIdx].Selected = true;
+                    lvSet.Items[selIdx].EnsureVisible();
                 }
                 else
                 {
@@ -1169,15 +1196,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.EndUpdate();
             BusyHide();
             pnlSet.Enabled = lvSet.Enabled;
-            Updating = false;
+            _updating = false;
         }
 
-        private void List_Sets_AddBlock(int[] iSets)
+        private void List_Sets_AddBlock(IReadOnlyList<int> iSets)
         {
             var items = new string[5];
-            if (iSets.Length < 1)
+            if (iSets.Count < 1)
                 return;
-            var num = iSets.Length - 1;
+            var num = iSets.Count - 1;
             for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
             {
                 if (iSets[imageIndex] <= -1)
@@ -1204,12 +1231,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (cbFilter.SelectedIndex != 1)
                 return;
-            btnClassEdit_Click(this, new EventArgs());
+            btnClassEdit_Click(this, EventArgs.Empty);
         }
 
         private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Updating)
+            if (_updating)
                 return;
             List_Sets(0);
             Application.DoEvents();
@@ -1218,7 +1245,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lvPower_DoubleClick(object sender, EventArgs e)
         {
-            btnPowerEdit_Click(this, new EventArgs());
+            btnPowerEdit_Click(this, EventArgs.Empty);
         }
 
         private void lvPower_SelectedIndexChanged(object sender, EventArgs e)
@@ -1230,39 +1257,39 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lvSet_DoubleClick(object sender, EventArgs e)
         {
-            btnSetEdit_Click(this, new EventArgs());
+            btnSetEdit_Click(this, EventArgs.Empty);
         }
 
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Updating)
+            if (_updating)
                 return;
             if (lvSet.SelectedItems.Count > 0)
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
             List_Powers(0);
         }
 
-        private void RefreshLists(int Group = -1, int Powerset = -1, int Power = -1)
+        private void RefreshLists(int @group = -1, int powerset = -1, int power = -1)
         {
-            var SelectGroup = Group;
-            var SelectSet = Powerset;
-            var SelectPower = Power;
-            if ((lvGroup.SelectedIndices.Count > 0) & (SelectGroup == -1))
-                SelectGroup = lvGroup.SelectedIndices[0];
-            if ((lvSet.SelectedIndices.Count > 0) & (SelectSet == -1))
-                SelectSet = lvSet.SelectedIndices[0];
-            if ((lvPower.SelectedIndices.Count > 0) & (SelectPower == -1))
-                SelectPower = lvPower.SelectedIndices[0];
-            UpdateLists(SelectGroup, SelectSet, SelectPower);
+            var selectGroup = @group;
+            var selectSet = powerset;
+            var selectPower = power;
+            if ((lvGroup.SelectedIndices.Count > 0) & (selectGroup == -1))
+                selectGroup = lvGroup.SelectedIndices[0];
+            if ((lvSet.SelectedIndices.Count > 0) & (selectSet == -1))
+                selectSet = lvSet.SelectedIndices[0];
+            if ((lvPower.SelectedIndices.Count > 0) & (selectPower == -1))
+                selectPower = lvPower.SelectedIndices[0];
+            UpdateLists(selectGroup, selectSet, selectPower);
         }
 
-        private void UpdateLists(int SelectGroup = -1, int SelectSet = -1, int SelectPower = -1)
+        private void UpdateLists(int selectGroup = -1, int selectSet = -1, int selectPower = -1)
         {
-            List_Groups(SelectGroup);
+            List_Groups(selectGroup);
             Application.DoEvents();
-            List_Sets(SelectSet);
+            List_Sets(selectSet);
             Application.DoEvents();
-            List_Powers(SelectPower);
+            List_Powers(selectPower);
         }
 
         private void btnManageHiddenPowers_Click(object sender, EventArgs e)
@@ -1283,9 +1310,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             return;
 
             BusyMsg("Fetching Scrapper powers...");
-            Debug.WriteLine("Fetching powers");
+            //Debug.WriteLine("Fetching powers");
             var powers = DatabaseAPI.Database.Power.Where(p => p.FullName.StartsWith("Scrapper_Melee."));
-            Debug.WriteLine("Counting effects");
+            //Debug.WriteLine("Counting effects");
             var fxNb = powers.Sum(p => p.Effects.Length);
 
             BusyHide();
@@ -1299,7 +1326,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         fx.ActiveConditionals.Clear();
                         fx.SpecialCase = Enums.eSpecialCase.CriticalMinion;
                         fx.EffectId = "MLCrit";
-                        Debug.WriteLine($"Updated MLCrit for {p.FullName}");
+                        //Debug.WriteLine($"Updated MLCrit for {p.FullName}");
                     }
                     else if (fx.EffectId == "BossCrit" | fx.EffectId == "CritLarge" | fx.SpecialCase == Enums.eSpecialCase.CriticalBoss)
                     {
@@ -1307,7 +1334,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         fx.EffectId = "BossCrit";
                         fx.ActiveConditionals.Clear();
                         fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
-                        Debug.WriteLine($"Updated BossCrit for {p.FullName}");
+                        //Debug.WriteLine($"Updated BossCrit for {p.FullName}");
                     }
                     else if (fx.EffectId == "PlayerCrit" | fx.EffectId == "CritPlayer") // Not found in fx.SpecialCase
                     {
@@ -1315,27 +1342,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         fx.EffectId = "PlayerCrit";
                         fx.ActiveConditionals.Clear();
                         fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
-                        Debug.WriteLine($"Updated PlayerCrit for {p.FullName}");
+                        //Debug.WriteLine($"Updated PlayerCrit for {p.FullName}");
                     }
                     else if (fx.EffectId == "ECCritModSmall")
                     {
                         fx.ActiveConditionals.Clear();
                         fx.SpecialCase = Enums.eSpecialCase.CriticalMinion;
-                        Debug.WriteLine($"Updated ECCritModSmall for {p.FullName}");
+                        //Debug.WriteLine($"Updated ECCritModSmall for {p.FullName}");
                     }
                     else if (fx.EffectId == "ECCritModLarge")
                     {
                         fx.SpecialCase = Enums.eSpecialCase.None;
                         fx.ActiveConditionals.Clear();
                         fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
-                        Debug.WriteLine($"Updated ECCritModLarge for {p.FullName}");
+                        //Debug.WriteLine($"Updated ECCritModLarge for {p.FullName}");
                     }
                     else if (fx.EffectId == "ECCritModPlayer")
                     {
                         fx.SpecialCase = Enums.eSpecialCase.None;
                         fx.ActiveConditionals.Clear();
                         fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
-                        Debug.WriteLine($"Updated ECCritModPlayer for {p.FullName}");
+                        //Debug.WriteLine($"Updated ECCritModPlayer for {p.FullName}");
                     }
                 }
             }

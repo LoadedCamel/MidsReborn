@@ -209,7 +209,7 @@ namespace mrbBase
 
             internal static class DB
             {
-                internal const string Start = "Mids' Hero Designer Database MK II";
+                internal const string Start = "Mids Reborn Powers Database";
                 internal const string Archetypes = "BEGIN:ARCHETYPES";
                 internal const string Powersets = "BEGIN:POWERSETS";
                 internal const string Powers = "BEGIN:POWERS";
@@ -218,22 +218,22 @@ namespace mrbBase
 
             internal static class EnhDB
             {
-                internal const string Start = "Mids' Hero Designer Enhancement Database";
+                internal const string Start = "Mids Reborn Enhancement Database";
             }
 
             internal static class Salvage
             {
-                internal const string Start = "Mids' Hero Designer Salvage Database";
+                internal const string Start = "Mids Reborn Salvage Database";
             }
 
             internal static class Recipe
             {
-                internal const string Start = "Mids' Hero Designer Recipe Database";
+                internal const string Start = "Mids Reborn Recipe Database";
             }
 
             internal static class AttribMod
             {
-                internal const string Start = "Mids' Hero Designer Attribute Modifier Tables";
+                internal const string Start = "Mids Reborn Attribute Modifier Tables";
             }
 
             public static class Save
