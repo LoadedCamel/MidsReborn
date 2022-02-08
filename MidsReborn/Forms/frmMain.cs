@@ -88,6 +88,7 @@ namespace Mids_Reborn.Forms
                 Resize += frmMain_Maximize;
                 MouseWheel += frmMain_MouseWheel;
                 TitleUpdated += OnTitleUpdate;
+                Move += frmMain_Move;
                 NoUpdate = false;
                 EnhancingSlot = -1;
                 EnhancingPower = -1;
@@ -384,11 +385,11 @@ namespace Mids_Reborn.Forms
 
                 if (!MidsContext.Config.LastLocation.IsEmpty)
                 {
-                    Location = MidsContext.Config.LastLocation;
+                    Location = new Point(Math.Max(0, MidsContext.Config.LastLocation.X), Math.Max(0, MidsContext.Config.LastLocation.Y));
                 }
                 else
                 {
-                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2); ;
+                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
                 }
 
                 if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
@@ -2084,10 +2085,21 @@ namespace Mids_Reborn.Forms
             fData?.UpdateData(dvLastPower);
         }
 
+        private void frmMain_Move(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized) return;
+
+            MidsContext.Config.LastLocation = Location;
+        }
+
         private void frmMain_Closed(object sender, EventArgs e)
         {
-            MidsContext.Config.LastSize = Size;
-            MidsContext.Config.LastLocation = Location;
+            if (WindowState != FormWindowState.Minimized)
+            {
+                MidsContext.Config.LastSize = Size;
+                MidsContext.Config.LastLocation = Location;
+            }
+
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             if (MidsContext.Config.DiscordEnabled is true)
             {
@@ -2151,7 +2163,11 @@ namespace Mids_Reborn.Forms
             }
 
             if (!NoResizeEvent & MainModule.MidsController.IsAppInitialized & Visible)
+            {
                 MidsContext.Config.LastSize = Size;
+                MidsContext.Config.LastLocation = Location;
+            }
+
             UpdateControls();
             DoRedraw();
         }
