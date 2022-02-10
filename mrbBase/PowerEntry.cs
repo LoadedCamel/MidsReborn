@@ -103,7 +103,26 @@ namespace mrbBase
         public bool Tag { get; set; }
         public bool StatInclude { get; set; }
         public bool ProcInclude { get; set; }
-        public int VariableValue { get; set; }
+
+        private int _VirtualVariableValue;
+        private int _VariableValue;
+        public int VirtualVariableValue
+        {
+            get => _VirtualVariableValue;
+            set => _VirtualVariableValue = value;
+        }
+
+        public int VariableValue
+        {
+            get => _VirtualVariableValue;
+            set
+            {
+                _VirtualVariableValue = value;
+                _VariableValue = value;
+            }
+        }
+
+        public int InternalVariableValue => _VariableValue;
         public SlotEntry[] Slots { get; set; }
         public PowerSubEntry[] SubPowers { get; set; }
 

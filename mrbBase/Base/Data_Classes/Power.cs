@@ -709,7 +709,26 @@ namespace mrbBase.Base.Data_Classes
 
         public bool Active { get; set; }
         public bool Taken { get; set; }
-        public int Stacks { get; set; }
+
+        private int _VirtualStacks;
+        private int _Stacks;
+        public int VirtualStacks
+        {
+            get => _VirtualStacks;
+            set => _VirtualStacks = value;
+        }
+
+        public int Stacks
+        {
+            get => _VirtualStacks;
+            set
+            {
+                _Stacks = value;
+                _VirtualStacks = value;
+            }
+        }
+
+        public int InternalStacks => _Stacks;
 
         public void StoreTo(ref BinaryWriter writer)
         {

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -873,6 +872,140 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 return traySource[slotId];
+            }
+        }
+
+        #endregion
+
+        #region Scales graph sub-class
+
+        private static class VariableStatsGraph
+        {
+            public static class PowerStats
+            {
+                public struct FxIdentifier
+                {
+                    public Enums.eEffectType EffectType;
+                    public Enums.eMez MezType;
+                    public Enums.eDamage DamageType;
+                    public Enums.eEffectType ETModifies;
+                }
+
+                public struct DataPoint
+                {
+                    public int Stacks;
+                    public float Value;
+                }
+
+                private static List<FxIdentifier> GetVariableStats(int historyIdx)
+                {
+                    var ret = new List<FxIdentifier>();
+                    if (historyIdx < 0 || historyIdx >= MidsContext.Character.CurrentBuild.Powers.Count)
+                    {
+                        return ret;
+                    }
+
+                    if (MidsContext.Character.CurrentBuild.Powers[historyIdx].Power == null)
+                    {
+                        return ret;
+                    }
+
+                    var powerEntry = MidsContext.Character.CurrentBuild.Powers[historyIdx];
+                    var power = powerEntry.Power;
+
+                    foreach (var fx in power.Effects)
+                    {
+                        var fxIdent = new FxIdentifier
+                        {
+                            EffectType = fx.EffectType,
+                            MezType = fx.MezType,
+                            DamageType = fx.EffectType == Enums.eEffectType.Damage | fx.EffectType == Enums.eEffectType.Defense | fx.EffectType == Enums.eEffectType.Resistance
+                                ? Enums.eDamage.None
+                                : fx.DamageType,
+                            ETModifies = fx.ETModifies
+                        };
+
+                        if (ret.Contains(fxIdent))
+                        {
+                            continue;
+                        }
+
+                        if (power.VariableEnabled & !fx.IgnoreScaling & (fx.AttribType == Enums.eAttribType.Duration | fx.AttribType == Enums.eAttribType.Magnitude))
+                        {
+                            ret.Add(fxIdent);
+                        }
+                        else if (power.VariableEnabled & fx.AttribType == Enums.eAttribType.Expression)
+                        {
+                            if (fx.MagnitudeExpression.Contains($"{power.FullName}>stacks"))
+                            {
+                                ret.Add(fxIdent);
+                            }
+                        }
+                    }
+
+                    return ret;
+                }
+
+                public static Dictionary<FxIdentifier, List<DataPoint>> GetPOI(int historyIdx)
+                {
+                    var ret = new Dictionary<FxIdentifier, List<DataPoint>>();
+                    var variableStats = GetVariableStats(historyIdx);
+                    if (variableStats.Count <= 0) return ret;
+
+                    foreach (var stat in variableStats)
+                    {
+                        ret.Add(stat, new List<DataPoint>());
+                    }
+
+                    var powerEntry = MidsContext.Character.CurrentBuild.Powers[historyIdx];
+                    var power = powerEntry.Power;
+                    var variableRange = Math.Abs(power.VariableMax - power.VariableMin);
+                    for (var i = power.VariableMin;
+                         i < power.VariableMax;
+                         i = variableRange < 10 ? ++i : (int)Math.Round(i + (decimal)variableRange / 10))
+                    {
+                        powerEntry.VirtualVariableValue = i;
+                        power.VirtualStacks = i;
+                        MainModule.MidsController.Toon.GenerateBuffedPowerArray();
+                        
+                        // Warning: can be null
+                        var pEnh = MainModule.MidsController.Toon.GetEnhancedPower(historyIdx);
+                        if (pEnh == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var stat in variableStats)
+                        {
+                            if (stat.EffectType == Enums.eEffectType.Damage)
+                            {
+                                var dmg = pEnh.FXGetDamageValue();
+                                ret[stat].Add(new DataPoint
+                                {
+                                    Stacks = i,
+                                    Value = dmg
+                                });
+                            }
+                            else
+                            {
+                                // Note: this won't work for Enhancement() or Mez() effects.
+                                var fxTotal = pEnh.GetEffectMagSum(stat.EffectType);
+
+                                ret[stat].Add(new DataPoint
+                                {
+                                    Stacks = i,
+                                    Value = fxTotal.Sum
+                                });
+                            }
+                        }
+                    }
+
+                    powerEntry.VirtualVariableValue = powerEntry.InternalVariableValue;
+                    power.VirtualStacks = power.InternalStacks;
+                    MainModule.MidsController.Toon.GenerateBuffedPowerArray();
+
+                    return ret;
+                }
             }
         }
 

@@ -230,6 +230,10 @@ namespace mrbBase
     
         int Stacks { get; set; }
 
+        int InternalStacks { get; }
+
+        int VirtualStacks { get; set; }
+
         bool HasDefEffects();
 
         bool HasResEffects();
