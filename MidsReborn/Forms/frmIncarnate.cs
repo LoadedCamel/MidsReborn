@@ -238,7 +238,7 @@ namespace Mids_Reborn.Forms
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Knives of Vengeance"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Longbow"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Nemesis"));
-                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Phantoms"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Phantom"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Polar Lights"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Rikti"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Robotic Drones"));
