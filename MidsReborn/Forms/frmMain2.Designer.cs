@@ -241,7 +241,7 @@ namespace Mids_Reborn.Forms
             this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.topPanel.Location = new System.Drawing.Point(0, 24);
             this.topPanel.Name = "topPanel";
-            this.topPanel.Size = new System.Drawing.Size(1326, 64);
+            this.topPanel.Size = new System.Drawing.Size(1323, 64);
             this.topPanel.TabIndex = 0;
             // 
             // lblHero
@@ -259,7 +259,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ibTeam.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTeam.Location = new System.Drawing.Point(765, 3);
+            this.ibTeam.Location = new System.Drawing.Point(762, 3);
             this.ibTeam.Name = "ibTeam";
             this.ibTeam.Size = new System.Drawing.Size(105, 22);
             this.ibTeam.TabIndex = 100;
@@ -268,7 +268,7 @@ namespace Mids_Reborn.Forms
             // 
             this.heroVillain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.heroVillain.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.heroVillain.Location = new System.Drawing.Point(876, 3);
+            this.heroVillain.Location = new System.Drawing.Point(873, 3);
             this.heroVillain.Name = "heroVillain";
             this.heroVillain.Size = new System.Drawing.Size(105, 22);
             this.heroVillain.TabIndex = 116;
@@ -277,7 +277,7 @@ namespace Mids_Reborn.Forms
             // 
             this.petsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.petsButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.petsButton.Location = new System.Drawing.Point(765, 31);
+            this.petsButton.Location = new System.Drawing.Point(762, 31);
             this.petsButton.Name = "petsButton";
             this.petsButton.Size = new System.Drawing.Size(105, 22);
             this.petsButton.TabIndex = 117;
@@ -286,7 +286,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tempPowersButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tempPowersButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.tempPowersButton.Location = new System.Drawing.Point(1209, 31);
+            this.tempPowersButton.Location = new System.Drawing.Point(1206, 31);
             this.tempPowersButton.Name = "tempPowersButton";
             this.tempPowersButton.Size = new System.Drawing.Size(105, 22);
             this.tempPowersButton.TabIndex = 115;
@@ -295,7 +295,7 @@ namespace Mids_Reborn.Forms
             // 
             this.accoladeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.accoladeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.accoladeButton.Location = new System.Drawing.Point(987, 31);
+            this.accoladeButton.Location = new System.Drawing.Point(984, 31);
             this.accoladeButton.Name = "accoladeButton";
             this.accoladeButton.Size = new System.Drawing.Size(105, 22);
             this.accoladeButton.TabIndex = 114;
@@ -304,7 +304,7 @@ namespace Mids_Reborn.Forms
             // 
             this.incarnateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.incarnateButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.incarnateButton.Location = new System.Drawing.Point(1098, 31);
+            this.incarnateButton.Location = new System.Drawing.Point(1095, 31);
             this.incarnateButton.Name = "incarnateButton";
             this.incarnateButton.Size = new System.Drawing.Size(105, 22);
             this.incarnateButton.TabIndex = 113;
@@ -313,7 +313,7 @@ namespace Mids_Reborn.Forms
             // 
             this.prestigeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.prestigeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.prestigeButton.Location = new System.Drawing.Point(876, 31);
+            this.prestigeButton.Location = new System.Drawing.Point(873, 31);
             this.prestigeButton.Name = "prestigeButton";
             this.prestigeButton.Size = new System.Drawing.Size(105, 22);
             this.prestigeButton.TabIndex = 111;
@@ -322,7 +322,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPvX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ibPvX.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPvX.Location = new System.Drawing.Point(987, 3);
+            this.ibPvX.Location = new System.Drawing.Point(984, 3);
             this.ibPvX.Name = "ibPvX";
             this.ibPvX.Size = new System.Drawing.Size(105, 22);
             this.ibPvX.TabIndex = 111;
@@ -331,7 +331,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ibRecipe.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibRecipe.Location = new System.Drawing.Point(1098, 3);
+            this.ibRecipe.Location = new System.Drawing.Point(1095, 3);
             this.ibRecipe.Name = "ibRecipe";
             this.ibRecipe.Size = new System.Drawing.Size(105, 22);
             this.ibRecipe.TabIndex = 105;
@@ -340,7 +340,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPopup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ibPopup.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPopup.Location = new System.Drawing.Point(1209, 3);
+            this.ibPopup.Location = new System.Drawing.Point(1206, 3);
             this.ibPopup.Name = "ibPopup";
             this.ibPopup.Size = new System.Drawing.Size(105, 22);
             this.ibPopup.TabIndex = 104;
@@ -349,9 +349,9 @@ namespace Mids_Reborn.Forms
             // 
             this.leftPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.leftPanel.BackColor = System.Drawing.Color.Black;
-            this.leftPanel.Controls.Add(this.dvPlaceholder);
             this.leftPanel.Controls.Add(this.secondaryPlaceholder);
             this.leftPanel.Controls.Add(this.primaryPlaceholder);
+            this.leftPanel.Controls.Add(this.dvPlaceholder);
             this.leftPanel.Controls.Add(this.epicPlaceholder);
             this.leftPanel.Controls.Add(this.pool3Placeholder);
             this.leftPanel.Controls.Add(this.pool2Placeholder);
@@ -394,61 +394,61 @@ namespace Mids_Reborn.Forms
             this.leftPanel.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.leftPanel.Location = new System.Drawing.Point(0, 88);
             this.leftPanel.Name = "leftPanel";
-            this.leftPanel.Size = new System.Drawing.Size(501, 874);
+            this.leftPanel.Size = new System.Drawing.Size(546, 874);
             this.leftPanel.TabIndex = 1;
             // 
             // dvPlaceholder
             // 
-            this.dvPlaceholder.Location = new System.Drawing.Point(12, 458);
+            this.dvPlaceholder.Location = new System.Drawing.Point(12, 462);
             this.dvPlaceholder.Name = "dvPlaceholder";
-            this.dvPlaceholder.Size = new System.Drawing.Size(317, 404);
+            this.dvPlaceholder.Size = new System.Drawing.Size(360, 400);
             this.dvPlaceholder.TabIndex = 126;
             // 
             // secondaryPlaceholder
             // 
-            this.secondaryPlaceholder.Location = new System.Drawing.Point(177, 175);
+            this.secondaryPlaceholder.Location = new System.Drawing.Point(204, 175);
             this.secondaryPlaceholder.Name = "secondaryPlaceholder";
-            this.secondaryPlaceholder.Size = new System.Drawing.Size(152, 250);
+            this.secondaryPlaceholder.Size = new System.Drawing.Size(170, 262);
             this.secondaryPlaceholder.TabIndex = 125;
             // 
             // primaryPlaceholder
             // 
             this.primaryPlaceholder.Location = new System.Drawing.Point(12, 175);
             this.primaryPlaceholder.Name = "primaryPlaceholder";
-            this.primaryPlaceholder.Size = new System.Drawing.Size(152, 250);
+            this.primaryPlaceholder.Size = new System.Drawing.Size(170, 262);
             this.primaryPlaceholder.TabIndex = 124;
             // 
             // epicPlaceholder
             // 
-            this.epicPlaceholder.Location = new System.Drawing.Point(337, 759);
+            this.epicPlaceholder.Location = new System.Drawing.Point(389, 760);
             this.epicPlaceholder.Name = "epicPlaceholder";
             this.epicPlaceholder.Size = new System.Drawing.Size(138, 95);
             this.epicPlaceholder.TabIndex = 123;
             // 
             // pool3Placeholder
             // 
-            this.pool3Placeholder.Location = new System.Drawing.Point(337, 613);
+            this.pool3Placeholder.Location = new System.Drawing.Point(389, 614);
             this.pool3Placeholder.Name = "pool3Placeholder";
             this.pool3Placeholder.Size = new System.Drawing.Size(138, 95);
             this.pool3Placeholder.TabIndex = 113;
             // 
             // pool2Placeholder
             // 
-            this.pool2Placeholder.Location = new System.Drawing.Point(337, 467);
+            this.pool2Placeholder.Location = new System.Drawing.Point(389, 468);
             this.pool2Placeholder.Name = "pool2Placeholder";
             this.pool2Placeholder.Size = new System.Drawing.Size(138, 95);
             this.pool2Placeholder.TabIndex = 112;
             // 
             // pool1Placeholder
             // 
-            this.pool1Placeholder.Location = new System.Drawing.Point(337, 321);
+            this.pool1Placeholder.Location = new System.Drawing.Point(389, 322);
             this.pool1Placeholder.Name = "pool1Placeholder";
             this.pool1Placeholder.Size = new System.Drawing.Size(138, 95);
             this.pool1Placeholder.TabIndex = 111;
             // 
             // pool0Placeholder
             // 
-            this.pool0Placeholder.Location = new System.Drawing.Point(337, 175);
+            this.pool0Placeholder.Location = new System.Drawing.Point(389, 176);
             this.pool0Placeholder.Name = "pool0Placeholder";
             this.pool0Placeholder.Size = new System.Drawing.Size(138, 95);
             this.pool0Placeholder.TabIndex = 110;
@@ -488,7 +488,7 @@ namespace Mids_Reborn.Forms
             // 
             this.sbMode.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sbMode.ForeColor = System.Drawing.Color.White;
-            this.sbMode.Location = new System.Drawing.Point(259, 9);
+            this.sbMode.Location = new System.Drawing.Point(311, 9);
             this.sbMode.Name = "sbMode";
             this.sbMode.Size = new System.Drawing.Size(105, 22);
             this.sbMode.TabIndex = 122;
@@ -497,7 +497,7 @@ namespace Mids_Reborn.Forms
             // ibSets
             // 
             this.ibSets.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSets.Location = new System.Drawing.Point(259, 37);
+            this.ibSets.Location = new System.Drawing.Point(311, 37);
             this.ibSets.Name = "ibSets";
             this.ibSets.Size = new System.Drawing.Size(105, 22);
             this.ibSets.TabIndex = 98;
@@ -505,7 +505,7 @@ namespace Mids_Reborn.Forms
             // ibSlots
             // 
             this.ibSlots.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSlots.Location = new System.Drawing.Point(370, 65);
+            this.ibSlots.Location = new System.Drawing.Point(422, 65);
             this.ibSlots.Name = "ibSlots";
             this.ibSlots.Size = new System.Drawing.Size(105, 22);
             this.ibSlots.TabIndex = 106;
@@ -513,7 +513,7 @@ namespace Mids_Reborn.Forms
             // ibSlotLevels
             // 
             this.ibSlotLevels.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSlotLevels.Location = new System.Drawing.Point(259, 64);
+            this.ibSlotLevels.Location = new System.Drawing.Point(311, 65);
             this.ibSlotLevels.Name = "ibSlotLevels";
             this.ibSlotLevels.Size = new System.Drawing.Size(105, 22);
             this.ibSlotLevels.TabIndex = 101;
@@ -521,14 +521,14 @@ namespace Mids_Reborn.Forms
             // ibTotals
             // 
             this.ibTotals.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTotals.Location = new System.Drawing.Point(370, 37);
+            this.ibTotals.Location = new System.Drawing.Point(422, 37);
             this.ibTotals.Name = "ibTotals";
             this.ibTotals.Size = new System.Drawing.Size(105, 22);
             this.ibTotals.TabIndex = 99;
             // 
             // pbDynMode
             // 
-            this.pbDynMode.Location = new System.Drawing.Point(370, 9);
+            this.pbDynMode.Location = new System.Drawing.Point(422, 9);
             this.pbDynMode.Name = "pbDynMode";
             this.pbDynMode.Size = new System.Drawing.Size(105, 22);
             this.pbDynMode.TabIndex = 92;
@@ -540,9 +540,9 @@ namespace Mids_Reborn.Forms
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
-            this.lblLockedSecondary.Location = new System.Drawing.Point(177, 146);
+            this.lblLockedSecondary.Location = new System.Drawing.Point(204, 147);
             this.lblLockedSecondary.Name = "lblLockedSecondary";
-            this.lblLockedSecondary.Size = new System.Drawing.Size(152, 22);
+            this.lblLockedSecondary.Size = new System.Drawing.Size(151, 21);
             this.lblLockedSecondary.TabIndex = 109;
             this.lblLockedSecondary.Text = "Sec. Locked";
             this.lblLockedSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -555,7 +555,7 @@ namespace Mids_Reborn.Forms
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
             this.lblATLocked.Location = new System.Drawing.Point(80, 35);
             this.lblATLocked.Name = "lblATLocked";
-            this.lblATLocked.Size = new System.Drawing.Size(144, 23);
+            this.lblATLocked.Size = new System.Drawing.Size(164, 23);
             this.lblATLocked.TabIndex = 53;
             this.lblATLocked.Text = "Archetype Locked";
             this.lblATLocked.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -566,7 +566,7 @@ namespace Mids_Reborn.Forms
             this.txtName.ForeColor = System.Drawing.Color.Black;
             this.txtName.Location = new System.Drawing.Point(80, 7);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(144, 20);
+            this.txtName.Size = new System.Drawing.Size(183, 20);
             this.txtName.TabIndex = 1;
             // 
             // cbSecondary
@@ -576,19 +576,19 @@ namespace Mids_Reborn.Forms
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSecondary.ForeColor = System.Drawing.Color.Black;
             this.cbSecondary.ItemHeight = 16;
-            this.cbSecondary.Location = new System.Drawing.Point(177, 147);
+            this.cbSecondary.Location = new System.Drawing.Point(204, 147);
             this.cbSecondary.MaxDropDownItems = 15;
             this.cbSecondary.Name = "cbSecondary";
-            this.cbSecondary.Size = new System.Drawing.Size(152, 22);
+            this.cbSecondary.Size = new System.Drawing.Size(170, 22);
             this.cbSecondary.TabIndex = 11;
             // 
             // lblSecondary
             // 
             this.lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblSecondary.ForeColor = System.Drawing.Color.White;
-            this.lblSecondary.Location = new System.Drawing.Point(175, 127);
+            this.lblSecondary.Location = new System.Drawing.Point(202, 127);
             this.lblSecondary.Name = "lblSecondary";
-            this.lblSecondary.Size = new System.Drawing.Size(154, 17);
+            this.lblSecondary.Size = new System.Drawing.Size(172, 17);
             this.lblSecondary.TabIndex = 10;
             this.lblSecondary.Text = "Secondary Power Set";
             this.lblSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -603,7 +603,7 @@ namespace Mids_Reborn.Forms
             this.cbPrimary.Location = new System.Drawing.Point(12, 147);
             this.cbPrimary.MaxDropDownItems = 15;
             this.cbPrimary.Name = "cbPrimary";
-            this.cbPrimary.Size = new System.Drawing.Size(152, 22);
+            this.cbPrimary.Size = new System.Drawing.Size(170, 22);
             this.cbPrimary.TabIndex = 7;
             // 
             // cbOrigin
@@ -615,7 +615,7 @@ namespace Mids_Reborn.Forms
             this.cbOrigin.ItemHeight = 17;
             this.cbOrigin.Location = new System.Drawing.Point(80, 64);
             this.cbOrigin.Name = "cbOrigin";
-            this.cbOrigin.Size = new System.Drawing.Size(144, 23);
+            this.cbOrigin.Size = new System.Drawing.Size(183, 23);
             this.cbOrigin.TabIndex = 5;
             // 
             // cbAT
@@ -629,7 +629,7 @@ namespace Mids_Reborn.Forms
             this.cbAT.Location = new System.Drawing.Point(80, 35);
             this.cbAT.MaxDropDownItems = 15;
             this.cbAT.Name = "cbAT";
-            this.cbAT.Size = new System.Drawing.Size(144, 23);
+            this.cbAT.Size = new System.Drawing.Size(183, 23);
             this.cbAT.TabIndex = 3;
             this.cbAT.ValueMember = "Idx";
             // 
@@ -639,7 +639,7 @@ namespace Mids_Reborn.Forms
             this.lblPrimary.ForeColor = System.Drawing.Color.White;
             this.lblPrimary.Location = new System.Drawing.Point(12, 127);
             this.lblPrimary.Name = "lblPrimary";
-            this.lblPrimary.Size = new System.Drawing.Size(152, 17);
+            this.lblPrimary.Size = new System.Drawing.Size(170, 17);
             this.lblPrimary.TabIndex = 9;
             this.lblPrimary.Text = "Primary Power Set";
             this.lblPrimary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -648,7 +648,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblPool1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool1.ForeColor = System.Drawing.Color.White;
-            this.lblPool1.Location = new System.Drawing.Point(337, 127);
+            this.lblPool1.Location = new System.Drawing.Point(389, 127);
             this.lblPool1.Name = "lblPool1";
             this.lblPool1.Size = new System.Drawing.Size(138, 17);
             this.lblPool1.TabIndex = 14;
@@ -662,7 +662,7 @@ namespace Mids_Reborn.Forms
             this.cbPool0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool0.ForeColor = System.Drawing.Color.Black;
             this.cbPool0.ItemHeight = 16;
-            this.cbPool0.Location = new System.Drawing.Point(337, 147);
+            this.cbPool0.Location = new System.Drawing.Point(389, 148);
             this.cbPool0.MaxDropDownItems = 15;
             this.cbPool0.Name = "cbPool0";
             this.cbPool0.Size = new System.Drawing.Size(138, 22);
@@ -672,7 +672,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblPool2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool2.ForeColor = System.Drawing.Color.White;
-            this.lblPool2.Location = new System.Drawing.Point(337, 273);
+            this.lblPool2.Location = new System.Drawing.Point(389, 274);
             this.lblPool2.Name = "lblPool2";
             this.lblPool2.Size = new System.Drawing.Size(138, 17);
             this.lblPool2.TabIndex = 17;
@@ -686,7 +686,7 @@ namespace Mids_Reborn.Forms
             this.cbPool1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool1.ForeColor = System.Drawing.Color.Black;
             this.cbPool1.ItemHeight = 16;
-            this.cbPool1.Location = new System.Drawing.Point(337, 293);
+            this.cbPool1.Location = new System.Drawing.Point(389, 294);
             this.cbPool1.MaxDropDownItems = 15;
             this.cbPool1.Name = "cbPool1";
             this.cbPool1.Size = new System.Drawing.Size(138, 22);
@@ -696,7 +696,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblPool3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool3.ForeColor = System.Drawing.Color.White;
-            this.lblPool3.Location = new System.Drawing.Point(337, 419);
+            this.lblPool3.Location = new System.Drawing.Point(389, 420);
             this.lblPool3.Name = "lblPool3";
             this.lblPool3.Size = new System.Drawing.Size(138, 17);
             this.lblPool3.TabIndex = 20;
@@ -710,7 +710,7 @@ namespace Mids_Reborn.Forms
             this.cbPool2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool2.ForeColor = System.Drawing.Color.Black;
             this.cbPool2.ItemHeight = 16;
-            this.cbPool2.Location = new System.Drawing.Point(337, 439);
+            this.cbPool2.Location = new System.Drawing.Point(389, 440);
             this.cbPool2.MaxDropDownItems = 15;
             this.cbPool2.Name = "cbPool2";
             this.cbPool2.Size = new System.Drawing.Size(138, 22);
@@ -720,7 +720,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblPool4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool4.ForeColor = System.Drawing.Color.White;
-            this.lblPool4.Location = new System.Drawing.Point(337, 565);
+            this.lblPool4.Location = new System.Drawing.Point(389, 566);
             this.lblPool4.Name = "lblPool4";
             this.lblPool4.Size = new System.Drawing.Size(138, 17);
             this.lblPool4.TabIndex = 23;
@@ -734,7 +734,7 @@ namespace Mids_Reborn.Forms
             this.cbPool3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool3.ForeColor = System.Drawing.Color.Black;
             this.cbPool3.ItemHeight = 16;
-            this.cbPool3.Location = new System.Drawing.Point(337, 585);
+            this.cbPool3.Location = new System.Drawing.Point(389, 586);
             this.cbPool3.MaxDropDownItems = 15;
             this.cbPool3.Name = "cbPool3";
             this.cbPool3.Size = new System.Drawing.Size(138, 22);
@@ -744,7 +744,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblEpic.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblEpic.ForeColor = System.Drawing.Color.White;
-            this.lblEpic.Location = new System.Drawing.Point(335, 711);
+            this.lblEpic.Location = new System.Drawing.Point(387, 712);
             this.lblEpic.Name = "lblEpic";
             this.lblEpic.Size = new System.Drawing.Size(140, 17);
             this.lblEpic.TabIndex = 26;
@@ -758,7 +758,7 @@ namespace Mids_Reborn.Forms
             this.cbAncillary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAncillary.ForeColor = System.Drawing.Color.Black;
             this.cbAncillary.ItemHeight = 16;
-            this.cbAncillary.Location = new System.Drawing.Point(337, 731);
+            this.cbAncillary.Location = new System.Drawing.Point(389, 732);
             this.cbAncillary.Name = "cbAncillary";
             this.cbAncillary.Size = new System.Drawing.Size(138, 22);
             this.cbAncillary.TabIndex = 27;
@@ -769,9 +769,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked0.Location = new System.Drawing.Point(337, 146);
+            this.lblLocked0.Location = new System.Drawing.Point(389, 148);
             this.lblLocked0.Name = "lblLocked0";
-            this.lblLocked0.Size = new System.Drawing.Size(138, 22);
+            this.lblLocked0.Size = new System.Drawing.Size(120, 21);
             this.lblLocked0.TabIndex = 72;
             this.lblLocked0.Text = "Pool Locked";
             this.lblLocked0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -782,9 +782,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked1.Location = new System.Drawing.Point(337, 290);
+            this.lblLocked1.Location = new System.Drawing.Point(389, 294);
             this.lblLocked1.Name = "lblLocked1";
-            this.lblLocked1.Size = new System.Drawing.Size(138, 22);
+            this.lblLocked1.Size = new System.Drawing.Size(120, 19);
             this.lblLocked1.TabIndex = 73;
             this.lblLocked1.Text = "Pool Locked";
             this.lblLocked1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -795,9 +795,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked2.Location = new System.Drawing.Point(337, 439);
+            this.lblLocked2.Location = new System.Drawing.Point(389, 440);
             this.lblLocked2.Name = "lblLocked2";
-            this.lblLocked2.Size = new System.Drawing.Size(138, 22);
+            this.lblLocked2.Size = new System.Drawing.Size(120, 22);
             this.lblLocked2.TabIndex = 74;
             this.lblLocked2.Text = "Pool Locked";
             this.lblLocked2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -808,9 +808,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked3.Location = new System.Drawing.Point(337, 584);
+            this.lblLocked3.Location = new System.Drawing.Point(389, 586);
             this.lblLocked3.Name = "lblLocked3";
-            this.lblLocked3.Size = new System.Drawing.Size(138, 22);
+            this.lblLocked3.Size = new System.Drawing.Size(120, 21);
             this.lblLocked3.TabIndex = 75;
             this.lblLocked3.Text = "Pool Locked";
             this.lblLocked3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -821,9 +821,9 @@ namespace Mids_Reborn.Forms
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
-            this.lblLockedAncillary.Location = new System.Drawing.Point(337, 730);
+            this.lblLockedAncillary.Location = new System.Drawing.Point(389, 732);
             this.lblLockedAncillary.Name = "lblLockedAncillary";
-            this.lblLockedAncillary.Size = new System.Drawing.Size(138, 22);
+            this.lblLockedAncillary.Size = new System.Drawing.Size(120, 21);
             this.lblLockedAncillary.TabIndex = 76;
             this.lblLockedAncillary.Text = "Pool Locked";
             this.lblLockedAncillary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -846,7 +846,7 @@ namespace Mids_Reborn.Forms
             this.WindowToolStripMenuItem});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
-            this.menuBar.Size = new System.Drawing.Size(1326, 24);
+            this.menuBar.Size = new System.Drawing.Size(1323, 24);
             this.menuBar.TabIndex = 3;
             this.menuBar.Text = "menuStrip1";
             // 
@@ -1723,9 +1723,9 @@ namespace Mids_Reborn.Forms
             this.mainPanel.BackColor = System.Drawing.Color.Transparent;
             this.mainPanel.Controls.Add(this.pnlGFX1);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanel.Location = new System.Drawing.Point(501, 88);
+            this.mainPanel.Location = new System.Drawing.Point(546, 88);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(825, 874);
+            this.mainPanel.Size = new System.Drawing.Size(777, 874);
             this.mainPanel.TabIndex = 4;
             // 
             // pnlGFX1
@@ -1734,7 +1734,7 @@ namespace Mids_Reborn.Forms
             this.mainPanel.SetFlowBreak(this.pnlGFX1, true);
             this.pnlGFX1.Location = new System.Drawing.Point(3, 3);
             this.pnlGFX1.Name = "pnlGFX1";
-            this.pnlGFX1.Size = new System.Drawing.Size(810, 859);
+            this.pnlGFX1.Size = new System.Drawing.Size(763, 859);
             this.pnlGFX1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pnlGFX1.TabIndex = 0;
             this.pnlGFX1.TabStop = false;
@@ -1744,7 +1744,7 @@ namespace Mids_Reborn.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1326, 962);
+            this.ClientSize = new System.Drawing.Size(1323, 962);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.leftPanel);
             this.Controls.Add(this.topPanel);
