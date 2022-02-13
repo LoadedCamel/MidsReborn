@@ -383,38 +383,41 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
 
-                if (!MidsContext.Config.LastLocation.IsEmpty)
+                if (MidsContext.Config.LastWindowState != FormWindowState.Maximized)
                 {
-                    Location = new Point(Math.Max(0, MidsContext.Config.LastLocation.X), Math.Max(0, MidsContext.Config.LastLocation.Y));
-                }
-                else
-                {
-                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
-                }
+                    if (!MidsContext.Config.LastLocation.IsEmpty)
+                    {
+                        Location = new Point(Math.Max(0, MidsContext.Config.LastLocation.X), Math.Max(0, MidsContext.Config.LastLocation.Y));
+                    }
+                    else
+                    {
+                        Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
+                    }
 
-                if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
-                {
-                    var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
-                    var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
-                    var hasValidBoth = hasMaxSize & hasValidLastSize;
-                    var needsWidthReduction = Screen.PrimaryScreen.WorkingArea.Width > MaximumSize.Width ? 1 : 0;
-                    width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.LastSize.Width;
-                }
-                else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.LastSize.Width)
-                {
-                    width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
-                }
+                    if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
+                    {
+                        var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
+                        var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
+                        var hasValidBoth = hasMaxSize & hasValidLastSize;
+                        var needsWidthReduction = Screen.PrimaryScreen.WorkingArea.Width > MaximumSize.Width ? 1 : 0;
+                        width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.LastSize.Width;
+                    }
+                    else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.LastSize.Width)
+                    {
+                        width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
+                    }
 
-                if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
-                {
-                    height1 = MidsContext.Config.LastSize.Height;
-                }
-                else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
-                {
-                    height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
-                }
+                    if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
+                    {
+                        height1 = MidsContext.Config.LastSize.Height;
+                    }
+                    else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
+                    {
+                        height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
+                    }
 
-                Size = new Size(width1, height1);
+                    Size = new Size(width1, height1);
+                }
 
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
@@ -467,6 +470,13 @@ namespace Mids_Reborn.Forms
                 /*if (MidsContext.Config.CheckForUpdates)
                     clsXMLUpdate.CheckUpdate();*/
 
+                // Delay maximize, otherwise the inherents section doesn't show up
+                if (MidsContext.Config.LastWindowState == FormWindowState.Maximized)
+                {
+                    Location = new Point(0, 0);
+                    WindowState = FormWindowState.Maximized;
+                    LastState = FormWindowState.Maximized;
+                }
             }
             catch (Exception ex)
             {
@@ -2100,6 +2110,10 @@ namespace Mids_Reborn.Forms
                 MidsContext.Config.LastLocation = Location;
             }
 
+            MidsContext.Config.LastWindowState = WindowState == FormWindowState.Maximized
+                ? FormWindowState.Maximized
+                : FormWindowState.Normal;
+
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
             if (MidsContext.Config.DiscordEnabled is true)
             {
@@ -2146,6 +2160,8 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
+            if (loading) return;
+
             UpdatePoolsPanelSize();
             if (dvAnchored != null)
             {

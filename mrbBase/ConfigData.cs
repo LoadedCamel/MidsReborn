@@ -125,6 +125,8 @@ namespace mrbBase
 
         public Point LastLocation { get; set; }
 
+        public FormWindowState LastWindowState { get; set; }
+
         public bool UseOldTotalsWindow { get; set; }
         public float BaseAcc { get; set; } = 0.75f;
         public bool DoNotUpdateFileAssociation { get; set; }

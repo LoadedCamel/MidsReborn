@@ -2861,7 +2861,7 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Endurance:
                         if (pBase.Effects[Index[ID]].BuffedMag < -0.01 && pBase.Effects[Index[ID]].BuffedMag > -1)
                         {
-                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2} ---";
+                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
                             shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
                             shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
                             tag2.Assign(shortFxBase);
