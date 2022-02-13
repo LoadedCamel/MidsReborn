@@ -7,14 +7,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms
 {
     public partial class FrmMain2 : Form
     {
+        private frmInitializing _frmInitializing;
+        private bool Loading { get; set; }
+
         public FrmMain2()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            ConfigData.Initialize(Serializer.GetSerializer());
+            Load += FrmMain2_Load;
             InitializeComponent();
+        }
+
+        private void FrmMain2_Load(object sender, EventArgs e)
+        {
+            if (MidsContext.Config.I9.DefaultIOLevel == 27)
+            {
+                MidsContext.Config.I9.DefaultIOLevel = 49;
+            }
+
+            using frmInitializing iFrm = new frmInitializing();
+            _frmInitializing = iFrm;
+            _frmInitializing.Show();
+            if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
+            {
+                MidsContext.Config.CheckForUpdates = false;
+                MidsContext.Config.DefaultSaveFolderOverride = null;
+                MidsContext.Config.CreateDefaultSaveFolder();
+                MidsContext.Config.IsInitialized = true;
+            }
+            MainModule.MidsController.LoadData(ref _frmInitializing);
+            _frmInitializing?.SetMessage("Setting up UI...");
+
+            Show();
+            _frmInitializing.Hide();
+            _frmInitializing.Close();
+            Refresh();
+            Loading = false;
         }
 
         private void tsAdvResetTips_Click(object sender, EventArgs e)
