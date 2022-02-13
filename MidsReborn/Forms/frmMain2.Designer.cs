@@ -33,6 +33,9 @@ namespace Mids_Reborn.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.DlgOpen = new System.Windows.Forms.OpenFileDialog();
+            this.DlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.tmrGfx = new System.Windows.Forms.Timer(this.components);
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblHero = new System.Windows.Forms.Label();
             this.ibTeam = new System.Windows.Forms.Button();
@@ -46,10 +49,14 @@ namespace Mids_Reborn.Forms
             this.ibRecipe = new System.Windows.Forms.Button();
             this.ibPopup = new System.Windows.Forms.Button();
             this.leftPanel = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.dvPlaceholder = new System.Windows.Forms.Panel();
+            this.secondaryPlaceholder = new System.Windows.Forms.Panel();
+            this.primaryPlaceholder = new System.Windows.Forms.Panel();
+            this.epicPlaceholder = new System.Windows.Forms.Panel();
+            this.pool3Placeholder = new System.Windows.Forms.Panel();
+            this.pool2Placeholder = new System.Windows.Forms.Panel();
+            this.pool1Placeholder = new System.Windows.Forms.Panel();
+            this.pool0Placeholder = new System.Windows.Forms.Panel();
             this.lblName = new System.Windows.Forms.Label();
             this.lblAT = new System.Windows.Forms.Label();
             this.lblOrigin = new System.Windows.Forms.Label();
@@ -78,12 +85,12 @@ namespace Mids_Reborn.Forms
             this.cbPool3 = new System.Windows.Forms.ComboBox();
             this.lblEpic = new System.Windows.Forms.Label();
             this.cbAncillary = new System.Windows.Forms.ComboBox();
-            this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblLocked0 = new System.Windows.Forms.Label();
             this.lblLocked1 = new System.Windows.Forms.Label();
             this.lblLocked2 = new System.Windows.Forms.Label();
             this.lblLocked3 = new System.Windows.Forms.Label();
             this.lblLockedAncillary = new System.Windows.Forms.Label();
+            this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -200,13 +207,22 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.mainPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlGFX1 = new mrbControls.pnlGFX();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.topPanel.SuspendLayout();
             this.leftPanel.SuspendLayout();
             this.menuBar.SuspendLayout();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlGFX1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // DlgOpen
+            // 
+            this.DlgOpen.DefaultExt = "mxd";
+            this.DlgOpen.Filter = "Hero/Villain Builds (*.mxd)|*.mxd;*.txt|Text Files (*.txt)|*.txt";
+            // 
+            // DlgSave
+            // 
+            this.DlgSave.DefaultExt = "mxd";
+            this.DlgSave.Filter = "Hero/Villain Builds (*.mxd)|*.mxd";
             // 
             // topPanel
             // 
@@ -333,11 +349,14 @@ namespace Mids_Reborn.Forms
             // 
             this.leftPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.leftPanel.BackColor = System.Drawing.Color.Black;
-            this.leftPanel.Controls.Add(this.panel5);
-            this.leftPanel.Controls.Add(this.panel4);
-            this.leftPanel.Controls.Add(this.panel3);
-            this.leftPanel.Controls.Add(this.panel2);
-            this.leftPanel.Controls.Add(this.panel1);
+            this.leftPanel.Controls.Add(this.dvPlaceholder);
+            this.leftPanel.Controls.Add(this.secondaryPlaceholder);
+            this.leftPanel.Controls.Add(this.primaryPlaceholder);
+            this.leftPanel.Controls.Add(this.epicPlaceholder);
+            this.leftPanel.Controls.Add(this.pool3Placeholder);
+            this.leftPanel.Controls.Add(this.pool2Placeholder);
+            this.leftPanel.Controls.Add(this.pool1Placeholder);
+            this.leftPanel.Controls.Add(this.pool0Placeholder);
             this.leftPanel.Controls.Add(this.lblName);
             this.leftPanel.Controls.Add(this.lblAT);
             this.leftPanel.Controls.Add(this.lblOrigin);
@@ -356,15 +375,20 @@ namespace Mids_Reborn.Forms
             this.leftPanel.Controls.Add(this.cbOrigin);
             this.leftPanel.Controls.Add(this.cbAT);
             this.leftPanel.Controls.Add(this.lblPrimary);
+            this.leftPanel.Controls.Add(this.lblLocked0);
             this.leftPanel.Controls.Add(this.lblPool1);
             this.leftPanel.Controls.Add(this.cbPool0);
             this.leftPanel.Controls.Add(this.lblPool2);
+            this.leftPanel.Controls.Add(this.lblLocked1);
             this.leftPanel.Controls.Add(this.cbPool1);
             this.leftPanel.Controls.Add(this.lblPool3);
+            this.leftPanel.Controls.Add(this.lblLocked2);
             this.leftPanel.Controls.Add(this.cbPool2);
             this.leftPanel.Controls.Add(this.lblPool4);
+            this.leftPanel.Controls.Add(this.lblLocked3);
             this.leftPanel.Controls.Add(this.cbPool3);
             this.leftPanel.Controls.Add(this.lblEpic);
+            this.leftPanel.Controls.Add(this.lblLockedAncillary);
             this.leftPanel.Controls.Add(this.cbAncillary);
             this.leftPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.leftPanel.ForeColor = System.Drawing.Color.WhiteSmoke;
@@ -373,33 +397,61 @@ namespace Mids_Reborn.Forms
             this.leftPanel.Size = new System.Drawing.Size(501, 874);
             this.leftPanel.TabIndex = 1;
             // 
-            // panel4
+            // dvPlaceholder
             // 
-            this.panel4.Location = new System.Drawing.Point(337, 613);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(138, 95);
-            this.panel4.TabIndex = 113;
+            this.dvPlaceholder.Location = new System.Drawing.Point(12, 458);
+            this.dvPlaceholder.Name = "dvPlaceholder";
+            this.dvPlaceholder.Size = new System.Drawing.Size(317, 404);
+            this.dvPlaceholder.TabIndex = 126;
             // 
-            // panel3
+            // secondaryPlaceholder
             // 
-            this.panel3.Location = new System.Drawing.Point(337, 467);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(138, 95);
-            this.panel3.TabIndex = 112;
+            this.secondaryPlaceholder.Location = new System.Drawing.Point(177, 175);
+            this.secondaryPlaceholder.Name = "secondaryPlaceholder";
+            this.secondaryPlaceholder.Size = new System.Drawing.Size(152, 250);
+            this.secondaryPlaceholder.TabIndex = 125;
             // 
-            // panel2
+            // primaryPlaceholder
             // 
-            this.panel2.Location = new System.Drawing.Point(337, 321);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(138, 95);
-            this.panel2.TabIndex = 111;
+            this.primaryPlaceholder.Location = new System.Drawing.Point(12, 175);
+            this.primaryPlaceholder.Name = "primaryPlaceholder";
+            this.primaryPlaceholder.Size = new System.Drawing.Size(152, 250);
+            this.primaryPlaceholder.TabIndex = 124;
             // 
-            // panel1
+            // epicPlaceholder
             // 
-            this.panel1.Location = new System.Drawing.Point(337, 175);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(138, 95);
-            this.panel1.TabIndex = 110;
+            this.epicPlaceholder.Location = new System.Drawing.Point(337, 759);
+            this.epicPlaceholder.Name = "epicPlaceholder";
+            this.epicPlaceholder.Size = new System.Drawing.Size(138, 95);
+            this.epicPlaceholder.TabIndex = 123;
+            // 
+            // pool3Placeholder
+            // 
+            this.pool3Placeholder.Location = new System.Drawing.Point(337, 613);
+            this.pool3Placeholder.Name = "pool3Placeholder";
+            this.pool3Placeholder.Size = new System.Drawing.Size(138, 95);
+            this.pool3Placeholder.TabIndex = 113;
+            // 
+            // pool2Placeholder
+            // 
+            this.pool2Placeholder.Location = new System.Drawing.Point(337, 467);
+            this.pool2Placeholder.Name = "pool2Placeholder";
+            this.pool2Placeholder.Size = new System.Drawing.Size(138, 95);
+            this.pool2Placeholder.TabIndex = 112;
+            // 
+            // pool1Placeholder
+            // 
+            this.pool1Placeholder.Location = new System.Drawing.Point(337, 321);
+            this.pool1Placeholder.Name = "pool1Placeholder";
+            this.pool1Placeholder.Size = new System.Drawing.Size(138, 95);
+            this.pool1Placeholder.TabIndex = 111;
+            // 
+            // pool0Placeholder
+            // 
+            this.pool0Placeholder.Location = new System.Drawing.Point(337, 175);
+            this.pool0Placeholder.Name = "pool0Placeholder";
+            this.pool0Placeholder.Size = new System.Drawing.Size(138, 95);
+            this.pool0Placeholder.TabIndex = 110;
             // 
             // lblName
             // 
@@ -488,9 +540,9 @@ namespace Mids_Reborn.Forms
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
-            this.lblLockedSecondary.Location = new System.Drawing.Point(178, 147);
+            this.lblLockedSecondary.Location = new System.Drawing.Point(177, 146);
             this.lblLockedSecondary.Name = "lblLockedSecondary";
-            this.lblLockedSecondary.Size = new System.Drawing.Size(144, 22);
+            this.lblLockedSecondary.Size = new System.Drawing.Size(152, 22);
             this.lblLockedSecondary.TabIndex = 109;
             this.lblLockedSecondary.Text = "Sec. Locked";
             this.lblLockedSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -524,19 +576,19 @@ namespace Mids_Reborn.Forms
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSecondary.ForeColor = System.Drawing.Color.Black;
             this.cbSecondary.ItemHeight = 16;
-            this.cbSecondary.Location = new System.Drawing.Point(178, 147);
+            this.cbSecondary.Location = new System.Drawing.Point(177, 147);
             this.cbSecondary.MaxDropDownItems = 15;
             this.cbSecondary.Name = "cbSecondary";
-            this.cbSecondary.Size = new System.Drawing.Size(144, 22);
+            this.cbSecondary.Size = new System.Drawing.Size(152, 22);
             this.cbSecondary.TabIndex = 11;
             // 
             // lblSecondary
             // 
             this.lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblSecondary.ForeColor = System.Drawing.Color.White;
-            this.lblSecondary.Location = new System.Drawing.Point(176, 127);
+            this.lblSecondary.Location = new System.Drawing.Point(175, 127);
             this.lblSecondary.Name = "lblSecondary";
-            this.lblSecondary.Size = new System.Drawing.Size(136, 17);
+            this.lblSecondary.Size = new System.Drawing.Size(154, 17);
             this.lblSecondary.TabIndex = 10;
             this.lblSecondary.Text = "Secondary Power Set";
             this.lblSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -548,10 +600,10 @@ namespace Mids_Reborn.Forms
             this.cbPrimary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPrimary.ForeColor = System.Drawing.Color.Black;
             this.cbPrimary.ItemHeight = 16;
-            this.cbPrimary.Location = new System.Drawing.Point(16, 147);
+            this.cbPrimary.Location = new System.Drawing.Point(12, 147);
             this.cbPrimary.MaxDropDownItems = 15;
             this.cbPrimary.Name = "cbPrimary";
-            this.cbPrimary.Size = new System.Drawing.Size(144, 22);
+            this.cbPrimary.Size = new System.Drawing.Size(152, 22);
             this.cbPrimary.TabIndex = 7;
             // 
             // cbOrigin
@@ -585,9 +637,9 @@ namespace Mids_Reborn.Forms
             // 
             this.lblPrimary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPrimary.ForeColor = System.Drawing.Color.White;
-            this.lblPrimary.Location = new System.Drawing.Point(24, 127);
+            this.lblPrimary.Location = new System.Drawing.Point(12, 127);
             this.lblPrimary.Name = "lblPrimary";
-            this.lblPrimary.Size = new System.Drawing.Size(136, 17);
+            this.lblPrimary.Size = new System.Drawing.Size(152, 17);
             this.lblPrimary.TabIndex = 9;
             this.lblPrimary.Text = "Primary Power Set";
             this.lblPrimary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -717,9 +769,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked0.Location = new System.Drawing.Point(308, 166);
+            this.lblLocked0.Location = new System.Drawing.Point(337, 146);
             this.lblLocked0.Name = "lblLocked0";
-            this.lblLocked0.Size = new System.Drawing.Size(92, 29);
+            this.lblLocked0.Size = new System.Drawing.Size(138, 22);
             this.lblLocked0.TabIndex = 72;
             this.lblLocked0.Text = "Pool Locked";
             this.lblLocked0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -730,9 +782,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked1.Location = new System.Drawing.Point(308, 186);
+            this.lblLocked1.Location = new System.Drawing.Point(337, 290);
             this.lblLocked1.Name = "lblLocked1";
-            this.lblLocked1.Size = new System.Drawing.Size(92, 29);
+            this.lblLocked1.Size = new System.Drawing.Size(138, 22);
             this.lblLocked1.TabIndex = 73;
             this.lblLocked1.Text = "Pool Locked";
             this.lblLocked1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -743,9 +795,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked2.Location = new System.Drawing.Point(304, 194);
+            this.lblLocked2.Location = new System.Drawing.Point(337, 439);
             this.lblLocked2.Name = "lblLocked2";
-            this.lblLocked2.Size = new System.Drawing.Size(92, 29);
+            this.lblLocked2.Size = new System.Drawing.Size(138, 22);
             this.lblLocked2.TabIndex = 74;
             this.lblLocked2.Text = "Pool Locked";
             this.lblLocked2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -756,9 +808,9 @@ namespace Mids_Reborn.Forms
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
-            this.lblLocked3.Location = new System.Drawing.Point(284, 210);
+            this.lblLocked3.Location = new System.Drawing.Point(337, 584);
             this.lblLocked3.Name = "lblLocked3";
-            this.lblLocked3.Size = new System.Drawing.Size(92, 29);
+            this.lblLocked3.Size = new System.Drawing.Size(138, 22);
             this.lblLocked3.TabIndex = 75;
             this.lblLocked3.Text = "Pool Locked";
             this.lblLocked3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -769,12 +821,18 @@ namespace Mids_Reborn.Forms
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
-            this.lblLockedAncillary.Location = new System.Drawing.Point(268, 230);
+            this.lblLockedAncillary.Location = new System.Drawing.Point(337, 730);
             this.lblLockedAncillary.Name = "lblLockedAncillary";
-            this.lblLockedAncillary.Size = new System.Drawing.Size(92, 29);
+            this.lblLockedAncillary.Size = new System.Drawing.Size(138, 22);
             this.lblLockedAncillary.TabIndex = 76;
             this.lblLockedAncillary.Text = "Pool Locked";
             this.lblLockedAncillary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tTip
+            // 
+            this.tTip.AutoPopDelay = 5000;
+            this.tTip.InitialDelay = 500;
+            this.tTip.ReshowDelay = 100;
             // 
             // menuBar
             // 
@@ -1662,6 +1720,7 @@ namespace Mids_Reborn.Forms
             // mainPanel
             // 
             this.mainPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mainPanel.BackColor = System.Drawing.Color.Transparent;
             this.mainPanel.Controls.Add(this.pnlGFX1);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(501, 88);
@@ -1671,6 +1730,7 @@ namespace Mids_Reborn.Forms
             // 
             // pnlGFX1
             // 
+            this.pnlGFX1.BackColor = System.Drawing.Color.Black;
             this.mainPanel.SetFlowBreak(this.pnlGFX1, true);
             this.pnlGFX1.Location = new System.Drawing.Point(3, 3);
             this.pnlGFX1.Name = "pnlGFX1";
@@ -1678,13 +1738,6 @@ namespace Mids_Reborn.Forms
             this.pnlGFX1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pnlGFX1.TabIndex = 0;
             this.pnlGFX1.TabStop = false;
-            // 
-            // panel5
-            // 
-            this.panel5.Location = new System.Drawing.Point(337, 759);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(138, 95);
-            this.panel5.TabIndex = 123;
             // 
             // FrmMain2
             // 
@@ -1762,6 +1815,9 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.Label lblPrimary;
         private System.Windows.Forms.Label lblSecondary;
         private System.Windows.Forms.ToolTip tTip;
+        private System.Windows.Forms.Timer tmrGfx;
+        private System.Windows.Forms.OpenFileDialog DlgOpen;
+        private System.Windows.Forms.SaveFileDialog DlgSave;
         private System.Windows.Forms.MenuStrip menuBar;
         private System.Windows.Forms.ToolStripMenuItem tsAdvDBEdit;
         private System.Windows.Forms.ToolStripMenuItem tsAdvFreshInstall;
@@ -1881,10 +1937,13 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.ToolStripMenuItem WindowToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel mainPanel;
         private mrbControls.pnlGFX pnlGFX1;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel pool3Placeholder;
+        private System.Windows.Forms.Panel pool2Placeholder;
+        private System.Windows.Forms.Panel pool1Placeholder;
+        private System.Windows.Forms.Panel pool0Placeholder;
+        private System.Windows.Forms.Panel epicPlaceholder;
+        private System.Windows.Forms.Panel dvPlaceholder;
+        private System.Windows.Forms.Panel secondaryPlaceholder;
+        private System.Windows.Forms.Panel primaryPlaceholder;
     }
 }
