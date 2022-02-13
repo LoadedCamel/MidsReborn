@@ -1763,17 +1763,16 @@ namespace Mids_Reborn.Forms.Controls
                     tabBox.InactiveTabColor = Color.FromArgb(45, 0, 77);
                     break;
 
-                // Green and Teal colors need some refreshers.
                 case 2:
-                    // L=50 / L=30
-                    tabBox.ActiveTabColor = Color.Green;
-                    tabBox.InactiveTabColor = Color.FromArgb(0, 77, 0);
+                    // L=33 / L=20
+                    tabBox.ActiveTabColor = Color.FromArgb(2, 85, 55);
+                    tabBox.InactiveTabColor = Color.FromArgb(1, 51, 33);
                     break;
 
                 case 3:
-                    // L=50 / L=30
-                    tabBox.ActiveTabColor = Color.Teal;
-                    tabBox.InactiveTabColor = Color.FromArgb(0, 77, 77);
+                    // L=45 / L=27
+                    tabBox.ActiveTabColor = Color.FromArgb(0, 98, 116);
+                    tabBox.InactiveTabColor = Color.FromArgb(0, 59, 69);
                     break;
 
                 case 4:

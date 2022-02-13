@@ -136,7 +136,7 @@
             this.tabBox.TabIndex = 0;
             this.tabBox.TabPanelBackColor = System.Drawing.Color.Black;
             this.tabBox.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRenderer2D);
-            this.tabBox.Text = "EFFECTS";
+            this.tabBox.Text = "INFO";
             this.tabBox.ThemeName = "TabRenderer2D";
             this.tabBox.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             this.tabBox.UseMnemonic = false;
@@ -266,7 +266,7 @@
             this.lblDamage.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblDamage.Location = new System.Drawing.Point(4, 284);
             this.lblDamage.Name = "lblDamage";
-            this.lblDamage.Size = new System.Drawing.Size(369, 17);
+            this.lblDamage.Size = new System.Drawing.Size(352, 17);
             this.lblDamage.TabIndex = 5;
             this.lblDamage.Text = "Damage:";
             this.lblDamage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -308,9 +308,9 @@
             this.infoTabTitle.BackColor = System.Drawing.Color.Black;
             this.infoTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.infoTabTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.infoTabTitle.Location = new System.Drawing.Point(15, 10);
+            this.infoTabTitle.Location = new System.Drawing.Point(24, 7);
             this.infoTabTitle.Name = "infoTabTitle";
-            this.infoTabTitle.Size = new System.Drawing.Size(329, 16);
+            this.infoTabTitle.Size = new System.Drawing.Size(312, 16);
             this.infoTabTitle.TabIndex = 0;
             this.infoTabTitle.Text = "Title";
             this.infoTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -552,7 +552,7 @@
             this.lblEffectsBlock3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEffectsBlock3.Location = new System.Drawing.Point(4, 254);
             this.lblEffectsBlock3.Name = "lblEffectsBlock3";
-            this.lblEffectsBlock3.Size = new System.Drawing.Size(367, 20);
+            this.lblEffectsBlock3.Size = new System.Drawing.Size(352, 20);
             this.lblEffectsBlock3.TabIndex = 13;
             this.lblEffectsBlock3.Text = "Block 3:";
             this.lblEffectsBlock3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -562,7 +562,7 @@
             this.lblEffectsBlock2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEffectsBlock2.Location = new System.Drawing.Point(4, 138);
             this.lblEffectsBlock2.Name = "lblEffectsBlock2";
-            this.lblEffectsBlock2.Size = new System.Drawing.Size(367, 20);
+            this.lblEffectsBlock2.Size = new System.Drawing.Size(352, 20);
             this.lblEffectsBlock2.TabIndex = 10;
             this.lblEffectsBlock2.Text = "Block 2:";
             this.lblEffectsBlock2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -572,7 +572,7 @@
             this.lblEffectsBlock1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEffectsBlock1.Location = new System.Drawing.Point(4, 25);
             this.lblEffectsBlock1.Name = "lblEffectsBlock1";
-            this.lblEffectsBlock1.Size = new System.Drawing.Size(367, 20);
+            this.lblEffectsBlock1.Size = new System.Drawing.Size(352, 20);
             this.lblEffectsBlock1.TabIndex = 7;
             this.lblEffectsBlock1.Text = "Block 1:";
             this.lblEffectsBlock1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -581,16 +581,16 @@
             // 
             this.effectsTabTitle.BackColor = System.Drawing.Color.Black;
             this.effectsTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.effectsTabTitle.Location = new System.Drawing.Point(15, 9);
+            this.effectsTabTitle.Location = new System.Drawing.Point(24, 7);
             this.effectsTabTitle.Name = "effectsTabTitle";
-            this.effectsTabTitle.Size = new System.Drawing.Size(329, 16);
+            this.effectsTabTitle.Size = new System.Drawing.Size(312, 16);
             this.effectsTabTitle.TabIndex = 0;
             this.effectsTabTitle.Text = "Title";
             this.effectsTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tabPageAdv3
             // 
-            this.tabPageAdv3.BackColor = System.Drawing.Color.Green;
+            this.tabPageAdv3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(85)))), ((int)(((byte)(55)))));
             this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsR);
             this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsL);
             this.tabPageAdv3.Controls.Add(this.label8);
@@ -609,7 +609,7 @@
             this.tabPageAdv3.Name = "tabPageAdv3";
             this.tabPageAdv3.ShowCloseButton = true;
             this.tabPageAdv3.Size = new System.Drawing.Size(360, 379);
-            this.tabPageAdv3.TabBackColor = System.Drawing.Color.Green;
+            this.tabPageAdv3.TabBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(85)))), ((int)(((byte)(55)))));
             this.tabPageAdv3.TabFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPageAdv3.TabForeColor = System.Drawing.Color.White;
             this.tabPageAdv3.TabIndex = 3;
@@ -686,7 +686,7 @@
             // 
             // label8
             // 
-            this.label8.BackColor = System.Drawing.Color.Green;
+            this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(85)))), ((int)(((byte)(55)))));
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(4, 241);
             this.label8.Name = "label8";
@@ -697,17 +697,17 @@
             // 
             // label7
             // 
-            this.label7.BackColor = System.Drawing.Color.Green;
+            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(85)))), ((int)(((byte)(55)))));
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(4, 135);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(367, 16);
+            this.label7.Size = new System.Drawing.Size(352, 16);
             this.label7.TabIndex = 6;
             this.label7.Text = "Resistance:";
             // 
             // label6
             // 
-            this.label6.BackColor = System.Drawing.Color.Green;
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(85)))), ((int)(((byte)(55)))));
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(4, 28);
             this.label6.Name = "label6";
@@ -718,14 +718,14 @@
             // label5
             // 
             this.label5.BackColor = System.Drawing.Color.Black;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(15, 9);
+            this.label5.Location = new System.Drawing.Point(24, 7);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(329, 16);
+            this.label5.Size = new System.Drawing.Size(312, 16);
             this.label5.TabIndex = 0;
             this.label5.Text = "Cumulative Totals (for Self)";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // dV2TotalsPane2R
             // 
@@ -773,7 +773,7 @@
             // 
             // tabPageAdv4
             // 
-            this.tabPageAdv4.BackColor = System.Drawing.Color.Teal;
+            this.tabPageAdv4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(98)))), ((int)(((byte)(116)))));
             this.tabPageAdv4.Controls.Add(this.skglEnhAlt);
             this.tabPageAdv4.Controls.Add(this.skglEnhActive);
             this.tabPageAdv4.Controls.Add(this.richEnhValues);
@@ -787,7 +787,7 @@
             this.tabPageAdv4.Name = "tabPageAdv4";
             this.tabPageAdv4.ShowCloseButton = true;
             this.tabPageAdv4.Size = new System.Drawing.Size(360, 379);
-            this.tabPageAdv4.TabBackColor = System.Drawing.Color.Teal;
+            this.tabPageAdv4.TabBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(98)))), ((int)(((byte)(116)))));
             this.tabPageAdv4.TabFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPageAdv4.TabForeColor = System.Drawing.Color.White;
             this.tabPageAdv4.TabIndex = 4;
@@ -836,24 +836,24 @@
             // label11
             // 
             this.label11.BackColor = System.Drawing.Color.Black;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label11.Location = new System.Drawing.Point(4, 29);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(352, 16);
             this.label11.TabIndex = 1;
             this.label11.Text = "Enhancement Values";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // enhanceTabTitle
             // 
             this.enhanceTabTitle.BackColor = System.Drawing.Color.Black;
-            this.enhanceTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.enhanceTabTitle.Location = new System.Drawing.Point(15, 9);
+            this.enhanceTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.enhanceTabTitle.Location = new System.Drawing.Point(24, 7);
             this.enhanceTabTitle.Name = "enhanceTabTitle";
-            this.enhanceTabTitle.Size = new System.Drawing.Size(329, 16);
+            this.enhanceTabTitle.Size = new System.Drawing.Size(312, 16);
             this.enhanceTabTitle.TabIndex = 0;
             this.enhanceTabTitle.Text = "Title";
-            this.enhanceTabTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.enhanceTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tabPageAdv5
             // 
@@ -1168,9 +1168,9 @@
             this.scalesTabTitle.BackColor = System.Drawing.Color.Black;
             this.scalesTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scalesTabTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.scalesTabTitle.Location = new System.Drawing.Point(15, 9);
+            this.scalesTabTitle.Location = new System.Drawing.Point(24, 7);
             this.scalesTabTitle.Name = "scalesTabTitle";
-            this.scalesTabTitle.Size = new System.Drawing.Size(329, 16);
+            this.scalesTabTitle.Size = new System.Drawing.Size(312, 16);
             this.scalesTabTitle.TabIndex = 1;
             this.scalesTabTitle.Text = "Title";
             this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
