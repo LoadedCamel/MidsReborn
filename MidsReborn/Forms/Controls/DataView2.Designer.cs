@@ -72,11 +72,14 @@
             this.totalsMiscEffectsL = new System.Windows.Forms.ListView();
             this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.dV2TotalsPane2R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane2L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane1R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
+            this.dV2TotalsPane1L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.skglEnhAlt = new SkiaSharp.Views.Desktop.SKGLControl();
             this.skglEnhActive = new SkiaSharp.Views.Desktop.SKGLControl();
@@ -87,20 +90,16 @@
             this.skglScalesGraph = new SkiaSharp.Views.Desktop.SKGLControl();
             this.panelPowerScaler3 = new System.Windows.Forms.Panel();
             this.lblPowerScaler3 = new System.Windows.Forms.Label();
+            this.powerScaler3 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.panelPowerScaler2 = new System.Windows.Forms.Panel();
             this.lblPowerScaler2 = new System.Windows.Forms.Label();
+            this.powerScaler2 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.panelPowerScaler1 = new System.Windows.Forms.Panel();
             this.labelPowerScaler1 = new System.Windows.Forms.Label();
+            this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
             this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.scalesTabTitle = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.dV2TotalsPane2R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.dV2TotalsPane2L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.dV2TotalsPane1R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.dV2TotalsPane1L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
-            this.powerScaler3 = new Mids_Reborn.Forms.Controls.ColorSlider();
-            this.powerScaler2 = new Mids_Reborn.Forms.Controls.ColorSlider();
-            this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
             this.tabBox.SuspendLayout();
             this.tabPageAdv1.SuspendLayout();
@@ -137,7 +136,7 @@
             this.tabBox.TabIndex = 0;
             this.tabBox.TabPanelBackColor = System.Drawing.Color.Black;
             this.tabBox.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRenderer2D);
-            this.tabBox.Text = "INFO";
+            this.tabBox.Text = "EFFECTS";
             this.tabBox.ThemeName = "TabRenderer2D";
             this.tabBox.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             this.tabBox.UseMnemonic = false;
@@ -582,7 +581,7 @@
             // 
             this.effectsTabTitle.BackColor = System.Drawing.Color.Black;
             this.effectsTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.effectsTabTitle.Location = new System.Drawing.Point(24, 9);
+            this.effectsTabTitle.Location = new System.Drawing.Point(15, 9);
             this.effectsTabTitle.Name = "effectsTabTitle";
             this.effectsTabTitle.Size = new System.Drawing.Size(329, 16);
             this.effectsTabTitle.TabIndex = 0;
@@ -594,7 +593,6 @@
             this.tabPageAdv3.BackColor = System.Drawing.Color.Green;
             this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsR);
             this.tabPageAdv3.Controls.Add(this.totalsMiscEffectsL);
-            this.tabPageAdv3.Controls.Add(this.label9);
             this.tabPageAdv3.Controls.Add(this.label8);
             this.tabPageAdv3.Controls.Add(this.label7);
             this.tabPageAdv3.Controls.Add(this.label6);
@@ -686,24 +684,13 @@
             // 
             this.columnHeader20.Width = 73;
             // 
-            // label9
-            // 
-            this.label9.BackColor = System.Drawing.Color.Green;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(4, 447);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(367, 20);
-            this.label9.TabIndex = 11;
-            this.label9.Text = "Click the \'View Totals\' button for more.";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label8
             // 
             this.label8.BackColor = System.Drawing.Color.Green;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(4, 241);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(367, 20);
+            this.label8.Size = new System.Drawing.Size(351, 20);
             this.label8.TabIndex = 10;
             this.label8.Text = "Misc effects:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -724,7 +711,7 @@
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(4, 28);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(367, 16);
+            this.label6.Size = new System.Drawing.Size(349, 16);
             this.label6.TabIndex = 3;
             this.label6.Text = "Defense:";
             // 
@@ -733,12 +720,56 @@
             this.label5.BackColor = System.Drawing.Color.Black;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(24, 9);
+            this.label5.Location = new System.Drawing.Point(15, 9);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(329, 16);
             this.label5.TabIndex = 0;
             this.label5.Text = "Cumulative Totals (for Self)";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // dV2TotalsPane2R
+            // 
+            this.dV2TotalsPane2R.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane2R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane2R.Location = new System.Drawing.Point(179, 151);
+            this.dV2TotalsPane2R.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane2R.Name = "dV2TotalsPane2R";
+            this.dV2TotalsPane2R.Size = new System.Drawing.Size(176, 90);
+            this.dV2TotalsPane2R.TabIndex = 5;
+            this.dV2TotalsPane2R.TabStop = false;
+            // 
+            // dV2TotalsPane2L
+            // 
+            this.dV2TotalsPane2L.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane2L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane2L.Location = new System.Drawing.Point(4, 151);
+            this.dV2TotalsPane2L.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane2L.Name = "dV2TotalsPane2L";
+            this.dV2TotalsPane2L.Size = new System.Drawing.Size(176, 90);
+            this.dV2TotalsPane2L.TabIndex = 4;
+            this.dV2TotalsPane2L.TabStop = false;
+            // 
+            // dV2TotalsPane1R
+            // 
+            this.dV2TotalsPane1R.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane1R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane1R.Location = new System.Drawing.Point(179, 45);
+            this.dV2TotalsPane1R.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane1R.Name = "dV2TotalsPane1R";
+            this.dV2TotalsPane1R.Size = new System.Drawing.Size(176, 90);
+            this.dV2TotalsPane1R.TabIndex = 2;
+            this.dV2TotalsPane1R.TabStop = false;
+            // 
+            // dV2TotalsPane1L
+            // 
+            this.dV2TotalsPane1L.BackColor = System.Drawing.Color.Black;
+            this.dV2TotalsPane1L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
+            this.dV2TotalsPane1L.Location = new System.Drawing.Point(4, 45);
+            this.dV2TotalsPane1L.Margin = new System.Windows.Forms.Padding(0);
+            this.dV2TotalsPane1L.Name = "dV2TotalsPane1L";
+            this.dV2TotalsPane1L.Size = new System.Drawing.Size(176, 90);
+            this.dV2TotalsPane1L.TabIndex = 1;
+            this.dV2TotalsPane1L.TabStop = false;
             // 
             // tabPageAdv4
             // 
@@ -877,124 +908,6 @@
             this.lblPowerScaler3.TabIndex = 1;
             this.lblPowerScaler3.Text = "Scale 3:";
             // 
-            // panelPowerScaler2
-            // 
-            this.panelPowerScaler2.BackColor = System.Drawing.Color.Black;
-            this.panelPowerScaler2.Controls.Add(this.lblPowerScaler2);
-            this.panelPowerScaler2.Controls.Add(this.powerScaler2);
-            this.panelPowerScaler2.Location = new System.Drawing.Point(4, 112);
-            this.panelPowerScaler2.Name = "panelPowerScaler2";
-            this.panelPowerScaler2.Size = new System.Drawing.Size(353, 16);
-            this.panelPowerScaler2.TabIndex = 12;
-            this.panelPowerScaler2.Visible = false;
-            // 
-            // lblPowerScaler2
-            // 
-            this.lblPowerScaler2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblPowerScaler2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPowerScaler2.Location = new System.Drawing.Point(0, 0);
-            this.lblPowerScaler2.Name = "lblPowerScaler2";
-            this.lblPowerScaler2.Size = new System.Drawing.Size(112, 16);
-            this.lblPowerScaler2.TabIndex = 1;
-            this.lblPowerScaler2.Text = "Scale 2:";
-            // 
-            // panelPowerScaler1
-            // 
-            this.panelPowerScaler1.BackColor = System.Drawing.Color.Black;
-            this.panelPowerScaler1.Controls.Add(this.labelPowerScaler1);
-            this.panelPowerScaler1.Controls.Add(this.powerScaler1);
-            this.panelPowerScaler1.Location = new System.Drawing.Point(4, 90);
-            this.panelPowerScaler1.Name = "panelPowerScaler1";
-            this.panelPowerScaler1.Size = new System.Drawing.Size(353, 16);
-            this.panelPowerScaler1.TabIndex = 11;
-            // 
-            // labelPowerScaler1
-            // 
-            this.labelPowerScaler1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.labelPowerScaler1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPowerScaler1.Location = new System.Drawing.Point(0, 0);
-            this.labelPowerScaler1.Name = "labelPowerScaler1";
-            this.labelPowerScaler1.Size = new System.Drawing.Size(112, 16);
-            this.labelPowerScaler1.TabIndex = 1;
-            this.labelPowerScaler1.Text = "Targets:";
-            // 
-            // richInfoScaleSmall
-            // 
-            this.richInfoScaleSmall.BackColor = System.Drawing.Color.Black;
-            this.richInfoScaleSmall.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richInfoScaleSmall.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richInfoScaleSmall.DetectUrls = false;
-            this.richInfoScaleSmall.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richInfoScaleSmall.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.richInfoScaleSmall.Location = new System.Drawing.Point(4, 30);
-            this.richInfoScaleSmall.Name = "richInfoScaleSmall";
-            this.richInfoScaleSmall.ReadOnly = true;
-            this.richInfoScaleSmall.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richInfoScaleSmall.Size = new System.Drawing.Size(353, 54);
-            this.richInfoScaleSmall.TabIndex = 2;
-            this.richInfoScaleSmall.Text = "Info small";
-            // 
-            // scalesTabTitle
-            // 
-            this.scalesTabTitle.BackColor = System.Drawing.Color.Black;
-            this.scalesTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scalesTabTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.scalesTabTitle.Location = new System.Drawing.Point(15, 9);
-            this.scalesTabTitle.Name = "scalesTabTitle";
-            this.scalesTabTitle.Size = new System.Drawing.Size(329, 16);
-            this.scalesTabTitle.TabIndex = 1;
-            this.scalesTabTitle.Text = "Title";
-            this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // dV2TotalsPane2R
-            // 
-            this.dV2TotalsPane2R.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane2R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane2R.Location = new System.Drawing.Point(179, 151);
-            this.dV2TotalsPane2R.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane2R.Name = "dV2TotalsPane2R";
-            this.dV2TotalsPane2R.Size = new System.Drawing.Size(176, 90);
-            this.dV2TotalsPane2R.TabIndex = 5;
-            this.dV2TotalsPane2R.TabStop = false;
-            // 
-            // dV2TotalsPane2L
-            // 
-            this.dV2TotalsPane2L.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane2L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(125)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane2L.Location = new System.Drawing.Point(4, 151);
-            this.dV2TotalsPane2L.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane2L.Name = "dV2TotalsPane2L";
-            this.dV2TotalsPane2L.Size = new System.Drawing.Size(176, 90);
-            this.dV2TotalsPane2L.TabIndex = 4;
-            this.dV2TotalsPane2L.TabStop = false;
-            // 
-            // dV2TotalsPane1R
-            // 
-            this.dV2TotalsPane1R.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane1R.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane1R.Location = new System.Drawing.Point(179, 45);
-            this.dV2TotalsPane1R.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane1R.Name = "dV2TotalsPane1R";
-            this.dV2TotalsPane1R.Size = new System.Drawing.Size(176, 90);
-            this.dV2TotalsPane1R.TabIndex = 2;
-            this.dV2TotalsPane1R.TabStop = false;
-            // 
-            // dV2TotalsPane1L
-            // 
-            this.dV2TotalsPane1L.BackColor = System.Drawing.Color.Black;
-            this.dV2TotalsPane1L.BackgroundColorEnd = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(125)))));
-            this.dV2TotalsPane1L.Location = new System.Drawing.Point(4, 45);
-            this.dV2TotalsPane1L.Margin = new System.Windows.Forms.Padding(0);
-            this.dV2TotalsPane1L.Name = "dV2TotalsPane1L";
-            this.dV2TotalsPane1L.Size = new System.Drawing.Size(176, 90);
-            this.dV2TotalsPane1L.TabIndex = 1;
-            this.dV2TotalsPane1L.TabStop = false;
-            // 
             // powerScaler3
             // 
             this.powerScaler3.BackColor = System.Drawing.Color.Black;
@@ -1060,6 +973,27 @@
             0,
             0});
             this.powerScaler3.ValueChanged += new System.EventHandler(this.powerScaler_ValueChanged);
+            // 
+            // panelPowerScaler2
+            // 
+            this.panelPowerScaler2.BackColor = System.Drawing.Color.Black;
+            this.panelPowerScaler2.Controls.Add(this.lblPowerScaler2);
+            this.panelPowerScaler2.Controls.Add(this.powerScaler2);
+            this.panelPowerScaler2.Location = new System.Drawing.Point(4, 112);
+            this.panelPowerScaler2.Name = "panelPowerScaler2";
+            this.panelPowerScaler2.Size = new System.Drawing.Size(353, 16);
+            this.panelPowerScaler2.TabIndex = 12;
+            this.panelPowerScaler2.Visible = false;
+            // 
+            // lblPowerScaler2
+            // 
+            this.lblPowerScaler2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblPowerScaler2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPowerScaler2.Location = new System.Drawing.Point(0, 0);
+            this.lblPowerScaler2.Name = "lblPowerScaler2";
+            this.lblPowerScaler2.Size = new System.Drawing.Size(112, 16);
+            this.lblPowerScaler2.TabIndex = 1;
+            this.lblPowerScaler2.Text = "Scale 2:";
             // 
             // powerScaler2
             // 
@@ -1127,6 +1061,26 @@
             0});
             this.powerScaler2.ValueChanged += new System.EventHandler(this.powerScaler_ValueChanged);
             // 
+            // panelPowerScaler1
+            // 
+            this.panelPowerScaler1.BackColor = System.Drawing.Color.Black;
+            this.panelPowerScaler1.Controls.Add(this.labelPowerScaler1);
+            this.panelPowerScaler1.Controls.Add(this.powerScaler1);
+            this.panelPowerScaler1.Location = new System.Drawing.Point(4, 90);
+            this.panelPowerScaler1.Name = "panelPowerScaler1";
+            this.panelPowerScaler1.Size = new System.Drawing.Size(353, 16);
+            this.panelPowerScaler1.TabIndex = 11;
+            // 
+            // labelPowerScaler1
+            // 
+            this.labelPowerScaler1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.labelPowerScaler1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPowerScaler1.Location = new System.Drawing.Point(0, 0);
+            this.labelPowerScaler1.Name = "labelPowerScaler1";
+            this.labelPowerScaler1.Size = new System.Drawing.Size(112, 16);
+            this.labelPowerScaler1.TabIndex = 1;
+            this.labelPowerScaler1.Text = "Targets:";
+            // 
             // powerScaler1
             // 
             this.powerScaler1.BackColor = System.Drawing.Color.Black;
@@ -1193,6 +1147,39 @@
             0});
             this.powerScaler1.ValueChanged += new System.EventHandler(this.powerScaler_ValueChanged);
             // 
+            // richInfoScaleSmall
+            // 
+            this.richInfoScaleSmall.BackColor = System.Drawing.Color.Black;
+            this.richInfoScaleSmall.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richInfoScaleSmall.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.richInfoScaleSmall.DetectUrls = false;
+            this.richInfoScaleSmall.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richInfoScaleSmall.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.richInfoScaleSmall.Location = new System.Drawing.Point(4, 30);
+            this.richInfoScaleSmall.Name = "richInfoScaleSmall";
+            this.richInfoScaleSmall.ReadOnly = true;
+            this.richInfoScaleSmall.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richInfoScaleSmall.Size = new System.Drawing.Size(353, 54);
+            this.richInfoScaleSmall.TabIndex = 2;
+            this.richInfoScaleSmall.Text = "Info small";
+            // 
+            // scalesTabTitle
+            // 
+            this.scalesTabTitle.BackColor = System.Drawing.Color.Black;
+            this.scalesTabTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scalesTabTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.scalesTabTitle.Location = new System.Drawing.Point(15, 9);
+            this.scalesTabTitle.Name = "scalesTabTitle";
+            this.scalesTabTitle.Size = new System.Drawing.Size(329, 16);
+            this.scalesTabTitle.TabIndex = 1;
+            this.scalesTabTitle.Text = "Title";
+            this.scalesTabTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // DataView2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1233,7 +1220,6 @@
         private System.Windows.Forms.Label label5;
         private DV2TotalsPane dV2TotalsPane1R;
         private DV2TotalsPane dV2TotalsPane1L;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private DV2TotalsPane dV2TotalsPane2R;
