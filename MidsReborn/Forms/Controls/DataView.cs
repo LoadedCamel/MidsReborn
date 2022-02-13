@@ -752,14 +752,15 @@ namespace Mids_Reborn.Forms.Controls
                             switch (pBase.Effects[rankedEffects[id]].EffectType)
                             {
                                 case Enums.eEffectType.Recovery:
-                                    rankedEffect.Name = "Recovery";
+                                case Enums.eEffectType.Endurance:
+                                    rankedEffect.Name = $"{pBase.Effects[rankedEffects[id]].EffectType}";
                                     var fxTarget = pEnh.Effects[rankedEffects[id]].ToWho switch
                                     {
-                                        Enums.eToWho.Self => " (Self)",
-                                        Enums.eToWho.Target => " (Tgt)",
+                                        Enums.eToWho.Self => "(Self)",
+                                        Enums.eToWho.Target => "(Tgt)",
                                         _ => ""
                                     };
-                                    rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}{fxTarget}";
+                                    rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100}% {fxTarget}" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
                                     break;
                                 
                                 case Enums.eEffectType.EntCreate:
@@ -2860,7 +2861,7 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Endurance:
                         if (pBase.Effects[Index[ID]].BuffedMag < -0.01 && pBase.Effects[Index[ID]].BuffedMag > -1)
                         {
-                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2}";
+                            temp = $"{pBase.Effects[Index[ID]].BuffedMag:P2} ---";
                             shortFxBase.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
                             shortFxEnh.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
                             tag2.Assign(shortFxBase);
