@@ -897,6 +897,12 @@ namespace Mids_Reborn.Forms.Controls
                     public float Value;
                 }
 
+                public struct Range
+                {
+                    public float Min;
+                    public float Max;
+                }
+
                 private static List<FxIdentifier> GetVariableStats(int historyIdx)
                 {
                     var ret = new List<FxIdentifier>();
@@ -946,7 +952,7 @@ namespace Mids_Reborn.Forms.Controls
                     return ret;
                 }
 
-                public static Dictionary<FxIdentifier, List<DataPoint>> GetPOI(int historyIdx)
+                internal static Dictionary<FxIdentifier, List<DataPoint>> GetPOI(int historyIdx)
                 {
                     var ret = new Dictionary<FxIdentifier, List<DataPoint>>();
                     var variableStats = GetVariableStats(historyIdx);
@@ -1006,6 +1012,230 @@ namespace Mids_Reborn.Forms.Controls
 
                     return ret;
                 }
+
+                internal static Range GetValuesRange(Dictionary<FxIdentifier, List<DataPoint>> dataPoints)
+                {
+                    if (dataPoints.Keys.Count <= 0)
+                    {
+                        return new Range { Min = 0, Max = 0 };
+                    }
+
+                    var ret = new Range { Min = float.MaxValue, Max = float.MinValue };
+
+                    foreach (var points in dataPoints.Values)
+                    {
+                        foreach (var p in points)
+                        {
+                            if (p.Value < ret.Min)
+                            {
+                                ret.Min = p.Value;
+                            }
+
+                            if (p.Value > ret.Max)
+                            {
+                                ret.Max = p.Value;
+                            }
+                        }
+                    }
+
+                    return ret;
+                }
+
+                internal static Dictionary<FxIdentifier, Range> GetValuesRangeEach(Dictionary<FxIdentifier, List<DataPoint>> dataPoints)
+                {
+                    var ret = new Dictionary<FxIdentifier, Range>();
+
+                    foreach (var points in dataPoints)
+                    {
+                        var range = new Range { Min = float.MaxValue, Max = float.MinValue };
+                        foreach (var p in points.Value)
+                        {
+                            if (p.Value < range.Min)
+                            {
+                                range.Min = p.Value;
+                            }
+
+                            if (p.Value > range.Max)
+                            {
+                                range.Max = p.Value;
+                            }
+                        }
+
+                        ret.Add(points.Key, range);
+                    }
+
+                    return ret;
+                }
+            }
+
+            private static SKColor GetGraphColorFromEffectType(Enums.eEffectType effectType)
+            {
+                switch (effectType)
+                {
+                    case Enums.eEffectType.Defense:
+                        return SKColors.Magenta;
+
+                    case Enums.eEffectType.Resistance:
+                        return new SKColor(0, 192, 192);
+
+                    case Enums.eEffectType.Regeneration:
+                        return new SKColor(64, 255, 64);
+
+                    case Enums.eEffectType.HitPoints:
+                        return new SKColor(44, 180, 44);
+
+                    case Enums.eEffectType.Recovery:
+                        return SKColors.DodgerBlue;
+
+                    case Enums.eEffectType.Endurance:
+                        return new SKColor(59, 158, 255);
+
+                    case Enums.eEffectType.SpeedFlying:
+                    case Enums.eEffectType.SpeedJumping:
+                    case Enums.eEffectType.SpeedRunning:
+                    case Enums.eEffectType.JumpHeight:
+                        return new SKColor(0, 192, 128);
+
+                    case Enums.eEffectType.MaxFlySpeed:
+                    case Enums.eEffectType.MaxJumpSpeed:
+                    case Enums.eEffectType.MaxRunSpeed:
+                        return new SKColor(0, 140, 94);
+
+                    case Enums.eEffectType.StealthRadius:
+                    case Enums.eEffectType.StealthRadiusPlayer:
+                    case Enums.eEffectType.PerceptionRadius:
+                        return new SKColor(106, 121, 136);
+
+                    case Enums.eEffectType.RechargeTime:
+                        return new SKColor(255, 128, 0);
+
+                    case Enums.eEffectType.ToHit:
+                        return new SKColor(255, 255, 128);
+
+                    case Enums.eEffectType.Accuracy:
+                        return SKColors.Yellow;
+
+                    case Enums.eEffectType.Damage:
+                        return SKColors.Red;
+
+                    case Enums.eEffectType.DamageBuff:
+                        return new SKColor(255, 64, 64);
+
+                    case Enums.eEffectType.EnduranceDiscount:
+                        return SKColors.RoyalBlue;
+
+                    case Enums.eEffectType.ThreatLevel:
+                        return SKColors.MediumPurple;
+
+                    case Enums.eEffectType.Elusivity:
+                        return new SKColor(163, 1, 231);
+
+                    case Enums.eEffectType.Mez:
+                        return new SKColor(113, 86, 168);
+
+                    case Enums.eEffectType.MezResist:
+                        return SKColors.Yellow;
+
+                    default:
+                        return new SKColor(13, 170, 222);
+                }
+            }
+
+            private static SKColor GetGraphCurveColor(PowerStats.FxIdentifier fxIdentifier)
+            {
+                return fxIdentifier.EffectType == Enums.eEffectType.Enhancement
+                    ? GetGraphColorFromEffectType(fxIdentifier.ETModifies)
+                    : GetGraphColorFromEffectType(fxIdentifier.EffectType);
+            }
+
+            public static SKImage DrawScalesGraphSurface(int historyIdx, int w, int h)
+            {
+                var padding = new SKSize(5, 5);
+                const int gridCells = 6;
+                var dataPoints = PowerStats.GetPOI(historyIdx);
+
+                var surface = SKSurface.Create(new SKImageInfo(w, h));
+                surface.Canvas.Clear(SKColors.Black);
+
+                if (dataPoints.Keys.Count <= 0) return surface.Snapshot();
+
+                // Grid
+
+                var pathGrid = new SKPath();
+                for (var i = 1; i < gridCells - 1; i++)
+                {
+                    pathGrid.MoveTo(padding.Width + (w - 2 * padding.Width) / gridCells * i, padding.Height);
+                    pathGrid.LineTo(padding.Width + (w - 2 * padding.Width) / gridCells * i, h - padding.Height);
+                }
+
+                for (var i = 1; i < gridCells - 1; i++)
+                {
+                    pathGrid.MoveTo(padding.Width, padding.Height + (h - 2 * padding.Height) / gridCells * i);
+                    pathGrid.LineTo(w - padding.Width, padding.Height + (h - 2 * padding.Height) / gridCells * i);
+                }
+
+                surface.Canvas.DrawPath(pathGrid, new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = new SKColor(160, 160, 160),
+                    StrokeWidth = 1,
+                    StrokeCap = SKStrokeCap.Butt,
+                    PathEffect = SKPathEffect.CreateDash(new float[] { 10, 10 }, 20)
+                });
+
+                // Axis
+
+                var pathAxis = new SKPath();
+                pathAxis.MoveTo(padding.Width, padding.Height);
+                pathAxis.LineTo(padding.Width, h - padding.Height);
+                pathAxis.LineTo(w - padding.Width, h - padding.Height);
+                surface.Canvas.DrawPath(pathAxis, new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = SKColors.WhiteSmoke,
+                    StrokeWidth = 1,
+                    StrokeCap = SKStrokeCap.Butt,
+                    PathEffect = SKPathEffect.CreateDash(new float[] { 10, 10 }, 20)
+                });
+
+                // Points/Lines
+
+                const float displayScaleFactor = 0.9f;
+                var absoluteRange = PowerStats.GetValuesRange(dataPoints);
+                var ranges = PowerStats.GetValuesRangeEach(dataPoints);
+                var scaleFactors = ranges.ToDictionary(range => range.Key,
+                    range => Math.Abs(range.Value.Min - range.Value.Max) < float.Epsilon
+                        ? displayScaleFactor
+                        : displayScaleFactor * (absoluteRange.Max - absoluteRange.Min) / (range.Value.Max - range.Value.Min));
+
+                var bottomLine = h - padding.Height - (1 - displayScaleFactor) * (h - 2 * padding.Height);
+
+                foreach (var series in dataPoints)
+                {
+                    var curveColor = GetGraphCurveColor(series.Key);
+                    var path = new SKPath();
+                    for (var i = 0; i < series.Value.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            path.MoveTo(padding.Width + i * (w - 2 * padding.Width), bottomLine - scaleFactors[series.Key] * Math.Abs(series.Value[i].Value));
+                        }
+                        else
+                        {
+                            path.LineTo(padding.Width + i * (w - 2 * padding.Width), bottomLine - scaleFactors[series.Key] * Math.Abs(series.Value[i].Value));
+                        }
+                    }
+
+                    surface.Canvas.DrawPath(path, new SKPaint
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        Color = curveColor,
+                        StrokeWidth = 1,
+                        StrokeCap = SKStrokeCap.Butt
+                    });
+                }
+
+                return surface.Snapshot();
             }
         }
 
@@ -1618,7 +1848,11 @@ namespace Mids_Reborn.Forms.Controls
 
         private void skglScalesGraph_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
+            var target = (SKGLControl)sender;
 
+            e.Surface.Canvas.Clear(SKColors.Black);
+            var graph = VariableStatsGraph.DrawScalesGraphSurface(HistoryIdx, target.Width, target.Height);
+            e.Surface.Canvas.DrawImage(graph, new SKPoint(0, 0));
         }
     }
 }
