@@ -73,6 +73,12 @@
     <Compile Include="Forms\frmBuildSalvageHud.Designer.cs">
       <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmMain2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMain2.Designer.cs">
+      <DependentUpon>frmMain2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -385,6 +391,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\DV2TotalsPane.resx">
       <DependentUpon>DV2TotalsPane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMain2.resx">
+      <DependentUpon>frmMain2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>

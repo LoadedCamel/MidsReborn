@@ -548,8 +548,9 @@ namespace mrbControls
 
             protected override void OnPaint(PaintEventArgs e)
             {
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
                 e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
