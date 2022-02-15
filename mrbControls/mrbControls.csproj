@@ -290,9 +290,6 @@
     <PackageReference Include="Syncfusion.Tools.Windows">
       <Version>19.3.0.57</Version>
     </PackageReference>
-    <PackageReference Include="Zstandard2.Net">
-      <Version>1.4.4</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mrbBase\mrbBase.csproj">
