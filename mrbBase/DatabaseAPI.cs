@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -872,7 +873,11 @@ namespace mrbBase
         public static bool EnhHasCatalyst(string uid)
         {
             if (string.IsNullOrEmpty(uid)) return false;
-            if (Database.Enhancements[GetEnhancementByUIDName(uid)].TypeID == Enums.eType.InventO) return false;
+
+            var baseUidIndex = GetEnhancementByUIDName(GetEnhancementBaseUIDName(uid));
+            if (baseUidIndex < 0) return false;
+
+            if (Database.Enhancements[baseUidIndex].TypeID == Enums.eType.InventO) return false;
             var setName = Regex.Replace(uid, @"(Attuned_|Superior_|Crafted_)", string.Empty);
 
             return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 3))) > 1;
