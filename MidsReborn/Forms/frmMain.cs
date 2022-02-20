@@ -30,6 +30,8 @@ namespace Mids_Reborn.Forms
 {
     public sealed partial class frmMain : Form
     {
+        private const string UriScheme = "MRB";
+
         private frmInitializing _frmInitializing;
 
         private frmBusy _frmBusy;
@@ -52,8 +54,13 @@ namespace Mids_Reborn.Forms
 
         public static frmMain MainInstance;
 
-        public frmMain()
+        private string[] CommandArgs { get; }
+        private string ProcessedCommand { get; set; }
+        private bool ProcessedFromCommand { get; set; }
+
+        public frmMain(string[] args)
         {
+            CommandArgs = args;
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 if (File.Exists(Files.GetConfigFilename(false)))
@@ -79,7 +86,6 @@ namespace Mids_Reborn.Forms
                         }
                     }
                 }
-
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -115,20 +121,12 @@ namespace Mids_Reborn.Forms
                 DbChangeRequested = false;
             }
             InitializeComponent();
-            MainInstance = this;
-            //Application.EnableVisualStyles();
-            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
 
+            MainInstance = this;
+            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
-            //enable menus
-            tsKoFi.Visible = true;
-            tsKoFi.Enabled = true;
-            tsPatreon.Visible = true;
-            tsPatreon.Enabled = true;
-
-
             tmrGfx.Tick += tmrGfx_Tick;
             //adding events
             if (Debugger.IsAttached && this.IsInDesignMode() && Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -157,7 +155,6 @@ namespace Mids_Reborn.Forms
 
             //var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
             Icon = Resources.reborn;
-            Name = nameof(frmMain);
         }
 
         public bool petWindowFlag { get; set; }
@@ -209,43 +206,13 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon == null) return "";
             if (!stripExt) return LastFileName;
 
-            Regex r = new Regex(@"\.(([tT][xX][tT])|([mM][hHxX][dD]))$");
+            var r = new Regex(@"\.(([tT][xX][tT])|([mM][hHxX][dD]))$");
             return r.Replace(LastFileName, "");
         }
 
         private ComboBoxT<string> GetCbOrigin()
         {
             return new ComboBoxT<string>(cbOrigin);
-        }
-
-        // [Zed 06/01/20]
-        // Input: argv: string[] Command line parameters, value: argument value to look for, caseSensitive: bool, perform case (in)sensitive lookup
-        // Output: bool, target value has (not) been found
-        private bool FindCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
-        {
-            // Only inspect first 10 arguments,
-            // skip first argument (aka %0), since it is the executable path.
-            for (var i = 1; i < Math.Min(10, argv.Length); i++)
-                if (caseSensitive)
-                {
-                    if (argv[i] == value) return true;
-                }
-                else
-                {
-                    if (string.Equals(argv[i], value, StringComparison.CurrentCultureIgnoreCase)) return true;
-                }
-
-            return false;
-        }
-
-        // [Zed 06/01/20]
-        // Input: clFilename: string, filename passed as command line argument
-        // Output: Usable filename (trimmed out of quotes)
-        // Note: not checked here, but a valid file name should be either a local path name (X:\...) or a UNC resource name (\\server\share\...)
-        // Integrate Environment.GetCommandLineArgs().Skip(1); directly here?
-        private string FormatFilenameFromParameter(string clFilename)
-        {
-            return clFilename.Replace("\"", string.Empty);
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -303,61 +270,72 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                var args = Environment.GetCommandLineArgs();
-                if (FindCommandLineParameter(args, "RECOVERY"))
-                {
-                    MessageBox.Show(@"As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.", @"Recovery Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    clsXMLUpdate.DownloadFromDomain();
-                    Application.Exit();
-                    return;
-                }
-
-                if (FindCommandLineParameter(args, "MASTERMODE=YES"))
-                {
-                    MidsContext.Config.MasterMode = true;
-                }
-
                 MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
-                var loadedFromArgs = false;
+                var comLoad = false;
                 var prevLastFileNameCfg = MidsContext.Config.LastFileName;
                 var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
-                if (args.Length > 1)
+                if (CommandArgs.Length > 0)
                 {
-                    // [Zed 08/26/21]
-                    // Instead of directly trying to load a build when an argument is passed from command line,
-                    // set the build full path into the config and pretend it's going to be loaded
-                    // like it is build you had open on previous run.
-                    var clFilename = FormatFilenameFromParameter(args[1]).Trim();
-                    if (File.Exists(clFilename))
+                    switch (CommandArgs[0])
                     {
-                        loadedFromArgs = true;
-                        MidsContext.Config.DisableLoadLastFileOnStart = false;
-                        MidsContext.Config.LastFileName = clFilename;
+                        case "-master":
+                            MidsContext.Config.MasterMode = true;
+                            tsAdvResetTips.Visible = true;
+                            SetTitleBar();
+                            ProcessedCommand = CommandArgs[0];
+                            ProcessedFromCommand = true;
+                            break;
+                        case "-load":
+                            var nArgs = CommandArgs.Skip(1);
+                            var file = string.Join(" ", nArgs);
+                            MidsContext.Config.DisableLoadLastFileOnStart = false;
+                            DoOpen(file);
+                            ProcessedFromCommand = true;
+
+                            break;
+                        default:
+                            if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Debug.WriteLine("URL Verified");
+                                Debug.WriteLine(uri);
+                            }
+                            else
+                            {
+                                Debug.WriteLine("URL NOT Verified");
+                                MidsContext.Config.DisableLoadLastFileOnStart = false;
+                                comLoad = true;
+                                ProcessedFromCommand = true;
+                            }
+                            break;
                     }
                 }
 
                 var toonLoaded = false;
-                if (!MidsContext.Config.DisableLoadLastFileOnStart)
+                if (!MidsContext.Config.DisableLoadLastFileOnStart && !ProcessedFromCommand)
+                {
                     toonLoaded = DoOpen(MidsContext.Config.LastFileName);
-                
+                }
+
                 if (!toonLoaded)
                 {
                     NewToon();
                     PowerModified(true);
                 }
 
-                if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded)
-                    PowerModified(true);
-
-                // Build loaded from a file set as argument from the command line: done
-                // Restore config variables to their original values.
-                if (loadedFromArgs)
+                switch (ProcessedFromCommand)
                 {
-                    MidsContext.Config.LastFileName = prevLastFileNameCfg;
-                    MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
+                    case false when !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded:
+                        PowerModified(true);
+                        break;
+                    // Build loaded from a file set as argument from the command line: done
+                    // Restore config variables to their original values.
+                    case true:
+                        MidsContext.Config.LastFileName = prevLastFileNameCfg;
+                        MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
+                        break;
                 }
 
                 dvAnchored.Init();
@@ -440,15 +418,14 @@ namespace Mids_Reborn.Forms
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;
-                if (MidsContext.Config.MasterMode)
-                {
-                    tsAdvFreshInstall.Visible = true;
-                    tsAdvResetTips.Visible = true;
-                }
                 Show();
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
+                if (comLoad)
+                {
+                    command_Load(CommandArgs[0]);
+                }
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -1105,9 +1082,7 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon.Locked & FileModified)
             {
                 FloatTop(false);
-                var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?",
-                    "Question",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
                     return;
@@ -1431,6 +1406,79 @@ namespace Mids_Reborn.Forms
             FloatUpdate(true);
 
             return true;
+        }
+
+        private bool DoLoad(string data)
+        {
+            Debug.WriteLine(data);
+            DataViewLocked = false;
+            NewToon(true, true);
+            if (data != null && (data.Contains("MxDz") || data.Contains("MxDu")))
+            {
+                Stream mStream = new MemoryStream(Encoding.ASCII.GetBytes(data));
+                var loaded = MainModule.MidsController.Toon.Load("", ref mStream);
+
+                if (loaded)
+                {
+                    Debug.WriteLine("Loaded");
+                    FileModified = false;
+                    drawing.Highlight = -1;
+                    petsButton.Visible = MidsContext.Character.Archetype.DisplayName == "Mastermind";
+                    petsButton.Enabled = MidsContext.Character.Archetype.DisplayName == "Mastermind";
+
+                    NewDraw();
+                    myDataView.Clear();
+                    MidsContext.Character.ResetLevel();
+                    PowerModified(true);
+                    UpdateControls(true);
+                    SetTitleBar();
+                    Application.DoEvents();
+                    GetBestDamageValues();
+                    UpdateColors();
+                    FloatUpdate(true);
+                }
+            }
+            return true;
+        }
+
+        private void command_Load(string data)
+        {
+            FloatTop(false);
+            FileModified = false;
+            var loaded = false;
+            NewToon();
+
+            if (data != null && (data.Contains("MxDz") || data.Contains("MxDu")))
+            {
+                Debug.WriteLine(data);
+                Stream mStream = new MemoryStream(new ASCIIEncoding().GetBytes(data));
+                loaded = MainModule.MidsController.Toon.Load("", ref mStream);
+            }
+
+            if (!loaded)
+                loaded = MainModule.MidsController.Toon.StringToInternalData(data);
+            if (loaded)
+            {
+                drawing.Highlight = -1;
+                NewDraw();
+                myDataView.Clear();
+                PowerModified(true);
+                UpdateControls(true);
+                SetFormHeight();
+            }
+            else
+            {
+                NewToon();
+                myDataView.Clear();
+                PowerModified(true);
+            }
+
+            GetBestDamageValues();
+            if (drawing != null)
+                DoRedraw();
+            UpdateColors();
+            FloatTop(true);
+            SetTitleBar();
         }
 
         public void DoRedraw()
@@ -2104,6 +2152,13 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Closed(object sender, EventArgs e)
         {
+            if (MidsContext.Config.MasterMode)
+            {
+                if (ProcessedFromCommand && ProcessedCommand.Contains("master"))
+                {
+                    MidsContext.Config.MasterMode = false;
+                }
+            }
             if (WindowState != FormWindowState.Minimized)
             {
                 MidsContext.Config.LastSize = Size;
