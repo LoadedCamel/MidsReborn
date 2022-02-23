@@ -39,13 +39,10 @@ namespace Mids_Reborn.Forms
             Name = nameof(frmRecipeViewer);
             //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
             Icon = Resources.reborn;
-            RecipeInfo.MouseWheel += RecipeInfo_MouseWheel;
-            RecipeInfo.MouseEnter += RecipeInfo_MouseEnter;
             lvPower.MouseEnter += lvPower_MouseEnter;
             lvPower.ItemChecked += lvPower_ItemChecked;
             lvDPA.SelectedIndexChanged += lvDPA_SelectedIndexChanged;
             lvDPA.MouseEnter += lvDPA_MouseEnter;
-            VScrollBar1.Scroll += VScrollBar1_Scroll;
             chkRecipe.CheckedChanged += chkRecipe_CheckedChanged;
             chkSortByLevel.CheckedChanged += chkSortByLevel_CheckedChanged;
             ibClipboard.ButtonClicked += ibClipboard_ButtonClicked;
@@ -139,21 +136,13 @@ namespace Mids_Reborn.Forms
             return popupData.Sections?.Sum(s => s.Content.Length) ?? 0;
         }
 
-        private void ChangeVScrollBarState(PopUp.PopupData popupData)
-        {
-            var lines = GetPopupDataLines(popupData);
-            VScrollBar1.Enabled = lines > 12;
-            VScrollBar1.Visible = lines > 12;
-        }
-
         private PopUp.PopupData BuildList(bool mini)
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
-            var tl = Array.Empty<CountingList>();
+            var tl = new List<CountingList>();
             if (lvDPA.SelectedIndices.Count < 1)
             {
-                ChangeVScrollBarState(popupData);
                 return popupData;
             }
 
@@ -179,17 +168,13 @@ namespace Mids_Reborn.Forms
                     if (lvDPA.Items[i].SubItems[1].Text == "*")
                     {
                         rIDX = -1;
-                        putInList(ref tl, lvDPA.Items[i].Text);
+                        PutInList(ref tl, lvDPA.Items[i].Text);
                     }
 
                     if (rIDX <= -1)
                     {
                         continue;
                     }
-
-                    Debug.WriteLine($"rIDX: {rIDX}, Recipe name (external): {DatabaseAPI.Database.Recipes[rIDX].ExternalName}, Recipe name (internal): {DatabaseAPI.Database.Recipes[rIDX].InternalName}");
-                    Debug.WriteLine($"GetEnhancementNameShortWSet(EnhIdx={DatabaseAPI.Database.Recipes[rIDX].EnhIdx}): {DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rIDX].EnhIdx)}");
-                    Debug.WriteLine($"IsGeneric: {DatabaseAPI.Database.Recipes[rIDX].IsGeneric}, IsVirtual: {DatabaseAPI.Database.Recipes[rIDX].IsVirtual}");
 
                     var iLevel = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text) - 1;
                     var itemId = FindItemID(rIDX, iLevel);
@@ -391,7 +376,7 @@ namespace Mids_Reborn.Forms
                         : $"{nonRecipeCount - 1} Non-Crafted Enhancements:";
 
                     popupData.Sections[index1].Add(iText2, PopUp.Colors.Title);
-                    for (var index2 = 0; index2 < tl.Length; index2++)
+                    for (var index2 = 0; index2 < tl.Count; index2++)
                     {
                         if (mini)
                         {
@@ -408,7 +393,7 @@ namespace Mids_Reborn.Forms
                     popupData.Sections[index1].Content = sortPopupStrings(mini, 1, popupData.Sections[index1].Content);
                 }
 
-                ChangeVScrollBarState(popupData);
+                RecipeInfo.Height = (int) Math.Round(RecipeInfo.lHeight) + Panel1.Height + 16;
                 RecipeInfo.ResumeLayout();
 
                 return popupData;
@@ -439,8 +424,6 @@ namespace Mids_Reborn.Forms
             DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
             if (rIdx <= -1)
             {
-                ChangeVScrollBarState(popupData);
-
                 return popupData;
             }
 
@@ -452,7 +435,6 @@ namespace Mids_Reborn.Forms
             {
                 var content = popupData.Sections[index4].Content;
                 content[0].Text = $"{content[0].Text} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
-                ChangeVScrollBarState(popupData);
 
                 return popupData;
             }
@@ -460,16 +442,9 @@ namespace Mids_Reborn.Forms
             var sContent = popupData.Sections[index4].Content;
             if (sContent != null) sContent[0].Text = "";
 
-            ChangeVScrollBarState(popupData);
             RecipeInfo.ResumeLayout();
-            return popupData;
-        }
 
-        private void ChangedRecipeInfoElements()
-        {
-            VScrollBar1.Value = 0;
-            VScrollBar1.Maximum =
-                (int) Math.Round(RecipeInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
+            return popupData;
         }
 
         private void chkRecipe_CheckedChanged(object sender, EventArgs e)
@@ -747,11 +722,12 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
         {
+            // Bug: open dps calc form then the recipe viewer, form size differs
+            Size = new Size(738, 543);
             lvPower.EnableDoubleBuffer();
             lvDPA.EnableDoubleBuffer();
             UpdateColorTheme();
             RecipeInfo.SetPopup(new PopUp.PopupData());
-            ChangedRecipeInfoElements();
             chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
             RecalcSalvage();
             SalvageHudVisible = myParent.IsSalvageHudVisible();
@@ -926,39 +902,22 @@ namespace Mids_Reborn.Forms
 
         private void lvDPA_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RecipeInfo.ScrollY = 0.0f;
             RecipeInfo.SetPopup(BuildList(false));
-            ChangedRecipeInfoElements();
         }
 
-        private static void putInList(ref CountingList[] tl, string item)
+        private static void PutInList(ref List<CountingList> tl, string item)
         {
-            var num = tl.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < tl.Count; index++)
             {
-                if (tl[index].Text != item)
-                    continue;
-                ++tl[index].Count;
+                var e = tl[index];
+                if (e.Text != item) continue;
+                
+                e.Count++;
+                
                 return;
             }
 
-            Array.Resize(ref tl, tl.Length + 1);
-            //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
-            tl[tl.Length - 1].Count = 1;
-            tl[tl.Length - 1].Text = item;
-        }
-
-        private void RecipeInfo_MouseEnter(object sender, EventArgs e)
-        {
-            VScrollBar1.Focus();
-        }
-
-        private void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
-        {
-            //VScrollBar1.Value =
-                //Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
-            VScrollBar1.Value = Math.Max(VScrollBar1.Minimum, Math.Min(VScrollBar1.Maximum - 9, VScrollBar1.Value + (e.Delta > 0 ? -1 : 1)));
-            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            tl.Add(new CountingList { Count = 1, Text = item });
         }
 
         public void SetLocation()
@@ -1056,12 +1015,6 @@ namespace Mids_Reborn.Forms
             if (Loading)
                 return;
             FillPowerList();
-        }
-
-        private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            RecipeInfo.ScrollY = VScrollBar1.Value / (float) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
-                                 (RecipeInfo.lHeight - Panel1.Height);
         }
 
         private struct CountingList
