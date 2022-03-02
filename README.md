@@ -4,9 +4,6 @@
 - Zed
 
 #### In-Active Development Team Members
-- Maslow
-- Pine
-- Procat
 - Feles Noctis
 
 #### Official Discord Server
