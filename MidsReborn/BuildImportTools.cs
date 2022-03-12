@@ -74,10 +74,25 @@ namespace Mids_Reborn
             if (i9Slot.Enh == -1)
             {
                 var iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
+                var r = new Regex(@"^(Science|Mutation|Technology|Natural)_(?!Science|Mutation|Technology|Natural|Magic)"); // SOs
+                if (r.IsMatch(iName))
+                {
+                    iName = r.Replace(iName, "Magic_");
+                    i9Slot.Grade = Enums.eEnhGrade.SingleO;
+                }
+
+                r = new Regex(@"^(Science|Mutation|Technology|Natural|Magic)_(Science|Mutation|Technology|Natural|Magic)"); // DOs
+                if (r.IsMatch(iName))
+                {
+                    iName = r.Replace(iName, "Magic");
+                    i9Slot.Grade = Enums.eEnhGrade.DualO;
+                    // DOs are converted to SOs
+                }
+
                 i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
                 if (i9Slot.Enh == -1)
                 {
-                    _ = MessageBox.Show("Error getting data for enhancement UID: " + enhInternalName, "Error",
+                    _ = MessageBox.Show($"Error getting data for enhancement UID: {enhInternalName}", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     i9Slot.Enh = 0;
                 }
