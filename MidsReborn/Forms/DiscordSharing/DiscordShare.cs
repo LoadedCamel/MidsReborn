@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -68,7 +69,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
             _oAuth = await _dataStore.Retrieve<Models.OAuthModel>();
             _discordUser = await _dataStore.Retrieve<Models.DiscordUserModel>();
-            var dTokenExpiry = await _discord.GetTokenExpiry(_oAuth.AccessToken);
+            var dTokenExpiry = DateTimeOffset.Parse(_oAuth.Expirey).UtcDateTime;
             if (DateTime.Now < dTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > dTokenExpiry.Subtract(TimeSpan.FromHours(8)))
             {
                 _oAuth = await _discord.RefreshAccessToken(_oAuth.RefreshToken);
@@ -89,7 +90,9 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
 
             _mrbAuth = await _dataStore.Retrieve<Models.MbAuthModel>();
-            var mTokenExpiry = DateTime.Parse(_mrbAuth.RefreshTokenExpiration).ToUniversalTime();
+            var mTokenExpiry = DateTimeOffset.Parse(_mrbAuth.RefreshTokenExpiration).UtcDateTime;
+            Debug.WriteLine($"mToken Expire: {mTokenExpiry}");
+            Debug.WriteLine(mTokenExpiry.Subtract(TimeSpan.FromHours(8)));
             if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
             {
                 _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);

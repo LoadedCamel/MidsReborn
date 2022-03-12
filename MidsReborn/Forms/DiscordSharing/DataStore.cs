@@ -25,7 +25,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                     Directory.CreateDirectory(path);
                 }
             }
-            var dataStore = new LiteDatabase(_path);
+            var dataStore = new LiteDatabase($"Filename={_path};Connection=shared");
             return dataStore;
         }
 

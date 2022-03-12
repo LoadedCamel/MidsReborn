@@ -90,13 +90,5 @@ namespace Mids_Reborn.Forms.DiscordSharing
             var responseStream = await restClient.DownloadStreamAsync(request, CancellationToken.None);
             return responseStream != null ? Image.FromStream(responseStream) : Image.FromFile("images\\defaultAvatar.png");
         }
-
-        internal async Task<DateTime> GetTokenExpiry(string accessToken)
-        {
-            var expireRequest = new RestRequest("oauth2/@me");
-            _restClient.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, "Bearer");
-            var result = await _restClient.GetAsync<DiscordExpireModel>(expireRequest, CancellationToken.None);
-            return result.Expires;
-        }
     }
 }
