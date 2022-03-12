@@ -7,7 +7,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
 {
     internal static class Models
     {
-        internal struct OAuthModel
+        internal class OAuthModel
         {
             [JsonProperty("access_token")]
             public string AccessToken { get; set; }
@@ -19,6 +19,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             public string RefreshToken { get; set; }
             [JsonProperty("scope")]
             public string Scope { get; set; }
+            public string Expirey => $"{DateTime.UtcNow.AddSeconds(ExpiresIn)}";
         }
 
         internal struct DiscordUserModel
