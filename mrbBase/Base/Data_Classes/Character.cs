@@ -977,11 +977,13 @@ namespace mrbBase.Base.Data_Classes
                                 "Set Type: " + DatabaseAPI.Database.SetTypeStringLong[
                                     (int)DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType],
                                 PopUp.Colors.Invention);
+                        var levelMin = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1;
+                        var levelMax = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1;
                         popupData1.Sections[index3]
                             .Add(
-                                "Set Level Range: " +
-                                (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1) + " to " +
-                                (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1),
+                                levelMin == levelMax
+                                    ? $"Set Level: {levelMin}"
+                                    : $"Set Level Range: {levelMin} to {levelMax}",
                                 PopUp.Colors.Text);
                         popupData1.Add(PopSetEnhList(enhancement.nIDSet, powerEntry));
                         popupData1.Add(PopSetBonusListing(enhancement.nIDSet, powerEntry));
