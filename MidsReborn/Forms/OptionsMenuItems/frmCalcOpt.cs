@@ -14,7 +14,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 {
     public partial class frmCalcOpt : Form
     {
-        private readonly clsOAuth clsOAuth;
+        //private readonly clsOAuth clsOAuth;
         private readonly short[] defActs;
         private readonly frmMain myParent;
         private readonly string[][] scenActs;
@@ -306,14 +306,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             fcDisplay();
         }
 
-
-        private void InvBot_Click(object sender, EventArgs e)
-        {
-            var botLink = clsDiscord.ShrinkTheDatalink(
-                "https://discordapp.com/api/oauth2/authorize?client_id=593333282234695701&permissions=18432&redirect_uri=https%3A%2F%2Fmidsreborn.com&scope=bot");
-            Process.Start(botLink);
-        }
-
         private void fcNotes_TextChanged(object sender, EventArgs e)
         {
             if ((fcList.SelectedIndex < 0) | fcNoUpdate)
@@ -589,7 +581,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
             chkColorPrint.Checked = config.PrintInColor;
-            if (config.DiscordEnabled != null) chkDiscordEnabled.Checked = (bool) config.DiscordEnabled;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
@@ -812,7 +803,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.ShowSOLevels = chkShowSOLevels.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColor = chkColorPrint.Checked;
-            config.DiscordEnabled = chkDiscordEnabled.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;

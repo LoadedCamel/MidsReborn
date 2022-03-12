@@ -64,6 +64,9 @@ namespace mrbBase
         public bool CoDEffectFormat = false;
         public ConfigData()
         {
+            ApplicationRegistered = false;
+            Authorized = false;
+            Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
             DamageMath.ReturnValue = EDamageReturn.Numeric;
             I9.DefaultIOLevel = 49;
@@ -73,15 +76,15 @@ namespace mrbBase
             Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
-            DiscordEnabled = false;
-            Registered = 0;
-            DiscordAuthorized = false;
             ShowSelfBuffsAny = false;
             InitializeComponent();
         }
 
         private ConfigData(bool deserializing, string iFilename)
         {
+            ApplicationRegistered = false;
+            Authorized = false;
+            Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
             DamageMath.ReturnValue = EDamageReturn.Numeric;
             I9.DefaultIOLevel = 49;
@@ -104,9 +107,6 @@ namespace mrbBase
             }
 
             TeamMembers = new Dictionary<string, int>();
-            DiscordEnabled = false;
-            Registered = 0;
-            DiscordAuthorized = false;
             InitializeComponent();
         }
 
@@ -127,6 +127,9 @@ namespace mrbBase
 
         public FormWindowState LastWindowState { get; set; }
 
+        public bool ApplicationRegistered { get; set; }
+        public bool Authorized { get; set; }
+        public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }
         public float BaseAcc { get; set; } = 0.75f;
         public bool DoNotUpdateFileAssociation { get; set; }
@@ -151,9 +154,6 @@ namespace mrbBase
         public Enums.GraphStyle StatGraphStyle { get; set; } = Enums.GraphStyle.Stacked;
         public Enums.CompOverride[] CompOverride { get; set; }
 
-        public bool? DiscordEnabled { get; set; }
-        public bool DiscordAuthorized { get; set; }
-        public int Registered { get; set; } = 0;
         public bool DisableDesaturateInherent { get; set; }
         public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
         public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;
@@ -333,10 +333,6 @@ namespace mrbBase
                         return;
                 }
 
-                /* Commenting out for now - will remove later
-                this.DNickName = reader.ReadString();
-                this.DSelServer = reader.ReadString();
-                this.DChannel = reader.ReadString();*/
                 NoToolTips = reader.ReadBoolean();
                 BaseAcc = reader.ReadSingle();
                 double num3 = reader.ReadSingle();

@@ -1,19 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using Microsoft.Win32;
 using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.Forms.DiscordSharing;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
@@ -24,13 +30,15 @@ using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Mids_Reborn.Forms
 {
     public sealed partial class frmMain : Form
     {
-        private const string UriScheme = "MRB";
+        private const string UriScheme = "mrb";
 
         private frmInitializing _frmInitializing;
 
@@ -69,10 +77,6 @@ namespace Mids_Reborn.Forms
                     if (fInfo.Length > 0)
                     {
                         ConfigData.Initialize(Serializer.GetSerializer());
-                        if (MidsContext.Config.DiscordEnabled is true)
-                        {
-                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
-                        }
                     }
                     else
                     {
@@ -80,11 +84,11 @@ namespace Mids_Reborn.Forms
                         tempConfig.Save(Serializer.GetSerializer(), Files.GetConfigFilename(false));
                         tempConfig.SaveConfig(Serializer.GetSerializer());
                         ConfigData.Initialize(Serializer.GetSerializer());
-                        if (MidsContext.Config.DiscordEnabled is true)
-                        {
-                            ConfigDataSpecial.Initialize(Serializer.GetSerializer());
-                        }
                     }
+                }
+                if (!MidsContext.Config.ApplicationRegistered)
+                {
+                    RegisterUriScheme();
                 }
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
@@ -215,6 +219,21 @@ namespace Mids_Reborn.Forms
             return new ComboBoxT<string>(cbOrigin);
         }
 
+        private static void RegisterUriScheme()
+        {
+            // Modify to only perform on 1st run - need to account for removal as well. Perhaps move to the installer?
+            const string friendlyName = "Mids Reborn Protocol";
+            var applicationLocation = Assembly.GetExecutingAssembly().Location;
+            using var key = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{UriScheme}");
+            key?.SetValue("", $"URL:{friendlyName}");
+            key?.SetValue("URL Protocol", "");
+            using var defaultIcon = key?.CreateSubKey("DefaultIcon");
+            defaultIcon?.SetValue("", applicationLocation + ",1");
+            using var commandKey = key?.CreateSubKey(@"shell\open\command");
+            commandKey?.SetValue("", $"\"{applicationLocation}\" \"%1\"");
+            MidsContext.Config.ApplicationRegistered = true;
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             loading = true;
@@ -246,30 +265,6 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.IsInitialized = true;
                 }
 
-                if (MidsContext.Config.DiscordEnabled is true)
-                {
-                    if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
-                    {
-                        MidsContext.ConfigSp.IsInitialized = true;
-                    }
-                    if (!ConfigDataSpecial.HasAuth()) MidsContext.Config.DiscordAuthorized = false;
-                    if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
-                    {
-                        if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) &&
-                            !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
-                        {
-                            MidsContext.Config.DiscordAuthorized = true;
-                            MidsContext.Config.Registered = 1;
-                        }
-                        else
-                        {
-                            File.Delete(Files.GetConfigSpFile());
-                            MidsContext.Config.DiscordAuthorized = false;
-                            MidsContext.Config.Registered = 0;
-                        }
-                    }
-                }
-
                 MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
@@ -299,14 +294,15 @@ namespace Mids_Reborn.Forms
                         default:
                             if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
                             {
-                                Debug.WriteLine("URL Verified");
-                                Debug.WriteLine(uri);
+                                MidsContext.Config.DisableLoadLastFileOnStart = false;
+                                Task.Run(() => ProcessUriCommands(uri));
+                                ProcessedFromCommand = true;
                             }
                             else
                             {
-                                Debug.WriteLine("URL NOT Verified");
                                 MidsContext.Config.DisableLoadLastFileOnStart = false;
                                 comLoad = true;
+                                ProcessedCommand = CommandArgs[0];
                                 ProcessedFromCommand = true;
                             }
                             break;
@@ -424,7 +420,7 @@ namespace Mids_Reborn.Forms
                 Refresh();
                 if (comLoad)
                 {
-                    command_Load(CommandArgs[0]);
+                    command_Load(ProcessedCommand);
                 }
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
@@ -464,6 +460,16 @@ namespace Mids_Reborn.Forms
             }
 
             loading = false;
+        }
+
+        private async Task ProcessUriCommands(Uri uri)
+        {
+            using var nStream = new MemoryStream();
+            using var httpClient = new HttpClient();
+            var newUri = uri.ToString().Replace("mrb://", "https://");
+            var buildTask = await httpClient.GetStreamAsync(newUri);
+            await buildTask.CopyToAsync(nStream);
+            DoLoad(nStream);
         }
 
         internal void ChildRequestedRedraw()
@@ -1408,6 +1414,37 @@ namespace Mids_Reborn.Forms
             return true;
         }
 
+        private bool DoLoad(Stream data)
+        {
+            DataViewLocked = false;
+            NewToon(true, true);
+            if (data != null)
+            {
+                var loaded = MainModule.MidsController.Toon.Load("", ref data);
+
+                if (loaded)
+                {
+                    Debug.WriteLine("Loaded");
+                    FileModified = false;
+                    drawing.Highlight = -1;
+                    petsButton.Visible = MidsContext.Character.Archetype.DisplayName == "Mastermind";
+                    petsButton.Enabled = MidsContext.Character.Archetype.DisplayName == "Mastermind";
+
+                    NewDraw();
+                    myDataView.Clear();
+                    MidsContext.Character.ResetLevel();
+                    PowerModified(true);
+                    UpdateControls(true);
+                    SetTitleBar();
+                    Application.DoEvents();
+                    GetBestDamageValues();
+                    UpdateColors();
+                    FloatUpdate(true);
+                }
+            }
+            return true;
+        }
+
         private bool DoLoad(string data)
         {
             Debug.WriteLine(data);
@@ -1450,7 +1487,6 @@ namespace Mids_Reborn.Forms
 
             if (data != null && (data.Contains("MxDz") || data.Contains("MxDu")))
             {
-                Debug.WriteLine(data);
                 Stream mStream = new MemoryStream(new ASCIIEncoding().GetBytes(data));
                 loaded = MainModule.MidsController.Toon.Load("", ref mStream);
             }
@@ -2170,10 +2206,6 @@ namespace Mids_Reborn.Forms
                 : FormWindowState.Normal;
 
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
-            if (MidsContext.Config.DiscordEnabled is true)
-            {
-                MidsContext.ConfigSp.SaveConfig(Serializer.GetSerializer());
-            }
         }
 
         private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -5706,14 +5738,11 @@ namespace Mids_Reborn.Forms
         {
             try
             {
-                var iParent = this;
-                fDiscord = new frmDiscord(ref iParent);
-                fDiscord.ShowDialog(this);
+                new DiscordShare().ShowDialog(this);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Console.WriteLine(exception);
-                throw;
+                MessageBox.Show($"{ex.Message}\r\n\r\n{ex.StackTrace}", @"Debug Error", MessageBoxButtons.OK);
             }
         }
 
@@ -5855,7 +5884,7 @@ namespace Mids_Reborn.Forms
             };
             var dsr = dirSelector.ShowDialog();
             if (dsr == DialogResult.Cancel) return;
-            InputBoxResult iResult = InputBox.Show("Enter a name for the popmenu", "Name your menu", "Enter the menu name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            var iResult = InputBox.Show("Enter a name for the popmenu", "Name your menu", false, "Enter the menu name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
             if (!iResult.OK) return;
             clsGenFreebies.MenuName = iResult.Text;
             Directory.CreateDirectory(dirSelector.SelectedPath + @"\data\texts\English\Menus");
@@ -6293,49 +6322,6 @@ namespace Mids_Reborn.Forms
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
-            if (!MidsContext.Config.DiscordEnabled.HasValue && MidsContext.Config.DiscordAuthorized)
-            {
-                MidsContext.Config.DiscordEnabled = true;
-            }
-            else if (!MidsContext.Config.DiscordEnabled.HasValue && !MidsContext.Config.DiscordAuthorized)
-            {
-                MidsContext.Config.DiscordEnabled = false;
-            }
-
-            if (MidsContext.Config.DiscordEnabled != null)
-            {
-                tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
-                if (MidsContext.Config.DiscordEnabled is true)
-                {
-                    ConfigDataSpecial.Initialize(Serializer.GetSerializer());
-                    if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
-                    {
-                        MidsContext.ConfigSp.IsInitialized = true;
-                    }
-                }
-                else
-                {
-                    if (MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
-                    {
-                        MidsContext.ConfigSp.Auth.TryGetValue("access_token", out var token);
-                        clsOAuth.RevokeToken(token?.ToString());
-                        MidsContext.Config.DiscordAuthorized = false;
-                    }
-
-                    if (MidsContext.Config.Registered == 1)
-                    {
-                        if (File.Exists(Files.GetConfigSpFile()))
-                        {
-                            if (clsDiscord.DeauthorizationRequest())
-                            {
-                                File.Delete(Files.GetConfigSpFile());
-                            }
-                        }
-                        MidsContext.Config.Registered = 0;
-                    }
-                }
-            }
-
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);
@@ -7008,7 +6994,6 @@ namespace Mids_Reborn.Forms
         private frmIncarnate fIncarnate;
         private frmMMPowers fMMPets;
         private frmPrestige fPrestige;
-        private frmDiscord fDiscord;
         private bool FlipActive;
         private PowerEntry FlipGP;
         private readonly int FlipInterval;

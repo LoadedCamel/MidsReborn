@@ -50,7 +50,6 @@
     <Compile Include="ExpressionParser.cs" />
     <Compile Include="PowersReplTable.cs" />
     <Compile Include="clsRewardCurrency.cs" />
-    <Compile Include="ConfigDataSpecial.cs" />
     <Compile Include="HeroViewerBase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Schema.cs" />

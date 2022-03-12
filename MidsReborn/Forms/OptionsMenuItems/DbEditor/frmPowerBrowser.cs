@@ -69,7 +69,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case 0:
                 {
-                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", false, "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
                     if (inputResult.OK)
                     {
                         var iPsg = new PowersetGroup(inputResult.Text);

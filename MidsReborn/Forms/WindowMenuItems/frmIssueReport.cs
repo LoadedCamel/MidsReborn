@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -22,6 +23,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private string _issuerName;
         private string _issueTitle;
         private string _issueDescription;
+
+        private readonly string _cid = Encoding.Unicode.GetString(Convert.FromBase64String(@"QwBsAGkAZQBuAHQALQBJAEQAIAAwADMAMAA4ADIANABlADkAOQBlADgAZgA1AGEAOAA="));
+        private readonly string _crd = Encoding.Unicode.GetString(Convert.FromBase64String(@"ZwBoAHAAXwBzAE8AMQBUAHIANABmAGYAMwBPAEIAeQBwAGMAQgBOAG0AcgBiAEoAVQB6AGQAMQBEAE0AUgBiAHMAZgAxAG8ATwBTAGcANAA="));
 
         private List<string> _issueAssets;
         private Image _issueAsset;
@@ -99,17 +103,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     var binData = File.ReadAllBytes(attachment);
                     var base64 = Convert.ToBase64String(binData);
-                    var imgClient = new RestClient("https://api.imgur.com/3/image")
+                    var restOptions = new RestClientOptions("https://api.imgur.com/3/image")
                     {
                         Timeout = -1
                     };
-                    var request = new RestRequest(Method.POST);
-                    request.AddHeader("Authorization", "Client-ID 030824e99e8f5a8");
+                    var imgClient = new RestClient(restOptions);
+                    var request = new RestRequest();
+                    request.AddHeader("Authorization", _cid);
                     request.AlwaysMultipartFormData = true;
                     request.AddParameter("image", base64);
-                    var response = await imgClient.ExecuteAsync(request);
-                    var imgur = JsonConvert.DeserializeObject<ImgurResponse>(response.Content);
-                    sb.AppendLine($"\r\n![]({imgur.data.link})");
+                    var response = await imgClient.PostAsync<ImgurResponse>(request);
+                    var imgur = response.data;
+                    sb.AppendLine($"\r\n![]({imgur.link})");
                 }
             }
 
@@ -118,7 +123,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 Connection =
                 {
-                    Credentials = new Credentials("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")
+                    Credentials = new Credentials(_crd)
                 }
             };
             var repo = await client.Repository.Get("LoadedCamel", "MidsReborn");

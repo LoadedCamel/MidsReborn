@@ -148,6 +148,15 @@ namespace mrbBase
             return str;
         }
 
+        public static string MxDGenerateByteString(bool includeAltEnh)
+        {
+            var cData = new CompressionData();
+            var saveString = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
+            if (string.IsNullOrEmpty(saveString)) return string.Empty;
+            var separator = string.Empty;
+            return $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded};HEX;|{separator}{saveString}{saveString}";
+        }
+
         public static string MxDBuildSaveString(bool includeAltEnh, bool forumMode)
         {
             var cData = new CompressionData();
@@ -182,6 +191,9 @@ namespace mrbBase
             }
 
             var str6 = ";HEX";
+            //var output = "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" + cData.SzEncoded + str6 + ";|" + str3 + str1 + str3;
+            var output = $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded}{str6};|{str3}{str1}{str3}";
+            Debug.WriteLine(output.Replace("\n", string.Empty));
             return str4 + "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" +
                    cData.SzEncoded + str6 + ";|" + str3 + str1 + str3 +
                    "|-------------------------------------------------------------------|";

@@ -103,7 +103,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnAddMod_Click(object sender, EventArgs e)
         {
 	        var newGCM = string.Empty;
-	        InputBoxResult result = InputBox.Show("Enter the modifier you wish to add.", "Add Modifier", "Enter the modifier here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+	        InputBoxResult result = InputBox.Show("Enter the modifier you wish to add.", "Add Modifier", false, "Enter the modifier here", InputBox.InputBoxIcon.Info, inputBox_Validating);
 	        if (result.OK) { newGCM = result.Text; }
             DatabaseAPI.Database.EffectIds.Add(newGCM);
             lvModifiers.Items.Add(newGCM);

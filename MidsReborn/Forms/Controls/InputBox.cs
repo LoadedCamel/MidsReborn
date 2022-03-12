@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -12,6 +13,7 @@ namespace Mids_Reborn.Forms.Controls
         private Button buttonOK;
         private Button buttonCancel;
         private Panel panel1;
+        private IconButton iconButton1;
         private PictureBox inputIcon;
         private static ImageList inputImages;
         private ErrorProvider errorProviderText;
@@ -57,6 +59,7 @@ namespace Mids_Reborn.Forms.Controls
             buttonOK = new Button();
             buttonCancel = new Button();
             panel1 = new Panel();
+            iconButton1 = new IconButton();
             inputIcon = new PictureBox();
             inputImages = new ImageList(components);
             errorProviderText = new ErrorProvider(components);
@@ -122,6 +125,22 @@ namespace Mids_Reborn.Forms.Controls
             panel1.Name = "panel1";
             panel1.Size = new Size(492, 30);
             panel1.TabIndex = 4;
+            //
+            // iconButton1
+            //
+            iconButton1.Visible = false;
+            iconButton1.FlatAppearance.BorderSize = 0;
+            iconButton1.FlatStyle = FlatStyle.Flat;
+            iconButton1.IconChar = IconChar.Eye;
+            iconButton1.IconColor = Color.Black;
+            iconButton1.IconFont = IconFont.Auto;
+            iconButton1.IconSize = 20;
+            iconButton1.Location = new Point(460, 37);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(20, 19);
+            iconButton1.TabIndex = 5;
+            iconButton1.UseVisualStyleBackColor = true;
+            iconButton1.Click += new EventHandler(iconButton1_Click);
             // 
             // inputIcon
             // 
@@ -129,7 +148,7 @@ namespace Mids_Reborn.Forms.Controls
             inputIcon.Location = new Point(12, 9);
             inputIcon.Name = "inputIcon";
             inputIcon.Size = new Size(48, 48);
-            inputIcon.TabIndex = 5;
+            inputIcon.TabIndex = 6;
             inputIcon.TabStop = false;
             // 
             // inputImages
@@ -155,6 +174,7 @@ namespace Mids_Reborn.Forms.Controls
             BackColor = SystemColors.Control;
             CancelButton = buttonCancel;
             ClientSize = new Size(492, 95);
+            Controls.Add(iconButton1);
             Controls.Add(inputIcon);
             Controls.Add(panel1);
             Controls.Add(inputTextBox);
@@ -174,16 +194,16 @@ namespace Mids_Reborn.Forms.Controls
             ResumeLayout(false);
             PerformLayout();
         }
-
         #endregion
 
-        private static InputBoxResult Show(string prompt, string title, string defaultResponse, InputBoxIcon icon, InputBoxValidatingHandler validator, int xpos, int ypos)
+        private static InputBoxResult Show(string prompt, string title, bool isPassword, string defaultResponse, InputBoxIcon icon, InputBoxValidatingHandler validator, int xpos, int ypos)
         {
             using var form = new InputBox
             {
                 inputLabel = {Text = prompt},
                 Text = title,
                 inputTextBox = {Text = defaultResponse},
+                iconButton1 = {Visible = isPassword},
                 inputIcon = {Image = inputImages.Images[(int) icon]}
             };
 
@@ -207,9 +227,9 @@ namespace Mids_Reborn.Forms.Controls
             return returnVal;
         }
 
-        public static InputBoxResult Show(string prompt, string title, string defaultText, InputBoxIcon icon, InputBoxValidatingHandler validator)
+        public static InputBoxResult Show(string prompt, string title, bool isPassword, string defaultText, InputBoxIcon icon, InputBoxValidatingHandler validator)
         {
-            return Show(prompt, title, defaultText, icon, validator, -1, -1);
+            return Show(prompt, title, isPassword, defaultText, icon, validator, -1, -1);
         }
 
         private void inputTextBox_TextChanged(object sender, EventArgs e)
@@ -231,6 +251,15 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         private InputBoxValidatingHandler Validator { get; set; }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            inputTextBox.UseSystemPasswordChar = inputTextBox.UseSystemPasswordChar switch
+            {
+                false => true,
+                true => false
+            };
+        }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {

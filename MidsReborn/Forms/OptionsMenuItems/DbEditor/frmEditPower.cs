@@ -254,7 +254,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
-            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
+            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", false, "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
             if (!result.OK) return;
 
             var b = result.Text.Replace(" ", "_");
@@ -1472,7 +1472,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
+            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", false, $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
             if (!result.OK) return;
 
             lblStaticIndex.Text = result.Text;
