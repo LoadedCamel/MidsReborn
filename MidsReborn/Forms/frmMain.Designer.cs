@@ -761,8 +761,6 @@ namespace Mids_Reborn.Forms
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsConfig,
-            this.ToolStripSeparator14,
-            this.tsUpdateCheck,
             this.ToolStripSeparator5,
             this.AdvancedToolStripMenuItem1});
             this.OptionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -786,7 +784,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsUpdateCheck.Name = "tsUpdateCheck";
             this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
-            this.tsUpdateCheck.Text = "Check for &Updates Now";
+            this.tsUpdateCheck.Text = "Check for &Updates";
             this.tsUpdateCheck.Click += new System.EventHandler(this.tsUpdateCheck_Click);
             // 
             // ToolStripSeparator5
@@ -1214,15 +1212,12 @@ namespace Mids_Reborn.Forms
             this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
-            this.tsPatchNotes,
+            this.tsUpdateCheck,
             this.ToolStripSeparator10,
             this.tsBugCrytilis,
-            this.tsHCMRBForum,
             this.ToolStripSeparator23,
             this.tsKoFi,
-            this.tsPatreon,
-            this.ToolStripSeparator24,
-            this.tsGitHubCrytilis});
+            this.tsPatreon});
             this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
             this.HelpToolStripMenuItem1.Size = new System.Drawing.Size(102, 20);
@@ -1237,7 +1232,7 @@ namespace Mids_Reborn.Forms
             //
             this.tsPatchNotes.Name = "tsPatchNotes";
             this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
-            this.tsPatchNotes.Text = "&View Patch Notes";
+            this.tsPatchNotes.Text = "&Read Patch Notes";
             this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
@@ -1312,7 +1307,7 @@ namespace Mids_Reborn.Forms
             this.WindowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             this.WindowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
-            this.WindowToolStripMenuItem.Text = "&Window";
+            this.WindowToolStripMenuItem.Text = "&Windows";
             // 
             // tsViewSets
             // 
