@@ -91,8 +91,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
             _mrbAuth = await _dataStore.Retrieve<Models.MbAuthModel>();
             var mTokenExpiry = DateTimeOffset.Parse(_mrbAuth.RefreshTokenExpiration).UtcDateTime;
-            Debug.WriteLine($"mToken Expire: {mTokenExpiry}");
-            Debug.WriteLine(mTokenExpiry.Subtract(TimeSpan.FromHours(8)));
             if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
             {
                 _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);
