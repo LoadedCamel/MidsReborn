@@ -37,6 +37,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
             this.TabPage3 = new System.Windows.Forms.TabPage();
+            this.chkShowSelfBuffsAny = new System.Windows.Forms.CheckBox();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.chkOldStyle = new System.Windows.Forms.CheckBox();
             this.cbTotalsWindowTitleOpt = new System.Windows.Forms.ComboBox();
@@ -191,8 +192,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkDiscordEnabled = new System.Windows.Forms.CheckBox();
-            this.chkShowSelfBuffsAny = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
@@ -282,6 +281,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage3.TabIndex = 2;
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
+            // 
+            // chkShowSelfBuffsAny
+            // 
+            this.chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 324);
+            this.chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
+            this.chkShowSelfBuffsAny.Size = new System.Drawing.Size(190, 18);
+            this.chkShowSelfBuffsAny.TabIndex = 80;
+            this.chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
+            this.chkShowSelfBuffsAny.Visible = false;
+            this.chkShowSelfBuffsAny.CheckedChanged += new System.EventHandler(this.chkShowSelfBuffsAny_CheckedChanged);
             // 
             // groupBox18
             // 
@@ -467,7 +476,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.chkHighVis.TabIndex = 69;
             this.chkHighVis.Text = "Use High-Visiblity text on the build view";
             this.myTip.SetToolTip(this.chkHighVis, "Draw white text with a black outline on the build view (power bars on the right o" +
-                                                   "f the screen)");
+        "f the screen)");
             // 
             // Label36
             // 
@@ -852,7 +861,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage2.Controls.Add(this.GroupBox6);
             this.TabPage2.Location = new System.Drawing.Point(4, 23);
             this.TabPage2.Name = "TabPage2";
-            this.TabPage2.Size = new System.Drawing.Size(749, 325);
+            this.TabPage2.Size = new System.Drawing.Size(749, 345);
             this.TabPage2.TabIndex = 1;
             this.TabPage2.Text = "Effects & Maths";
             this.TabPage2.UseVisualStyleBackColor = true;
@@ -1066,7 +1075,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage6.Controls.Add(this.GroupBox4);
             this.TabPage6.Location = new System.Drawing.Point(4, 23);
             this.TabPage6.Name = "TabPage6";
-            this.TabPage6.Size = new System.Drawing.Size(749, 325);
+            this.TabPage6.Size = new System.Drawing.Size(749, 345);
             this.TabPage6.TabIndex = 5;
             this.TabPage6.Text = "Exemping & Base Values";
             this.TabPage6.UseVisualStyleBackColor = true;
@@ -1273,7 +1282,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage4.Controls.Add(this.GroupBox11);
             this.TabPage4.Location = new System.Drawing.Point(4, 23);
             this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(749, 325);
+            this.TabPage4.Size = new System.Drawing.Size(749, 345);
             this.TabPage4.TabIndex = 3;
             this.TabPage4.Text = "Forum Export Settings";
             this.TabPage4.UseVisualStyleBackColor = true;
@@ -1635,7 +1644,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.Controls.Add(this.GroupBox7);
             this.TabPage1.Location = new System.Drawing.Point(4, 23);
             this.TabPage1.Name = "TabPage1";
-            this.TabPage1.Size = new System.Drawing.Size(749, 325);
+            this.TabPage1.Size = new System.Drawing.Size(749, 345);
             this.TabPage1.TabIndex = 6;
             this.TabPage1.Text = "Drag & Drop";
             this.TabPage1.UseVisualStyleBackColor = true;
@@ -1732,7 +1741,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage5.Controls.Add(this.GroupBox1);
             this.TabPage5.Location = new System.Drawing.Point(4, 23);
             this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(749, 325);
+            this.TabPage5.Size = new System.Drawing.Size(749, 345);
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
@@ -1981,26 +1990,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
-            // chkDiscordEnabled
-            // 
-            this.chkDiscordEnabled.AutoSize = true;
-            this.chkDiscordEnabled.Location = new System.Drawing.Point(12, 386);
-            this.chkDiscordEnabled.Name = "chkDiscordEnabled";
-            this.chkDiscordEnabled.Size = new System.Drawing.Size(129, 18);
-            this.chkDiscordEnabled.TabIndex = 61;
-            this.chkDiscordEnabled.Text = "Enable DiscordExport";
-            this.chkDiscordEnabled.UseVisualStyleBackColor = true;
-            // 
-            // chkShowSelfBuffsAny
-            // 
-            this.chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 324);
-            this.chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
-            this.chkShowSelfBuffsAny.Size = new System.Drawing.Size(190, 18);
-            this.chkShowSelfBuffsAny.TabIndex = 80;
-            this.chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
-            this.chkShowSelfBuffsAny.Visible = false;
-            this.chkShowSelfBuffsAny.CheckedChanged += new System.EventHandler(this.chkShowSelfBuffsAny_CheckedChanged);
-            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -2008,7 +1997,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(757, 412);
-            this.Controls.Add(this.chkDiscordEnabled);
             this.Controls.Add(this.chkColorPrint);
             this.Controls.Add(this.TabControl1);
             this.Controls.Add(this.btnCancel);
@@ -2066,7 +2054,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox19.ResumeLayout(false);
             this.GroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
         #endregion
@@ -2231,7 +2218,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label Label37;
         private ComboBox cbCurrency;
         private Label label19;
-        private CheckBox chkDiscordEnabled;
         private CheckBox chkShowSelfBuffsAny;
     }
 }

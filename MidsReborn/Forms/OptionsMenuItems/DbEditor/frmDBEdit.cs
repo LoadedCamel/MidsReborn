@@ -201,7 +201,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnJsonImporter.Visible = MidsContext.Config.MasterMode;
             btnGCMIO.Visible = MidsContext.Config.MasterMode;
             btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
-            btnDBConverter.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -267,13 +266,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             MessageBox.Show(@"Entities should now be restored. Verify via Entity editor then open and save Main DB.");
         }
 
-        private void btnDBConverter_Click(object sender, EventArgs e)
-        {
-            var iParent = _frmMain;
-            frmDBConvert dbConvert = new frmDBConvert(ref iParent);
-            dbConvert.ShowDialog();
-        }
-
         private void txtPageVol_MouseHover(object sender, EventArgs e)
         {
             txtPageVol.ForeColor = Color.Gold;
@@ -288,6 +280,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
                 case "Volume":
                     txtPageVol.Text = @"Page";
+                    break;
+                case "PageVol":
+                    txtPageVol.Text = @"Volume";
                     break;
             }
 

@@ -202,9 +202,9 @@ namespace mrbBase.Base.Data_Classes
             HiddenPower = template.HiddenPower;
         }
 
-        public Power(BinaryReader reader, bool useOld = false)
+        public Power(BinaryReader reader, bool legacy = false)
         {
-            if (!useOld)
+            if (!legacy)
             {
                 Enhancements = new int[0];
                 BuffMode = Enums.eBuffMode.Normal;
@@ -372,7 +372,7 @@ namespace mrbBase.Base.Data_Classes
                 AccuracyMult = Accuracy;
                 AttackTypes = (Enums.eVector)reader.ReadInt32();
                 GroupMembership = new string[reader.ReadInt32() + 1];
-                for (int index = 0; index < GroupMembership.Length; ++index)
+                for (var index = 0; index < GroupMembership.Length; ++index)
                     GroupMembership[index] = reader.ReadString();
                 EntitiesAffected = (Enums.eEntity)reader.ReadInt32();
                 EntitiesAutoHit = (Enums.eEntity)reader.ReadInt32();
@@ -401,36 +401,38 @@ namespace mrbBase.Base.Data_Classes
                 NumAllowed = reader.ReadInt32();
                 DoNotSave = reader.ReadBoolean();
                 BoostsAllowed = new string[reader.ReadInt32() + 1];
-                for (int index = 0; index <= BoostsAllowed.Length - 1; ++index)
+                for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
                     BoostsAllowed[index] = reader.ReadString();
                 CastThroughHold = reader.ReadBoolean();
                 IgnoreStrength = reader.ReadBoolean();
                 DescShort = reader.ReadString();
                 DescLong = reader.ReadString();
                 Enhancements = new int[reader.ReadInt32() + 1];
-                for (int index = 0; index <= Enhancements.Length - 1; ++index)
+                for (var index = 0; index <= Enhancements.Length - 1; ++index)
                     Enhancements[index] = reader.ReadInt32();
                 SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
-                for (int index = 0; index <= SetTypes.Length - 1; ++index)
+                for (var index = 0; index <= SetTypes.Length - 1; ++index)
                     SetTypes[index] = (Enums.eSetType)reader.ReadInt32();
                 ClickBuff = reader.ReadBoolean();
                 AlwaysToggle = reader.ReadBoolean();
                 Level = reader.ReadInt32();
                 AllowFrontLoading = reader.ReadBoolean();
                 VariableEnabled = reader.ReadBoolean();
+                VariableOverride = reader.ReadBoolean();
                 VariableName = reader.ReadString();
                 VariableMin = reader.ReadInt32();
                 VariableMax = reader.ReadInt32();
                 UIDSubPower = new string[reader.ReadInt32() + 1];
-                for (int index = 0; index <= UIDSubPower.Length - 1; ++index)
+                for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
                     UIDSubPower[index] = reader.ReadString();
                 IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (int index = 0; index <= IgnoreEnh.Length - 1; ++index)
+                for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
                     IgnoreEnh[index] = (Enums.eEnhance)reader.ReadInt32();
                 Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (int index = 0; index <= Ignore_Buff.Length - 1; ++index)
+                for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
                     Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
                 SkipMax = reader.ReadBoolean();
+                InherentType = (Enums.eGridType)reader.ReadInt32();
                 DisplayLocation = reader.ReadInt32();
                 MutexAuto = reader.ReadBoolean();
                 MutexIgnore = reader.ReadBoolean();
@@ -445,7 +447,7 @@ namespace mrbBase.Base.Data_Classes
                 BoostBoostable = reader.ReadBoolean();
                 BoostUsePlayerLevel = reader.ReadBoolean();
                 Effects = new IEffect[reader.ReadInt32() + 1];
-                for (int index = 0; index <= Effects.Length - 1; ++index)
+                for (var index = 0; index <= Effects.Length - 1; ++index)
                 {
                     var eff = (IEffect)new Effect(reader, true)
                     {
@@ -455,15 +457,24 @@ namespace mrbBase.Base.Data_Classes
 
                     Effects[index] = eff;
                 }
+
                 HiddenPower = reader.ReadBoolean();
+                Active = reader.ReadBoolean();
+                Taken = reader.ReadBoolean();
+                Stacks = reader.ReadInt32();
             }
         }
 
         public IPowerset GetPowerSet()
         {
-            return !((PowerSetID < 0) | (PowerSetID > DatabaseAPI.Database.Powersets.Length))
-                ? DatabaseAPI.Database.Powersets[PowerSetID]
-                : null;
+            if (!((PowerSetID < 0) | (PowerSetID > DatabaseAPI.Database.Powersets.Length)))
+            {
+                return DatabaseAPI.Database.Powersets[PowerSetID];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public float CastTimeReal { get; set; }

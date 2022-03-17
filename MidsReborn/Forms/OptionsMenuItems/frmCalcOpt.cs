@@ -867,6 +867,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             {
                 myParent.DbChangeRequested = true;
                 lblDatabaseLoc.Text = fBrowse.SelectedPath;
+                if (MidsContext.Config.MasterMode)
+                {
+                    var result = MessageBox.Show(@$"Is this a legacy database?", @"Database Type", MessageBoxButtons.YesNo);
+                    MidsContext.Config.IsLegacy = result switch
+                    {
+                        DialogResult.Yes => true,
+                        DialogResult.No => false,
+                        _ => MidsContext.Config.IsLegacy
+                    };
+                }
             }
 
         }

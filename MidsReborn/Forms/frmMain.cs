@@ -265,7 +265,15 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.IsInitialized = true;
                 }
 
-                MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
+                if (MidsContext.Config.IsLegacy)
+                {
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath, true);
+                }
+                else
+                {
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
+                }
+
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();

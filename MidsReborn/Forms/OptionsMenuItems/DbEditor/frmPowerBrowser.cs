@@ -32,7 +32,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private const int FILTER_ORPHAN_SETS = 4;
 
         private frmBusy BusyForm { get; set; }
-        private frmDBDiffing _diffFrm;
 
         private bool _updating;
 
@@ -49,7 +48,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnCancel_Click(object sender, EventArgs e)
         {
             BusyMsg("Discarding Changes...");
-            DatabaseAPI.LoadMainDatabase();
+            DatabaseAPI.LoadMainDatabase(MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
             BusyHide();
             DialogResult = DialogResult.Cancel;

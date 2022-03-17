@@ -67,7 +67,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAttribModEdit = new System.Windows.Forms.Button();
             this.btnGCMIO = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.btnDBConverter = new System.Windows.Forms.Button();
             this.udPageVol = new System.Windows.Forms.NumericUpDown();
             this.txtPageVol = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -503,19 +502,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btnDBConverter
-            // 
-            this.btnDBConverter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnDBConverter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDBConverter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDBConverter.Location = new System.Drawing.Point(338, 167);
-            this.btnDBConverter.Name = "btnDBConverter";
-            this.btnDBConverter.Size = new System.Drawing.Size(164, 24);
-            this.btnDBConverter.TabIndex = 32;
-            this.btnDBConverter.Text = "Convert 2.x DB to 3.x";
-            this.btnDBConverter.UseVisualStyleBackColor = true;
-            this.btnDBConverter.Click += new System.EventHandler(this.btnDBConverter_Click);
-            // 
             // udPageVol
             // 
             this.udPageVol.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -634,7 +620,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ClientSize = new System.Drawing.Size(837, 373);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.btnDBConverter);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnAttribModEdit);
             this.Controls.Add(this.btnGCMIO);
@@ -674,7 +659,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnGCMIO;
         private Button btnAttribModEdit;
         private Button button1;
-        private Button btnDBConverter;
         private NumericUpDown udPageVol;
         private Label txtPageVol;
         private TableLayoutPanel tableLayoutPanel1;

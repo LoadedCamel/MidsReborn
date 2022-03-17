@@ -104,12 +104,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.Designer.cs">
       <DependentUpon>frmConditionalAttributeSearch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.Designer.cs">
-      <DependentUpon>frmDBConvert.cs</DependentUpon>
-    </Compile>
     <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
       <SubType>UserControl</SubType>
@@ -187,12 +181,6 @@
     </Compile>
     <Compile Include="Forms\frmTeam.Designer.cs">
       <DependentUpon>frmTeam.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.Designer.cs">
-      <DependentUpon>frmDBDiffing.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.cs">
       <SubType>Form</SubType>
@@ -434,9 +422,6 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.resx">
       <DependentUpon>frmConditionalAttributeSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.resx">
-      <DependentUpon>frmDBConvert.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.resx">
       <DependentUpon>frmRestoreHidden.cs</DependentUpon>
     </EmbeddedResource>
@@ -499,9 +484,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.resx">
-      <DependentUpon>frmDBDiffing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.resx">
       <DependentUpon>frmGCMEditor.cs</DependentUpon>

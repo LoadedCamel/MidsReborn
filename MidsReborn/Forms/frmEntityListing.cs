@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Extensions;
+using mrbBase.Base.Master_Classes;
 
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
@@ -55,7 +56,7 @@ namespace Mids_Reborn.Forms
         private void btnCancel_Click(object sender, EventArgs e)
         {
             BusyMsg("Re-Indexing...");
-            DatabaseAPI.LoadMainDatabase();
+            DatabaseAPI.LoadMainDatabase(MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
             BusyHide();
             Hide();

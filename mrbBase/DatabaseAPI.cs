@@ -1268,7 +1268,7 @@ namespace mrbBase
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
             File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
-        public static bool LoadMainDatabase(string iPath = "", bool useOld = false)
+        public static bool LoadMainDatabase(string iPath = "", bool legacy = false)
         {
             ClearLookups();
             string path;
@@ -1295,27 +1295,60 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids Reborn Powers Database")
+                var headerFound = true;
+                var header = reader.ReadString();
+                if (!legacy)
                 {
-                    MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
-                }
-
-                Database.Version = Version.Parse(reader.ReadString());
-                var year = reader.ReadInt32();
-                if (year > 0)
-                {
-                    var month = reader.ReadInt32();
-                    var day = reader.ReadInt32();
-                    Database.Date = new DateTime(year, month, day);
+                    if (header != @"Mids Reborn Powers Database")
+                    {
+                        headerFound = false;
+                    }
                 }
                 else
                 {
-                    Database.Date = DateTime.FromBinary(reader.ReadInt64());
+                    if (header != @"Mids' Hero Designer Database MK II")
+                    {
+                        headerFound = false;
+                    }
                 }
 
-                Database.Issue = reader.ReadInt32();
-                Database.PageVol = reader.ReadInt32();
-                Database.PageVolText = reader.ReadString();
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Database");
+                    return false;
+                }
+
+
+                if (!legacy)
+                {
+                    Database.Version = Version.Parse(reader.ReadString());
+                    var year = reader.ReadInt32();
+                    if (year > 0)
+                    {
+                        var month = reader.ReadInt32();
+                        var day = reader.ReadInt32();
+                        Database.Date = new DateTime(year, month, day);
+                    }
+                    else
+                    {
+                        Database.Date = DateTime.FromBinary(reader.ReadInt64());
+                    }
+
+                    Database.Issue = reader.ReadInt32();
+                    Database.PageVol = reader.ReadInt32();
+                    Database.PageVolText = reader.ReadString();
+                }
+                else
+                {
+                    var date = DateTime.Now;
+                    Database.Version = new Version(date.Year, date.Month, 1);
+                    Database.Date = new DateTime(date.Year, date.Month, date.Day);
+                    Database.Issue = 24;
+                    Database.PageVol = 1;
+                    Database.PageVolText = @"PageVol";
+                    reader.BaseStream.Seek(20, SeekOrigin.Current);
+                }
+
                 if (reader.ReadString() != "BEGIN:ARCHETYPES")
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
@@ -1371,29 +1404,14 @@ namespace mrbBase
                 Database.PowerEffectVersion.Load(reader);
                 Database.IOAssignmentVersion.Load(reader);
                 Database.Power = new IPower[reader.ReadInt32() + 1];
-                if (!useOld)
+                for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
-                    for (var index = 0; index <= Database.Power.Length - 1; ++index)
-                    {
-                        Database.Power[index] = new Power(reader);
-                        ++num3;
-                        if (num3 <= 50)
-                            continue;
-                        num3 = 0;
-                        Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    for (var index = 0; index <= Database.Power.Length - 1; ++index)
-                    {
-                        Database.Power[index] = new Power(reader, true);
-                        ++num3;
-                        if (num3 <= 50)
-                            continue;
-                        num3 = 0;
-                        Application.DoEvents();
-                    }
+                    Database.Power[index] = new Power(reader, legacy);
+                    ++num3;
+                    if (num3 <= 50)
+                        continue;
+                    num3 = 0;
+                    Application.DoEvents();
                 }
 
                 if (reader.ReadString() != "BEGIN:SUMMONS")
@@ -1412,7 +1430,7 @@ namespace mrbBase
             {
                 reader.Close();
                 fileStream.Close();
-                MessageBox.Show(e.StackTrace);
+                MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
                 return false;
             }
 
@@ -1769,7 +1787,7 @@ namespace mrbBase
             }
         }
 
-        public static void LoadRecipes(string iPath = "", bool useOld = false)
+        public static void LoadRecipes(string iPath = "", bool legacy = false)
         {
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
@@ -1795,44 +1813,47 @@ namespace mrbBase
                 return;
             }
 
-            if (reader.ReadString() == "Mids Reborn Recipe Database")
+            var headerFound = true;
+            var header = reader.ReadString();
+            if (!legacy)
             {
-                Database.RecipeSource1 = reader.ReadString();
-                Database.RecipeSource2 = reader.ReadString();
-                Database.RecipeRevisionDate = DateTime.FromBinary(reader.ReadInt64());
-                var num = 0;
-                Database.Recipes = new Recipe[reader.ReadInt32() + 1];
-                if (!useOld)
+                if (header != @"Mids Reborn Recipe Database")
                 {
-                    for (var index = 0; index < Database.Recipes.Length; ++index)
-                    {
-                        Database.Recipes[index] = new Recipe(reader);
-                        ++num;
-                        if (num <= 100)
-                            continue;
-                        num = 0;
-                        Application.DoEvents();
-                    }
-                }
-                else
-                {
-                    for (var index = 0; index < Database.Recipes.Length; ++index)
-                    {
-                        Database.Recipes[index] = new Recipe(reader, true);
-                        ++num;
-                        if (num <= 100)
-                            continue;
-                        num = 0;
-                        Application.DoEvents();
-                    }
+                    headerFound = false;
                 }
             }
             else
             {
-                MessageBox.Show(@"Recipe Database header wasn't found, file may be corrupt!");
+                if (header != @"Mids' Hero Designer Recipe Database")
+                {
+                    headerFound = false;
+                }
+            }
+
+            if (!headerFound)
+            {
+                MessageBox.Show(@"Expected recipe header, got something else!", @"Error Reading Database");
                 reader.Close();
                 fileStream.Close();
+                return;
             }
+
+            Database.RecipeSource1 = reader.ReadString();
+            Database.RecipeSource2 = reader.ReadString();
+            Database.RecipeRevisionDate = DateTime.FromBinary(reader.ReadInt64());
+            var num = 0;
+            Database.Recipes = new Recipe[reader.ReadInt32() + 1];
+            for (var index = 0; index < Database.Recipes.Length; ++index)
+            {
+                Database.Recipes[index] = new Recipe(reader, legacy);
+                ++num;
+                if (num <= 100)
+                    continue;
+                num = 0;
+                Application.DoEvents();
+            }
+            reader.Close();
+            fileStream.Close();
         }
 
         private static void SaveRecipesRaw(ISerialize serializer, string fn, string name)
@@ -1894,7 +1915,7 @@ namespace mrbBase
             }
         }
 
-        public static void LoadSalvage(string iPath = "")
+        public static void LoadSalvage(string iPath = "", bool legacy = false)
         {
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
@@ -1922,18 +1943,40 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids Reborn Salvage Database")
+
+                var headerFound = true;
+                var header = reader.ReadString();
+
+                if (!legacy)
                 {
-                    MessageBox.Show("Salvage Database header wasn't found, file may be corrupt!");
-                    reader.Close();
-                    fileStream.Close();
+                    if (header != @"Mids Reborn Salvage Database")
+                    {
+                        headerFound = false;
+                    }
                 }
                 else
                 {
-                    Database.Salvage = new Salvage[reader.ReadInt32() + 1];
-                    for (var index = 0; index < Database.Salvage.Length; ++index)
-                        Database.Salvage[index] = new Salvage(reader);
+                    if (header != @"Mids' Hero Designer Salvage Database")
+                    {
+                        headerFound = false;
+                    }
                 }
+                
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected recipe header, got something else!", @"Error Reading Database");
+                    reader.Close();
+                    fileStream.Close();
+                    return;
+                }
+
+                Database.Salvage = new Salvage[reader.ReadInt32() + 1];
+                for (var index = 0; index < Database.Salvage.Length; ++index)
+                {
+                    Database.Salvage[index] = new Salvage(reader);
+                }
+                reader.Close();
+                fileStream.Close();
             }
             catch (Exception ex)
             {
@@ -2100,7 +2143,7 @@ namespace mrbBase
         }
     }*/
 
-        public static void LoadEnhancementDb(string iPath = "", bool useOld = false)
+        public static void LoadEnhancementDb(string iPath = "", bool legacy = false)
         {
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
@@ -2128,60 +2171,62 @@ namespace mrbBase
 
             try
             {
-                if (reader.ReadString() != "Mids Reborn Enhancement Database")
+
+                var headerFound = true;
+                var header = reader.ReadString();
+
+                if (!legacy)
                 {
-                    MessageBox.Show("Enhancement Database header wasn't found, file may be corrupt!", "Meep!");
-                    reader.Close();
-                    fileStream.Close();
+                    if (header != @"Mids Reborn Enhancement Database")
+                    {
+                        headerFound = false;
+                    }
                 }
                 else
                 {
-                    reader.ReadSingle();
-                    var versionEnhDb = Database.VersionEnhDb;
-                    var num1 = 0;
-                    Database.Enhancements = new IEnhancement[reader.ReadInt32() + 1];
-                    if (!useOld)
+                    if (header != @"Mids' Hero Designer Enhancement Database")
                     {
-                        for (var index = 0; index < Database.Enhancements.Length; ++index)
-                        {
-
-                            Database.Enhancements[index] = new Enhancement(reader);
-                            ++num1;
-                            if (num1 <= 5)
-                                continue;
-                            num1 = 0;
-                            Application.DoEvents();
-                        }
+                        headerFound = false;
                     }
-                    else
-                    {
-                        for (var index = 0; index < Database.Enhancements.Length; ++index)
-                        {
-
-                            Database.Enhancements[index] = new Enhancement(reader, true);
-                            ++num1;
-                            if (num1 <= 5)
-                                continue;
-                            num1 = 0;
-                            Application.DoEvents();
-                        }
-                    }
-
-                    Database.EnhancementSets = new EnhancementSetCollection();
-                    var num2 = reader.ReadInt32() + 1;
-                    for (var index = 0; index < num2; ++index)
-                    {
-                        Database.EnhancementSets.Add(new EnhancementSet(reader));
-                        ++num1;
-                        if (num1 <= 5)
-                            continue;
-                        num1 = 0;
-                        Application.DoEvents();
-                    }
-
+                }
+                
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected recipe header, got something else!", @"Error Reading Database");
                     reader.Close();
                     fileStream.Close();
+                    return;
                 }
+
+                reader.ReadSingle();
+                var versionEnhDb = Database.VersionEnhDb;
+                var num1 = 0;
+                Database.Enhancements = new IEnhancement[reader.ReadInt32() + 1];
+                for (var index = 0; index < Database.Enhancements.Length; ++index)
+                {
+
+                    Database.Enhancements[index] = new Enhancement(reader, legacy);
+                    ++num1;
+                    if (num1 <= 5)
+                        continue;
+                    num1 = 0;
+                    Application.DoEvents();
+                }
+
+                Database.EnhancementSets = new EnhancementSetCollection();
+                var num2 = reader.ReadInt32() + 1;
+                for (var index = 0; index < num2; ++index)
+                {
+                    Database.EnhancementSets.Add(new EnhancementSet(reader));
+                    ++num1;
+                    if (num1 <= 5)
+                        continue;
+                    num1 = 0;
+                    Application.DoEvents();
+                }
+
+                reader.Close();
+                fileStream.Close();
             }
             catch (Exception ex)
             {

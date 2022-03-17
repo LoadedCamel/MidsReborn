@@ -27,9 +27,9 @@ namespace mrbBase
         {
         }
 
-        public Recipe(BinaryReader reader, bool useOld = false)
+        public Recipe(BinaryReader reader, bool legacy = false)
         {
-            if (!useOld)
+            if (!legacy)
             {
                 Rarity = (RecipeRarity) reader.ReadInt32();
                 InternalName = reader.ReadString();
@@ -64,12 +64,12 @@ namespace mrbBase
             }
             else
             {
-                Rarity = (RecipeRarity) reader.ReadInt32();
+                Rarity = (RecipeRarity)reader.ReadInt32();
                 InternalName = reader.ReadString();
                 ExternalName = reader.ReadString();
                 Enhancement = reader.ReadString();
                 Item = new RecipeEntry[reader.ReadInt32() + 1];
-                for (int index1 = 0; index1 < Item.Length; ++index1)
+                for (var index1 = 0; index1 < Item.Length; index1++)
                 {
                     Item[index1] = new RecipeEntry
                     {
@@ -79,15 +79,16 @@ namespace mrbBase
                         BuyCostM = reader.ReadInt32(),
                         CraftCostM = reader.ReadInt32()
                     };
-                    int num = reader.ReadInt32();
+                    var num = reader.ReadInt32();
                     Item[index1].Salvage = new string[num + 1];
                     Item[index1].Count = new int[num + 1];
                     Item[index1].SalvageIdx = new int[num + 1];
-                    for (int index2 = 0; index2 < Item[index1].Salvage.Length; ++index2)
+                    for (var index2 = 0; index2 < Item[index1].Salvage.Length; ++index2)
                     {
                         Item[index1].Salvage[index2] = reader.ReadString();
                         Item[index1].Count[index2] = reader.ReadInt32();
                         Item[index1].SalvageIdx[index2] = reader.ReadInt32();
+                        _ = reader.ReadInt32();
                     }
                 }
             }

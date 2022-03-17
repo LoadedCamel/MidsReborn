@@ -112,9 +112,9 @@ namespace mrbBase.Base.Data_Classes
             this.power = power;
         }
 
-        public Effect(BinaryReader reader, bool useOld = false) : this()
+        public Effect(BinaryReader reader, bool legacy = false) : this()
         {
-            if (!useOld)
+            if (!legacy)
             {
                 PowerFullName = reader.ReadString();
                 UniqueID = reader.ReadInt32();
@@ -155,7 +155,6 @@ namespace mrbBase.Base.Data_Classes
                 IgnoreED = reader.ReadBoolean();
                 Override = reader.ReadString();
                 ProcsPerMinute = reader.ReadSingle();
-
                 PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
                 AtrOrigAccuracy = reader.ReadSingle();
                 AtrOrigActivatePeriod = reader.ReadSingle();
@@ -169,7 +168,6 @@ namespace mrbBase.Base.Data_Classes
                 AtrOrigRange = reader.ReadSingle();
                 AtrOrigRechargeTime = reader.ReadSingle();
                 AtrOrigSecondaryRange = reader.ReadSingle();
-
                 AtrModAccuracy = reader.ReadSingle();
                 AtrModActivatePeriod = reader.ReadSingle();
                 AtrModArc = reader.ReadInt32();
@@ -230,9 +228,34 @@ namespace mrbBase.Base.Data_Classes
                 IgnoreED = reader.ReadBoolean();
                 Override = reader.ReadString();
                 ProcsPerMinute = reader.ReadSingle();
-                if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
-                    return;
-                DatabaseAPI.Database.EffectIds.Add(EffectId);
+                PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
+                AtrOrigAccuracy = reader.ReadSingle();
+                AtrOrigActivatePeriod = reader.ReadSingle();
+                AtrOrigArc = reader.ReadInt32();
+                AtrOrigCastTime = reader.ReadSingle();
+                AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+                AtrOrigEnduranceCost = reader.ReadSingle();
+                AtrOrigInterruptTime = reader.ReadSingle();
+                AtrOrigMaxTargets = reader.ReadInt32();
+                AtrOrigRadius = reader.ReadSingle();
+                AtrOrigRange = reader.ReadSingle();
+                AtrOrigRechargeTime = reader.ReadSingle();
+                AtrOrigSecondaryRange = reader.ReadSingle();
+                AtrModAccuracy = reader.ReadSingle();
+                AtrModActivatePeriod = reader.ReadSingle();
+                AtrModArc = reader.ReadInt32();
+                AtrModCastTime = reader.ReadSingle();
+                AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+                AtrModEnduranceCost = reader.ReadSingle();
+                AtrModInterruptTime = reader.ReadSingle();
+                AtrModMaxTargets = reader.ReadInt32();
+                AtrModRadius = reader.ReadSingle();
+                AtrModRange = reader.ReadSingle();
+                AtrModRechargeTime = reader.ReadSingle();
+                AtrModSecondaryRange = reader.ReadSingle();
+                int num = reader.ReadInt32();
+                for (int index = 0; index < num; ++index)
+                    ActiveConditionals.Add(new KeyValue<string, string>(reader.ReadString(), reader.ReadString()));
             }
         }
 

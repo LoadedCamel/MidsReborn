@@ -77,7 +77,7 @@ namespace Mids_Reborn.UIv2
                     MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
                 }
-                MainModule.MidsController.LoadData(ref _frmInitializing);
+                MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                 _frmInitializing?.SetMessage("Setting up UI...");
 
                 Show();

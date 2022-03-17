@@ -81,9 +81,9 @@ namespace mrbBase
             Superior = iEnh.Superior;
         }
 
-        public Enhancement(BinaryReader reader, bool useOld = false)
+        public Enhancement(BinaryReader reader, bool legacy = false)
         {
-            if (!useOld)
+            if (!legacy)
             {
                 RecipeIDX = -1;
                 IsModified = false;
@@ -151,7 +151,7 @@ namespace mrbBase
                 TypeID = (Enums.eType)reader.ReadInt32();
                 SubTypeID = (Enums.eSubtype)reader.ReadInt32();
                 ClassID = new int[reader.ReadInt32() + 1];
-                for (int index = 0; index < ClassID.Length; ++index)
+                for (var index = 0; index < ClassID.Length; ++index)
                     ClassID[index] = reader.ReadInt32();
                 Image = reader.ReadString();
                 nIDSet = reader.ReadInt32();
@@ -165,7 +165,7 @@ namespace mrbBase
                 if (MutExID < Enums.eEnhMutex.None)
                     MutExID = Enums.eEnhMutex.None;
                 Effect = new Enums.sEffect[reader.ReadInt32() + 1];
-                for (int index = 0; index <= Effect.Length - 1; ++index)
+                for (var index = 0; index <= Effect.Length - 1; ++index)
                 {
                     Effect[index].Mode = (Enums.eEffMode)reader.ReadInt32();
                     Effect[index].BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
@@ -173,7 +173,7 @@ namespace mrbBase
                     Effect[index].Enhance.SubID = reader.ReadInt32();
                     Effect[index].Schedule = (Enums.eSchedule)reader.ReadInt32();
                     Effect[index].Multiplier = reader.ReadSingle();
-                    ref Enums.sEffect local = ref Effect[index];
+                    ref var local = ref Effect[index];
                     Effect effect;
                     if (!reader.ReadBoolean())
                         effect = null;
@@ -184,9 +184,11 @@ namespace mrbBase
                         };
                     local.FX = effect;
                 }
+
                 UID = reader.ReadString();
                 RecipeName = reader.ReadString();
                 Superior = reader.ReadBoolean();
+                IsProc = reader.ReadBoolean();
             }
         }
 

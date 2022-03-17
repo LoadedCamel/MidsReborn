@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace mrbBase
 {
@@ -192,6 +193,7 @@ namespace mrbBase
         public string SourceDataPath { get; set; }
         public string ConversionDataPath { get; set; }
         public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
+        public bool IsLegacy { get; set; }
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
