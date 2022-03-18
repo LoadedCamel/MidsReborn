@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -1691,10 +1692,23 @@ namespace Mids_Reborn.Forms.Controls
                                 };
 
                                 if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
+                                {
                                     continue;
-                                iList.AddItem(new PairedList.ItemPair($"+{str4}:", $"{effectMagSum11.Value[index]}%{str5}", false, false, false, pEnh.Effects[effectMagSum11.Index[index]].BuildEffectString()));
+                                }
+
+                                // Prevent crash when switching primary specs
+                                if (effectMagSum11.Value == null)
+                                {
+                                    continue;
+                                }
+
+                                iList.AddItem(new PairedList.ItemPair($"+{str4}:",
+                                    $"{effectMagSum11.Value[index]}%{str5}", false, false, false,
+                                    pEnh.Effects[effectMagSum11.Index[index]].BuildEffectString()));
                                 if (pEnh.Effects[effectMagSum10.Index[index]].isEnhancementEffect)
+                                {
                                     iList.SetUnique();
+                                }
                             }
                         }
                         else
