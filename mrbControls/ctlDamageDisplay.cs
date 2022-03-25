@@ -413,8 +413,11 @@ namespace mrbControls
                 var brush = new LinearGradientBrush(rect, pFadeBackStart, pFadeBackEnd, 0f);
                 rect.Height -= 20;
                 bxBuffer.Graphics.FillRectangle(brush, rect);
-                if (!(Math.Abs(nBase) > float.Epsilon))
+                if (Math.Abs(nBase) < float.Epsilon & Math.Abs(nEnhanced) < float.Epsilon)
+                {
                     return;
+                }
+
                 unchecked
                 {
                     if (Math.Abs(nMaxEnhanced) < float.Epsilon) nMaxEnhanced = nBase * 2f;
