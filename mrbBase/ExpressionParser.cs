@@ -34,7 +34,7 @@ namespace mrbBase
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", "0.75"}, // Value not present in MidsContext.Character.Archetype
+                { "base.kToHit", $"{MidsContext.Config.BaseAcc}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" }
             };
         }
