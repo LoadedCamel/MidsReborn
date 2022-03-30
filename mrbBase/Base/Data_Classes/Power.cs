@@ -844,93 +844,110 @@ namespace mrbBase.Base.Data_Classes
         //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
         public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == DisplayName);
 
-        public float FXGetDamageValue()
+        public float FXGetDamageValue(bool absorb = false)
         {
-            var num1 = 0.0f;
-            foreach (var effect in Effects)
+            var totalDamage = 0f;
+            IPower power = new Power(this);
+            if (absorb)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || (effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self) || (!(effect.Probability > 0.0) || !effect.CanInclude()) || !effect.PvXInclude())
+                power.AbsorbPetEffects();
+            }
+
+            foreach (var effect in power.Effects)
+            {
+                if (effect.EffectType != Enums.eEffectType.Damage ||
+                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) ||
+                    (effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special &&
+                        effect.ToWho == Enums.eToWho.Self) || (!(effect.Probability > 0) || !effect.CanInclude()) ||
+                    !effect.PvXInclude())
                 {
                     continue;
                 }
 
-                var num2 = effect.BuffedMag;
-                
+                var effectDmg = effect.BuffedMag;
+
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
-                    num2 *= effect.Probability;
+                    effectDmg *= effect.Probability;
                 }
 
-                if (PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
+                if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    num2 = (float)(num2 * (double)ActivatePeriod / 10.0);
+                    effectDmg = (float)(effectDmg * power.ActivatePeriod / 10d);
                 }
 
                 if (effect.Ticks > 1)
                 {
-                    if (effect.CancelOnMiss && MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average && effect.Probability < 1.0)
-                    {
-                        num2 *= (float)((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
-                    }
-                    else
-                    {
-                        num2 *= effect.Ticks;
-                    }
+                    effectDmg *= effect.CancelOnMiss &&
+                            MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
+                            effect.Probability < 1
+                        ? (float)((1 - Math.Pow(effect.Probability, effect.Ticks)) / (1 - effect.Probability))
+                        : effect.Ticks;
                 }
 
-                num1 += num2;
-                
+                totalDamage += effectDmg;
             }
 
             switch (MidsContext.Config.DamageMath.ReturnValue)
             {
                 case ConfigData.EDamageReturn.DPS:
-                    if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
+                    if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                     {
-                        num1 /= ActivatePeriod;
+                        totalDamage /= power.ActivatePeriod;
                         break;
                     }
 
-                    if (RechargeTime + (double) CastTime + InterruptTime > 0.0)
+                    if (power.RechargeTime + (double)power.CastTime + power.InterruptTime > 0)
                     {
-                        num1 /= RechargeTime + CastTime + InterruptTime;
+                        totalDamage /= power.RechargeTime + power.CastTime + power.InterruptTime;
                     }
 
                     break;
                 case ConfigData.EDamageReturn.DPA:
-                    if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
+                    if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                     {
-                        num1 /= ActivatePeriod;
+                        totalDamage /= power.ActivatePeriod;
                         break;
                     }
 
-                    if (CastTime > 0.0)
+                    if (power.CastTime > 0)
                     {
-                        num1 /= CastTime;
+                        totalDamage /= power.CastTime;
                     }
 
                     break;
             }
 
-            return num1;
+            return totalDamage;
         }
 
-        public string FXGetDamageString()
+        public string FXGetDamageString(bool absorb = false)
         {
-            var names = Enum.GetNames(Enums.eDamage.None.GetType());
+            var names = Enum.GetNames(typeof(Enums.eDamage));
             var numArray1 = new float[names.Length];
             var numArray2 = new float[names.Length, 2];
             var numArray3 = new float[names.Length, 2];
-            var str1 = string.Empty;
-            var iNum = 0.0f;
-            foreach (var effect in Effects)
+            var dmgString = string.Empty;
+            var totalDamage = 0f;
+
+            IPower power = new Power(this);
+            if (absorb)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self || !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
+                power.AbsorbPetEffects();
+            }
+
+            foreach (var effect in power.Effects)
+            {
+                if (effect.EffectType != Enums.eEffectType.Damage ||
+                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
+                    !(Math.Abs(effect.Probability) > 0.999000012874603) ||
+                    effect.EffectClass == Enums.eEffectClass.Ignored ||
+                    effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self ||
+                    !(effect.Probability > 0) || !effect.CanInclude() || !effect.PvXInclude())
                 {
                     continue;
                 }
 
-                
                 var effectMag = effect.BuffedMag;
 
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
@@ -938,119 +955,109 @@ namespace mrbBase.Base.Data_Classes
                     effectMag *= effect.Probability;
                 }
 
-                if (PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
+                if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    effectMag = (float) (effectMag * (double) ActivatePeriod / 10.0);
+                    effectMag = (float)(effectMag * power.ActivatePeriod / 10d);
                 }
 
                 switch (MidsContext.Config.DamageMath.ReturnValue)
                 {
                     case ConfigData.EDamageReturn.DPS:
-                        if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
+                        if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                         {
-                            effectMag /= ActivatePeriod;
+                            effectMag /= power.ActivatePeriod;
                             break;
                         }
 
-                        if (RechargeTime + (double) CastTime > 0.0)
+                        if (power.RechargeTime + (double)power.CastTime > 0)
                         {
-                            effectMag /= RechargeTime + CastTime;
+                            effectMag /= power.RechargeTime + power.CastTime;
                         }
 
                         break;
                     case ConfigData.EDamageReturn.DPA:
-                        if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
+                        if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                         {
-                            effectMag /= ActivatePeriod;
+                            effectMag /= power.ActivatePeriod;
                             break;
                         }
 
-                        if (CastTime > 0.0)
+                        if (power.CastTime > 0)
                         {
-                            effectMag /= CastTime;
+                            effectMag /= power.CastTime;
                         }
 
                         break;
-                    case ConfigData.EDamageReturn.Numeric:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        //case ConfigData.EDamageReturn.Numeric:
+                        //    break;
                 }
 
                 if (effect.Ticks != 0)
                 {
-                    float num2;
-                    if (!effect.CancelOnMiss || MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average || effect.Probability >= 1.0)
-                    {
-                        num2 = effect.Ticks;
-                    }
-                    else
-                    {
-                        num2 = (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
-                    }
+                    var num2 = !effect.CancelOnMiss ||
+                           MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
+                           effect.Probability >= 1
+                        ? effect.Ticks
+                        : (float)((1 - Math.Pow(effect.Probability, effect.Ticks)) / (1 - effect.Probability));
 
                     var index = 0;
-                    if (Math.Abs(numArray2[(int) effect.DamageType, 0] - 0.0f) > 0.01)
+                    if (Math.Abs(numArray2[(int)effect.DamageType, 0]) > 0.01)
                     {
                         index = 1;
                     }
 
-                    numArray2[(int) effect.DamageType, index] = effectMag;
-                    numArray3[(int) effect.DamageType, index] = num2;
-                    iNum += effectMag * num2;
+                    numArray2[(int)effect.DamageType, index] = effectMag;
+                    numArray3[(int)effect.DamageType, index] = num2;
+                    totalDamage += effectMag * num2;
                 }
                 else
                 {
-                    iNum += effectMag;
-                    numArray1[(int) effect.DamageType] += effectMag;
+                    totalDamage += effectMag;
+                    numArray1[(int)effect.DamageType] += effectMag;
                 }
             }
 
-            if (!(iNum > 0.0))
+            if (totalDamage <= 0)
             {
-                return str1;
+                return dmgString;
             }
 
+            for (var index = 0; index < numArray1.Length; index++)
             {
-                for (var index = 0; index <= numArray1.Length - 1; ++index)
+                if (!((numArray1[index] > 0) | (numArray2[index, 0] > 0)))
                 {
-                    if (!((numArray1[index] > 0.0) | (numArray2[index, 0] > 0.0)))
-                    {
-                        continue;
-                    }
-
-                    if (!string.IsNullOrEmpty(str1))
-                    {
-                        str1 += ", ";
-                    }
-
-                    var str2 = str1 + Enums.GetDamageName((Enums.eDamage) index) + "(";
-                    if (numArray1[index] > 0.0)
-                    {
-                        str2 += Utilities.FixDP(numArray1[index]);
-                    }
-
-                    if (Math.Abs(numArray2[index, 0] - 0.0f) > 0.01)
-                    {
-                        if (numArray1[index] > 0.0)
-                        {
-                            str2 += "+";
-                        }
-
-                        str2 = str2 + Utilities.FixDP(numArray2[index, 0]) + "x" + Utilities.FixDP(numArray3[index, 0]);
-                        if (Math.Abs(numArray2[index, 1] - 0.0f) > 0.01)
-                        {
-                            str2 = str2 + "+" + Utilities.FixDP(numArray2[index, 1]) + "x" +
-                                   Utilities.FixDP(numArray3[index, 1]);
-                        }
-                    }
-
-                    str1 = str2 + ")";
+                    continue;
                 }
 
-                str1 = str1 + " = " + Utilities.FixDP(iNum);
+                if (!string.IsNullOrEmpty(dmgString))
+                {
+                    dmgString += ", ";
+                }
+
+                var str2 = $"{dmgString}{Enums.GetDamageName((Enums.eDamage)index)}(";
+                if (numArray1[index] > 0)
+                {
+                    str2 += Utilities.FixDP(numArray1[index]);
+                }
+
+                if (Math.Abs(numArray2[index, 0]) > 0.01)
+                {
+                    if (numArray1[index] > 0)
+                    {
+                        str2 += "+";
+                    }
+
+                    str2 += $"{Utilities.FixDP(numArray2[index, 0])}x{Utilities.FixDP(numArray3[index, 0])}";
+                    if (Math.Abs(numArray2[index, 1]) > 0.01)
+                    {
+                        str2 += $"+{Utilities.FixDP(numArray2[index, 1])}x{Utilities.FixDP(numArray3[index, 1])}";
+                    }
+                }
+
+                dmgString = $"{str2})";
             }
-            return str1;
+
+            return $"{dmgString} = {Utilities.FixDP(totalDamage)}";
         }
 
         public int[] GetRankedEffects()
