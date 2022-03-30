@@ -209,10 +209,10 @@ namespace mrbBase
         void StoreTo(ref BinaryWriter writer);
 
         PowerEntry? GetPowerEntry();
+        
+        float FXGetDamageValue(bool absorb = false);
 
-        float FXGetDamageValue();
-
-        string FXGetDamageString();
+        string FXGetDamageString(bool absorb = false);
 
         int[] GetRankedEffects();
 
