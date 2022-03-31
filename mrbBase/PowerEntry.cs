@@ -329,7 +329,6 @@ namespace mrbBase
                 }
                 else
                 {
-                    Debug.WriteLine(Slots.Length);
                     var num2 = 0;
                     for (var index2 = 1; index2 < Slots.Length; ++index2)
                     {
@@ -425,7 +424,6 @@ namespace mrbBase
                 return false;
             }
 
-            Debug.WriteLine($"idx: {slotIdx}\n\tInherent?: {Slots[slotIdx].IsInherent}");
             if ((slotIdx == 0) & (NIDPowerset > -1))
             {
                 message = "This slot was added automatically and can't be removed without also removing the power.";
