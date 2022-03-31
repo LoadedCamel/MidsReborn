@@ -44,7 +44,7 @@ namespace mrbBase.Base.Data_Classes
                 if (LevelCache > -1) return LevelCache;
 
                 int num2;
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
+                if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
                     num2 = CurrentBuild.GetMaxLevel();
                 }
@@ -66,7 +66,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public int MaxLevel => 49;
+        public static int MaxLevel => 49;
 
         public int RequestedLevel { get; set; }
 
@@ -102,7 +102,7 @@ namespace mrbBase.Base.Data_Classes
             get
             {
                 if (_completeCache.HasValue) return _completeCache.GetValueOrDefault();
-                var num1 = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                var num1 = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
                 var num2 = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
                 _completeCache = num1 < 1 && num2 < 1;
                 return _completeCache.GetValueOrDefault();
@@ -187,7 +187,7 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                var num = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
                 return num;
             }
         }
@@ -203,7 +203,7 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
                 {
-                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    if (Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
                 else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
@@ -411,6 +411,81 @@ namespace mrbBase.Base.Data_Classes
             PEnhancementsList = new List<string>();
         }
 
+        public void CheckInherentSlots()
+        {
+            if (MidsContext.Config.Server.ExtraSlotsEnabled)
+            {
+                foreach (var power in CurrentBuild.Powers)
+                {
+                    if (power?.Power == null) continue;
+                    switch (MidsContext.Config.BuildMode)
+                    {
+                        case Enums.dmModes.LevelUp:
+                            switch (power.Name)
+                            {
+                                case "Health" when Level == MidsContext.Config.Server.HealthSlot1Level && power.InherentSlotsUsed < 2:
+                                    power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
+                                    power.InherentSlotsUsed++;
+
+                                    break;
+                                case "Health" when Level == MidsContext.Config.Server.HealthSlot2Level && power.InherentSlotsUsed < 2:
+                                    power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
+
+                                    break;
+                                case "Stamina" when Level == MidsContext.Config.Server.StaminaSlot1Level && power.InherentSlotsUsed < 2:
+                                    power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
+                                    
+                                    break;
+                                case "Stamina" when Level == MidsContext.Config.Server.StaminaSlot2Level && power.InherentSlotsUsed < 2:
+                                    power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
+
+                                    break;
+                            }
+
+                            break;
+                        case Enums.dmModes.Normal:
+                            switch (power.Name)
+                            {
+                                case "Health":
+                                    if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
+                                    {
+                                        power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
+                                        power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
+                                        power.InherentSlotsUsed = 2;
+                                    }
+                                    break;
+                                case "Stamina":
+                                    if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
+                                    {
+                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
+                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
+                                        power.InherentSlotsUsed = 2;
+                                    }
+                                    break;
+                            }
+
+                            break;
+                    }
+                }
+            }
+        }
+
+
+        private List<int> CurrentInherentSlots(PowerEntry powerEntry)
+        {
+            var inherentSlots = new List<int>();
+            for (var slotIndex = 0; slotIndex < powerEntry.Slots.Length; slotIndex++)
+            {
+                var slot = powerEntry.Slots[slotIndex];
+                if (slot.IsInherent)
+                {
+                    inherentSlots.Add(slotIndex);
+                }
+            }
+
+            return inherentSlots;
+        }
+
 
         /// <summary>
         /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
@@ -452,6 +527,7 @@ namespace mrbBase.Base.Data_Classes
             inherentPowers = new List<IPower>();
             PEnhancementsList = new List<string>();
 
+            CheckInherentSlots();
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null) continue;

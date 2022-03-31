@@ -508,6 +508,7 @@ namespace Mids_Reborn.Forms
             MidsContext.Character.ResetLevel();
             PowerModified(markModified: false);
             UpdateDMBuffer();
+            //MidsContext.Character.CheckInherentSlots();
             pbDynMode.Refresh();
         }
 
@@ -1238,7 +1239,7 @@ namespace Mids_Reborn.Forms
             var str2 = "";
             var ch = MidsContext.Character;
             var level = ch.Level;
-            if (!((ch.CurrentBuild.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) & (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
+            if (!((Build.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) & (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
             {
                 str1 = " (Placing " + (ch.Level + 1) + ")";
             }
@@ -3445,8 +3446,7 @@ namespace Mids_Reborn.Forms
                 {
                     if (!((e.Button == MouseButtons.Left) & (slotID > -1))) return;
 
-                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained =
-                        !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
+                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained = !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
                     if (fRecipe != null && fRecipe.Visible)
                     {
                         //fRecipe.RecalcSalvage();
@@ -3552,8 +3552,7 @@ namespace Mids_Reborn.Forms
                         EnhancementModified();
                         LastClickPlacedSlot = false;
                     }
-                    else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
-                             (e.Button == MouseButtons.Left))
+                    else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                     {
                         var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
                         if (!flag && powerEntry.CanIncludeForStats() && powerEntry.HasProc())
@@ -3742,15 +3741,35 @@ namespace Mids_Reborn.Forms
                 drawing.HighlightSlot(-1);
 
             var slotCounts = MainModule.MidsController.Toon.GetSlotCounts();
-            slotCounts[0] = Math.Abs(MidsContext.Character.CurrentBuild.TotalSlotsAvailable -
-                                     MidsContext.Character.CurrentBuild.SlotsPlaced);
+            slotCounts[0] = Build.TotalSlotsAvailable - MidsContext.Character.CurrentBuild.SlotsPlaced;
             slotCounts[1] = MidsContext.Character.CurrentBuild.SlotsPlaced;
-            ibAccolade.TextOff = slotCounts[0] <= 0
-                ? "No slot left"
-                : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? string.Empty : "s") + " to go";
-            ibAccolade.TextOn = slotCounts[1] <= 0
-                ? "No slot placed"
-                : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? string.Empty : "s") + " placed";
+            if (slotCounts[0] == 0)
+            {
+                ibAccolade.TextOff = "No slots left";
+            }
+            else
+            {
+                if (slotCounts[0] < 0)
+                {
+                    ibAccolade.TextOff = Math.Abs(slotCounts[0]) + " slot" + (slotCounts[0] == 1 ? string.Empty : "s") + " over";
+                    MessageBox.Show($@"This build exceeds the slot limit.
+ Please remove {Math.Abs(slotCounts[0])} slots from the build.", @"Invalid Slotting", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    ibAccolade.TextOff = slotCounts[0] + " slot" + (slotCounts[0] == 1 ? string.Empty : "s") + " to go";
+                }
+            }
+
+            if (slotCounts[1] <= 0)
+            {
+                ibAccolade.TextOn = "No slots placed";
+            }
+            else
+            {
+                ibAccolade.TextOn = slotCounts[1] + " slot" + (slotCounts[1] == 1 ? string.Empty : "s") + " placed";
+            }
+
             if ((index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
@@ -6849,7 +6868,7 @@ namespace Mids_Reborn.Forms
                     p = pList.First();
                     while (pe.Slots.Length < p.Slots.Length)
                     {
-                        pe.AddSlot(MidsContext.Character.MaxLevel);
+                        pe.AddSlot(Character.MaxLevel);
                     }
 
                     p.Slots.CopyTo(pe.Slots, 0);
@@ -6903,8 +6922,8 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                MidsContext.Character.RequestedLevel = MidsContext.Character.MaxLevel;
-                MidsContext.Character.SetLevelTo(MidsContext.Character.MaxLevel);
+                MidsContext.Character.RequestedLevel = Character.MaxLevel;
+                MidsContext.Character.SetLevelTo(Character.MaxLevel);
             }
 
             MidsContext.Archetype = MidsContext.Character.Archetype;

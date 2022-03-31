@@ -124,8 +124,11 @@ namespace Mids_Reborn
             {
                 if (CanRemovePower(inToonHistory, true, out message))
                 {
-                    if ((true) & (inToonHistory < CurrentBuild.Powers.Count))
+                    if (true & (inToonHistory < CurrentBuild.Powers.Count))
+                    {
                         CurrentBuild.Powers[inToonHistory].Reset();
+                    }
+
                     RequestedLevel = CurrentBuild.Powers[inToonHistory].Level;
                 }
                 else if (!string.IsNullOrEmpty(message))
@@ -244,7 +247,10 @@ namespace Mids_Reborn
 
             Validate();
             if (!noPoolShuffle)
+            {
                 PoolShuffle();
+            }
+
             ResetLevel();
         }
 
@@ -451,7 +457,7 @@ namespace Mids_Reborn
                             Summon = pfx.Summon
                         });
 
-                    if (bPowerFxIdentifiers.Intersect(gPowerFxIdentifiers).Count() <= 0) continue;
+                    if (!bPowerFxIdentifiers.Intersect(gPowerFxIdentifiers).Any()) continue;
 
                     var fxList = p.Effects.ToList();
                     foreach (var gpFx in gp.TargetPower.Effects)

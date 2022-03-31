@@ -62,8 +62,12 @@ namespace mrbBase
             {
                 var pplaced = 0;
                 foreach (var power in Powers)
+                {
                     if (power.Chosen && power.Power != null)
+                    {
                         ++pplaced;
+                    }
+                }
 
                 return pplaced;
             }
@@ -75,8 +79,12 @@ namespace mrbBase
             {
                 var placed = 0;
                 foreach (var power in Powers)
+                {
                     if (power.Slots.Length > 1)
+                    {
                         placed += power.Slots.Length - 1;
+                    }
+                }
 
                 return placed;
             }
@@ -87,7 +95,17 @@ namespace mrbBase
         get { return DatabaseAPI.Database.Levels.Sum(level => level.Slots); }
     }*/
 
-        public int TotalSlotsAvailable => 67;
+        public static int TotalSlotsAvailable
+        {
+            get
+            {
+                return MidsContext.Config.Server.ExtraSlotsEnabled switch
+                {
+                    false => MidsContext.Config.Server.MaxSlots,
+                    true => MidsContext.Config.Server.MaxSlots + MidsContext.Config.Server.HealthSlots + MidsContext.Config.Server.StaminaSlots
+                };
+            }
+        }
 
         public PowerEntry AddPower(IPower power, int specialLevel = -1)
         {
@@ -827,24 +845,35 @@ namespace mrbBase
             var powersetList = new List<IPowerset>();
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
+            {
                 if (powerset.SetType == Enums.ePowerSetType.Inherent && !powersetList.Contains(powerset))
+                {
                     powersetList.Add(powerset);
+                }
+            }
 
             foreach (var powerset in powersetList)
             {
                 if (powerset == null)
+                {
                     continue;
+                }
+
                 foreach (var power in powerset.Powers)
                 {
                     var val2 = 0;
-                    if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) ||
-                        !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
+                    if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) || !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
+                    {
                         continue;
+                    }
+
                     if (power.Requires.NPowerID.Length > 0)
                     {
                         var inToonHistory = FindInToonHistory(power.Requires.NPowerID[0][0]);
                         if (inToonHistory > -1)
+                        {
                             val2 = Powers[inToonHistory].Level;
+                        }
                     }
 
                     AddPower(power, Math.Max(power.Level - 1, val2));

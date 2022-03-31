@@ -306,28 +306,25 @@ namespace mrbControls
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers = currentBuild.Powers;
-                        var index = i;
-                        var value = powers[index];
+                        var value = powers[i];
                         DrawPowerSlot(ref value, true);
-                        currentBuild.Powers[index] = value;
+                        currentBuild.Powers[i] = value;
                     }
                     else if (MidsContext.Character.CurrentBuild.Powers[i].Chosen)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers2 = currentBuild.Powers;
-                        var index = i;
-                        var value = powers2[index];
+                        var value = powers2[i];
                         DrawPowerSlot(ref value);
-                        currentBuild.Powers[index] = value;
+                        currentBuild.Powers[i] = value;
                     }
                     else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers3 = currentBuild.Powers;
-                        var index = i;
-                        var value = powers3[index];
+                        var value = powers3[i];
                         DrawPowerSlot(ref value);
-                        currentBuild.Powers[index] = value;
+                        currentBuild.Powers[i] = value;
                     }
 
                 Application.DoEvents();

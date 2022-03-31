@@ -24,7 +24,8 @@ namespace mrbBase
 
         private const string MagicCompressed = "MxDz";
         private const string MagicUncompressed = "MxDu";
-        private const float SaveVersion = 3.10f;
+        private const float ThisVersion = 3.20f;
+        private const float PriorVersion = 3.10f;
 
 
         private const int DataLinkMaxLength = 2048;
@@ -59,7 +60,7 @@ namespace mrbBase
             }
 
             writer.Write(MagicNumber, 0, MagicNumber.Length);
-            writer.Write(SaveVersion);
+            writer.Write(ThisVersion);
             writer.Write(UseQualifiedNames);
             writer.Write(UseOldSubpowerFields);
             writer.Write(MidsContext.Character.Archetype.ClassName);
@@ -84,6 +85,7 @@ namespace mrbBase
                     writer.Write(Convert.ToSByte(power.Level));
                     writer.Write(Convert.ToBoolean(power.StatInclude));
                     writer.Write(Convert.ToBoolean(power.ProcInclude));
+                    writer.Write(power.InherentSlotsUsed);
                     writer.Write(power.VariableValue);
                     writer.Write(Convert.ToSByte(power.SubPowers.Length - 1));
                     foreach (var index2 in power.SubPowers)
@@ -100,6 +102,7 @@ namespace mrbBase
                 for (var index2 = 0; index2 <= power.Slots.Length - 1; ++index2)
                 {
                     writer.Write(Convert.ToSByte(power.Slots[index2].Level));
+                    writer.Write(power.Slots[index2].IsInherent);
                     WriteSlotData(ref writer, ref power.Slots[index2].Enhancement);
                     writer.Write(includeAltEnh);
                     if (includeAltEnh)
@@ -269,7 +272,8 @@ namespace mrbBase
 
         private static bool MxDReadSaveData(ref byte[] buffer, bool silent)
         {
-            var useOldFormat = false;
+            var useLegacyFormat = false;
+            var usePriorFormat = false;
             InherentPowers = new List<PowerEntry>();
             DisplayIndex = -1;
             if (buffer.Length < 1)
@@ -332,13 +336,18 @@ namespace mrbBase
 
                 switch (fVersion)
                 {
-                    case > 3.10f:
+                    case > ThisVersion:
                         MessageBox.Show(@"File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.", @"Unable to Load");
                         r.Close();
                         memoryStream.Close();
                         return false;
-                    case < 3.10f:
-                        useOldFormat = true;
+                    case < PriorVersion:
+                        Debug.WriteLine(@"Using legacy file version format.");
+                        useLegacyFormat = true;
+                        break;
+                    case < ThisVersion and >= PriorVersion:
+                        Debug.WriteLine(@"Using previous file version format.");
+                        usePriorFormat = true;
                         break;
                 }
 
@@ -431,7 +440,7 @@ namespace mrbBase
                         if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
                         {
                             powerEntry1.Level = r.ReadSByte();
-                            if (useOldFormat)
+                            if (useLegacyFormat)
                             {
                                 powerEntry1.StatInclude = r.ReadBoolean();
                             }
@@ -440,6 +449,12 @@ namespace mrbBase
                                 powerEntry1.StatInclude = r.ReadBoolean();
                                 powerEntry1.ProcInclude = r.ReadBoolean();
                             }
+
+                            if (!usePriorFormat && !useLegacyFormat)
+                            {
+                                powerEntry1.InherentSlotsUsed = r.ReadInt32();
+                            }
+
                             powerEntry1.VariableValue = r.ReadInt32();
                             if (hasSubPower)
                             {
@@ -479,16 +494,33 @@ namespace mrbBase
                         }
 
                         if (nId < 0 && powerIndex < DatabaseAPI.Database.Levels_MainPowers.Length)
+                        {
                             powerEntry1.Level = DatabaseAPI.Database.Levels_MainPowers[powerIndex];
+                        }
+
                         powerEntry1.Slots = new SlotEntry[r.ReadSByte() + 1];
                         for (var index3 = 0; index3 < powerEntry1.Slots.Length; ++index3)
                         {
-                            powerEntry1.Slots[index3] = new SlotEntry
+                            if (usePriorFormat || useLegacyFormat)
                             {
-                                Level = r.ReadSByte(),
-                                Enhancement = new I9Slot(),
-                                FlippedEnhancement = new I9Slot()
-                            };
+                                powerEntry1.Slots[index3] = new SlotEntry
+                                {
+                                    Level = r.ReadSByte(),
+                                    Enhancement = new I9Slot(),
+                                    FlippedEnhancement = new I9Slot()
+                                };
+                            }
+                            else
+                            {
+                                powerEntry1.Slots[index3] = new SlotEntry
+                                {
+                                    Level = r.ReadSByte(),
+                                    IsInherent = r.ReadBoolean(),
+                                    Enhancement = new I9Slot(),
+                                    FlippedEnhancement = new I9Slot()
+                                };
+                            }
+
                             ReadSlotData(r, ref powerEntry1.Slots[index3].Enhancement, qualifiedNames, fVersion);
                             if (r.ReadBoolean())
                                 ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
@@ -713,18 +745,22 @@ namespace mrbBase
             else
             {
                 if (slot.Enh <= -1)
+                {
                     return;
+                }
+
                 writer.Write(DatabaseAPI.Database.Enhancements[slot.Enh].StaticIndex);
                 if (DatabaseAPI.Database.Enhancements[slot.Enh].StaticIndex < 0)
+                {
                     return;
-                if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal) |
-                    (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO))
+                }
+
+                if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO))
                 {
                     writer.Write(Convert.ToSByte(slot.RelativeLevel));
                     writer.Write(Convert.ToSByte(slot.Grade));
                 }
-                else if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO) |
-                         (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO))
+                else if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO))
                 {
                     writer.Write(Convert.ToSByte(slot.IOLevel));
                     writer.Write(Convert.ToSByte(slot.RelativeLevel));

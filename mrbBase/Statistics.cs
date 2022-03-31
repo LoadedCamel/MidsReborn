@@ -1,21 +1,22 @@
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
     public class Statistics
     {
-        public const float MaxRunSpeed = 135.67f;
-        public const float MaxJumpSpeed = 114.4f;
-        public const float MaxFlySpeed = 86f;
+        public static readonly float MaxRunSpeed = MidsContext.Config.Server.MaxRunSpeed;
+        public readonly float MaxJumpSpeed = MidsContext.Config.Server.MaxJumpSpeed;
+        public static readonly float MaxFlySpeed = MidsContext.Config.Server.MaxFlySpeed;
         public const float CapRunSpeed = 135.67f;
         public const float CapJumpSpeed = 114.4f;
         public const float CapFlySpeed = 128.99f;
-        public const float BaseRunSpeed = 21f;
-        public const float BaseJumpSpeed = 21f;
-        public const float BaseJumpHeight = 4f;
-        public const float BaseFlySpeed = 31.5f;
+        public static readonly float BaseRunSpeed = MidsContext.Config.Server.BaseRunSpeed;
+        public static readonly float BaseJumpSpeed = MidsContext.Config.Server.BaseJumpSpeed;
+        public static readonly float BaseJumpHeight = MidsContext.Config.Server.BaseJumpHeight;
+        public static readonly float BaseFlySpeed = MidsContext.Config.Server.BaseFlySpeed;
         internal const float BaseMagic = 1.666667f;
-        public const float BasePerception = 500f;
+        public static readonly float BasePerception = MidsContext.Config.Server.BasePerception;
         public const float MaxDefenseDebuffRes = 95f;
         public const float MaxGenericDebuffRes = 100f; // All but defense that has a specific value
         private readonly Character _character;

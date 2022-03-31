@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
@@ -65,6 +68,7 @@ namespace mrbBase
                     Slots[0].Enhancement = new I9Slot();
                     Slots[0].FlippedEnhancement = new I9Slot();
                     Slots[0].Level = iLevel;
+                    Slots[0].IsInherent = false;
                 }
                 else
                 {
@@ -103,6 +107,7 @@ namespace mrbBase
         public bool Tag { get; set; }
         public bool StatInclude { get; set; }
         public bool ProcInclude { get; set; }
+        public int InherentSlotsUsed { get; set; }
 
         private int _VirtualVariableValue;
         private int _VariableValue;
@@ -189,7 +194,9 @@ namespace mrbBase
             {
                 Slots = new SlotEntry[iPe.Slots.Length];
                 for (var index = 0; index <= Slots.Length - 1; ++index)
+                {
                     Slots[index].Assign(iPe.Slots[index]);
+                }
             }
             else
             {
@@ -200,7 +207,9 @@ namespace mrbBase
             {
                 SubPowers = new PowerSubEntry[iPe.SubPowers.Length];
                 for (var index = 0; index <= SubPowers.Length - 1; ++index)
+                {
                     SubPowers[index].Assign(iPe.SubPowers[index]);
+                }
             }
             else
             {
@@ -303,12 +312,12 @@ namespace mrbBase
             return section;
         }
 
-        public int AddSlot(int iLevel)
+        public int AddSlot(int iLevel, bool isInherent = false)
         {
-            int num1;
+            int slotIdx;
             if ((Slots.Length > 5) | !DatabaseAPI.Database.Power[NIDPower].Slottable)
             {
-                num1 = -1;
+                slotIdx = -1;
             }
             else
             {
@@ -320,34 +329,60 @@ namespace mrbBase
                 }
                 else
                 {
+                    Debug.WriteLine(Slots.Length);
                     var num2 = 0;
                     for (var index2 = 1; index2 < Slots.Length; ++index2)
+                    {
                         if (Slots[index2].Level <= iLevel)
+                        {
                             num2 = index2;
+                        }
+                    }
+
                     index1 = num2 + 1;
+
                     var slotEntryArray = new SlotEntry[Slots.Length + 1];
+
                     var index3 = -1;
+
                     for (var index2 = 0; index2 < slotEntryArray.Length; ++index2)
                     {
                         if (index2 == index1)
+                        {
                             continue;
+                        }
                         ++index3;
+                        if (index3 < 2 && isInherent)
+                        {
+                            Slots[index3].IsInherent = true;
+                        }
                         slotEntryArray[index2].Assign(Slots[index3]);
                     }
 
                     Slots = new SlotEntry[slotEntryArray.Length];
                     for (var index2 = 0; index2 < Slots.Length; ++index2)
+                    {
                         if (index2 != index1)
+                        {
+                            if (index2 < 2 && isInherent)
+                            {
+                                slotEntryArray[index2].IsInherent = true;
+                            }
                             Slots[index2].Assign(slotEntryArray[index2]);
+                        }
+                    }
                 }
 
                 Slots[index1].Enhancement = new I9Slot();
                 Slots[index1].FlippedEnhancement = new I9Slot();
                 Slots[index1].Level = iLevel;
-                num1 = index1;
+                if (isInherent)
+                {
+                    Slots[index1].IsInherent = true;
+                }
+                slotIdx = index1;
             }
-
-            return num1;
+            return slotIdx;
         }
 
         public int AddSlot2(int lvl)
@@ -385,18 +420,30 @@ namespace mrbBase
         public bool CanRemoveSlot(int slotIdx, out string message)
         {
             message = string.Empty;
-            if (slotIdx < 0 || slotIdx > Slots.Length - 1) return false;
+            if (slotIdx < 0 || slotIdx > Slots.Length - 1)
+            {
+                return false;
+            }
 
+            Debug.WriteLine($"idx: {slotIdx}\n\tInherent?: {Slots[slotIdx].IsInherent}");
             if ((slotIdx == 0) & (NIDPowerset > -1))
             {
                 message = "This slot was added automatically and can't be removed without also removing the power.";
                 return false;
             }
 
+            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp or Enums.dmModes.Normal && MidsContext.Config.Server.ExtraSlotsEnabled)
+            {
+                message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
+                return false;
+            }
+
             if (slotIdx != 0 || Slots.Length <= 1)
+            {
                 return true;
-            message =
-                "This slot was added automatically with a power, and can't be removed until you've removed all other slots from this power.";
+            }
+
+            message = "This slot was added automatically with a power, and can't be removed until you've removed all other slots from this power.";
             return false;
         }
     }

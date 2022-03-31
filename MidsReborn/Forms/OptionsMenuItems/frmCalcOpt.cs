@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.ImportExportItems;
 using mrbBase;
@@ -39,30 +40,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optTO.Image = Resources.optTO_Image;
             optDO.Image = Resources.optDO_Image;
             optSO.Image = Resources.optSO_Image;
-            myTip.SetToolTip(udExHigh, "Set this to the level of your character.\r\n" +
-                    "This setting will not reduce the number of slots / powers placed to match the level.\r\n" +
-                    "Powers available after the level set here will still be calculated unless you disable them."
-            );
-            Label15.Text = "Swap = two powers are swapped. The powers in between are unaffected by the transition.\r\n"
-                           + "Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.\r\n"
-                           + "Shift = cascading swaps.Shifting down means powers are moved to a lower level, starting with the lowest.Shifting up means powers are moved to a higher level, starting with the highest.";
-
-            Label5.Text =
-                "When exemplared below level 32, the game scales your enhancements down. If you want to see the approximate values for your character when exemplared, enter a starting level and exemplar level"
-                + " (Remember that if your build's level is different to the starting level set here, the numbers will be wrong!)";
-
-            Label9.Text =
-                "Some attacks have a chance to deal additional damage (such as fire). Because this damage isn't always going to happen, the attack's damage can be calculated either as an average,"
-                + " at maximum possible (as thought the extra damage always happens), or at minimum (as though it never happens).\r\n"
-                + "Note that this also affects how Scrapper damage is displayed with Critical Hit is toggled on.\r\n"
-                + "Where an attack has a chance to do additional damage:";
             Icon = Resources.reborn;
             myParent = iParent;
-        }
-
-        private void btnBaseReset_Click(object sender, EventArgs e)
-        {
-            udBaseToHit.Value = new decimal(75);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -477,6 +456,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             }
         }
 
+        private void ServerSpecificEnablement()
+        {
+            if (!MidsContext.Config.MasterMode)
+            {
+                TabControl1.TabPages[TabControl1.TabPages.Count - 1].Enabled = false;
+            }
+        }
+
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblExample.Text = scenarioExample[listScenarios.SelectedIndex];
@@ -553,9 +540,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
             cbEnhLevel.SelectedIndex = (int)config.CalcEnhLevel;
-            udExHigh.Value = new decimal(config.ExempHigh);
-            udExLow.Value = new decimal(config.ExempLow);
-            udForceLevel.Value = new decimal(config.ForceLevel);
             chkHighVis.Checked = config.EnhanceVisibility;
             rbGraphTwoLine.Checked = config.DataGraphType == Enums.eDDGraph.Both;
             rbGraphStacked.Checked = config.DataGraphType == Enums.eDDGraph.Stacked;
@@ -565,7 +549,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             rbChanceAverage.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Average;
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
+
+            udBaseFlySpeed.Value = Convert.ToDecimal(config.Server.BaseFlySpeed);
+            udBaseJumpSpeed.Value = Convert.ToDecimal(config.Server.BaseJumpSpeed);
+            udBaseJumpHeight.Value = Convert.ToDecimal(config.Server.BaseJumpHeight);
+            udBaseRunSpeed.Value = Convert.ToDecimal(config.Server.BaseRunSpeed);
+            udBasePerception.Value = Convert.ToDecimal(config.Server.BasePerception);
             udBaseToHit.Value = new decimal(config.BaseAcc * 100f);
+            udMaxFlySpeed.Value = Convert.ToDecimal(config.Server.MaxFlySpeed);
+            udMaxJumpSpeed.Value = Convert.ToDecimal(config.Server.MaxJumpSpeed);
+            udMaxRunSpeed.Value = Convert.ToDecimal(config.Server.MaxRunSpeed);
+
+            udMaxSlots.Value = config.Server.MaxSlots;
+            chkEnableExtra.Checked = config.Server.ExtraSlotsEnabled;
+            udHealthSlots.Value = config.Server.HealthSlots;
+            udHealthFirst.Value = config.Server.HealthSlot1Level;
+            udHealthSecond.Value = config.Server.HealthSlot2Level;
+            udStaminaSlots.Value = config.Server.StaminaSlots;
+            udStaminaFirst.Value = config.Server.StaminaSlot1Level;
+            udStaminaSecond.Value = config.Server.StaminaSlot2Level;
+
             chkUpdates.Checked = config.CheckForUpdates;
             chkShowSOLevels.Checked = config.ShowSOLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
@@ -774,11 +777,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             else if (optTO.Checked)
                 config.CalcEnhOrigin = Enums.eEnhGrade.TrainingO;
             config.CalcEnhLevel = (Enums.eEnhRelative)cbEnhLevel.SelectedIndex;
-            config.ExempHigh = Convert.ToInt32(udExHigh.Value);
-            config.ExempLow = Convert.ToInt32(udExLow.Value);
-            if (config.ExempHigh < config.ExempLow)
-                config.ExempHigh = config.ExempLow;
-            config.ForceLevel = Convert.ToInt32(udForceLevel.Value);
             if (rbGraphTwoLine.Checked)
                 config.DataGraphType = Enums.eDDGraph.Both;
             else if (rbGraphStacked.Checked)
@@ -793,6 +791,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             else if (rbChanceIgnore.Checked)
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
             config.BaseAcc = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
+
+            config.Server.BaseFlySpeed = Convert.ToSingle(udBaseFlySpeed.Value);
+            config.Server.BaseJumpSpeed = Convert.ToSingle(udBaseJumpSpeed.Value);
+            config.Server.BaseJumpHeight = Convert.ToSingle(udBaseJumpHeight.Value);
+            config.Server.BaseRunSpeed = Convert.ToSingle(udBaseRunSpeed.Value);
+            config.Server.BasePerception = Convert.ToSingle(udBasePerception.Value);
+            config.Server.MaxFlySpeed = Convert.ToSingle(udMaxFlySpeed.Value);
+            config.Server.MaxJumpSpeed = Convert.ToSingle(udMaxJumpSpeed.Value);
+            config.Server.MaxRunSpeed = Convert.ToSingle(udMaxRunSpeed.Value);
+            config.Server.MaxSlots = Convert.ToInt32(udMaxSlots.Value);
+            config.Server.HealthSlots = Convert.ToInt32(udHealthSlots.Value);
+            config.Server.HealthSlot1Level = Convert.ToInt32(udHealthFirst.Value);
+            config.Server.HealthSlot2Level = Convert.ToInt32(udHealthSecond.Value);
+            config.Server.StaminaSlots = Convert.ToInt32(udStaminaSlots.Value);
+            config.Server.StaminaSlot1Level = Convert.ToInt32(udStaminaFirst.Value);
+            config.Server.StaminaSlot2Level = Convert.ToInt32(udStaminaSecond.Value);
+
             config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
@@ -889,6 +904,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
         {
             MidsContext.Config.ShowSelfBuffsAny = chkShowSelfBuffsAny.Checked;
+        }
+
+        private void chkEnableExtra_CheckedChanged(object sender, EventArgs e)
+        {
+            MidsContext.Config.Server.ExtraSlotsEnabled = chkEnableExtra.Checked;
         }
     }
 }

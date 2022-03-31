@@ -3,12 +3,14 @@ namespace mrbBase
     public struct SlotEntry
     {
         public int Level;
+        public bool IsInherent;
         public I9Slot Enhancement;
         public I9Slot FlippedEnhancement;
 
         public void Assign(SlotEntry slotEntry)
         {
             Level = slotEntry.Level;
+            IsInherent = slotEntry.IsInherent;
             Enhancement = slotEntry.Enhancement.Clone() as I9Slot;
             FlippedEnhancement = slotEntry.FlippedEnhancement.Clone() as I9Slot;
         }

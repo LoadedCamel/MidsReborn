@@ -863,8 +863,8 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
             
-            Debug.WriteLine($"pBase null: {pBase.PowerIndex == -1}, pEnh null: {pEnh.PowerIndex == -1}");
-            Debug.WriteLine($"pBase: {pBase.PowerIndex}, pEnh: {pEnh.PowerIndex}");
+            // Debug.WriteLine($"pBase null: {pBase.PowerIndex == -1}, pEnh null: {pEnh.PowerIndex == -1}");
+            // Debug.WriteLine($"pBase: {pBase.PowerIndex}, pEnh: {pEnh.PowerIndex}");
             var baseDamage = pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
             if (pBase.NIDSubPower.Length > 0 & baseDamage == 0)
             {

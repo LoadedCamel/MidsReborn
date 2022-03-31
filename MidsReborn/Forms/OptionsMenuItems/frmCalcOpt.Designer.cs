@@ -37,6 +37,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
             this.TabPage3 = new System.Windows.Forms.TabPage();
+            this.chkEnableExtra = new System.Windows.Forms.CheckBox();
             this.chkShowSelfBuffsAny = new System.Windows.Forms.CheckBox();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.chkOldStyle = new System.Windows.Forms.CheckBox();
@@ -104,22 +105,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.Label7 = new System.Windows.Forms.Label();
             this.rbPvP = new System.Windows.Forms.RadioButton();
             this.rbPvE = new System.Windows.Forms.RadioButton();
-            this.TabPage6 = new System.Windows.Forms.TabPage();
-            this.Label6 = new System.Windows.Forms.Label();
-            this.GroupBox13 = new System.Windows.Forms.GroupBox();
-            this.udForceLevel = new System.Windows.Forms.NumericUpDown();
-            this.Label38 = new System.Windows.Forms.Label();
-            this.GroupBox10 = new System.Windows.Forms.GroupBox();
-            this.btnBaseReset = new System.Windows.Forms.Button();
-            this.Label14 = new System.Windows.Forms.Label();
-            this.udBaseToHit = new System.Windows.Forms.NumericUpDown();
-            this.Label13 = new System.Windows.Forms.Label();
-            this.GroupBox4 = new System.Windows.Forms.GroupBox();
-            this.Label12 = new System.Windows.Forms.Label();
-            this.udExLow = new System.Windows.Forms.NumericUpDown();
-            this.Label11 = new System.Windows.Forms.Label();
-            this.Label5 = new System.Windows.Forms.Label();
-            this.udExHigh = new System.Windows.Forms.NumericUpDown();
             this.TabPage4 = new System.Windows.Forms.TabPage();
             this.GroupBox12 = new System.Windows.Forms.GroupBox();
             this.fcReset = new System.Windows.Forms.Button();
@@ -188,6 +173,47 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.cbUpdateURL = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
             this.lblUpdateURL = new System.Windows.Forms.Label();
+            this.TabPage6 = new System.Windows.Forms.TabPage();
+            this.groupBox20 = new System.Windows.Forms.GroupBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.udStaminaSecond = new System.Windows.Forms.NumericUpDown();
+            this.udHealthSecond = new System.Windows.Forms.NumericUpDown();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.udStaminaFirst = new System.Windows.Forms.NumericUpDown();
+            this.udHealthFirst = new System.Windows.Forms.NumericUpDown();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.udStaminaSlots = new System.Windows.Forms.NumericUpDown();
+            this.label46 = new System.Windows.Forms.Label();
+            this.udHealthSlots = new System.Windows.Forms.NumericUpDown();
+            this.label43 = new System.Windows.Forms.Label();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.label47 = new System.Windows.Forms.Label();
+            this.udMaxSlots = new System.Windows.Forms.NumericUpDown();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.udMaxRunSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.udMaxFlySpeed = new System.Windows.Forms.NumericUpDown();
+            this.udMaxJumpSpeed = new System.Windows.Forms.NumericUpDown();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.udBasePerception = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.udBaseRunSpeed = new System.Windows.Forms.NumericUpDown();
+            this.udBaseToHit = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.Label14 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.Label13 = new System.Windows.Forms.Label();
+            this.udBaseJumpHeight = new System.Windows.Forms.NumericUpDown();
+            this.udBaseFlySpeed = new System.Windows.Forms.NumericUpDown();
+            this.udBaseJumpSpeed = new System.Windows.Forms.NumericUpDown();
             this.chkColorPrint = new System.Windows.Forms.CheckBox();
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
@@ -210,14 +236,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox15.SuspendLayout();
             this.GroupBox8.SuspendLayout();
             this.GroupBox6.SuspendLayout();
-            this.TabPage6.SuspendLayout();
-            this.GroupBox13.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udForceLevel)).BeginInit();
-            this.GroupBox10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udBaseToHit)).BeginInit();
-            this.GroupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udExLow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udExHigh)).BeginInit();
             this.TabPage4.SuspendLayout();
             this.GroupBox12.SuspendLayout();
             this.GroupBox11.SuspendLayout();
@@ -228,6 +246,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox16.SuspendLayout();
             this.groupBox19.SuspendLayout();
             this.GroupBox1.SuspendLayout();
+            this.TabPage6.SuspendLayout();
+            this.groupBox20.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaSecond)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthSecond)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaFirst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthFirst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaSlots)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthSlots)).BeginInit();
+            this.groupBox13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxSlots)).BeginInit();
+            this.groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRunSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxFlySpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxJumpSpeed)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udBasePerception)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseRunSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseToHit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseJumpHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseFlySpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseJumpSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOK
@@ -254,10 +293,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.TabControl1.Controls.Add(this.TabPage3);
             this.TabControl1.Controls.Add(this.TabPage2);
-            this.TabControl1.Controls.Add(this.TabPage6);
             this.TabControl1.Controls.Add(this.TabPage4);
             this.TabControl1.Controls.Add(this.TabPage1);
             this.TabControl1.Controls.Add(this.TabPage5);
+            this.TabControl1.Controls.Add(this.TabPage6);
             this.TabControl1.Location = new System.Drawing.Point(0, 0);
             this.TabControl1.Name = "TabControl1";
             this.TabControl1.SelectedIndex = 0;
@@ -266,6 +305,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage3
             // 
+            this.TabPage3.Controls.Add(this.chkEnableExtra);
             this.TabPage3.Controls.Add(this.chkShowSelfBuffsAny);
             this.TabPage3.Controls.Add(this.groupBox18);
             this.TabPage3.Controls.Add(this.chkNoTips);
@@ -281,6 +321,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage3.TabIndex = 2;
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableExtra
+            // 
+            this.chkEnableExtra.AutoSize = true;
+            this.chkEnableExtra.Location = new System.Drawing.Point(499, 324);
+            this.chkEnableExtra.Name = "chkEnableExtra";
+            this.chkEnableExtra.Size = new System.Drawing.Size(127, 18);
+            this.chkEnableExtra.TabIndex = 83;
+            this.chkEnableExtra.Text = "Enable Inherent Slots";
+            this.chkEnableExtra.UseVisualStyleBackColor = true;
+            this.chkEnableExtra.CheckedChanged += new System.EventHandler(this.chkEnableExtra_CheckedChanged);
             // 
             // chkShowSelfBuffsAny
             // 
@@ -916,9 +967,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.clbSuppression.CheckOnClick = true;
             this.clbSuppression.FormattingEnabled = true;
-            this.clbSuppression.Location = new System.Drawing.Point(9, 104);
+            this.clbSuppression.Location = new System.Drawing.Point(9, 75);
             this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(206, 169);
+            this.clbSuppression.Size = new System.Drawing.Size(206, 199);
             this.clbSuppression.TabIndex = 9;
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
             // 
@@ -926,7 +977,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.Label8.Location = new System.Drawing.Point(6, 28);
             this.Label8.Name = "Label8";
-            this.Label8.Size = new System.Drawing.Size(209, 55);
+            this.Label8.Size = new System.Drawing.Size(209, 44);
             this.Label8.TabIndex = 65;
             this.Label8.Text = "Some effects are suppressed on specific conditions. You can enable those conditio" +
     "ns here.";
@@ -996,7 +1047,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // rbChanceIgnore
             // 
-            this.rbChanceIgnore.Location = new System.Drawing.Point(221, 113);
+            this.rbChanceIgnore.Location = new System.Drawing.Point(221, 130);
             this.rbChanceIgnore.Name = "rbChanceIgnore";
             this.rbChanceIgnore.Size = new System.Drawing.Size(224, 20);
             this.rbChanceIgnore.TabIndex = 8;
@@ -1005,7 +1056,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // rbChanceAverage
             // 
             this.rbChanceAverage.Checked = true;
-            this.rbChanceAverage.Location = new System.Drawing.Point(11, 97);
+            this.rbChanceAverage.Location = new System.Drawing.Point(6, 104);
             this.rbChanceAverage.Name = "rbChanceAverage";
             this.rbChanceAverage.Size = new System.Drawing.Size(204, 20);
             this.rbChanceAverage.TabIndex = 7;
@@ -1014,7 +1065,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // rbChanceMax
             // 
-            this.rbChanceMax.Location = new System.Drawing.Point(221, 83);
+            this.rbChanceMax.Location = new System.Drawing.Point(221, 104);
             this.rbChanceMax.Name = "rbChanceMax";
             this.rbChanceMax.Size = new System.Drawing.Size(204, 20);
             this.rbChanceMax.TabIndex = 6;
@@ -1024,7 +1075,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.Label9.Location = new System.Drawing.Point(8, 16);
             this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(499, 56);
+            this.Label9.Size = new System.Drawing.Size(499, 85);
             this.Label9.TabIndex = 4;
             // 
             // GroupBox6
@@ -1066,215 +1117,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.rbPvE.TabIndex = 0;
             this.rbPvE.TabStop = true;
             this.rbPvE.Text = "Show values for Mobs (PvE)";
-            // 
-            // TabPage6
-            // 
-            this.TabPage6.Controls.Add(this.Label6);
-            this.TabPage6.Controls.Add(this.GroupBox13);
-            this.TabPage6.Controls.Add(this.GroupBox10);
-            this.TabPage6.Controls.Add(this.GroupBox4);
-            this.TabPage6.Location = new System.Drawing.Point(4, 23);
-            this.TabPage6.Name = "TabPage6";
-            this.TabPage6.Size = new System.Drawing.Size(749, 345);
-            this.TabPage6.TabIndex = 5;
-            this.TabPage6.Text = "Exemping & Base Values";
-            this.TabPage6.UseVisualStyleBackColor = true;
-            // 
-            // Label6
-            // 
-            this.Label6.Location = new System.Drawing.Point(401, 85);
-            this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(332, 119);
-            this.Label6.TabIndex = 71;
-            this.Label6.Text = "Exemplar and level-accurate scaling features will be added in the future!";
-            this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // GroupBox13
-            // 
-            this.GroupBox13.Controls.Add(this.udForceLevel);
-            this.GroupBox13.Controls.Add(this.Label38);
-            this.GroupBox13.Enabled = false;
-            this.GroupBox13.Location = new System.Drawing.Point(284, 4);
-            this.GroupBox13.Name = "GroupBox13";
-            this.GroupBox13.Size = new System.Drawing.Size(96, 184);
-            this.GroupBox13.TabIndex = 70;
-            this.GroupBox13.TabStop = false;
-            this.GroupBox13.Text = "Forced Level:";
-            // 
-            // udForceLevel
-            // 
-            this.udForceLevel.Location = new System.Drawing.Point(8, 124);
-            this.udForceLevel.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.udForceLevel.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.udForceLevel.Name = "udForceLevel";
-            this.udForceLevel.Size = new System.Drawing.Size(80, 20);
-            this.udForceLevel.TabIndex = 55;
-            this.udForceLevel.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
-            // Label38
-            // 
-            this.Label38.Location = new System.Drawing.Point(4, 16);
-            this.Label38.Name = "Label38";
-            this.Label38.Size = new System.Drawing.Size(88, 100);
-            this.Label38.TabIndex = 1;
-            this.Label38.Text = "Slots/Powers placed after this level won\'t be included in stats, and will be dimm" +
-    "ed in the build view.";
-            // 
-            // GroupBox10
-            // 
-            this.GroupBox10.Controls.Add(this.btnBaseReset);
-            this.GroupBox10.Controls.Add(this.Label14);
-            this.GroupBox10.Controls.Add(this.udBaseToHit);
-            this.GroupBox10.Controls.Add(this.Label13);
-            this.GroupBox10.Location = new System.Drawing.Point(4, 196);
-            this.GroupBox10.Name = "GroupBox10";
-            this.GroupBox10.Size = new System.Drawing.Size(376, 104);
-            this.GroupBox10.TabIndex = 69;
-            this.GroupBox10.TabStop = false;
-            this.GroupBox10.Text = "Base Values:";
-            // 
-            // btnBaseReset
-            // 
-            this.btnBaseReset.Location = new System.Drawing.Point(240, 76);
-            this.btnBaseReset.Name = "btnBaseReset";
-            this.btnBaseReset.Size = new System.Drawing.Size(120, 20);
-            this.btnBaseReset.TabIndex = 61;
-            this.btnBaseReset.Text = "Reset Values";
-            this.btnBaseReset.Click += new System.EventHandler(this.btnBaseReset_Click);
-            // 
-            // Label14
-            // 
-            this.Label14.Location = new System.Drawing.Point(147, 39);
-            this.Label14.Name = "Label14";
-            this.Label14.Size = new System.Drawing.Size(112, 20);
-            this.Label14.TabIndex = 58;
-            this.Label14.Text = "Base ToHit:";
-            this.Label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // udBaseToHit
-            // 
-            this.udBaseToHit.Location = new System.Drawing.Point(263, 39);
-            this.udBaseToHit.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.udBaseToHit.Name = "udBaseToHit";
-            this.udBaseToHit.Size = new System.Drawing.Size(88, 20);
-            this.udBaseToHit.TabIndex = 57;
-            this.myTip.SetToolTip(this.udBaseToHit, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
-            this.udBaseToHit.Value = new decimal(new int[] {
-            75,
-            0,
-            0,
-            0});
-            // 
-            // Label13
-            // 
-            this.Label13.Location = new System.Drawing.Point(8, 16);
-            this.Label13.Name = "Label13";
-            this.Label13.Size = new System.Drawing.Size(136, 84);
-            this.Label13.TabIndex = 0;
-            this.Label13.Text = "These values are used as the base for stats calculation. They shouldn\'t ever need" +
-    " to be changed unless there\'s a change to the game.";
-            // 
-            // GroupBox4
-            // 
-            this.GroupBox4.Controls.Add(this.Label12);
-            this.GroupBox4.Controls.Add(this.udExLow);
-            this.GroupBox4.Controls.Add(this.Label11);
-            this.GroupBox4.Controls.Add(this.Label5);
-            this.GroupBox4.Controls.Add(this.udExHigh);
-            this.GroupBox4.Enabled = false;
-            this.GroupBox4.Location = new System.Drawing.Point(4, 4);
-            this.GroupBox4.Name = "GroupBox4";
-            this.GroupBox4.Size = new System.Drawing.Size(276, 184);
-            this.GroupBox4.TabIndex = 68;
-            this.GroupBox4.TabStop = false;
-            this.GroupBox4.Text = "Exemplar Level:";
-            // 
-            // Label12
-            // 
-            this.Label12.Location = new System.Drawing.Point(8, 148);
-            this.Label12.Name = "Label12";
-            this.Label12.Size = new System.Drawing.Size(160, 20);
-            this.Label12.TabIndex = 58;
-            this.Label12.Text = "Exemplared (Lower) Level:";
-            this.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // udExLow
-            // 
-            this.udExLow.Location = new System.Drawing.Point(172, 148);
-            this.udExLow.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.udExLow.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.udExLow.Name = "udExLow";
-            this.udExLow.Size = new System.Drawing.Size(88, 20);
-            this.udExLow.TabIndex = 57;
-            this.myTip.SetToolTip(this.udExLow, "Set the target exemplar level. Your enhancements will be calculated as though you" +
-        " are exemplared to this level, and their effect will be reduced accordingly");
-            this.udExLow.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
-            // Label11
-            // 
-            this.Label11.Location = new System.Drawing.Point(8, 124);
-            this.Label11.Name = "Label11";
-            this.Label11.Size = new System.Drawing.Size(160, 20);
-            this.Label11.TabIndex = 56;
-            this.Label11.Text = "Starting (Higher) Level:";
-            this.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // Label5
-            // 
-            this.Label5.Location = new System.Drawing.Point(8, 16);
-            this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(264, 96);
-            this.Label5.TabIndex = 55;
-            // 
-            // udExHigh
-            // 
-            this.udExHigh.Location = new System.Drawing.Point(172, 124);
-            this.udExHigh.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.udExHigh.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.udExHigh.Name = "udExHigh";
-            this.udExHigh.Size = new System.Drawing.Size(88, 20);
-            this.udExHigh.TabIndex = 54;
-            this.udExHigh.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
             // 
             // TabPage4
             // 
@@ -1971,6 +1813,580 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.lblUpdateURL.Text = "Application Update Manifest:";
             this.lblUpdateURL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // TabPage6
+            // 
+            this.TabPage6.Controls.Add(this.groupBox20);
+            this.TabPage6.Controls.Add(this.groupBox13);
+            this.TabPage6.Controls.Add(this.groupBox10);
+            this.TabPage6.Controls.Add(this.groupBox4);
+            this.TabPage6.Location = new System.Drawing.Point(4, 23);
+            this.TabPage6.Name = "TabPage6";
+            this.TabPage6.Size = new System.Drawing.Size(749, 345);
+            this.TabPage6.TabIndex = 5;
+            this.TabPage6.Text = "Server Specific Values";
+            this.TabPage6.UseVisualStyleBackColor = true;
+            // 
+            // groupBox20
+            // 
+            this.groupBox20.Controls.Add(this.label38);
+            this.groupBox20.Controls.Add(this.udStaminaSecond);
+            this.groupBox20.Controls.Add(this.udHealthSecond);
+            this.groupBox20.Controls.Add(this.label52);
+            this.groupBox20.Controls.Add(this.label51);
+            this.groupBox20.Controls.Add(this.udStaminaFirst);
+            this.groupBox20.Controls.Add(this.udHealthFirst);
+            this.groupBox20.Controls.Add(this.label50);
+            this.groupBox20.Controls.Add(this.label49);
+            this.groupBox20.Controls.Add(this.udStaminaSlots);
+            this.groupBox20.Controls.Add(this.label46);
+            this.groupBox20.Controls.Add(this.udHealthSlots);
+            this.groupBox20.Controls.Add(this.label43);
+            this.groupBox20.Location = new System.Drawing.Point(404, 236);
+            this.groupBox20.Name = "groupBox20";
+            this.groupBox20.Size = new System.Drawing.Size(337, 106);
+            this.groupBox20.TabIndex = 73;
+            this.groupBox20.TabStop = false;
+            this.groupBox20.Text = "Extra Fitness Slotting (Overrides Max Slots)";
+            // 
+            // label38
+            // 
+            this.label38.Location = new System.Drawing.Point(6, 19);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(325, 29);
+            this.label38.TabIndex = 82;
+            this.label38.Text = "Note: You need to add the extra slots to your Level map mhds prior to setting the" +
+    "se.\r\n";
+            // 
+            // udStaminaSecond
+            // 
+            this.udStaminaSecond.Location = new System.Drawing.Point(281, 77);
+            this.udStaminaSecond.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udStaminaSecond.Name = "udStaminaSecond";
+            this.udStaminaSecond.Size = new System.Drawing.Size(41, 20);
+            this.udStaminaSecond.TabIndex = 81;
+            this.myTip.SetToolTip(this.udStaminaSecond, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udStaminaSecond.Value = new decimal(new int[] {
+            22,
+            0,
+            0,
+            0});
+            // 
+            // udHealthSecond
+            // 
+            this.udHealthSecond.Location = new System.Drawing.Point(281, 51);
+            this.udHealthSecond.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udHealthSecond.Name = "udHealthSecond";
+            this.udHealthSecond.Size = new System.Drawing.Size(41, 20);
+            this.udHealthSecond.TabIndex = 80;
+            this.myTip.SetToolTip(this.udHealthSecond, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udHealthSecond.Value = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(261, 80);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(14, 14);
+            this.label52.TabIndex = 79;
+            this.label52.Text = "&&";
+            this.label52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(261, 54);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(14, 14);
+            this.label51.TabIndex = 78;
+            this.label51.Text = "&&";
+            this.label51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udStaminaFirst
+            // 
+            this.udStaminaFirst.Location = new System.Drawing.Point(220, 77);
+            this.udStaminaFirst.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udStaminaFirst.Name = "udStaminaFirst";
+            this.udStaminaFirst.Size = new System.Drawing.Size(35, 20);
+            this.udStaminaFirst.TabIndex = 77;
+            this.myTip.SetToolTip(this.udStaminaFirst, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udStaminaFirst.Value = new decimal(new int[] {
+            12,
+            0,
+            0,
+            0});
+            // 
+            // udHealthFirst
+            // 
+            this.udHealthFirst.Location = new System.Drawing.Point(220, 51);
+            this.udHealthFirst.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udHealthFirst.Name = "udHealthFirst";
+            this.udHealthFirst.Size = new System.Drawing.Size(35, 20);
+            this.udHealthFirst.TabIndex = 76;
+            this.myTip.SetToolTip(this.udHealthFirst, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udHealthFirst.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(129, 80);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(85, 14);
+            this.label50.TabIndex = 75;
+            this.label50.Text = "Given at Levels:";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(129, 53);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(85, 14);
+            this.label49.TabIndex = 74;
+            this.label49.Text = "Given at Levels:";
+            this.label49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udStaminaSlots
+            // 
+            this.udStaminaSlots.Location = new System.Drawing.Point(90, 77);
+            this.udStaminaSlots.Name = "udStaminaSlots";
+            this.udStaminaSlots.Size = new System.Drawing.Size(33, 20);
+            this.udStaminaSlots.TabIndex = 72;
+            this.myTip.SetToolTip(this.udStaminaSlots, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udStaminaSlots.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label46
+            // 
+            this.label46.Location = new System.Drawing.Point(9, 77);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(75, 20);
+            this.label46.TabIndex = 73;
+            this.label46.Text = "Stamina Slots:";
+            this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udHealthSlots
+            // 
+            this.udHealthSlots.Location = new System.Drawing.Point(90, 51);
+            this.udHealthSlots.Name = "udHealthSlots";
+            this.udHealthSlots.Size = new System.Drawing.Size(33, 20);
+            this.udHealthSlots.TabIndex = 70;
+            this.myTip.SetToolTip(this.udHealthSlots, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udHealthSlots.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label43
+            // 
+            this.label43.Location = new System.Drawing.Point(9, 51);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(75, 20);
+            this.label43.TabIndex = 71;
+            this.label43.Text = "Health Slots:";
+            this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.label48);
+            this.groupBox13.Controls.Add(this.label47);
+            this.groupBox13.Controls.Add(this.udMaxSlots);
+            this.groupBox13.Location = new System.Drawing.Point(8, 236);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(390, 106);
+            this.groupBox13.TabIndex = 72;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Other Values (Mids Specific)";
+            // 
+            // label48
+            // 
+            this.label48.Location = new System.Drawing.Point(6, 19);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(370, 41);
+            this.label48.TabIndex = 68;
+            this.label48.Text = "These values should never change unless you allow more for your server.\r\nNote: Yo" +
+    "u may need to change the level maps if you increase the slots.\r\n";
+            // 
+            // label47
+            // 
+            this.label47.Location = new System.Drawing.Point(6, 63);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(176, 20);
+            this.label47.TabIndex = 67;
+            this.label47.Text = "Max Slots (Minus Default 1st Slot):";
+            this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxSlots
+            // 
+            this.udMaxSlots.Location = new System.Drawing.Point(188, 63);
+            this.udMaxSlots.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udMaxSlots.Name = "udMaxSlots";
+            this.udMaxSlots.Size = new System.Drawing.Size(60, 20);
+            this.udMaxSlots.TabIndex = 66;
+            this.myTip.SetToolTip(this.udMaxSlots, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udMaxSlots.Value = new decimal(new int[] {
+            67,
+            0,
+            0,
+            0});
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.label45);
+            this.groupBox10.Controls.Add(this.label39);
+            this.groupBox10.Controls.Add(this.udMaxRunSpeed);
+            this.groupBox10.Controls.Add(this.label41);
+            this.groupBox10.Controls.Add(this.label42);
+            this.groupBox10.Controls.Add(this.udMaxFlySpeed);
+            this.groupBox10.Controls.Add(this.udMaxJumpSpeed);
+            this.groupBox10.Location = new System.Drawing.Point(429, 3);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(312, 227);
+            this.groupBox10.TabIndex = 71;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Cap/Max Values";
+            // 
+            // label45
+            // 
+            this.label45.Location = new System.Drawing.Point(6, 16);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(300, 48);
+            this.label45.TabIndex = 70;
+            this.label45.Text = "These values are used as the maximum for stats calculation. They shouldn\'t ever n" +
+    "eed to be changed unless they differ on your server.";
+            // 
+            // label39
+            // 
+            this.label39.Location = new System.Drawing.Point(3, 135);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(99, 20);
+            this.label39.TabIndex = 69;
+            this.label39.Text = "Max Run Speed:";
+            this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxRunSpeed
+            // 
+            this.udMaxRunSpeed.DecimalPlaces = 2;
+            this.udMaxRunSpeed.Location = new System.Drawing.Point(108, 136);
+            this.udMaxRunSpeed.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.udMaxRunSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udMaxRunSpeed.Name = "udMaxRunSpeed";
+            this.udMaxRunSpeed.Size = new System.Drawing.Size(88, 20);
+            this.udMaxRunSpeed.TabIndex = 68;
+            this.myTip.SetToolTip(this.udMaxRunSpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udMaxRunSpeed.Value = new decimal(new int[] {
+            13567,
+            0,
+            0,
+            131072});
+            // 
+            // label41
+            // 
+            this.label41.Location = new System.Drawing.Point(3, 84);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(99, 20);
+            this.label41.TabIndex = 65;
+            this.label41.Text = "Max Fly Speed:";
+            this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label42
+            // 
+            this.label42.Location = new System.Drawing.Point(3, 110);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(99, 20);
+            this.label42.TabIndex = 67;
+            this.label42.Text = "Max Jump Speed:";
+            this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxFlySpeed
+            // 
+            this.udMaxFlySpeed.DecimalPlaces = 2;
+            this.udMaxFlySpeed.Location = new System.Drawing.Point(108, 84);
+            this.udMaxFlySpeed.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.udMaxFlySpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udMaxFlySpeed.Name = "udMaxFlySpeed";
+            this.udMaxFlySpeed.Size = new System.Drawing.Size(88, 20);
+            this.udMaxFlySpeed.TabIndex = 62;
+            this.myTip.SetToolTip(this.udMaxFlySpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udMaxFlySpeed.Value = new decimal(new int[] {
+            86,
+            0,
+            0,
+            0});
+            // 
+            // udMaxJumpSpeed
+            // 
+            this.udMaxJumpSpeed.DecimalPlaces = 2;
+            this.udMaxJumpSpeed.Location = new System.Drawing.Point(108, 110);
+            this.udMaxJumpSpeed.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.udMaxJumpSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udMaxJumpSpeed.Name = "udMaxJumpSpeed";
+            this.udMaxJumpSpeed.Size = new System.Drawing.Size(88, 20);
+            this.udMaxJumpSpeed.TabIndex = 64;
+            this.myTip.SetToolTip(this.udMaxJumpSpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udMaxJumpSpeed.Value = new decimal(new int[] {
+            1144,
+            0,
+            0,
+            65536});
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label44);
+            this.groupBox4.Controls.Add(this.udBasePerception);
+            this.groupBox4.Controls.Add(this.label5);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.udBaseRunSpeed);
+            this.groupBox4.Controls.Add(this.udBaseToHit);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Controls.Add(this.Label14);
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.Label13);
+            this.groupBox4.Controls.Add(this.udBaseJumpHeight);
+            this.groupBox4.Controls.Add(this.udBaseFlySpeed);
+            this.groupBox4.Controls.Add(this.udBaseJumpSpeed);
+            this.groupBox4.Location = new System.Drawing.Point(8, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(415, 227);
+            this.groupBox4.TabIndex = 70;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Base Values";
+            // 
+            // label44
+            // 
+            this.label44.Location = new System.Drawing.Point(214, 84);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(99, 20);
+            this.label44.TabIndex = 73;
+            this.label44.Text = "Base Perception:";
+            this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udBasePerception
+            // 
+            this.udBasePerception.DecimalPlaces = 1;
+            this.udBasePerception.Location = new System.Drawing.Point(319, 84);
+            this.udBasePerception.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.udBasePerception.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBasePerception.Name = "udBasePerception";
+            this.udBasePerception.Size = new System.Drawing.Size(88, 20);
+            this.udBasePerception.TabIndex = 72;
+            this.myTip.SetToolTip(this.udBasePerception, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBasePerception.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(6, 109);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(99, 20);
+            this.label5.TabIndex = 63;
+            this.label5.Text = "Base Jump Height:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(6, 135);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(99, 20);
+            this.label12.TabIndex = 69;
+            this.label12.Text = "Base Run Speed:";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udBaseRunSpeed
+            // 
+            this.udBaseRunSpeed.DecimalPlaces = 2;
+            this.udBaseRunSpeed.Location = new System.Drawing.Point(111, 135);
+            this.udBaseRunSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBaseRunSpeed.Name = "udBaseRunSpeed";
+            this.udBaseRunSpeed.Size = new System.Drawing.Size(88, 20);
+            this.udBaseRunSpeed.TabIndex = 68;
+            this.myTip.SetToolTip(this.udBaseRunSpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBaseRunSpeed.Value = new decimal(new int[] {
+            21,
+            0,
+            0,
+            0});
+            // 
+            // udBaseToHit
+            // 
+            this.udBaseToHit.Location = new System.Drawing.Point(319, 111);
+            this.udBaseToHit.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBaseToHit.Name = "udBaseToHit";
+            this.udBaseToHit.Size = new System.Drawing.Size(88, 20);
+            this.udBaseToHit.TabIndex = 57;
+            this.myTip.SetToolTip(this.udBaseToHit, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBaseToHit.Value = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(6, 57);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(99, 20);
+            this.label6.TabIndex = 65;
+            this.label6.Text = "Base Fly Speed:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label14
+            // 
+            this.Label14.Location = new System.Drawing.Point(217, 110);
+            this.Label14.Name = "Label14";
+            this.Label14.Size = new System.Drawing.Size(96, 20);
+            this.Label14.TabIndex = 58;
+            this.Label14.Text = "Base ToHit:";
+            this.Label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(6, 83);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(99, 20);
+            this.label11.TabIndex = 67;
+            this.label11.Text = "Base Jump Speed:";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label13
+            // 
+            this.Label13.Location = new System.Drawing.Point(6, 16);
+            this.Label13.Name = "Label13";
+            this.Label13.Size = new System.Drawing.Size(355, 38);
+            this.Label13.TabIndex = 0;
+            this.Label13.Text = "These values are used as the base for stats calculation. They shouldn\'t ever need" +
+    " to be changed unless they differ on your server.";
+            // 
+            // udBaseJumpHeight
+            // 
+            this.udBaseJumpHeight.DecimalPlaces = 2;
+            this.udBaseJumpHeight.Location = new System.Drawing.Point(111, 109);
+            this.udBaseJumpHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBaseJumpHeight.Name = "udBaseJumpHeight";
+            this.udBaseJumpHeight.Size = new System.Drawing.Size(88, 20);
+            this.udBaseJumpHeight.TabIndex = 66;
+            this.myTip.SetToolTip(this.udBaseJumpHeight, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBaseJumpHeight.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            // 
+            // udBaseFlySpeed
+            // 
+            this.udBaseFlySpeed.DecimalPlaces = 2;
+            this.udBaseFlySpeed.Location = new System.Drawing.Point(111, 57);
+            this.udBaseFlySpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBaseFlySpeed.Name = "udBaseFlySpeed";
+            this.udBaseFlySpeed.Size = new System.Drawing.Size(88, 20);
+            this.udBaseFlySpeed.TabIndex = 62;
+            this.myTip.SetToolTip(this.udBaseFlySpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBaseFlySpeed.Value = new decimal(new int[] {
+            315,
+            0,
+            0,
+            65536});
+            // 
+            // udBaseJumpSpeed
+            // 
+            this.udBaseJumpSpeed.DecimalPlaces = 2;
+            this.udBaseJumpSpeed.Location = new System.Drawing.Point(111, 83);
+            this.udBaseJumpSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udBaseJumpSpeed.Name = "udBaseJumpSpeed";
+            this.udBaseJumpSpeed.Size = new System.Drawing.Size(88, 20);
+            this.udBaseJumpSpeed.TabIndex = 64;
+            this.myTip.SetToolTip(this.udBaseJumpSpeed, "Chance of hitting a foe. Accuracy = (Base ToHit + Buffs) * Enhancements");
+            this.udBaseJumpSpeed.Value = new decimal(new int[] {
+            21,
+            0,
+            0,
+            0});
+            // 
             // chkColorPrint
             // 
             this.chkColorPrint.Location = new System.Drawing.Point(246, 387);
@@ -2012,6 +2428,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.Text = "Options";
             this.TabControl1.ResumeLayout(false);
             this.TabPage3.ResumeLayout(false);
+            this.TabPage3.PerformLayout();
             this.groupBox18.ResumeLayout(false);
             this.groupBox18.PerformLayout();
             this.GroupBox17.ResumeLayout(false);
@@ -2032,14 +2449,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox15.ResumeLayout(false);
             this.GroupBox8.ResumeLayout(false);
             this.GroupBox6.ResumeLayout(false);
-            this.TabPage6.ResumeLayout(false);
-            this.GroupBox13.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udForceLevel)).EndInit();
-            this.GroupBox10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udBaseToHit)).EndInit();
-            this.GroupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udExLow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udExHigh)).EndInit();
             this.TabPage4.ResumeLayout(false);
             this.GroupBox12.ResumeLayout(false);
             this.GroupBox12.PerformLayout();
@@ -2053,12 +2462,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox16.PerformLayout();
             this.groupBox19.ResumeLayout(false);
             this.GroupBox1.ResumeLayout(false);
+            this.TabPage6.ResumeLayout(false);
+            this.groupBox20.ResumeLayout(false);
+            this.groupBox20.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaSecond)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthSecond)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaFirst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthFirst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaminaSlots)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udHealthSlots)).EndInit();
+            this.groupBox13.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxSlots)).EndInit();
+            this.groupBox10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRunSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxFlySpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxJumpSpeed)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udBasePerception)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseRunSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseToHit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseJumpHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseFlySpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udBaseJumpSpeed)).EndInit();
             this.ResumeLayout(false);
 
         }
         #endregion
-
-        Button btnBaseReset;
         Button btnCancel;
         Button btnFontColor;
         Button btnIOReset;
@@ -2110,16 +2539,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         RadioButton fcWSSpace;
         RadioButton fcWSTab;
         GroupBox GroupBox1;
-        GroupBox GroupBox10;
         GroupBox GroupBox11;
         GroupBox GroupBox12;
-        GroupBox GroupBox13;
         GroupBox GroupBox14;
         GroupBox GroupBox15;
         GroupBox GroupBox17;
         GroupBox GroupBox2;
         GroupBox GroupBox3;
-        GroupBox GroupBox4;
         GroupBox GroupBox5;
         GroupBox GroupBox6;
         GroupBox GroupBox7;
@@ -2127,8 +2553,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         GroupBox GroupBox9;
         Label Label1;
         Label Label10;
-        Label Label11;
-        Label Label12;
         Label Label13;
         Label Label14;
         Label Label15;
@@ -2150,11 +2574,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         Label Label33;
         Label Label34;
         Label Label36;
-        Label Label38;
         Label Label4;
         Label Label40;
-        Label Label5;
-        Label Label6;
         Label Label7;
         Label Label8;
         Label Label9;
@@ -2184,9 +2605,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         NumericUpDown TeamSize;
         //System.Windows.Forms.TextBox txtUpdatePath;
         NumericUpDown udBaseToHit;
-        NumericUpDown udExHigh;
-        NumericUpDown udExLow;
-        NumericUpDown udForceLevel;
         NumericUpDown udIOLevel;
         NumericUpDown udRTFSize;
         NumericUpDown udStatSize;
@@ -2219,5 +2637,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private ComboBox cbCurrency;
         private Label label19;
         private CheckBox chkShowSelfBuffsAny;
+        private NumericUpDown udBaseRunSpeed;
+        private Label label12;
+        private NumericUpDown udBaseJumpHeight;
+        private Label label11;
+        private NumericUpDown udBaseJumpSpeed;
+        private Label label6;
+        private NumericUpDown udBaseFlySpeed;
+        private Label label5;
+        private GroupBox groupBox4;
+        private GroupBox groupBox10;
+        private Label label45;
+        private Label label39;
+        private NumericUpDown udMaxRunSpeed;
+        private Label label41;
+        private Label label42;
+        private NumericUpDown udMaxFlySpeed;
+        private NumericUpDown udMaxJumpSpeed;
+        private Label label44;
+        private NumericUpDown udBasePerception;
+        private GroupBox groupBox13;
+        private Label label47;
+        private NumericUpDown udMaxSlots;
+        private Label label48;
+        private GroupBox groupBox20;
+        private NumericUpDown udStaminaSecond;
+        private NumericUpDown udHealthSecond;
+        private Label label52;
+        private Label label51;
+        private NumericUpDown udStaminaFirst;
+        private NumericUpDown udHealthFirst;
+        private Label label50;
+        private Label label49;
+        private NumericUpDown udStaminaSlots;
+        private Label label46;
+        private NumericUpDown udHealthSlots;
+        private Label label43;
+        private CheckBox chkEnableExtra;
+        private Label label38;
     }
 }

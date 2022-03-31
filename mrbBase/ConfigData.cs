@@ -78,6 +78,7 @@ namespace mrbBase
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
+            Server = new ServerConfig();
             InitializeComponent();
         }
 
@@ -94,6 +95,7 @@ namespace mrbBase
             Tips = new Tips();
             Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
+            Server = new ServerConfig();
             if (deserializing) return;
             if (iFilename != Files.FNameJsonConfig && File.Exists(iFilename))
             {
@@ -173,6 +175,7 @@ namespace mrbBase
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
         public ExportConfig Export { get; }
+        public ServerConfig Server { get; }
         public bool PrintInColor { get; set; }
         public bool PrintHistory { get; set; }
         public bool SaveFolderChecked { get; set; }
