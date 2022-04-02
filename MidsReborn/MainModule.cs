@@ -106,17 +106,7 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadReplacementTable();
 
                 iFrm?.SetMessage("Loading Graphics...");
-                var taskArray = new Task[9];
-                taskArray[0] = Task.Run(I9Gfx.LoadOriginImages);
-                taskArray[1] = Task.Run(I9Gfx.LoadArchetypeImages);
-                taskArray[2] = Task.Run(I9Gfx.LoadPowersetImages);
-                taskArray[3] = Task.Run(I9Gfx.LoadEnhancements);
-                taskArray[4] = Task.Run(I9Gfx.LoadSets);
-                taskArray[5] = Task.Run(I9Gfx.LoadBorders);
-                taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
-                taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
-                taskArray[8] = Task.Run(I9Gfx.LoadClasses);
-                Task.WaitAll(taskArray);
+                LoadGraphics(path).GetAwaiter().GetResult();
 
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
                 if (iFrm != null)
@@ -132,7 +122,13 @@ namespace Mids_Reborn
                 GC.Collect();
             }
 
-            public static void LoadData(ref frmInitializing iFrm)
+            private static async Task LoadGraphics(string path)
+            {
+                await I9Gfx.Initialize(path);
+                await I9Gfx.LoadImages();
+            }
+
+            /*public static void LoadData(ref frmInitializing iFrm)
             {
                 DatabaseAPI.LoadDatabaseVersion();
                 IsAppInitialized = true;
@@ -180,16 +176,15 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadRecipes();
 
                 iFrm?.SetMessage("Loading Graphics...");
-                var taskArray = new Task[9];
+                var taskArray = new Task[8];
                 taskArray[0] = Task.Run(I9Gfx.LoadOriginImages);
-                taskArray[1] = Task.Run(I9Gfx.LoadArchetypeImages);
-                taskArray[2] = Task.Run(I9Gfx.LoadPowersetImages);
-                taskArray[3] = Task.Run(I9Gfx.LoadEnhancements);
-                taskArray[4] = Task.Run(I9Gfx.LoadSets);
-                taskArray[5] = Task.Run(I9Gfx.LoadBorders);
-                taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
-                taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
-                taskArray[8] = Task.Run(() => I9Gfx.LoadClasses());
+                taskArray[1] = Task.Run(I9Gfx.LoadPowersetImages);
+                taskArray[2] = Task.Run(I9Gfx.LoadEnhancements);
+                taskArray[3] = Task.Run(I9Gfx.LoadSets);
+                taskArray[4] = Task.Run(I9Gfx.LoadBorders);
+                taskArray[5] = Task.Run(I9Gfx.LoadSetTypes);
+                taskArray[6] = Task.Run(I9Gfx.LoadEnhTypes);
+                taskArray[7] = Task.Run(() => I9Gfx.LoadClasses());
                 Task.WaitAll(taskArray);
 
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));
@@ -204,7 +199,7 @@ namespace Mids_Reborn
 
                 DatabaseAPI.AssignRecipeIDs();
                 GC.Collect();
-            }
+            }*/
         }
     }
 }

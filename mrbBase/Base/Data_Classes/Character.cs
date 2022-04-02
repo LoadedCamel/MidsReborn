@@ -323,9 +323,18 @@ namespace mrbBase.Base.Data_Classes
 
         public IEnumerable<(int, string)> LoadPowersetsByName(IList<string> names)
         {
-            Powersets = names.Select(n => string.IsNullOrEmpty(n) ? null : DatabaseAPI.GetPowersetByName(n)).ToArray();
-            return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] })
-                .Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
+            Powersets = names.Select(n =>
+            {
+                if (string.IsNullOrEmpty(n))
+                {
+                    return null;
+                }
+                else
+                {
+                    return DatabaseAPI.GetPowersetByName(n);
+                }
+            }).ToArray();
+            return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] }).Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
         }
 
         public void Reset(Archetype iArchetype = null, int iOrigin = 0)

@@ -199,10 +199,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _bFrm.Show(this);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
             BusyMsg("Saving, please wait...");
-            I9Gfx.LoadEnhancements();
+            await I9Gfx.LoadEnhancements();
             foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
             Array.Sort(DatabaseAPI.Database.Power);
             var serializer = Serializer.GetSerializer();

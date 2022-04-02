@@ -297,6 +297,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ilSets.Images.Clear();
             var num = DatabaseAPI.Database.EnhancementSets.Count - 1;
             for (var index = 0; index <= num; ++index)
+            {
                 if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
                 {
                     extendedBitmap.Graphics.Clear(Color.Transparent);
@@ -314,6 +315,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var bitmap = new Bitmap(width2, height2);
                     images.Add(bitmap);
                 }
+            }
         }
 
         private void frmSetListing_Load(object sender, EventArgs e)
@@ -322,11 +324,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DisplayList();
         }
 
-        private void ImageUpdate()
+        private async void ImageUpdate()
         {
             if (NoReload.Checked)
                 return;
-            I9Gfx.LoadSets();
+            await I9Gfx.LoadSets();
             FillImageList();
         }
 

@@ -666,16 +666,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void BuildATImageList()
+        private async void BuildATImageList()
 
         {
             ilAT.Images.Clear();
-            var num = DatabaseAPI.Database.Classes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var loadedArchetypes = await I9Gfx.LoadArchetypes();
+            foreach (var archetype in loadedArchetypes)
             {
-                var str = I9Gfx.GetOriginsPath() + DatabaseAPI.Database.Classes[index].ClassName + ".png";
-                if (!File.Exists(str)) str = I9Gfx.ImagePath() + "Unknown.png";
-                using var extendedBitmap = new ExtendedBitmap(str);
+                using var extendedBitmap = new ExtendedBitmap(archetype);
                 ilAT.Images.Add(new Bitmap(extendedBitmap.Bitmap));
             }
         }
@@ -704,7 +702,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 var str = I9Gfx.GetPowersetsPath() + DatabaseAPI.Database.Powersets[iSets[index]].ImageName;
                 if (!File.Exists(str))
-                    str = I9Gfx.ImagePath() + "Unknown.png";
+                    str = I9Gfx.ImagePath() + "\\Unknown.png";
                 using var extendedBitmap2 = new ExtendedBitmap(str);
                 string s;
                 SolidBrush solidBrush4;
