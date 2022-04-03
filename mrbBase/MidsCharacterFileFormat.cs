@@ -619,7 +619,7 @@ namespace mrbBase
 
                         if (flag5)
                         {
-                            if (powerEntry.Power.InherentType != Enums.eGridType.None)
+                            if (powerEntry.Power != null && powerEntry.Power.InherentType != Enums.eGridType.None)
                             {
                                 InherentPowers.Add(powerEntry);
                             }
