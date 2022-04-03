@@ -450,27 +450,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
+                {
                     return;
+                }
+
                 IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
+                {
                     return;
+                }
+
                 //Update the full power name in the powerset array
                 if (newPower.PowerSetID > -1)
+                {
                     DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName =
                         newPower.FullName;
+                }
 
-                var num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
-                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName =
-                        DatabaseAPI.Database.Power[index1].FullName;
+                foreach (var p in DatabaseAPI.Database.Power[index1].Effects)
+                {
+                    p.PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
+                }
+
                 var strArray = DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
-                var str1 = "";
-                var num3 = strArray.Length - 1;
-                for (var index2 = 0; index2 <= num3; ++index2)
-                    str1 = str1 + strArray[index2] + "\r\n";
+                var str1 = strArray.Aggregate("", (current, t) => $"{current}{t}\r\n");
                 if (strArray.Length > 0)
                 {
                     var str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
