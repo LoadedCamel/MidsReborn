@@ -1,0 +1,70 @@
+{
+  "name": "Mids' Hero Designer Comparison Overrides",
+  "CompOverride": [
+    {
+      "Powerset": "Electrical Blast",
+      "Power": "Tesla Cage",
+      "Override": "Ranged, Foe Hold, Foe Disorient"
+    },
+    {
+      "Powerset": "Electrical Blast",
+      "Power": "Short Circuit",
+      "Override": "PBAoE, Cone Moderate DoT(Energy), Foe -End, -Recovery "
+    },
+    {
+      "Powerset": "Assault Rifle",
+      "Power": "Burst",
+      "Override": "Ranged, minor DMG(Lethal), Foe -DEF "
+    },
+    {
+      "Powerset": "Assault Rifle",
+      "Power": "Slug",
+      "Override": "Ranged, moderate DMG(Lethal), Foe Knockback "
+    },
+    {
+      "Powerset": "Electrical Blast",
+      "Power": "Charged Bolts",
+      "Override": "Ranged, minor DMG(Energy), Foe -End "
+    },
+    {
+      "Powerset": "Electrical Blast",
+      "Power": "Lightning Bolt",
+      "Override": "Ranged, moderate DMG(Energy), Foe -End "
+    },
+    {
+      "Powerset": "Archery",
+      "Power": "Rain of Arrows",
+      "Override": "Ranged (Location AoE), Extreme DoT(Lethal) Self -Recovery "
+    },
+    {
+      "Powerset": "Assault Rifle",
+      "Power": "Full Auto",
+      "Override": "Ranged (Cone), extreme DMG(Lethal), +Special Self -Recovery "
+    },
+    {
+      "Powerset": "Sonic Attack",
+      "Power": "Shockwave",
+      "Override": "Ranged Minor DMG(Smashing/Energy), Foe Knockback "
+    },
+    {
+      "Powerset": "Sonic Attack",
+      "Power": "Shout",
+      "Override": "close high DMG(Smashing/Energy), Foe -Res(All) "
+    },
+    {
+      "Powerset": "Illusion Control",
+      "Power": "Blind",
+      "Override": "Ranged , Moderate DMG(Psionic), Foe Hold"
+    },
+    {
+      "Powerset": "Illusion Control",
+      "Power": "Phantom Army",
+      "Override": "Decoys: Ranged Minor DMG(Energy/Special) "
+    },
+    {
+      "Powerset": "Illusion Control",
+      "Power": "Spectral Terror",
+      "Override": "Terror: Ranged Fear "
+    }
+  ]
+}

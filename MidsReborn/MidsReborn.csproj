@@ -430,6 +430,21 @@
     <Content Include="Data\Homecoming\Images\Powersets\SonicManipulation.png" />
     <Content Include="Data\Homecoming\Images\Sets\DSync.png" />
     <Content Include="Data\Homecoming\Images\Sets\Sentinel.png" />
+    <Content Include="Data\Rebirth\Images\Archetypes\Class_Guardian.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\AO_Absolute_Resolution.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\AO_Superior_Absolute_Resolution.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Curse_of_the_Witch-Normal_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Curse_of_the_Witch-Superiorl_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Endless_Nightmare-Normal_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Endless_Nightmare-Superior_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\sFrozen_Blast.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\suFrozen_Blast.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\The_Haunting-Normal_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\The_Haunting-Superior_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\The_Rising-Normal_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\The_Rising-Superior_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Vampires_Bite-Normal_Attuned.png" />
+    <Content Include="Data\Rebirth\Images\Enhancements\Vampires_Bite-Superior_Attuned.png" />
     <Content Include="Images\Archetypes\Class_Arachnos_Soldier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2222,6 +2237,51 @@
     <Content Include="Data\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\Generic\bbcode.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\Compare.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\EClasses.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\EnhDB.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\I12.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\I9.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\Maths.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\NLevels.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\Origins.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\Recipe.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\RLevels.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\Salvage.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\SetTypes.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\AttribMod.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\GlobalMods.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Data\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2722,6 +2782,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
+    <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Data\Rebirth\Images\Powersets\" />
+    <Folder Include="Data\Rebirth\Images\Sets\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
