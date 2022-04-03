@@ -189,7 +189,15 @@ namespace mrbBase
         public static int NidFromStaticIndexPower(int sidPower)
         {
             if (sidPower < 0)
+            {
                 return -1;
+            }
+            
+            if (sidPower == 10965 & MidsContext.Character.Archetype.DisplayName == "Defender") // Blaster_Ranged.Seismic_Blast.Meteor
+            {
+                sidPower = 11038; // Defender_Ranged.Seismic_Blast.Meteor
+            }
+
             return Database.Power.TryFindIndex(p => p.StaticIndex == sidPower);
         }
 
@@ -204,7 +212,7 @@ namespace mrbBase
                 se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
+        private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType)
         {
             if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 && !Database.Classes[nIDClass].Playable)
                 return Array.Empty<int>();
