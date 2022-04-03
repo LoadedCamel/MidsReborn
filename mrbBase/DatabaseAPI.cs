@@ -192,11 +192,6 @@ namespace mrbBase
             {
                 return -1;
             }
-            
-            if (sidPower == 10965 & MidsContext.Character.Archetype.DisplayName == "Defender") // Blaster_Ranged.Seismic_Blast.Meteor
-            {
-                sidPower = 11038; // Defender_Ranged.Seismic_Blast.Meteor
-            }
 
             return Database.Power.TryFindIndex(p => p.StaticIndex == sidPower);
         }

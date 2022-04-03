@@ -11,7 +11,14 @@ namespace mrbBase
 {
     public class PowersReplTable
     {
-        private List<KeyValuePair<int, int>> _table;
+        private struct AlternateEntry
+        {
+            public int SourcePowerId;
+            public int TargetPowerId;
+            public string Archetype;
+        }
+
+        private List<AlternateEntry> _table;
         public int Entries => _table.Count;
         private static PowersReplTable _current { get; set; }
         private const bool EnableDebug = false;
@@ -38,22 +45,39 @@ namespace mrbBase
             // Remove blank lines
             var r = new Regex(@"\n{2,}");
             cnt = r.Replace(cnt, "\n");
-            
+
             // Remove comments
             r = new Regex(@"\s*\#.*");
             cnt = r.Replace(cnt, "");
 
             // Split by lines
             var lines = cnt.Split('\n');
-            _table = new List<KeyValuePair<int, int>>();
+            _table = new List<AlternateEntry>();
+
+            var rItems = new Regex(@"\,\s*");
+            var rBlocks = new Regex(@"^\[([a-zA-Z\s]+)\]");
+            var block = "";
 
             foreach (var l in lines)
             {
                 var line = l.Trim();
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
-                r = new Regex(@"\,\s*");
-                var chunks = r.Split(line);
+                if (rBlocks.IsMatch(line))
+                {
+                    var m = rBlocks.Match(line);
+                    block = m.Groups[1].Value.ToLowerInvariant();
+                    if (block == "global")
+                    {
+                        block = "";
+                    }
+
+                    continue;
+                }
+
+                if (!rItems.IsMatch(line)) continue;
+
+                var chunks = rItems.Split(line);
                 if (chunks.Length != 2) continue;
 
                 var res1 = int.TryParse(chunks[0], out var id1);
@@ -61,7 +85,7 @@ namespace mrbBase
 
                 if (!res1 | !res2) continue;
 
-                _table.Add(new KeyValuePair<int, int>(id1, id2));
+                _table.Add(new AlternateEntry { SourcePowerId = id1, TargetPowerId = id2, Archetype = block });
             }
         }
 
@@ -81,59 +105,71 @@ namespace mrbBase
 
         public bool KeyExists(int id)
         {
-            return _table.Any(item => item.Key == id);
+            return _table.Any(item => item.SourcePowerId == id);
         }
 
-        public int FetchAlternate(int oldId)
+        public int FetchAlternate(int oldId, string archetype = "")
         {
+            archetype = archetype.ToLowerInvariant();
+
             foreach (var item in _table)
             {
-                if (item.Key == oldId) return item.Value;
+                if (item.SourcePowerId == oldId & archetype == "") return item.TargetPowerId;
+                if (item.SourcePowerId == oldId & archetype != "" & archetype == item.Archetype) return item.TargetPowerId;
             }
 
             return -1;
         }
 
+        private static string FirstCharToUpper(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
         private void CheckConsistency()
         {
-            var itemsToRemove = new List<KeyValuePair<int, int>>();
+            var itemsToRemove = new List<AlternateEntry>();
             var counters = new Dictionary<int, int>();
             foreach (var item in _table)
             {
-                if (!counters.ContainsKey(item.Key))
+                if (!counters.ContainsKey(item.SourcePowerId))
                 {
-                    counters.Add(item.Key, 1);
+                    counters.Add(item.SourcePowerId, 1);
                 }
                 else
                 {
-                    counters[item.Key]++;
+                    counters[item.SourcePowerId]++;
                     itemsToRemove.Add(item);
                     MessageBox.Show(
-                        $"Warning: duplicate input power ID {item.Key} found.\r\nPlease ensure input IDs are unique.\r\nThe replacement pair <{item.Key}, {item.Value}> will be disabled.",
+                        $"Warning: duplicate input power ID {item.SourcePowerId} found.\r\nPlease ensure input IDs are unique.\r\nThe replacement pair <{item.SourcePowerId}, {item.TargetPowerId}> {(item.Archetype == "" ? "" : $"({FirstCharToUpper(item.Archetype)}) ")}will be disabled.",
                         "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 var power = DatabaseAPI.Database.Power
                     .DefaultIfEmpty(new Power { StaticIndex = -1 })
-                    .FirstOrDefault(e => e.StaticIndex == item.Value);
+                    .FirstOrDefault(e => e.StaticIndex == item.TargetPowerId);
 
                 var powerName = power.StaticIndex == -1 ? "" : power.FullName;
-                if (powerName == "")
-                {
-                    itemsToRemove.Add(item);
-                    MessageBox.Show(
-                        $"Warning: power ID {item.Key} can be converted to ID {item.Value} but the matching power doesn't exist.",
-                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                if (powerName != "") continue;
+
+                itemsToRemove.Add(item);
+                MessageBox.Show(
+                    $"Warning: power ID {item.SourcePowerId} can be converted to ID {item.TargetPowerId} but the matching power doesn't exist.",
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             if (itemsToRemove.Count <= 0) return;
 
             // Remove invalid items and reindex
-            var tableTempCopy = new List<KeyValuePair<int, int>>();
+            var tableTempCopy = new List<AlternateEntry>();
             var j = 0;
             foreach (var e in _table)
             {
-                if (e.Key == itemsToRemove[j].Key & e.Value == itemsToRemove[j].Value)
+                if (e.SourcePowerId == itemsToRemove[j].SourcePowerId & e.TargetPowerId == itemsToRemove[j].TargetPowerId)
                 {
                     j++;
                     continue;
@@ -148,18 +184,17 @@ namespace mrbBase
         public void Dump()
         {
             if (!Debugger.IsAttached && !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv")) return;
-            if (!EnableDebug) return;
-            
+
             Debug.WriteLine($"Dump() - PowersReplTable Count: {_table.Count}");
             foreach (var item in _table)
             {
                 var power = DatabaseAPI.Database.Power
-                    .DefaultIfEmpty(new Power {StaticIndex = -1})
-                    .FirstOrDefault(e => e.StaticIndex == item.Value);
-                
+                    .DefaultIfEmpty(new Power { StaticIndex = -1 })
+                    .FirstOrDefault(e => e.StaticIndex == item.TargetPowerId);
+
                 var powerName = power.StaticIndex == -1 ? "" : power.FullName;
 
-                Debug.WriteLine($"{item.Key} --> {item.Value} [{(powerName == "" ? "<null>" : powerName)}]");
+                Debug.WriteLine($"{item.SourcePowerId} --> {item.TargetPowerId} {(item.Archetype == "" ? "(Global)" : $"({FirstCharToUpper(item.Archetype)})")} [{(powerName == "" ? "<null>" : powerName)}]");
             }
         }
     }

@@ -416,7 +416,7 @@ namespace mrbBase
                         else
                         {
                             sidPower1 = r.ReadInt32();
-                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower1);
+                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower1, MidsContext.Character.Archetype.DisplayName);
                             if (newId >= 0)
                             {
                                 sidPower1 = newId;
