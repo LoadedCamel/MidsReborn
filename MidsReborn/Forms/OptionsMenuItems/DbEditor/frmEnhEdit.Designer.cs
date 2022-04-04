@@ -57,6 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lvEnh
             // 
             this.lvEnh.BackColor = System.Drawing.Color.White;
+            this.lvEnh.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvEnh.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnHeader2,
             this.ColumnHeader3,
@@ -107,7 +108,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Set";
-            this.ColumnHeader5.Width = 145;
+            this.ColumnHeader5.Width = 88;
             // 
             // ilEnh
             // 
@@ -228,7 +229,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblLoading.BackColor = System.Drawing.Color.White;
             this.lblLoading.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoading.ForeColor = System.Drawing.Color.Black;
-            this.lblLoading.Location = new System.Drawing.Point(256, 264);
+            this.lblLoading.Location = new System.Drawing.Point(317, 264);
             this.lblLoading.Name = "lblLoading";
             this.lblLoading.Size = new System.Drawing.Size(116, 24);
             this.lblLoading.TabIndex = 26;
