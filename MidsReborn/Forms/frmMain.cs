@@ -368,7 +368,9 @@ namespace Mids_Reborn.Forms
 
                 if (MidsContext.Config.Bounds.Location.IsEmpty)
                 {
-                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
+                    Location = new Point((Screen.PrimaryScreen.Bounds.Width - Width) / 2, (Screen.PrimaryScreen.Bounds.Height - Height) / 2);
+                    Size = new Size(1342, 1001);
+                    /*Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
                     if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.Bounds.Width) & (MidsContext.Config.Bounds.Width >= MinimumSize.Width))
                     {
                         var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
@@ -390,7 +392,7 @@ namespace Mids_Reborn.Forms
                     {
                         height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                     }
-                    Size = new Size(width1, height1);
+                    Size = new Size(width1, height1);*/
                 }
                 else
                 {
@@ -398,12 +400,10 @@ namespace Mids_Reborn.Forms
                     {
                         case "Maximized":
                             WindowState = FormWindowState.Maximized;
-                            Location = MidsContext.Config.Bounds.Location;
-                            Size = MidsContext.Config.Bounds.Size;
+                            DesktopBounds = MidsContext.Config.Bounds;
                             break;
                         case "Normal":
-                            Location = MidsContext.Config.Bounds.Location;
-                            Size = MidsContext.Config.Bounds.Size;
+                            DesktopBounds = MidsContext.Config.Bounds;
                             break;
                         case "Minimized":
                             WindowState = FormWindowState.Normal;
