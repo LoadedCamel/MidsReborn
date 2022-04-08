@@ -120,15 +120,8 @@ namespace mrbBase
         public FontSettings RtFont { get; } = new FontSettings();
         public Dictionary<string, int> TeamMembers { get; } = new Dictionary<string, int>();
 
-        public Size LastSize
-        {
-            get => _lastSize;
-            set => _lastSize = value;
-        }
-
-        public Point LastLocation { get; set; }
-
-        public FormWindowState LastWindowState { get; set; }
+        public string WindowState { get; set; }
+        public Rectangle Bounds { get; set; }
 
         public bool ApplicationRegistered { get; set; }
         public bool Authorized { get; set; }

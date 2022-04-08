@@ -95,7 +95,6 @@ namespace Mids_Reborn.Forms
                 FormClosing += frmMain_Closing;
                 ResizeEnd += frmMain_Resize;
                 KeyDown += frmMain_KeyDown;
-                Resize += frmMain_Maximize;
                 MouseWheel += frmMain_MouseWheel;
                 TitleUpdated += OnTitleUpdate;
                 Move += frmMain_Move;
@@ -365,40 +364,52 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
 
-                if (MidsContext.Config.LastWindowState != FormWindowState.Maximized)
-                {
-                    if (!MidsContext.Config.LastLocation.IsEmpty)
-                    {
-                        Location = new Point(Math.Max(0, MidsContext.Config.LastLocation.X), Math.Max(0, MidsContext.Config.LastLocation.Y));
-                    }
-                    else
-                    {
-                        Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
-                    }
 
-                    if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.LastSize.Width) & (MidsContext.Config.LastSize.Width >= MinimumSize.Width))
+
+                if (MidsContext.Config.Bounds.Location.IsEmpty)
+                {
+                    Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
+                    if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.Bounds.Width) & (MidsContext.Config.Bounds.Width >= MinimumSize.Width))
                     {
                         var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
-                        var hasValidLastSize = MaximumSize.Width - MidsContext.Config.LastSize.Width < 32 ? 1 : 0;
+                        var hasValidLastSize = MaximumSize.Width - MidsContext.Config.Bounds.Width < 32 ? 1 : 0;
                         var hasValidBoth = hasMaxSize & hasValidLastSize;
                         var needsWidthReduction = Screen.PrimaryScreen.WorkingArea.Width > MaximumSize.Width ? 1 : 0;
-                        width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.LastSize.Width;
+                        width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.Bounds.Width;
                     }
-                    else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.LastSize.Width)
+                    else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.Bounds.Width)
                     {
                         width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
                     }
 
-                    if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.LastSize.Height && MidsContext.Config.LastSize.Height >= MinimumSize.Height)
+                    if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.Bounds.Height && MidsContext.Config.Bounds.Height >= MinimumSize.Height)
                     {
-                        height1 = MidsContext.Config.LastSize.Height;
+                        height1 = MidsContext.Config.Bounds.Height;
                     }
-                    else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
+                    else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.Bounds.Height)
                     {
                         height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                     }
-
                     Size = new Size(width1, height1);
+                }
+                else
+                {
+                    switch (MidsContext.Config.WindowState)
+                    {
+                        case "Maximized":
+                            Location = MidsContext.Config.Bounds.Location;
+                            Size = MidsContext.Config.Bounds.Size;
+                            break;
+                        case "Normal":
+                            Location = MidsContext.Config.Bounds.Location;
+                            Size = MidsContext.Config.Bounds.Size;
+                            break;
+                        case "Minimized":
+                            WindowState = FormWindowState.Normal;
+                            Location = new Point((Screen.PrimaryScreen.Bounds.Width - Width) / 2, (Screen.PrimaryScreen.Bounds.Height - Height) / 2);
+                            Size = new Size(1342, 1001);
+                            break;
+                    }
                 }
 
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
@@ -450,14 +461,6 @@ namespace Mids_Reborn.Forms
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
                     clsXMLUpdate.CheckUpdate();*/
-
-                // Delay maximize, otherwise the inherents section doesn't show up
-                if (MidsContext.Config.LastWindowState == FormWindowState.Maximized)
-                {
-                    Location = new Point(0, 0);
-                    WindowState = FormWindowState.Maximized;
-                    LastState = FormWindowState.Maximized;
-                }
             }
             catch (Exception ex)
             {
@@ -998,11 +1001,6 @@ namespace Mids_Reborn.Forms
 
         private bool CloseCommand()
         {
-            if (MidsContext.Config.FirstRun)
-            {
-                MidsContext.Config.FirstRun = false;
-            }
-
             if (MainModule.MidsController.Toon == null)
             {
                 return false;
@@ -2190,13 +2188,16 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Move(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized) return;
-
-            MidsContext.Config.LastLocation = Location;
+            MidsContext.Config.Bounds = DesktopBounds;
         }
 
         private void frmMain_Closed(object sender, EventArgs e)
         {
+            if (MidsContext.Config.FirstRun)
+            {
+                MidsContext.Config.FirstRun = false;
+            }
+
             if (MidsContext.Config.MasterMode)
             {
                 if (ProcessedFromCommand && ProcessedCommand.Contains("master"))
@@ -2204,16 +2205,23 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.MasterMode = false;
                 }
             }
-            if (WindowState != FormWindowState.Minimized)
+
+            switch (WindowState)
             {
-                MidsContext.Config.LastSize = Size;
-                MidsContext.Config.LastLocation = Location;
+                case FormWindowState.Minimized:
+                    MidsContext.Config.WindowState = WindowState.ToString();
+                    MessageBox.Show(@"Warning: Mids is currently minimized!
+The default position/state will be used upon next launch.", @"Window State Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case FormWindowState.Maximized:
+                    MidsContext.Config.Bounds = DesktopBounds;
+                    MidsContext.Config.WindowState = WindowState.ToString();
+                    break;
+                case FormWindowState.Normal:
+                    MidsContext.Config.Bounds = DesktopBounds;
+                    MidsContext.Config.WindowState = WindowState.ToString();
+                    break;
             }
-
-            MidsContext.Config.LastWindowState = WindowState == FormWindowState.Maximized
-                ? FormWindowState.Maximized
-                : FormWindowState.Normal;
-
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
         }
 
@@ -2237,16 +2245,6 @@ namespace Mids_Reborn.Forms
                     break;
             }
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
-        }
-
-
-        private void frmMain_Maximize(object sender, EventArgs e)
-        {
-            if (WindowState != LastState)
-            {
-                frmMain_Resize(RuntimeHelpers.GetObjectValue(sender), e);
-            }
-            LastState = WindowState;
         }
 
         private void frmMain_MouseWheel(object sender, MouseEventArgs e)
@@ -2276,8 +2274,11 @@ namespace Mids_Reborn.Forms
 
             if (!NoResizeEvent & MainModule.MidsController.IsAppInitialized & Visible)
             {
-                MidsContext.Config.LastSize = Size;
-                MidsContext.Config.LastLocation = Location;
+                if (WindowState != FormWindowState.Minimized)
+                {
+                    MidsContext.Config.Bounds = DesktopBounds;
+                    MidsContext.Config.WindowState = WindowState.ToString();
+                }
             }
 
             UpdateControls();
