@@ -397,6 +397,7 @@ namespace Mids_Reborn.Forms
                     switch (MidsContext.Config.WindowState)
                     {
                         case "Maximized":
+                            WindowState = FormWindowState.Maximized;
                             Location = MidsContext.Config.Bounds.Location;
                             Size = MidsContext.Config.Bounds.Size;
                             break;
