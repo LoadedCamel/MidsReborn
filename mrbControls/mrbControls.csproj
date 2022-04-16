@@ -55,6 +55,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ctlEnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhPicker.Designer.cs">
+      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="IPSlider.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -174,16 +180,6 @@
     <Compile Include="ImageButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="My\MyApplication.cs" />
-    <Compile Include="My\MyComputer.cs" />
-    <Compile Include="My\MyProject.cs" />
-    <Compile Include="My\MySettings.Designer.cs">
-      <DependentUpon>MySettings.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="My\MySettingsProperty.cs" />
-    <Compile Include="My\Resources\Resources.cs" />
     <Compile Include="PairedList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -230,6 +226,9 @@
       <DependentUpon>ctlCombo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
+    <EmbeddedResource Include="ctlEnhPicker.resx">
+      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlEnhPopupPanel.resx">
       <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,12 +263,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resources" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="My\MySettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>MySettings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FastDeepCloner">

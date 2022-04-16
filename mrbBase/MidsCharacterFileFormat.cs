@@ -641,8 +641,7 @@ namespace mrbBase
                 var num1 = -1;
                 if (strArray2.Length < 1)
                 {
-                    var num2 = (int)MessageBox.Show("Unable to locate data header - Zero-Length Input!",
-                        "ExtractAndLoad Failed");
+                    MessageBox.Show("Unable to locate data header - Zero-Length Input!", "ExtractAndLoad Failed");
                     eLoadReturnCode = eLoadReturnCode.Failure;
                 }
                 else
@@ -651,12 +650,24 @@ namespace mrbBase
                     {
                         var startIndex = strArray2[index].IndexOf(MagicUncompressed, StringComparison.Ordinal);
                         if (startIndex < 0)
+                        {
                             startIndex = strArray2[index].IndexOf(MagicCompressed, StringComparison.Ordinal);
+                        }
+
                         if (startIndex < 0)
-                            startIndex = strArray2[index].IndexOf(Files.Headers.Save.Compressed,
-                                StringComparison.OrdinalIgnoreCase);
+                        {
+                            startIndex = strArray2[index].IndexOf(Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
+                            if (startIndex <= -1)
+                            {
+                                startIndex = strArray2[index].IndexOf(Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase);
+                            }
+                        }
+
                         if (startIndex <= -1)
+                        {
                             continue;
+                        }
+
                         strArray1 = strArray2[index].Substring(startIndex).Split(';');
                         a = strArray1.Length > 0 ? strArray1[0] : string.Empty;
                         num1 = index;
@@ -668,7 +679,7 @@ namespace mrbBase
                         MessageBox.Show("Unable to locate data header - Magic Number not found!", "ExtractAndLoad Failed");
                         eLoadReturnCode = eLoadReturnCode.Failure;
                     }
-                    else if (string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase))
+                    else if (string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) || string.Equals(a, Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase))
                     {
                         eLoadReturnCode = eLoadReturnCode.IsOldFormat;
                     }

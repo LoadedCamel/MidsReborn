@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Display;
 using mrbBase.Base.Extensions;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -23,20 +24,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.reborn;
         }
 
-        private void AddListItem(int Index)
+        private void AddListItem(int idx)
         {
             var items = new string[7];
-            var enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[idx];
             items[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
-            items[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
+            items[1] = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).ShortName;
             items[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
             items[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
             items[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);
             var num1 = 0;
             var num2 = enhancementSet.Bonus.Length - 1;
             for (var index = 0; index <= num2; ++index)
+            {
                 if (enhancementSet.Bonus[index].Index.Length > 0)
+                {
                     ++num1;
+                }
+            }
+
             items[5] = Convert.ToString(num1);
 
             var setContainsPvPfx = false;
@@ -51,7 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             items[6] = setContainsPvPfx ? "X" : "";
-            lvSets.Items.Add(new ListViewItem(items, Index));
+            lvSets.Items.Add(new ListViewItem(items, idx));
             lvSets.Items[lvSets.Items.Count - 1].Selected = true;
             lvSets.Items[lvSets.Items.Count - 1].EnsureVisible();
         }
@@ -243,7 +249,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnSave_Click(object sender, EventArgs e)
         {
             var serializer = Serializer.GetSerializer();
-            DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
             Hide();
         }
 

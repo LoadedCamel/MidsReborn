@@ -894,7 +894,7 @@ namespace mrbBase
             {
                 var allowedSet = false;
                 var setType = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType;
-                for (var index = 0; index <= Powers[hIdx].Power.SetTypes.Length - 1; ++index)
+                for (var index = 0; index <= Powers[hIdx].Power.SetTypes.Count - 1; ++index)
                 {
                     if (Powers[hIdx].Power.SetTypes[index] != setType)
                     {

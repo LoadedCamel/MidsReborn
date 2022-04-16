@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Extensions;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -50,7 +51,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.LoadSalvage();
+            DatabaseAPI.LoadSalvage(MidsContext.Config.DataPath);
             Close();
         }
 
@@ -132,7 +133,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.SaveSalvage(Serializer.GetSerializer());
+            DatabaseAPI.SaveSalvage(Serializer.GetSerializer(), MidsContext.Config.SavePath);
             Close();
         }
 

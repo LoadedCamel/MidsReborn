@@ -1057,11 +1057,8 @@ namespace mrbBase.Base.Data_Classes
                     if (enhancement.TypeID == Enums.eType.SetO)
                     {
                         var index3 = popupData1.Add();
-                        popupData1.Sections[index3]
-                            .Add(
-                                "Set Type: " + DatabaseAPI.Database.SetTypeStringLong[
-                                    (int)DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType],
-                                PopUp.Colors.Invention);
+                        popupData1.Sections[index3].Add($"Set Type: {DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType).Name}", PopUp.Colors.Invention);
+                        //popupData1.Sections[index3].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType], PopUp.Colors.Invention);
                         var levelMin = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1;
                         var levelMax = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1;
                         popupData1.Sections[index3]
@@ -1471,12 +1468,18 @@ namespace mrbBase.Base.Data_Classes
                 var popupData1 = new PopUp.PopupData();
                 var index1 = popupData1.Add();
                 popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
-                popupData1.Sections[index1]
-                    .Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType],
-                        PopUp.Colors.Invention);
-                var str = enhancementSet.LevelMin != enhancementSet.LevelMax
-                    ? enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1)
-                    : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
+                popupData1.Sections[index1].Add($"Set Type: {DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).Name}", PopUp.Colors.Invention);
+                //popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention);
+                string str;
+                if (enhancementSet.LevelMin != enhancementSet.LevelMax)
+                {
+                    str = enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1);
+                }
+                else
+                {
+                    str = (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
+                }
+
                 popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text);
                 popupData1.Add(PopSetEnhList(sIdx, powerEntry));
                 popupData1.Add(PopSetBonusListing(sIdx, powerEntry));

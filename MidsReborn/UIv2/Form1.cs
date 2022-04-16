@@ -73,8 +73,6 @@ namespace Mids_Reborn.UIv2
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
                     MidsContext.Config.CheckForUpdates = false;
-                    MidsContext.Config.DefaultSaveFolderOverride = null;
-                    MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
                 }
                 MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);

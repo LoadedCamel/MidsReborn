@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace mrbBase
 {
@@ -46,23 +46,21 @@ namespace mrbBase
             CharNameBuildFile
         }
 
-        private const string header = "Mids' Hero Designer Config V2";
-
-        private const string OverrideNames = "Mids' Hero Designer Comparison Overrides";
+        private const string OverrideNames = "Mids Reborn Comparison Overrides";
 
         public readonly short[] DragDropScenarioAction =
         {
             3, 0, 5, 0, 3, 5, 0, 0, 5, 0, 2, 3, 0, 2, 2, 0, 0, 0, 0, 0
         };
 
-        private string _defaultSaveFolderOverride;
-        private Size _lastSize = new(1342, 1001);
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
         public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
         public string AppChangeLog { get; set; }
         public string DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
+
+
         public ConfigData()
         {
             ApplicationRegistered = false;
@@ -82,43 +80,12 @@ namespace mrbBase
             InitializeComponent();
         }
 
-        private ConfigData(bool deserializing, string iFilename)
-        {
-            ApplicationRegistered = false;
-            Authorized = false;
-            Registered = false;
-            DamageMath.Calculate = EDamageMath.Average;
-            DamageMath.ReturnValue = EDamageReturn.Numeric;
-            I9.DefaultIOLevel = 49;
-            TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
-            RtFont.SetDefault();
-            Tips = new Tips();
-            Export = new ExportConfig();
-            CompOverride = Array.Empty<Enums.CompOverride>();
-            Server = new ServerConfig();
-            if (deserializing) return;
-            if (iFilename != Files.FNameJsonConfig && File.Exists(iFilename))
-            {
-                try
-                {
-                    LegacyForMigration(iFilename);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                }
-            }
-
-            TeamMembers = new Dictionary<string, int>();
-            InitializeComponent();
-        }
-
         // these properties require setters for deserialization
-        public SDamageMath DamageMath { get; } = new SDamageMath();
-        public IncludeExclude Inc { get; } = new IncludeExclude();
-        public Si9 I9 { get; } = new Si9();
-        public FontSettings RtFont { get; } = new FontSettings();
-        public Dictionary<string, int> TeamMembers { get; } = new Dictionary<string, int>();
+        public SDamageMath DamageMath { get; } = new();
+        public IncludeExclude Inc { get; } = new();
+        public Si9 I9 { get; } = new();
+        public FontSettings RtFont { get; } = new();
+        public Dictionary<string, int> TeamMembers { get; }
 
         public string WindowState { get; set; }
         public Rectangle Bounds { get; set; }
@@ -175,7 +142,7 @@ namespace mrbBase
         public bool ShowSlotLevels { get; set; }
         public bool ShowEnhRel { get; set; }
         public bool ShowRelSymbols { get; set; }
-        public bool ShowSOLevels { get; set; }
+        public bool ShowSoLevels { get; set; }
         public bool EnhanceVisibility { get; set; }
         public Tips Tips { get; set; }
         public bool PopupRecipes { get; set; }
@@ -184,35 +151,56 @@ namespace mrbBase
         public bool LongExport { get; set; }
         public bool MasterMode { get; set; }
         public bool ShrinkFrmSets { get; set; }
-        public bool ConvertOldDb { get; set; }
-        public bool FirstRun { get; set; } = true;
-        public string SourceDataPath { get; set; }
-        public string ConversionDataPath { get; set; }
-        public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
-        public bool IsLegacy { get; set; }
+
+
+        private string _buildsPath = Files.FDefaultBuildsPath;
+
+        public string BuildsPath
+        {
+            get => _buildsPath;
+            set
+            {
+                if (!Directory.Exists(value))
+                {
+                    Directory.CreateDirectory(value);
+                }
+
+                _buildsPath = value;
+            }
+        }
+
+        public string DataPath { get; set; }
+
+        private string _savePath = Files.FDefaultPath;
+
+        public string SavePath
+        {
+            get => _savePath;
+            set
+            {
+                if (value != DataPath)
+                {
+                    if (!Directory.Exists(value))
+                    {
+                        Directory.CreateDirectory(value);
+                    }
+                    _savePath = value;
+                }
+                else
+                {
+                    _savePath = DataPath;
+                }
+            }
+        }
+
+        public bool FirstRun { get; set; }
+
+
+
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
         public bool ShowSelfBuffsAny { get; set; }
-
-        public string DefaultSaveFolderOverride
-        {
-            get => _defaultSaveFolderOverride;
-            set
-            {
-                var osDefault = OS.GetDefaultSaveFolder();
-                if (string.IsNullOrWhiteSpace(value)
-                    || Path.GetFullPath(value) == osDefault
-                    || value == osDefault
-                    || osDefault != null && Path.GetFullPath(osDefault) == value)
-                {
-                    _defaultSaveFolderOverride = null;
-                    return;
-                }
-
-                _defaultSaveFolderOverride = value;
-            }
-        }
 
         public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
 
@@ -225,28 +213,14 @@ namespace mrbBase
             }
         }
 
-        private static void MigrateToSerializer(string mhdFn, ISerialize serializer)
+        public void ResetBuildsPath()
         {
-            var oldMethod = new ConfigData(false, mhdFn);
-            oldMethod.InitializeComponent();
-            var file = mhdFn + ".old";
-            if (File.Exists(file))
-                file += "2";
-            File.Move(mhdFn, file);
-            oldMethod.SaveConfig(serializer);
+            BuildsPath = Files.FDefaultBuildsPath;
         }
 
         public static void Initialize(ISerialize serializer)
         {
-            // migrate
-            // force Mhd if it exists, then rename it
-            var mhdFn = Files.GetConfigFilename(true);
-            var fn = Files.GetConfigFilename(false);
-            if (File.Exists(mhdFn))
-            {
-                MigrateToSerializer(mhdFn, serializer);
-            }
-
+            var fn = Files.GetConfigFilename();
             
             if (File.Exists(fn))
             {
@@ -267,13 +241,21 @@ namespace mrbBase
         private void InitializeComponent()
         {
             if (string.IsNullOrWhiteSpace(UpdatePath))
+            {
                 UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
+            }
 
             if (string.IsNullOrWhiteSpace(DbUpdatePath))
+            {
                 DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+            }
+
             if (string.IsNullOrWhiteSpace(DataPath))
+            {
                 DataPath = Files.FDefaultPath;
-            RelocateSaveFolder(false);
+            }
+
+            // RelocateSaveFolder(false);
             try
             {
                 LoadOverrides();
@@ -306,200 +288,6 @@ namespace mrbBase
             return fntSize;
         }
         
-        private void LegacyForMigration(string iFilename)
-        {
-            //using (FileStream fileStream = new FileStream(iFilename, FileMode.Open, FileAccess.Read))
-            {
-                using var reader = new BinaryReader(File.Open(iFilename, FileMode.Open, FileAccess.Read));
-                float version;
-                switch (reader.ReadString())
-                {
-                    // legacy string, refers to something specific in files, do not change
-                    case "Mids' Hero Designer Config":
-                        version = 0.9f;
-                        break;
-                    // legacy string, refers to something specific in files, do not change
-                    // here's something F# doesn't do easily(fallthrough where one branch has a when variable declared)
-                    case "Mids' Hero Designer Config V2":
-                    case { } x when x == header:
-                        version = reader.ReadSingle();
-                        break;
-                    default:
-                        MessageBox.Show("Config file was missing a header! Using defaults.");
-                        reader.Close();
-                        //fileStream.Close();
-                        return;
-                }
-
-                NoToolTips = reader.ReadBoolean();
-                BaseAcc = reader.ReadSingle();
-                double num3 = reader.ReadSingle();
-                double num4 = reader.ReadSingle();
-                double num5 = reader.ReadSingle();
-                double num6 = reader.ReadSingle();
-                double num7 = reader.ReadSingle();
-                CalcEnhLevel = (Enums.eEnhRelative)reader.ReadInt32();
-                CalcEnhOrigin = (Enums.eEnhGrade)reader.ReadInt32();
-                ExempHigh = reader.ReadInt32();
-                ExempLow = reader.ReadInt32();
-                Inc.DisablePvE = !reader.ReadBoolean();
-                reader.ReadBoolean();
-                DamageMath.Calculate = (EDamageMath)reader.ReadInt32();
-                reader.ReadSingle();
-                if (version < 1.24000000953674)
-                    reader.ReadBoolean();
-                else
-                    reader.ReadInt32();
-                DamageMath.ReturnValue = (EDamageReturn)reader.ReadInt32();
-                DisableDataDamageGraph = !reader.ReadBoolean();
-                DataDamageGraphPercentageOnly = reader.ReadBoolean();
-                DataGraphType = (Enums.eDDGraph)reader.ReadInt32();
-                ExportScheme = reader.ReadInt32();
-                ExportTarget = reader.ReadInt32();
-                if (version >= 1.24000000953674)
-                {
-                    ExportBonusTotals = reader.ReadBoolean();
-                    ExportBonusList = reader.ReadBoolean();
-                }
-
-                //this._hideOriginEnhancements =
-                reader.ReadBoolean();
-                DisableVillainColors = !reader.ReadBoolean();
-                CheckForUpdates = reader.ReadBoolean();
-                Columns = reader.ReadInt32();
-                _lastSize.Width = reader.ReadInt32();
-                _lastSize.Height = reader.ReadInt32();
-                DvState = (Enums.eVisibleSize)reader.ReadInt32();
-                StatGraphStyle = (Enums.GraphStyle)reader.ReadInt32();
-                if (version >= 1.0)
-                    IsInitialized = !reader.ReadBoolean();
-                if (version >= 1.10000002384186)
-                    ForceLevel = reader.ReadInt32();
-                if (version >= 1.20000004768372)
-                {
-                    I9.DefaultIOLevel = reader.ReadInt32();
-                    if (I9.DefaultIOLevel > 49)
-                        I9.DefaultIOLevel = 49;
-                    I9.HideIOLevels = !reader.ReadBoolean();
-                    I9.IgnoreEnhFX = !reader.ReadBoolean();
-                    I9.IgnoreSetBonusFX = !reader.ReadBoolean();
-                    I9.ExportIOLevels = reader.ReadBoolean();
-                    I9.DisablePrintIOLevels = !reader.ReadBoolean();
-                    I9.DisableExportCompress = !reader.ReadBoolean();
-                    I9.DisableExportDataChunk = !reader.ReadBoolean();
-                    I9.ExportStripEnh = reader.ReadBoolean();
-                    I9.ExportStripSetNames = reader.ReadBoolean();
-                    I9.ExportExtraSep = reader.ReadBoolean();
-                    PrintInColor = reader.ReadBoolean();
-                    //this._printScheme = 
-                    reader.ReadInt32();
-                }
-
-                if (version >= 1.21000003814697)
-                {
-                    // Bold fonts disabled but on powers - some rendering issues when hovering lists.
-                    RtFont.PairedBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PairedBase);
-                    //RtFont.PairedBold =
-                    reader.ReadBoolean();
-                    RtFont.PairedBold = false;
-                    RtFont.RTFBase = reader.ReadInt32();
-                    RtFont.RTFBold = reader.ReadBoolean();
-                    RtFont.ColorBackgroundHero = GetStreamColor(reader, Enums.eColorSetting.ColorBackgroundHero);
-                    RtFont.ColorBackgroundVillain = GetStreamColor(reader, Enums.eColorSetting.ColorBackgroundVillain);
-                    RtFont.ColorEnhancement = GetStreamColor(reader, Enums.eColorSetting.ColorEnhancement);
-                    RtFont.ColorFaded = GetStreamColor(reader, Enums.eColorSetting.ColorFaded);
-                    RtFont.ColorInvention = GetStreamColor(reader, Enums.eColorSetting.ColorInvention);
-                    RtFont.ColorInventionInv = GetStreamColor(reader, Enums.eColorSetting.ColorInventionInv);
-                    RtFont.ColorText = GetStreamColor(reader, Enums.eColorSetting.ColorText);
-                    RtFont.ColorWarning = GetStreamColor(reader, Enums.eColorSetting.ColorWarning);
-                    RtFont.ColorPlName = GetStreamColor(reader, Enums.eColorSetting.ColorPlName);
-                    RtFont.ColorPlSpecial = GetStreamColor(reader, Enums.eColorSetting.ColorPlSpecial);
-                    RtFont.PowersSelectBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PowersSelectBase);
-                    //RtFont.PowersSelectBold =
-                    reader.ReadBoolean();
-                    RtFont.PowersSelectBold = false;
-                    RtFont.PowersBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PowersBase);
-                    RtFont.PowersBold = reader.ReadBoolean();
-                }
-
-                if (version >= 1.22000002861023)
-                {
-                    ShowSlotLevels = reader.ReadBoolean();
-                    DisableLoadLastFileOnStart = !reader.ReadBoolean();
-                    LastFileName = reader.ReadString();
-                    RtFont.ColorPowerAvailable = GetStreamColor(reader, Enums.eColorSetting.ColorPowerAvailable);
-                    RtFont.ColorPowerDisabled = GetStreamColor(reader, Enums.eColorSetting.ColorPowerDisabled);
-                    RtFont.ColorPowerTakenHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenHero);
-                    RtFont.ColorPowerTakenDarkHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenDarkHero);
-                    RtFont.ColorPowerHighlightHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerHighlightHero);
-                    RtFont.ColorPowerTakenVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenVillain);
-                    RtFont.ColorPowerTakenDarkVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenDarkVillain);
-                    RtFont.ColorPowerHighlightVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerHighlightVillain);
-                }
-
-                if (version >= 1.23000001907349)
-                {
-                    Tips = new Tips(reader);
-                    DefaultSaveFolderOverride = reader.ReadString();
-                }
-
-                if (version >= 1.24000000953674)
-                {
-                    EnhanceVisibility = reader.ReadBoolean();
-                    reader.ReadBoolean();
-                    BuildMode = (Enums.dmModes)reader.ReadInt32();
-                    BuildOption = (Enums.dmItem)reader.ReadInt32();
-                    //this.UpdatePath =
-                    reader.ReadString();
-                    //if (string.IsNullOrEmpty(this.UpdatePath))
-                    //    this.UpdatePath = "https://midsreborn.com/mids_updates/";
-                }
-
-                if (version >= 1.25)
-                {
-                    ShowEnhRel = reader.ReadBoolean();
-                    ShowRelSymbols = reader.ReadBoolean();
-                    DisableShowPopup = !reader.ReadBoolean();
-                    if (version >= 1.32000005245209)
-                        DisableAlphaPopup = !reader.ReadBoolean();
-                    PopupRecipes = reader.ReadBoolean();
-                    ShoppingListIncludesRecipes = reader.ReadBoolean();
-                    PrintProfile = (PrintOptionProfile)reader.ReadInt32();
-                    PrintHistory = reader.ReadBoolean();
-                    LastPrinter = reader.ReadString();
-                    DisablePrintProfileEnh = !reader.ReadBoolean();
-                    DisableDesaturateInherent = !reader.ReadBoolean();
-                    DisableRepeatOnMiddleClick = !reader.ReadBoolean();
-                }
-
-                if (version >= 1.25999999046326)
-                    DisableExportHex = !reader.ReadBoolean();
-                if (version >= 1.26999998092651)
-                    SpeedFormat = (Enums.eSpeedMeasure)reader.ReadInt32();
-                if (version >= 1.27999997138977)
-                    SaveFolderChecked = reader.ReadBoolean();
-                if (version >= 1.28999996185303)
-                    UseArcanaTime = reader.ReadBoolean(); //this is correct
-                CreateDefaultSaveFolder();
-            }
-        }
-
-        public string GetSaveFolder()
-        {
-            return DefaultSaveFolderOverride ?? OS.GetDefaultSaveFolder();
-        }
-
-        public void CreateDefaultSaveFolder()
-        {
-            // if there is a save folder override, but it does not exist, wipe it out
-            if (!string.IsNullOrWhiteSpace(DefaultSaveFolderOverride) && !Directory.Exists(DefaultSaveFolderOverride))
-                DefaultSaveFolderOverride = null;
-            var saveFolder = GetSaveFolder();
-            if (Directory.Exists(saveFolder))
-                return;
-            Directory.CreateDirectory(saveFolder);
-        }
-
         private void SaveRaw(ISerialize serializer, string iFilename)
         {
             SaveRawMhd(serializer, this, iFilename, null);
@@ -510,55 +298,13 @@ namespace mrbBase
             SaveRaw(serializer, iFilename);
         }
 
-        private void RelocateSaveFolder(bool manual)
-        {
-            if (!string.IsNullOrWhiteSpace(DefaultSaveFolderOverride) && Directory.Exists(DefaultSaveFolderOverride) &&
-                (OS.GetDefaultSaveFolder() != DefaultSaveFolderOverride) & (!SaveFolderChecked | manual))
-            {
-                if (DefaultSaveFolderOverride.IndexOf(OS.GetMyDocumentsPath(), StringComparison.OrdinalIgnoreCase) > -1)
-                {
-                    SaveFolderChecked = true;
-                    return;
-                }
-
-                if (Directory.Exists(DefaultSaveFolderOverride))
-                {
-                    if (MessageBox.Show(
-                        "In order for Mids' Reborn : Designer to operate better in more recent versions of Windows, the recommended Save folder has been changed to appear inside the My Documents folder.\nThe application can automatically move your save folder and its contents to 'My Documents\\Hero & Villain Builds\\'.\nThis message will not appear again.\n\nMove your Save folder now?",
-                        "Save Folder Location", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                    {
-                        LastFileName = string.Empty;
-                        var defaultSaveFolder = DefaultSaveFolderOverride;
-                        DefaultSaveFolderOverride = null;
-                        if (FileIO.CopyFolder(defaultSaveFolder, GetSaveFolder()))
-                        {
-                            MessageBox.Show(@"Save folder was moved!", "All Done", MessageBoxButtons.OK);
-                        }
-                        else
-                        {
-                            MessageBox.Show(@"Save folder couldn't be moved! Using old save folder instead.", "Whoops",
-                                MessageBoxButtons.OK);
-                            DefaultSaveFolderOverride = defaultSaveFolder;
-                        }
-                    }
-                }
-                else
-                {
-                    CreateDefaultSaveFolder();
-                }
-            }
-
-            SaveFolderChecked = true;
-        }
-
         // poorly named
         // saves both config.mhd, and compare.mhd
         public void SaveConfig(ISerialize serializer)
         {
             try
             {
-                Save(serializer, Files.GetConfigFilename(false));
+                Save(serializer, Files.GetConfigFilename());
                 SaveOverrides(serializer);
             }
             catch (Exception ex)
@@ -571,7 +317,7 @@ namespace mrbBase
         {
             using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
-            if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
+            if (binaryReader.ReadString() != OverrideNames)
             {
                 MessageBox.Show("Overrides file was missing a header! Not loading powerset comparison overrides.");
             }
@@ -585,11 +331,6 @@ namespace mrbBase
                     CompOverride[index].Override = binaryReader.ReadString();
                 }
             }
-        }
-
-        public static (bool, T) LoadRawMhd<T>(ISerialize serializer, string fn)
-        {
-            return !File.Exists(fn) ? (false, default) : (true, serializer.Deserialize<T>(File.ReadAllText(fn)));
         }
 
         public static RawSaveResult SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
@@ -658,7 +399,7 @@ namespace mrbBase
         private void SaveOverrides(ISerialize serializer)
         {
             var fn = Files.SelectDataFileLoad("Compare.mhd");
-            SaveRawOverrides(serializer, fn, OverrideNames);
+            //SaveRawOverrides(serializer, fn, OverrideNames);
 
             using var fileStream = new FileStream(fn, FileMode.Create);
             using var binaryWriter = new BinaryWriter(fileStream);

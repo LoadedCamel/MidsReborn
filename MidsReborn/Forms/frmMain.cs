@@ -71,9 +71,9 @@ namespace Mids_Reborn.Forms
             CommandArgs = args;
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
-                if (File.Exists(Files.GetConfigFilename(false)))
+                if (File.Exists(Files.GetConfigFilename()))
                 {
-                    var fInfo = new FileInfo(Files.GetConfigFilename(false));
+                    var fInfo = new FileInfo(Files.GetConfigFilename());
                     if (fInfo.Length > 0)
                     {
                         ConfigData.Initialize(Serializer.GetSerializer());
@@ -81,7 +81,7 @@ namespace Mids_Reborn.Forms
                     else
                     {
                         var tempConfig = new ConfigData();
-                        tempConfig.Save(Serializer.GetSerializer(), Files.GetConfigFilename(false));
+                        tempConfig.Save(Serializer.GetSerializer(), Files.GetConfigFilename());
                         tempConfig.SaveConfig(Serializer.GetSerializer());
                         ConfigData.Initialize(Serializer.GetSerializer());
                     }
@@ -242,9 +242,7 @@ namespace Mids_Reborn.Forms
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
-                
-                var height1 = 0;
-                var width1 = 0;
+
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
                 using var iFrm = new frmInitializing();
                 _frmInitializing = iFrm;
@@ -259,14 +257,13 @@ namespace Mids_Reborn.Forms
                     //MessageBox.Show(("Welcome to Mids' Reborn : Hero Designer "
                     //+ MidsContext.AppVersion 
                     //+ "! Please check the Readme/Help for quick instructions.\r\n\r\nMids' Hero Designer is able to check for and download updates automatically when it starts.\r\nIt's recommended that you turn on automatic updating. Do you want to?\r\n\r\n(If you don't, you can manually check from the 'Updates' tab in the options.)"), MessageBoxButtons.YesNo | MessageBoxIcon.Question, "Welcome!") == DialogResult.Yes;
-                    MidsContext.Config.DefaultSaveFolderOverride = null;
-                    MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
+                    MidsContext.Config.FirstRun = true;
                 }
 
-                if (MidsContext.Config.IsLegacy)
+                if (MidsContext.Config.FirstRun)
                 {
-                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath, true);
+                    MainModule.MidsController.SelectDatabase(_frmInitializing);
                 }
                 else
                 {
@@ -415,7 +412,7 @@ namespace Mids_Reborn.Forms
 
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
-                tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
+                tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
                 tsViewSelected();
@@ -425,8 +422,8 @@ namespace Mids_Reborn.Forms
                 //ReArrange(true);
                 GetBestDamageValues();
                 dvAnchored.SetFontData();
-                DlgSave.InitialDirectory = MidsContext.Config.GetSaveFolder();
-                DlgOpen.InitialDirectory = MidsContext.Config.GetSaveFolder();
+                DlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
+                DlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
                 NoUpdate = false;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 ibSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
@@ -508,7 +505,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            if (!DatabaseAPI.LoadLevelsDatabase()) return;
+            if (!DatabaseAPI.LoadLevelsDatabase(MidsContext.Config.DataPath)) return;
             MidsContext.Character.ResetLevel();
             PowerModified(markModified: false);
             UpdateDMBuffer();
@@ -6177,8 +6174,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewSOLevels_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.ShowSOLevels = !MidsContext.Config.ShowSOLevels;
-            tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
+            MidsContext.Config.ShowSoLevels = !MidsContext.Config.ShowSoLevels;
+            tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
             DoRedraw();
         }
 

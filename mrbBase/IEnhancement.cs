@@ -26,7 +26,9 @@ namespace mrbBase
 
         Enums.eType TypeID { get; set; }
 
-        Enums.eSubtype SubTypeID { get; set; }
+        //Enums.eSubtype SubTypeID { get; set; }
+
+        int SubTypeID { get; set; }
 
         int[] ClassID { get; set; }
 

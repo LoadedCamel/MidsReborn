@@ -85,7 +85,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            MySet.SetType = (Enums.eSetType) cbSetType.SelectedIndex;
+            MySet.SetType = cbSetType.SelectedIndex;
         }
 
         private void cbSlotX_SelectedIndexChanged(object sender, EventArgs e)
@@ -415,7 +415,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             SetMaxLevel(MySet.LevelMax + 1);
             udMaxLevel.Minimum = udMinLevel.Value;
             udMinLevel.Maximum = udMaxLevel.Value;
-            cbSetType.SelectedIndex = (int) MySet.SetType;
+            cbSetType.SelectedIndex = MySet.SetType;
             btnImage.Text = MySet.Image;
             DisplayBonusText();
             DisplayBonus();
@@ -506,7 +506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillComboBoxes()
         {
-            var names = Enum.GetNames(Enums.eSetType.Untyped.GetType());
+            var names = DatabaseAPI.Database.SetTypes.Select(setType => setType.ShortName).ToList();
             cbSetType.BeginUpdate();
             cbSetType.Items.Clear();
             cbSetType.Items.AddRange(names.ToArray<object>());

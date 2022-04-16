@@ -16,7 +16,8 @@ namespace mrbBase
             ShortName = "NewEnh";
             Desc = string.Empty;
             TypeID = Enums.eType.Normal;
-            SubTypeID = Enums.eSubtype.None;
+            //SubTypeID = Enums.eSubtype.None;
+            SubTypeID = 0;
             Image = string.Empty;
             nIDSet = -1;
             EffectChance = 1f;
@@ -81,115 +82,62 @@ namespace mrbBase
             Superior = iEnh.Superior;
         }
 
-        public Enhancement(BinaryReader reader, bool legacy = false)
+        public Enhancement(BinaryReader reader)
         {
-            if (!legacy)
+            RecipeIDX = -1;
+            IsModified = false;
+            IsNew = false;
+            StaticIndex = reader.ReadInt32();
+            Name = reader.ReadString();
+            ShortName = reader.ReadString();
+            Desc = reader.ReadString();
+            TypeID = (Enums.eType)reader.ReadInt32();
+            //SubTypeID = (Enums.eSubtype)reader.ReadInt32();
+            SubTypeID = reader.ReadInt32();
+            ClassID = new int[reader.ReadInt32() + 1];
+            for (var index = 0; index < ClassID.Length; ++index)
+                ClassID[index] = reader.ReadInt32();
+            Image = reader.ReadString();
+            nIDSet = reader.ReadInt32();
+            UIDSet = reader.ReadString();
+            EffectChance = reader.ReadSingle();
+            LevelMin = reader.ReadInt32();
+            LevelMax = reader.ReadInt32();
+            Unique = reader.ReadBoolean();
+            MutExID = (Enums.eEnhMutex)reader.ReadInt32();
+            BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
+            if (MutExID < Enums.eEnhMutex.None)
+                MutExID = Enums.eEnhMutex.None;
+            Effect = new Enums.sEffect[reader.ReadInt32() + 1];
+            for (var index = 0; index <= Effect.Length - 1; ++index)
             {
-                RecipeIDX = -1;
-                IsModified = false;
-                IsNew = false;
-                StaticIndex = reader.ReadInt32();
-                Name = reader.ReadString();
-                ShortName = reader.ReadString();
-                Desc = reader.ReadString();
-                TypeID = (Enums.eType) reader.ReadInt32();
-                SubTypeID = (Enums.eSubtype) reader.ReadInt32();
-                ClassID = new int[reader.ReadInt32() + 1];
-                for (var index = 0; index < ClassID.Length; ++index)
-                    ClassID[index] = reader.ReadInt32();
-                Image = reader.ReadString();
-                nIDSet = reader.ReadInt32();
-                UIDSet = reader.ReadString();
-                EffectChance = reader.ReadSingle();
-                LevelMin = reader.ReadInt32();
-                LevelMax = reader.ReadInt32();
-                Unique = reader.ReadBoolean();
-                MutExID = (Enums.eEnhMutex) reader.ReadInt32();
-                BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
-                if (MutExID < Enums.eEnhMutex.None)
-                    MutExID = Enums.eEnhMutex.None;
-                Effect = new Enums.sEffect[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Effect.Length - 1; ++index)
+                Effect[index].Mode = (Enums.eEffMode)reader.ReadInt32();
+                Effect[index].BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
+                Effect[index].Enhance.ID = reader.ReadInt32();
+                Effect[index].Enhance.SubID = reader.ReadInt32();
+                Effect[index].Schedule = (Enums.eSchedule)reader.ReadInt32();
+                Effect[index].Multiplier = reader.ReadSingle();
+                ref var local = ref Effect[index];
+                Effect effect;
+                if (!reader.ReadBoolean())
                 {
-                    Effect[index].Mode = (Enums.eEffMode) reader.ReadInt32();
-                    Effect[index].BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
-                    Effect[index].Enhance.ID = reader.ReadInt32();
-                    Effect[index].Enhance.SubID = reader.ReadInt32();
-                    Effect[index].Schedule = (Enums.eSchedule) reader.ReadInt32();
-                    Effect[index].Multiplier = reader.ReadSingle();
-                    ref var local = ref Effect[index];
-                    Effect effect;
-                    if (!reader.ReadBoolean())
-                    {
-                        effect = null;
-                    }
-                    else
-                    {
-                        effect = new Effect(reader)
-                        {
-                            isEnhancementEffect = true,
-                        };
-                    }
-                    local.FX = effect;
+                    effect = null;
                 }
-
-                UID = reader.ReadString();
-                RecipeName = reader.ReadString();
-                Superior = reader.ReadBoolean();
-                IsProc = reader.ReadBoolean();
-                IsScalable = reader.ReadBoolean();
-            }
-            else
-            {
-                RecipeIDX = -1;
-                IsModified = false;
-                IsNew = false;
-                StaticIndex = reader.ReadInt32();
-                Name = reader.ReadString();
-                ShortName = reader.ReadString();
-                Desc = reader.ReadString();
-                TypeID = (Enums.eType)reader.ReadInt32();
-                SubTypeID = (Enums.eSubtype)reader.ReadInt32();
-                ClassID = new int[reader.ReadInt32() + 1];
-                for (var index = 0; index < ClassID.Length; ++index)
-                    ClassID[index] = reader.ReadInt32();
-                Image = reader.ReadString();
-                nIDSet = reader.ReadInt32();
-                UIDSet = reader.ReadString();
-                EffectChance = reader.ReadSingle();
-                LevelMin = reader.ReadInt32();
-                LevelMax = reader.ReadInt32();
-                Unique = reader.ReadBoolean();
-                MutExID = (Enums.eEnhMutex)reader.ReadInt32();
-                BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
-                if (MutExID < Enums.eEnhMutex.None)
-                    MutExID = Enums.eEnhMutex.None;
-                Effect = new Enums.sEffect[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Effect.Length - 1; ++index)
+                else
                 {
-                    Effect[index].Mode = (Enums.eEffMode)reader.ReadInt32();
-                    Effect[index].BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
-                    Effect[index].Enhance.ID = reader.ReadInt32();
-                    Effect[index].Enhance.SubID = reader.ReadInt32();
-                    Effect[index].Schedule = (Enums.eSchedule)reader.ReadInt32();
-                    Effect[index].Multiplier = reader.ReadSingle();
-                    ref var local = ref Effect[index];
-                    Effect effect;
-                    if (!reader.ReadBoolean())
-                        effect = null;
-                    else
-                        effect = new Effect(reader, true)
-                        {
-                            isEnhancementEffect = true
-                        };
-                    local.FX = effect;
+                    effect = new Effect(reader)
+                    {
+                        isEnhancementEffect = true,
+                    };
                 }
-
-                UID = reader.ReadString();
-                RecipeName = reader.ReadString();
-                Superior = reader.ReadBoolean();
-                IsProc = reader.ReadBoolean();
+                local.FX = effect;
             }
+
+            UID = reader.ReadString();
+            RecipeName = reader.ReadString();
+            Superior = reader.ReadBoolean();
+            IsProc = reader.ReadBoolean();
+            IsScalable = reader.ReadBoolean();
         }
 
         public bool IsModified { get; set; }
@@ -206,7 +154,9 @@ namespace mrbBase
 
         public Enums.eType TypeID { get; set; }
 
-        public Enums.eSubtype SubTypeID { get; set; }
+        //public Enums.eSubtype SubTypeID { get; set; }
+
+        public int SubTypeID { get; set; }
 
         public int[] ClassID { get; set; }
 
@@ -350,7 +300,8 @@ namespace mrbBase
             writer.Write(ShortName);
             writer.Write(Desc);
             writer.Write((int) TypeID);
-            writer.Write((int) SubTypeID);
+            //writer.Write((int) SubTypeID);
+            writer.Write(SubTypeID);
             writer.Write(ClassID.Length - 1);
             for (var index = 0; index <= ClassID.Length - 1; ++index)
                 writer.Write(ClassID[index]);
@@ -427,7 +378,8 @@ namespace mrbBase
 
         public string GetSpecialName()
         {
-            return $"{Enum.GetName(typeof(Enums.eSubtype), (int) SubTypeID)} Origin";
+            return DatabaseAPI.GetSpecialEnhByIndex(SubTypeID).ShortName;
+            //return $"{Enum.GetName(typeof(Enums.eSubtype), (int) SubTypeID)} Origin";
         }
 
         public static int GranularLevelZb(int iLevel, int iMin, int iMax, int iStep = 5)

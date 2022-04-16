@@ -12,7 +12,9 @@ using System.Windows.Forms;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.IO_Classes;
 using mrbBase.Base.Master_Classes;
+using mrbBase.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace mrbBase
 {
@@ -58,7 +60,6 @@ namespace mrbBase
         public const int VillainAccolades = 3258;
         public const int TempPowers = 3259;
 
-        public const string MainDbName = "Mids Reborn Powers Database";
         private const string RecipeName = "Mids Reborn Recipe Database";
         private const string SalvageName = "Mids Reborn Salvage Database";
         private const string EnhancementDbName = "Mids Reborn Enhancement Database";
@@ -623,19 +624,7 @@ namespace mrbBase
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.SetType is Enums.eSetType.Arachnos
-                or Enums.eSetType.Blaster
-                or Enums.eSetType.Brute
-                or Enums.eSetType.Controller
-                or Enums.eSetType.Corruptor
-                or Enums.eSetType.Defender
-                or Enums.eSetType.Dominator
-                or Enums.eSetType.Kheldian
-                or Enums.eSetType.Mastermind
-                or Enums.eSetType.Scrapper
-                or Enums.eSetType.Sentinel
-                or Enums.eSetType.Stalker
-                or Enums.eSetType.Tanker;
+            return GetSetTypeByIndex(enhSetData.SetType).Name.Contains("Archetype");
         }
 
         public static bool EnhIsWinterEventE(int enhIdx)
@@ -750,7 +739,7 @@ namespace mrbBase
         {
             if (PurpleSetsEnhUIDList.Length != 0) return PurpleSetsEnhUIDList;
             
-            var enh = Database.Enhancements.Where(e =>
+            /*var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 e.RecipeIDX > -1 &&
                 Database.Recipes[e.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare &&
@@ -767,6 +756,13 @@ namespace mrbBase
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Sentinel &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Stalker &&
                 Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Tanker
+            );*/
+
+            var enh = Database.Enhancements.Where(item =>
+                item.nIDSet > -1 &&
+                item.RecipeIDX > 1 &&
+                Database.Recipes[item.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare &&
+                !GetSetTypeByIndex(Database.EnhancementSets[item.nIDSet].SetType).Name.Contains("Archetype")
             );
                 
             PurpleSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
@@ -790,21 +786,7 @@ namespace mrbBase
 
             var enh = Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
-                (
-                    Database.EnhancementSets[e.nIDSet].SetType is Enums.eSetType.Arachnos
-                        or Enums.eSetType.Blaster
-                        or Enums.eSetType.Brute
-                        or Enums.eSetType.Controller
-                        or Enums.eSetType.Corruptor
-                        or Enums.eSetType.Defender
-                        or Enums.eSetType.Dominator
-                        or Enums.eSetType.Kheldian
-                        or Enums.eSetType.Mastermind
-                        or Enums.eSetType.Scrapper
-                        or Enums.eSetType.Sentinel
-                        or Enums.eSetType.Stalker
-                        or Enums.eSetType.Tanker
-                )
+                GetSetTypeByIndex(Database.EnhancementSets[e.nIDSet].SetType).Name.Contains("Archetype")
             );
 
             ATOSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
@@ -886,7 +868,7 @@ namespace mrbBase
             return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 2))) > 1;
         }
 
-        public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
+        /*public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
         {
             var ret = new Dictionary<Enums.eSetType, List<IPower>>();
             foreach (var power in Database.Power)
@@ -907,9 +889,9 @@ namespace mrbBase
             }
 
             return ret;
-        }
+        }*/
 
-        public static List<IPower> SlottablePowersSetType(Enums.eSetType enhSetType)
+        public static List<IPower> SlottablePowersSetType(int enhSetType)
         {
             var retList = new List<IPower>();
             foreach (var power in Database.Power)
@@ -1046,7 +1028,7 @@ namespace mrbBase
 
         public static string[] UidReferencingPowerFix(string uidPower, string uidNew = "")
         {
-            var array = new string[0];
+            var array = Array.Empty<string>();
             for (var index1 = 0; index1 <= Database.Power.Length - 1; ++index1)
             {
                 if (Database.Power[index1].Requires.ReferencesPower(uidPower, uidNew))
@@ -1175,19 +1157,10 @@ namespace mrbBase
             }
         }
 
-        public static void SaveMainDatabase(ISerialize serializer, string iPath = "")
+        public static void SaveMainDatabase(ISerialize serializer, string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                CheckEhcBoosts();
-                path = Files.SelectDataFileSave(Files.MxdbFileDB);
-            }
-            else
-            {
-                CheckEhcBoosts();
-                path = Files.SelectDataFileSave(Files.MxdbFileDB, iPath);
-            }
+            CheckEhcBoosts();
+            var path = Files.SelectDataFileSave(Files.MxdbFileDb, iPath);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1197,21 +1170,21 @@ namespace mrbBase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Main db save failed: " + ex.Message);
+                MessageBox.Show(@"Main database save failed: " + ex.Message);
                 return;
             }
 
             try
             {
                 UpdateDbModified();
-                writer.Write(MainDbName);
+                writer.Write(Files.Headers.Db.Start);
                 writer.Write(Database.Version.ToString());
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
                 writer.Write(Database.PageVol);
                 writer.Write(Database.PageVolText);
-                writer.Write("BEGIN:ARCHETYPES");
+                writer.Write(Files.Headers.Db.Archetypes);
                 Database.ArchetypeVersion.StoreTo(writer);
                 //Console.WriteLine(Database.ArchetypeVersion);
                 writer.Write(Database.Classes.Length - 1);
@@ -1220,7 +1193,7 @@ namespace mrbBase
                     Database.Classes[index].StoreTo(ref writer);
                 }
 
-                writer.Write("BEGIN:POWERSETS");
+                writer.Write(Files.Headers.Db.Powersets);
                 Database.PowersetVersion.StoreTo(writer);
                 writer.Write(Database.Powersets.Length - 1);
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
@@ -1228,7 +1201,7 @@ namespace mrbBase
                     Database.Powersets[index].StoreTo(ref writer);
                 }
 
-                writer.Write("BEGIN:POWERS");
+                writer.Write(Files.Headers.Db.Powers);
                 Database.PowerVersion.StoreTo(writer);
                 Database.PowerLevelVersion.StoreTo(writer);
                 Database.PowerEffectVersion.StoreTo(writer);
@@ -1246,7 +1219,7 @@ namespace mrbBase
                     }
                 }
 
-                writer.Write("BEGIN:SUMMONS");
+                writer.Write(Files.Headers.Db.Summons);
                 Database.StoreEntities(writer);
                 writer.Close();
                 fileStream.Close();
@@ -1271,18 +1244,10 @@ namespace mrbBase
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
             File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
-        public static bool LoadMainDatabase(string iPath = "", bool legacy = false)
+        public static bool LoadMainDatabase(string iPath)
         {
             ClearLookups();
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileDB);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileDB, iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1300,19 +1265,9 @@ namespace mrbBase
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (!legacy)
+                if (header != Files.Headers.Db.Start)
                 {
-                    if (header != @"Mids Reborn Powers Database")
-                    {
-                        headerFound = false;
-                    }
-                }
-                else
-                {
-                    if (header != @"Mids' Hero Designer Database MK II")
-                    {
-                        headerFound = false;
-                    }
+                    headerFound = false;
                 }
 
                 if (!headerFound)
@@ -1322,37 +1277,24 @@ namespace mrbBase
                 }
 
 
-                if (!legacy)
+                Database.Version = Version.Parse(reader.ReadString());
+                var year = reader.ReadInt32();
+                if (year > 0)
                 {
-                    Database.Version = Version.Parse(reader.ReadString());
-                    var year = reader.ReadInt32();
-                    if (year > 0)
-                    {
-                        var month = reader.ReadInt32();
-                        var day = reader.ReadInt32();
-                        Database.Date = new DateTime(year, month, day);
-                    }
-                    else
-                    {
-                        Database.Date = DateTime.FromBinary(reader.ReadInt64());
-                    }
-
-                    Database.Issue = reader.ReadInt32();
-                    Database.PageVol = reader.ReadInt32();
-                    Database.PageVolText = reader.ReadString();
+                    var month = reader.ReadInt32();
+                    var day = reader.ReadInt32();
+                    Database.Date = new DateTime(year, month, day);
                 }
                 else
                 {
-                    var date = DateTime.Now;
-                    Database.Version = new Version(date.Year, date.Month, 1);
-                    Database.Date = new DateTime(date.Year, date.Month, date.Day);
-                    Database.Issue = 24;
-                    Database.PageVol = 1;
-                    Database.PageVolText = @"PageVol";
-                    reader.BaseStream.Seek(20, SeekOrigin.Current);
+                    Database.Date = DateTime.FromBinary(reader.ReadInt64());
                 }
 
-                if (reader.ReadString() != "BEGIN:ARCHETYPES")
+                Database.Issue = reader.ReadInt32();
+                Database.PageVol = reader.ReadInt32();
+                Database.PageVolText = reader.ReadString();
+
+                if (reader.ReadString() != Files.Headers.Db.Archetypes)
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
                     reader.Close();
@@ -1370,7 +1312,7 @@ namespace mrbBase
                     };
                 }
 
-                if (reader.ReadString() != "BEGIN:POWERSETS")
+                if (reader.ReadString() != Files.Headers.Db.Powersets)
                 {
                     MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1394,7 +1336,7 @@ namespace mrbBase
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != "BEGIN:POWERS")
+                if (reader.ReadString() != Files.Headers.Db.Powers)
                 {
                     MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1409,7 +1351,7 @@ namespace mrbBase
                 Database.Power = new IPower[reader.ReadInt32() + 1];
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
-                    Database.Power[index] = new Power(reader, legacy);
+                    Database.Power[index] = new Power(reader);
                     ++num3;
                     if (num3 <= 50)
                         continue;
@@ -1417,7 +1359,7 @@ namespace mrbBase
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != "BEGIN:SUMMONS")
+                if (reader.ReadString() != Files.Headers.Db.Summons)
                 {
                     MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1440,19 +1382,10 @@ namespace mrbBase
             return true;
         }
 
-        public static void LoadDatabaseVersion(string iPath = "")
+        public static void LoadDatabaseVersion(string iPath)
         {
-            string target;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                target = Files.SelectDataFileLoad("I12.mhd");
-                Database.Version = GetDatabaseVersion(target);
-            }
-            else
-            {
-                target = Files.SelectDataFileLoad("I12.mhd", iPath);
-                Database.Version = GetDatabaseVersion(target);
-            }
+            var target = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
+            Database.Version = GetDatabaseVersion(target);
         }
 
         private static Version GetDatabaseVersion(string fp)
@@ -1469,9 +1402,9 @@ namespace mrbBase
                 {
                     try
                     {
-                        if (binaryReader.ReadString() != "Mids Reborn Powers Database")
+                        if (binaryReader.ReadString() != Files.Headers.Db.Start)
                         {
-                            MessageBox.Show(@"Expected MHD header, got something else!");
+                            MessageBox.Show(@"Expected MRB header, got something else!");
                         }
 
                         version = Version.Parse(binaryReader.ReadString());
@@ -1490,18 +1423,9 @@ namespace mrbBase
             return version;
         }
 
-        public static bool LoadEffectIdsDatabase(string iPath = "")
+        public static bool LoadEffectIdsDatabase(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
-            }
-
+            var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
             if (File.Exists(path))
             {
                 Database.EffectIds.Clear();
@@ -1541,17 +1465,9 @@ namespace mrbBase
             return true;
         }
 
-        public static void SaveEffectIdsDatabase(string iPath = "")
+        public static void SaveEffectIdsDatabase(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileSave(Files.MxdbFileEffectIds);
-            }
-            else
-            {
-                path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
-            }
+            var path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
 
             FileStream fileStream;
             BinaryWriter writer;
@@ -1584,9 +1500,9 @@ namespace mrbBase
             }
         }
 
-        public static bool LoadLevelsDatabase(string iPath = "")
+        public static bool LoadLevelsDatabase(string iPath)
         {
-            string path = string.Empty;
+            var path = string.Empty;
             switch (MidsContext.Config.BuildMode)
             {
                 case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
@@ -1597,7 +1513,7 @@ namespace mrbBase
                     break;
             }
 
-            Database.Levels = new LevelMap[0];
+            Database.Levels = Array.Empty<LevelMap>();
             StreamReader iStream;
             try
             {
@@ -1624,17 +1540,9 @@ namespace mrbBase
             return true;
         }
 
-        public static void LoadOrigins(string iPath = "")
+        public static void LoadOrigins(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad("Origins.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad("Origins.mhd", iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileOrigins, iPath);
 
             Database.Origins = new List<Origin>();
             StreamReader streamReader;
@@ -1790,19 +1698,11 @@ namespace mrbBase
             }
         }
 
-        public static void LoadRecipes(string iPath = "", bool legacy = false)
+        public static void LoadRecipes(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad("Recipe.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad("Recipe.mhd", iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileRecipe, iPath);
 
-            Database.Recipes = new Recipe[0];
+            Database.Recipes = Array.Empty<Recipe>();
             FileStream fileStream;
             BinaryReader reader;
             try
@@ -1818,19 +1718,9 @@ namespace mrbBase
 
             var headerFound = true;
             var header = reader.ReadString();
-            if (!legacy)
+            if (header != Files.Headers.Recipe.Start)
             {
-                if (header != @"Mids Reborn Recipe Database")
-                {
-                    headerFound = false;
-                }
-            }
-            else
-            {
-                if (header != @"Mids' Hero Designer Recipe Database")
-                {
-                    headerFound = false;
-                }
+                headerFound = false;
             }
 
             if (!headerFound)
@@ -1848,7 +1738,7 @@ namespace mrbBase
             Database.Recipes = new Recipe[reader.ReadInt32() + 1];
             for (var index = 0; index < Database.Recipes.Length; ++index)
             {
-                Database.Recipes[index] = new Recipe(reader, legacy);
+                Database.Recipes[index] = new Recipe(reader);
                 ++num;
                 if (num <= 100)
                     continue;
@@ -1872,17 +1762,9 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveRecipes(ISerialize serializer, string iPath = "")
+        public static void SaveRecipes(ISerialize serializer, string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileSave("Recipe.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileSave("Recipe.mhd", iPath);
-            }
+            var path = Files.SelectDataFileSave(Files.MxdbFileRecipe, iPath);
 
             //SaveRecipesRaw(serializer, path, RecipeName);
             FileStream fileStream;
@@ -1900,7 +1782,7 @@ namespace mrbBase
 
             try
             {
-                writer.Write(RecipeName);
+                writer.Write(Files.Headers.Recipe.Start);
                 writer.Write(Database.RecipeSource1);
                 writer.Write(Database.RecipeSource2);
                 writer.Write(Database.RecipeRevisionDate.ToBinary());
@@ -1918,19 +1800,11 @@ namespace mrbBase
             }
         }
 
-        public static void LoadSalvage(string iPath = "", bool legacy = false)
+        public static void LoadSalvage(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad("Salvage.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad("Salvage.mhd", iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileSalvage, iPath);
 
-            Database.Salvage = new Salvage[0];
+            Database.Salvage = Array.Empty<Salvage>();
             FileStream fileStream;
             BinaryReader reader;
             try
@@ -1950,21 +1824,11 @@ namespace mrbBase
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (!legacy)
+                if (header != Files.Headers.Salvage.Start)
                 {
-                    if (header != @"Mids Reborn Salvage Database")
-                    {
-                        headerFound = false;
-                    }
+                    headerFound = false;
                 }
-                else
-                {
-                    if (header != @"Mids' Hero Designer Salvage Database")
-                    {
-                        headerFound = false;
-                    }
-                }
-                
+
                 if (!headerFound)
                 {
                     MessageBox.Show(@"Expected recipe header, got something else!", @"Error Reading Database");
@@ -1984,7 +1848,7 @@ namespace mrbBase
             catch (Exception ex)
             {
                 MessageBox.Show("Salvage Database file isn't how it should be (" + ex.Message + ")\nNo salvage loaded.");
-                Database.Salvage = new Salvage[0];
+                Database.Salvage = Array.Empty<Salvage>();
                 reader.Close();
                 fileStream.Close();
             }
@@ -2000,17 +1864,9 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveSalvage(ISerialize serializer, string iPath = "")
+        public static void SaveSalvage(ISerialize serializer, string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileSave("Salvage.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileSave("Salvage.mhd", iPath);
-            }
+            var  path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;
@@ -2028,7 +1884,7 @@ namespace mrbBase
 
             try
             {
-                writer.Write(SalvageName);
+                writer.Write(Files.Headers.Salvage.Start);
                 writer.Write(Database.Salvage.Length - 1);
                 for (var index = 0; index <= Database.Salvage.Length - 1; ++index)
                     Database.Salvage[index].StoreTo(writer);
@@ -2070,24 +1926,16 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, filename, null);
         }
 
-        public static void SaveEnhancementDb(ISerialize serializer, string iPath = "")
+        public static void SaveEnhancementDb(ISerialize serializer, string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
-            }
-            else
-            {
-                path = Files.SelectDataFileSave(Files.MxdbFileEnhDB, iPath);
-            }
+            var path = Files.SelectDataFileSave(Files.MxdbFileEnhDb, iPath);
 
             //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
             using var fileStream = new FileStream(path, FileMode.Create);
             using var writer = new BinaryWriter(fileStream, Encoding.UTF8);
             try
             {
-                writer.Write(EnhancementDbName);
+                writer.Write(Files.Headers.EnhDb.Start);
                 writer.Write(Database.VersionEnhDb);
                 writer.Write(Database.Enhancements.Length - 1);
 
@@ -2109,56 +1957,11 @@ namespace mrbBase
             }
         }
 
-        /*public static void SaveEnhancementDb(ISerialize serializer)
-    {
-        string path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
-        //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
-        FileStream fileStream;
-        BinaryWriter writer;
-        try
+        public static void LoadEnhancementDb(string iPath)
         {
-            fileStream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite);
-            writer = new BinaryWriter(fileStream);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            return;
-        }
-        try
-        {
-            writer.Write(EnhancementDbName);
-            writer.Write(Database.VersionEnhDb);
-            writer.Write(Database.Enhancements.Length - 1);
-            for (int index = 0; index <= Database.Enhancements.Length - 1; ++index)
-                Database.Enhancements[index].StoreTo(writer);
-            writer.Write(Database.EnhancementSets.Count - 1);
-            for (int index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
-                Database.EnhancementSets[index].StoreTo(writer);
-            writer.Close();
-            fileStream.Close();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            writer.Close();
-            fileStream.Close();
-        }
-    }*/
+            var path = Files.SelectDataFileLoad(Files.MxdbFileEnhDb, iPath);
 
-        public static void LoadEnhancementDb(string iPath = "", bool legacy = false)
-        {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad("EnhDB.mhd");
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad("EnhDB.mhd", iPath);
-            }
-
-            Database.Enhancements = new IEnhancement[0];
+            Database.Enhancements = Array.Empty<IEnhancement>();
             FileStream fileStream;
             BinaryReader reader;
             try
@@ -2178,21 +1981,11 @@ namespace mrbBase
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (!legacy)
+                if (header != Files.Headers.EnhDb.Start)
                 {
-                    if (header != @"Mids Reborn Enhancement Database")
-                    {
-                        headerFound = false;
-                    }
+                    headerFound = false;
                 }
-                else
-                {
-                    if (header != @"Mids' Hero Designer Enhancement Database")
-                    {
-                        headerFound = false;
-                    }
-                }
-                
+
                 if (!headerFound)
                 {
                     MessageBox.Show(@"Expected recipe header, got something else!", @"Error Reading Database");
@@ -2208,7 +2001,7 @@ namespace mrbBase
                 for (var index = 0; index < Database.Enhancements.Length; ++index)
                 {
 
-                    Database.Enhancements[index] = new Enhancement(reader, legacy);
+                    Database.Enhancements[index] = new Enhancement(reader);
                     ++num1;
                     if (num1 <= 5)
                         continue;
@@ -2234,29 +2027,21 @@ namespace mrbBase
             catch (Exception ex)
             {
                 MessageBox.Show("Enhancement Database file isn't how it should be (" + ex.Message + "\r\n" + ex.StackTrace + ")\nNo Enhancements have been loaded.", "Huh...");
-                Database.Enhancements = new IEnhancement[0];
+                Database.Enhancements = Array.Empty<IEnhancement>();
                 reader.Close();
                 fileStream.Close();
             }
         }
 
-        public static bool LoadEnhancementClasses(string iPath = "")
+        public static bool LoadEnhancementClasses(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileEClasses);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
 
             using var streamReader = new StreamReader(path);
             Database.EnhancementClasses = Array.Empty<Enums.sEnhClass>();
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, version header not found!");
                 if (!FileIO.IOSeek(streamReader, "Index"))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, section header not found!");
@@ -2295,20 +2080,107 @@ namespace mrbBase
             return true;
         }
 
-        public static void LoadSetTypeStrings(string iPath = "")
+        public static void LoadTypeGrades(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
+            var path = Files.SelectDataFileLoad(Files.JsonFileTypeGrades, iPath);
+            var jsonData = File.ReadAllText(path);
+            var parsedData = JObject.Parse(jsonData);
+
+            var headerResult = parsedData["Name"]?.ToObject<string>();
+            if (headerResult != Files.Headers.TypeGrade.Start)
             {
-                path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes, iPath);
+                MessageBox.Show(@"Invalid header detected!", @"Error Reading TypeGrades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            Database.SetTypeStringLong = new string[0];
-            Database.SetTypeStringShort = new string[0];
+            var setTypeResults = parsedData["SetTypes"]?.Children().ToList();
+            Database.SetTypes = new List<TypeGrade>();
+            if (setTypeResults != null)
+            {
+                foreach (var result in setTypeResults)
+                {
+                    var setType = result.ToObject<TypeGrade>();
+                    setType.Index = Database.SetTypes.Count;
+                    Database.SetTypes.Add(setType);
+                }
+            }
+
+            var enhGradeResults = parsedData["EnhancementGrades"]?.Children().ToList();
+            Database.EnhancementGrades = new List<TypeGrade>();
+            if (enhGradeResults != null)
+            {
+                foreach (var result in enhGradeResults)
+                {
+                    var enhGrade = result.ToObject<TypeGrade>();
+                    enhGrade.Index = Database.EnhancementGrades.Count;
+                    Database.EnhancementGrades.Add(enhGrade);
+                }
+            }
+
+            var specEnhResults = parsedData["SpecialEnhancementTypes"]?.Children().ToList();
+            Database.SpecialEnhancements = new List<TypeGrade>();
+            if (specEnhResults != null)
+            {
+                foreach (var result in specEnhResults)
+                {
+                    var specEnh = result.ToObject<TypeGrade>();
+                    specEnh.Index = Database.SpecialEnhancements.Count;
+                    Database.SpecialEnhancements.Add(specEnh);
+                }
+            }
+
+            Database.EnhGradeStringLong = new string[4];
+            Database.EnhGradeStringShort = new string[4];
+            Database.EnhGradeStringLong[0] = "None";
+            Database.EnhGradeStringLong[1] = "Training Origin";
+            Database.EnhGradeStringLong[2] = "Dual Origin";
+            Database.EnhGradeStringLong[3] = "Single Origin";
+            Database.EnhGradeStringShort[0] = "None";
+            Database.EnhGradeStringShort[1] = "TO";
+            Database.EnhGradeStringShort[2] = "DO";
+            Database.EnhGradeStringShort[3] = "SO";
+        }
+
+        public static void ShowSetTypes()
+        {
+            for (var index = 0; index < Database.SetTypes.Count; index++)
+            {
+                var setType = Database.SetTypes[index];
+                Debug.WriteLine($"SetType: {setType.Name}\n\tShortName: {setType.ShortName}\n\tIndex: {setType.Index}\n\tActual Index: {index}\r\n");
+            }
+        }
+
+        public static TypeGrade GetSetTypeByName(string name)
+        {
+            return Database.SetTypes.FirstOrDefault(x => x.Name == name);
+        }
+
+        public static TypeGrade GetSetTypeByShortName(string shortName)
+        {
+            return Database.SetTypes.FirstOrDefault(x => x.ShortName == shortName);
+        }
+
+        public static TypeGrade GetSetTypeByIndex(int index)
+        {
+            return Database.SetTypes.FirstOrDefault(x => x.Index == index);
+        }
+
+        public static TypeGrade GetSpecialEnhByIndex(int index)
+        {
+            return Database.SpecialEnhancements.FirstOrDefault(x => x.Index == index);
+        }
+
+        public static TypeGrade GetSpecialEnhByName(string name)
+        {
+            return Database.SpecialEnhancements.FirstOrDefault(x => x.Name == name);
+        }
+
+        /*public static void LoadSetTypeStrings(string iPath)
+        {
+            var path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes, iPath);
+
+            Database.SetTypeStringLong = Array.Empty<string>();
+            Database.SetTypeStringShort = Array.Empty<string>();
             StreamReader streamReader;
             try
             {
@@ -2322,7 +2194,7 @@ namespace mrbBase
 
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
                     throw new EndOfStreamException("Unable to load SetType data, version header not found!");
                 if (!FileIO.IOSeek(streamReader, "SetID"))
                     throw new EndOfStreamException("Unable to load SetType data, section header not found!");
@@ -2380,19 +2252,11 @@ namespace mrbBase
             }
 
             streamReader.Close();
-        }
+        }*/
 
-        public static bool LoadMaths(string iPath = "")
+        public static bool LoadMaths(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileMaths);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
 
             StreamReader streamReader;
             try
@@ -2407,22 +2271,36 @@ namespace mrbBase
 
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
+                {
                     throw new EndOfStreamException("Unable to load Enhancement Maths data, version header not found!");
+                }
+
                 if (!FileIO.IOSeek(streamReader, "EDRT"))
+                {
                     throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                }
+
                 Database.MultED = new float[4][];
                 for (var index = 0; index < 4; ++index)
+                {
                     Database.MultED[index] = new float[3];
+                }
+
                 for (var index1 = 0; index1 <= 2; ++index1)
                 {
                     var strArray = FileIO.IOGrab(streamReader);
                     for (var index2 = 0; index2 < 4; ++index2)
+                    {
                         Database.MultED[index2][index1] = float.Parse(strArray[index2 + 1]);
+                    }
                 }
 
                 if (!FileIO.IOSeek(streamReader, "EGE"))
+                {
                     throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                }
+
                 Database.MultTO = new float[1][];
                 Database.MultDO = new float[1][];
                 Database.MultSO = new float[1][];
@@ -2430,28 +2308,45 @@ namespace mrbBase
                 var strArray1 = FileIO.IOGrab(streamReader);
                 Database.MultTO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
+                {
                     Database.MultTO[0][index] = float.Parse(strArray1[index + 1]);
+                }
+
                 var strArray2 = FileIO.IOGrab(streamReader);
                 Database.MultDO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
+                {
                     Database.MultDO[0][index] = float.Parse(strArray2[index + 1]);
+                }
+
                 var strArray3 = FileIO.IOGrab(streamReader);
                 Database.MultSO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
+                {
                     Database.MultSO[0][index] = float.Parse(strArray3[index + 1]);
+                }
+
                 var strArray4 = FileIO.IOGrab(streamReader);
                 Database.MultHO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
+                {
                     Database.MultHO[0][index] = float.Parse(strArray4[index + 1]);
+                }
+
                 if (!FileIO.IOSeek(streamReader, "LBIOE"))
+                {
                     throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                }
+
                 Database.MultIO = new float[53][];
                 for (var index1 = 0; index1 < 53; ++index1)
                 {
                     var strArray5 = FileIO.IOGrab(streamReader);
                     Database.MultIO[index1] = new float[4];
                     for (var index2 = 0; index2 < 4; ++index2)
+                    {
                         Database.MultIO[index1][index2] = float.Parse(strArray5[index2 + 1]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -2507,9 +2402,6 @@ namespace mrbBase
                     : NidFromUidClass(effPower.ForcedClass);
             }
 
-            if (MidsContext.MathLevelExemp > -1 && MidsContext.MathLevelExemp < MidsContext.MathLevelBase)
-                iLevel = MidsContext.MathLevelExemp;
-
             //Everything seems to be valid, return the modifier
             return GetModifier(iClass, iEffect.nModifierTable, iLevel);
         }
@@ -2564,9 +2456,9 @@ namespace mrbBase
             {
                 Database.Classes[index].Idx = index;
                 Array.Sort(Database.Classes[index].Origin);
-                Database.Classes[index].Primary = new int[0];
-                Database.Classes[index].Secondary = new int[0];
-                Database.Classes[index].Ancillary = new int[0];
+                Database.Classes[index].Primary = Array.Empty<int>();
+                Database.Classes[index].Secondary = Array.Empty<int>();
+                Database.Classes[index].Ancillary = Array.Empty<int>();
             }
         }
 
@@ -2591,8 +2483,8 @@ namespace mrbBase
                         powerset.nIDMutexSets[index2] = NidFromUidPowerset(powerset.UIDMutexSets[index2]);
                 }
 
-                powerset.Power = new int[0];
-                powerset.Powers = new IPower[0];
+                powerset.Power = Array.Empty<int>();
+                powerset.Powers = Array.Empty<IPower>();
             }
         }
 
@@ -2781,7 +2673,7 @@ namespace mrbBase
             }
 
             for (var index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
-                Database.EnhancementSets[index].Enhancements = new int[0];
+                Database.EnhancementSets[index].Enhancements = Array.Empty<int>();
             var flag = false;
             var str = string.Empty;
             for (var index1 = 0; index1 <= Database.Enhancements.Length - 1; ++index1)
@@ -2880,20 +2772,20 @@ namespace mrbBase
 
             if (!save)
                 return;
-            SaveMainDatabase(serializer);
-            SaveEnhancementDb(serializer);
+            SaveMainDatabase(serializer, MidsContext.Config.SavePath);
+            SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
         }
     }
 
     public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
     {
-        public override Boolean CanConvert(Type objectType)
+        public override bool CanConvert(Type objectType)
             => objectType == typeof(TAbstract);
 
-        public override Object? ReadJson(JsonReader reader, Type type, Object? value, JsonSerializer jser)
+        public override object? ReadJson(JsonReader reader, Type type, object? value, JsonSerializer jser)
             => jser.Deserialize<TReal>(reader);
 
-        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer jser)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer jser)
             => jser.Serialize(writer, value);
     }
 }

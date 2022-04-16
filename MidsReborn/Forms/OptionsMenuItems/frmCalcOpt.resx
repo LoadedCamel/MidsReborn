@@ -120,6 +120,22 @@
   <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="Label9.Text" xml:space="preserve">
+    <value>Some attacks have a chance to deal additional damage. This damage can be calculated as...
+
+Average - Extra damage is included based on chance.
+Maximum - Extra damage is always included.
+Minimum - Extra damage is ignored.
+
+Note: This also affects how Scrapper damage is displayed with Critical Hit is toggled on. 
+
+Where an attack has a chance to do additional damage:</value>
+  </data>
+  <data name="Label15.Text" xml:space="preserve">
+    <value>Swap = two powers are swapped. The powers in between are unaffected by the transition
+Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.
+Shift = Cascading swaps. Shifting down means powers are moved to a lower level, starting with the lowest. Shifting up means powers are moved to a higher level, starting with the highest.</value>
+  </data>
   <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

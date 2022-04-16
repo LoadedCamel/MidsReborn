@@ -397,14 +397,13 @@ namespace mrbBase
         private static async Task LoadSetTypeImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            var values = Enum.GetValues(typeof(Enums.eSetType));
-            var names = Enum.GetNames(typeof(Enums.eSetType));
-            var length = values.Length;
-            SetTypes = ExtendedBitmap(length * IconLarge, IconLarge);
-            for (var index = 0; index <= length - 1; ++index)
+
+            var setTypes = DatabaseAPI.Database.SetTypes;
+            SetTypes = ExtendedBitmap(setTypes.Count * IconLarge, IconLarge);
+            for (var index = 0; index <= setTypes.Count - 1; ++index)
             {
                 var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{names[index]}.png").Path;
+                var path = images.FirstOrDefault(i => i.FileName == $"{setTypes[index].ShortName}.png").Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;
@@ -485,13 +484,16 @@ namespace mrbBase
                 }
             }
 
-            var values3 = Enum.GetValues(typeof(Enums.eSubtype));
-            var names3 = Enum.GetNames(typeof(Enums.eSubtype));
-            EnhSpecials = ExtendedBitmap(values3.Length * IconLarge, IconLarge);
-            for (var index = 0; index <= values3.Length - 1; ++index)
+            // var values3 = Enum.GetValues(typeof(Enums.eSubtype));
+            //var names3 = Enum.GetNames(typeof(Enums.eSubtype));
+
+            var specialEnhTypes = DatabaseAPI.Database.SpecialEnhancements;
+            var specEnhNames = specialEnhTypes.Select(x => x.Name.Replace(" Origin", string.Empty)).ToArray();
+            EnhSpecials = ExtendedBitmap(specialEnhTypes.Count * IconLarge, IconLarge);
+            for (var index = 0; index <= specialEnhTypes.Count - 1; ++index)
             {
                 var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{names3[index]}.png").Path;
+                var path = images.FirstOrDefault(i => i.FileName == $"{specEnhNames[index]}.png").Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;

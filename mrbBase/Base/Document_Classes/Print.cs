@@ -557,24 +557,11 @@ namespace mrbBase.Base.Document_Classes
                                                 .Powers[index1].Slots[index2].Enhancement.IOLevel + 1);
                                         break;
                                     case Enums.eType.SpecialO:
-                                        string str2 = null;
-                                        switch (enhancement.SubTypeID)
-                                        {
-                                            case Enums.eSubtype.Hamidon:
-                                                str2 = "HO:";
-                                                break;
-                                            case Enums.eSubtype.Hydra:
-                                                str2 = "HY:";
-                                                break;
-                                            case Enums.eSubtype.Titan:
-                                                str2 = "TN:";
-                                                break;
-                                            case Enums.eSubtype.None:
-                                                break;
-                                            default:
-                                                str2 = "X:";
-                                                break;
-                                        }
+                                        string str2;
+
+                                        var specEnh = DatabaseAPI.GetSpecialEnhByIndex(enhancement.SubTypeID);
+                                        str2 = specEnh.ShortName;
+                                        // Default should be X:
 
                                         str1 = str1 + str2 + enhancement.ShortName;
                                         break;

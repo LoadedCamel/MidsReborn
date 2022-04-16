@@ -75,6 +75,24 @@
     <Compile Include="Forms\Controls\CheckedListExt.Designer.cs">
       <DependentUpon>CheckedListExt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Controls\PowerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\PowerSelector.Designer.cs">
+      <DependentUpon>PowerSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEffectConditionals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEffectConditionals.Designer.cs">
+      <DependentUpon>frmEffectConditionals.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Controls\FileMover.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\FileMover.Designer.cs">
+      <DependentUpon>FileMover.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DiscordSharing\Discord.cs" />
     <Compile Include="Forms\DiscordSharing\MidsBot.cs" />
     <Compile Include="Forms\DiscordSharing\Models.cs" />
@@ -91,6 +109,24 @@
     </Compile>
     <Compile Include="Forms\frmBuildSalvageHud.Designer.cs">
       <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DatabaseSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DatabaseSelector.Designer.cs">
+      <DependentUpon>DatabaseSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.Designer.cs">
+      <DependentUpon>frmExpressionBuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.Designer.cs">
+      <DependentUpon>frmPowerEffect2.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
       <SubType>Form</SubType>
@@ -386,8 +422,26 @@
     <EmbeddedResource Include="Forms\Controls\DV2TotalsPane.resx">
       <DependentUpon>DV2TotalsPane.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Controls\PowerSelector.resx">
+      <DependentUpon>PowerSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEffectConditionals.resx">
+      <DependentUpon>frmEffectConditionals.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Controls\FileMover.resx">
+      <DependentUpon>FileMover.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DiscordSharing\DiscordShare.resx">
       <DependentUpon>DiscordShare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DatabaseSelector.resx">
+      <DependentUpon>DatabaseSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.resx">
+      <DependentUpon>frmExpressionBuilder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.resx">
+      <DependentUpon>frmPowerEffect2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
@@ -428,7 +482,7 @@
     <Content Include="Data\Homecoming\Images\Powersets\SeismicBlast.png" />
     <Content Include="Data\Homecoming\Images\Powersets\ShockTherapy.png" />
     <Content Include="Data\Homecoming\Images\Powersets\SonicManipulation.png" />
-    <Content Include="Data\Homecoming\Images\Sets\DSync.png" />
+    <Content Include="Data\Homecoming\Images\Sets\D-Sync.png" />
     <Content Include="Data\Homecoming\Images\Sets\Sentinel.png" />
     <Content Include="Data\Rebirth\Images\Archetypes\Class_Guardian.png" />
     <Content Include="Data\Rebirth\Images\Enhancements\AO_Absolute_Resolution.png" />
@@ -2164,6 +2218,9 @@
     <Content Include="Images\Sets\Stun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Sets\Synthetic Hamidon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Sets\Tanker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2273,13 +2330,13 @@
     <Content Include="Data\Generic\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\SetTypes.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Generic\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Generic\GlobalMods.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Data\Homecoming\PowersReplTable.mhd">
@@ -2289,9 +2346,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Rebirth\bbcode.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Rebirth\Compare.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Rebirth\Compare.mhd">
@@ -2333,7 +2387,10 @@
     <Content Include="Data\Rebirth\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SetTypes.mhd">
+    <Content Include="Data\Homecoming\TypeGrades.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Rebirth\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\enhData.png" />
@@ -2720,9 +2777,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Homecoming\Salvage.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Homecoming\SetTypes.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />

@@ -1,0 +1,264 @@
+{
+	"Name": "Mids Reborn Types and Grades",
+	"SetTypes": [
+		{
+			"Name": "Untyped",
+			"ShortName": "Untyped"
+		},
+		{
+			"Name": "Melee Damage",
+			"ShortName": "MeleeST"
+		},
+		{
+			"Name": "Ranged Damage",
+			"ShortName": "RangedST"
+		},
+		{
+			"Name": "Targeted AoE Damage",
+			"ShortName": "RangedAoE"
+		},
+		{
+			"Name": "PBAoE Damage",
+			"ShortName": "MeleeAoE"
+		},
+		{
+			"Name": "Sniper Attacks",
+			"ShortName": "Snipe"
+		},
+		{
+			"Name": "Pet Damage",
+			"ShortName": "Pets"
+		},
+		{
+			"Name": "Defense Sets",
+			"ShortName": "Defense"
+		},
+		{
+			"Name": "Resist Damage",
+			"ShortName": "Resistance"
+		},
+		{
+			"Name": "Healing",
+			"ShortName": "Heal"
+		},
+		{
+			"Name": "Holds",
+			"ShortName": "Hold"
+		},
+		{
+			"Name": "Stuns",
+			"ShortName": "Stun"
+		},
+		{
+			"Name": "Immobilize",
+			"ShortName": "Immob"
+		},
+		{
+			"Name": "Slow Movement",
+			"ShortName": "Slow"
+		},
+		{
+			"Name": "Sleep",
+			"ShortName": "Sleep"
+		},
+		{
+			"Name": "Fear",
+			"ShortName": "Fear"
+		},
+		{
+			"Name": "Confuse",
+			"ShortName": "Confuse"
+		},
+		{
+			"Name": "Flight",
+			"ShortName": "Flight"
+		},
+		{
+			"Name": "Leaping",
+			"ShortName": "Jump"
+		},
+		{
+			"Name": "Running",
+			"ShortName": "Run"
+		},
+		{
+			"Name": "Teleport",
+			"ShortName": "Teleport"
+		},
+		{
+			"Name": "Defense Debuff",
+			"ShortName": "DefDebuff"
+		},
+		{
+			"Name": "Endurance Modification",
+			"ShortName": "EndMod"
+		},
+		{
+			"Name": "Knockback",
+			"ShortName": "Knockback"
+		},
+		{
+			"Name": "Threat Duration",
+			"ShortName": "Threat"
+		},
+		{
+			"Name": "To Hit Buff",
+			"ShortName": "ToHit"
+		},
+		{
+			"Name": "To Hit Debuff",
+			"ShortName": "ToHitDeb"
+		},
+		{
+			"Name": "Recharge Intensive Pets",
+			"ShortName": "PetRech"
+		},
+		{
+			"Name": "Universal Travel",
+			"ShortName": "Travel"
+		},
+		{
+			"Name": "Accurate Healing",
+			"ShortName": "AccHeal"
+		},
+		{
+			"Name": "Accurate Defense Debuff",
+			"ShortName": "AccDefDeb"
+		},
+		{
+			"Name": "Accurate To-Hit Debuff",
+			"ShortName": "AccToHitDeb"
+		},
+		{
+			"Name": "Soldiers of Arachnos Archetype Sets",
+			"ShortName": "Arachnos"
+		},
+		{
+			"Name": "Blaster Archetype Sets",
+			"ShortName": "Blaster"
+		},
+		{
+			"Name": "Brute Archetype Sets",
+			"ShortName": "Brute"
+		},
+		{
+			"Name": "Controller Archetype Sets",
+			"ShortName": "Controller"
+		},
+		{
+			"Name": "Corruptor Archetype Sets",
+			"ShortName": "Corruptor"
+		},
+		{
+			"Name": "Defender Archetype Sets",
+			"ShortName": "Defender"
+		},
+		{
+			"Name": "Dominator Archetype Sets",
+			"ShortName": "Dominator"
+		},
+		{
+			"Name": "Kheldian Archetype Sets",
+			"ShortName": "Kheldian"
+		},
+		{
+			"Name": "Mastermind Archetype Sets",
+			"ShortName": "Mastermind"
+		},
+		{
+			"Name": "Scrapper Archetype Sets",
+			"ShortName": "Scrapper"
+		},
+		{
+			"Name": "Stalker Archetype Sets",
+			"ShortName": "Stalker"
+		},
+		{
+			"Name": "Tanker Archetype Sets",
+			"ShortName": "Tanker"
+		},
+		{
+			"Name": "Universal Damage",
+			"ShortName": "UniversalDamage"
+		},
+		{
+			"Name": "Sentinel Archetype Sets",
+			"ShortName": "Sentinel"
+		},
+		{
+			"Name": "Run (No Sprint)",
+			"ShortName": "RunNoSprint"
+		},
+		{
+			"Name": "Jump (No Sprint)",
+			"ShortName": "JumpNoSprint"
+		},
+		{
+			"Name": "Flight (No Sprint)",
+			"ShortName": "FlightNoSprint"
+		},
+		{
+			"Name": "Teleport (No Sprint)",
+			"ShortName": "TeleportNoSprint"
+		}
+	],
+	"EnhancementGrades": [
+		{
+			"Name": "None",
+			"ShortName": "None",
+			"Description": "This is not an enhancement grade!"
+		},
+		{
+			"Name": "Training Origin",
+			"ShortName": "TO",
+			"Description": "These are the least potent of all Enhancements."
+		},
+		{
+			"Name": "Dual Origin",
+			"ShortName": "DO",
+			"Description": "These are twice as potent as TO Enhancements, Limited to 2 specific Origins."
+		},
+		{
+			"Name": "Single Origin",
+			"ShortName": "SO",
+			"Description": "These are twice as potent as DO Enhancements. Limited to a single Origin."
+		},
+		{
+			"Name": "Invention Origin",
+			"ShortName": "IO",
+			"Description": "These are approx. 27% more potent than SO Enhancements. Crafted from Salvage."
+		},
+		{
+			"Name": "Invention Origin Sets",
+			"ShortName": "SetO",
+			"Description": "These are the strongest of all Enhancements as they also provide additional effects and bonuses."
+		}
+	],
+	"SpecialEnhancementTypes": [
+		{
+			"Name": "None",
+			"ShortName": "None",
+			"Description": "This is not a special enhancement type!"
+		},
+		{
+			"Name": "Hamidon Origin",
+			"ShortName": "HO",
+			"Description": "Rewards from the Hamidon Raid."
+		},
+		{
+			"Name": "Hydra Origin",
+			"ShortName": "HyO",
+			"Description": "Rewards from the Sewer Trial."
+		},
+		{
+			"Name": "Titan Origin",
+			"ShortName": "TnO",
+			"Description": "Rewards from the Eden Trial."
+		},
+		{
+			"Name": "D-Sync Origin",
+			"ShortName": "DSyncO",
+			"Description": "Rewards from the Aeon Strike Force."
+		}
+	]
+}

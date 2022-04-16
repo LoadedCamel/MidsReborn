@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Forms.WindowMenuItems;
 using mrbBase;
 using mrbBase.Base.Extensions;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -316,8 +317,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.AssignRecipeSalvageIDs();
             DatabaseAPI.AssignRecipeIDs();
             var serializer = Serializer.GetSerializer();
-            DatabaseAPI.SaveRecipes(serializer);
-            DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.SaveRecipes(serializer, MidsContext.Config.SavePath);
+            DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
             Close();
         }
 

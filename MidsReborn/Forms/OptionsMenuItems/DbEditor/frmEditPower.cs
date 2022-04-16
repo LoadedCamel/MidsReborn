@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -129,7 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             var effectList = myPower.Effects.ToList();
-            effectList.Add((IEffect) frmPowerEffect.myFX.Clone());
+            effectList.Add((IEffect) frmPowerEffect.MyFx.Clone());
             myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
@@ -142,9 +143,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+            if (frmPowerEffect.ShowDialog(this) != DialogResult.OK) return;
 
-            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
+            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.MyFx.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = selectedIndex;
         }
@@ -178,7 +179,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
 
             var effectList = myPower.Effects.ToList();
-            effectList.Add(frmPowerEffect.myFX);
+            effectList.Add(frmPowerEffect.MyFx);
             myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
@@ -953,13 +954,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             format.LineAlignment = StringAlignment.Center;
             using var solidBrush3 = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxSet.Graphics.FillRectangle(solidBrush3, bxSet.ClipRect);
-            var num = myPower.SetTypes.Length - 1;
+            var num = myPower.SetTypes.Count - 1;
             for (var index = 0; index <= num; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxSet.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect,
-                    I9Gfx.GetImageRect((int) myPower.SetTypes[index]), GraphicsUnit.Pixel);
-                var s = myPower.SetTypes[index] switch
+                bxSet.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(myPower.SetTypes[index]), GraphicsUnit.Pixel);
+                /*var s = myPower.SetTypes[index] switch
                 {
                     Enums.eSetType.MeleeST => "M\r\nST",
                     Enums.eSetType.RangedST => "R\r\nST",
@@ -986,7 +986,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 --layoutRectangle.X;
                 bxSet.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);
                 layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
-                bxSet.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);
+                bxSet.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);*/
                 enhPadding2 += 30 + enhPadding;
             }
 
@@ -995,7 +995,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DrawSetList()
         {
-            var eSetType = Enums.eSetType.Untyped;
+            //var eSetType = Enums.eSetType.Untyped;
             bxSetList = new ExtendedBitmap(pbInvSetList.Width, pbInvSetList.Height);
             var enhPadding1 = enhPadding;
             var enhPadding2 = enhPadding;
@@ -1006,16 +1006,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             using var solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
-            var names = Enum.GetNames(eSetType.GetType());
+            //var names = Enum.GetNames(eSetType.GetType());
+            var setTypes = DatabaseAPI.Database.SetTypes;
             using var solidBrush3 = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxSetList.Graphics.FillRectangle(solidBrush3, bxSetList.ClipRect);
-            var num2 = names.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            //var num2 = names.Length - 1;
+            for (var index = 0; index <= setTypes.Count -1; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxSetList.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(index),
-                    GraphicsUnit.Pixel);
-                var s = (Enums.eSetType) index switch
+                bxSetList.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(index), GraphicsUnit.Pixel);
+                /*var s = (Enums.eSetType) index switch
                 {
                     Enums.eSetType.MeleeST => "M\r\nST",
                     Enums.eSetType.RangedST => "R\r\nST",
@@ -1043,7 +1043,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 --layoutRectangle.X;
                 bxSetList.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);
                 layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
-                bxSetList.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);
+                bxSetList.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);*/
                 enhPadding2 += 30 + enhPadding;
                 ++num1;
                 if (num1 != enhAcross)
@@ -1722,41 +1722,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void pbInvSetList_MouseDown(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1))) return;
+            var setTypes = DatabaseAPI.Database.SetTypes;
+            
+            if (!((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))) return;
+
             var flag = false;
-            var num = myPower.SetTypes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+
+            for (var index = 0; index <= myPower.SetTypes.Count - 1; ++index)
             {
-                if (myPower.SetTypes[index] == (Enums.eSetType) invSetListIndex)
+                if (myPower.SetTypes[index] == invSetListIndex)
                 {
                     flag = true;
                 }
             }
 
-            if (flag | (myPower.SetTypes.Length > 15))
+            if (flag | (myPower.SetTypes.Count > 15))
             {
                 return;
             }
 
-            var eSetTypeList = myPower.SetTypes.ToList();
-            eSetTypeList.Add((Enums.eSetType)invSetListIndex);
-            myPower.SetTypes = eSetTypeList.ToArray();
-            Array.Sort(myPower.SetTypes);
+            var eSetTypeList = myPower.SetTypes;
+            eSetTypeList.Add(invSetListIndex);
+            myPower.SetTypes = eSetTypeList;
             DrawAcceptedSets();
         }
 
         private void pbInvSetList_MouseMove(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            if ((invSetListIndex < names.Length) & (invSetListIndex > -1))
-                lblInvSet.Text = names[invSetListIndex];
+            var setTypes = DatabaseAPI.Database.SetTypes;
+
+            if ((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))
+            {
+                lblInvSet.Text = DatabaseAPI.GetSetTypeByIndex(invSetListIndex).Name;
+            }
             else
+            {
                 lblInvSet.Text = "";
+            }
         }
 
         private void pbInvSetList_Paint(object sender, PaintEventArgs e)
@@ -1769,20 +1773,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbInvSetUsed_MouseDown(object sender, MouseEventArgs e)
         {
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
-            if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
+            if (!((invSetIndex < myPower.SetTypes.Count) & (invSetIndex > -1)))
             {
                 return;
             }
 
-            var numArray = new int[myPower.SetTypes.Length];
-            var num1 = myPower.SetTypes.Length - 1;
+            var numArray = new int[myPower.SetTypes.Count];
+            var num1 = myPower.SetTypes.Count - 1;
             for (var index = 0; index <= num1; ++index)
             {
-                numArray[index] = (int) myPower.SetTypes[index];
+                numArray[index] = myPower.SetTypes[index];
             }
 
             var index1 = 0;
-            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
+
+            myPower.SetTypes = new List<int>();
+
             var num2 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
             {
@@ -1791,22 +1797,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     continue;
                 }
 
-                myPower.SetTypes[index1] = (Enums.eSetType) numArray[index2];
+                myPower.SetTypes[index1] = numArray[index2];
                 ++index1;
             }
 
-            Array.Sort(myPower.SetTypes);
             DrawAcceptedSets();
         }
 
         private void pbInvSetUsed_MouseMove(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            lblInvSet.Text = invSetIndex < myPower.SetTypes.Length & invSetIndex > -1
-                ? names[(int) myPower.SetTypes[invSetIndex]]
-                : "";
+
+            if (invSetIndex < myPower.SetTypes.Count & invSetIndex > -1)
+            {
+                lblInvSet.Text = DatabaseAPI.GetSetTypeByIndex(myPower.SetTypes[invSetIndex]).Name;
+            }
+            else
+            {
+                lblInvSet.Text = "";
+            }
         }
 
         private void pbInvSetUsed_Paint(object sender, PaintEventArgs e)

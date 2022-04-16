@@ -5,7 +5,7 @@ using mrbControls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    public partial class frmPowerEffect
+    public partial class frmPowerEffect3
     {
         /// <summary>
         /// Required designer variable.

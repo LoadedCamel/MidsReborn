@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
+using mrbBase.Utils;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -34,7 +35,7 @@ namespace mrbBase.Base.Data_Classes
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
-            SetTypes = new Enums.eSetType[0];
+            SetTypes = new List<int>();
             VariableName = string.Empty;
             UIDSubPower = new string[0];
             NIDSubPower = new int[0];
@@ -82,7 +83,8 @@ namespace mrbBase.Base.Data_Classes
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
-            SetTypes = new Enums.eSetType[0];
+            //SetTypes = new Enums.eSetType[0];
+            SetTypes = new List<int>();
             VariableName = string.Empty;
             UIDSubPower = new string[0];
             NIDSubPower = new int[0];
@@ -154,8 +156,11 @@ namespace mrbBase.Base.Data_Classes
             IgnoreStrength = template.IgnoreStrength;
             DescShort = template.DescShort;
             DescLong = template.DescLong;
-            SetTypes = new Enums.eSetType[template.SetTypes.Length];
-            Array.Copy(template.SetTypes, SetTypes, SetTypes.Length);
+
+            SetTypes = template.SetTypes;
+            // SetTypes = new Enums.eSetType[template.SetTypes.Length];
+            // Array.Copy(template.SetTypes, SetTypes, SetTypes.Length);
+
             Effects = new IEffect[template.Effects.Length];
             for (var index = 0; index <= Effects.Length - 1; ++index)
             {
@@ -202,267 +207,150 @@ namespace mrbBase.Base.Data_Classes
             HiddenPower = template.HiddenPower;
         }
 
-        public Power(BinaryReader reader, bool legacy = false)
+        public Power(BinaryReader reader)
         {
-            if (!legacy)
+            Enhancements = new int[0];
+            BuffMode = Enums.eBuffMode.Normal;
+            Effects = new IEffect[0];
+            ForcedClass = string.Empty;
+            MutexAuto = true;
+            TargetLoS = true;
+            GroupMembership = new string[0];
+            Requires = new Requirement();
+            NGroupMembership = new int[0];
+            StaticIndex = -1;
+            PowerSetIndex = -1;
+            PowerSetID = -1;
+            PowerIndex = -1;
+
+            //SetTypes = new Enums.eSetType[0];
+
+            SetTypes = new List<int>();
+
+            VariableName = string.Empty;
+            UIDSubPower = new string[0];
+            NIDSubPower = new int[0];
+            Ignore_Buff = new Enums.eEnhance[0];
+            IgnoreEnh = new Enums.eEnhance[0];
+            SubIsAltColor = false;
+            BoostsAllowed = new string[0];
+            StaticIndex = reader.ReadInt32();
+            FullName = reader.ReadString();
+            GroupName = reader.ReadString();
+            SetName = reader.ReadString();
+            PowerName = reader.ReadString();
+            DisplayName = reader.ReadString();
+            Available = reader.ReadInt32();
+            Requires = new Requirement(reader);
+            ModesRequired = (Enums.eModeFlags)reader.ReadInt32();
+            ModesDisallowed = (Enums.eModeFlags)reader.ReadInt32();
+            PowerType = (Enums.ePowerType)reader.ReadInt32();
+            Accuracy = reader.ReadSingle();
+            AccuracyMult = Accuracy;
+            AttackTypes = (Enums.eVector)reader.ReadInt32();
+            GroupMembership = new string[reader.ReadInt32() + 1];
+            for (var index = 0; index < GroupMembership.Length; ++index)
+                GroupMembership[index] = reader.ReadString();
+            EntitiesAffected = (Enums.eEntity)reader.ReadInt32();
+            EntitiesAutoHit = (Enums.eEntity)reader.ReadInt32();
+            Target = (Enums.eEntity)reader.ReadInt32();
+            TargetLoS = reader.ReadBoolean();
+            Range = reader.ReadSingle();
+            TargetSecondary = (Enums.eEntity)reader.ReadInt32();
+            RangeSecondary = reader.ReadSingle();
+            EndCost = reader.ReadSingle();
+            InterruptTime = reader.ReadSingle();
+            CastTime = reader.ReadSingle();
+            RechargeTime = reader.ReadSingle();
+            BaseRechargeTime = reader.ReadSingle();
+            ActivatePeriod = reader.ReadSingle();
+            EffectArea = (Enums.eEffectArea)reader.ReadInt32();
+            Radius = reader.ReadSingle();
+            Arc = reader.ReadInt32();
+            MaxTargets = reader.ReadInt32();
+            MaxBoosts = reader.ReadString();
+            CastFlags = (Enums.eCastFlags)reader.ReadInt32();
+            AIReport = (Enums.eNotify)reader.ReadInt32();
+            NumCharges = reader.ReadInt32();
+            UsageTime = reader.ReadInt32();
+            LifeTime = reader.ReadInt32();
+            LifeTimeInGame = reader.ReadInt32();
+            NumAllowed = reader.ReadInt32();
+            DoNotSave = reader.ReadBoolean();
+            BoostsAllowed = new string[reader.ReadInt32() + 1];
+            for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
+                BoostsAllowed[index] = reader.ReadString();
+            CastThroughHold = reader.ReadBoolean();
+            IgnoreStrength = reader.ReadBoolean();
+            DescShort = reader.ReadString();
+            DescLong = reader.ReadString();
+            Enhancements = new int[reader.ReadInt32() + 1];
+            for (var index = 0; index <= Enhancements.Length - 1; ++index)
+                Enhancements[index] = reader.ReadInt32();
+
+            // SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
+            // for (var index = 0; index <= SetTypes.Length - 1; ++index)
+            // {
+            //     SetTypes[index] = (Enums.eSetType)reader.ReadInt32();
+            // }
+
+            var setTypeCount = reader.ReadInt32();
+            for (var i = 0; i <= setTypeCount; i++)
             {
-                Enhancements = new int[0];
-                BuffMode = Enums.eBuffMode.Normal;
-                Effects = new IEffect[0];
-                ForcedClass = string.Empty;
-                MutexAuto = true;
-                TargetLoS = true;
-                GroupMembership = new string[0];
-                Requires = new Requirement();
-                NGroupMembership = new int[0];
-                StaticIndex = -1;
-                PowerSetIndex = -1;
-                PowerSetID = -1;
-                PowerIndex = -1;
-                SetTypes = new Enums.eSetType[0];
-                VariableName = string.Empty;
-                UIDSubPower = new string[0];
-                NIDSubPower = new int[0];
-                Ignore_Buff = new Enums.eEnhance[0];
-                IgnoreEnh = new Enums.eEnhance[0];
-                SubIsAltColor = false;
-                BoostsAllowed = new string[0];
-                StaticIndex = reader.ReadInt32();
-                FullName = reader.ReadString();
-                GroupName = reader.ReadString();
-                SetName = reader.ReadString();
-                PowerName = reader.ReadString();
-                DisplayName = reader.ReadString();
-                Available = reader.ReadInt32();
-                Requires = new Requirement(reader);
-                ModesRequired = (Enums.eModeFlags) reader.ReadInt32();
-                ModesDisallowed = (Enums.eModeFlags) reader.ReadInt32();
-                PowerType = (Enums.ePowerType) reader.ReadInt32();
-                Accuracy = reader.ReadSingle();
-                AccuracyMult = Accuracy;
-                AttackTypes = (Enums.eVector) reader.ReadInt32();
-                GroupMembership = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index < GroupMembership.Length; ++index)
-                    GroupMembership[index] = reader.ReadString();
-                EntitiesAffected = (Enums.eEntity) reader.ReadInt32();
-                EntitiesAutoHit = (Enums.eEntity) reader.ReadInt32();
-                Target = (Enums.eEntity) reader.ReadInt32();
-                TargetLoS = reader.ReadBoolean();
-                Range = reader.ReadSingle();
-                TargetSecondary = (Enums.eEntity) reader.ReadInt32();
-                RangeSecondary = reader.ReadSingle();
-                EndCost = reader.ReadSingle();
-                InterruptTime = reader.ReadSingle();
-                CastTime = reader.ReadSingle();
-                RechargeTime = reader.ReadSingle();
-                BaseRechargeTime = reader.ReadSingle();
-                ActivatePeriod = reader.ReadSingle();
-                EffectArea = (Enums.eEffectArea) reader.ReadInt32();
-                Radius = reader.ReadSingle();
-                Arc = reader.ReadInt32();
-                MaxTargets = reader.ReadInt32();
-                MaxBoosts = reader.ReadString();
-                CastFlags = (Enums.eCastFlags) reader.ReadInt32();
-                AIReport = (Enums.eNotify) reader.ReadInt32();
-                NumCharges = reader.ReadInt32();
-                UsageTime = reader.ReadInt32();
-                LifeTime = reader.ReadInt32();
-                LifeTimeInGame = reader.ReadInt32();
-                NumAllowed = reader.ReadInt32();
-                DoNotSave = reader.ReadBoolean();
-                BoostsAllowed = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
-                    BoostsAllowed[index] = reader.ReadString();
-                CastThroughHold = reader.ReadBoolean();
-                IgnoreStrength = reader.ReadBoolean();
-                DescShort = reader.ReadString();
-                DescLong = reader.ReadString();
-                Enhancements = new int[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Enhancements.Length - 1; ++index)
-                    Enhancements[index] = reader.ReadInt32();
-                SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
-                for (var index = 0; index <= SetTypes.Length - 1; ++index)
-                    SetTypes[index] = (Enums.eSetType) reader.ReadInt32();
-                ClickBuff = reader.ReadBoolean();
-                AlwaysToggle = reader.ReadBoolean();
-                Level = reader.ReadInt32();
-                AllowFrontLoading = reader.ReadBoolean();
-                VariableEnabled = reader.ReadBoolean();
-                VariableOverride = reader.ReadBoolean();
-                VariableName = reader.ReadString();
-                VariableMin = reader.ReadInt32();
-                VariableMax = reader.ReadInt32();
-                UIDSubPower = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
-                    UIDSubPower[index] = reader.ReadString();
-                IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
-                    IgnoreEnh[index] = (Enums.eEnhance) reader.ReadInt32();
-                Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
-                    Ignore_Buff[index] = (Enums.eEnhance) reader.ReadInt32();
-                SkipMax = reader.ReadBoolean();
-                InherentType = (Enums.eGridType) reader.ReadInt32();
-                DisplayLocation = reader.ReadInt32();
-                MutexAuto = reader.ReadBoolean();
-                MutexIgnore = reader.ReadBoolean();
-                AbsorbSummonEffects = reader.ReadBoolean();
-                AbsorbSummonAttributes = reader.ReadBoolean();
-                ShowSummonAnyway = reader.ReadBoolean();
-                NeverAutoUpdate = reader.ReadBoolean();
-                NeverAutoUpdateRequirements = reader.ReadBoolean();
-                IncludeFlag = reader.ReadBoolean();
-                ForcedClass = reader.ReadString();
-                SortOverride = reader.ReadBoolean();
-                BoostBoostable = reader.ReadBoolean();
-                BoostUsePlayerLevel = reader.ReadBoolean();
-                Effects = new IEffect[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Effects.Length - 1; ++index)
-                {
-                    var eff = (IEffect) new Effect(reader)
-                    {
-                        nID = index
-                    };
-                    eff.SetPower(this);
-
-                    Effects[index] = eff;
-                }
-
-                HiddenPower = reader.ReadBoolean();
-                Active = reader.ReadBoolean();
-                Taken = reader.ReadBoolean();
-                Stacks = reader.ReadInt32();
-                VariableStart = reader.ReadInt32();
+                var setType = reader.ReadInt32();
+                SetTypes.Add(setType);
             }
-            else
+
+            ClickBuff = reader.ReadBoolean();
+            AlwaysToggle = reader.ReadBoolean();
+            Level = reader.ReadInt32();
+            AllowFrontLoading = reader.ReadBoolean();
+            VariableEnabled = reader.ReadBoolean();
+            VariableOverride = reader.ReadBoolean();
+            VariableName = reader.ReadString();
+            VariableMin = reader.ReadInt32();
+            VariableMax = reader.ReadInt32();
+            UIDSubPower = new string[reader.ReadInt32() + 1];
+            for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
+                UIDSubPower[index] = reader.ReadString();
+            IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
+            for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
+                IgnoreEnh[index] = (Enums.eEnhance)reader.ReadInt32();
+            Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
+            for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
+                Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
+            SkipMax = reader.ReadBoolean();
+            InherentType = (Enums.eGridType)reader.ReadInt32();
+            DisplayLocation = reader.ReadInt32();
+            MutexAuto = reader.ReadBoolean();
+            MutexIgnore = reader.ReadBoolean();
+            AbsorbSummonEffects = reader.ReadBoolean();
+            AbsorbSummonAttributes = reader.ReadBoolean();
+            ShowSummonAnyway = reader.ReadBoolean();
+            NeverAutoUpdate = reader.ReadBoolean();
+            NeverAutoUpdateRequirements = reader.ReadBoolean();
+            IncludeFlag = reader.ReadBoolean();
+            ForcedClass = reader.ReadString();
+            SortOverride = reader.ReadBoolean();
+            BoostBoostable = reader.ReadBoolean();
+            BoostUsePlayerLevel = reader.ReadBoolean();
+            Effects = new IEffect[reader.ReadInt32() + 1];
+            for (var index = 0; index <= Effects.Length - 1; ++index)
             {
-                Enhancements = new int[0];
-                BuffMode = Enums.eBuffMode.Normal;
-                Effects = new IEffect[0];
-                ForcedClass = string.Empty;
-                MutexAuto = true;
-                TargetLoS = true;
-                GroupMembership = new string[0];
-                Requires = new Requirement();
-                NGroupMembership = new int[0];
-                StaticIndex = -1;
-                PowerSetIndex = -1;
-                PowerSetID = -1;
-                PowerIndex = -1;
-                SetTypes = new Enums.eSetType[0];
-                VariableName = string.Empty;
-                UIDSubPower = new string[0];
-                NIDSubPower = new int[0];
-                Ignore_Buff = new Enums.eEnhance[0];
-                IgnoreEnh = new Enums.eEnhance[0];
-                SubIsAltColor = false;
-                BoostsAllowed = new string[0];
-                StaticIndex = reader.ReadInt32();
-                FullName = reader.ReadString();
-                GroupName = reader.ReadString();
-                SetName = reader.ReadString();
-                PowerName = reader.ReadString();
-                DisplayName = reader.ReadString();
-                Available = reader.ReadInt32();
-                Requires = new Requirement(reader);
-                ModesRequired = (Enums.eModeFlags)reader.ReadInt32();
-                ModesDisallowed = (Enums.eModeFlags)reader.ReadInt32();
-                PowerType = (Enums.ePowerType)reader.ReadInt32();
-                Accuracy = reader.ReadSingle();
-                AccuracyMult = Accuracy;
-                AttackTypes = (Enums.eVector)reader.ReadInt32();
-                GroupMembership = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index < GroupMembership.Length; ++index)
-                    GroupMembership[index] = reader.ReadString();
-                EntitiesAffected = (Enums.eEntity)reader.ReadInt32();
-                EntitiesAutoHit = (Enums.eEntity)reader.ReadInt32();
-                Target = (Enums.eEntity)reader.ReadInt32();
-                TargetLoS = reader.ReadBoolean();
-                Range = reader.ReadSingle();
-                TargetSecondary = (Enums.eEntity)reader.ReadInt32();
-                RangeSecondary = reader.ReadSingle();
-                EndCost = reader.ReadSingle();
-                InterruptTime = reader.ReadSingle();
-                CastTime = reader.ReadSingle();
-                RechargeTime = reader.ReadSingle();
-                BaseRechargeTime = reader.ReadSingle();
-                ActivatePeriod = reader.ReadSingle();
-                EffectArea = (Enums.eEffectArea)reader.ReadInt32();
-                Radius = reader.ReadSingle();
-                Arc = reader.ReadInt32();
-                MaxTargets = reader.ReadInt32();
-                MaxBoosts = reader.ReadString();
-                CastFlags = (Enums.eCastFlags)reader.ReadInt32();
-                AIReport = (Enums.eNotify)reader.ReadInt32();
-                NumCharges = reader.ReadInt32();
-                UsageTime = reader.ReadInt32();
-                LifeTime = reader.ReadInt32();
-                LifeTimeInGame = reader.ReadInt32();
-                NumAllowed = reader.ReadInt32();
-                DoNotSave = reader.ReadBoolean();
-                BoostsAllowed = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
-                    BoostsAllowed[index] = reader.ReadString();
-                CastThroughHold = reader.ReadBoolean();
-                IgnoreStrength = reader.ReadBoolean();
-                DescShort = reader.ReadString();
-                DescLong = reader.ReadString();
-                Enhancements = new int[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Enhancements.Length - 1; ++index)
-                    Enhancements[index] = reader.ReadInt32();
-                SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
-                for (var index = 0; index <= SetTypes.Length - 1; ++index)
-                    SetTypes[index] = (Enums.eSetType)reader.ReadInt32();
-                ClickBuff = reader.ReadBoolean();
-                AlwaysToggle = reader.ReadBoolean();
-                Level = reader.ReadInt32();
-                AllowFrontLoading = reader.ReadBoolean();
-                VariableEnabled = reader.ReadBoolean();
-                VariableOverride = reader.ReadBoolean();
-                VariableName = reader.ReadString();
-                VariableMin = reader.ReadInt32();
-                VariableMax = reader.ReadInt32();
-                UIDSubPower = new string[reader.ReadInt32() + 1];
-                for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
-                    UIDSubPower[index] = reader.ReadString();
-                IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
-                    IgnoreEnh[index] = (Enums.eEnhance)reader.ReadInt32();
-                Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
-                    Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
-                SkipMax = reader.ReadBoolean();
-                InherentType = (Enums.eGridType)reader.ReadInt32();
-                DisplayLocation = reader.ReadInt32();
-                MutexAuto = reader.ReadBoolean();
-                MutexIgnore = reader.ReadBoolean();
-                AbsorbSummonEffects = reader.ReadBoolean();
-                AbsorbSummonAttributes = reader.ReadBoolean();
-                ShowSummonAnyway = reader.ReadBoolean();
-                NeverAutoUpdate = reader.ReadBoolean();
-                NeverAutoUpdateRequirements = reader.ReadBoolean();
-                IncludeFlag = reader.ReadBoolean();
-                ForcedClass = reader.ReadString();
-                SortOverride = reader.ReadBoolean();
-                BoostBoostable = reader.ReadBoolean();
-                BoostUsePlayerLevel = reader.ReadBoolean();
-                Effects = new IEffect[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Effects.Length - 1; ++index)
+                var eff = (IEffect)new Effect(reader)
                 {
-                    var eff = (IEffect)new Effect(reader, true)
-                    {
-                        nID = index
-                    };
-                    eff.SetPower(this);
+                    nID = index
+                };
+                eff.SetPower(this);
 
-                    Effects[index] = eff;
-                }
-
-                HiddenPower = reader.ReadBoolean();
-                Active = reader.ReadBoolean();
-                Taken = reader.ReadBoolean();
-                Stacks = reader.ReadInt32();
+                Effects[index] = eff;
             }
+
+            HiddenPower = reader.ReadBoolean();
+            Active = reader.ReadBoolean();
+            Taken = reader.ReadBoolean();
+            Stacks = reader.ReadInt32();
+            VariableStart = reader.ReadInt32();
         }
 
         public IPowerset GetPowerSet()
@@ -597,7 +485,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool HiddenPower { get; set; }
 
-        public Enums.eSetType[] SetTypes { get; set; }
+        public List<int> SetTypes { get; set; }
 
         public bool ClickBuff { get; set; }
 
@@ -795,9 +683,20 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(Enhancements.Length - 1);
             for (var index = 0; index <= Enhancements.Length - 1; ++index)
                 writer.Write(Enhancements[index]);
-            writer.Write(SetTypes.Length - 1);
-            for (var index = 0; index <= SetTypes.Length - 1; ++index)
-                writer.Write((int) SetTypes[index]);
+
+            // writer.Write(SetTypes.Length - 1);
+            // for (var index = 0; index <= SetTypes.Length - 1; ++index)
+            // {
+            //     writer.Write((int) SetTypes[index]);
+            // }
+
+            writer.Write(SetTypes.Count - 1);
+            foreach (var setType in SetTypes)
+            {
+                writer.Write(setType);
+            }
+
+
             writer.Write(ClickBuff);
             writer.Write(AlwaysToggle);
             writer.Write(Level);
@@ -2209,7 +2108,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None)
+        public List<int> GetValidEnhancements(Enums.eType iType, int iSubType = 0)
         {
             var intList = new List<int>();
             List<int> allowedEnh;
@@ -2233,7 +2132,7 @@ namespace mrbBase.Base.Data_Classes
                         {
                             foreach (var enhancement2 in Enhancements)
                             {
-                                if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == Enums.eSubtype.None || iSubType == Enums.eSubtype.None || enhancement1.SubTypeID == iSubType))
+                                if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == 0 || iSubType == 0 || enhancement1.SubTypeID == iSubType))
                                 {
                                     flag = true;
                                 }

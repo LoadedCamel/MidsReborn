@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Utils;
 
 namespace mrbBase
 {
@@ -134,8 +135,8 @@ namespace mrbBase
         bool SortOverride { get; set; }
 
         bool HiddenPower { get; set; }
-
-        Enums.eSetType[] SetTypes { get; set; }
+        
+        List<int> SetTypes { get; set; }
 
         bool ClickBuff { get; set; }
 
@@ -285,7 +286,7 @@ namespace mrbBase
 
         void ApplyGrantPowerEffects();
 
-        List<int> GetValidEnhancements(Enums.eType iType, Enums.eSubtype iSubType = Enums.eSubtype.None);
+        List<int> GetValidEnhancements(Enums.eType iType, int iSubType = 0);
 
         bool IsEnhancementValid(int iEnh);
 

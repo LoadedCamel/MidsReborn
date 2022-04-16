@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using mrbBase.Utils;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -71,7 +72,7 @@ namespace mrbBase.Base.Data_Classes
 
         public int[] Levels_MainPowers { get; set; }
 
-        public List<string> EffectIds { get; set; } = new List<string>();
+        public List<string> EffectIds { get; set; } = new();
 
         public float VersionEnhDb { get; set; }
 
@@ -86,6 +87,12 @@ namespace mrbBase.Base.Data_Classes
         public float[][] MultHO { get; set; }
 
         public float[][] MultIO { get; set; }
+
+        public List<TypeGrade> SetTypes { get; set; }
+        
+        public List<TypeGrade> EnhancementGrades { get; set; }
+
+        public List<TypeGrade> SpecialEnhancements { get; set; }
 
         public string[] SetTypeStringLong { get; set; }
 
@@ -114,5 +121,6 @@ namespace mrbBase.Base.Data_Classes
             for (var index = 0; index <= Entities.Length - 1; ++index)
                 Entities[index].StoreTo(writer);
         }
+
     }
 }

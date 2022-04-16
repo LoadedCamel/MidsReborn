@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +15,13 @@ namespace mrbBase.Base.Data_Classes
             new Regex("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower power;
+
+        public class Expression
+        {
+            public string Duration { get; set; }
+            public string Magnitude { get; set; } 
+            public string Probability { get; set; }
+        }
 
         public static readonly List<string> ExprCommandsList = new()
         {
@@ -48,6 +56,7 @@ namespace mrbBase.Base.Data_Classes
             Validated = false;
             BaseProbability = 1f;
             MagnitudeExpression = string.Empty;
+            Expressions = new Expression();
             Reward = string.Empty;
             EffectClass = Enums.eEffectClass.Primary;
             EffectType = Enums.eEffectType.None;
@@ -112,151 +121,113 @@ namespace mrbBase.Base.Data_Classes
             this.power = power;
         }
 
-        public Effect(BinaryReader reader, bool legacy = false) : this()
+        public Effect(BinaryReader reader) : this()
         {
-            if (!legacy)
+            PowerFullName = reader.ReadString();
+            UniqueID = reader.ReadInt32();
+            EffectClass = (Enums.eEffectClass)reader.ReadInt32();
+            EffectType = (Enums.eEffectType)reader.ReadInt32();
+            DamageType = (Enums.eDamage)reader.ReadInt32();
+            MezType = (Enums.eMez)reader.ReadInt32();
+            ETModifies = (Enums.eEffectType)reader.ReadInt32();
+            Summon = reader.ReadString();
+            DelayedTime = reader.ReadSingle();
+            Ticks = reader.ReadInt32();
+            Stacking = (Enums.eStacking)reader.ReadInt32();
+            BaseProbability = reader.ReadSingle();
+            Suppression = (Enums.eSuppress)reader.ReadInt32();
+            Buffable = reader.ReadBoolean();
+            Resistible = reader.ReadBoolean();
+            SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
+            VariableModifiedOverride = reader.ReadBoolean();
+            IgnoreScaling = reader.ReadBoolean();
+            PvMode = (Enums.ePvX)reader.ReadInt32();
+            ToWho = (Enums.eToWho)reader.ReadInt32();
+            DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
+            Scale = reader.ReadSingle();
+            nMagnitude = reader.ReadSingle();
+            nDuration = reader.ReadSingle();
+            AttribType = (Enums.eAttribType)reader.ReadInt32();
+            Aspect = (Enums.eAspect)reader.ReadInt32();
+            ModifierTable = reader.ReadString();
+            nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
+            NearGround = reader.ReadBoolean();
+            CancelOnMiss = reader.ReadBoolean();
+            RequiresToHitCheck = reader.ReadBoolean();
+            UIDClassName = reader.ReadString();
+            nIDClassName = reader.ReadInt32();
+            MagnitudeExpression = reader.ReadString();
+
+            AssignExpression(MagnitudeExpression);
+            // Here we create the instance of the Expression class and read the data back;
+
+            // Expressions = new Expression();
+            // Expressions.Duration = reader.ReadString();
+            // Expressions.Magnitude = reader.ReadString();
+            // Expressions.Probability = reader.ReadString();
+
+            Reward = reader.ReadString();
+            EffectId = reader.ReadString();
+            IgnoreED = reader.ReadBoolean();
+            Override = reader.ReadString();
+            ProcsPerMinute = reader.ReadSingle();
+            PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
+            AtrOrigAccuracy = reader.ReadSingle();
+            AtrOrigActivatePeriod = reader.ReadSingle();
+            AtrOrigArc = reader.ReadInt32();
+            AtrOrigCastTime = reader.ReadSingle();
+            AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+            AtrOrigEnduranceCost = reader.ReadSingle();
+            AtrOrigInterruptTime = reader.ReadSingle();
+            AtrOrigMaxTargets = reader.ReadInt32();
+            AtrOrigRadius = reader.ReadSingle();
+            AtrOrigRange = reader.ReadSingle();
+            AtrOrigRechargeTime = reader.ReadSingle();
+            AtrOrigSecondaryRange = reader.ReadSingle();
+            AtrModAccuracy = reader.ReadSingle();
+            AtrModActivatePeriod = reader.ReadSingle();
+            AtrModArc = reader.ReadInt32();
+            AtrModCastTime = reader.ReadSingle();
+            AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+            AtrModEnduranceCost = reader.ReadSingle();
+            AtrModInterruptTime = reader.ReadSingle();
+            AtrModMaxTargets = reader.ReadInt32();
+            AtrModRadius = reader.ReadSingle();
+            AtrModRange = reader.ReadSingle();
+            AtrModRechargeTime = reader.ReadSingle();
+            AtrModSecondaryRange = reader.ReadSingle();
+            var conditionalCount = reader.ReadInt32();
+            for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
             {
-                PowerFullName = reader.ReadString();
-                UniqueID = reader.ReadInt32();
-                EffectClass = (Enums.eEffectClass)reader.ReadInt32();
-                EffectType = (Enums.eEffectType)reader.ReadInt32();
-                DamageType = (Enums.eDamage)reader.ReadInt32();
-                MezType = (Enums.eMez)reader.ReadInt32();
-                ETModifies = (Enums.eEffectType)reader.ReadInt32();
-                Summon = reader.ReadString();
-                DelayedTime = reader.ReadSingle();
-                Ticks = reader.ReadInt32();
-                Stacking = (Enums.eStacking)reader.ReadInt32();
-                BaseProbability = reader.ReadSingle();
-                Suppression = (Enums.eSuppress)reader.ReadInt32();
-                Buffable = reader.ReadBoolean();
-                Resistible = reader.ReadBoolean();
-                SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
-                VariableModifiedOverride = reader.ReadBoolean();
-                IgnoreScaling = reader.ReadBoolean();
-                PvMode = (Enums.ePvX)reader.ReadInt32();
-                ToWho = (Enums.eToWho)reader.ReadInt32();
-                DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
-                Scale = reader.ReadSingle();
-                nMagnitude = reader.ReadSingle();
-                nDuration = reader.ReadSingle();
-                AttribType = (Enums.eAttribType)reader.ReadInt32();
-                Aspect = (Enums.eAspect)reader.ReadInt32();
-                ModifierTable = reader.ReadString();
-                nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-                NearGround = reader.ReadBoolean();
-                CancelOnMiss = reader.ReadBoolean();
-                RequiresToHitCheck = reader.ReadBoolean();
-                UIDClassName = reader.ReadString();
-                nIDClassName = reader.ReadInt32();
-                MagnitudeExpression = reader.ReadString();
-                Reward = reader.ReadString();
-                EffectId = reader.ReadString();
-                IgnoreED = reader.ReadBoolean();
-                Override = reader.ReadString();
-                ProcsPerMinute = reader.ReadSingle();
-                PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
-                AtrOrigAccuracy = reader.ReadSingle();
-                AtrOrigActivatePeriod = reader.ReadSingle();
-                AtrOrigArc = reader.ReadInt32();
-                AtrOrigCastTime = reader.ReadSingle();
-                AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-                AtrOrigEnduranceCost = reader.ReadSingle();
-                AtrOrigInterruptTime = reader.ReadSingle();
-                AtrOrigMaxTargets = reader.ReadInt32();
-                AtrOrigRadius = reader.ReadSingle();
-                AtrOrigRange = reader.ReadSingle();
-                AtrOrigRechargeTime = reader.ReadSingle();
-                AtrOrigSecondaryRange = reader.ReadSingle();
-                AtrModAccuracy = reader.ReadSingle();
-                AtrModActivatePeriod = reader.ReadSingle();
-                AtrModArc = reader.ReadInt32();
-                AtrModCastTime = reader.ReadSingle();
-                AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-                AtrModEnduranceCost = reader.ReadSingle();
-                AtrModInterruptTime = reader.ReadSingle();
-                AtrModMaxTargets = reader.ReadInt32();
-                AtrModRadius = reader.ReadSingle();
-                AtrModRange = reader.ReadSingle();
-                AtrModRechargeTime = reader.ReadSingle();
-                AtrModSecondaryRange = reader.ReadSingle();
-                var conditionalCount = reader.ReadInt32();
-                for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
+                var cKey = reader.ReadString();
+                var cValue = reader.ReadString();
+                ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
+            }
+        }
+
+        private void AssignExpression(string? magnitudeExpression)
+        {
+            if (MagnitudeExpression.Contains("///"))
+            {
+                var replaced = magnitudeExpression?.Replace("///", "®");
+                var splitExpr = replaced?.Split('®');
+                Expressions = new Expression
                 {
-                    var cKey = reader.ReadString();
-                    var cValue = reader.ReadString();
-                    ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
-                }
+                    Duration = "",
+                    Magnitude = splitExpr?[0].Trim(),
+                    Probability = splitExpr?[1].Trim()
+                };
             }
             else
             {
-                PowerFullName = reader.ReadString();
-                UniqueID = reader.ReadInt32();
-                EffectClass = (Enums.eEffectClass)reader.ReadInt32();
-                EffectType = (Enums.eEffectType)reader.ReadInt32();
-                DamageType = (Enums.eDamage)reader.ReadInt32();
-                MezType = (Enums.eMez)reader.ReadInt32();
-                ETModifies = (Enums.eEffectType)reader.ReadInt32();
-                Summon = reader.ReadString();
-                DelayedTime = reader.ReadSingle();
-                Ticks = reader.ReadInt32();
-                Stacking = (Enums.eStacking)reader.ReadInt32();
-                BaseProbability = reader.ReadSingle();
-                Suppression = (Enums.eSuppress)reader.ReadInt32();
-                Buffable = reader.ReadBoolean();
-                Resistible = reader.ReadBoolean();
-                SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
-                VariableModifiedOverride = reader.ReadBoolean();
-                PvMode = (Enums.ePvX)reader.ReadInt32();
-                ToWho = (Enums.eToWho)reader.ReadInt32();
-                DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
-                Scale = reader.ReadSingle();
-                nMagnitude = reader.ReadSingle();
-                nDuration = reader.ReadSingle();
-                AttribType = (Enums.eAttribType)reader.ReadInt32();
-                Aspect = (Enums.eAspect)reader.ReadInt32();
-                ModifierTable = reader.ReadString();
-                nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-                NearGround = reader.ReadBoolean();
-                CancelOnMiss = reader.ReadBoolean();
-                RequiresToHitCheck = reader.ReadBoolean();
-                UIDClassName = reader.ReadString();
-                nIDClassName = reader.ReadInt32();
-                MagnitudeExpression = reader.ReadString();
-                Reward = reader.ReadString();
-                EffectId = reader.ReadString();
-                IgnoreED = reader.ReadBoolean();
-                Override = reader.ReadString();
-                ProcsPerMinute = reader.ReadSingle();
-                PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
-                AtrOrigAccuracy = reader.ReadSingle();
-                AtrOrigActivatePeriod = reader.ReadSingle();
-                AtrOrigArc = reader.ReadInt32();
-                AtrOrigCastTime = reader.ReadSingle();
-                AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-                AtrOrigEnduranceCost = reader.ReadSingle();
-                AtrOrigInterruptTime = reader.ReadSingle();
-                AtrOrigMaxTargets = reader.ReadInt32();
-                AtrOrigRadius = reader.ReadSingle();
-                AtrOrigRange = reader.ReadSingle();
-                AtrOrigRechargeTime = reader.ReadSingle();
-                AtrOrigSecondaryRange = reader.ReadSingle();
-                AtrModAccuracy = reader.ReadSingle();
-                AtrModActivatePeriod = reader.ReadSingle();
-                AtrModArc = reader.ReadInt32();
-                AtrModCastTime = reader.ReadSingle();
-                AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-                AtrModEnduranceCost = reader.ReadSingle();
-                AtrModInterruptTime = reader.ReadSingle();
-                AtrModMaxTargets = reader.ReadInt32();
-                AtrModRadius = reader.ReadSingle();
-                AtrModRange = reader.ReadSingle();
-                AtrModRechargeTime = reader.ReadSingle();
-                AtrModSecondaryRange = reader.ReadSingle();
-                int num = reader.ReadInt32();
-                for (int index = 0; index < num; ++index)
-                    ActiveConditionals.Add(new KeyValue<string, string>(reader.ReadString(), reader.ReadString()));
+                Expressions = new Expression
+                {
+                    Duration = "",
+                    Magnitude = magnitudeExpression ?? "",
+                    Probability = ""
+                };
             }
+
         }
 
         private Effect(IEffect template) : this()
@@ -308,6 +279,7 @@ namespace mrbBase.Base.Data_Classes
             UIDClassName = template.UIDClassName;
             nIDClassName = template.nIDClassName;
             MagnitudeExpression = template.MagnitudeExpression;
+            Expressions = template.Expressions;
             Reward = template.Reward;
             EffectId = template.EffectId;
             IgnoreED = template.IgnoreED;
@@ -346,6 +318,8 @@ namespace mrbBase.Base.Data_Classes
         private int? OverrideId { get; set; }
 
         public string MagnitudeExpression { get; set; }
+
+        public Expression Expressions { get; set; }
 
         public float ProcsPerMinute { get; set; }
 
@@ -1620,7 +1594,13 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(RequiresToHitCheck);
             writer.Write(UIDClassName);
             writer.Write(nIDClassName);
-            writer.Write(MagnitudeExpression);
+            //writer.Write(MagnitudeExpression);
+
+            //Here we write in the Expression class properties
+            writer.Write(Expressions.Duration);
+            writer.Write(Expressions.Magnitude);
+            writer.Write(Expressions.Probability);
+
             writer.Write(Reward);
             writer.Write(EffectId);
             writer.Write(IgnoreED);

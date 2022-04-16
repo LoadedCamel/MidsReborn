@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Utils;
 
 namespace mrbBase
 {
@@ -84,6 +85,12 @@ namespace mrbBase
         float[][] MultHO { get; set; }
 
         float[][] MultIO { get; set; }
+
+        List<TypeGrade> SetTypes { get; set; }
+
+        List<TypeGrade> EnhancementGrades { get; set; }
+
+        List<TypeGrade> SpecialEnhancements { get; set; }
 
         string[] SetTypeStringLong { get; set; }
 

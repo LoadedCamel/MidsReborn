@@ -4,7 +4,7 @@ namespace mrbBase.Import
 {
     public class EnhSetData
     {
-        private readonly string _csvString = string.Empty;
+        /*private readonly string _csvString = string.Empty;
 
         public readonly EnhancementSet Data;
         private readonly int Index = -1;
@@ -96,6 +96,6 @@ namespace mrbBase.Import
             }
 
             return flag;
-        }
+        }*/
     }
 }

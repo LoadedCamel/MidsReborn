@@ -55,6 +55,7 @@
     <Compile Include="Schema.cs" />
     <Compile Include="ServerConfig.cs" />
     <Compile Include="Stats.cs" />
+    <Compile Include="Utils\Structs.cs" />
     <Compile Include="ZStatus.Designer.cs">
       <DependentUpon>ZStatus.cs</DependentUpon>
     </Compile>
@@ -78,7 +79,6 @@
     <Compile Include="PowersetGroup.cs" />
     <Compile Include="Powerset.cs" />
     <Compile Include="PowerEntry.cs" />
-    <Compile Include="OS.cs" />
     <Compile Include="Modifiers.cs" />
     <Compile Include="MidsCharacterFileFormat.cs" />
     <Compile Include="LevelMap.cs" />

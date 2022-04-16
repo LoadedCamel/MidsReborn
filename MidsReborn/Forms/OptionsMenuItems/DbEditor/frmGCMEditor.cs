@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 using mrbControls;
 using Newtonsoft.Json;
 
@@ -154,7 +155,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			BusyMsg("Saving EffectIds...");
-			DatabaseAPI.SaveEffectIdsDatabase();
+			DatabaseAPI.SaveEffectIdsDatabase(MidsContext.Config.SavePath);
 			BusyHide();
 			DialogResult = DialogResult.OK;
 			Hide();

@@ -37,7 +37,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pnlClassList.MouseMove += pnlClassList_MouseMove;
             pnlClassList.Paint += pnlClassList_Paint;
             pnlClassList.MouseDown += pnlClassList_MouseDown;
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
             btnImage.Image = Resources.enhData;
             typeSet.Image = Resources.enhData;
             typeIO.Image = Resources.enhData;
@@ -79,8 +78,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             var enh = myEnh;
-            //var sEffectArray = (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-
+  
             var effects = enh.Effect.ToList();
             effects.Add(new Enums.sEffect
             {
@@ -88,7 +86,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Enhance = new Enums.sTwinID { ID = -1, SubID = -1 },
                 Multiplier = 1f,
                 Schedule = Enums.eSchedule.A,
-                FX = (IEffect)frmPowerEffect.myFX.Clone()
+                FX = (IEffect)frmPowerEffect.MyFx.Clone()
             });
             effects[effects.Count - 1].FX.isEnhancementEffect = true;
             var sEffects = effects.ToArray();
@@ -371,19 +369,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            if (cb?.SelectedIndex != -1)
+            if (sender is ComboBox cb && cb.SelectedIndex != -1)
             {
-                var selectedItem = cb?.SelectedItem.ToString();
+                var selectedItem = cb.SelectedText;
                 if (selectedItem != "None")
                 {
-                    var subType = (Enums.eSubtype)Enum.Parse(typeof(Enums.eSubtype), selectedItem);
+                    var subType = DatabaseAPI.GetSpecialEnhByName(selectedItem).Index;
                     myEnh.SubTypeID = subType;
                 }
             }
             else
             {
-                myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
+                myEnh.SubTypeID = cbSubType.SelectedIndex;
             }
         }
 
@@ -471,9 +468,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
-                    var type = Enum.GetName(typeof(Enums.eSubtype), myEnh.SubTypeID);
-                    //Debug.WriteLine(type);
-                    cbSubType.SelectedItem = type;
+                    cbSubType.SelectedIndex = myEnh.SubTypeID;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;
                     cbRecipe.SelectedIndex = 0;
@@ -723,7 +718,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     effect[index].Enhance.SubID = -1;
                     effect[index].Multiplier = 1f;
                     effect[index].Schedule = Enums.eSchedule.A;
-                    effect[index].FX = (IEffect)frmPowerEffect.myFX.Clone();
+                    effect[index].FX = (IEffect)frmPowerEffect.MyFx.Clone();
                 }
             }
 
@@ -761,8 +756,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 IEnhancement enh = myEnh;
-                //Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-                //enh.Effect = sEffectArray;
 
                 var effects = enh.Effect.ToList();
                 effects.Add(new Enums.sEffect
@@ -774,13 +767,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 });
                 enh.Effect = effects.ToArray();
 
-                /*Enums.sEffect[] effect = myEnh.Effect;
-                int index = myEnh.Effect.Length - 1;
-                effect[index].Mode = Enums.eEffMode.Enhancement;
-                effect[index].Enhance.ID = (int)integer;
-                effect[index].Enhance.SubID = tSub;
-                effect[index].Multiplier = 1f;
-                effect[index].Schedule = Enhancement.GetSchedule(integer, tSub);*/
                 FillEffectList();
                 ListSelectedEffects();
                 lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
@@ -860,12 +846,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillSubTypeList()
         {
-            //var names = Enum.GetNames(Enums.eSubtype.None.GetType());
-            var names = Enum.GetNames(typeof(Enums.eSubtype)).ToList();
+            var specEnhancements = DatabaseAPI.Database.SpecialEnhancements.Select(specEnh => specEnh.Name.Replace(" Origin", string.Empty)).ToList();
             cbSubType.BeginUpdate();
-            //cbSubType.Items.Clear();
-            cbSubType.DataSource = names;
-            //cbSubType.Items.AddRange(names);
+            cbSubType.Items.Clear();
+            cbSubType.Items.AddRange(specEnhancements.ToArray<object>());
             cbSubType.EndUpdate();
         }
 

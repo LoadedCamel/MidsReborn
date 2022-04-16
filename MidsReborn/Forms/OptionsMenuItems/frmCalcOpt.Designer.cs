@@ -33,6 +33,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCalcOpt));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
@@ -300,7 +301,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabControl1.Location = new System.Drawing.Point(0, 0);
             this.TabControl1.Name = "TabControl1";
             this.TabControl1.SelectedIndex = 0;
-            this.TabControl1.Size = new System.Drawing.Size(757, 372);
+            this.TabControl1.Size = new System.Drawing.Size(785, 372);
             this.TabControl1.TabIndex = 0;
             // 
             // TabPage3
@@ -317,7 +318,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage3.Controls.Add(this.GroupBox3);
             this.TabPage3.Location = new System.Drawing.Point(4, 23);
             this.TabPage3.Name = "TabPage3";
-            this.TabPage3.Size = new System.Drawing.Size(749, 345);
+            this.TabPage3.Size = new System.Drawing.Size(777, 345);
             this.TabPage3.TabIndex = 2;
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
@@ -912,7 +913,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage2.Controls.Add(this.GroupBox6);
             this.TabPage2.Location = new System.Drawing.Point(4, 23);
             this.TabPage2.Name = "TabPage2";
-            this.TabPage2.Size = new System.Drawing.Size(749, 345);
+            this.TabPage2.Size = new System.Drawing.Size(777, 345);
             this.TabPage2.TabIndex = 1;
             this.TabPage2.Text = "Effects & Maths";
             this.TabPage2.UseVisualStyleBackColor = true;
@@ -920,7 +921,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // Label16
             // 
             this.Label16.Enabled = false;
-            this.Label16.Location = new System.Drawing.Point(587, 297);
+            this.Label16.Location = new System.Drawing.Point(575, 322);
             this.Label16.Name = "Label16";
             this.Label16.Size = new System.Drawing.Size(57, 18);
             this.Label16.TabIndex = 66;
@@ -930,7 +931,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // TeamSize
             // 
             this.TeamSize.Enabled = false;
-            this.TeamSize.Location = new System.Drawing.Point(650, 295);
+            this.TeamSize.Location = new System.Drawing.Point(638, 320);
             this.TeamSize.Maximum = new decimal(new int[] {
             8,
             0,
@@ -956,9 +957,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.GroupBox2.Controls.Add(this.clbSuppression);
             this.GroupBox2.Controls.Add(this.Label8);
-            this.GroupBox2.Location = new System.Drawing.Point(517, 4);
+            this.GroupBox2.Location = new System.Drawing.Point(547, 4);
             this.GroupBox2.Name = "GroupBox2";
-            this.GroupBox2.Size = new System.Drawing.Size(221, 283);
+            this.GroupBox2.Size = new System.Drawing.Size(221, 310);
             this.GroupBox2.TabIndex = 69;
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Suppression";
@@ -969,7 +970,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.clbSuppression.FormattingEnabled = true;
             this.clbSuppression.Location = new System.Drawing.Point(9, 75);
             this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(206, 199);
+            this.clbSuppression.Size = new System.Drawing.Size(206, 229);
             this.clbSuppression.TabIndex = 9;
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
             // 
@@ -984,7 +985,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkUseArcanaTime
             // 
-            this.chkUseArcanaTime.Location = new System.Drawing.Point(8, 295);
+            this.chkUseArcanaTime.Location = new System.Drawing.Point(8, 320);
             this.chkUseArcanaTime.Name = "chkUseArcanaTime";
             this.chkUseArcanaTime.Size = new System.Drawing.Size(204, 22);
             this.chkUseArcanaTime.TabIndex = 66;
@@ -997,9 +998,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox15.Controls.Add(this.Label20);
             this.GroupBox15.Controls.Add(this.chkSetBonus);
             this.GroupBox15.Controls.Add(this.chkIOEffects);
-            this.GroupBox15.Location = new System.Drawing.Point(316, 166);
+            this.GroupBox15.Location = new System.Drawing.Point(315, 194);
             this.GroupBox15.Name = "GroupBox15";
-            this.GroupBox15.Size = new System.Drawing.Size(195, 121);
+            this.GroupBox15.Size = new System.Drawing.Size(226, 121);
             this.GroupBox15.TabIndex = 68;
             this.GroupBox15.TabStop = false;
             this.GroupBox15.Text = "Invention Effects:";
@@ -1008,7 +1009,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.Label20.Location = new System.Drawing.Point(6, 17);
             this.Label20.Name = "Label20";
-            this.Label20.Size = new System.Drawing.Size(179, 49);
+            this.Label20.Size = new System.Drawing.Size(213, 49);
             this.Label20.TabIndex = 65;
             this.Label20.Text = "The effects of set bonusses and special IO enhancements can be included when stat" +
     "s are calculated.";
@@ -1040,50 +1041,52 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox8.Controls.Add(this.Label9);
             this.GroupBox8.Location = new System.Drawing.Point(4, 4);
             this.GroupBox8.Name = "GroupBox8";
-            this.GroupBox8.Size = new System.Drawing.Size(507, 156);
+            this.GroupBox8.Size = new System.Drawing.Size(537, 182);
             this.GroupBox8.TabIndex = 3;
             this.GroupBox8.TabStop = false;
             this.GroupBox8.Text = "Chance of Damage:";
             // 
             // rbChanceIgnore
             // 
-            this.rbChanceIgnore.Location = new System.Drawing.Point(221, 130);
+            this.rbChanceIgnore.Location = new System.Drawing.Point(347, 156);
             this.rbChanceIgnore.Name = "rbChanceIgnore";
-            this.rbChanceIgnore.Size = new System.Drawing.Size(224, 20);
+            this.rbChanceIgnore.Size = new System.Drawing.Size(183, 20);
             this.rbChanceIgnore.TabIndex = 8;
-            this.rbChanceIgnore.Text = "Ignore Extra Damage (Show minimum)";
+            this.rbChanceIgnore.Text = "Minimum (Ignore Extra Damage)\r\n";
             // 
             // rbChanceAverage
             // 
             this.rbChanceAverage.Checked = true;
-            this.rbChanceAverage.Location = new System.Drawing.Point(6, 104);
+            this.rbChanceAverage.Location = new System.Drawing.Point(6, 156);
             this.rbChanceAverage.Name = "rbChanceAverage";
-            this.rbChanceAverage.Size = new System.Drawing.Size(204, 20);
+            this.rbChanceAverage.Size = new System.Drawing.Size(168, 20);
             this.rbChanceAverage.TabIndex = 7;
             this.rbChanceAverage.TabStop = true;
-            this.rbChanceAverage.Text = "Show Average (Damage x Chance)";
+            this.rbChanceAverage.Text = "Average (Damage x Chance)";
             // 
             // rbChanceMax
             // 
-            this.rbChanceMax.Location = new System.Drawing.Point(221, 104);
+            this.rbChanceMax.Location = new System.Drawing.Point(180, 156);
             this.rbChanceMax.Name = "rbChanceMax";
-            this.rbChanceMax.Size = new System.Drawing.Size(204, 20);
+            this.rbChanceMax.Size = new System.Drawing.Size(161, 20);
             this.rbChanceMax.TabIndex = 6;
-            this.rbChanceMax.Text = "Show Max Possible Damage";
+            this.rbChanceMax.Text = "Maximum (Always Include)";
             // 
             // Label9
             // 
             this.Label9.Location = new System.Drawing.Point(8, 16);
             this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(499, 85);
+            this.Label9.Size = new System.Drawing.Size(522, 137);
             this.Label9.TabIndex = 4;
+            this.Label9.Text = resources.GetString("Label9.Text");
+            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // GroupBox6
             // 
             this.GroupBox6.Controls.Add(this.Label7);
             this.GroupBox6.Controls.Add(this.rbPvP);
             this.GroupBox6.Controls.Add(this.rbPvE);
-            this.GroupBox6.Location = new System.Drawing.Point(8, 166);
+            this.GroupBox6.Location = new System.Drawing.Point(8, 192);
             this.GroupBox6.Name = "GroupBox6";
             this.GroupBox6.Size = new System.Drawing.Size(301, 122);
             this.GroupBox6.TabIndex = 1;
@@ -1124,7 +1127,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage4.Controls.Add(this.GroupBox11);
             this.TabPage4.Location = new System.Drawing.Point(4, 23);
             this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(749, 345);
+            this.TabPage4.Size = new System.Drawing.Size(777, 345);
             this.TabPage4.TabIndex = 3;
             this.TabPage4.Text = "Forum Export Settings";
             this.TabPage4.UseVisualStyleBackColor = true;
@@ -1162,7 +1165,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox12.Controls.Add(this.Label33);
             this.GroupBox12.Location = new System.Drawing.Point(180, 8);
             this.GroupBox12.Name = "GroupBox12";
-            this.GroupBox12.Size = new System.Drawing.Size(561, 308);
+            this.GroupBox12.Size = new System.Drawing.Size(589, 308);
             this.GroupBox12.TabIndex = 1;
             this.GroupBox12.TabStop = false;
             this.GroupBox12.Text = "Formatting Codes:";
@@ -1394,7 +1397,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.Label25.Location = new System.Drawing.Point(148, 224);
             this.Label25.Name = "Label25";
-            this.Label25.Size = new System.Drawing.Size(407, 76);
+            this.Label25.Size = new System.Drawing.Size(435, 76);
             this.Label25.TabIndex = 14;
             this.Label25.Text = "When defining a formatting code which takes a value, such as a color tag, use %VA" +
     "L% as a placeholder for the actual value, which will replace it when a build is " +
@@ -1486,7 +1489,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.Controls.Add(this.GroupBox7);
             this.TabPage1.Location = new System.Drawing.Point(4, 23);
             this.TabPage1.Name = "TabPage1";
-            this.TabPage1.Size = new System.Drawing.Size(749, 345);
+            this.TabPage1.Size = new System.Drawing.Size(777, 345);
             this.TabPage1.TabIndex = 6;
             this.TabPage1.Text = "Drag & Drop";
             this.TabPage1.UseVisualStyleBackColor = true;
@@ -1495,8 +1498,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.Label15.Location = new System.Drawing.Point(14, 9);
             this.Label15.Name = "Label15";
-            this.Label15.Size = new System.Drawing.Size(721, 92);
+            this.Label15.Size = new System.Drawing.Size(755, 92);
             this.Label15.TabIndex = 4;
+            this.Label15.Text = resources.GetString("Label15.Text");
+            this.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Label10
             // 
@@ -1523,7 +1528,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox9.Controls.Add(this.lblExample);
             this.GroupBox9.Location = new System.Drawing.Point(403, 104);
             this.GroupBox9.Name = "GroupBox9";
-            this.GroupBox9.Size = new System.Drawing.Size(338, 161);
+            this.GroupBox9.Size = new System.Drawing.Size(366, 161);
             this.GroupBox9.TabIndex = 1;
             this.GroupBox9.TabStop = false;
             this.GroupBox9.Text = "Description / Example(s)";
@@ -1532,7 +1537,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.lblExample.Location = new System.Drawing.Point(13, 17);
             this.lblExample.Name = "lblExample";
-            this.lblExample.Size = new System.Drawing.Size(319, 130);
+            this.lblExample.Size = new System.Drawing.Size(347, 141);
             this.lblExample.TabIndex = 0;
             // 
             // GroupBox7
@@ -1583,7 +1588,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage5.Controls.Add(this.GroupBox1);
             this.TabPage5.Location = new System.Drawing.Point(4, 23);
             this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(749, 345);
+            this.TabPage5.Size = new System.Drawing.Size(777, 345);
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
@@ -1779,7 +1784,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             "https://midsreborn.com/mids_updates/update_manifest.xml"});
             this.cbDBUpdateURL.Location = new System.Drawing.Point(174, 114);
             this.cbDBUpdateURL.Name = "cbDBUpdateURL";
-            this.cbDBUpdateURL.Size = new System.Drawing.Size(335, 22);
+            this.cbDBUpdateURL.Size = new System.Drawing.Size(479, 22);
             this.cbDBUpdateURL.TabIndex = 73;
             // 
             // cbUpdateURL
@@ -1792,7 +1797,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             "https://midsreborn.com/mids_updates/update_manifest.xml"});
             this.cbUpdateURL.Location = new System.Drawing.Point(174, 86);
             this.cbUpdateURL.Name = "cbUpdateURL";
-            this.cbUpdateURL.Size = new System.Drawing.Size(335, 22);
+            this.cbUpdateURL.Size = new System.Drawing.Size(479, 22);
             this.cbUpdateURL.TabIndex = 67;
             // 
             // label23
@@ -1821,7 +1826,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage6.Controls.Add(this.groupBox4);
             this.TabPage6.Location = new System.Drawing.Point(4, 23);
             this.TabPage6.Name = "TabPage6";
-            this.TabPage6.Size = new System.Drawing.Size(749, 345);
+            this.TabPage6.Size = new System.Drawing.Size(777, 345);
             this.TabPage6.TabIndex = 5;
             this.TabPage6.Text = "Server Specific Values";
             this.TabPage6.UseVisualStyleBackColor = true;
@@ -2412,7 +2417,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(757, 412);
+            this.ClientSize = new System.Drawing.Size(785, 412);
             this.Controls.Add(this.chkColorPrint);
             this.Controls.Add(this.TabControl1);
             this.Controls.Add(this.btnCancel);

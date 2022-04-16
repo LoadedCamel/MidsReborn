@@ -3827,8 +3827,7 @@ namespace Mids_Reborn.Forms.Controls
             else
             {
                 info_Title.Text = DatabaseAPI.Database.EnhancementSets[iSet].DisplayName;
-                var str1 = DatabaseAPI.Database.SetTypeStringLong[
-                    (int)DatabaseAPI.Database.EnhancementSets[iSet].SetType];
+                var str1 = DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[iSet].SetType).Name;
                 if (!Compact)
                     str1 += RTF.Crlf();
                 var str2 = DatabaseAPI.Database.EnhancementSets[iSet].LevelMin !=

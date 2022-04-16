@@ -274,8 +274,7 @@ namespace Mids_Reborn.Forms
             lvSet.Items.Add(new ListViewItem(new[]
             {
                 DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName,
-                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}",
-                DatabaseAPI.Database.SetTypeStringLong[(int) DatabaseAPI.Database.EnhancementSets[nIDSet].SetType],
+                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}", DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nIDSet].SetType).Name,
                 BonusID >= 0
                     ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)}"
                     : "Special"

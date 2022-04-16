@@ -38,17 +38,10 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
         }
 
-        public bool Load(string iPath = "")
+        public bool Load(string iPath)
         {
-            string path;
-            if (string.IsNullOrWhiteSpace(iPath))
-            {
-                path = Files.SelectDataFileLoad(Files.JsonFileModifiers);
-            }
-            else
-            {
-                path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
-            }
+            var path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
+            
             if (File.Exists(path))
             {
                 try
@@ -71,7 +64,6 @@ namespace mrbBase
                     return false;
                 }
             }
-
             if (!string.IsNullOrWhiteSpace(iPath))
             {
                 path = Files.SelectDataFileLoad(Files.MxdbFileModifiers, iPath);

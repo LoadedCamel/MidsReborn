@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
@@ -15,15 +16,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 {
     public partial class frmCalcOpt : Form
     {
-        //private readonly clsOAuth clsOAuth;
         private readonly short[] defActs;
         private readonly frmMain myParent;
         private readonly string[][] scenActs;
 
         private readonly string[] scenarioExample;
-
-        //public List<bool> checkStats = new List<bool>();
-        private readonly List<string> useStats = new List<string>();
 
         private bool fcNoUpdate;
 
@@ -75,20 +72,53 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
         private void btnSaveFolder_Click(object sender, EventArgs e)
         {
+            var priorPath = lblSaveFolder.Text;
             fbdSave.SelectedPath = lblSaveFolder.Text;
             if (fbdSave.ShowDialog() != DialogResult.OK)
                 return;
             lblSaveFolder.Text = fbdSave.SelectedPath;
+            MovePrior(priorPath, fbdSave.SelectedPath);
+        }
+
+        private void MovePrior(string priorPath, string currentPath)
+        {
+            Debug.WriteLine($"Prev: {priorPath}\nCurrent: {currentPath}");
+            if (currentPath == priorPath)
+            {
+                return;
+            }
+
+            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath).ToList().Any();
+            if (!previousHasBuilds)
+            {
+                return;
+            }
+
+            var msgResult = MessageBox.Show(@"Do you want to move your builds to the new location?", @"Builds Path Change Detected!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (msgResult != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using var fMover = new FileMover(priorPath, currentPath);
+            var result = fMover.ShowDialog(this);
+            if (result == DialogResult.Yes)
+            {
+                Directory.Delete(priorPath, true);
+                MessageBox.Show(@"All items have been moved to the new location.", @"Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(@"Some items could not be moved to the new location.
+Please move these items manually.", @"Operation Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void btnSaveFolderReset_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.CreateDefaultSaveFolder();
-            MidsContext.Config.DefaultSaveFolderOverride = null;
-            lblSaveFolder.Text = MidsContext.Config.GetSaveFolder();
+            MidsContext.Config.ResetBuildsPath();
+            lblSaveFolder.Text = MidsContext.Config.BuildsPath;
         }
-
-        //void btnUpdatePathReset_Click(object sender, EventArgs e) => this.txtUpdatePath.Text = "http://repo.cohtitan.com/mids_updates/";
 
         private void clbSuppression_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -570,7 +600,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udStaminaSecond.Value = config.Server.StaminaSlot2Level;
 
             chkUpdates.Checked = config.CheckForUpdates;
-            chkShowSOLevels.Checked = config.ShowSOLevels;
+            chkShowSOLevels.Checked = config.ShowSoLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
             rbGraphTwoLine.Enabled = chkEnableDmgGraph.Checked;
             rbGraphStacked.Enabled = chkEnableDmgGraph.Checked;
@@ -593,7 +623,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkPowSelBold.Checked = config.RtFont.PowersSelectBold;
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
-            lblSaveFolder.Text = config.GetSaveFolder();
+            lblSaveFolder.Text = config.BuildsPath;
             lblDatabaseLoc.Text = config.DataPath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
@@ -815,7 +845,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.I9.IgnoreSetBonusFX = !chkSetBonus.Checked;
             config.I9.HideIOLevels = !chkIOLevel.Checked;
             config.ShowRelSymbols = chkRelSignOnly.Checked;
-            config.ShowSOLevels = chkShowSOLevels.Checked;
+            config.ShowSoLevels = chkShowSOLevels.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColor = chkColorPrint.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
@@ -827,11 +857,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.RtFont.PowersBase = Convert.ToSingle(udPowersSize.Value);
             config.RtFont.PowersBold = chkPowersBold.Checked;
             config.DisableLoadLastFileOnStart = !chkLoadLastFile.Checked;
-            if (config.DefaultSaveFolderOverride != lblSaveFolder.Text)
+            if (config.BuildsPath != lblSaveFolder.Text)
             {
-                config.DefaultSaveFolderOverride = lblSaveFolder.Text;
-                myParent.DlgOpen.InitialDirectory = config.DefaultSaveFolderOverride;
-                myParent.DlgSave.InitialDirectory = config.DefaultSaveFolderOverride;
+                config.BuildsPath = lblSaveFolder.Text;
+                myParent.DlgOpen.InitialDirectory = config.BuildsPath;
+                myParent.DlgSave.InitialDirectory = config.BuildsPath;
             }
 
             config.EnhanceVisibility = chkHighVis.Checked;
@@ -875,23 +905,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             using var fBrowse = new BetterFolderBrowser
             {
                 Multiselect = false,
-                RootFolder = Path.Combine(Files.GetAssemblyLoc(), Files.RoamingFolder),
+                RootFolder = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
                 Title = @"Select the location of the database files"
             };
             if (fBrowse.ShowDialog(this) == DialogResult.OK)
             {
                 myParent.DbChangeRequested = true;
                 lblDatabaseLoc.Text = fBrowse.SelectedPath;
-                if (MidsContext.Config.MasterMode)
-                {
-                    var result = MessageBox.Show(@$"Is this a legacy database?", @"Database Type", MessageBoxButtons.YesNo);
-                    MidsContext.Config.IsLegacy = result switch
-                    {
-                        DialogResult.Yes => true,
-                        DialogResult.No => false,
-                        _ => MidsContext.Config.IsLegacy
-                    };
-                }
             }
 
         }

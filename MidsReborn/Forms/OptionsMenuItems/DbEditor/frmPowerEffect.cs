@@ -16,7 +16,7 @@ using mrbControls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    public partial class frmPowerEffect : Form
+    public partial class frmPowerEffect3 : Form
     {
         private bool Loading;
 
@@ -27,7 +27,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private readonly List<string> ConditionalOps;
         private readonly int EffectIndex;
 
-        public frmPowerEffect(IEffect iFX, IPower fxPower, int fxIndex = 0)
+        public frmPowerEffect3(IEffect iFX, IPower fxPower, int fxIndex = 0)
         {
             Loading = true;
             myPower = fxPower;
@@ -41,7 +41,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             EffectIndex = fxIndex;
         }
 
-        public frmPowerEffect(IEffect iFX, int fxIndex = 0)
+        public frmPowerEffect3(IEffect iFX, int fxIndex = 0)
         {
             Loading = true;
             InitializeComponent();
@@ -394,6 +394,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var magExprChunks = ExpressionParser.SplitExpression(myFX, out _, false);
             txtMagExpression.Text = magExprChunks.Count > 0 ? magExprChunks[0] : "";
             txtProbExpression.Text = magExprChunks.Count == 2 ? magExprChunks[1] : "";
+
             txtMagExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
             magexLabel.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
             txtProbExpression.Enabled = myFX.AttribType == Enums.eAttribType.Expression;
@@ -1848,9 +1849,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
-            MessageBox.Show(
-                $"No match found for '{sf.SearchTerms.PowerName}'{(searchAtGroup == "" ? "" : $" in AT/group {sf.SearchTerms.AtGroup}")}",
-                "Dammit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($@"No match found for '{sf.SearchTerms.PowerName}'{(searchAtGroup == "" ? "" : $" in AT/group {sf.SearchTerms.AtGroup}")}", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
@@ -1923,6 +1922,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
 
             txtMagExpression.Text += cbExprCommands.Items[cbExprCommands.SelectedIndex].ToString();
+        }
+
+        private void frmPowerEffect_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

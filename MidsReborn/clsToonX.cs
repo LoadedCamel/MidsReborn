@@ -2770,8 +2770,7 @@ namespace Mids_Reborn
                         a = strArray.Length <= 0 ? "" : strArray[0];
                     else
                         throw new Exception("Reached end of data without finding header.");
-                } while (!(string.Equals(a, Files.Headers.Save.Uncompressed, StringComparison.OrdinalIgnoreCase) |
-                           string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase)));
+                } while (!(string.Equals(a, Files.Headers.Save.Uncompressed, StringComparison.OrdinalIgnoreCase) | string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) || string.Equals(a, Files.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase) | string.Equals(a, Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase)));
             }
             catch (Exception ex)
             {
@@ -2779,13 +2778,13 @@ namespace Mids_Reborn
                 return false;
             }
 
-            if (string.Equals(a, Files.Headers.Save.Uncompressed, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(a, Files.Headers.Save.Uncompressed, StringComparison.OrdinalIgnoreCase) || string.Equals(a, Files.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
             {
                 iStream.BaseStream.Seek(0L, SeekOrigin.Begin);
                 return ReadInternalDataUC(iStream);
             }
 
-            if (!string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) || !string.Equals(a, Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase))
                 return false;
             var asciiEncoding = new ASCIIEncoding();
             var outSize = Convert.ToInt32(strArray[1]);
@@ -2822,7 +2821,7 @@ namespace Mids_Reborn
             do
             {
                 strArray1 = IoGrab2(iStream, "|");
-            } while (strArray1[0] != Files.Headers.Save.Uncompressed);
+            } while (strArray1[0] != Files.Headers.Save.Uncompressed || strArray1[0] != Files.Headers.Save.LegacyUncompressed);
 
             strArray1[1] = strArray1[1].Replace(",", ".");
             var nVer = Convert.ToSingle(strArray1[1]);
@@ -3010,8 +3009,7 @@ namespace Mids_Reborn
         public bool StringToInternalData(string iString)
         {
             bool flag1;
-            if ((iString?.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) == -1) &
-                (iString?.IndexOf(Files.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1))
+            if ((iString?.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) == -1) & (iString?.IndexOf(Files.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1) || (iString?.IndexOf(Files.Headers.Save.LegacyCompressed, StringComparison.Ordinal) == -1) & (iString?.IndexOf(Files.Headers.Save.LegacyUncompressed, StringComparison.Ordinal) == -1))
             {
                 if ((iString.IndexOf("Primary", StringComparison.Ordinal) > -1) &
                     (iString.IndexOf("Secondary", StringComparison.Ordinal) > -1))
@@ -3048,7 +3046,7 @@ namespace Mids_Reborn
 
                 try
                 {
-                    if (iString.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) < 0)
+                    if (iString != null && (iString.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) < 0 || iString.IndexOf(Files.Headers.Save.LegacyCompressed, StringComparison.Ordinal) < 0))
                     {
                         iString = iString.Replace("+\r\n+", "");
                         iString = iString.Replace("+ \r\n+", "");

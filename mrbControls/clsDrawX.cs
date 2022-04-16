@@ -421,7 +421,7 @@ namespace mrbControls
                         //relativeString = Convert.ToString(Math.Max(53, MidsContext.Character.Level + 5), null);
                         relativeString = "53";
                     }
-                    else if (MidsContext.Config.ShowSOLevels)
+                    else if (MidsContext.Config.ShowSoLevels)
                     {
                         // It isn't slot.Enhancement.IOLevel... always set to 0
                         // Improvisation it is...
@@ -431,7 +431,7 @@ namespace mrbControls
 
                     if (
                         //MidsContext.Config.ShowEnhRel &&
-                        MidsContext.Config.ShowSOLevels &&
+                        MidsContext.Config.ShowSoLevels &&
                         slot.Enhancement.RelativeLevel != Enums.eEnhRelative.None &&
                         slot.Enhancement.RelativeLevel != Enums.eEnhRelative.Even &&
                         slot.Enhancement.RelativeLevel != Enums.eEnhRelative.PlusThree

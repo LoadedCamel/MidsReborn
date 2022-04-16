@@ -8,6 +8,7 @@ namespace mrbBase
 {
     public class ServerConfig
     {
+        public float BaseToHit { get; set; } = 0.75f;
         public float BaseFlySpeed { get; set; } = 31.5f;
         public float BaseJumpSpeed { get; set; } = 21f;
         public float BaseJumpHeight { get; set; } = 4f;

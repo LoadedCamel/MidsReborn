@@ -1,0 +1,11 @@
+# Mids' Reborn powers auto replacement table
+# When loading a build, powers' ID with a match will be automatically replaced.
+# Ensure old power IDs are unique.
+
+# Version: 1.1
+# Revision date: 04/03/22
+# Realm: Generic
+
+[Global]
+
+

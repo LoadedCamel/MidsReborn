@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using FastDeepCloner;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
+using mrbBase.Utils;
 
 namespace mrbBase
 {
@@ -21,7 +22,8 @@ namespace mrbBase
         public int ImageIdx;
         public int LevelMax;
         public int LevelMin;
-        public Enums.eSetType SetType;
+        //public Enums.eSetType SetType;
+        public int SetType;
         public string ShortName;
         public BonusItem[] SpecialBonus = new BonusItem[6];
         public string Uid = string.Empty;
@@ -31,7 +33,7 @@ namespace mrbBase
             DisplayName = string.Empty;
             ShortName = string.Empty;
             Desc = string.Empty;
-            SetType = Enums.eSetType.Untyped;
+            SetType = 0;
             Enhancements = new int[0];
             Image = string.Empty;
             InitBonus();
@@ -65,7 +67,9 @@ namespace mrbBase
             ShortName = reader.ReadString();
             Uid = reader.ReadString();
             Desc = reader.ReadString();
-            SetType = (Enums.eSetType) reader.ReadInt32();
+
+            SetType = reader.ReadInt32();
+
             Image = reader.ReadString();
             LevelMin = reader.ReadInt32();
             LevelMax = reader.ReadInt32();
@@ -307,7 +311,9 @@ namespace mrbBase
             writer.Write(ShortName);
             writer.Write(Uid);
             writer.Write(Desc);
-            writer.Write((int) SetType);
+
+            writer.Write(SetType);
+
             writer.Write(Image);
             writer.Write(LevelMin);
             writer.Write(LevelMax);
@@ -343,7 +349,7 @@ namespace mrbBase
             }
         }
 
-        public bool ImportFromCSV(string iCSV)
+        /*public bool ImportFromCSV(string iCSV)
         {
             bool flag;
             if (iCSV == null)
@@ -370,7 +376,7 @@ namespace mrbBase
             }
 
             return flag;
-        }
+        }*/
 
         private static string GenerateShortName(string displayName)
 
