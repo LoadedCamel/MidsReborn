@@ -133,7 +133,7 @@ namespace mrbBase
 
         int nOverride { get; set; }
 
-        Effect.Expression Expressions { get; set; }
+        Expressions Expressions { get; set; }
 
         string MagnitudeExpression { get; set; }
 

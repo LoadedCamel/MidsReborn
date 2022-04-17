@@ -6,48 +6,15 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using mrbBase.Base.Master_Classes;
+using static mrbBase.Expressions;
 
 namespace mrbBase.Base.Data_Classes
 {
     public class Effect : IEffect, IComparable, ICloneable
     {
-        private static readonly Regex UidClassRegex =
-            new Regex("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
+        private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower power;
-
-        public class Expression
-        {
-            public string Duration { get; set; }
-            public string Magnitude { get; set; } 
-            public string Probability { get; set; }
-        }
-
-        public static readonly List<string> ExprCommandsList = new()
-        {
-            "",
-            "power.base>activateperiod",
-            "power.base>activatetime",
-            "power.base>areafactor",
-            "power.base>rechargetime",
-            "power.base>endcost",
-            "effect>scale",
-            "@StdResult",
-            "ifPvE",
-            "ifPvP",
-            "modifier>current",
-            "maxEndurance",
-            "rand()",
-            "source.ownPower?(",
-            "source>Max.kHitPoints",
-            ">stacks",
-            "modifier>",
-            "powerGroupIn(",
-            "powerGroupNotIn(",
-            "eq(",
-            "ne(",
-            "minmax(",
-        };
 
         public double Rand => new Random().NextDouble();
 
@@ -56,7 +23,7 @@ namespace mrbBase.Base.Data_Classes
             Validated = false;
             BaseProbability = 1f;
             MagnitudeExpression = string.Empty;
-            Expressions = new Expression();
+            Expressions = new Expressions();
             Reward = string.Empty;
             EffectClass = Enums.eEffectClass.Primary;
             EffectType = Enums.eEffectType.None;
@@ -156,15 +123,17 @@ namespace mrbBase.Base.Data_Classes
             RequiresToHitCheck = reader.ReadBoolean();
             UIDClassName = reader.ReadString();
             nIDClassName = reader.ReadInt32();
-            MagnitudeExpression = reader.ReadString();
+            //MagnitudeExpression = reader.ReadString();
 
-            AssignExpression(MagnitudeExpression);
+            //AssignExpression(MagnitudeExpression);
             // Here we create the instance of the Expression class and read the data back;
 
-            // Expressions = new Expression();
-            // Expressions.Duration = reader.ReadString();
-            // Expressions.Magnitude = reader.ReadString();
-            // Expressions.Probability = reader.ReadString();
+            Expressions = new Expressions
+            {
+                Duration = reader.ReadString(),
+                Magnitude = reader.ReadString(),
+                Probability = reader.ReadString()
+            };
 
             Reward = reader.ReadString();
             EffectId = reader.ReadString();
@@ -203,31 +172,6 @@ namespace mrbBase.Base.Data_Classes
                 var cValue = reader.ReadString();
                 ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
             }
-        }
-
-        private void AssignExpression(string? magnitudeExpression)
-        {
-            if (MagnitudeExpression.Contains("///"))
-            {
-                var replaced = magnitudeExpression?.Replace("///", "®");
-                var splitExpr = replaced?.Split('®');
-                Expressions = new Expression
-                {
-                    Duration = "",
-                    Magnitude = splitExpr?[0].Trim(),
-                    Probability = splitExpr?[1].Trim()
-                };
-            }
-            else
-            {
-                Expressions = new Expression
-                {
-                    Duration = "",
-                    Magnitude = magnitudeExpression ?? "",
-                    Probability = ""
-                };
-            }
-
         }
 
         private Effect(IEffect template) : this()
@@ -278,7 +222,7 @@ namespace mrbBase.Base.Data_Classes
             RequiresToHitCheck = template.RequiresToHitCheck;
             UIDClassName = template.UIDClassName;
             nIDClassName = template.nIDClassName;
-            MagnitudeExpression = template.MagnitudeExpression;
+            //MagnitudeExpression = template.MagnitudeExpression;
             Expressions = template.Expressions;
             Reward = template.Reward;
             EffectId = template.EffectId;
@@ -319,7 +263,7 @@ namespace mrbBase.Base.Data_Classes
 
         public string MagnitudeExpression { get; set; }
 
-        public Expression Expressions { get; set; }
+        public Expressions Expressions { get; set; }
 
         public float ProcsPerMinute { get; set; }
 
@@ -330,16 +274,12 @@ namespace mrbBase.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
-                if (ExpressionParser.HasSeparator(this) & AttribType == Enums.eAttribType.Expression)
+                if (AttribType == Enums.eAttribType.Expression && !string.IsNullOrWhiteSpace(Expressions.Probability))
                 {
-                    var chunks = ExpressionParser.SplitExpression(this, out _);
-                    if (chunks.Count <= 1) return 0;
-
-                    var ret = ExpressionParser.ParseExpression2(ExpressionParser.SubExpressionToFx(chunks[1], this), out var parseError);
-
-                    return parseError.ErrorFound ? 0 : Math.Max(0, Math.Min(1, ret));
+                    var retValue = Parse(this, ExpressionType.Probability, out var error);
+                    return error.Found ? 0f : Math.Max(0, Math.Min(1, retValue));
                 }
-
+               
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
                 {
                     var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
@@ -357,10 +297,11 @@ namespace mrbBase.Base.Data_Classes
                                 (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }
 
-                //probability = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) &&
-                    MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
+                
+                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
+                {
                     probability += MidsContext.Character.ModifyEffects[EffectId];
+                }
 
                 return Math.Max(0, Math.Min(1, probability));
             }
@@ -375,7 +316,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eAttribType.Magnitude => Scale * nMagnitude * DatabaseAPI.GetModifier(this),
                     Enums.eAttribType.Duration => nMagnitude,
-                    Enums.eAttribType.Expression => ExpressionParser.ParseExpression(this, out _),
+                    Enums.eAttribType.Expression => Parse(this, ExpressionType.Magnitude, out _),
                     _ => 0
                 };
             }
@@ -950,20 +891,16 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
+            if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
             {
-                var chunks = ExpressionParser.SplitExpression(this, out _);
-                if (chunks.Count == 2)
+                if (editorDisplay)
                 {
-                    if (editorDisplay)
-                    {
-                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ExpressionParser.ParseExpression(this, out _, 1) * 100)))}% Variable Chance";
-                        sProbExp = $"Probability Expression: {chunks[1]}";
-                    }
-                    else
-                    {
-                        sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, ExpressionParser.ParseExpression(this, out _, 1) * 100)))}% chance";
-                    }
+                    sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, Parse(this, ExpressionType.Probability, out _) * 100)))}% Variable Chance";
+                    sProbExp = $"Probability Expression: {Expressions.Probability}";
+                }
+                else
+                {
+                    sChance = $"{decimal.Round((decimal)Math.Max(0, Math.Min(100, Parse(this, ExpressionType.Probability, out _) * 100)))}% chance";
                 }
             }
 
@@ -1180,15 +1117,9 @@ namespace mrbBase.Base.Data_Classes
 
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                if (MagnitudeExpression != "" & AttribType == Enums.eAttribType.Expression)
+                if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var chunks = ExpressionParser.SplitExpression(this, out var forcedMagDefault);
-                    if (forcedMagDefault)
-                    {
-                        chunks[0] = $@"{Convert.ToSingle(chunks[0]) * DatabaseAPI.GetModifier(this) * (EffectType == Enums.eEffectType.Damage ? -1 : 1)}";
-                    }
-
-                    var mag = Math.Abs(ExpressionParser.ParseExpression(this, out _));
+                    var mag = Math.Abs(Parse(this, ExpressionType.Magnitude, out _));
                     var absAllowed = new List<Enums.eEffectType>
                     {
                         Enums.eEffectType.Damage,
@@ -1201,27 +1132,28 @@ namespace mrbBase.Base.Data_Classes
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
+                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
+                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
                         }
 
-                        sMagExp = $"Mag Expression: {chunks[0].Replace("modifier>current", ModifierTable)}";
+                        sMagExp = $"Mag Expression: {Expressions.Magnitude.Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(ExpressionParser.ParseExpression(this, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
+                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)ExpressionParser.ParseExpression(this, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
+                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
                         }
                     }
                 }
+                
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
                 {
                     var perceptionDistance = Statistics.BasePerception * BuffedMag;

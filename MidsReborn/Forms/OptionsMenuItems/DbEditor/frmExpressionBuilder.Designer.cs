@@ -185,28 +185,6 @@
             // lbCommandVars
             // 
             this.lbCommandVars.FormattingEnabled = true;
-            this.lbCommandVars.Items.AddRange(new object[] {
-            "power.base>activateperiod",
-            "power.base>activatetime",
-            "power.base>areafactor",
-            "power.base>rechargetime",
-            "power.base>endcost",
-            "effect>scale",
-            "@StdResult",
-            "ifPvE",
-            "ifPvP",
-            "modifier>current",
-            "maxEndurance",
-            "rand()",
-            "source.ownPower?(",
-            "source>Max.kHitPoints",
-            ">stacks",
-            "modifier>",
-            "powerGroupIn(",
-            "powerGroupNotIn(",
-            "eq(",
-            "ne(",
-            "minmax("});
             this.lbCommandVars.Location = new System.Drawing.Point(10, 31);
             this.lbCommandVars.Name = "lbCommandVars";
             this.lbCommandVars.Size = new System.Drawing.Size(211, 290);

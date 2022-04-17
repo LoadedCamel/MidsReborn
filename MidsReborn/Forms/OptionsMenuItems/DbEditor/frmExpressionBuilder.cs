@@ -22,22 +22,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public string Magnitude { get; set; }
         public string Probability { get; set; }
 
-        private readonly Expression _myExpressions;
+        private readonly IEffect _myEffect;
         private TextBox SelectedExpression { get; set; }
         private int InsertAtPos { get; set; }
 
-        public frmExpressionBuilder(Expression expressions)
+        public frmExpressionBuilder(ICloneable fx)
         {
             InitializeComponent();
-            _myExpressions = expressions.Clone();
+            _myEffect = fx.Clone() as IEffect;
             Load += OnLoad;
         }
 
         private void OnLoad(object sender, EventArgs e)
         {
-            tbDurationExp.Text = _myExpressions.Duration;
-            tbMagExpr.Text = _myExpressions.Magnitude;
-            tbProbExpr.Text = _myExpressions.Probability;
+            lbCommandVars.BeginUpdate();
+            lbCommandVars.Items.Clear();
+            lbCommandVars.DataSource = new BindingSource(Expressions.CommandsList, null);
+            lbCommandVars.EndUpdate();
+            tbDurationExp.Text = _myEffect.Expressions.Duration;
+            tbMagExpr.Text = _myEffect.Expressions.Magnitude;
+            tbProbExpr.Text = _myEffect.Expressions.Probability;
         }
 
         private void btnPowerInsert_Click(object sender, EventArgs e)

@@ -122,11 +122,11 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.Designer.cs">
       <DependentUpon>frmExpressionBuilder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.Designer.cs">
-      <DependentUpon>frmPowerEffect2.cs</DependentUpon>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.Designer.cs">
+      <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
       <SubType>Form</SubType>
@@ -350,9 +350,6 @@
     <Compile Include="Forms\frmPrint.Designer.cs">
       <DependentUpon>frmPrint.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.Designer.cs">
-      <DependentUpon>frmPowerEffect.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.Designer.cs">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
     </Compile>
@@ -440,8 +437,8 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.resx">
       <DependentUpon>frmExpressionBuilder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect2.resx">
-      <DependentUpon>frmPowerEffect2.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.resx">
+      <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
@@ -2553,9 +2550,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\frmPrint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2660,9 +2654,6 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.resx">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.resx">
-      <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPrint.resx">
       <DependentUpon>frmPrint.cs</DependentUpon>
