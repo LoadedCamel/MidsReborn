@@ -1,7 +1,5 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -330,18 +328,15 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                switch (AttribType)
+                return AttribType switch
                 {
-                    case Enums.eAttribType.Magnitude:
-                    case Enums.eAttribType.Expression:
-                        return Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration;
-                    case Enums.eAttribType.Duration:
-                        return Math.Abs(Math_Duration) <= 0.01
-                            ? Scale * DatabaseAPI.GetModifier(this)
-                            : Math_Duration;
-                    default:
-                        return 0.0f;
-                }
+                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration,
+                    Enums.eAttribType.Expression => Parse(this, ExpressionType.Duration, out _),
+                    Enums.eAttribType.Duration => Math.Abs(Math_Duration) <= 0.01
+                        ? Scale * DatabaseAPI.GetModifier(this)
+                        : Math_Duration,
+                    _ => 0.0f
+                };
             }
         }
 
