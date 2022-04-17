@@ -5,10 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -120,6 +117,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             MyFx.Expressions.Duration = expression.Duration;
             MyFx.Expressions.Magnitude = expression.Magnitude;
             MyFx.Expressions.Probability = expression.Probability;
+            UpdateFxText();
         }
 
         private void cbAffects_SelectedIndexChanged(object sender, EventArgs e)

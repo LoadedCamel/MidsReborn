@@ -331,7 +331,8 @@ namespace mrbBase.Base.Data_Classes
                 return AttribType switch
                 {
                     Enums.eAttribType.Magnitude => Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration,
-                    Enums.eAttribType.Expression => Parse(this, ExpressionType.Duration, out _),
+                    Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Duration) => Parse(this,
+                        ExpressionType.Duration, out _),
                     Enums.eAttribType.Duration => Math.Abs(Math_Duration) <= 0.01
                         ? Scale * DatabaseAPI.GetModifier(this)
                         : Math_Duration,
