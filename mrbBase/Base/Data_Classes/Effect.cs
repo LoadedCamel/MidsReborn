@@ -267,35 +267,39 @@ namespace mrbBase.Base.Data_Classes
 
         public bool CancelOnMiss { get; set; }
 
-        public float Probability
+        private float ActualProbability
         {
             get
             {
                 var probability = BaseProbability;
-                if (AttribType == Enums.eAttribType.Expression && !string.IsNullOrWhiteSpace(Expressions.Probability))
-                {
-                    var retValue = Parse(this, ExpressionType.Probability, out var error);
-                    return error.Found ? 0f : Math.Max(0, Math.Min(1, retValue));
-                }
-               
                 if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
                 {
                     var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
                     var procsPerMinute = ProcsPerMinute;
                     var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
-                        ? 0
-                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
-                    probability = power.PowerType == Enums.ePowerType.Click
-                        ? Math.Min(
+                    float rechargeVal;
+                    if (Math.Abs(power.RechargeTime) < float.Epsilon)
+                    {
+                        rechargeVal = 0;
+                    }
+                    else
+                    {
+                        rechargeVal = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
+                    }
+
+                    if (power.PowerType == Enums.ePowerType.Click)
+                    {
+                        probability = Math.Min(
                             Math.Max(procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f)
-                        : Math.Min(
-                            Math.Max(procsPerMinute * 10 / (60f * areaFactor),
                                 (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                    }
+                    else
+                    {
+                        probability = Math.Min(Math.Max(procsPerMinute * 10 / (60f * areaFactor), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                    }
                 }
 
-                
+
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
                 {
                     probability += MidsContext.Character.ModifyEffects[EffectId];
@@ -303,6 +307,26 @@ namespace mrbBase.Base.Data_Classes
 
                 return Math.Max(0, Math.Min(1, probability));
             }
+        }
+
+        public float Probability
+        {
+            get
+            {
+                switch (AttribType)
+                {
+                    case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Probability):
+                    {
+                        var retValue = Parse(this, ExpressionType.Probability, out var error);
+                        return error.Found ? 0f : Math.Max(0, Math.Min(1, retValue));
+                    }
+                    case Enums.eAttribType.Expression:
+                        return ActualProbability;
+                    default:
+                        return ActualProbability;
+                }
+            }
+
             set => BaseProbability = value;
         }
 
@@ -314,7 +338,8 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eAttribType.Magnitude => Scale * nMagnitude * DatabaseAPI.GetModifier(this),
                     Enums.eAttribType.Duration => nMagnitude,
-                    Enums.eAttribType.Expression => Parse(this, ExpressionType.Magnitude, out _),
+                    Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Magnitude) => Parse(this, ExpressionType.Magnitude, out _),
+                    Enums.eAttribType.Expression => Scale * nMagnitude,
                     _ => 0
                 };
             }
@@ -328,16 +353,19 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                return AttribType switch
+                switch (AttribType)
                 {
-                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration,
-                    Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Duration) => Parse(this,
-                        ExpressionType.Duration, out _),
-                    Enums.eAttribType.Duration => Math.Abs(Math_Duration) <= 0.01
-                        ? Scale * DatabaseAPI.GetModifier(this)
-                        : Math_Duration,
-                    _ => 0.0f
-                };
+                    case Enums.eAttribType.Magnitude:
+                        break;
+                    case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Duration):
+                        return Parse(this, ExpressionType.Duration, out _);
+                    case Enums.eAttribType.Expression:
+                        return Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration;
+                    case Enums.eAttribType.Duration:
+                        return Math.Abs(Math_Duration) <= 0.01 ? Scale * DatabaseAPI.GetModifier(this) : Math_Duration;
+                }
+
+                return 0.0f;
             }
         }
 
@@ -887,7 +915,7 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
+            if (AttribType == Enums.eAttribType.Expression && !string.IsNullOrWhiteSpace(Expressions.Probability))
             {
                 if (editorDisplay)
                 {
