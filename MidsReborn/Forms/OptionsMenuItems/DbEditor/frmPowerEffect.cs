@@ -114,9 +114,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var expression = new frmExpressionBuilder(MyFx);
             var result = expression.ShowDialog(this);
             if (result != DialogResult.OK) return;
-            MyFx.Expressions.Duration = expression.Duration;
-            MyFx.Expressions.Magnitude = expression.Magnitude;
-            MyFx.Expressions.Probability = expression.Probability;
+            MyFx.Expressions ??= new Expressions();
+            MyFx.Expressions.Duration = expression.Duration ?? "";
+            MyFx.Expressions.Magnitude = expression.Magnitude ?? "";
+            MyFx.Expressions.Probability = expression.Probability ?? "";
             UpdateFxText();
         }
 
