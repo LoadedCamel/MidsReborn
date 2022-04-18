@@ -671,6 +671,11 @@ namespace mrbBase
             return $"{ImagePath()}\\Enhancements\\";
         }
 
+        public static string GetDbEnhancementsPath()
+        {
+            return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
+        }
+
         public static string GetOriginsPath()
         {
             return ImagePath() + "\\Origins\\";

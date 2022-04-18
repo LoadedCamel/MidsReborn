@@ -20,7 +20,7 @@ namespace mrbBase.Base.Data_Classes
         {
             Validated = false;
             BaseProbability = 1f;
-            MagnitudeExpression = string.Empty;
+            //MagnitudeExpression = string.Empty;
             Expressions = new Expressions();
             Reward = string.Empty;
             EffectClass = Enums.eEffectClass.Primary;
@@ -121,6 +121,7 @@ namespace mrbBase.Base.Data_Classes
             RequiresToHitCheck = reader.ReadBoolean();
             UIDClassName = reader.ReadString();
             nIDClassName = reader.ReadInt32();
+
             //MagnitudeExpression = reader.ReadString();
 
             //AssignExpression(MagnitudeExpression);
@@ -172,6 +173,31 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
+        private void AssignExpression(string? magnitudeExpression)
+        {
+            if (MagnitudeExpression.Contains("///"))
+            {
+                var replaced = magnitudeExpression?.Replace("///", "®");
+                var splitExpr = replaced?.Split('®');
+                Expressions = new Expressions
+                {
+                    Duration = "",
+                    Magnitude = splitExpr?[0].Trim(),
+                    Probability = splitExpr?[1].Trim()
+                };
+            }
+            else
+            {
+                Expressions = new Expressions
+                {
+                    Duration = "",
+                    Magnitude = magnitudeExpression ?? "",
+                    Probability = ""
+                };
+            }
+
+        }
+
         private Effect(IEffect template) : this()
         {
             PowerFullName = template.PowerFullName;
@@ -220,7 +246,9 @@ namespace mrbBase.Base.Data_Classes
             RequiresToHitCheck = template.RequiresToHitCheck;
             UIDClassName = template.UIDClassName;
             nIDClassName = template.nIDClassName;
+
             //MagnitudeExpression = template.MagnitudeExpression;
+
             Expressions = template.Expressions;
             Reward = template.Reward;
             EffectId = template.EffectId;
@@ -2826,9 +2854,19 @@ namespace mrbBase.Base.Data_Classes
                     return string.CompareOrdinal(EffectId, effect.EffectId);
                 if (Reward != effect.Reward)
                     return string.CompareOrdinal(Reward, effect.Reward);
-                if (MagnitudeExpression != effect.MagnitudeExpression)
+
+                if (Expressions.Magnitude != effect.Expressions.Magnitude)
                 {
-                    return string.CompareOrdinal(MagnitudeExpression, effect.MagnitudeExpression);
+                    return string.CompareOrdinal(Expressions.Magnitude, effect.Expressions.Magnitude);
+                }
+                if (Expressions.Duration != effect.Expressions.Duration)
+                {
+                    return string.CompareOrdinal(Expressions.Duration, effect.Expressions.Duration);
+                }
+
+                if (Expressions.Probability != effect.Expressions.Probability)
+                {
+                    return string.CompareOrdinal(Expressions.Probability, effect.Expressions.Probability);
                 }
 
                 //EffectType is the same, go more detailed.

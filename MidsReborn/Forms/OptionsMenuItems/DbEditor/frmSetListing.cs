@@ -366,7 +366,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var strArray = new string[7];
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             strArray[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
-            strArray[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
+            strArray[1] = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).ShortName;
             strArray[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
             strArray[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
             strArray[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);

@@ -184,7 +184,16 @@
 		{
 			"Name": "Guardian Archetype Sets",
 			"ShortName": "Guardian"
+		},
+		{
+			"Name": "Universal Debuff",
+			"ShortName": "UniversalDebuff"
+		},
+		{
+			"Name": "Resurrection",
+			"ShortName": "Rez"
 		}
+		
 	],
 	"EnhancementGrades": [
 		{

@@ -1778,28 +1778,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var numArray = new int[myPower.SetTypes.Count];
-            var num1 = myPower.SetTypes.Count - 1;
-            for (var index = 0; index <= num1; ++index)
-            {
-                numArray[index] = myPower.SetTypes[index];
-            }
-
-            var index1 = 0;
-
-            myPower.SetTypes = new List<int>();
-
-            var num2 = numArray.Length - 1;
-            for (var index2 = 0; index2 <= num2; ++index2)
-            {
-                if (index2 == invSetIndex)
-                {
-                    continue;
-                }
-
-                myPower.SetTypes[index1] = numArray[index2];
-                ++index1;
-            }
+            myPower.SetTypes.Remove(myPower.SetTypes[invSetIndex]);
 
             DrawAcceptedSets();
         }

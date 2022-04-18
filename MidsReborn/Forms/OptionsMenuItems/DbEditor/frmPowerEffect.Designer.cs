@@ -129,7 +129,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbCoDFormat.AutoSize = true;
             this.cbCoDFormat.BackColor = System.Drawing.Color.Transparent;
-            this.cbCoDFormat.Location = new System.Drawing.Point(1255, 86);
+            this.cbCoDFormat.Location = new System.Drawing.Point(987, 12);
             this.cbCoDFormat.Name = "cbCoDFormat";
             this.cbCoDFormat.Size = new System.Drawing.Size(131, 17);
             this.cbCoDFormat.TabIndex = 177;

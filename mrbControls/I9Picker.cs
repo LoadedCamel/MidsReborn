@@ -685,15 +685,12 @@ namespace mrbControls
                 return;
             }
 
-            if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.SetTypeId == Ui.View.SetTypeId) &
-                (Ui.Initial.SetId == Ui.View.SetId) &
-                (Ui.Initial.GradeId == Ui.View.GradeId) & (Ui.Initial.SpecialId == Ui.View.SpecialId))
+            if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.SetTypeId == Ui.View.SetTypeId) & (Ui.Initial.SetId == Ui.View.SetId) & (Ui.Initial.GradeId == Ui.View.GradeId) & (Ui.Initial.SpecialId == Ui.View.SpecialId))
             {
                 DrawSelected(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
                 DrawBox(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
             }
-            else if (Ui.Initial.TabId == Ui.View.TabId && Ui.Initial.SetTypeId == Ui.View.SetTypeId &&
-                     Ui.View.SetId < 0)
+            else if (Ui.Initial.TabId == Ui.View.TabId && Ui.Initial.SetTypeId == Ui.View.SetTypeId && Ui.View.SetId < 0)
             {
                 DrawSelected(IndexToXy(Ui.Initial.SetId).X, IndexToXy(Ui.Initial.SetId).Y);
                 DrawBox(IndexToXy(Ui.Initial.SetId).X, IndexToXy(Ui.Initial.SetId).Y);
@@ -1289,7 +1286,7 @@ namespace mrbControls
                             str = string.Concat(" (", Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1), "-", Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMax + 1), ")");
                         }
 
-                        SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[tId].SetType));
+                        SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[tId].SetType).ShortName);
                         //SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + setTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[tId].SetType]);
                         if ((cell.X != _hoverCell.X) | (cell.Y != _hoverCell.Y) || alwaysUpdate)
                         {

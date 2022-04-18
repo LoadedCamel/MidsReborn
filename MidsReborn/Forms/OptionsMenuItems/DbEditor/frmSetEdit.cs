@@ -42,22 +42,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            ImagePicker.InitialDirectory = I9Gfx.GetEnhancementsPath();
+            ImagePicker.InitialDirectory = I9Gfx.GetDbEnhancementsPath();
             ImagePicker.FileName = MySet.Image;
-            if (ImagePicker.ShowDialog() == DialogResult.OK)
+            if (ImagePicker.ShowDialog(this) != DialogResult.OK) return;
+
+            var imageFile = FileIO.StripPath(ImagePicker.FileName);
+            if (!File.Exists(Path.Combine(I9Gfx.GetDbEnhancementsPath(), imageFile)))
             {
-                var str = FileIO.StripPath(ImagePicker.FileName);
-                if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
-                {
-                    MessageBox.Show(
-                        $"You must select an image from the {I9Gfx.GetEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
-                        @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MySet.Image = str;
-                    DisplayIcon();
-                }
+                MessageBox.Show($@"You must select an image from the {I9Gfx.GetDbEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MySet.Image = imageFile;
+                DisplayIcon();
             }
         }
 
@@ -384,7 +381,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (!string.IsNullOrWhiteSpace(MySet.Image))
             {
-                using var extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{MySet.Image}");
+                var img = MySet.Image;
+                var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
+                using var extendedBitmap1 = new ExtendedBitmap(path);
                 using var extendedBitmap2 = new ExtendedBitmap(30, 30);
                 extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
                     I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
@@ -489,15 +488,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 items[1] = "";
                 if (DatabaseAPI.Database.Power[_setBonusList[index]].Effects.Length > 0)
-                    items[1] = DatabaseAPI.Database.Power[_setBonusList[index]].Effects[0]
-                        .BuildEffectStringShort(false, true);
+                {
+                    items[1] = DatabaseAPI.Database.Power[_setBonusList[index]].Effects[0].BuildEffectStringShort(false, true);
+                }
+
                 items[0] = $"{DatabaseAPI.Database.Power[_setBonusList[index]].PowerName}{(DatabaseAPI.Database.Power[_setBonusList[index]].FullName.ToLowerInvariant().Contains("pvp") ? " [PvP]" : "")}";
-                if (items[0].ToUpper(CultureInfo.InvariantCulture)
-                    .Contains(txtBonusFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
+                if (items[0].ToUpper(CultureInfo.InvariantCulture).Contains(txtBonusFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
+                {
                     lvBonusList.Items.Add(new ListViewItem(items)
                     {
                         Tag = _setBonusList[index]
                     });
+                }
             }
 
             lvBonusList.Sort();
