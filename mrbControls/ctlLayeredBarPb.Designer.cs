@@ -40,6 +40,7 @@ namespace mrbControls
             // 
             // canvas
             // 
+            this.canvas.BorderStyle = BorderStyle.None;
             this.canvas.Location = new System.Drawing.Point(54, 52);
             this.canvas.Name = "canvas";
             this.canvas.Size = new System.Drawing.Size(277, 13);
@@ -58,6 +59,7 @@ namespace mrbControls
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BorderStyle = BorderStyle.None;
             this.Controls.Add(this.canvas);
             this.Name = "ctlLayeredBarPb";
             this.Size = new System.Drawing.Size(277, 13);
