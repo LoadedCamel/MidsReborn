@@ -546,7 +546,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar21
             // 
             this.bar21.BackColor = System.Drawing.Color.Transparent;
-            this.bar21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar21.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar21.Group = "Endurance";
             this.bar21.Location = new System.Drawing.Point(183, 3);
             this.bar21.MaximumBarValue = 10F;
@@ -559,7 +559,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar23
             // 
             this.bar23.BackColor = System.Drawing.Color.Transparent;
-            this.bar23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar23.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar23.Group = "Endurance";
             this.bar23.Location = new System.Drawing.Point(183, 41);
             this.bar23.MaximumBarValue = 200F;
@@ -572,7 +572,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar22
             // 
             this.bar22.BackColor = System.Drawing.Color.Transparent;
-            this.bar22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar22.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar22.Group = "Endurance";
             this.bar22.Location = new System.Drawing.Point(183, 22);
             this.bar22.MaximumBarValue = 15F;
@@ -721,7 +721,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar19
             // 
             this.bar19.BackColor = System.Drawing.Color.Transparent;
-            this.bar19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar19.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar19.Group = "HP";
             this.bar19.Location = new System.Drawing.Point(184, 3);
             this.bar19.MaximumBarValue = 1500F;
@@ -734,7 +734,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar20
             // 
             this.bar20.BackColor = System.Drawing.Color.Transparent;
-            this.bar20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar20.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar20.Group = "HP";
             this.bar20.Location = new System.Drawing.Point(184, 22);
             this.bar20.MaximumBarValue = 4500F;
@@ -921,7 +921,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar11
             // 
             this.bar11.BackColor = System.Drawing.Color.Transparent;
-            this.bar11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar11.Group = "Resistance";
             this.bar11.Location = new System.Drawing.Point(183, 3);
             this.bar11.MaximumBarValue = 100F;
@@ -934,7 +934,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar18
             // 
             this.bar18.BackColor = System.Drawing.Color.Transparent;
-            this.bar18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar18.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar18.Group = "Resistance";
             this.bar18.Location = new System.Drawing.Point(183, 136);
             this.bar18.MaximumBarValue = 100F;
@@ -947,7 +947,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar12
             // 
             this.bar12.BackColor = System.Drawing.Color.Transparent;
-            this.bar12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar12.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar12.Group = "Resistance";
             this.bar12.Location = new System.Drawing.Point(183, 22);
             this.bar12.MaximumBarValue = 100F;
@@ -960,7 +960,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar17
             // 
             this.bar17.BackColor = System.Drawing.Color.Transparent;
-            this.bar17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar17.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar17.Group = "Resistance";
             this.bar17.Location = new System.Drawing.Point(183, 117);
             this.bar17.MaximumBarValue = 100F;
@@ -973,7 +973,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar13
             // 
             this.bar13.BackColor = System.Drawing.Color.Transparent;
-            this.bar13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar13.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar13.Group = "Resistance";
             this.bar13.Location = new System.Drawing.Point(183, 41);
             this.bar13.MaximumBarValue = 100F;
@@ -986,7 +986,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar16
             // 
             this.bar16.BackColor = System.Drawing.Color.Transparent;
-            this.bar16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar16.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar16.Group = "Resistance";
             this.bar16.Location = new System.Drawing.Point(183, 98);
             this.bar16.MaximumBarValue = 100F;
@@ -999,7 +999,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar14
             // 
             this.bar14.BackColor = System.Drawing.Color.Transparent;
-            this.bar14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar14.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar14.Group = "Resistance";
             this.bar14.Location = new System.Drawing.Point(183, 60);
             this.bar14.MaximumBarValue = 100F;
@@ -1012,7 +1012,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar15
             // 
             this.bar15.BackColor = System.Drawing.Color.Transparent;
-            this.bar15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar15.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar15.Group = "Resistance";
             this.bar15.Location = new System.Drawing.Point(183, 79);
             this.bar15.MaximumBarValue = 100F;
@@ -1212,7 +1212,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar10
             // 
             this.bar10.BackColor = System.Drawing.Color.Transparent;
-            this.bar10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar10.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar10.Group = "Defense";
             this.bar10.Location = new System.Drawing.Point(184, 174);
             this.bar10.MaximumBarValue = 100F;
@@ -1236,7 +1236,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar9
             // 
             this.bar9.BackColor = System.Drawing.Color.Transparent;
-            this.bar9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar9.Group = "Defense";
             this.bar9.Location = new System.Drawing.Point(184, 155);
             this.bar9.MaximumBarValue = 100F;
@@ -1260,7 +1260,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar8
             // 
             this.bar8.BackColor = System.Drawing.Color.Transparent;
-            this.bar8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar8.Group = "Defense";
             this.bar8.Location = new System.Drawing.Point(184, 136);
             this.bar8.MaximumBarValue = 100F;
@@ -1284,7 +1284,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar7
             // 
             this.bar7.BackColor = System.Drawing.Color.Transparent;
-            this.bar7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar7.Group = "Defense";
             this.bar7.Location = new System.Drawing.Point(184, 117);
             this.bar7.MaximumBarValue = 100F;
@@ -1308,7 +1308,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar6
             // 
             this.bar6.BackColor = System.Drawing.Color.Transparent;
-            this.bar6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar6.Group = "Defense";
             this.bar6.Location = new System.Drawing.Point(184, 98);
             this.bar6.MaximumBarValue = 100F;
@@ -1332,7 +1332,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar5
             // 
             this.bar5.BackColor = System.Drawing.Color.Transparent;
-            this.bar5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar5.Group = "Defense";
             this.bar5.Location = new System.Drawing.Point(184, 79);
             this.bar5.MaximumBarValue = 100F;
@@ -1356,7 +1356,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar4
             // 
             this.bar4.BackColor = System.Drawing.Color.Transparent;
-            this.bar4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar4.Group = "Defense";
             this.bar4.Location = new System.Drawing.Point(184, 60);
             this.bar4.MaximumBarValue = 100F;
@@ -1380,7 +1380,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar3
             // 
             this.bar3.BackColor = System.Drawing.Color.Transparent;
-            this.bar3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar3.Group = "Defense";
             this.bar3.Location = new System.Drawing.Point(184, 41);
             this.bar3.MaximumBarValue = 100F;
@@ -1404,7 +1404,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar2
             // 
             this.bar2.BackColor = System.Drawing.Color.Transparent;
-            this.bar2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar2.Group = "Defense";
             this.bar2.Location = new System.Drawing.Point(184, 22);
             this.bar2.MaximumBarValue = 100F;
@@ -1429,7 +1429,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar1
             // 
             this.bar1.BackColor = System.Drawing.Color.Transparent;
-            this.bar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar1.Group = "Defense";
             this.bar1.Location = new System.Drawing.Point(184, 3);
             this.bar1.MaximumBarValue = 100F;
@@ -1820,7 +1820,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar37
             // 
             this.bar37.BackColor = System.Drawing.Color.Transparent;
-            this.bar37.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar37.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar37.Group = "Elusivity";
             this.bar37.Location = new System.Drawing.Point(152, 3);
             this.bar37.MaximumBarValue = 100F;
@@ -1833,7 +1833,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar68
             // 
             this.bar68.BackColor = System.Drawing.Color.Transparent;
-            this.bar68.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar68.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar68.Group = "Elusivity";
             this.bar68.Location = new System.Drawing.Point(152, 3);
             this.bar68.MaximumBarValue = 100F;
@@ -1846,7 +1846,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar69
             // 
             this.bar69.BackColor = System.Drawing.Color.Transparent;
-            this.bar69.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar69.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar69.Group = "Elusivity";
             this.bar69.Location = new System.Drawing.Point(152, 3);
             this.bar69.MaximumBarValue = 100F;
@@ -1859,7 +1859,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar70
             // 
             this.bar70.BackColor = System.Drawing.Color.Transparent;
-            this.bar70.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar70.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar70.Group = "Elusivity";
             this.bar70.Location = new System.Drawing.Point(152, 3);
             this.bar70.MaximumBarValue = 100F;
@@ -1872,7 +1872,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar71
             // 
             this.bar71.BackColor = System.Drawing.Color.Transparent;
-            this.bar71.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar71.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar71.Group = "Elusivity";
             this.bar71.Location = new System.Drawing.Point(152, 3);
             this.bar71.MaximumBarValue = 100F;
@@ -1885,7 +1885,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar72
             // 
             this.bar72.BackColor = System.Drawing.Color.Transparent;
-            this.bar72.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar72.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar72.Group = "Elusivity";
             this.bar72.Location = new System.Drawing.Point(152, 3);
             this.bar72.MaximumBarValue = 100F;
@@ -1898,7 +1898,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar73
             // 
             this.bar73.BackColor = System.Drawing.Color.Transparent;
-            this.bar73.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar73.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar73.Group = "Elusivity";
             this.bar73.Location = new System.Drawing.Point(152, 3);
             this.bar73.MaximumBarValue = 100F;
@@ -1911,7 +1911,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar74
             // 
             this.bar74.BackColor = System.Drawing.Color.Transparent;
-            this.bar74.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar74.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar74.Group = "Elusivity";
             this.bar74.Location = new System.Drawing.Point(152, 3);
             this.bar74.MaximumBarValue = 100F;
@@ -1924,7 +1924,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar75
             // 
             this.bar75.BackColor = System.Drawing.Color.Transparent;
-            this.bar75.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar75.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar75.Group = "Elusivity";
             this.bar75.Location = new System.Drawing.Point(152, 3);
             this.bar75.MaximumBarValue = 100F;
@@ -1937,7 +1937,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar76
             // 
             this.bar76.BackColor = System.Drawing.Color.Transparent;
-            this.bar76.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar76.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar76.Group = "Elusivity";
             this.bar76.Location = new System.Drawing.Point(152, 3);
             this.bar76.MaximumBarValue = 100F;
@@ -1950,7 +1950,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar77
             // 
             this.bar77.BackColor = System.Drawing.Color.Transparent;
-            this.bar77.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar77.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar77.Group = "Elusivity";
             this.bar77.Location = new System.Drawing.Point(152, 3);
             this.bar77.MaximumBarValue = 100F;
@@ -2129,7 +2129,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar36
             // 
             this.bar36.BackColor = System.Drawing.Color.Transparent;
-            this.bar36.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar36.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar36.Group = "";
             this.bar36.Location = new System.Drawing.Point(153, 3);
             this.bar36.MaximumBarValue = 500F;
@@ -2198,7 +2198,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar35
             // 
             this.bar35.BackColor = System.Drawing.Color.Transparent;
-            this.bar35.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar35.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar35.Group = "";
             this.bar35.Location = new System.Drawing.Point(153, 3);
             this.bar35.MaximumBarValue = 200F;
@@ -2267,7 +2267,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar34
             // 
             this.bar34.BackColor = System.Drawing.Color.Transparent;
-            this.bar34.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar34.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar34.Group = "";
             this.bar34.Location = new System.Drawing.Point(152, 3);
             this.bar34.MaximumBarValue = 750F;
@@ -2336,7 +2336,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar33
             // 
             this.bar33.BackColor = System.Drawing.Color.Transparent;
-            this.bar33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar33.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar33.Group = "";
             this.bar33.Location = new System.Drawing.Point(152, 3);
             this.bar33.MaximumBarValue = 100F;
@@ -2405,7 +2405,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar32
             // 
             this.bar32.BackColor = System.Drawing.Color.Transparent;
-            this.bar32.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar32.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar32.Group = "";
             this.bar32.Location = new System.Drawing.Point(151, 3);
             this.bar32.MaximumBarValue = 250F;
@@ -2474,7 +2474,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar31
             // 
             this.bar31.BackColor = System.Drawing.Color.Transparent;
-            this.bar31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar31.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar31.Group = "";
             this.bar31.Location = new System.Drawing.Point(151, 3);
             this.bar31.MaximumBarValue = 500F;
@@ -2560,7 +2560,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar30
             // 
             this.bar30.BackColor = System.Drawing.Color.Transparent;
-            this.bar30.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar30.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar30.Group = "Perception";
             this.bar30.Location = new System.Drawing.Point(168, 41);
             this.bar30.MaximumBarValue = 1500F;
@@ -2584,7 +2584,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar29
             // 
             this.bar29.BackColor = System.Drawing.Color.Transparent;
-            this.bar29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar29.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar29.Group = "Perception";
             this.bar29.Location = new System.Drawing.Point(168, 22);
             this.bar29.MaximumBarValue = 1500F;
@@ -2609,7 +2609,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar28
             // 
             this.bar28.BackColor = System.Drawing.Color.Transparent;
-            this.bar28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar28.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar28.Group = "Perception";
             this.bar28.Location = new System.Drawing.Point(168, 3);
             this.bar28.MaximumBarValue = 1500F;
@@ -2775,7 +2775,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar27
             // 
             this.bar27.BackColor = System.Drawing.Color.Transparent;
-            this.bar27.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar27.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar27.Group = "Movement";
             this.bar27.Location = new System.Drawing.Point(198, 53);
             this.bar27.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2800,7 +2800,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar26
             // 
             this.bar26.BackColor = System.Drawing.Color.Transparent;
-            this.bar26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar26.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar26.Group = "Movement";
             this.bar26.Location = new System.Drawing.Point(198, 36);
             this.bar26.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2825,7 +2825,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar25
             // 
             this.bar25.BackColor = System.Drawing.Color.Transparent;
-            this.bar25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar25.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar25.Group = "Movement";
             this.bar25.Location = new System.Drawing.Point(198, 19);
             this.bar25.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2851,7 +2851,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar24
             // 
             this.bar24.BackColor = System.Drawing.Color.Transparent;
-            this.bar24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar24.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar24.Group = "Movement";
             this.bar24.Location = new System.Drawing.Point(198, 2);
             this.bar24.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -3173,7 +3173,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar52
             // 
             this.bar52.BackColor = System.Drawing.Color.Transparent;
-            this.bar52.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar52.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar52.Group = "Status Resistance";
             this.bar52.Location = new System.Drawing.Point(179, 60);
             this.bar52.MaximumBarValue = 400F;
@@ -3197,7 +3197,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar51
             // 
             this.bar51.BackColor = System.Drawing.Color.Transparent;
-            this.bar51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar51.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar51.Group = "Status Resistance";
             this.bar51.Location = new System.Drawing.Point(179, 41);
             this.bar51.MaximumBarValue = 400F;
@@ -3221,7 +3221,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar50
             // 
             this.bar50.BackColor = System.Drawing.Color.Transparent;
-            this.bar50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar50.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar50.Group = "Status Resistance";
             this.bar50.Location = new System.Drawing.Point(179, 22);
             this.bar50.MaximumBarValue = 400F;
@@ -3246,7 +3246,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar49
             // 
             this.bar49.BackColor = System.Drawing.Color.Transparent;
-            this.bar49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar49.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar49.Group = "Status Resistance";
             this.bar49.Location = new System.Drawing.Point(179, 3);
             this.bar49.MaximumBarValue = 400F;
@@ -3306,7 +3306,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar53
             // 
             this.bar53.BackColor = System.Drawing.Color.Transparent;
-            this.bar53.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar53.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar53.Group = "Status Resistance";
             this.bar53.Location = new System.Drawing.Point(179, 79);
             this.bar53.MaximumBarValue = 400F;
@@ -3319,7 +3319,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar54
             // 
             this.bar54.BackColor = System.Drawing.Color.Transparent;
-            this.bar54.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar54.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar54.Group = "Status Resistance";
             this.bar54.Location = new System.Drawing.Point(179, 99);
             this.bar54.MaximumBarValue = 400F;
@@ -3332,7 +3332,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar55
             // 
             this.bar55.BackColor = System.Drawing.Color.Transparent;
-            this.bar55.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar55.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar55.Group = "Status Resistance";
             this.bar55.Location = new System.Drawing.Point(179, 119);
             this.bar55.MaximumBarValue = 400F;
@@ -3345,7 +3345,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar56
             // 
             this.bar56.BackColor = System.Drawing.Color.Transparent;
-            this.bar56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar56.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar56.Group = "Status Resistance";
             this.bar56.Location = new System.Drawing.Point(179, 139);
             this.bar56.MaximumBarValue = 400F;
@@ -3358,7 +3358,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar57
             // 
             this.bar57.BackColor = System.Drawing.Color.Transparent;
-            this.bar57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar57.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar57.Group = "Status Resistance";
             this.bar57.Location = new System.Drawing.Point(179, 159);
             this.bar57.MaximumBarValue = 400F;
@@ -3371,7 +3371,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar58
             // 
             this.bar58.BackColor = System.Drawing.Color.Transparent;
-            this.bar58.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar58.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar58.Group = "Status Resistance";
             this.bar58.Location = new System.Drawing.Point(179, 179);
             this.bar58.MaximumBarValue = 400F;
@@ -3384,7 +3384,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar59
             // 
             this.bar59.BackColor = System.Drawing.Color.Transparent;
-            this.bar59.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar59.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar59.Group = "Status Resistance";
             this.bar59.Location = new System.Drawing.Point(179, 199);
             this.bar59.MaximumBarValue = 400F;
@@ -3652,7 +3652,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar41
             // 
             this.bar41.BackColor = System.Drawing.Color.Transparent;
-            this.bar41.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar41.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar41.Group = "Status Protection";
             this.bar41.Location = new System.Drawing.Point(178, 60);
             this.bar41.MaximumBarValue = 40F;
@@ -3676,7 +3676,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar40
             // 
             this.bar40.BackColor = System.Drawing.Color.Transparent;
-            this.bar40.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar40.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar40.Group = "Status Protection";
             this.bar40.Location = new System.Drawing.Point(178, 41);
             this.bar40.MaximumBarValue = 40F;
@@ -3700,7 +3700,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar39
             // 
             this.bar39.BackColor = System.Drawing.Color.Transparent;
-            this.bar39.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar39.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar39.Group = "Status Protection";
             this.bar39.Location = new System.Drawing.Point(178, 22);
             this.bar39.MaximumBarValue = 40F;
@@ -3725,7 +3725,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar38
             // 
             this.bar38.BackColor = System.Drawing.Color.Transparent;
-            this.bar38.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar38.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar38.Group = "Status Protection";
             this.bar38.Location = new System.Drawing.Point(178, 3);
             this.bar38.MaximumBarValue = 40F;
@@ -3785,7 +3785,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar42
             // 
             this.bar42.BackColor = System.Drawing.Color.Transparent;
-            this.bar42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar42.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar42.Group = "Status Protection";
             this.bar42.Location = new System.Drawing.Point(178, 79);
             this.bar42.MaximumBarValue = 40F;
@@ -3798,7 +3798,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar43
             // 
             this.bar43.BackColor = System.Drawing.Color.Transparent;
-            this.bar43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar43.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar43.Group = "Status Protection";
             this.bar43.Location = new System.Drawing.Point(178, 99);
             this.bar43.MaximumBarValue = 40F;
@@ -3811,7 +3811,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar44
             // 
             this.bar44.BackColor = System.Drawing.Color.Transparent;
-            this.bar44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar44.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar44.Group = "Status Protection";
             this.bar44.Location = new System.Drawing.Point(178, 119);
             this.bar44.MaximumBarValue = 40F;
@@ -3824,7 +3824,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar45
             // 
             this.bar45.BackColor = System.Drawing.Color.Transparent;
-            this.bar45.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar45.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar45.Group = "Status Protection";
             this.bar45.Location = new System.Drawing.Point(178, 139);
             this.bar45.MaximumBarValue = 40F;
@@ -3837,7 +3837,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar46
             // 
             this.bar46.BackColor = System.Drawing.Color.Transparent;
-            this.bar46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar46.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar46.Group = "Status Protection";
             this.bar46.Location = new System.Drawing.Point(178, 159);
             this.bar46.MaximumBarValue = 40F;
@@ -3850,7 +3850,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar47
             // 
             this.bar47.BackColor = System.Drawing.Color.Transparent;
-            this.bar47.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar47.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar47.Group = "Status Protection";
             this.bar47.Location = new System.Drawing.Point(178, 179);
             this.bar47.MaximumBarValue = 40F;
@@ -3863,7 +3863,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar48
             // 
             this.bar48.BackColor = System.Drawing.Color.Transparent;
-            this.bar48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar48.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar48.Group = "Status Protection";
             this.bar48.Location = new System.Drawing.Point(178, 199);
             this.bar48.MaximumBarValue = 40F;
@@ -4063,7 +4063,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar60
             // 
             this.bar60.BackColor = System.Drawing.Color.Transparent;
-            this.bar60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar60.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar60.Group = "Debuff Resistance";
             this.bar60.Location = new System.Drawing.Point(149, 3);
             this.bar60.MaximumBarValue = 110F;
@@ -4076,7 +4076,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar67
             // 
             this.bar67.BackColor = System.Drawing.Color.Transparent;
-            this.bar67.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar67.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar67.Group = "Debuff Resistance";
             this.bar67.Location = new System.Drawing.Point(149, 136);
             this.bar67.MaximumBarValue = 110F;
@@ -4089,7 +4089,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar61
             // 
             this.bar61.BackColor = System.Drawing.Color.Transparent;
-            this.bar61.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar61.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar61.Group = "Debuff Resistance";
             this.bar61.Location = new System.Drawing.Point(149, 22);
             this.bar61.MaximumBarValue = 110F;
@@ -4102,7 +4102,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar66
             // 
             this.bar66.BackColor = System.Drawing.Color.Transparent;
-            this.bar66.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar66.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar66.Group = "Debuff Resistance";
             this.bar66.Location = new System.Drawing.Point(149, 117);
             this.bar66.MaximumBarValue = 110F;
@@ -4115,7 +4115,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar62
             // 
             this.bar62.BackColor = System.Drawing.Color.Transparent;
-            this.bar62.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar62.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar62.Group = "Debuff Resistance";
             this.bar62.Location = new System.Drawing.Point(149, 41);
             this.bar62.MaximumBarValue = 110F;
@@ -4128,7 +4128,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar65
             // 
             this.bar65.BackColor = System.Drawing.Color.Transparent;
-            this.bar65.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar65.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar65.Group = "Debuff Resistance";
             this.bar65.Location = new System.Drawing.Point(149, 98);
             this.bar65.MaximumBarValue = 110F;
@@ -4141,7 +4141,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar63
             // 
             this.bar63.BackColor = System.Drawing.Color.Transparent;
-            this.bar63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar63.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar63.Group = "Debuff Resistance";
             this.bar63.Location = new System.Drawing.Point(149, 60);
             this.bar63.MaximumBarValue = 110F;
@@ -4154,7 +4154,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // bar64
             // 
             this.bar64.BackColor = System.Drawing.Color.Transparent;
-            this.bar64.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar64.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bar64.Group = "Debuff Resistance";
             this.bar64.Location = new System.Drawing.Point(149, 79);
             this.bar64.MaximumBarValue = 110F;

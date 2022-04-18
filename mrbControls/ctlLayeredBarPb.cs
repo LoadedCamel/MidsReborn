@@ -44,6 +44,7 @@ namespace mrbControls
         public bool EnableOverlayOutline = true;
         public Color OverlayTextColor = Color.WhiteSmoke;
         public Color OverlayOutlineColor = Color.Black;
+        public Color BorderColor = Color.Black;
 
         public bool EnableOverlayText
         {
@@ -340,6 +341,8 @@ namespace mrbControls
             {
                 e.Graphics.DrawImage(BxBuffer.Bitmap, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle, GraphicsUnit.Pixel);
             }
+            
+            ControlPaint.DrawBorder(e.Graphics, DisplayRectangle, BorderColor, ButtonBorderStyle.Solid);
         }
 
         private void ctlLayeredBarPb_Resize(object sender, EventArgs e)
