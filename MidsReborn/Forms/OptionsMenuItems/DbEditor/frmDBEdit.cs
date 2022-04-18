@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.JsonImport;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
@@ -55,6 +56,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label lblCountRecipe;
         private Label lblCountSalvage;
         private Label lblDate;
+        private frmBusy _frmBusy;
 
         public frmDBEdit()
         {
@@ -292,6 +294,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtPageVol_MouseLeave(object sender, EventArgs e)
         {
             txtPageVol.ForeColor = Color.White;
+        }
+
+        private async void btnDbCreate_Click(object sender, EventArgs e)
+        {
+            var iResult = InputBox.Show("Enter a name for your database", "Name your Database", false, "Enter the database name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!iResult.OK) return;
+            var dbName = iResult.Text;
+            var path = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, dbName);
+            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(Path.Combine(path, "Images"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Archetypes"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Enhancements"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Powersets"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Sets"));
+            var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, "Generic"));
+            foreach (var file in files)
+            {
+                File.Copy(file, Path.Combine(path, Path.GetFileName(file)));
+            }
+
+            var result = MessageBox.Show(@"Would you like to load your new database now so you can start editing?", @"Load New Database?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes) return;
+            MidsContext.Config.DataPath = path;
+            MidsContext.Config.SavePath = path;
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            using var iFrm = new frmBusy();
+            _frmBusy = iFrm;
+            _frmBusy.SetTitle(@"Changing Database");
+            _frmBusy.Show();
+            await MainModule.MidsController.ChangeDatabase(_frmBusy);
+        }
+
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
         }
     }
 }

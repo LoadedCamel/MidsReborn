@@ -1886,13 +1886,38 @@ namespace mrbBase
         public class VersionData
         {
             public int Revision;
-            public DateTime RevisionDate = new DateTime(0L);
+            public DateTime RevisionDate = new(0L, DateTimeKind.Local);
             public string SourceFile = "";
 
-            public void Load(BinaryReader reader)
+            public void Load(BinaryReader reader, bool fromChanged = false)
             {
                 Revision = reader.ReadInt32();
-                RevisionDate = DateTime.FromBinary(reader.ReadInt64());
+                if (fromChanged)
+                {
+                    long usedTicks;
+                    DateTime date;
+                    var ticks = reader.ReadInt64();
+                    if (ticks > 0)
+                    {
+                        usedTicks = -ticks & -0x3FFFFFFFFFFFFFFF;
+                        date = DateTime.FromBinary(usedTicks);
+                        Debug.WriteLine($"Ticks: {usedTicks}\r\nDate: {date}");
+                    }
+                    else
+                    {
+                        usedTicks = ticks;
+                        date = DateTime.FromBinary(usedTicks);
+                        Debug.WriteLine($"Ticks: {usedTicks}\r\nDate: {date}");
+                    }
+
+                    
+                    //RevisionDate = DateTime.SpecifyKind(DateTime.FromBinary(ticks), DateTimeKind.Local);
+                }
+                else
+                {
+                    RevisionDate = DateTime.FromBinary(reader.ReadInt64());
+                }
+
                 SourceFile = reader.ReadString();
             }
 

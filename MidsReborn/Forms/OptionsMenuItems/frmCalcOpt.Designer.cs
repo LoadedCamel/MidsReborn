@@ -1604,7 +1604,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox16.Size = new System.Drawing.Size(403, 87);
             this.groupBox16.TabIndex = 77;
             this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Database Location:";
+            this.groupBox16.Text = "Database Save Location:";
             // 
             // lblDatabaseLoc
             // 

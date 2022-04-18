@@ -624,7 +624,7 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             lblSaveFolder.Text = config.BuildsPath;
-            lblDatabaseLoc.Text = config.DataPath;
+            lblDatabaseLoc.Text = config.SavePath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
@@ -882,7 +882,7 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
-            config.DataPath = lblDatabaseLoc.Text;
+            config.SavePath = lblDatabaseLoc.Text;
             config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
         }
 
@@ -906,19 +906,19 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             {
                 Multiselect = false,
                 RootFolder = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
-                Title = @"Select the location of the database files"
+                Title = @"Select the location to save the database files"
             };
             if (fBrowse.ShowDialog(this) == DialogResult.OK)
             {
-                myParent.DbChangeRequested = true;
                 lblDatabaseLoc.Text = fBrowse.SelectedPath;
+                MidsContext.Config.SavePath = fBrowse.SelectedPath;
             }
 
         }
 
         private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
         {
-            lblDatabaseLoc.Text = Files.FDefaultPath;
+            lblDatabaseLoc.Text = MidsContext.Config.DataPath;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)

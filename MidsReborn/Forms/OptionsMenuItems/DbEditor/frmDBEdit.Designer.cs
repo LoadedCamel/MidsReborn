@@ -72,6 +72,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.txtDBVer = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnDbCreate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -493,9 +494,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.button1.Enabled = false;
             this.button1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button1.Location = new System.Drawing.Point(338, 137);
+            this.button1.Location = new System.Drawing.Point(525, 78);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(164, 24);
+            this.button1.Size = new System.Drawing.Size(110, 24);
             this.button1.TabIndex = 31;
             this.button1.Text = "Restore Entities";
             this.button1.UseVisualStyleBackColor = true;
@@ -613,11 +614,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel2.Size = new System.Drawing.Size(813, 100);
             this.tableLayoutPanel2.TabIndex = 38;
             // 
+            // btnDbCreate
+            // 
+            this.btnDbCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDbCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnDbCreate.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDbCreate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnDbCreate.Location = new System.Drawing.Point(338, 147);
+            this.btnDbCreate.Name = "btnDbCreate";
+            this.btnDbCreate.Size = new System.Drawing.Size(164, 34);
+            this.btnDbCreate.TabIndex = 39;
+            this.btnDbCreate.Text = "Create New Database";
+            this.btnDbCreate.UseVisualStyleBackColor = true;
+            this.btnDbCreate.Click += new System.EventHandler(this.btnDbCreate_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(837, 373);
+            this.Controls.Add(this.btnDbCreate);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.button1);
@@ -664,5 +680,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private TableLayoutPanel tableLayoutPanel1;
         private Label txtDBVer;
         private TableLayoutPanel tableLayoutPanel2;
+        private Button btnDbCreate;
     }
 }

@@ -66,14 +66,17 @@ namespace mrbBase
         public Powerset(BinaryReader reader)
         {
             nID = -1;
-            Powers = new IPower[0];
+            Powers = Array.Empty<IPower>();
             DisplayName = reader.ReadString();
             nArchetype = reader.ReadInt32();
             SetType = (Enums.ePowerSetType) reader.ReadInt32();
             ImageName = reader.ReadString();
             FullName = reader.ReadString();
             if (string.IsNullOrEmpty(FullName))
+            {
                 FullName = "Orphan." + DisplayName.Replace(" ", "_");
+            }
+
             SetName = reader.ReadString();
             Description = reader.ReadString();
             SubName = reader.ReadString();

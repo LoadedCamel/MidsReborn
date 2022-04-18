@@ -52,7 +52,7 @@ namespace Mids_Reborn
 
             public static async Task ChangeDatabase(frmBusy iFrm)
             {
-                iFrm.SetMessage(@"Mids Reborn will now restart and load your selected database.");
+                iFrm.SetMessage(@"Restarting with selected database.");
                 await Task.Delay(2000);
                 BusyHide();
                 Application.Restart();
@@ -62,8 +62,19 @@ namespace Mids_Reborn
             {
                 using var dbSelector = new DatabaseSelector();
                 var result = dbSelector.ShowDialog();
-                var dbSelected = result == DialogResult.OK ? dbSelector.SelectedDatabase : Files.FDefaultPath;
+                string dbSelected;
+                if (result == DialogResult.OK)
+                {
+                    dbSelected = dbSelector.SelectedDatabase;
+                }
+                else
+                {
+                    MessageBox.Show(@"The default i24 (Generic) Database will be used as you did not select a database.", @"Database Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dbSelected = Files.FDefaultPath;
+                }
+
                 MidsContext.Config.DataPath = dbSelected;
+                MidsContext.Config.SavePath = dbSelected;
                 LoadData(ref iFrm, MidsContext.Config.DataPath);
             }
 

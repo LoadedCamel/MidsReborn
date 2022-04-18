@@ -579,22 +579,24 @@ namespace mrbBase
             return GetPowersetIndexes(at.Idx, iSet);
         }
 
-        public static IPowerset[] GetPowersetIndexes(int iAT, Enums.ePowerSetType iSet)
+        public static IPowerset[] GetPowersetIndexes(int iAt, Enums.ePowerSetType iSet)
         {
             var powersetList = new List<IPowerset>();
             if ((iSet != Enums.ePowerSetType.Pool) & (iSet != Enums.ePowerSetType.Inherent))
             {
                 foreach (var ps in Database.Powersets)
-                    if ((ps.nArchetype == iAT) & (ps.SetType == iSet))
+                    if ((ps.nArchetype == iAt) & (ps.SetType == iSet))
                         powersetList.Add(ps);
-                    else if ((iSet == Enums.ePowerSetType.Ancillary) & (ps.SetType == iSet) && ps.ClassOk(iAT))
+                    else if ((iSet == Enums.ePowerSetType.Ancillary) & (ps.SetType == iSet) && ps.ClassOk(iAt))
                         powersetList.Add(ps);
             }
             else
             {
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
                     if (Database.Powersets[index].SetType == iSet)
+                    {
                         powersetList.Add(Database.Powersets[index]);
+                    }
             }
 
             powersetList.Sort();
@@ -1185,8 +1187,6 @@ namespace mrbBase
                 writer.Write(Database.PageVol);
                 writer.Write(Database.PageVolText);
                 writer.Write(Files.Headers.Db.Archetypes);
-                Database.ArchetypeVersion.StoreTo(writer);
-                //Console.WriteLine(Database.ArchetypeVersion);
                 writer.Write(Database.Classes.Length - 1);
                 for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 {
@@ -1194,7 +1194,6 @@ namespace mrbBase
                 }
 
                 writer.Write(Files.Headers.Db.Powersets);
-                Database.PowersetVersion.StoreTo(writer);
                 writer.Write(Database.Powersets.Length - 1);
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
                 {
@@ -1202,10 +1201,6 @@ namespace mrbBase
                 }
 
                 writer.Write(Files.Headers.Db.Powers);
-                Database.PowerVersion.StoreTo(writer);
-                Database.PowerLevelVersion.StoreTo(writer);
-                Database.PowerEffectVersion.StoreTo(writer);
-                Database.IOAssignmentVersion.StoreTo(writer);
                 writer.Write(Database.Power.Length - 1);
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
@@ -1302,7 +1297,6 @@ namespace mrbBase
                     return false;
                 }
 
-                Database.ArchetypeVersion.Load(reader);
                 Database.Classes = new Archetype[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Classes.Length; ++index)
                 {
@@ -1320,7 +1314,6 @@ namespace mrbBase
                     return false;
                 }
 
-                Database.PowersetVersion.Load(reader);
                 var num3 = 0;
                 Database.Powersets = new IPowerset[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Powersets.Length; ++index)
@@ -1344,10 +1337,6 @@ namespace mrbBase
                     return false;
                 }
 
-                Database.PowerVersion.Load(reader);
-                Database.PowerLevelVersion.Load(reader);
-                Database.PowerEffectVersion.Load(reader);
-                Database.IOAssignmentVersion.Load(reader);
                 Database.Power = new IPower[reader.ReadInt32() + 1];
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
@@ -2440,6 +2429,18 @@ namespace mrbBase
             UpdateMessage(iFrm, "Matching Modifier IDs...");
             MatchModifierIDs();
             UpdateMessage(iFrm, "Matching Entity IDs...");
+            MatchSummonIDs();
+        }
+
+        public static void MatchIds()
+        {
+            FillGroupArray();
+            MatchArchetypeIDs();
+            MatchPowersetIDs();
+            MatchPowerIDs();
+            SetPowersetsFromGroups();
+            MatchEnhancementIDs();
+            MatchModifierIDs();
             MatchSummonIDs();
         }
 

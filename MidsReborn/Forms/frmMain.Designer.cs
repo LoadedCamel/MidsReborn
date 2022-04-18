@@ -87,6 +87,8 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsExportDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.tsUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
@@ -760,6 +762,8 @@ namespace Mids_Reborn.Forms
             // 
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsChangeDb,
+            this.ToolStripSeparator29,
             this.tsConfig,
             this.ToolStripSeparator5,
             this.AdvancedToolStripMenuItem1});
@@ -767,6 +771,18 @@ namespace Mids_Reborn.Forms
             this.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
             this.OptionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.OptionsToolStripMenuItem.Text = "&Options";
+            // 
+            // tsChangeDb
+            // 
+            this.tsChangeDb.Name = "tsChangeDb";
+            this.tsChangeDb.Size = new System.Drawing.Size(199, 22);
+            this.tsChangeDb.Text = "&Change Database";
+            this.tsChangeDb.Click += new System.EventHandler(this.tsChangeDb_Click);
+            //
+            // ToolStripSeparator29
+            //
+            this.ToolStripSeparator29.Name = "ToolStripSeparator29";
+            this.ToolStripSeparator29.Size = new System.Drawing.Size(242, 6);
             // 
             // tsConfig
             // 
@@ -2097,6 +2113,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsBugCrytilis;
         ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsClearAllEnh;
+        ToolStripMenuItem tsChangeDb;
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
         ToolStripMenuItem tsPatreon;
@@ -2267,5 +2284,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem ViewToolStripMenuItem;
         ToolStripMenuItem WindowToolStripMenuItem;
         Panel poolsPanel;
+        ToolStripSeparator ToolStripSeparator29;
     }
 }

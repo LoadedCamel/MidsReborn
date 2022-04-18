@@ -42,13 +42,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(@"The default i24 (Generic) Database will be used as you did not select a database.", @"Database Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
         private void okayButton_Click(object sender, EventArgs e)
         {
             SelectedDatabase = dbDropdown.SelectedValue.ToString();
+            DialogResult = DialogResult.OK;
             Close();
         }
     }

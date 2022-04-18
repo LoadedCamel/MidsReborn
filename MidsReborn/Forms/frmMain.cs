@@ -5598,7 +5598,23 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatTop(true);
         }
 
-        private async void tsConfig_Click(object sender, EventArgs e)
+        private async void tsChangeDb_Click(object sender, EventArgs e)
+        {
+            using var dbSelector = new DatabaseSelector();
+            var result = dbSelector.ShowDialog();
+            if (result != DialogResult.OK) return;
+            var dbSelected = dbSelector.SelectedDatabase;
+            MidsContext.Config.DataPath = dbSelected;
+            MidsContext.Config.SavePath = dbSelected;
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            using var iFrm = new frmBusy();
+            _frmBusy = iFrm;
+            _frmBusy.SetTitle(@"Changing Database");
+            _frmBusy.Show();
+            await MainModule.MidsController.ChangeDatabase(_frmBusy);
+        }
+
+        private void tsConfig_Click(object sender, EventArgs e)
         {
             FloatTop(false);
             var iParent = this;
@@ -5614,14 +5630,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
             frmCalcOpt.Dispose();
             tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
             FloatTop(true);
-            if (DbChangeRequested)
-            {
-                using var iFrm = new frmBusy();
-                _frmBusy = iFrm;
-                _frmBusy.SetTitle(@"Database Change Requested");
-                _frmBusy.Show();
-                await MainModule.MidsController.ChangeDatabase(_frmBusy);
-            }
+
+            // if (DbChangeRequested)
+            // {
+            //     using var iFrm = new frmBusy();
+            //     _frmBusy = iFrm;
+            //     _frmBusy.SetTitle(@"Database Change Requested");
+            //     _frmBusy.Show();
+            //     await MainModule.MidsController.ChangeDatabase(_frmBusy);
+            // }
         }
 
         private void tsKoFi_Click(object sender, EventArgs e)
