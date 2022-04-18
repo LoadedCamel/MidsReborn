@@ -62,9 +62,12 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 AppUpdate.InitiateQuery(parent);
             }
-            else if (DbUpdate.IsAvailable)
+            else if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.UpdateManifest))
             {
-                DbUpdate.InitiateQuery(parent);
+                if (DbUpdate.IsAvailable)
+                {
+                    DbUpdate.InitiateQuery(parent);
+                }
             }
             else
             {
