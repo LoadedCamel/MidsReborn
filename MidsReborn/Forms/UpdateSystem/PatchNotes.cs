@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using mrbBase;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.UpdateSystem
@@ -107,7 +108,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version);
                         break;
                     case "Database":
-                        clsXMLUpdate.Update(MidsContext.Config.DbUpdatePath, Version);
+                        clsXMLUpdate.Update(DatabaseAPI.Database.UpdateManifest, Version);
                         break;
                 }
                 Close();

@@ -55,7 +55,6 @@ namespace mrbBase
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-        public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
         public string AppChangeLog { get; set; }
         public string DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
@@ -243,11 +242,6 @@ namespace mrbBase
             if (string.IsNullOrWhiteSpace(UpdatePath))
             {
                 UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-            }
-
-            if (string.IsNullOrWhiteSpace(DbUpdatePath))
-            {
-                DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
             }
 
             if (string.IsNullOrWhiteSpace(DataPath))

@@ -606,6 +606,9 @@
     <Content Include="Data\Rebirth\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\Homecoming\UdData.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\enhData.png" />
     <None Include="Resources\PictureBox1.Image.png" />
     <None Include="Resources\pbTitle.Image.png" />

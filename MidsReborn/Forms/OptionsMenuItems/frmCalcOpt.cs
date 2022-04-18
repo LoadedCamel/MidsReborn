@@ -623,14 +623,10 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             chkPowSelBold.Checked = config.RtFont.PowersSelectBold;
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
-            lblSaveFolder.Text = config.BuildsPath;
-            lblDatabaseLoc.Text = config.SavePath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
-            cbUpdateURL.Text = MidsContext.Config.UpdatePath;
-            cbDBUpdateURL.Text = MidsContext.Config.DbUpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             var index = 0;
             do
@@ -872,8 +868,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
-            config.UpdatePath = cbUpdateURL.Text;
-            config.DbUpdatePath = cbDBUpdateURL.Text;
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
@@ -882,7 +876,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
-            config.SavePath = lblDatabaseLoc.Text;
             config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
         }
 
@@ -898,27 +891,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             {
                 MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnDatabaseLoc_Click(object sender, EventArgs e)
-        {
-            using var fBrowse = new BetterFolderBrowser
-            {
-                Multiselect = false,
-                RootFolder = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
-                Title = @"Select the location to save the database files"
-            };
-            if (fBrowse.ShowDialog(this) == DialogResult.OK)
-            {
-                lblDatabaseLoc.Text = fBrowse.SelectedPath;
-                MidsContext.Config.SavePath = fBrowse.SelectedPath;
-            }
-
-        }
-
-        private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
-        {
-            lblDatabaseLoc.Text = MidsContext.Config.DataPath;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)

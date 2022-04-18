@@ -100,6 +100,11 @@ namespace Mids_Reborn
                     Application.Exit();
                 }
 
+                if (File.Exists(Path.Combine(path, Files.MxdbUdData)))
+                {
+                    DatabaseAPI.LoadUdData(path);
+                }
+
                 if (!DatabaseAPI.LoadMaths(path))
                 {
                     Application.Exit();

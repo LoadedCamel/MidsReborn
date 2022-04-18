@@ -1159,6 +1159,80 @@ namespace mrbBase
             }
         }
 
+        public static void SaveUdData(string iPath)
+        {
+            var path = Files.SelectDataFileSave(Files.MxdbUdData, iPath);
+            FileStream fileStream;
+            BinaryWriter writer;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Create);
+                writer = new BinaryWriter(fileStream);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Update data save failed: " + ex.Message);
+                return;
+            }
+
+            try
+            {
+                writer.Write(Files.Headers.UpdateData.Start);
+                writer.Write(Database.UpdateManifest);
+                writer.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Message: {e.Message}\r\nTrace: {e.StackTrace}");
+                writer.Close();
+                fileStream.Close();
+            }
+        }
+
+        public static void LoadUdData(string iPath)
+        {
+            var path = Files.SelectDataFileLoad(Files.MxdbUdData, iPath);
+
+            FileStream fileStream;
+            BinaryReader reader;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                reader = new BinaryReader(fileStream);
+            }
+            catch
+            {
+                return;
+            }
+
+            try
+            {
+                var headerFound = true;
+                var header = reader.ReadString();
+                if (header != Files.Headers.UpdateData.Start)
+                {
+                    headerFound = false;
+                }
+
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Update Data");
+                    return;
+                }
+
+                Database.UpdateManifest = reader.ReadString();
+                reader.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                reader.Close();
+                fileStream.Close();
+                MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+            }
+        }
+
         public static void SaveMainDatabase(ISerialize serializer, string iPath)
         {
             CheckEhcBoosts();

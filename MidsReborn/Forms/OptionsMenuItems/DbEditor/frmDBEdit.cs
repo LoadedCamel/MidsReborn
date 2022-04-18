@@ -203,6 +203,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnJsonImporter.Visible = MidsContext.Config.MasterMode;
             btnGCMIO.Visible = MidsContext.Config.MasterMode;
             btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
+            btnDbCreate.Visible = MidsContext.Config.MasterMode;
+            btnEditManifest.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -331,6 +333,42 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (e.Text.Trim().Length != 0) return;
             e.Cancel = true;
             e.Message = "Required";
+        }
+
+        private void btnEditManifest_Click(object sender, EventArgs e)
+        {
+            var loadingText = DatabaseAPI.Database.UpdateManifest ?? "Enter the URL here";
+            var iResult = InputBox.Show("Enter your XML manifest URL", "Set Database Manifest URL", false, loadingText, InputBox.InputBoxIcon.Info, validate_Url);
+            if (!iResult.OK) return;
+            DatabaseAPI.Database.UpdateManifest = iResult.Text;
+            DatabaseAPI.SaveUdData(MidsContext.Config.DataPath);
+        }
+
+        private static void validate_Url(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length > 0)
+            {
+                var validResult = Uri.TryCreate(e.Text.Trim(), UriKind.Absolute, out var uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                if (!validResult)
+                {
+                    e.Cancel = true;
+                    e.Message = "Valid Url is required";
+                }
+                else
+                {
+                    if (e.Text.EndsWith(".xml"))
+                    {
+                        return;
+                    }
+                    e.Cancel = true;
+                    e.Message = "This is not a valid manifest URL";
+                }
+            }
+            else
+            {
+                e.Cancel = true;
+                e.Message = "Required";
+            }
         }
     }
 }

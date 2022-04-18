@@ -73,6 +73,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.txtDBVer = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btnDbCreate = new System.Windows.Forms.Button();
+            this.btnEditManifest = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -628,11 +629,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnDbCreate.UseVisualStyleBackColor = true;
             this.btnDbCreate.Click += new System.EventHandler(this.btnDbCreate_Click);
             // 
+            // btnEditManifest
+            // 
+            this.btnEditManifest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEditManifest.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditManifest.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditManifest.Location = new System.Drawing.Point(308, 335);
+            this.btnEditManifest.Name = "btnEditManifest";
+            this.btnEditManifest.Size = new System.Drawing.Size(234, 31);
+            this.btnEditManifest.TabIndex = 40;
+            this.btnEditManifest.Text = "Edit Database Update Manifest Location";
+            this.btnEditManifest.UseVisualStyleBackColor = true;
+            this.btnEditManifest.Visible = false;
+            this.btnEditManifest.Click += new System.EventHandler(this.btnEditManifest_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(837, 373);
+            this.Controls.Add(this.btnEditManifest);
             this.Controls.Add(this.btnDbCreate);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -681,5 +697,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label txtDBVer;
         private TableLayoutPanel tableLayoutPanel2;
         private Button btnDbCreate;
+        private Button btnEditManifest;
     }
 }

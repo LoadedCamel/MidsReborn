@@ -8,6 +8,8 @@ namespace mrbBase
 {
     public interface IDatabase
     {
+        string UpdateManifest { get; set; }
+
         Version Version { get; set; }
 
         int Issue { get; set; }

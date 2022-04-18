@@ -25,6 +25,7 @@ namespace mrbBase
         public const string MxdbFileOverrides = "Compare.mhd";
         public const string MxdbFileModifiers = "AttribMod.mhd";
         public const string MxdbFileEffectIds = "GlobalMods.mhd";
+        public const string MxdbUdData = "UdData.mhd";
         public const string MxdbFileGraphics = "I9.mhd";
 
         public const string JsonFileModifiers = "AttribMod.json";
@@ -110,6 +111,11 @@ namespace mrbBase
             internal static class AttribMod
             {
                 internal const string Start = "Mids Reborn Attribute Modifier Tables";
+            }
+
+            internal static class UpdateData
+            {
+                internal const string Start = "Mids Reborn Update Data";
             }
 
             internal static class TypeGrade
