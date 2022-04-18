@@ -455,6 +455,9 @@
     <EmbeddedResource Include="UIv2\v2Controls\PowerList.resx">
       <DependentUpon>PowerList.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Data\Generic\Example UpdateManifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\Homecoming\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -552,6 +555,9 @@
     <Content Include="Data\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data\Generic\PowersReplTable.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
