@@ -496,9 +496,10 @@ namespace Mids_Reborn.Forms
             {
                 case SwitchButton.SwitchState.StateA:
                     MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
-                    MainModule.MidsController.Toon.ClearInvalidInherentSlots();
-                    DoRefresh();
-                    DoRedraw();
+                    if (MidsContext.Config.Server.ExtraSlotsEnabled)
+                    {
+                        MainModule.MidsController.Toon.ClearInvalidInherentSlots();
+                    }
                     break;
                 case SwitchButton.SwitchState.StateB:
                     MidsContext.Config.BuildMode = Enums.dmModes.Normal;
@@ -512,7 +513,6 @@ namespace Mids_Reborn.Forms
             MidsContext.Character.ResetLevel();
             PowerModified(markModified: false);
             UpdateDMBuffer();
-            //MidsContext.Character.CheckInherentSlots();
             pbDynMode.Refresh();
         }
 
