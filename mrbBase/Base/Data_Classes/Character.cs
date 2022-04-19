@@ -1,12 +1,12 @@
+using FastDeepCloner;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using FastDeepCloner;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -201,14 +201,35 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
+                if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
                     if (Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    {
                         return true;
+                    }
                 }
                 else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
                 {
                     return true;
+                }
+                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Power && SlotsRemaining > 0 && MidsContext.Config.Server.ExtraSlotsEnabled)
+                {
+                    if (Level == MidsContext.Config.Server.HealthSlot1Level)
+                    {
+                        return true;
+                    }
+                    if (Level == MidsContext.Config.Server.HealthSlot2Level)
+                    {
+                        return true;
+                    }
+                    if (Level == MidsContext.Config.Server.StaminaSlot1Level)
+                    {
+                        return true;
+                    }
+                    if (Level == MidsContext.Config.Server.StaminaSlot2Level)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -420,79 +441,83 @@ namespace mrbBase.Base.Data_Classes
             PEnhancementsList = new List<string>();
         }
 
-        public void CheckInherentSlots()
+        public async void ClearInvalidInherentSlots()
         {
-            if (MidsContext.Config.Server.ExtraSlotsEnabled)
+            ResetLevel();
+            foreach (var power in CurrentBuild.Powers.Where(power => power.Power != null))
             {
-                foreach (var power in CurrentBuild.Powers)
+                switch (power.Power.FullName)
                 {
-                    if (power?.Power == null) continue;
-                    switch (MidsContext.Config.BuildMode)
+                    case "Inherent.Fitness.Health":
                     {
-                        case Enums.dmModes.LevelUp:
-                            switch (power.Name)
+                        if (Level < MidsContext.Config.Server.HealthSlot1Level)
+                        {
+                            if (power.InherentSlotsUsed > 0)
                             {
-                                case "Health" when Level == MidsContext.Config.Server.HealthSlot1Level && power.InherentSlotsUsed < 2:
-                                    power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
-                                    power.InherentSlotsUsed++;
-
+                                for (var i = 0; i < power.Slots.Length; i++)
+                                {
+                                    var slot = power.Slots[i];
+                                    if (!slot.IsInherent) continue;
+                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
+                                    power.InherentSlotsUsed -= 1;
                                     break;
-                                case "Health" when Level == MidsContext.Config.Server.HealthSlot2Level && power.InherentSlotsUsed < 2:
-                                    power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
-
-                                    break;
-                                case "Stamina" when Level == MidsContext.Config.Server.StaminaSlot1Level && power.InherentSlotsUsed < 2:
-                                    power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
-                                    
-                                    break;
-                                case "Stamina" when Level == MidsContext.Config.Server.StaminaSlot2Level && power.InherentSlotsUsed < 2:
-                                    power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
-
-                                    break;
+                                }
                             }
+                        }
 
-                            break;
-                        case Enums.dmModes.Normal:
-                            switch (power.Name)
+                        if (MidsContext.Character.Level < MidsContext.Config.Server.HealthSlot2Level)
+                        {
+                            if (power.InherentSlotsUsed > 0)
                             {
-                                case "Health":
-                                    if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
-                                    {
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
-                                        power.InherentSlotsUsed = 2;
-                                    }
+                                for (var i = 0; i < power.Slots.Length; i++)
+                                {
+                                    var slot = power.Slots[i];
+                                    if (!slot.IsInherent) continue;
+                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
+                                    power.InherentSlotsUsed -= 1;
                                     break;
-                                case "Stamina":
-                                    if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
-                                    {
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
-                                        power.InherentSlotsUsed = 2;
-                                    }
-                                    break;
+                                }
                             }
+                        }
 
-                            break;
+                        break;
+                    }
+                    case "Inherent.Fitness.Stamina":
+                    {
+                        if (MidsContext.Character.Level < MidsContext.Config.Server.StaminaSlot1Level)
+                        {
+                            if (power.InherentSlotsUsed > 0)
+                            {
+                                for (var i = 0; i < power.Slots.Length; i++)
+                                {
+                                    var slot = power.Slots[i];
+                                    if (!slot.IsInherent) continue;
+                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
+                                    power.InherentSlotsUsed -= 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (MidsContext.Character.Level < MidsContext.Config.Server.StaminaSlot2Level)
+                        {
+                            if (power.InherentSlotsUsed > 0)
+                            {
+                                for (var i = 0; i < power.Slots.Length; i++)
+                                {
+                                    var slot = power.Slots[i];
+                                    if (!slot.IsInherent) continue;
+                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
+                                    power.InherentSlotsUsed -= 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
-        }
-
-
-        private List<int> CurrentInherentSlots(PowerEntry powerEntry)
-        {
-            var inherentSlots = new List<int>();
-            for (var slotIndex = 0; slotIndex < powerEntry.Slots.Length; slotIndex++)
-            {
-                var slot = powerEntry.Slots[slotIndex];
-                if (slot.IsInherent)
-                {
-                    inherentSlots.Add(slotIndex);
-                }
-            }
-
-            return inherentSlots;
         }
 
 
@@ -536,7 +561,7 @@ namespace mrbBase.Base.Data_Classes
             inherentPowers = new List<IPower>();
             PEnhancementsList = new List<string>();
 
-            CheckInherentSlots();
+            //CheckInherentSlots();
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null) continue;
@@ -575,14 +600,6 @@ namespace mrbBase.Base.Data_Classes
                     if (pSlotEnh != -1)
                     {
                         var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        /*var enhList = DatabaseAPI.GetEnhancementsInSet(enhancement.nIDSet);
-                        if (enhList != null)
-                        {
-                            foreach (var enh in enhList)
-                            {
-                                Debug.WriteLine(enh);
-                            }
-                        }*/
                         if (!PEnhancementsList.Contains(enhancement.UID))
                         {
                             PEnhancementsList.Add(enhancement.UID);

@@ -496,6 +496,9 @@ namespace Mids_Reborn.Forms
             {
                 case SwitchButton.SwitchState.StateA:
                     MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
+                    MainModule.MidsController.Toon.ClearInvalidInherentSlots();
+                    DoRefresh();
+                    DoRedraw();
                     break;
                 case SwitchButton.SwitchState.StateB:
                     MidsContext.Config.BuildMode = Enums.dmModes.Normal;
@@ -1093,7 +1096,7 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon.Locked & FileModified)
             {
                 FloatTop(false);
-                var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
                     return;
@@ -1102,19 +1105,15 @@ namespace Mids_Reborn.Forms
             FloatTop(false);
             FileModified = false;
             var loaded = false;
-            if (MessageBox.Show("Copy the build data on the forum to the clipboard. When that's done, click on OK.",
-                "Standing By",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
+            if (MessageBox.Show(@"Copy the build data on the forum to the clipboard. When that's done, click on OK.", @"Standing By", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
                 return;
             var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
             NewToon();
             try
             {
-                if (str != null && str.Length < 1)
+                if (str is { Length: < 1 })
                 {
-                    var num = (int)MessageBox.Show(
-                        "No data. Please check that you copied the build data from the forum correctly and that it's a valid format.",
-                        "Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"No data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -1162,14 +1161,13 @@ namespace Mids_Reborn.Forms
             }
         }
 
+
         private void command_New()
         {
             if (MainModule.MidsController.Toon.Locked & FileModified)
             {
                 FloatTop(false);
-                var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?",
-                    "Question",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
                     return;
@@ -1178,12 +1176,12 @@ namespace Mids_Reborn.Forms
             DataViewLocked = false;
             NewToon(false);
             MidsContext.EnhCheckMode = false;
-            if (fRecipe != null && fRecipe.Visible)
+            if (fRecipe is { Visible: true })
             {
                 fRecipe.UpdateData();
             }
 
-            if (fSalvageHud != null && fSalvageHud.Visible)
+            if (fSalvageHud is { Visible: true })
             {
                 FloatBuildSalvageHud(false);
             }
@@ -3159,13 +3157,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MidsContext.Character.Name = str;
             }
 
-            if (fAccolade != null && !fAccolade.IsDisposed)
+            if (fAccolade is { IsDisposed: false })
                 fAccolade.Dispose();
-            if (fTemp != null && !fTemp.IsDisposed)
+            if (fTemp is { IsDisposed: false })
                 fTemp.Dispose();
-            if (fIncarnate != null && !fIncarnate.IsDisposed)
+            if (fIncarnate is { IsDisposed: false })
                 fIncarnate.Dispose();
-            if (fPrestige != null && !fPrestige.IsDisposed)
+            if (fPrestige is { IsDisposed: false })
                 fPrestige.Dispose();
             if (MidsContext.Character.Archetype.DisplayName != "Mastermind")
             {
@@ -3189,11 +3187,19 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pbDynMode_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config.BuildMode != Enums.dmModes.Normal || MidsContext.Config.BuildMode != Enums.dmModes.Respec)
+            if (MainModule.MidsController.Toon == null)
                 return;
-            MidsContext.Config.BuildOption = MidsContext.Config.BuildOption == Enums.dmItem.Power
-                ? Enums.dmItem.Slot
-                : Enums.dmItem.Power;
+            if (MidsContext.Config.BuildMode != Enums.dmModes.Normal || MidsContext.Config.BuildMode != Enums.dmModes.Respec)
+                return;
+            switch (MidsContext.Config.BuildOption)
+            {
+                case Enums.dmItem.Power:
+                    MidsContext.Config.BuildOption = Enums.dmItem.Slot;
+                    break;
+                default:
+                    MidsContext.Config.BuildOption = Enums.dmItem.Power;
+                    break;
+            }
             UpdateDMBuffer();
             pbDynMode.Refresh();
         }
@@ -3724,7 +3730,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             fixStatIncludes();
             if (markModified)
                 FileModified = true;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
             {
                 index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)

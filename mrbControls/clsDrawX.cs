@@ -8,6 +8,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -696,9 +697,7 @@ namespace mrbControls
                     {
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height); // New slot rectangle
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
-                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
-                            (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
-                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(rectangleF));
@@ -712,10 +711,7 @@ namespace mrbControls
                         Graphics graphics6 = bxBuffer.Graphics;
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height);
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
-                            (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
-                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) |
-                            (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
+                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             RectangleF iValue3 = rectangleF;
@@ -876,8 +872,7 @@ namespace mrbControls
                 pathGradientBrush2 = pathGradientBrush;
             }
 
-            var centerPoint = new PointF((float)(num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))),
-                (float)(num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
+            var centerPoint = new PointF((float)(num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))), (float)(num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
             pathGradientBrush2.CenterPoint = centerPoint;
             return pathGradientBrush;
         }

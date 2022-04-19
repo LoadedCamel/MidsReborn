@@ -644,8 +644,8 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             }
 
             cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
-            chkShowSelfBuffsAny.Checked = MidsContext.Config.ShowSelfBuffsAny;
-
+            chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
+            lblSaveFolder.Text = config.BuildsPath;
             ResumeLayout();
         }
 

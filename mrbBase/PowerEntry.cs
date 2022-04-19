@@ -28,10 +28,11 @@ namespace mrbBase
             }
 
             Tag = false;
-            Slots = new SlotEntry[0];
-            SubPowers = new PowerSubEntry[0];
+            Slots = Array.Empty<SlotEntry>();
+            SubPowers = Array.Empty<PowerSubEntry>();
             VariableValue = 0;
             ProcInclude = false;
+            InherentSlotsUsed = 0;
         }
 
         public PowerEntry(int iLevel = -1, IPower power = null, bool chosen = false)
@@ -39,6 +40,7 @@ namespace mrbBase
             StatInclude = false;
             Level = iLevel;
             Chosen = chosen;
+            InherentSlotsUsed = 0;
             if (power != null)
             {
                 NIDPowerset = power.PowerSetID;
@@ -59,7 +61,7 @@ namespace mrbBase
                 }
                 else
                 {
-                    SubPowers = new PowerSubEntry[0];
+                    SubPowers = Array.Empty<PowerSubEntry>();
                 }
 
                 if (power.Slottable & (power.GetPowerSet().GroupName != "Incarnate"))
@@ -72,7 +74,7 @@ namespace mrbBase
                 }
                 else
                 {
-                    Slots = new SlotEntry[0];
+                    Slots = Array.Empty<SlotEntry>();
                 }
 
                 if (power.AlwaysToggle | (power.PowerType == Enums.ePowerType.Auto_))
@@ -83,8 +85,8 @@ namespace mrbBase
                 IDXPower = -1;
                 NIDPowerset = -1;
                 NIDPower = -1;
-                Slots = new SlotEntry[0];
-                SubPowers = new PowerSubEntry[0];
+                Slots = Array.Empty<SlotEntry>();
+                SubPowers = Array.Empty<PowerSubEntry>();
             }
 
             Tag = false;
@@ -174,10 +176,14 @@ namespace mrbBase
 
         public void ClearInvisibleSlots()
         {
-            if (SlotCount > 0 && (Power == null && !Chosen || Power != null && !Power.Slottable))
+            if (SlotCount > 0 && (Power == null && !Chosen || Power is { Slottable: false }))
+            {
                 Slots = Array.Empty<SlotEntry>();
+            }
             else if (SlotCount > 6)
+            {
                 Slots = Slots.Take(6).ToArray();
+            }
         }
 
         public void Assign(PowerEntry iPe)
@@ -200,7 +206,7 @@ namespace mrbBase
             }
             else
             {
-                Slots = new SlotEntry[0];
+                Slots = Array.Empty<SlotEntry>();
             }
 
             if (iPe.SubPowers != null)
@@ -213,7 +219,7 @@ namespace mrbBase
             }
             else
             {
-                SubPowers = new PowerSubEntry[0];
+                SubPowers = Array.Empty<PowerSubEntry>();
             }
         }
 
@@ -277,9 +283,14 @@ namespace mrbBase
             for (var index = 0; index <= Slots.Length - 1; ++index)
             {
                 if (!Power.IsEnhancementValid(Slots[index].Enhancement.Enh))
+                {
                     Slots[index].Enhancement = new I9Slot();
+                }
+
                 if (!Power.IsEnhancementValid(Slots[index].FlippedEnhancement.Enh))
+                {
                     Slots[index].FlippedEnhancement = new I9Slot();
+                }
             }
         }
 
@@ -291,10 +302,10 @@ namespace mrbBase
             Tag = false;
             StatInclude = false;
             ProcInclude = false;
-            SubPowers = new PowerSubEntry[0];
+            SubPowers = Array.Empty<PowerSubEntry>();
             if (Slots.Length != 1 || Slots[0].Enhancement.Enh != -1)
                 return;
-            Slots = new SlotEntry[0];
+            Slots = Array.Empty<SlotEntry>();
         }
 
         public PopUp.Section PopSubPowerListing(string sTitle, Color disabledColor, Color enabledColor)
@@ -351,7 +362,7 @@ namespace mrbBase
                             continue;
                         }
                         ++index3;
-                        if (index3 < 2 && isInherent)
+                        if (index3 is > 0 and < 2 && isInherent)
                         {
                             Slots[index3].IsInherent = true;
                         }
@@ -363,7 +374,7 @@ namespace mrbBase
                     {
                         if (index2 != index1)
                         {
-                            if (index2 < 2 && isInherent)
+                            if (index2 is > 0 and < 2 && isInherent)
                             {
                                 slotEntryArray[index2].IsInherent = true;
                             }
@@ -430,8 +441,39 @@ namespace mrbBase
                 return false;
             }
 
-            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp or Enums.dmModes.Normal && MidsContext.Config.Server.ExtraSlotsEnabled)
+            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.Normal && MidsContext.Config.Server.ExtraSlotsEnabled)
             {
+                message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
+                return false;
+            }
+
+            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp && MidsContext.Config.Server.ExtraSlotsEnabled)
+            {
+                switch (Power.FullName)
+                {
+                    case "Inherent.Fitness.Health":
+                        if (Level < MidsContext.Config.Server.HealthSlot1Level)
+                        {
+                            return true;
+                        }
+                        else if (Level < MidsContext.Config.Server.HealthSlot2Level)
+                        {
+                            return true;
+                        }
+
+                        break;
+                    case "Inherent.Fitness.Stamina":
+                        if (Level < MidsContext.Config.Server.StaminaSlot1Level)
+                        {
+                            return true;
+                        }
+                        else if (Level < MidsContext.Config.Server.StaminaSlot2Level)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
                 message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
                 return false;
             }
