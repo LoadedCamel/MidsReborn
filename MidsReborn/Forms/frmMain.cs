@@ -282,7 +282,8 @@ namespace Mids_Reborn.Forms
                     {
                         case "-master":
                             MidsContext.Config.MasterMode = true;
-                            tsAdvResetTips.Visible = true;
+                            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
+                            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
                             SetTitleBar();
                             ProcessedCommand = CommandArgs[0];
                             ProcessedFromCommand = true;
@@ -2243,6 +2244,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     break;
             }
 
+            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
         }
@@ -5787,7 +5789,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MessageBoxIcon.Information);
         }
 
-        private void tsExportDiscord_Click(object sender, EventArgs e)
+        private void tsShareDiscord_Click(object sender, EventArgs e)
         {
             try
             {
@@ -6376,6 +6378,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (loading) return;
             NoUpdate = true;
+            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);

@@ -85,7 +85,7 @@ namespace Mids_Reborn.Forms
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsExportDiscord = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
@@ -179,6 +179,7 @@ namespace Mids_Reborn.Forms
             this.TemporaryPowersWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblHero = new System.Windows.Forms.Label();
             this.heroVillain = new ImageButton();
@@ -594,10 +595,11 @@ namespace Mids_Reborn.Forms
             this.FileToolStripMenuItem,
             this.ImportExportToolStripMenuItem,
             this.OptionsToolStripMenuItem,
+            this.ShareToolStripMenuItem,
             this.CharacterToolStripMenuItem,
             this.ViewToolStripMenuItem,
-            this.HelpToolStripMenuItem1,
-            this.WindowToolStripMenuItem});
+            this.WindowToolStripMenuItem,
+            this.HelpToolStripMenuItem1});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
@@ -692,9 +694,7 @@ namespace Mids_Reborn.Forms
             this.tsExportLong,
             this.tsExportDataLink,
             this.ToolStripSeparator25,
-            this.tsGenFreebies,
-            this.ToolStripSeparator27,
-            this.tsExportDiscord});
+            this.tsGenFreebies});
             this.ImportExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ImportExportToolStripMenuItem.Name = "ImportExportToolStripMenuItem";
             this.ImportExportToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
@@ -750,13 +750,6 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator27.Name = "ToolStripSeparator27";
             this.ToolStripSeparator27.Size = new System.Drawing.Size(237, 6);
-            // 
-            // tsExportDiscord
-            //
-            this.tsExportDiscord.Name = "tsExportDiscord";
-            this.tsExportDiscord.Size = new System.Drawing.Size(240, 22);
-            this.tsExportDiscord.Text = "Export to Discord";
-            this.tsExportDiscord.Click += new System.EventHandler(this.tsExportDiscord_Click);
             // 
             // OptionsToolStripMenuItem
             // 
@@ -1222,6 +1215,25 @@ namespace Mids_Reborn.Forms
             this.tlsDPA.Size = new System.Drawing.Size(282, 22);
             this.tlsDPA.Text = "Show Damage Per Animation (Level 50)";
             this.tlsDPA.Click += new System.EventHandler(this.tlsDPA_Click);
+            //
+            // ShareToolStripMenuItem1
+            //
+            this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsShareDiscord
+            });
+            this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
+            this.ShareToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
+            this.ShareToolStripMenuItem.Text = "&Share Build";
+
+            // 
+            // tsShareDiscord
+            //
+            this.tsShareDiscord.Name = "tsShareDiscord";
+            this.tsShareDiscord.Size = new System.Drawing.Size(240, 22);
+            this.tsShareDiscord.Text = "Via Discord (RebornBot)";
+            this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             // 
             // HelpToolStripMenuItem1
             // 
@@ -2136,7 +2148,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsGenFreebies;
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
-        ToolStripMenuItem tsExportDiscord;
+        ToolStripMenuItem tsShareDiscord;
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
@@ -2285,5 +2297,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem WindowToolStripMenuItem;
         Panel poolsPanel;
         ToolStripSeparator ToolStripSeparator29;
+        ToolStripMenuItem ShareToolStripMenuItem;
     }
 }
