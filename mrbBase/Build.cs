@@ -100,10 +100,10 @@ namespace mrbBase
         {
             get
             {
-                return MidsContext.Config.Server.ExtraSlotsEnabled switch
+                return DatabaseAPI.ServerData.EnableInherentSlotting switch
                 {
-                    false => MidsContext.Config.Server.MaxSlots,
-                    true => MidsContext.Config.Server.MaxSlots + MidsContext.Config.Server.HealthSlots + MidsContext.Config.Server.StaminaSlots
+                    false => DatabaseAPI.ServerData.MaxSlots,
+                    true => DatabaseAPI.ServerData.MaxSlots + DatabaseAPI.ServerData.HealthSlots + DatabaseAPI.ServerData.StaminaSlots
                 };
             }
         }
@@ -690,20 +690,20 @@ namespace mrbBase
                         switch (MidsContext.Config.BuildMode)
                         {
                             case Enums.dmModes.LevelUp:
-                                if (MidsContext.Character.Level == MidsContext.Config.Server.HealthSlot1Level)
+                                if (MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot1Level)
                                 {
                                     if (power.InherentSlotsUsed < 1)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
                                         power.InherentSlotsUsed += 1;
                                     }
                                 }
 
-                                if (MidsContext.Character.Level == MidsContext.Config.Server.HealthSlot2Level)
+                                if (MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot2Level)
                                 {
                                     if (power.InherentSlotsUsed is > 0 and < 2)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
                                         power.InherentSlotsUsed += 1;
                                     }
                                 }
@@ -715,8 +715,8 @@ namespace mrbBase
                                 {
                                     if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot1Level, true);
-                                        power.AddSlot(MidsContext.Config.Server.HealthSlot2Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
                                         power.InherentSlotsUsed = 2;
                                     }
                                 }
@@ -729,20 +729,20 @@ namespace mrbBase
                         switch (MidsContext.Config.BuildMode)
                         {
                             case Enums.dmModes.LevelUp:
-                                if (MidsContext.Character.Level == MidsContext.Config.Server.StaminaSlot1Level)
+                                if (MidsContext.Character.Level == DatabaseAPI.ServerData.StaminaSlot1Level)
                                 {
                                     if (power.InherentSlotsUsed < 1)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
                                         power.InherentSlotsUsed += 1;
                                     }
                                 }
 
-                                if (MidsContext.Character.Level == MidsContext.Config.Server.StaminaSlot2Level)
+                                if (MidsContext.Character.Level == DatabaseAPI.ServerData.StaminaSlot2Level)
                                 {
                                     if (power.InherentSlotsUsed is > 0 and < 2)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
                                         power.InherentSlotsUsed += 1;
                                     }
                                 }
@@ -754,8 +754,8 @@ namespace mrbBase
                                 {
                                     if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
                                     {
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot1Level, true);
-                                        power.AddSlot(MidsContext.Config.Server.StaminaSlot2Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
                                         power.InherentSlotsUsed = 2;
                                     }
                                 }
@@ -777,7 +777,7 @@ namespace mrbBase
             FillMissingSubPowers();
             CheckAndFixAllEnhancements();
             CheckAllVariableBounds();
-            if (MidsContext.Config.Server.ExtraSlotsEnabled)
+            if (DatabaseAPI.ServerData.EnableInherentSlotting)
             {
                 CheckInherentSlotting();
             }

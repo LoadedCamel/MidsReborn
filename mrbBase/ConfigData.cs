@@ -75,7 +75,6 @@ namespace mrbBase
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
-            Server = new ServerConfig();
             InitializeComponent();
         }
 
@@ -134,7 +133,6 @@ namespace mrbBase
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
         public ExportConfig Export { get; }
-        public ServerConfig Server { get; }
         public bool PrintInColor { get; set; }
         public bool PrintHistory { get; set; }
         public bool SaveFolderChecked { get; set; }

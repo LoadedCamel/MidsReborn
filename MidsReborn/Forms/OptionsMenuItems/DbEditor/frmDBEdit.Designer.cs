@@ -60,24 +60,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditEntity = new System.Windows.Forms.Button();
             this.btnPSBrowse = new System.Windows.Forms.Button();
             this.Label3 = new System.Windows.Forms.Label();
-            this.btnFileReport = new System.Windows.Forms.Button();
             this.exportIndexes = new System.Windows.Forms.Button();
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
             this.btnAttribModEdit = new System.Windows.Forms.Button();
             this.btnGCMIO = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.udPageVol = new System.Windows.Forms.NumericUpDown();
             this.txtPageVol = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.txtDBVer = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btnDbCreate = new System.Windows.Forms.Button();
-            this.btnEditManifest = new System.Windows.Forms.Button();
+            this.btnServerDataEdit = new System.Windows.Forms.Button();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // udIssue
@@ -138,28 +138,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnEditEnh
             // 
-            this.btnEditEnh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditEnh.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditEnh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(255)))), ((int)(((byte)(102)))));
+            this.btnEditEnh.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEditEnh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnEditEnh.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditEnh.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditEnh.Location = new System.Drawing.Point(665, 78);
+            this.btnEditEnh.Location = new System.Drawing.Point(3, 71);
             this.btnEditEnh.Name = "btnEditEnh";
-            this.btnEditEnh.Size = new System.Drawing.Size(160, 44);
+            this.btnEditEnh.Size = new System.Drawing.Size(395, 62);
             this.btnEditEnh.TabIndex = 5;
-            this.btnEditEnh.Text = "Enhancement Database Editor";
-            this.btnEditEnh.UseVisualStyleBackColor = true;
+            this.btnEditEnh.Text = "Enhancement Editor";
+            this.btnEditEnh.UseVisualStyleBackColor = false;
             this.btnEditEnh.Click += new System.EventHandler(this.btnEditEnh_Click);
             // 
             // btnEditIOSetPvE
             // 
-            this.btnEditIOSetPvE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditIOSetPvE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(222)))), ((int)(((byte)(255)))));
+            this.btnEditIOSetPvE.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEditIOSetPvE.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditIOSetPvE.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditIOSetPvE.Location = new System.Drawing.Point(665, 127);
+            this.btnEditIOSetPvE.Location = new System.Drawing.Point(404, 71);
             this.btnEditIOSetPvE.Name = "btnEditIOSetPvE";
-            this.btnEditIOSetPvE.Size = new System.Drawing.Size(160, 44);
+            this.btnEditIOSetPvE.Size = new System.Drawing.Size(396, 62);
             this.btnEditIOSetPvE.TabIndex = 6;
             this.btnEditIOSetPvE.Text = "Invention Set Editor";
-            this.btnEditIOSetPvE.UseVisualStyleBackColor = true;
+            this.btnEditIOSetPvE.UseVisualStyleBackColor = false;
             this.btnEditIOSetPvE.Click += new System.EventHandler(this.btnEditIOSet_Click);
             // 
             // lblCountSalvage
@@ -333,68 +337,77 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnClose
             // 
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnClose.BackColor = System.Drawing.Color.Firebrick;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnClose.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnClose.Location = new System.Drawing.Point(708, 334);
+            this.btnClose.Location = new System.Drawing.Point(583, 587);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(117, 31);
+            this.btnClose.Size = new System.Drawing.Size(234, 31);
             this.btnClose.TabIndex = 10;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Text = "CLOSE";
+            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnSalvage
             // 
-            this.btnSalvage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnSalvage.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSalvage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(168)))), ((int)(((byte)(102)))));
+            this.btnSalvage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSalvage.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnSalvage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvage.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSalvage.Location = new System.Drawing.Point(12, 178);
+            this.btnSalvage.Location = new System.Drawing.Point(404, 139);
             this.btnSalvage.Name = "btnSalvage";
-            this.btnSalvage.Size = new System.Drawing.Size(160, 44);
+            this.btnSalvage.Size = new System.Drawing.Size(396, 62);
             this.btnSalvage.TabIndex = 14;
             this.btnSalvage.Text = "Salvage Editor";
-            this.btnSalvage.UseVisualStyleBackColor = true;
+            this.btnSalvage.UseVisualStyleBackColor = false;
             this.btnSalvage.Click += new System.EventHandler(this.btnSalvage_Click);
             // 
             // btnRecipe
             // 
-            this.btnRecipe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnRecipe.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(102)))), ((int)(((byte)(255)))));
+            this.btnRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnRecipe.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecipe.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRecipe.Location = new System.Drawing.Point(665, 178);
+            this.btnRecipe.Location = new System.Drawing.Point(3, 139);
             this.btnRecipe.Name = "btnRecipe";
-            this.btnRecipe.Size = new System.Drawing.Size(160, 44);
+            this.btnRecipe.Size = new System.Drawing.Size(395, 62);
             this.btnRecipe.TabIndex = 15;
             this.btnRecipe.Text = "Recipe Editor";
-            this.btnRecipe.UseVisualStyleBackColor = true;
+            this.btnRecipe.UseVisualStyleBackColor = false;
             this.btnRecipe.Click += new System.EventHandler(this.btnRecipe_Click);
             // 
             // btnEditEntity
             // 
-            this.btnEditEntity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditEntity.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditEntity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(186)))), ((int)(((byte)(194)))));
+            this.btnEditEntity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEditEntity.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnEditEntity.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditEntity.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditEntity.Location = new System.Drawing.Point(12, 128);
+            this.btnEditEntity.Location = new System.Drawing.Point(404, 3);
             this.btnEditEntity.Name = "btnEditEntity";
-            this.btnEditEntity.Size = new System.Drawing.Size(160, 44);
+            this.btnEditEntity.Size = new System.Drawing.Size(396, 62);
             this.btnEditEntity.TabIndex = 17;
             this.btnEditEntity.Text = "Entity Editor";
-            this.btnEditEntity.UseVisualStyleBackColor = true;
+            this.btnEditEntity.UseVisualStyleBackColor = false;
             this.btnEditEntity.Click += new System.EventHandler(this.btnEditEntity_Click);
             // 
             // btnPSBrowse
             // 
-            this.btnPSBrowse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPSBrowse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(102)))));
+            this.btnPSBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPSBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPSBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnPSBrowse.Location = new System.Drawing.Point(12, 78);
+            this.btnPSBrowse.Location = new System.Drawing.Point(3, 3);
             this.btnPSBrowse.Name = "btnPSBrowse";
-            this.btnPSBrowse.Size = new System.Drawing.Size(160, 44);
+            this.btnPSBrowse.Size = new System.Drawing.Size(395, 62);
             this.btnPSBrowse.TabIndex = 18;
-            this.btnPSBrowse.Text = "Power \r\nDatabase Editor";
-            this.btnPSBrowse.UseVisualStyleBackColor = true;
+            this.btnPSBrowse.Text = "Main Editor";
+            this.btnPSBrowse.UseVisualStyleBackColor = false;
             this.btnPSBrowse.Click += new System.EventHandler(this.btnPSBrowse_Click);
             // 
             // Label3
@@ -407,21 +420,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label3.TabIndex = 22;
             this.Label3.Text = "Database Version";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnFileReport
-            // 
-            this.btnFileReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnFileReport.Enabled = false;
-            this.btnFileReport.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFileReport.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFileReport.Location = new System.Drawing.Point(12, 334);
-            this.btnFileReport.Name = "btnFileReport";
-            this.btnFileReport.Size = new System.Drawing.Size(120, 31);
-            this.btnFileReport.TabIndex = 23;
-            this.btnFileReport.Text = "File Load Report";
-            this.btnFileReport.UseVisualStyleBackColor = true;
-            this.btnFileReport.Visible = false;
-            this.btnFileReport.Click += new System.EventHandler(this.btnFileReport_Click);
             // 
             // exportIndexes
             // 
@@ -439,24 +437,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnExportJSON
             // 
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnExportJSON.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnExportJSON.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportJSON.Location = new System.Drawing.Point(434, 197);
+            this.btnExportJSON.Location = new System.Drawing.Point(404, 343);
             this.btnExportJSON.Name = "btnExportJSON";
-            this.btnExportJSON.Size = new System.Drawing.Size(150, 24);
+            this.btnExportJSON.Size = new System.Drawing.Size(396, 51);
             this.btnExportJSON.TabIndex = 26;
-            this.btnExportJSON.Text = "JSON Export";
+            this.btnExportJSON.Text = "JSON Exporter";
             this.btnExportJSON.UseVisualStyleBackColor = true;
             this.btnExportJSON.Click += new System.EventHandler(this.btnExportJSON_Click);
             // 
             // btnJsonImporter
             // 
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnJsonImporter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnJsonImporter.Location = new System.Drawing.Point(256, 197);
+            this.btnJsonImporter.Location = new System.Drawing.Point(404, 275);
             this.btnJsonImporter.Name = "btnJsonImporter";
-            this.btnJsonImporter.Size = new System.Drawing.Size(150, 24);
+            this.btnJsonImporter.Size = new System.Drawing.Size(396, 62);
             this.btnJsonImporter.TabIndex = 27;
             this.btnJsonImporter.Text = "JSON Importer";
             this.btnJsonImporter.UseVisualStyleBackColor = true;
@@ -464,45 +464,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnAttribModEdit
             // 
-            this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(219)))), ((int)(((byte)(102)))));
+            this.btnAttribModEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAttribModEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAttribModEdit.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnAttribModEdit.Location = new System.Drawing.Point(338, 77);
+            this.btnAttribModEdit.Location = new System.Drawing.Point(404, 207);
             this.btnAttribModEdit.Name = "btnAttribModEdit";
-            this.btnAttribModEdit.Size = new System.Drawing.Size(164, 24);
+            this.btnAttribModEdit.Size = new System.Drawing.Size(396, 62);
             this.btnAttribModEdit.TabIndex = 28;
-            this.btnAttribModEdit.Text = "AttribMods Editor";
-            this.btnAttribModEdit.UseVisualStyleBackColor = true;
+            this.btnAttribModEdit.Text = "AttribMod Editor";
+            this.btnAttribModEdit.UseVisualStyleBackColor = false;
             this.btnAttribModEdit.Click += new System.EventHandler(this.btnAttribModEdit_Click);
             // 
             // btnGCMIO
             // 
-            this.btnGCMIO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnGCMIO.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGCMIO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(143)))));
+            this.btnGCMIO.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnGCMIO.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnGCMIO.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGCMIO.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnGCMIO.Location = new System.Drawing.Point(338, 107);
+            this.btnGCMIO.Location = new System.Drawing.Point(3, 207);
             this.btnGCMIO.Name = "btnGCMIO";
-            this.btnGCMIO.Size = new System.Drawing.Size(164, 24);
+            this.btnGCMIO.Size = new System.Drawing.Size(395, 62);
             this.btnGCMIO.TabIndex = 30;
-            this.btnGCMIO.Text = "Global Chance Mod Editor";
-            this.btnGCMIO.UseVisualStyleBackColor = true;
-            this.btnGCMIO.Visible = false;
+            this.btnGCMIO.Text = "GCM Editor";
+            this.btnGCMIO.UseVisualStyleBackColor = false;
             this.btnGCMIO.Click += new System.EventHandler(this.btnGCMIO_Click);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.button1.Enabled = false;
-            this.button1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button1.Location = new System.Drawing.Point(525, 78);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 24);
-            this.button1.TabIndex = 31;
-            this.button1.Text = "Restore Entities";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // udPageVol
             // 
@@ -607,7 +595,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel2.Controls.Add(this.Label11, 3, 0);
             this.tableLayoutPanel2.Controls.Add(this.Label13, 4, 0);
             this.tableLayoutPanel2.Controls.Add(this.lblCountPS, 3, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 228);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 481);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -617,54 +605,71 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDbCreate
             // 
-            this.btnDbCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDbCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(126)))), ((int)(((byte)(51)))));
             this.btnDbCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnDbCreate.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDbCreate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDbCreate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDbCreate.Location = new System.Drawing.Point(338, 147);
+            this.btnDbCreate.Location = new System.Drawing.Point(17, 586);
             this.btnDbCreate.Name = "btnDbCreate";
-            this.btnDbCreate.Size = new System.Drawing.Size(164, 34);
+            this.btnDbCreate.Size = new System.Drawing.Size(234, 32);
             this.btnDbCreate.TabIndex = 39;
             this.btnDbCreate.Text = "Create New Database";
-            this.btnDbCreate.UseVisualStyleBackColor = true;
+            this.btnDbCreate.UseVisualStyleBackColor = false;
             this.btnDbCreate.Click += new System.EventHandler(this.btnDbCreate_Click);
             // 
-            // btnEditManifest
+            // btnServerDataEdit
             // 
-            this.btnEditManifest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEditManifest.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditManifest.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEditManifest.Location = new System.Drawing.Point(308, 335);
-            this.btnEditManifest.Name = "btnEditManifest";
-            this.btnEditManifest.Size = new System.Drawing.Size(234, 31);
-            this.btnEditManifest.TabIndex = 40;
-            this.btnEditManifest.Text = "Edit Database Update Manifest Location";
-            this.btnEditManifest.UseVisualStyleBackColor = true;
-            this.btnEditManifest.Visible = false;
-            this.btnEditManifest.Click += new System.EventHandler(this.btnEditManifest_Click);
+            this.btnServerDataEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(92)))), ((int)(((byte)(255)))));
+            this.btnServerDataEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnServerDataEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnServerDataEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnServerDataEdit.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnServerDataEdit.Location = new System.Drawing.Point(3, 275);
+            this.btnServerDataEdit.Name = "btnServerDataEdit";
+            this.btnServerDataEdit.Size = new System.Drawing.Size(395, 62);
+            this.btnServerDataEdit.TabIndex = 41;
+            this.btnServerDataEdit.Text = "Server Data Editor";
+            this.btnServerDataEdit.UseVisualStyleBackColor = false;
+            this.btnServerDataEdit.Click += new System.EventHandler(this.btnServerDataEdit_Click);
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.btnServerDataEdit, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.btnPSBrowse, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.btnEditEntity, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.btnEditEnh, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btnExportJSON, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.btnAttribModEdit, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.btnEditIOSetPvE, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btnGCMIO, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.btnRecipe, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.btnSalvage, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.btnJsonImporter, 1, 4);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(17, 78);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 6;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.14384F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.14384F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.14384F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.14384F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.14384F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28082F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(803, 397);
+            this.tableLayoutPanel3.TabIndex = 42;
             // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(837, 373);
-            this.Controls.Add(this.btnEditManifest);
+            this.ClientSize = new System.Drawing.Size(837, 630);
             this.Controls.Add(this.btnDbCreate);
+            this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.btnAttribModEdit);
-            this.Controls.Add(this.btnGCMIO);
-            this.Controls.Add(this.btnJsonImporter);
-            this.Controls.Add(this.btnExportJSON);
-            this.Controls.Add(this.btnFileReport);
-            this.Controls.Add(this.btnPSBrowse);
-            this.Controls.Add(this.btnEditEntity);
-            this.Controls.Add(this.btnRecipe);
-            this.Controls.Add(this.btnSalvage);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnEditIOSetPvE);
-            this.Controls.Add(this.btnEditEnh);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -674,12 +679,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Name = "frmDBEdit";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Database Editor";
+            this.Text = "Database Menu";
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -690,13 +696,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnJsonImporter;
         private Button btnGCMIO;
         private Button btnAttribModEdit;
-        private Button button1;
         private NumericUpDown udPageVol;
         private Label txtPageVol;
         private TableLayoutPanel tableLayoutPanel1;
         private Label txtDBVer;
         private TableLayoutPanel tableLayoutPanel2;
         private Button btnDbCreate;
-        private Button btnEditManifest;
+        private Button btnServerDataEdit;
+        private TableLayoutPanel tableLayoutPanel3;
     }
 }

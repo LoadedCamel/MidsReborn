@@ -1699,7 +1699,7 @@ namespace Mids_Reborn
             if (powerBuffed == null) return false;
             var nToHit = !powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? 0.0f : _selfBuffs.Effect[(int)Enums.eStatType.ToHit];
             var nAcc = !powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? 0.0f : _selfBuffs.Effect[(int)Enums.eStatType.BuffAcc];
-            powerBuffed.Accuracy = (float) (powerBuffed.Accuracy * (1.0 + powerMath.Accuracy + nAcc) * (MidsContext.Config.BaseAcc + (double) nToHit));
+            powerBuffed.Accuracy = (float) (powerBuffed.Accuracy * (1.0 + powerMath.Accuracy + nAcc) * (DatabaseAPI.ServerData.BaseToHit + (double) nToHit));
             powerBuffed.AccuracyMult = powerBuffed.Accuracy * (1f + powerMath.Accuracy + nAcc);
             return true;
         }

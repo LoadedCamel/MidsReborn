@@ -657,7 +657,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
-                var num2 = MidsContext.Config.BaseAcc * pBase.Accuracy;
+                var num2 = DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
                 if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & flag2)
@@ -669,18 +669,18 @@ namespace Mids_Reborn.Forms.Controls
                 if ((Math.Abs(accuracy1 - (double)accuracy2) > float.Epsilon) &
                     (Math.Abs(num2 - (double)accuracy2) > float.Epsilon))
                 {
-                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)MidsContext.Config.BaseAcc):##0.00000}x{str}";
-                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (enhancedPower.Accuracy - (double) MidsContext.Config.BaseAcc)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
+                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)DatabaseAPI.ServerData.BaseToHit):##0.00000}x{str}";
+                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (enhancedPower.Accuracy - (double) DatabaseAPI.ServerData.BaseToHit)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), enhancedPower.Accuracy * 100f, suffix2, tip2));
+                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), enhancedPower.Accuracy * 100f, suffix2, tip2));
                 }
                 else
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
                     //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format(pBase.AccuracyMult, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0),
-                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), suffix2, tip2));
+                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0),
+                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), suffix2, tip2));
                 }
             }
             else

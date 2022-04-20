@@ -73,8 +73,8 @@ namespace mrbBase
         private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
         private static string[] ATOSetsEnhUIDList = Array.Empty<string>();
 
-        public static IDatabase Database
-            => Base.Data_Classes.Database.Instance;
+        public static IDatabase Database => Base.Data_Classes.Database.Instance;
+        public static IServerData ServerData => mrbBase.ServerData.Instance;
 
         private static void ClearLookups()
         {
@@ -1159,9 +1159,9 @@ namespace mrbBase
             }
         }
 
-        public static void SaveUdData(string iPath)
+        public static void SaveServerData(string iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbUdData, iPath);
+            var path = Files.SelectDataFileSave(Files.MxdbFileSd, iPath);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1171,14 +1171,31 @@ namespace mrbBase
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Update data save failed: " + ex.Message);
+                MessageBox.Show(@"Server Data save failed: " + ex.Message);
                 return;
             }
 
             try
             {
-                writer.Write(Files.Headers.UpdateData.Start);
-                writer.Write(Database.UpdateManifest);
+                writer.Write(Files.Headers.ServerData.Start);
+                writer.Write(ServerData.ManifestUri);
+                writer.Write(ServerData.MaxSlots);
+                writer.Write(ServerData.BaseFlySpeed);
+                writer.Write(ServerData.BaseJumpHeight);
+                writer.Write(ServerData.BaseJumpSpeed);
+                writer.Write(ServerData.BasePerception);
+                writer.Write(ServerData.BaseRunSpeed);
+                writer.Write(ServerData.BaseToHit);
+                writer.Write(ServerData.MaxFlySpeed);
+                writer.Write(ServerData.MaxJumpSpeed);
+                writer.Write(ServerData.MaxRunSpeed);
+                writer.Write(ServerData.EnableInherentSlotting);
+                writer.Write(ServerData.HealthSlots);
+                writer.Write(ServerData.HealthSlot1Level);
+                writer.Write(ServerData.HealthSlot2Level);
+                writer.Write(ServerData.StaminaSlots);
+                writer.Write(ServerData.StaminaSlot1Level);
+                writer.Write(ServerData.StaminaSlot2Level);
                 writer.Close();
                 fileStream.Close();
             }
@@ -1190,9 +1207,9 @@ namespace mrbBase
             }
         }
 
-        public static void LoadUdData(string iPath)
+        public static bool LoadServerData(string iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbUdData, iPath);
+            var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1203,25 +1220,42 @@ namespace mrbBase
             }
             catch
             {
-                return;
+                return false;
             }
 
             try
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.UpdateData.Start)
+                if (header != Files.Headers.ServerData.Start)
                 {
                     headerFound = false;
                 }
 
                 if (!headerFound)
                 {
-                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Update Data");
-                    return;
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Server Data");
+                    return false;
                 }
 
-                Database.UpdateManifest = reader.ReadString();
+                ServerData.ManifestUri = reader.ReadString();
+                ServerData.MaxSlots = reader.ReadInt32();
+                ServerData.BaseFlySpeed = reader.ReadSingle();
+                ServerData.BaseJumpHeight = reader.ReadSingle();
+                ServerData.BaseJumpSpeed = reader.ReadSingle();
+                ServerData.BasePerception = reader.ReadSingle();
+                ServerData.BaseRunSpeed = reader.ReadSingle();
+                ServerData.BaseToHit = reader.ReadSingle();
+                ServerData.MaxFlySpeed = reader.ReadSingle();
+                ServerData.MaxJumpSpeed = reader.ReadSingle();
+                ServerData.MaxRunSpeed = reader.ReadSingle();
+                ServerData.EnableInherentSlotting = reader.ReadBoolean();
+                ServerData.HealthSlots = reader.ReadInt32();
+                ServerData.HealthSlot1Level = reader.ReadInt32();
+                ServerData.HealthSlot2Level = reader.ReadInt32();
+                ServerData.StaminaSlots = reader.ReadInt32();
+                ServerData.StaminaSlot1Level = reader.ReadInt32();
+                ServerData.StaminaSlot2Level = reader.ReadInt32();
                 reader.Close();
                 fileStream.Close();
             }
@@ -1230,7 +1264,10 @@ namespace mrbBase
                 reader.Close();
                 fileStream.Close();
                 MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+                return false;
             }
+
+            return true;
         }
 
         public static void SaveMainDatabase(ISerialize serializer, string iPath)

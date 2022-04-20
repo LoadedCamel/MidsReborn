@@ -580,25 +580,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
 
-            udBaseFlySpeed.Value = Convert.ToDecimal(config.Server.BaseFlySpeed);
-            udBaseJumpSpeed.Value = Convert.ToDecimal(config.Server.BaseJumpSpeed);
-            udBaseJumpHeight.Value = Convert.ToDecimal(config.Server.BaseJumpHeight);
-            udBaseRunSpeed.Value = Convert.ToDecimal(config.Server.BaseRunSpeed);
-            udBasePerception.Value = Convert.ToDecimal(config.Server.BasePerception);
-            udBaseToHit.Value = new decimal(config.BaseAcc * 100f);
-            udMaxFlySpeed.Value = Convert.ToDecimal(config.Server.MaxFlySpeed);
-            udMaxJumpSpeed.Value = Convert.ToDecimal(config.Server.MaxJumpSpeed);
-            udMaxRunSpeed.Value = Convert.ToDecimal(config.Server.MaxRunSpeed);
-
-            udMaxSlots.Value = config.Server.MaxSlots;
-            chkEnableExtra.Checked = config.Server.ExtraSlotsEnabled;
-            udHealthSlots.Value = config.Server.HealthSlots;
-            udHealthFirst.Value = config.Server.HealthSlot1Level;
-            udHealthSecond.Value = config.Server.HealthSlot2Level;
-            udStaminaSlots.Value = config.Server.StaminaSlots;
-            udStaminaFirst.Value = config.Server.StaminaSlot1Level;
-            udStaminaSecond.Value = config.Server.StaminaSlot2Level;
-
             chkUpdates.Checked = config.CheckForUpdates;
             chkShowSOLevels.Checked = config.ShowSoLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
@@ -816,24 +797,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Max;
             else if (rbChanceIgnore.Checked)
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
-            config.BaseAcc = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
-
-            config.Server.BaseFlySpeed = Convert.ToSingle(udBaseFlySpeed.Value);
-            config.Server.BaseJumpSpeed = Convert.ToSingle(udBaseJumpSpeed.Value);
-            config.Server.BaseJumpHeight = Convert.ToSingle(udBaseJumpHeight.Value);
-            config.Server.BaseRunSpeed = Convert.ToSingle(udBaseRunSpeed.Value);
-            config.Server.BasePerception = Convert.ToSingle(udBasePerception.Value);
-            config.Server.MaxFlySpeed = Convert.ToSingle(udMaxFlySpeed.Value);
-            config.Server.MaxJumpSpeed = Convert.ToSingle(udMaxJumpSpeed.Value);
-            config.Server.MaxRunSpeed = Convert.ToSingle(udMaxRunSpeed.Value);
-            config.Server.MaxSlots = Convert.ToInt32(udMaxSlots.Value);
-            config.Server.HealthSlots = Convert.ToInt32(udHealthSlots.Value);
-            config.Server.HealthSlot1Level = Convert.ToInt32(udHealthFirst.Value);
-            config.Server.HealthSlot2Level = Convert.ToInt32(udHealthSecond.Value);
-            config.Server.StaminaSlots = Convert.ToInt32(udStaminaSlots.Value);
-            config.Server.StaminaSlot1Level = Convert.ToInt32(udStaminaFirst.Value);
-            config.Server.StaminaSlot2Level = Convert.ToInt32(udStaminaSecond.Value);
-
             config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
@@ -896,11 +859,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
         {
             MidsContext.Config.ShowSelfBuffsAny = chkShowSelfBuffsAny.Checked;
-        }
-
-        private void chkEnableExtra_CheckedChanged(object sender, EventArgs e)
-        {
-            MidsContext.Config.Server.ExtraSlotsEnabled = chkEnableExtra.Checked;
         }
     }
 }

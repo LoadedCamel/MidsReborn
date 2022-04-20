@@ -212,21 +212,21 @@ namespace mrbBase.Base.Data_Classes
                 {
                     return true;
                 }
-                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Power && SlotsRemaining > 0 && MidsContext.Config.Server.ExtraSlotsEnabled)
+                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Power && SlotsRemaining > 0 && DatabaseAPI.ServerData.EnableInherentSlotting)
                 {
-                    if (Level == MidsContext.Config.Server.HealthSlot1Level)
+                    if (Level == DatabaseAPI.ServerData.HealthSlot1Level)
                     {
                         return true;
                     }
-                    if (Level == MidsContext.Config.Server.HealthSlot2Level)
+                    if (Level == DatabaseAPI.ServerData.HealthSlot2Level)
                     {
                         return true;
                     }
-                    if (Level == MidsContext.Config.Server.StaminaSlot1Level)
+                    if (Level == DatabaseAPI.ServerData.StaminaSlot1Level)
                     {
                         return true;
                     }
-                    if (Level == MidsContext.Config.Server.StaminaSlot2Level)
+                    if (Level == DatabaseAPI.ServerData.StaminaSlot2Level)
                     {
                         return true;
                     }
@@ -450,7 +450,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     case "Inherent.Fitness.Health":
                     {
-                        if (Level < MidsContext.Config.Server.HealthSlot1Level)
+                        if (Level < DatabaseAPI.ServerData.HealthSlot1Level)
                         {
                             if (power.InherentSlotsUsed > 0)
                             {
@@ -465,7 +465,7 @@ namespace mrbBase.Base.Data_Classes
                             }
                         }
 
-                        if (MidsContext.Character.Level < MidsContext.Config.Server.HealthSlot2Level)
+                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.HealthSlot2Level)
                         {
                             if (power.InherentSlotsUsed > 0)
                             {
@@ -484,7 +484,7 @@ namespace mrbBase.Base.Data_Classes
                     }
                     case "Inherent.Fitness.Stamina":
                     {
-                        if (MidsContext.Character.Level < MidsContext.Config.Server.StaminaSlot1Level)
+                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.StaminaSlot1Level)
                         {
                             if (power.InherentSlotsUsed > 0)
                             {
@@ -499,7 +499,7 @@ namespace mrbBase.Base.Data_Classes
                             }
                         }
 
-                        if (MidsContext.Character.Level < MidsContext.Config.Server.StaminaSlot2Level)
+                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.StaminaSlot2Level)
                         {
                             if (power.InherentSlotsUsed > 0)
                             {

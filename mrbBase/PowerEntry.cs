@@ -441,33 +441,33 @@ namespace mrbBase
                 return false;
             }
 
-            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.Normal && MidsContext.Config.Server.ExtraSlotsEnabled)
+            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.Normal && DatabaseAPI.ServerData.EnableInherentSlotting)
             {
                 message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
                 return false;
             }
 
-            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp && MidsContext.Config.Server.ExtraSlotsEnabled)
+            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp && DatabaseAPI.ServerData.EnableInherentSlotting)
             {
                 switch (Power.FullName)
                 {
                     case "Inherent.Fitness.Health":
-                        if (Level < MidsContext.Config.Server.HealthSlot1Level)
+                        if (Level < DatabaseAPI.ServerData.HealthSlot1Level)
                         {
                             return true;
                         }
-                        else if (Level < MidsContext.Config.Server.HealthSlot2Level)
+                        else if (Level < DatabaseAPI.ServerData.HealthSlot2Level)
                         {
                             return true;
                         }
 
                         break;
                     case "Inherent.Fitness.Stamina":
-                        if (Level < MidsContext.Config.Server.StaminaSlot1Level)
+                        if (Level < DatabaseAPI.ServerData.StaminaSlot1Level)
                         {
                             return true;
                         }
-                        else if (Level < MidsContext.Config.Server.StaminaSlot2Level)
+                        else if (Level < DatabaseAPI.ServerData.StaminaSlot2Level)
                         {
                             return true;
                         }

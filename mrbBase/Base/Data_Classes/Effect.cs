@@ -1455,7 +1455,7 @@ namespace mrbBase.Base.Data_Classes
                     sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
                     sBuild = sSubEffect switch
                     {
-                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * MidsContext.Config.BaseAcc * 100f):0.##}%)",
+                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * DatabaseAPI.ServerData.BaseToHit * 100f):0.##}%)",
                         "ActivateInterval" => $"{sEffect}({sSubEffect}) to {AtrModActivatePeriod} second(s)",
                         "Arc" => $"{sEffect}({sSubEffect}) to {AtrModArc} degrees",
                         "CastTime" => $"{sEffect}({sSubEffect}) to {AtrModCastTime} second(s)",

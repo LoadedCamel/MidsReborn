@@ -81,13 +81,20 @@ namespace Mids_Reborn
             public static void LoadData(ref frmInitializing iFrm, string path)
             {
                 IsAppInitialized = true;
-                iFrm?.SetMessage("Loading Data...");
+                iFrm?.SetMessage("Initializing Data...");
+                iFrm?.SetMessage("Loading Server Data...");
+                if (!DatabaseAPI.LoadServerData(path))
+                {
+                    MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
                 iFrm?.SetMessage("Loading Attribute Modifiers...");
                 DatabaseAPI.Database.AttribMods = new Modifiers();
                 if (!DatabaseAPI.Database.AttribMods.Load(path)) { }
 
                 DatabaseAPI.LoadTypeGrades(path);
-                iFrm?.SetMessage("Loading Powerset Database...");
+                iFrm?.SetMessage("Loading Main Data...");
                 if (!DatabaseAPI.LoadLevelsDatabase(path))
                 {
                     MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/LoadedCamel/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -99,12 +106,7 @@ namespace Mids_Reborn
                     MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
-
-                if (File.Exists(Path.Combine(path, Files.MxdbUdData)))
-                {
-                    DatabaseAPI.LoadUdData(path);
-                }
-
+                
                 if (!DatabaseAPI.LoadMaths(path))
                 {
                     Application.Exit();

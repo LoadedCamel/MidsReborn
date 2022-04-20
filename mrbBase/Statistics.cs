@@ -5,18 +5,18 @@ namespace mrbBase
 {
     public class Statistics
     {
-        public static readonly float MaxRunSpeed = MidsContext.Config.Server.MaxRunSpeed;
-        public readonly float MaxJumpSpeed = MidsContext.Config.Server.MaxJumpSpeed;
-        public static readonly float MaxFlySpeed = MidsContext.Config.Server.MaxFlySpeed;
+        public static readonly float MaxRunSpeed = DatabaseAPI.ServerData.MaxRunSpeed;
+        public readonly float MaxJumpSpeed = DatabaseAPI.ServerData.MaxJumpSpeed;
+        public static readonly float MaxFlySpeed = DatabaseAPI.ServerData.MaxFlySpeed;
         public const float CapRunSpeed = 135.67f;
         public const float CapJumpSpeed = 114.4f;
         public const float CapFlySpeed = 128.99f;
-        public static readonly float BaseRunSpeed = MidsContext.Config.Server.BaseRunSpeed;
-        public static readonly float BaseJumpSpeed = MidsContext.Config.Server.BaseJumpSpeed;
-        public static readonly float BaseJumpHeight = MidsContext.Config.Server.BaseJumpHeight;
-        public static readonly float BaseFlySpeed = MidsContext.Config.Server.BaseFlySpeed;
+        public static readonly float BaseRunSpeed = DatabaseAPI.ServerData.BaseRunSpeed;
+        public static readonly float BaseJumpSpeed = DatabaseAPI.ServerData.BaseJumpSpeed;
+        public static readonly float BaseJumpHeight = DatabaseAPI.ServerData.BaseJumpHeight;
+        public static readonly float BaseFlySpeed = DatabaseAPI.ServerData.BaseFlySpeed;
         internal const float BaseMagic = 1.666667f;
-        public static readonly float BasePerception = MidsContext.Config.Server.BasePerception;
+        public static readonly float BasePerception = DatabaseAPI.ServerData.BasePerception;
         public const float MaxDefenseDebuffRes = 95f;
         public const float MaxGenericDebuffRes = 100f; // All but defense that has a specific value
         private readonly Character _character;

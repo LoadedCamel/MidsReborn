@@ -401,7 +401,7 @@ namespace Mids_Reborn.Forms
                     if (BaseArray[index] != null)
                         continue;
                     BaseArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    BaseArray[index].Accuracy *= MidsContext.Config.BaseAcc;
+                    BaseArray[index].Accuracy *= DatabaseAPI.ServerData.BaseToHit;
                 }
 
                 MainModule.MidsController.Toon.FlipAllSlots();
@@ -421,7 +421,7 @@ namespace Mids_Reborn.Forms
                     if (EnhArray[index] != null)
                         continue;
                     EnhArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    EnhArray[index].Accuracy *= MidsContext.Config.BaseAcc;
+                    EnhArray[index].Accuracy *= DatabaseAPI.ServerData.BaseToHit;
                 }
 
                 MainModule.MidsController.Toon.FlipAllSlots();
@@ -485,9 +485,9 @@ namespace Mids_Reborn.Forms
                 else
                 {
                     if (Math.Abs(EnhArray[index].Accuracy - (double) accuracy) < float.Epsilon)
-                        num3 = MidsContext.Config.BaseAcc * num3;
+                        num3 = DatabaseAPI.ServerData.BaseToHit * num3;
                     nEnh = num3 * 100f;
-                    nBase = (float) (MidsContext.Config.BaseAcc * (double) accuracy * 100.0);
+                    nBase = (float) (DatabaseAPI.ServerData.BaseToHit * (double) accuracy * 100.0);
                 }
 
                 var displayName = BaseArray[index].DisplayName;

@@ -823,7 +823,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsAdvDBEdit.Name = "tsAdvDBEdit";
             this.tsAdvDBEdit.Size = new System.Drawing.Size(165, 22);
-            this.tsAdvDBEdit.Text = "&Database Editor...";
+            this.tsAdvDBEdit.Text = "&Database Menu";
             this.tsAdvDBEdit.Click += new System.EventHandler(this.tsAdvDBEdit_Click);
             // 
             // ToolStripSeparator15

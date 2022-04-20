@@ -469,6 +469,8 @@ namespace Mids_Reborn.Forms
             }
 
             loading = false;
+            MidsContext.Config.FirstRun = false;
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
         }
 
         private async Task ProcessUriCommands(Uri uri)
@@ -496,7 +498,7 @@ namespace Mids_Reborn.Forms
             {
                 case SwitchButton.SwitchState.StateA:
                     MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
-                    if (MidsContext.Config.Server.ExtraSlotsEnabled)
+                    if (DatabaseAPI.ServerData.EnableInherentSlotting)
                     {
                         MainModule.MidsController.Toon.ClearInvalidInherentSlots();
                     }
@@ -2230,7 +2232,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)))
                 return;
-            tsAdvFreshInstall.Visible = true;
+            //tsAdvFreshInstall.Visible = true;
             switch (MidsContext.Config.MasterMode)
             {
                 case false:
@@ -2240,6 +2242,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     MidsContext.Config.MasterMode = false;
                     break;
             }
+
+            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
         }
 
@@ -6372,6 +6376,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (loading) return;
             NoUpdate = true;
+            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);
             if (ComboCheckAT(all))

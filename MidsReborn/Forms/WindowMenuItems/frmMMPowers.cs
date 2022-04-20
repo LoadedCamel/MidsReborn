@@ -470,7 +470,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.BaseAcc * (double) power1.Accuracy *
+                        Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy *
                                                  100.0)) + "%", PopUp.Colors.Title, 0.9f, FontStyle.Bold,
                         1);
                 if (power1.RechargeTime > 0.0)

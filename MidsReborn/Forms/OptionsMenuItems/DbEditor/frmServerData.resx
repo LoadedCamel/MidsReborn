@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,29 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="cPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>102, 17</value>
-  </metadata>
-  <metadata name="fbdSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>192, 17</value>
-  </metadata>
-  <data name="Label15.Text" xml:space="preserve">
-    <value>Swap = two powers are swapped. The powers in between are unaffected by the transition
-Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.
-Shift = Cascading swaps. Shifting down means powers are moved to a lower level, starting with the lowest. Shifting up means powers are moved to a higher level, starting with the highest.</value>
-  </data>
-  <data name="Label9.Text" xml:space="preserve">
-    <value>Some attacks have a chance to deal additional damage. This damage can be calculated as...
+  <data name="label48.Text" xml:space="preserve">
+    <value>This values works in conjuction with your level map MHDs. It should only be changed if your server supports more (non-inherent) slots.
 
-Average - Extra damage is included based on chance.
-Maximum - Extra damage is always included.
-Minimum - Extra damage is ignored.
+Note: You will need to change the level maps if you increase the slots.
 
-Note: This also affects how Scrapper damage is displayed with Critical Hit is toggled on. 
-
-Where an attack has a chance to do additional damage:</value>
+</value>
   </data>
 </root>

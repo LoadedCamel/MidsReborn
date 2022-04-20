@@ -25,8 +25,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private Button btnEditIOSetPvE;
 
-        private Button btnFileReport;
-
         private Button btnPSBrowse;
 
         private Button btnRecipe;
@@ -195,16 +193,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmDBEdit_Load(object sender, EventArgs e)
         {
-            UdIssue.Enabled = MidsContext.Config.MasterMode;
-            UdPageVol.Enabled = MidsContext.Config.MasterMode;
-            txtPageVol.Enabled = MidsContext.Config.MasterMode;
-            btnFileReport.Visible = MidsContext.Config.MasterMode;
-            btnExportJSON.Visible = MidsContext.Config.MasterMode;
-            btnJsonImporter.Visible = MidsContext.Config.MasterMode;
-            btnGCMIO.Visible = MidsContext.Config.MasterMode;
-            btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
-            btnDbCreate.Visible = MidsContext.Config.MasterMode;
-            btnEditManifest.Visible = MidsContext.Config.MasterMode;
+            Text = $@"{DatabaseAPI.DatabaseName} Database Menu";
             DisplayInfo();
         }
 
@@ -262,13 +251,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private readonly frmMain _frmMain;
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var entJson = JsonConvert.DeserializeObject<List<SummonedEntity>>(File.ReadAllText($@"{Application.StartupPath}\\Data\\Ents.json"));
-            DatabaseAPI.Database.Entities = entJson.ToArray();
-            MessageBox.Show(@"Entities should now be restored. Verify via Entity editor then open and save Main DB.");
-        }
 
         private void txtPageVol_MouseHover(object sender, EventArgs e)
         {
@@ -335,40 +317,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             e.Message = "Required";
         }
 
-        private void btnEditManifest_Click(object sender, EventArgs e)
+        private void btnServerDataEdit_Click(object sender, EventArgs e)
         {
-            var loadingText = DatabaseAPI.Database.UpdateManifest ?? "Enter the URL here";
-            var iResult = InputBox.Show("Enter your XML manifest URL", "Set Database Manifest URL", false, loadingText, InputBox.InputBoxIcon.Info, validate_Url);
-            if (!iResult.OK) return;
-            DatabaseAPI.Database.UpdateManifest = iResult.Text;
-            DatabaseAPI.SaveUdData(MidsContext.Config.DataPath);
-        }
-
-        private static void validate_Url(object sender, InputBoxValidatingArgs e)
-        {
-            if (e.Text.Trim().Length > 0)
-            {
-                var validResult = Uri.TryCreate(e.Text.Trim(), UriKind.Absolute, out var uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                if (!validResult)
-                {
-                    e.Cancel = true;
-                    e.Message = "Valid Url is required";
-                }
-                else
-                {
-                    if (e.Text.EndsWith(".xml"))
-                    {
-                        return;
-                    }
-                    e.Cancel = true;
-                    e.Message = "This is not a valid manifest URL";
-                }
-            }
-            else
-            {
-                e.Cancel = true;
-                e.Message = "Required";
-            }
+            using var iFrmServerData = new frmServerData();
+            iFrmServerData.ShowDialog(this);
         }
     }
 }

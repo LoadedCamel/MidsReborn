@@ -70,7 +70,7 @@ namespace mrbBase
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", $"{MidsContext.Config.BaseAcc}"},
+                { "base.kToHit", $"{DatabaseAPI.ServerData.BaseToHit}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" }
             };
         }

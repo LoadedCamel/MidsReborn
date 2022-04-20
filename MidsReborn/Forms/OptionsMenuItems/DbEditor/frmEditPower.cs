@@ -2187,8 +2187,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lblEndCost.Text = "";
             }
 
-            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.BaseAcc * 100.0):##0.##}%)";
-            //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) MidsContext.Config.BaseAcc * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
+            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * DatabaseAPI.ServerData.BaseToHit * 100.0):##0.##}%)";
+            //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) DatabaseAPI.ServerData.BaseToHit * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
         }
 
         private void SetFullName()
@@ -2310,7 +2310,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             power.Accuracy = num;
-            lblAcc.Text = $"({power.Accuracy * MidsContext.Config.BaseAcc * 100:##0.##}%)";
+            lblAcc.Text = $"({power.Accuracy * DatabaseAPI.ServerData.BaseToHit * 100:##0.##}%)";
         }
 
         private void txtActivate_Leave(object sender, EventArgs e)

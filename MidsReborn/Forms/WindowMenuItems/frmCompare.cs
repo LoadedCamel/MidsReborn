@@ -967,7 +967,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             flag = true;
                     Values[index1][index2] = !((Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None) | flag)
                         ? 0.0f
-                        : (float) (Powers[index1][index2].Accuracy * (double) MidsContext.Config.BaseAcc * 100.0);
+                        : (float) (Powers[index1][index2].Accuracy * (double) DatabaseAPI.ServerData.BaseToHit * 100.0);
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
                     {
