@@ -45,6 +45,9 @@
     <RootNamespace>mrbBase</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Base\Extensions\FormExt.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Base\Extensions\PanelExt.cs" />
     <Compile Include="Base\Extensions\ListviewExt.cs" />
     <Compile Include="Expressions.cs" />
@@ -57,6 +60,7 @@
     <Compile Include="ServerData.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="Utils\FileHash.cs" />
+    <Compile Include="Utils\GenResult.cs" />
     <Compile Include="Utils\PatchCompressor.cs" />
     <Compile Include="Utils\Structs.cs" />
     <Compile Include="ZStatus.Designer.cs">

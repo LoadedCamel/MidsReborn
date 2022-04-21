@@ -75,6 +75,12 @@
     <Compile Include="Forms\Controls\CheckedListExt.Designer.cs">
       <DependentUpon>CheckedListExt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Controls\PatchGenQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\PatchGenQuery.Designer.cs">
+      <DependentUpon>PatchGenQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Controls\PowerSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -424,6 +430,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\DV2TotalsPane.resx">
       <DependentUpon>DV2TotalsPane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Controls\PatchGenQuery.resx">
+      <DependentUpon>PatchGenQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\PowerSelector.resx">
       <DependentUpon>PowerSelector.cs</DependentUpon>

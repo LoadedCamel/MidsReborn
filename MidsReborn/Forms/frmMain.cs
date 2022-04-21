@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Windows.Input;
 using Microsoft.Win32;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
@@ -30,6 +31,10 @@ using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
+using Cursor = System.Windows.Forms.Cursor;
+using Cursors = System.Windows.Forms.Cursors;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Timer = System.Windows.Forms.Timer;
@@ -65,7 +70,6 @@ namespace Mids_Reborn.Forms
         private string[] CommandArgs { get; }
         private string ProcessedCommand { get; set; }
         private bool ProcessedFromCommand { get; set; }
-
         public frmMain(string[] args)
         {
             CommandArgs = args;
@@ -2231,19 +2235,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void frmMain_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)))
-                return;
-            //tsAdvFreshInstall.Visible = true;
-            switch (MidsContext.Config.MasterMode)
+            if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)) && !(e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.L)))
             {
-                case false:
-                    MidsContext.Config.MasterMode = true;
-                    break;
-                case true:
-                    MidsContext.Config.MasterMode = false;
-                    break;
+                return;
             }
 
+            if (e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.A) && !MidsContext.Config.IsLcAdmin)
+            {
+                MidsContext.Config.MasterMode = MidsContext.Config.MasterMode switch
+                {
+                    false => true,
+                    true => false
+                };
+            }
+
+            if (e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.L))
+            {
+                MidsContext.Config.MasterMode = MidsContext.Config.MasterMode switch
+                {
+                    false => true,
+                    true => false
+                };
+                MidsContext.Config.IsLcAdmin = MidsContext.Config.MasterMode;
+            }
+            
             ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
@@ -5102,9 +5117,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str2 = str2.Replace(nameof(hero), "Villain");
             }
 
-            if (MidsContext.Config.MasterMode)
+            if (MidsContext.Config.MasterMode && !MidsContext.Config.IsLcAdmin)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (DB Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+            }
+            else if (MidsContext.Config.MasterMode && MidsContext.Config.IsLcAdmin)
+            {
+                Text = $@"{str2} (LC Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
             }
             else
             {

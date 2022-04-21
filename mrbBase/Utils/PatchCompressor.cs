@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,18 +13,85 @@ using Newtonsoft.Json;
 
 namespace mrbBase.Utils
 {
-    public static class PatchCompressor
+    public sealed class PatchCompressor
     {
-        private static string TopLevelFolder => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder);
-        private static string PatchPath => Path.Combine(MidsContext.Config.DataPath, "Patches");
-        private static string PatchFile => Path.Combine(PatchPath, $"{DatabaseAPI.Database.Version}.mru");
-        private static string HashFile => Path.Combine(PatchPath, "FileHash.json");
-
-        private static IEnumerable<FileData> CompileList(string path)
+        private PatchCompressor(EPatchType patchType)
         {
-            List<FileHash> hashes = null;
+            PatchType = patchType;
+        }
+
+        public static PatchCompressor AppPatchCompressor { get; } = new(EPatchType.Application);
+        public static PatchCompressor DbPatchCompressor { get; } = new(EPatchType.Database);
+
+        private enum EPatchType
+        {
+            Application,
+            Database
+        }
+
+        private EPatchType PatchType { get; set; }
+
+        private const string PatchFolderName = @"Patches";
+        private const string HashFileName = @"FileHash.json";
+
+        private string TopLevelFolder
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => AppContext.BaseDirectory,
+                    EPatchType.Database => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string PatchPath
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => Path.Combine(AppContext.BaseDirectory, PatchFolderName),
+                    EPatchType.Database => Path.Combine(MidsContext.Config.DataPath, PatchFolderName),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string PatchFile
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => Path.Combine(PatchPath, $"{MidsContext.AssemblyFileVersion}.mru"),
+                    EPatchType.Database => Path.Combine(PatchPath, $"{DatabaseAPI.Database.Version}.mru"),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string HashFile => Path.Combine(PatchPath, HashFileName);
+
+
+        // private static string TopLevelFolder => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder);
+        // private static string PatchPath => Path.Combine(MidsContext.Config.DataPath, "Patches");
+        // private static string PatchFile => Path.Combine(PatchPath, $"{DatabaseAPI.Database.Version}.mru");
+        // private static string HashFile => Path.Combine(PatchPath, "FileHash.json");
+
+        private IEnumerable<FileData> CompileList(string path)
+        {
+            List<FileHash>? hashes = null;
             var fileQueue = new List<FileData>();
-            var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(x => !x.Contains("Patches")).ToList();
+            var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(x => !x.Contains("Patches") && !x.Contains("Data")).ToList();
 
             if (File.Exists(Path.Combine(PatchPath, HashFile)))
             {
@@ -65,7 +133,7 @@ namespace mrbBase.Utils
             return fileQueue;
         }
 
-        public static async Task<bool> CreatePatchFile(string path)
+        public async Task<bool> CreatePatchFile(string path)
         {
             var cSource = new TaskCompletionSource<bool>();
             var compressedData = CompressData(path);
@@ -83,9 +151,9 @@ namespace mrbBase.Utils
             return await cSource.Task;
         }
 
-        private static byte[] CompressData(string path)
+        private byte[]? CompressData(string path)
         {
-            byte[] outData;
+            byte[]? outData;
             MemoryStream patchStream;
             BinaryWriter writer;
             try
@@ -133,7 +201,7 @@ namespace mrbBase.Utils
             return outData;
         }
 
-        private static void DeletePriorPatch(string path)
+        private void DeletePriorPatch(string path)
         {
             var filesToRemove = Directory.GetFiles(PatchPath, "*.mru").ToList();
             if (!filesToRemove.Any()) return;
@@ -143,7 +211,7 @@ namespace mrbBase.Utils
             }
         }
 
-        private static bool GenerateFile(byte[] byteArray)
+        private bool GenerateFile(byte[] byteArray)
         {
             FileStream fileStream;
             DeflaterOutputStream outputStream;
@@ -175,7 +243,7 @@ namespace mrbBase.Utils
             return true;
         }
 
-        private static List<FileData> DecompressData()
+        private List<FileData>? DecompressData()
         {
             FileStream fileStream;
             MemoryStream decompressed;

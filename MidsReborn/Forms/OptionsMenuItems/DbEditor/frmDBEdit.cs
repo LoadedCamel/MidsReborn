@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -327,14 +328,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private async void btnGeneratePatch_Click(object sender, EventArgs e)
         {
-            var patchGenerated = await PatchCompressor.CreatePatchFile(MidsContext.Config.DataPath);
+            PatchCompressor compressor;
+            bool patchGenerated;
+            var pgQuery = !MidsContext.Config.IsLcAdmin ? new PatchGenQuery("Do You Wish To Generate A Database Patch Now?") : new PatchGenQuery("Select The Patch Type To Generate Below", true, "Database", "None");
+
+            var result = pgQuery.ShowDialog(this);
+            
+            switch (result)
+            {
+                case GenResult.Application:
+                    compressor = PatchCompressor.AppPatchCompressor;
+                    patchGenerated = await compressor.CreatePatchFile(AppContext.BaseDirectory);
+                    
+                    break;
+                case GenResult.Database:
+                    compressor = PatchCompressor.DbPatchCompressor;
+                    patchGenerated = await compressor.CreatePatchFile(MidsContext.Config.DataPath);
+                    
+                    break;
+                case GenResult.Cancel:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             if (patchGenerated)
             {
-                MessageBox.Show(@"Patch generation complete", @"Patch Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"Patch generation complete", @"Patch Generation Status", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show(@"Patch generation failed due to an known error, please relaunch the application and try again.", @"Patch Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    @"Patch generation failed due to an unknown error, please relaunch the application and try again.",
+                    @"Patch Generation Status", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

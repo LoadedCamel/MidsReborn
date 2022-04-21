@@ -147,6 +147,7 @@ namespace mrbBase
         public bool ExportChunkOnly { get; set; }
         public bool LongExport { get; set; }
         public bool MasterMode { get; set; }
+        public bool IsLcAdmin { get; set; }
         public bool ShrinkFrmSets { get; set; }
 
 

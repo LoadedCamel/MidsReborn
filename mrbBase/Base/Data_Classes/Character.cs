@@ -304,7 +304,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool IsHero()
         {
-            return Alignment == Enums.Alignment.Hero || Alignment == Enums.Alignment.Vigilante;
+            return Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
         }
 
         public bool PoolTaken(int poolID)
