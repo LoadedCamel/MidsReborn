@@ -5,12 +5,14 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.JsonImport;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
+using mrbBase.Utils;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -321,6 +323,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             using var iFrmServerData = new frmServerData();
             iFrmServerData.ShowDialog(this);
+        }
+
+        private async void btnGeneratePatch_Click(object sender, EventArgs e)
+        {
+            var patchGenerated = await PatchCompressor.CreatePatchFile(MidsContext.Config.DataPath);
+            if (patchGenerated)
+            {
+                MessageBox.Show(@"Patch generation complete", @"Patch Generation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(@"Patch generation failed due to an known error, please relaunch the application and try again.", @"Patch Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

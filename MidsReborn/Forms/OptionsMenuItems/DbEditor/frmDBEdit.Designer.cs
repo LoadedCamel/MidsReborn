@@ -73,6 +73,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnDbCreate = new System.Windows.Forms.Button();
             this.btnServerDataEdit = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnGeneratePatch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -637,6 +638,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.btnGeneratePatch, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.btnServerDataEdit, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.btnPSBrowse, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnEditEntity, 1, 0);
@@ -659,6 +661,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28082F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(803, 397);
             this.tableLayoutPanel3.TabIndex = 42;
+            // 
+            // btnGeneratePatch
+            // 
+            this.btnGeneratePatch.BackColor = System.Drawing.Color.PaleGoldenrod;
+            this.btnGeneratePatch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnGeneratePatch.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnGeneratePatch.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGeneratePatch.ForeColor = System.Drawing.Color.Black;
+            this.btnGeneratePatch.Location = new System.Drawing.Point(3, 343);
+            this.btnGeneratePatch.Name = "btnGeneratePatch";
+            this.btnGeneratePatch.Size = new System.Drawing.Size(395, 51);
+            this.btnGeneratePatch.TabIndex = 43;
+            this.btnGeneratePatch.Text = "Generate Patch File";
+            this.btnGeneratePatch.UseVisualStyleBackColor = false;
+            this.btnGeneratePatch.Click += new System.EventHandler(this.btnGeneratePatch_Click);
             // 
             // frmDBEdit
             // 
@@ -704,5 +721,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnDbCreate;
         private Button btnServerDataEdit;
         private TableLayoutPanel tableLayoutPanel3;
+        private Button btnGeneratePatch;
     }
 }
