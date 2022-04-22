@@ -3,41 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MRBUpdater
 {
     public class ProgressEventArgs : EventArgs
     {
-        public ProgressEventArgs(string name, float progress, float total)
+        public ProgressEventArgs(string name, double processed, double total)
         {
             Name = name;
-            Processed = progress;
+            Processed = processed;
             Total = total;
         }
 
         public string Name { get; }
 
-        public float Processed { get; }
+        public double Processed { get; }
 
-        public float Total { get; }
+        public double Total { get; }
 
-        public float PercentComplete
+        public int PercentComplete
         {
             get
             {
-                float result;
+                double result;
                 if (Processed <= 0)
                 {
                     result = 0;
                 }
                 else
                 {
-                    result = (Processed / Total) * 100.0f;
+                    result = Processed * 100 / Total;
                 }
-                return result;
+                return (int)result;
             }
         }
-
-        public bool ContinueRunning { get; set; } = true;
     }
 }

@@ -45,6 +45,8 @@ namespace mrbBase
         private static string FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
 
+        public static string BaseDataPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder);
+
         public static string SelectDataFileLoad(string iDataFile, string iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);

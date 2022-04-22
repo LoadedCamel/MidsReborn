@@ -35,7 +35,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             case "version":
                             {
                                 Version = Version.Parse(xmlReader.ReadElementContentAsString());
-                                Debug.WriteLine(Version);
                                 break;
                             }
                             case "changelog":
@@ -87,13 +86,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         dbResult.Close();
                         break;
                     case DialogResult.OK:
-                        Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), MidsContext.Config.DataPath);
+                        Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), Files.BaseDataPath);
                         break;
                 }
             }
             else
             {
-                Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), MidsContext.Config.DataPath);
+                Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), Files.BaseDataPath);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace MRBUpdater
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Updater(args));
+            Application.Run(new Update(args));
         }
     }
 }
