@@ -8,11 +8,11 @@ namespace mrbBase.Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 3;
-        private const int AppBuildVersion = 1;
-        private const int AppRevisionVersion = 9;
+        private const int AppBuildVersion = 2;
+        private const int AppRevisionVersion = 8;
 
-        public const string AssemblyVersion = "3.3.1";
-        public const string AssemblyFileVersion = "3.3.1.43";
+        public const string AssemblyVersion = "3.3.2";
+        public const string AssemblyFileVersion = "3.3.2.8";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
