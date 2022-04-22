@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace mrbBase.Utils
 {
-    public sealed class PatchCompressor
+    public class PatchCompressor
     {
         private PatchCompressor(EPatchType patchType)
         {
@@ -239,72 +239,6 @@ namespace mrbBase.Utils
             }
 
             return true;
-        }
-
-        private List<FileData>? DecompressData()
-        {
-            FileStream fileStream;
-            MemoryStream decompressed;
-            InflaterInputStream inflaterStream;
-            BinaryReader reader;
-            var patchFiles = new List<FileData>();
-            try
-            {
-                fileStream = new FileStream(PatchFile, FileMode.Open, FileAccess.Read);
-                decompressed = new MemoryStream();
-                inflaterStream = new InflaterInputStream(fileStream);
-                reader = new BinaryReader(inflaterStream);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(@"Failed to read patch data: " + e.Message);
-                return null;
-            }
-
-            try
-            {
-                var headerFound = true;
-                var header = reader.ReadString();
-                if (header != "Mids Reborn Patch Data")
-                {
-                    headerFound = false;
-                }
-
-                if (!headerFound)
-                {
-                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Patch Data");
-                    return null;
-                }
-
-                var fileCount = reader.ReadInt32();
-                for (var i = 0; i < fileCount; i++)
-                {
-                    var dataLength = reader.ReadInt32();
-                    patchFiles.Add(new FileData{FileName = reader.ReadString(), Path = reader.ReadString(), Data = reader.ReadBytes(dataLength)});
-                }
-                reader.Close();
-                decompressed.Close();
-                inflaterStream.Close();
-                fileStream.Close();
-
-                // foreach (var patchFile in patchFiles)
-                // {
-                //     var fileInfo = new FileInfo(Path.Combine(PatchPath, patchFile.Path, patchFile.FileName));
-                //     fileInfo.Directory?.Create();
-                //     File.WriteAllBytes(fileInfo.FullName, patchFile.Data);
-                // }
-            }
-            catch (Exception ex)
-            {
-                reader.Close();
-                decompressed.Close();
-                inflaterStream.Close();
-                fileStream.Close();
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                return null;
-            }
-
-            return patchFiles;
         }
     }
 }

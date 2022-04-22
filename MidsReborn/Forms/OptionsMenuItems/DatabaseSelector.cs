@@ -31,7 +31,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             foreach (var database in databases)
             {
                 var databaseData = new DirectoryInfo(database);
-                Debug.WriteLine(databaseData.FullName);
                 DatabaseData.Add(new DatabaseItems { Name = databaseData.Name, Path = databaseData.FullName });
             }
 

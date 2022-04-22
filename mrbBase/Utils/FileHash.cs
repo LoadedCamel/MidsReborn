@@ -32,13 +32,5 @@ namespace mrbBase.Utils
         }
 
         public static bool Compare(string incomingHash, string existingHash) => incomingHash.Equals(existingHash);
-
-        //public static FileHashComparer Compare(FileHash incHash, FileHash existingHash) => new FileHashComparer();
-
-        private static void GenerateHashList(string file, IReadOnlyCollection<FileHash> hashList)
-        {
-            var json = JsonConvert.SerializeObject(hashList, Formatting.Indented);
-            File.WriteAllText(file, json);
-        }
     }
 }
