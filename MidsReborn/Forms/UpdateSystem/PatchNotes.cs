@@ -105,10 +105,10 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 switch(Type)
                 {
                     case "App":
-                        clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version);
+                        clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version, AppContext.BaseDirectory);
                         break;
                     case "Database":
-                        clsXMLUpdate.Update(DatabaseAPI.Database.UpdateManifest, Version);
+                        clsXMLUpdate.Update(DatabaseAPI.ServerData.ManifestUri, Version, MidsContext.Config.DataPath);
                         break;
                 }
                 Close();

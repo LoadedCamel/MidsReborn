@@ -54,7 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PatchDecompressor.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressEventArgs.cs" />
+    <Compile Include="Streams\ProgressStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Updater.cs">
       <SubType>Form</SubType>
@@ -62,6 +65,8 @@
     <Compile Include="Updater.Designer.cs">
       <DependentUpon>Updater.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ScannerEventArgs.cs" />
+    <Compile Include="Utils\StreamUtils.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -111,5 +116,6 @@
   <ItemGroup>
     <Content Include="reborn.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

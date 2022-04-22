@@ -83,13 +83,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         appResult.Close();
                         break;
                     case DialogResult.OK:
-                        Update(MidsContext.Config.UpdatePath, Version.ToString());
+                        Update(MidsContext.Config.UpdatePath, Version.ToString(), AppContext.BaseDirectory);
                         break;
                 }
             }
             else
             {
-                Update(MidsContext.Config.UpdatePath, Version.ToString());
+                Update(MidsContext.Config.UpdatePath, Version.ToString(), AppContext.BaseDirectory);
             }
         }
     }

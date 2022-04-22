@@ -338,12 +338,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case GenResult.Application:
                     compressor = PatchCompressor.AppPatchCompressor;
-                    patchGenerated = await compressor.CreatePatchFile(AppContext.BaseDirectory);
+                    patchGenerated = compressor.CreatePatchFile(AppContext.BaseDirectory, PatchCompressor.EPatchType.Application);
                     
                     break;
                 case GenResult.Database:
                     compressor = PatchCompressor.DbPatchCompressor;
-                    patchGenerated = await compressor.CreatePatchFile(MidsContext.Config.DataPath);
+                    patchGenerated =compressor.CreatePatchFile(MidsContext.Config.DataPath, PatchCompressor.EPatchType.Database);
                     
                     break;
                 case GenResult.Cancel:

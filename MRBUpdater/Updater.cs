@@ -15,11 +15,12 @@ namespace MRBUpdater
     public partial class Updater : Form
     {
         private BackgroundWorker _updateWorker;
-        private FastZipEvents _updateEvents;
+        private PatchDecompressorEvents _updateEvents;
 
         private string UpdatePath { get; set; }
         private string VersionText { get; set; }
         private int ParentPid { get; set; }
+        private string ExtractPath{ get; set; }
 
         private static Uri UpdateFile { get; set; }
         private static string PackedUpdate { get; set; }
@@ -30,6 +31,7 @@ namespace MRBUpdater
             UpdatePath = args[0];
             VersionText = args[1];
             ParentPid = int.Parse(args[2]);
+            ExtractPath = args[3];
             Shown += OnShown;
             InitializeComponent();
         }
@@ -81,12 +83,20 @@ namespace MRBUpdater
 
         private void UpdateWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            _updateEvents = new FastZipEvents();
-            _updateEvents.Progress += Report_Progress;
-            var updFile = new FastZip();
+            _updateEvents = new PatchDecompressorEvents();
+            _updateEvents.UpdateProgress += Report_Progress;
+            var decompressor = new PatchDecompressor();
             Process.GetProcessById(ParentPid).Kill();
             Process.GetProcessById(ParentPid).WaitForExit();
-            updFile.ExtractZip(PackedUpdate, Application.StartupPath, null);
+            PatchDecompressor.CleanOldEntries(ExtractPath);
+            var decompressedData = PatchDecompressor.DecompressData(PackedUpdate);
+            if (decompressedData != null) decompressor.RecompileFileEntries(ExtractPath, decompressedData);
+            // _updateEvents = new FastZipEvents();
+            // _updateEvents.Progress += Report_Progress;
+            // var updFile = new FastZip();
+            // Process.GetProcessById(ParentPid).Kill();
+            // Process.GetProcessById(ParentPid).WaitForExit();
+            // updFile.ExtractZip(PackedUpdate, Application.StartupPath, null);
         }
 
         private void Report_Progress(object sender, ProgressEventArgs e)

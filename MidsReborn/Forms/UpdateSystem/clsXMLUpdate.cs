@@ -62,7 +62,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 AppUpdate.InitiateQuery(parent);
             }
-            else if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.UpdateManifest))
+            else if (!string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri))
             {
                 if (DbUpdate.IsAvailable)
                 {
@@ -82,7 +82,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             return comparisonResult > -1;
         }
 
-        public static void Update(string path, string updateVersion)
+        public static void Update(string path, string updateVersion, string extractionPath)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = Application.StartupPath,
                     FileName = @"MRBUpdater.exe",
-                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id}"
+                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id} {extractionPath}"
                 };
 
                 Process.Start(startInfo);

@@ -25,7 +25,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     XmlResolver = null,
                     DtdProcessing = DtdProcessing.Ignore
                 };
-                using var xmlReader = XmlReader.Create(DatabaseAPI.Database.UpdateManifest, settings);
+                using var xmlReader = XmlReader.Create(DatabaseAPI.ServerData.ManifestUri, settings);
                 while (xmlReader.Read())
                 {
                     try
@@ -35,6 +35,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             case "version":
                             {
                                 Version = Version.Parse(xmlReader.ReadElementContentAsString());
+                                Debug.WriteLine(Version);
                                 break;
                             }
                             case "changelog":
@@ -86,13 +87,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         dbResult.Close();
                         break;
                     case DialogResult.OK:
-                        Update(DatabaseAPI.Database.UpdateManifest, Version.ToString());
+                        Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), MidsContext.Config.DataPath);
                         break;
                 }
             }
             else
             {
-                Update(DatabaseAPI.Database.UpdateManifest, Version.ToString());
+                Update(DatabaseAPI.ServerData.ManifestUri, Version.ToString(), MidsContext.Config.DataPath);
             }
         }
     }
