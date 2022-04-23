@@ -143,7 +143,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditEnh.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditEnh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEditEnh.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditEnh.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditEnh.ForeColor = System.Drawing.Color.Black;
             this.btnEditEnh.Location = new System.Drawing.Point(3, 71);
             this.btnEditEnh.Name = "btnEditEnh";
             this.btnEditEnh.Size = new System.Drawing.Size(395, 62);
@@ -158,7 +158,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditIOSetPvE.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditIOSetPvE.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditIOSetPvE.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditIOSetPvE.ForeColor = System.Drawing.Color.Black;
             this.btnEditIOSetPvE.Location = new System.Drawing.Point(404, 71);
             this.btnEditIOSetPvE.Name = "btnEditIOSetPvE";
             this.btnEditIOSetPvE.Size = new System.Drawing.Size(396, 62);
@@ -342,7 +342,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnClose.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Location = new System.Drawing.Point(583, 587);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(234, 31);
@@ -357,7 +357,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnSalvage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSalvage.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnSalvage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvage.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSalvage.ForeColor = System.Drawing.Color.Black;
             this.btnSalvage.Location = new System.Drawing.Point(404, 139);
             this.btnSalvage.Name = "btnSalvage";
             this.btnSalvage.Size = new System.Drawing.Size(396, 62);
@@ -372,7 +372,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnRecipe.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipe.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRecipe.ForeColor = System.Drawing.Color.Black;
             this.btnRecipe.Location = new System.Drawing.Point(3, 139);
             this.btnRecipe.Name = "btnRecipe";
             this.btnRecipe.Size = new System.Drawing.Size(395, 62);
@@ -387,7 +387,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditEntity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditEntity.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEditEntity.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditEntity.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditEntity.ForeColor = System.Drawing.Color.Black;
             this.btnEditEntity.Location = new System.Drawing.Point(404, 3);
             this.btnEditEntity.Name = "btnEditEntity";
             this.btnEditEntity.Size = new System.Drawing.Size(396, 62);
@@ -402,7 +402,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnPSBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnPSBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPSBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnPSBrowse.ForeColor = System.Drawing.Color.Black;
             this.btnPSBrowse.Location = new System.Drawing.Point(3, 3);
             this.btnPSBrowse.Name = "btnPSBrowse";
             this.btnPSBrowse.Size = new System.Drawing.Size(395, 62);
@@ -440,13 +440,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnExportJSON.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnExportJSON.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnExportJSON.ForeColor = System.Drawing.Color.Black;
             this.btnExportJSON.Location = new System.Drawing.Point(404, 343);
             this.btnExportJSON.Name = "btnExportJSON";
             this.btnExportJSON.Size = new System.Drawing.Size(396, 51);
             this.btnExportJSON.TabIndex = 26;
             this.btnExportJSON.Text = "JSON Exporter";
-            this.btnExportJSON.UseVisualStyleBackColor = true;
+            this.btnExportJSON.UseVisualStyleBackColor = false;
             this.btnExportJSON.Click += new System.EventHandler(this.btnExportJSON_Click);
             // 
             // btnJsonImporter
@@ -454,13 +454,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnJsonImporter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnJsonImporter.ForeColor = System.Drawing.Color.Black;
             this.btnJsonImporter.Location = new System.Drawing.Point(404, 275);
             this.btnJsonImporter.Name = "btnJsonImporter";
             this.btnJsonImporter.Size = new System.Drawing.Size(396, 62);
             this.btnJsonImporter.TabIndex = 27;
             this.btnJsonImporter.Text = "JSON Importer";
-            this.btnJsonImporter.UseVisualStyleBackColor = true;
+            this.btnJsonImporter.UseVisualStyleBackColor = false;
             this.btnJsonImporter.Click += new System.EventHandler(this.btnJsonImporter_Click);
             // 
             // btnAttribModEdit
@@ -469,7 +469,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAttribModEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAttribModEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAttribModEdit.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnAttribModEdit.ForeColor = System.Drawing.Color.Black;
             this.btnAttribModEdit.Location = new System.Drawing.Point(404, 207);
             this.btnAttribModEdit.Name = "btnAttribModEdit";
             this.btnAttribModEdit.Size = new System.Drawing.Size(396, 62);
@@ -484,7 +484,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnGCMIO.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnGCMIO.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGCMIO.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGCMIO.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnGCMIO.ForeColor = System.Drawing.Color.Black;
             this.btnGCMIO.Location = new System.Drawing.Point(3, 207);
             this.btnGCMIO.Name = "btnGCMIO";
             this.btnGCMIO.Size = new System.Drawing.Size(395, 62);
@@ -609,7 +609,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnDbCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(126)))), ((int)(((byte)(51)))));
             this.btnDbCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnDbCreate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDbCreate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnDbCreate.ForeColor = System.Drawing.Color.Black;
             this.btnDbCreate.Location = new System.Drawing.Point(17, 586);
             this.btnDbCreate.Name = "btnDbCreate";
             this.btnDbCreate.Size = new System.Drawing.Size(234, 32);
@@ -624,7 +624,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnServerDataEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnServerDataEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnServerDataEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnServerDataEdit.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnServerDataEdit.ForeColor = System.Drawing.Color.Black;
             this.btnServerDataEdit.Location = new System.Drawing.Point(3, 275);
             this.btnServerDataEdit.Name = "btnServerDataEdit";
             this.btnServerDataEdit.Size = new System.Drawing.Size(395, 62);

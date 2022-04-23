@@ -71,8 +71,9 @@ namespace mrbBase
         private static string[] WinterEventEnhancements = Array.Empty<string>();
         private static string[] MovieEnhUIDList = Array.Empty<string>();
         private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
-        private static string[] ATOSetsEnhUIDList = Array.Empty<string>();
-
+        private static List<string> _archetypeEnhancements = new();
+        
+        public static IEnumerable<string> GetATOEnhancements => GetArchetypeEnhancements();
         public static IDatabase Database => Base.Data_Classes.Database.Instance;
         public static IServerData ServerData => mrbBase.ServerData.Instance;
 
@@ -782,18 +783,20 @@ namespace mrbBase
             return niDSet <= -1 ? null : Database.EnhancementSets[niDSet].Enhancements.Select(enh => Database.Enhancements[enh].UID).ToList();
         }
 
-        private static string[] GetATOSetsEnhUIDList()
+        private static IEnumerable<string> GetArchetypeEnhancements()
         {
-            if (ATOSetsEnhUIDList.Length != 0) return ATOSetsEnhUIDList;
+            if (_archetypeEnhancements.Any())
+            {
+                return _archetypeEnhancements;
+            }
 
-            var enh = Database.Enhancements.Where(e =>
-                e.nIDSet > -1 &&
-                GetSetTypeByIndex(Database.EnhancementSets[e.nIDSet].SetType).Name.Contains("Archetype")
-            );
-
-            ATOSetsEnhUIDList = enh.Select(e => e.UID).ToArray();
-
-            return ATOSetsEnhUIDList;
+            _archetypeEnhancements = Database.Enhancements
+                .Where(e => e.nIDSet > -1 &&
+                            !string.IsNullOrWhiteSpace(GetSetTypeByIndex(Database.EnhancementSets[e.nIDSet].SetType).Name) &&
+                            GetSetTypeByIndex(Database.EnhancementSets[e.nIDSet].SetType).Name.Contains("Archetype"))
+                .Select(e => e.UID)
+                .ToList();
+            return _archetypeEnhancements;
         }
 
         private static string[] GetWinterEventEnhUIDList()
@@ -828,7 +831,7 @@ namespace mrbBase
         public static string GetEnhancementBaseUIDName(string iName)
         {
             var purpleSetsEnh = GetPurpleSetsEnhUIDList();
-            var atoSetsEnh = GetATOSetsEnhUIDList();
+            var atoSetsEnh = GetArchetypeEnhancements();
             var winterEventEnh = GetWinterEventEnhUIDList();
             var movieEnh = GetMovieEnhUIDList();
 
