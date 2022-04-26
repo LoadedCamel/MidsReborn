@@ -88,11 +88,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var num = (int)frmEditArchetype.ShowDialog();
                     if (frmEditArchetype.DialogResult != DialogResult.OK)
                         return;
-                    var database = DatabaseAPI.Database;
-                    var archetypeArray = Array.Empty<Archetype>();
-                    Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
-                    database.Classes = archetypeArray;
-                    DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                    var classes = DatabaseAPI.Database.Classes.ToList();
+                    classes.Add(new Archetype(frmEditArchetype.MyAT) { IsNew = true });
+                    DatabaseAPI.Database.Classes = classes.ToArray();
                     Sort(0);
                     break;
                 }
