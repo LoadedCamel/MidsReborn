@@ -332,7 +332,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkCancelOnMiss.Checked = MyFx.CancelOnMiss;
             IgnoreED.Checked = MyFx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)MyFx.SpecialCase;
-            if (MyFx.SpecialCase == Enums.eSpecialCase.None)
+            if (MyFx.SpecialCase != Enums.eSpecialCase.None)
             {
                 btnEditConditions.Enabled = false;
                 if (MyFx.ActiveConditionals.Any())
