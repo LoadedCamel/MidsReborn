@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using FastDeepCloner;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -173,7 +174,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
 
-            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
+            var selectedEffect = (IEffect) myPower.Effects[lvFX.SelectedIndices[0]].Clone();
+            using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
