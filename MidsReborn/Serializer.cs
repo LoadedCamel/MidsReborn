@@ -1,5 +1,6 @@
 ﻿using System;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn
@@ -37,6 +38,31 @@ namespace Mids_Reborn
                         DefaultValueHandling = DefaultValueHandling.Ignore
                     }
                 ), "json");
+        }
+
+        public static readonly JsonSerializerSettings SerializerSettings = new()
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters =
+            {
+                new AbstractConverter<Database, IDatabase>(),
+                new AbstractConverter<Enhancement, IEnhancement>(),
+                new AbstractConverter<Powerset, IPowerset>(),
+                new AbstractConverter<Power, IPower>(),
+                new AbstractConverter<Effect, IEffect>(),
+            }
+        };
+
+        private class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
+        {
+            public override bool CanConvert(Type objectType) => objectType == typeof(TAbstract);
+
+            public override object ReadJson(JsonReader reader, Type type, object value, JsonSerializer jser) => jser.Deserialize<TReal>(reader);
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer jser) => jser.Serialize(writer, value);
         }
     }
 }
