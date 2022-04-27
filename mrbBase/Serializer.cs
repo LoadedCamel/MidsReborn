@@ -1,12 +1,10 @@
 ﻿using System;
-using mrbBase;
 using mrbBase.Base.Data_Classes;
 using Newtonsoft.Json;
 
-namespace Mids_Reborn
+namespace mrbBase
 {
-
-    internal class Serializer : ISerialize
+    public class Serializer : ISerialize
     {
         private readonly Func<object, string> _serializeFunc;
 
@@ -52,8 +50,9 @@ namespace Mids_Reborn
                 new AbstractConverter<Enhancement, IEnhancement>(),
                 new AbstractConverter<Powerset, IPowerset>(),
                 new AbstractConverter<Power, IPower>(),
-                new AbstractConverter<Effect, IEffect>(),
-            }
+                new AbstractConverter<Effect, IEffect>()
+            },
+            Formatting = Formatting.Indented
         };
 
         private class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract

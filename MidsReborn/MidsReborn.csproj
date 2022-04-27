@@ -395,7 +395,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Serializer.cs" />
     <Compile Include="UIv2\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
