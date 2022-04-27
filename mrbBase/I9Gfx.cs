@@ -167,6 +167,28 @@ namespace mrbBase
             await Task.CompletedTask;
         }
 
+        public static async Task<List<string>> LoadPowerSets()
+        {
+            var cSource = new TaskCompletionSource<List<string>>();
+            var retList = new List<string>();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
+            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            retList.Add(unknown);
+            for (var index = 0; index <= DatabaseAPI.Database.Powersets.Length - 1; ++index)
+            {
+                var path = powersetImages.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Powersets[index].ImageName}").Path;
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    continue;
+                }
+                retList.Add(path);
+            }
+
+            cSource.TrySetResult(retList);
+            return await cSource.Task;
+        }
+
         public static async Task<List<string>> LoadSets()
         {
             var cSource = new TaskCompletionSource<List<string>>();
@@ -674,6 +696,11 @@ namespace mrbBase
         public static string GetDbEnhancementsPath()
         {
             return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
+        }
+
+        public static string GetDbPowerSetsPath()
+        {
+            return Path.Combine(MidsContext.Config.DataPath, "Images\\Powersets");
         }
 
         public static string GetOriginsPath()

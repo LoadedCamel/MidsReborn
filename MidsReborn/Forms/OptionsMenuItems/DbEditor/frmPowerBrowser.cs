@@ -682,7 +682,88 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void BuildPowersetImageList(int[] iSets)
+        private async void BuildPowersetImageList(IReadOnlyList<int> iSets)
+        {
+            ilPS.Images.Clear();
+            using var extendedBitmap1 = new ExtendedBitmap(ilPS.ImageSize);
+            using var solidBrush1 = new SolidBrush(Color.Black);
+            using var solidBrush2 = new SolidBrush(Color.White);
+            using var solidBrush3 = new SolidBrush(Color.Transparent);
+            using var format = new StringFormat(StringFormatFlags.NoWrap)
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = StringAlignment.Center
+            };
+            using var font = new Font(Font, FontStyle.Bold);
+            var layoutRectangle = new RectangleF(17f, 0.0f, 16f, 18f);
+            var loadedPowerSets = await I9Gfx.LoadPowerSets();
+            foreach (var powerSet in iSets)
+            {
+                var imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
+                if (string.IsNullOrEmpty(imagePath))
+                {
+                    imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains("Unknown"));
+                }
+                using var extendedBitmap2 = new ExtendedBitmap(imagePath);
+                string s;
+                SolidBrush solidBrush4;
+                switch (DatabaseAPI.Database.Powersets[powerSet].SetType)
+                {
+                    case Enums.ePowerSetType.Primary:
+                        extendedBitmap1.Graphics.Clear(Color.Blue);
+                        s = "1";
+                        solidBrush4 = solidBrush2;
+                        break;
+                    case Enums.ePowerSetType.Secondary:
+                        extendedBitmap1.Graphics.Clear(Color.Red);
+                        s = "2";
+                        solidBrush4 = solidBrush1;
+                        break;
+                    case Enums.ePowerSetType.Ancillary:
+                        extendedBitmap1.Graphics.Clear(Color.Green);
+                        s = "A";
+                        solidBrush4 = solidBrush2;
+                        break;
+                    case Enums.ePowerSetType.Inherent:
+                        extendedBitmap1.Graphics.Clear(Color.Silver);
+                        s = "I";
+                        solidBrush4 = solidBrush1;
+                        break;
+                    case Enums.ePowerSetType.Pool:
+                        extendedBitmap1.Graphics.Clear(Color.Cyan);
+                        s = "P";
+                        solidBrush4 = solidBrush1;
+                        break;
+                    case Enums.ePowerSetType.Accolade:
+                        extendedBitmap1.Graphics.Clear(Color.Goldenrod);
+                        s = "+";
+                        solidBrush4 = solidBrush1;
+                        break;
+                    case Enums.ePowerSetType.Temp:
+                        extendedBitmap1.Graphics.Clear(Color.WhiteSmoke);
+                        s = "T";
+                        solidBrush4 = solidBrush1;
+                        break;
+                    case Enums.ePowerSetType.Pet:
+                        extendedBitmap1.Graphics.Clear(Color.Brown);
+                        s = "x";
+                        solidBrush4 = solidBrush2;
+                        break;
+                    default:
+                        extendedBitmap1.Graphics.Clear(Color.White);
+                        s = "";
+                        solidBrush4 = solidBrush1;
+                        break;
+                }
+
+                extendedBitmap1.Graphics.DrawImageUnscaled(extendedBitmap2.Bitmap, new Point(1, 1));
+                extendedBitmap1.Graphics.DrawString(s, font, solidBrush4, layoutRectangle, format);
+                ilPS.Images.Add(new Bitmap(extendedBitmap1.Bitmap));
+            }
+
+        }
+
+        /*private void BuildPowersetImageList(int[] iSets)
 
         {
             ilPS.Images.Clear();
@@ -763,7 +844,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 extendedBitmap1.Graphics.DrawString(s, font, solidBrush4, layoutRectangle, format);
                 ilPS.Images.Add(new Bitmap(extendedBitmap1.Bitmap));
             }
-        }
+        }*/
 
         private void BusyMsg(string sMessage)
         {
@@ -1118,8 +1199,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.Items.Clear();
             if ((cbFilter.SelectedIndex == 0) & (lvGroup.SelectedItems.Count > 0))
             {
-                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "",
-                    Enums.ePowerSetType.None);
+                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "", Enums.ePowerSetType.None);
                 BuildPowersetImageList(iSets);
                 List_Sets_AddBlock(iSets);
                 lvSet.Enabled = true;
