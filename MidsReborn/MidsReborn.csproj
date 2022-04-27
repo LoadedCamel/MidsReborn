@@ -51,18 +51,6 @@
     <Compile Include="clsBuildSalvageSummary.cs" />
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
-    <Compile Include="Forms\Controls\DataView2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Controls\DataView2.Designer.cs">
-      <DependentUpon>DataView2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Controls\DV2TotalsPane.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Controls\DV2TotalsPane.Designer.cs">
-      <DependentUpon>DV2TotalsPane.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Controls\ColorSlider.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -422,13 +410,6 @@
     <EmbeddedResource Include="Forms\Controls\ColorSlider.resx">
       <DependentUpon>ColorSlider.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Controls\DataView2.resx">
-      <DependentUpon>DataView2.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Controls\DV2TotalsPane.resx">
-      <DependentUpon>DV2TotalsPane.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\PatchGenQuery.resx">
       <DependentUpon>PatchGenQuery.cs</DependentUpon>
@@ -1025,9 +1006,6 @@
     <PackageReference Include="BetterFolderBrowser">
       <Version>1.2.0</Version>
     </PackageReference>
-    <PackageReference Include="CircularProgressBar">
-      <Version>2.8.0.16</Version>
-    </PackageReference>
     <PackageReference Include="FastDeepCloner">
       <Version>1.3.6</Version>
     </PackageReference>
@@ -1038,7 +1016,7 @@
       <Version>5.0.11</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1150.38</Version>
+      <Version>1.0.1185.39</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
@@ -1046,20 +1024,11 @@
     <PackageReference Include="Octokit">
       <Version>0.50.0</Version>
     </PackageReference>
-    <PackageReference Include="RandomString4Net">
-      <Version>1.3.0</Version>
-    </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>107.3.0</Version>
     </PackageReference>
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
       <Version>107.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp">
-      <Version>2.80.2</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms">
-      <Version>2.80.2</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
       <Version>19.3.0.57</Version>
