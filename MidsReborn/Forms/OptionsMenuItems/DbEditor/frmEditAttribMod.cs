@@ -143,21 +143,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var m = new Modifiers();
             var src = File.ReadAllText(f.FileName);
-            var jsonOpt = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                NullValueHandling = NullValueHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
 
             try
             {
                 if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("["))
                 {
                     //Modifiers.ModifierTable[]? tables = JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
-                    var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, jsonOpt);
+                    var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, Serializer.SerializerSettings);
                     if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
 
                     m.Modifier = (List<Modifiers.ModifierTable>) tables.Clone();
@@ -168,7 +160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
                 else if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("{"))
                 {
-                    m = JsonConvert.DeserializeObject<Modifiers>(src, jsonOpt);
+                    m = JsonConvert.DeserializeObject<Modifiers>(src, Serializer.SerializerSettings);
                     if (m == null) throw new FormatException("JSON file contains no usable data.");
                 }
                 else

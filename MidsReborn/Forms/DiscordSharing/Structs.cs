@@ -23,5 +23,11 @@ namespace Mids_Reborn.Forms.DiscordSharing
             [JsonProperty("channelId")]
             public ulong ChannelId { get; set; }
         }
+
+        internal struct Validation
+        {
+            public bool IsValid { get; set; }
+            public string Message { get; set; }
+        }
     }
 }

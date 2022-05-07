@@ -85,22 +85,15 @@ namespace mrbBase
 
         public static void ExportAttribMods()
         {
-            string path = $"{Application.StartupPath}\\Data\\Export\\attribModTables.json";
-            string path2 = $"{Application.StartupPath}\\Data\\Export\\attribMod.json";
-            string path3 = $"{Application.StartupPath}\\Data\\Export\\attribModOrdered.json";
-            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting = Formatting.Indented
-            };
-            File.WriteAllText(path, JsonConvert.SerializeObject(Database.AttribMods, serializerSettings));
-            File.WriteAllText(path2, JsonConvert.SerializeObject(AttribMod, serializerSettings));
-            Dictionary<string, int> ordered = AttribMod.OrderBy(x => x.Value)
+            var path = $"{Application.StartupPath}\\Data\\Export\\attribModTables.json";
+            var path2 = $"{Application.StartupPath}\\Data\\Export\\attribMod.json";
+            var path3 = $"{Application.StartupPath}\\Data\\Export\\attribModOrdered.json";
+            
+            File.WriteAllText(path, JsonConvert.SerializeObject(Database.AttribMods, Serializer.SerializerSettings));
+            File.WriteAllText(path2, JsonConvert.SerializeObject(AttribMod, Serializer.SerializerSettings));
+            var ordered = AttribMod.OrderBy(x => x.Value)
                 .ToDictionary(x => x.Key, x => x.Value);
-            File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, serializerSettings));
+            File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, Serializer.SerializerSettings));
         }
 
         public static void UpdateModifiersDict(Modifiers.ModifierTable[] mList)

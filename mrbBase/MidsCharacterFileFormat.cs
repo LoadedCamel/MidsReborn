@@ -22,6 +22,14 @@ namespace mrbBase
             IsOldFormat
         }
 
+        private class FitnessEntry
+        {
+            public string Name { get; set; }
+            public int PowerIndex { get; set; }
+            public int Sid { get; set; }
+            public SlotEntry[] Slots { get; set; } = Array.Empty<SlotEntry>();
+        }
+
         private const string MagicCompressed = "MxDz";
         private const string MagicUncompressed = "MxDu";
         private const float ThisVersion = 3.20f;
@@ -305,34 +313,34 @@ namespace mrbBase
                 {
                     r.BaseStream.Seek(streamIndex, SeekOrigin.Begin);
 
-                    var numArray = r.ReadBytes(4);
-                    if (numArray.Length >= 4)
-                    {
-                        magicFound = true;
-                        for (var index = 0; index < MagicNumber.Length; ++index)
-                            if (MagicNumber[index] != numArray[index])
-                                magicFound = false;
-                        if (!magicFound)
-                            ++streamIndex;
-                    }
-                    else
+                    var byteArray = r.ReadBytes(4);
+                    if (byteArray.Length > 4)
                     {
                         if (!silent)
+                        {
                             MessageBox.Show("Unable to read data - Magic Number not found.", "ReadSaveData Failed");
-                        r.Close();
-                        memoryStream.Close();
-                        return false;
+                            r.Close();
+                            memoryStream.Close();
+                            return false;
+                        }
+                    }
+
+                    magicFound = true;
+                    for (var i = 0; i < byteArray.Length; i++)
+                    {
+                        if (MagicNumber[i] != byteArray[i])
+                        {
+                            magicFound = false;
+                        }
+                    }
+
+                    if (!magicFound)
+                    {
+                        streamIndex += 1;
                     }
                 } while (!magicFound);
 
                 var fVersion = r.ReadSingle();
-                // if (fVersion > 2.0) //
-                // {
-                //     MessageBox.Show(@"File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.", @"Unable to Load");
-                //     r.Close();
-                //     memoryStream.Close();
-                //     return false;
-                // }
 
                 switch (fVersion)
                 {
@@ -353,8 +361,9 @@ namespace mrbBase
 
                 var qualifiedNames = r.ReadBoolean();
                 var hasSubPower = r.ReadBoolean();
-                var nIDClass = DatabaseAPI.NidFromUidClass(r.ReadString());
-                if (nIDClass < 0)
+
+                var nIdClass = DatabaseAPI.NidFromUidClass(r.ReadString());
+                if (nIdClass < 0)
                 {
                     if (!silent) MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
                     r.Close();
@@ -362,8 +371,8 @@ namespace mrbBase
                     return false;
                 }
 
-                var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIDClass);
-                MidsContext.Character.Reset(DatabaseAPI.Database.Classes[nIDClass], iOrigin);
+                var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIdClass);
+                MidsContext.Character.Reset(DatabaseAPI.Database.Classes[nIdClass], iOrigin);
                 if (fVersion > 1.0)
                 {
                     var align = r.ReadInt32();
@@ -371,98 +380,154 @@ namespace mrbBase
                 }
 
                 MidsContext.Character.Name = r.ReadString();
+
                 var powerSetCount = r.ReadInt32();
-                var expectedArrayLength = new IPowerset[powerSetCount + 1].Length;
-                var names = new List<string>();
-                for (var index = 0; index < powerSetCount + 1; ++index)
+
+                if (MidsContext.Character.Powersets.Length - 1 != powerSetCount)
                 {
-                    var iName = r.ReadString();
-                    iName = iName switch
-                    {
-                        "Pool.Leadership_beta" => "Pool.Leadership",
-
-                        // Partial support for builds made with MHD 1.x
-                        "Blaster_Support.Atomic_Manipulation" => "Blaster_Support.Radiation_Manipulation",
-                        "Pool.Fitness" => "Pool.Invisibility",
-                        _ => iName
-                    };
-
-                    names.Add(iName);
+                    MidsContext.Character.Powersets = new IPowerset[powerSetCount + 1];
                 }
 
-                var errors = MidsContext.Character.LoadPowersetsByName(names);
-                foreach (var (i, n) in errors)
+
+                var oldPSets = new Dictionary<string, int>();
+                for (var index = 0; index < MidsContext.Character.Powersets.Length; index++)
                 {
-                    MessageBox.Show($"Failed to load powerset by name:{n} at {i}", "Powerset load failure");
+                    var setName = r.ReadString();
+                    if (string.IsNullOrEmpty(setName))
+                    {
+                        MidsContext.Character.Powersets[index] = null;
+                    }
+                    else
+                    {
+                        // Debug.WriteLine($"SetName: {setName}");
+                        switch (setName)
+                        {
+                            case "Blaster_Support.Atomic_Manipulation":
+                                oldPSets.Add(setName, index);
+                                break;
+                            case "Pool.Fitness":
+                                //oldPSets.Add(setName, index);
+                                break;
+                            case "Pool.Leadership_beta":
+                                oldPSets.Add(setName, index);
+                                break;
+                            default:
+                                MidsContext.Character.Powersets[index] = DatabaseAPI.GetPowersetByName(setName);
+                                break;
+                        }
+                    }
                 }
 
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
 
-                var pEntryList = new List<PowerEntry>();
+                var fitnessEntries = new List<FitnessEntry>();
+                var altEntries = new List<PowerEntry>();
+                PowerEntry altEntry = null;
+
                 var powerCount = r.ReadInt32();
-                try
+                for (var powerIndex = 0; powerIndex <= powerCount; ++powerIndex)
                 {
-                    for (var powerIndex = 0; powerIndex <= powerCount; ++powerIndex)
+                    var nId = -1;
+                    var name = string.Empty;
+                    var sidPower = -1;
+                    PowerEntry powerEntry = null;
+                    if (qualifiedNames)
                     {
-                        var nId = -1;
-                        var name1 = string.Empty;
-                        var sidPower1 = -1;
-                        if (qualifiedNames)
+                        name = r.ReadString();
+                        if (!string.IsNullOrEmpty(name))
                         {
-                            name1 = r.ReadString();
-                            if (!string.IsNullOrEmpty(name1))
-                                nId = DatabaseAPI.NidFromUidPower(name1);
+                            nId = DatabaseAPI.NidFromUidPower(name);
                         }
-                        else
+                    }
+                    else
+                    {
+                        sidPower = r.ReadInt32();
+                        if (sidPower is 1797 or 1798 or 1799 or 1800)
                         {
-                            sidPower1 = r.ReadInt32();
-                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower1, MidsContext.Character.Archetype.DisplayName);
-                            if (newId >= 0)
+                            int sid = 0;
+                            switch (sidPower)
                             {
-                                sidPower1 = newId;
+                                case 1797:
+                                    sid = 2797;
+                                    break;
+                                case 1798:
+                                    sid = 2798;
+                                    break;
+                                case 1799:
+                                    sid = 2799;
+                                    break;
+                                case 1800:
+                                    sid = 2800;
+                                    break;
                             }
 
-                            nId = DatabaseAPI.NidFromStaticIndexPower(sidPower1);
-                        }
-
-                        var flag5 = false;
-                        PowerEntry powerEntry1;
-                        if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
-                        {
-                            powerEntry1 = MidsContext.Character.CurrentBuild.Powers[powerIndex];
+                            nId = DatabaseAPI.NidFromStaticIndexPower(sid);
+                            var power = DatabaseAPI.Database.Power[nId];
+                            fitnessEntries.Add(new FitnessEntry { Name = power.DisplayName, PowerIndex = powerIndex });
                         }
                         else
                         {
-                            powerEntry1 = new PowerEntry();
+                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower);
+                            if (newId >= 0)
+                            {
+                                sidPower = newId;
+                            }
+
+                            nId = DatabaseAPI.NidFromStaticIndexPower(sidPower);
+                        }
+                    }
+
+                    var flag5 = false;
+
+                    if (fitnessEntries.All(x => x.PowerIndex != powerIndex))
+                    {
+                        if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
+                        {
+                            powerEntry = MidsContext.Character.CurrentBuild.Powers[powerIndex];
+                        }
+                        else
+                        {
+                            powerEntry = new PowerEntry();
                             flag5 = true;
                         }
-
-                        if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
+                    }
+                    else
+                    {
+                        altEntry = new PowerEntry
                         {
-                            powerEntry1.Level = r.ReadSByte();
+                            Level = 1
+                        };
+                    }
+
+                    if (powerEntry != null)
+                    {
+                        if (sidPower > 1 | !string.IsNullOrWhiteSpace(name))
+                        {
+
+                            powerEntry.Level = r.ReadSByte();
                             if (useLegacyFormat)
                             {
-                                powerEntry1.StatInclude = r.ReadBoolean();
+                                powerEntry.StatInclude = r.ReadBoolean();
                             }
                             else
                             {
-                                powerEntry1.StatInclude = r.ReadBoolean();
-                                powerEntry1.ProcInclude = r.ReadBoolean();
+                                powerEntry.StatInclude = r.ReadBoolean();
+                                powerEntry.ProcInclude = r.ReadBoolean();
                             }
 
                             if (!usePriorFormat && !useLegacyFormat)
                             {
-                                powerEntry1.InherentSlotsUsed = r.ReadInt32();
+                                powerEntry.InherentSlotsUsed = r.ReadInt32();
                             }
 
-                            powerEntry1.VariableValue = r.ReadInt32();
+                            powerEntry.VariableValue = r.ReadInt32();
                             if (hasSubPower)
                             {
-                                powerEntry1.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
-                                for (var subPowerIndex = 0; subPowerIndex < powerEntry1.SubPowers.Length; ++subPowerIndex)
+                                powerEntry.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
+                                for (var subPowerIndex = 0; subPowerIndex < powerEntry.SubPowers.Length; ++subPowerIndex)
                                 {
                                     var powerSub = new PowerSubEntry();
-                                    powerEntry1.SubPowers[subPowerIndex] = powerSub;
+                                    powerEntry.SubPowers[subPowerIndex] = powerSub;
                                     if (qualifiedNames)
                                     {
                                         var name2 = r.ReadString();
@@ -495,15 +560,15 @@ namespace mrbBase
 
                         if (nId < 0 && powerIndex < DatabaseAPI.Database.Levels_MainPowers.Length)
                         {
-                            powerEntry1.Level = DatabaseAPI.Database.Levels_MainPowers[powerIndex];
+                            powerEntry.Level = DatabaseAPI.Database.Levels_MainPowers[powerIndex];
                         }
 
-                        powerEntry1.Slots = new SlotEntry[r.ReadSByte() + 1];
-                        for (var index3 = 0; index3 < powerEntry1.Slots.Length; ++index3)
+                        powerEntry.Slots = new SlotEntry[r.ReadSByte() + 1];
+                        for (var index3 = 0; index3 < powerEntry.Slots.Length; ++index3)
                         {
                             if (usePriorFormat || useLegacyFormat)
                             {
-                                powerEntry1.Slots[index3] = new SlotEntry
+                                powerEntry.Slots[index3] = new SlotEntry
                                 {
                                     Level = r.ReadSByte(),
                                     Enhancement = new I9Slot(),
@@ -512,7 +577,7 @@ namespace mrbBase
                             }
                             else
                             {
-                                powerEntry1.Slots[index3] = new SlotEntry
+                                powerEntry.Slots[index3] = new SlotEntry
                                 {
                                     Level = r.ReadSByte(),
                                     IsInherent = r.ReadBoolean(),
@@ -521,36 +586,28 @@ namespace mrbBase
                                 };
                             }
 
-                            ReadSlotData(r, ref powerEntry1.Slots[index3].Enhancement, qualifiedNames, fVersion);
+                            ReadSlotData(r, ref powerEntry.Slots[index3].Enhancement, qualifiedNames, fVersion);
                             if (r.ReadBoolean())
-                                ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                            {
+                                ReadSlotData(r, ref powerEntry.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                            }
                         }
 
-                        if (powerEntry1.SubPowers.Length > 0)
+                        if (powerEntry.SubPowers.Length > 0)
                             nId = -1;
                         if (nId <= -1)
                             continue;
-                        powerEntry1.NIDPower = nId;
-                        powerEntry1.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
-                        powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
-                        if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
+                        if (!DatabaseAPI.Database.Power[nId].FullName.Contains("Fitness"))
                         {
-                            if (powerEntry1.NIDPower == 2553)
-                                powerEntry1.NIDPower = 1521;
-                            if (powerEntry1.NIDPower == 2554)
-                                powerEntry1.NIDPower = 1523;
-                            if (powerEntry1.NIDPower == 2555)
-                                powerEntry1.NIDPower = 1522;
-                            if (powerEntry1.NIDPower == 2556)
-                                powerEntry1.NIDPower = 1524;
-                            powerEntry1.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
-                            powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
+                            powerEntry.NIDPower = nId;
+                            powerEntry.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
+                            powerEntry.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
                         }
 
-                        var ps = powerEntry1.Power?.GetPowerSet();
+                        var ps = powerEntry.Power?.GetPowerSet();
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
-                            if (powerEntry1.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool")))
+                            if (powerEntry.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps != null && ps.nArchetype > -1 || powerEntry.Power.GroupName == "Pool")))
                             {
                                 flag5 = !MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen;
                             }
@@ -562,50 +619,137 @@ namespace mrbBase
 
                         if (flag5)
                         {
-                            if (powerEntry1.Power != null && powerEntry1.Power.InherentType != Enums.eGridType.None)
+                            if (powerEntry.Power != null && powerEntry.Power.InherentType != Enums.eGridType.None)
                             {
-                                InherentPowers.Add(powerEntry1);
+                                InherentPowers.Add(powerEntry);
                             }
 
-                            //Console.WriteLine($"{powerEntry1.Power.DisplayName} - {powerEntry1.Power.InherentType}");
-                            //MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
+                            MidsContext.Character.CurrentBuild.Powers.Add(powerEntry);
                         }
-                        else if (powerEntry1.Power != null && (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool"))
+                        else if (powerEntry.Power != null && (ps != null && ps.nArchetype > -1 || powerEntry.Power.GroupName == "Pool"))
                         {
-                            MidsContext.Character.CurrentBuild.Powers[powerIndex] = powerEntry1;
+                            MidsContext.Character.CurrentBuild.Powers[powerIndex] = powerEntry;
                         }
                     }
-
-                    var newPowerList = new List<PowerEntry>();
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Class));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Inherent));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Powerset));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Power));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Prestige));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Incarnate));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Accolade));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Pet));
-                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Temp));
-                    foreach (var entry in newPowerList)
+                    else
                     {
-                        MidsContext.Character.CurrentBuild.Powers.Add(entry);
+                        if (sidPower > 1 | !string.IsNullOrWhiteSpace(name))
+                        {
+                            altEntry.Level = r.ReadSByte();
+                            if (useLegacyFormat)
+                            {
+                                altEntry.StatInclude = r.ReadBoolean();
+                            }
+                            else
+                            {
+                                altEntry.StatInclude = r.ReadBoolean();
+                                altEntry.ProcInclude = r.ReadBoolean();
+                            }
+
+                            if (!usePriorFormat && !useLegacyFormat)
+                            {
+                                altEntry.InherentSlotsUsed = r.ReadInt32();
+                            }
+
+                            altEntry.VariableValue = r.ReadInt32();
+                            if (hasSubPower)
+                            {
+                                altEntry.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
+                                for (var subPowerIndex = 0; subPowerIndex < altEntry.SubPowers.Length; ++subPowerIndex)
+                                {
+                                    var powerSub = new PowerSubEntry();
+                                    altEntry.SubPowers[subPowerIndex] = powerSub;
+                                    if (qualifiedNames)
+                                    {
+                                        var name2 = r.ReadString();
+                                        if (!string.IsNullOrEmpty(name2))
+                                            powerSub.nIDPower = DatabaseAPI.NidFromUidPower(name2);
+                                    }
+                                    else
+                                    {
+                                        var sidPower2 = r.ReadInt32();
+                                        powerSub.nIDPower = DatabaseAPI.NidFromStaticIndexPower(sidPower2);
+                                    }
+
+                                    if (powerSub.nIDPower > -1)
+                                    {
+                                        powerSub.Powerset = DatabaseAPI.Database.Power[powerSub.nIDPower].PowerSetID;
+                                        powerSub.Power = DatabaseAPI.Database.Power[powerSub.nIDPower].PowerSetIndex;
+                                    }
+
+                                    powerSub.StatInclude = r.ReadBoolean();
+                                    if (!((powerSub.nIDPower > -1) & powerSub.StatInclude))
+                                        continue;
+                                    var altEntry2 = new PowerEntry(DatabaseAPI.Database.Power[powerSub.nIDPower])
+                                    {
+                                        StatInclude = true
+                                    };
+                                    MidsContext.Character.CurrentBuild.Powers.Add(altEntry2);
+                                }
+                            }
+                        }
+
+                        altEntry.Slots = new SlotEntry[r.ReadSByte() + 1];
+                        for (var index3 = 0; index3 < altEntry.Slots.Length; ++index3)
+                        {
+                            if (usePriorFormat || useLegacyFormat)
+                            {
+                                altEntry.Slots[index3] = new SlotEntry
+                                {
+                                    Level = r.ReadSByte(),
+                                    Enhancement = new I9Slot(),
+                                    FlippedEnhancement = new I9Slot()
+                                };
+                            }
+                            else
+                            {
+                                altEntry.Slots[index3] = new SlotEntry
+                                {
+                                    Level = r.ReadSByte(),
+                                    IsInherent = r.ReadBoolean(),
+                                    Enhancement = new I9Slot(),
+                                    FlippedEnhancement = new I9Slot()
+                                };
+                            }
+
+                            ReadSlotData(r, ref altEntry.Slots[index3].Enhancement, qualifiedNames, fVersion);
+                            if (r.ReadBoolean())
+                            {
+                                ReadSlotData(r, ref altEntry.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                            }
+                        }
+
+                        altEntry.NIDPower = nId;
+                        altEntry.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
+                        altEntry.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
+                        altEntries.Add(altEntry);
                     }
-                }
-                catch (Exception ex)
-                {
-                    if (!silent)
-                        MessageBox.Show($"Error reading some power data, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
-                    return false;
                 }
 
                 MidsContext.Archetype = MidsContext.Character.Archetype;
                 MidsContext.Character.Validate();
                 MidsContext.Character.Lock();
+                foreach (var power in MidsContext.Character.CurrentBuild.Powers)
+                {
+                    if (power?.Power == null)
+                    {
+                        continue;
+                    }
+
+                    var entry = altEntries.FirstOrDefault(x => x.Name == power.Name);
+                    if (entry != null)
+                    {
+                        if (power.Name == entry.Name)
+                        {
+                            power.Slots = entry.Slots;
+                        }
+                    }
+                }
                 return true;
             }
             catch (Exception ex)
             {
-                if (!silent) MessageBox.Show("Unable to read data - " + ex.Message, "ReadSaveData Failed");
+                if (!silent) MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
                 return false;
             }
         }
@@ -620,7 +764,7 @@ namespace mrbBase
             }
             catch (Exception ex)
             {
-                var num = (int)MessageBox.Show("Unable to read data - " + ex.Message, "ExtractAndLoad Failed");
+                MessageBox.Show("Unable to read data - " + ex.Message, "ExtractAndLoad Failed");
                 return MidsCharacterFileFormat.eLoadReturnCode.Failure;
             }
 
@@ -656,11 +800,8 @@ namespace mrbBase
 
                         if (startIndex < 0)
                         {
-                            startIndex = strArray2[index].IndexOf(Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
-                            if (startIndex <= -1)
-                            {
-                                startIndex = strArray2[index].IndexOf(Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase);
-                            }
+                            startIndex = strArray2[index].IndexOf(Files.Headers.Save.Compressed,
+                                StringComparison.OrdinalIgnoreCase);
                         }
 
                         if (startIndex <= -1)
@@ -679,7 +820,7 @@ namespace mrbBase
                         MessageBox.Show("Unable to locate data header - Magic Number not found!", "ExtractAndLoad Failed");
                         eLoadReturnCode = eLoadReturnCode.Failure;
                     }
-                    else if (string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) || string.Equals(a, Files.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase))
+                    else if (string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase))
                     {
                         eLoadReturnCode = eLoadReturnCode.IsOldFormat;
                     }
@@ -692,13 +833,20 @@ namespace mrbBase
                     {
                         var iString = string.Empty;
                         for (var index = num1 + 1; index <= strArray2.Length - 1; ++index)
+                        {
                             iString = iString + strArray2[index] + "\n";
+                        }
+
                         var int32_1 = Convert.ToInt32(strArray1[1]);
                         var int32_2 = Convert.ToInt32(strArray1[2]);
                         var int32_3 = Convert.ToInt32(strArray1[3]);
                         var isHex = false;
                         if (strArray1.Length > 4)
+                        {
                             isHex = string.Equals(strArray1[4], "HEX", StringComparison.OrdinalIgnoreCase);
+                            Debug.WriteLine($"isHex: {isHex}");
+                        }
+
                         var iBytes =
                             new ASCIIEncoding().GetBytes(isHex
                                 ? Zlib.UnbreakHex(iString)
@@ -706,15 +854,16 @@ namespace mrbBase
                         streamReader.Close();
                         if (iBytes.Length < int32_3)
                         {
-                            MessageBox.Show(
-                                "Data chunk was incomplete! Check that the entire chunk was copied to the clipboard.",
-                                "ExtractAndLoad Failed");
+                            MessageBox.Show("Data chunk was incomplete! Check that the entire chunk was copied to the clipboard.", "ExtractAndLoad Failed");
                             eLoadReturnCode = eLoadReturnCode.Failure;
                         }
                         else
                         {
                             if (iBytes.Length > int32_3)
+                            {
                                 Array.Resize(ref iBytes, int32_3);
+                            }
+
                             iBytes = isHex ? Zlib.HexDecodeBytes(iBytes) : Zlib.UUDecodeBytes(iBytes);
                             if (iBytes.Length == 0)
                             {
@@ -729,9 +878,14 @@ namespace mrbBase
                                     iBytes = Zlib.UncompressChunk(ref tempByteArray, int32_1);
                                 }
 
-                                eLoadReturnCode = iBytes.Length != 0
-                                    ? MxDReadSaveData(ref iBytes, false) ? eLoadReturnCode.Success : eLoadReturnCode.Failure
-                                    : eLoadReturnCode.Failure;
+                                if (iBytes.Length != 0)
+                                {
+                                    eLoadReturnCode = MxDReadSaveData(ref iBytes, false) ? eLoadReturnCode.Success : eLoadReturnCode.Failure;
+                                }
+                                else
+                                {
+                                    eLoadReturnCode = eLoadReturnCode.Failure;
+                                }
                             }
                         }
                     }

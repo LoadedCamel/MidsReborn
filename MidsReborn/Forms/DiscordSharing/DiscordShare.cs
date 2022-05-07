@@ -12,6 +12,8 @@ using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
 using RestSharp;
+using Syncfusion.Licensing.crypto;
+using static Mids_Reborn.Forms.DiscordSharing.Structs;
 
 namespace Mids_Reborn.Forms.DiscordSharing
 {
@@ -295,7 +297,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                 return;
             }
 
-            var selectedServer = serverCombo.SelectedItem is Structs.AuthorizedServer authorizedServer ? authorizedServer : default;
+            var selectedServer = serverCombo.SelectedItem is AuthorizedServer authorizedServer ? authorizedServer : default;
             var channels = _mbServers.AuthorizedServers.Where(x => x.ServerId == selectedServer.ServerId).SelectMany(x => x.Channels).ToList();
             channelCombo.DataSource = null;
             channelCombo.DataSource = new BindingSource(channels, null);
@@ -328,9 +330,31 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             shareButton.IconColor = Color.FromArgb(88, 101, 242);
         }
+        
+        private static void PerformValidation(out Validation validation)
+        {
+            if (MidsContext.Character == null || MidsContext.Character.Archetype == null)
+            {
+                validation = new Validation { IsValid = false, Message = @"You must create a character and select some powers first." };
+            }
+            else if (MidsContext.Character != null && string.IsNullOrWhiteSpace(MidsContext.Character.Name))
+            {
+                validation = new Validation { IsValid = false, Message = @"You must specify a character name first." };
+            }
+            else
+            {
+                validation = new Validation { IsValid = true, Message = "" };
+            }
+        }
 
         private async void shareButton_Click(object sender, EventArgs e)
         {
+            PerformValidation(out var validation);
+            if (!validation.IsValid)
+            {
+                MessageBox.Show(validation.Message, @"Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             var subModel = new Models.MbSubmissionModel
             {
                 Id = Convert.ToUInt64(_discordUser.DiscordId),
@@ -338,7 +362,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                 Channel = Convert.ToUInt64(channelCombo.SelectedValue),
                 BuildName = MidsContext.Character.Name,
                 Description = richTextBox1.Text,
-                Level = MidsContext.Character.Level,
+                Level = MidsContext.Character.Level + 1,
                 Archetype = MidsContext.Character.Archetype.DisplayName,
                 Primary = MidsContext.Character.Powersets[0].DisplayName,
                 Secondary = MidsContext.Character.Powersets[1].DisplayName,
@@ -348,7 +372,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             var subResponse = await _midsBot.SubmitBuild(_mrbAuth.AccessToken, subModel);
             if (subResponse.Succeeded)
             {
-                MessageBox.Show($@"Your build was successfully shared in #{channelCombo.SelectedText} on {serverCombo.SelectedText}, you should see it momentarily.", @"Success!", MessageBoxButtons.OK);
+                MessageBox.Show($@"Your build was successfully shared in #{channelCombo.Text} on {serverCombo.Text}, you should see it momentarily.", @"Success!", MessageBoxButtons.OK);
             }
         }
 

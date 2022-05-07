@@ -47,20 +47,12 @@ namespace mrbBase
                 try
                 {
                     var jsonText = File.ReadAllText(path);
-                    var settings = new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Auto,
-                        NullValueHandling = NullValueHandling.Ignore,
-                        PreserveReferencesHandling = PreserveReferencesHandling.None,
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                        DefaultValueHandling = DefaultValueHandling.Ignore,
-                    };
-                    DatabaseAPI.Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(jsonText, settings);
+                    DatabaseAPI.Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(jsonText, Serializer.SerializerSettings);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Modifier table file isn't how it should be....\r\nMessage: {ex.Message}\r\nStackTrace: {ex.StackTrace}\n No modifiers were loaded.");
+                    MessageBox.Show($@"Modifier table file isn't how it should be....\r\nMessage: {ex.Message}\r\nStackTrace: {ex.StackTrace}\n No modifiers were loaded.");
                     return false;
                 }
             }
@@ -79,7 +71,7 @@ namespace mrbBase
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + '\n' + '\n' + "Modifier tables couldn't be loaded.");
+                    MessageBox.Show(ex.Message + '\n' + '\n' + @"Modifier tables couldn't be loaded.");
                     return false;
                 }
 
@@ -139,15 +131,7 @@ namespace mrbBase
                 path = Files.SelectDataFileSave("AttribMod.json", iPath);
             }
 
-            var serializerSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting = Formatting.Indented
-            };
-            File.WriteAllText(path, JsonConvert.SerializeObject(DatabaseAPI.Database.AttribMods, serializerSettings));
+            File.WriteAllText(path, JsonConvert.SerializeObject(DatabaseAPI.Database.AttribMods, Serializer.SerializerSettings));
         }
 
         [JsonObject]

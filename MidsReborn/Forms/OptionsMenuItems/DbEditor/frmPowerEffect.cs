@@ -6,10 +6,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using FastDeepCloner;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -332,7 +334,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkCancelOnMiss.Checked = MyFx.CancelOnMiss;
             IgnoreED.Checked = MyFx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)MyFx.SpecialCase;
-            if (MyFx.SpecialCase == Enums.eSpecialCase.None)
+            if (MyFx.SpecialCase != Enums.eSpecialCase.None)
             {
                 btnEditConditions.Enabled = false;
                 if (MyFx.ActiveConditionals.Any())
@@ -612,34 +614,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FullCopy()
         {
-            var format = DataFormats.GetFormat("mhdEffectBIN");
-            var memoryStream = new MemoryStream();
-            var writer = new BinaryWriter(memoryStream);
-            MyFx.StoreTo(ref writer);
-            writer.Close();
-            Clipboard.SetDataObject(new DataObject(format.Name, memoryStream.GetBuffer()));
-            memoryStream.Close();
+            var data = Serializer.GetSerializer().Serialize(MyFx);
+            Clipboard.SetData(@"MidsEffectData", data);
         }
 
         private void FullPaste()
         {
-            var format = DataFormats.GetFormat("mhdEffectBIN");
-            if (!Clipboard.ContainsData(format.Name))
+            if (!Clipboard.ContainsData(@"MidsEffectData"))
             {
-                MessageBox.Show(@"No effect data on the clipboard!", @"Unable to Paste", MessageBoxButtons.OK,                    MessageBoxIcon.Information);
+                MessageBox.Show(@"The clipboard does not contain any effect data.", @"Invalid Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
-            {
-                using var memoryStream = new MemoryStream(Clipboard.GetDataObject()?.GetData(format.Name) as byte[] ?? throw new InvalidOperationException());
-                using var reader = new BinaryReader(memoryStream);
-                var powerFullName = MyFx.PowerFullName;
-                var power = MyFx.GetPower();
-                var enhancement = MyFx.Enhancement;
-                MyFx = new Effect(reader) { PowerFullName = powerFullName };
-                MyFx.SetPower(power);
-                MyFx.Enhancement = enhancement;
-                DisplayEffectData();
-            }
+
+            var effectData = Serializer.GetSerializer().Deserialize<Effect>((string)Clipboard.GetData(@"MidsEffectData"));
+            MyFx = effectData;
+            DisplayEffectData();
         }
 
         private void IgnoreED_CheckedChanged(object sender, EventArgs e)

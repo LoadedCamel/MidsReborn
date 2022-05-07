@@ -5,7 +5,6 @@ using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 using Newtonsoft.Json;
@@ -130,14 +129,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (fileImportDialog.ShowDialog() == DialogResult.OK)
             {
 	            var jsonText = File.ReadAllText(fileImportDialog.FileName);
-	            var settings = new JsonSerializerSettings
-	            {
-		            TypeNameHandling = TypeNameHandling.Auto,
-		            Converters = {
-			            new AbstractConverter<Database, IDatabase>()
-		            }
-                };
-                effects = JsonConvert.DeserializeObject<List<string>>(jsonText, settings);
+                effects = JsonConvert.DeserializeObject<List<string>>(jsonText, Serializer.SerializerSettings);
             }
             DatabaseAPI.Database.EffectIds = effects;
 			PopulateInfo();
@@ -173,17 +165,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 			e.Cancel = true;
 			e.Message = "Required";
 		}
-    }
-
-    public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
-    {
-	    public override Boolean CanConvert(Type objectType)
-		    => objectType == typeof(TAbstract);
-
-	    public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
-		    => jser.Deserialize<TReal>(reader);
-
-	    public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
-		    => jser.Serialize(writer, value);
     }
 }

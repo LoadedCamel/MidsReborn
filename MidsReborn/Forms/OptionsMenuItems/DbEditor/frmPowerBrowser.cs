@@ -88,11 +88,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var num = (int)frmEditArchetype.ShowDialog();
                     if (frmEditArchetype.DialogResult != DialogResult.OK)
                         return;
-                    var database = DatabaseAPI.Database;
-                    var archetypeArray = Array.Empty<Archetype>();
-                    Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
-                    database.Classes = archetypeArray;
-                    DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                    var classes = DatabaseAPI.Database.Classes.ToList();
+                    classes.Add(new Archetype(frmEditArchetype.MyAT) { IsNew = true });
+                    DatabaseAPI.Database.Classes = classes.ToArray();
                     Sort(0);
                     break;
                 }
@@ -684,15 +682,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void BuildPowersetImageList(int[] iSets)
-
+        private async void BuildPowersetImageList(IReadOnlyList<int> iSets)
         {
             ilPS.Images.Clear();
-            var imageSize = ilPS.ImageSize;
-            var width = imageSize.Width;
-            imageSize = ilPS.ImageSize;
-            var height = imageSize.Height;
-            using var extendedBitmap1 = new ExtendedBitmap(width, height);
+            using var extendedBitmap1 = new ExtendedBitmap(ilPS.ImageSize);
             using var solidBrush1 = new SolidBrush(Color.Black);
             using var solidBrush2 = new SolidBrush(Color.White);
             using var solidBrush3 = new SolidBrush(Color.Transparent);
@@ -703,16 +696,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             };
             using var font = new Font(Font, FontStyle.Bold);
             var layoutRectangle = new RectangleF(17f, 0.0f, 16f, 18f);
-            var num = iSets.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var loadedPowerSets = await I9Gfx.LoadPowerSets();
+            foreach (var powerSet in iSets)
             {
-                var str = I9Gfx.GetPowersetsPath() + DatabaseAPI.Database.Powersets[iSets[index]].ImageName;
-                if (!File.Exists(str))
-                    str = I9Gfx.ImagePath() + "\\Unknown.png";
-                using var extendedBitmap2 = new ExtendedBitmap(str);
+                var imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
+                if (string.IsNullOrEmpty(imagePath))
+                {
+                    imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains("Unknown"));
+                }
+                using var extendedBitmap2 = new ExtendedBitmap(imagePath);
                 string s;
                 SolidBrush solidBrush4;
-                switch (DatabaseAPI.Database.Powersets[iSets[index]].SetType)
+                switch (DatabaseAPI.Database.Powersets[powerSet].SetType)
                 {
                     case Enums.ePowerSetType.Primary:
                         extendedBitmap1.Graphics.Clear(Color.Blue);
@@ -765,6 +760,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 extendedBitmap1.Graphics.DrawString(s, font, solidBrush4, layoutRectangle, format);
                 ilPS.Images.Add(new Bitmap(extendedBitmap1.Bitmap));
             }
+
         }
 
         private void BusyMsg(string sMessage)
@@ -1120,8 +1116,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.Items.Clear();
             if ((cbFilter.SelectedIndex == 0) & (lvGroup.SelectedItems.Count > 0))
             {
-                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "",
-                    Enums.ePowerSetType.None);
+                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "", Enums.ePowerSetType.None);
                 BuildPowersetImageList(iSets);
                 List_Sets_AddBlock(iSets);
                 lvSet.Enabled = true;

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -14,6 +12,7 @@ using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbBase.Import;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -74,47 +73,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFullCopy_Click(object sender, EventArgs e)
         {
-            var format = DataFormats.GetFormat("mhdPowerBIN");
-            var memoryStream = new MemoryStream();
-            var writer = new BinaryWriter(memoryStream);
-            myPower.StoreTo(ref writer);
-            writer.Close();
-            Clipboard.SetDataObject(new DataObject(format.Name, memoryStream.GetBuffer()));
-            memoryStream.Close();
+            var data = JsonConvert.SerializeObject(myPower, Formatting.None, Serializer.SerializerSettings);
+            Clipboard.SetData(@"MidsPowerData", data);
         }
 
         private void btnFullPaste_Click(object sender, EventArgs e)
         {
-            var format = DataFormats.GetFormat("mhdPowerBIN");
-            var groupName = myPower.GroupName;
-            var setName = myPower.SetName;
-            if (!Clipboard.ContainsData(format.Name))
+            if (!Clipboard.ContainsData(@"MidsPowerData"))
             {
-                MessageBox.Show("No power data on the clipboard!", "Unable to Paste", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show(@"The clipboard does not contain any power data.", @"Invalid Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
-            {
-                var oldStaticIndex = myPower.StaticIndex;
-                var memoryStream = new MemoryStream((byte[]) Clipboard.GetDataObject()?.GetData(format.Name) ??
-                                                    throw new InvalidOperationException());
-                var reader = new BinaryReader(memoryStream);
-                myPower = new Power(reader) {GroupName = groupName, SetName = setName};
-                if (oldStaticIndex != myPower.StaticIndex)
-                {
-                    var ret = MessageBox.Show("Overwrite static index with the imported one?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (ret == DialogResult.No)
-                    {
-                        myPower.StaticIndex = oldStaticIndex;
-                        lblStaticIndex.Text = Convert.ToString(oldStaticIndex, CultureInfo.InvariantCulture);
-                    }
-                }
 
-                SetFullName();
-                refresh_PowerData();
-                reader.Close();
-                memoryStream.Close();
+            var powerData = JsonConvert.DeserializeObject<Power>((string)Clipboard.GetData(@"MidsPowerData"), Serializer.SerializerSettings) ?? throw new InvalidOperationException();
+            if (powerData.StaticIndex != myPower.StaticIndex)
+            {
+                var result = MessageBox.Show(@"Do you want to overwrite the static index with the imported one?", @"Static Index Is Different!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    powerData.StaticIndex = myPower.StaticIndex;
+                    lblStaticIndex.Text = powerData.StaticIndex.ToString();
+                }
             }
+            myPower = powerData;
+            SetFullName();
+            refresh_PowerData();
         }
 
         private void btnFXAdd_Click(object sender, EventArgs e)
@@ -173,7 +156,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
 
-            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
+            var selectedEffect = (IEffect) myPower.Effects[lvFX.SelectedIndices[0]].Clone();
+            using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
