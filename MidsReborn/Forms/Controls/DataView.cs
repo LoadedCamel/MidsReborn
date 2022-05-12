@@ -670,14 +670,12 @@ namespace Mids_Reborn.Forms.Controls
                     (Math.Abs(num2 - (double)accuracy2) > float.Epsilon))
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)DatabaseAPI.ServerData.BaseToHit):##0.00000}x{str}";
-                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (enhancedPower.Accuracy - (double) DatabaseAPI.ServerData.BaseToHit)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), enhancedPower.Accuracy * 100f, suffix2, tip2));
                 }
                 else
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
-                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format(pBase.AccuracyMult, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0),
                         (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), suffix2, tip2));
@@ -3566,6 +3564,7 @@ namespace Mids_Reborn.Forms.Controls
                 : enhancedPowerData;
 
             // Data sent to the Dataview may differ from DB.
+            // Not needed if ActivatePeriod absorb from summons is disabled in Power.AbsorbPetEffects()
             /*var dbPower = DatabaseAPI.GetPowerByFullName(pBase.FullName);
             if (dbPower != null)
             {

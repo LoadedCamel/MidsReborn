@@ -2210,7 +2210,6 @@ namespace mrbBase.Base.Data_Classes
                     {
                         foreach (var power in powerset.Powers)
                         {
-                            ActivatePeriod = power.ActivatePeriod;
                             AttackTypes = power.AttackTypes;
                             EffectArea = power.EffectArea;
                             EntitiesAffected = power.EntitiesAffected;
@@ -2224,7 +2223,7 @@ namespace mrbBase.Base.Data_Classes
                             MaxTargets = power.MaxTargets;
                             Radius = power.Radius;
                             Target = power.Target;
-                            ActivatePeriod = power.ActivatePeriod;
+                            //ActivatePeriod = power.ActivatePeriod;
                             if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit is Enums.eEntity.None or Enums.eEntity.Caster)
                             {
                                 continue;
