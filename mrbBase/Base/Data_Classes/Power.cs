@@ -1505,26 +1505,24 @@ namespace mrbBase.Base.Data_Classes
         public Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false)
         {
             var shortFx = new Enums.ShortFX();
-            for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
+            for (var iIndex = 0; iIndex < Effects.Length; iIndex++)
             {
-                bool flag = false;
-                if (!onlySelf && Effects[iIndex].ToWho == Enums.eToWho.Target)
+                var flag = false;
+
+                switch (Effects[iIndex].ToWho)
                 {
-                    flag = true;
+                    case Enums.eToWho.Target when !onlySelf:
+                    case Enums.eToWho.Self when !onlyTarget:
+                    case Enums.eToWho.All:
+                        flag = true;
+                        break;
                 }
-                else if (!onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Self)
-                {
-                    flag = true;
-                }
-                else if (onlySelf && Effects[iIndex].ToWho != Enums.eToWho.Target)
-                {
-                    flag = true;
-                }
-                else if (onlyTarget && Effects[iIndex].ToWho != Enums.eToWho.Self)
-                {
-                    flag = true;
-                }
-                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode && Effects[iIndex].Aspect == Enums.eAspect.Max || (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) & !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
+
+                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
+                    Effects[iIndex].Aspect == Enums.eAspect.Max ||
+                    (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
+                    (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
+                    !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
                 {
                     flag = false;
                 }
@@ -1534,7 +1532,12 @@ namespace mrbBase.Base.Data_Classes
                     flag = false;
                 }
 
-                if (!flag || !(Effects[iIndex].Probability > 0.0) || maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].EffectClass == Enums.eEffectClass.Special || (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) || !Effects[iIndex].PvXInclude())
+                if (!flag || !(Effects[iIndex].Probability > 0.0) ||
+                    maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect ||
+                    Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
+                    Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
+                    !(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude() ||
+                    !Effects[iIndex].PvXInclude())
                 {
                     continue;
                 }
