@@ -1382,12 +1382,40 @@ namespace Mids_Reborn.Forms.Controls
                             {
                                 // Note: this won't work for Enhancement() or Mez() effects.
                                 var fxTotal = pEnh.GetEffectMagSum(stat.EffectType);
-
                                 ret[stat].Add(new DataPoint
                                 {
                                     Stacks = i,
                                     Value = fxTotal.Sum
                                 });
+                            }
+                        }
+                    }
+
+                    // Cut-off aberrant values
+                    foreach (var series in ret)
+                    {
+                        // Series -may- not be affine.
+                        // In order to determinate if it is a positive or a negative series,
+                        // count how many negative and positive points we have.
+                        var negPoints = series.Value
+                            .Select(e => e.Value)
+                            .Count(e => e < 0);
+
+                        var posPoints = series.Value
+                            .Select(e => e.Value)
+                            .Count(e => e > 0);
+
+                        for (var i = 0; i < series.Value.Count; i++)
+                        {
+                            if (negPoints > posPoints & series.Value[i].Value > 0)
+                            {
+                                series.Value[i] = new DataPoint { Stacks = series.Value[i].Stacks, Value = 0 };
+                                continue;
+                            }
+
+                            if (posPoints > negPoints & series.Value[i].Value < 0)
+                            {
+                                series.Value[i] = new DataPoint { Stacks = series.Value[i].Stacks, Value = 0 };
                             }
                         }
                     }
@@ -1427,7 +1455,7 @@ namespace Mids_Reborn.Forms.Controls
                     return ret;
                 }
 
-                internal static Dictionary<FxIdentifier, Range> GetValuesRangeEach(Dictionary<FxIdentifier, List<DataPoint>> dataPoints)
+                public static Dictionary<FxIdentifier, Range> GetValuesRangeEach(Dictionary<FxIdentifier, List<DataPoint>> dataPoints)
                 {
                     var ret = new Dictionary<FxIdentifier, Range>();
 
@@ -1479,10 +1507,10 @@ namespace Mids_Reborn.Forms.Controls
                         return new SKColor(44, 180, 44);
 
                     case Enums.eEffectType.Recovery:
-                        return SKColors.DodgerBlue;
+                        return new SKColor(24, 117, 206);
 
                     case Enums.eEffectType.Endurance:
-                        return new SKColor(59, 158, 255);
+                        return new SKColor(94, 175, 255);
 
                     case Enums.eEffectType.SpeedFlying:
                     case Enums.eEffectType.SpeedJumping:
@@ -1535,14 +1563,14 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            private static SKColor GetGraphCurveColor(PowerStats.FxIdentifier fxIdentifier)
+            public static SKColor GetGraphCurveColor(PowerStats.FxIdentifier fxIdentifier)
             {
                 return fxIdentifier.EffectType == Enums.eEffectType.Enhancement
                     ? GetGraphColorFromEffectType(fxIdentifier.ETModifies)
                     : GetGraphColorFromEffectType(fxIdentifier.EffectType);
             }
 
-            public static SKImage DrawScalesGraphSurface(DataView2 root, int historyIdx, int w, int h)
+            public static SKImage DrawScalesGraphSurface(int w, int h)
             {
                 var padding = new SKSize(5, 5);
                 const int gridCells = 6;
@@ -1571,7 +1599,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     IsAntialias = true,
                     Style = SKPaintStyle.Stroke,
-                    Color = new SKColor(130, 130, 130),
+                    Color = new SKColor(110, 110, 110),
                     StrokeWidth = 1,
                     StrokeCap = SKStrokeCap.Butt,
                     PathEffect = SKPathEffect.CreateDash(new float[] { 5, 5 }, 10)
@@ -3705,6 +3733,7 @@ namespace Mids_Reborn.Forms.Controls
                 public static void UpdateGraph()
                 {
                     Root.skglScalesGraph.Invalidate();
+                    Root.skglGraphLegend.Invalidate();
                 }
 
                 public static Dictionary<VariableStatsGraph.PowerStats.FxIdentifier, List<VariableStatsGraph.PowerStats.DataPoint>> DataPoints => _DataPoints;
@@ -3741,6 +3770,7 @@ namespace Mids_Reborn.Forms.Controls
 
                     Root.scalesTabTitle.Invalidate();
                     Root.skglScalesGraph.Invalidate();
+                    Root.skglGraphLegend.Invalidate();
                 }
             }
         }
@@ -3813,6 +3843,12 @@ namespace Mids_Reborn.Forms.Controls
             if (target.Name != "powerScaler1") return;
 
             BuildPowerEntry.VariableValue = (int) target.Value;
+            if (BuildPowerEntry.Power != null)
+            {
+                // Needed ?
+                BuildPowerEntry.Power.Stacks = (int) target.Value;
+            }
+
             Tabs.Scales.UpdateGraph();
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
         }
@@ -3890,7 +3926,7 @@ namespace Mids_Reborn.Forms.Controls
             var target = (SKGLControl) sender;
 
             e.Surface.Canvas.Clear(SKColors.Black);
-            using var graph = VariableStatsGraph.DrawScalesGraphSurface(this, HistoryIdx, target.Width, target.Height);
+            using var graph = VariableStatsGraph.DrawScalesGraphSurface(target.Width, target.Height);
             e.Surface.Canvas.DrawImage(graph, new SKPoint(0, 0));
         }
 
@@ -4272,6 +4308,63 @@ namespace Mids_Reborn.Forms.Controls
         {
             // [user32.dll].HideCaret() doesn't work.
             tabPageAdv4.Focus();
+        }
+
+        private void skglGraphLegend_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+        {
+            var target = (SKGLControl) sender;
+
+            e.Surface.Canvas.Clear(SKColors.Black);
+            var ranges = VariableStatsGraph.PowerStats.GetValuesRangeEach(Tabs.Scales.DataPoints);
+            if (ranges.Count <= 0) return;
+
+            var padding = new SKSize(3, 5);
+            const float lineLength = 48;
+            const int maxCols = 2;
+            const int maxRows = 3;
+            var i = 0;
+            using var textPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = SKColors.Gainsboro
+            };
+
+            foreach (var range in ranges)
+            {
+                using var linePaint = new SKPaint
+                {
+                    IsAntialias = true,
+                    Color = VariableStatsGraph.GetGraphCurveColor(range.Key),
+                    StrokeWidth = 1
+                };
+
+                var row = i % maxRows;
+                var col = (int) Math.Floor(i / (float) maxRows);
+                e.Surface.Canvas.DrawLine(new SKPoint(padding.Width + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 5 + row * 16), new SKPoint(padding.Width + lineLength + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 5 + row * 16), linePaint);
+                var stat = range.Key.EffectType switch
+                {
+                    Enums.eEffectType.Enhancement => $"Enh({range.Key.ETModifies})",
+                    Enums.eEffectType.Mez => $"{range.Key.MezType}",
+                    Enums.eEffectType.Resistance => range.Key.DamageType == Enums.eDamage.None ? "Resistance" : $"Res({range.Key.DamageType})",
+                    Enums.eEffectType.Defense => range.Key.DamageType == Enums.eDamage.None ? "Defense" : $"Def({range.Key.DamageType})",
+                    Enums.eEffectType.Elusivity => range.Key.DamageType == Enums.eDamage.None ? "Elusivity" : $"Elu({range.Key.DamageType})",
+                    Enums.eEffectType.ResEffect => $"ResEffect({range.Key.ETModifies})",
+                    _ => $"{range.Key.EffectType}"
+                };
+
+                var hasPercentage = Math.Abs(range.Value.Min) <= 1 & Math.Abs(range.Value.Max) <= 1;
+                var rangeText = hasPercentage
+                    ? Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
+                        ? ""
+                        : $"{range.Value.Min:P2} to {range.Value.Max:P2}"
+                    : Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
+                        ? ""
+                        : $"{range.Value.Min:###0.##} to {range.Value.Max:###0.##}";
+
+                e.Surface.Canvas.DrawTextShort($"{stat}{(rangeText != "" ? $" ({rangeText})" : "")}", 11, padding.Width + lineLength + 6 + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 8 + row * 16, textPaint);
+
+                i++;
+            }
         }
 
         #endregion

@@ -123,6 +123,7 @@ namespace Mids_Reborn.Forms.Controls
             this.richEnhValues = new System.Windows.Forms.RichTextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
+            this.skglGraphLegend = new SkiaSharp.Views.Desktop.SKGLControl();
             this.scalesTabTitle = new SkiaSharp.Views.Desktop.SKGLControl();
             this.ipbResize5 = new FontAwesome.Sharp.IconPictureBox();
             this.ipbLock5 = new FontAwesome.Sharp.IconPictureBox();
@@ -136,7 +137,6 @@ namespace Mids_Reborn.Forms.Controls
             this.panelPowerScaler1 = new System.Windows.Forms.Panel();
             this.labelPowerScaler1 = new System.Windows.Forms.Label();
             this.powerScaler1 = new Mids_Reborn.Forms.Controls.ColorSlider();
-            this.richInfoScaleSmall = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tabBox)).BeginInit();
@@ -1440,6 +1440,7 @@ namespace Mids_Reborn.Forms.Controls
             // tabPageAdv5
             // 
             this.tabPageAdv5.BackColor = System.Drawing.Color.FromArgb(148, 117, 46);
+            this.tabPageAdv5.Controls.Add(this.skglGraphLegend);
             this.tabPageAdv5.Controls.Add(this.scalesTabTitle);
             this.tabPageAdv5.Controls.Add(this.ipbResize5);
             this.tabPageAdv5.Controls.Add(this.ipbLock5);
@@ -1447,7 +1448,6 @@ namespace Mids_Reborn.Forms.Controls
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler3);
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler2);
             this.tabPageAdv5.Controls.Add(this.panelPowerScaler1);
-            this.tabPageAdv5.Controls.Add(this.richInfoScaleSmall);
             this.tabPageAdv5.ForeColor = System.Drawing.Color.White;
             this.tabPageAdv5.Image = null;
             this.tabPageAdv5.ImageSize = new System.Drawing.Size(16, 16);
@@ -1459,6 +1459,16 @@ namespace Mids_Reborn.Forms.Controls
             this.tabPageAdv5.TabIndex = 5;
             this.tabPageAdv5.Text = "SCALES";
             this.tabPageAdv5.ThemesEnabled = false;
+            // 
+            // skglGraphLegend
+            // 
+            this.skglGraphLegend.BackColor = System.Drawing.Color.Black;
+            this.skglGraphLegend.Location = new System.Drawing.Point(4, 30);
+            this.skglGraphLegend.Name = "skglGraphLegend";
+            this.skglGraphLegend.Size = new System.Drawing.Size(353, 54);
+            this.skglGraphLegend.TabIndex = 18;
+            this.skglGraphLegend.VSync = false;
+            this.skglGraphLegend.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglGraphLegend_PaintSurface);
             // 
             // scalesTabTitle
             // 
@@ -1778,22 +1788,6 @@ namespace Mids_Reborn.Forms.Controls
             0});
             this.powerScaler1.ValueChanged += new System.EventHandler(this.powerScaler_ValueChanged);
             // 
-            // richInfoScaleSmall
-            // 
-            this.richInfoScaleSmall.BackColor = System.Drawing.Color.Black;
-            this.richInfoScaleSmall.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richInfoScaleSmall.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richInfoScaleSmall.DetectUrls = false;
-            this.richInfoScaleSmall.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richInfoScaleSmall.ForeColor = System.Drawing.Color.Gainsboro;
-            this.richInfoScaleSmall.Location = new System.Drawing.Point(4, 30);
-            this.richInfoScaleSmall.Name = "richInfoScaleSmall";
-            this.richInfoScaleSmall.ReadOnly = true;
-            this.richInfoScaleSmall.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richInfoScaleSmall.Size = new System.Drawing.Size(353, 54);
-            this.richInfoScaleSmall.TabIndex = 2;
-            this.richInfoScaleSmall.Text = "Info small";
-            // 
             // timer1
             // 
             this.timer1.Interval = 1;
@@ -1877,7 +1871,6 @@ namespace Mids_Reborn.Forms.Controls
         private System.Windows.Forms.Panel panelPowerScaler1;
         private System.Windows.Forms.Label labelPowerScaler1;
         private ColorSlider powerScaler1;
-        private System.Windows.Forms.RichTextBox richInfoScaleSmall;
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhAlt;
         private SkiaSharp.Views.Desktop.SKGLControl skglEnhActive;
         private System.Windows.Forms.Timer timer1;
@@ -1931,5 +1924,6 @@ namespace Mids_Reborn.Forms.Controls
         private RichTextBox rtSetsCompareMain;
         private SkiaSharp.Views.Desktop.SKGLControl enhanceTabTitle;
         private SkiaSharp.Views.Desktop.SKGLControl scalesTabTitle;
+        private SkiaSharp.Views.Desktop.SKGLControl skglGraphLegend;
     }
 }
