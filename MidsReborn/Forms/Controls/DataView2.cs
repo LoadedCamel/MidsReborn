@@ -287,29 +287,6 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private void InitScaler()
-        {
-            // Scales tab ? DataView2_Load ?
-            if (_basePower is { VariableEnabled: true } && HistoryIdx > -1)
-            {
-                FreezeScalerCB = true;
-                labelPowerScaler1.Text = string.IsNullOrWhiteSpace(_basePower.VariableName)
-                    ? "Targets"
-                    : _basePower.VariableName;
-                powerScaler1.Minimum = _basePower.VariableMin;
-                powerScaler1.Maximum = _basePower.VariableMax;
-                powerScaler1.Value = MidsContext.Character.CurrentBuild.Powers[HistoryIdx].VariableValue;
-                // Show range tooltip when mouseover ?
-                // Show current value when moving, mousedown ?
-                FreezeScalerCB = false;
-                panelPowerScaler1.Visible = true;
-            }
-            else
-            {
-                panelPowerScaler1.Visible = false;
-            }
-        }
-
         public void ReInit()
         {
             richInfoSmall.Text = string.Empty;
@@ -1376,8 +1353,8 @@ namespace Mids_Reborn.Forms.Controls
                     var power = powerEntry.Power;
                     var variableRange = Math.Abs(power.VariableMax - power.VariableMin);
                     for (var i = power.VariableMin;
-                         i < power.VariableMax;
-                         i = variableRange < 10 ? ++i : (int)Math.Round(i + (decimal)variableRange / 10))
+                         i <= power.VariableMax;
+                         i = variableRange < 10 ? ++i : (int) Math.Round(i + (decimal) variableRange / 10))
                     {
                         powerEntry.VirtualVariableValue = i;
                         power.VirtualStacks = i;
@@ -1477,6 +1454,14 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
+            public static class Utilities
+            {
+                public static SKPoint GetGraphCoordPoint(KeyValuePair<PowerStats.FxIdentifier, List<PowerStats.DataPoint>> series, float graphWidth, float scaleFactor, SKSize padding, float bottomLine, int variableValue)
+                {
+                    return new SKPoint(padding.Width + variableValue * (graphWidth - 2 * padding.Width) / (series.Value.Count - 1), bottomLine - scaleFactor * Math.Abs(series.Value[variableValue].Value));
+                }
+            }
+            
             private static SKColor GetGraphColorFromEffectType(Enums.eEffectType effectType)
             {
                 switch (effectType)
@@ -1557,27 +1542,26 @@ namespace Mids_Reborn.Forms.Controls
                     : GetGraphColorFromEffectType(fxIdentifier.EffectType);
             }
 
-            public static SKImage DrawScalesGraphSurface(int historyIdx, int w, int h)
+            public static SKImage DrawScalesGraphSurface(DataView2 root, int historyIdx, int w, int h)
             {
                 var padding = new SKSize(5, 5);
                 const int gridCells = 6;
-                var dataPoints = PowerStats.GetPOI(historyIdx);
 
                 var surface = SKSurface.Create(new SKImageInfo(w, h));
                 surface.Canvas.Clear(SKColors.Black);
 
-                if (dataPoints.Keys.Count <= 0) return surface.Snapshot();
+                if (Tabs.Scales.DataPoints.Keys.Count <= 0) return surface.Snapshot();
 
                 // Grid
 
                 var pathGrid = new SKPath();
-                for (var i = 1; i < gridCells - 1; i++)
+                for (var i = 1; i < gridCells; i++)
                 {
                     pathGrid.MoveTo(padding.Width + (w - 2 * padding.Width) / gridCells * i, padding.Height);
                     pathGrid.LineTo(padding.Width + (w - 2 * padding.Width) / gridCells * i, h - padding.Height);
                 }
 
-                for (var i = 1; i < gridCells - 1; i++)
+                for (var i = 1; i < gridCells; i++)
                 {
                     pathGrid.MoveTo(padding.Width, padding.Height + (h - 2 * padding.Height) / gridCells * i);
                     pathGrid.LineTo(w - padding.Width, padding.Height + (h - 2 * padding.Height) / gridCells * i);
@@ -1585,11 +1569,12 @@ namespace Mids_Reborn.Forms.Controls
 
                 surface.Canvas.DrawPath(pathGrid, new SKPaint
                 {
+                    IsAntialias = true,
                     Style = SKPaintStyle.Stroke,
-                    Color = new SKColor(160, 160, 160),
+                    Color = new SKColor(130, 130, 130),
                     StrokeWidth = 1,
                     StrokeCap = SKStrokeCap.Butt,
-                    PathEffect = SKPathEffect.CreateDash(new float[] { 10, 10 }, 20)
+                    PathEffect = SKPathEffect.CreateDash(new float[] { 5, 5 }, 10)
                 });
 
                 // Axis
@@ -1600,26 +1585,30 @@ namespace Mids_Reborn.Forms.Controls
                 pathAxis.LineTo(w - padding.Width, h - padding.Height);
                 surface.Canvas.DrawPath(pathAxis, new SKPaint
                 {
+                    IsAntialias = true,
                     Style = SKPaintStyle.Stroke,
                     Color = SKColors.WhiteSmoke,
                     StrokeWidth = 1,
                     StrokeCap = SKStrokeCap.Butt,
-                    PathEffect = SKPathEffect.CreateDash(new float[] { 10, 10 }, 20)
+                    PathEffect = SKPathEffect.CreateDash(new float[] { 2, 2 }, 4)
                 });
 
                 // Points/Lines
 
                 const float displayScaleFactor = 0.9f;
-                var absoluteRange = PowerStats.GetValuesRange(dataPoints);
-                var ranges = PowerStats.GetValuesRangeEach(dataPoints);
-                var scaleFactors = ranges.ToDictionary(range => range.Key,
-                    range => Math.Abs(range.Value.Min - range.Value.Max) < float.Epsilon
-                        ? displayScaleFactor
-                        : displayScaleFactor * (absoluteRange.Max - absoluteRange.Min) / (range.Value.Max - range.Value.Min));
-
                 var bottomLine = h - padding.Height - (1 - displayScaleFactor) * (h - 2 * padding.Height);
+                //var absoluteRange = PowerStats.GetValuesRange(dataPoints);
+                var ranges = PowerStats.GetValuesRangeEach(Tabs.Scales.DataPoints);
 
-                foreach (var series in dataPoints)
+                var scaleFactors = ranges.ToDictionary(range => range.Key,
+                    range => Math.Abs(range.Value.Min - range.Value.Max) < float.Epsilon || Math.Max(range.Value.Max, range.Value.Min) < float.Epsilon
+                        ? displayScaleFactor
+                        : (bottomLine - padding.Height) / Math.Max(range.Value.Max, range.Value.Min));
+
+                var seriesHasPercentage = ranges.ToDictionary(range => range.Key,
+                    range => Math.Abs(range.Value.Min) <= 1 & Math.Abs(range.Value.Max) <= 1);
+
+                foreach (var series in Tabs.Scales.DataPoints)
                 {
                     var curveColor = GetGraphCurveColor(series.Key);
                     var path = new SKPath();
@@ -1627,21 +1616,85 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         if (i == 0)
                         {
-                            path.MoveTo(padding.Width + i * (w - 2 * padding.Width), bottomLine - scaleFactors[series.Key] * Math.Abs(series.Value[i].Value));
+                            path.MoveTo(Utilities.GetGraphCoordPoint(series, w, scaleFactors[series.Key], padding, bottomLine, i));
                         }
                         else
                         {
-                            path.LineTo(padding.Width + i * (w - 2 * padding.Width), bottomLine - scaleFactors[series.Key] * Math.Abs(series.Value[i].Value));
+                            path.LineTo(Utilities.GetGraphCoordPoint(series, w, scaleFactors[series.Key], padding, bottomLine, i));
                         }
                     }
 
                     surface.Canvas.DrawPath(path, new SKPaint
                     {
+                        IsAntialias = true,
                         Style = SKPaintStyle.Stroke,
                         Color = curveColor,
                         StrokeWidth = 1,
                         StrokeCap = SKStrokeCap.Butt
                     });
+                }
+
+                // Current value - crosshairs + text
+                var crosshairColor = new SKColor(245, 245, 245, 230);
+                var variableValue = BuildPowerEntry.VariableValue;
+                const float crosshairRadius = 8;
+                const float crosshairRadiusInner = 2;
+                const float closeNeighborRadius = 12;
+                const float textOffset = 17;
+                using var textPaint = new SKPaint
+                {
+                    IsAntialias = true,
+                    Color = SKColors.WhiteSmoke
+                };
+
+                var pointsOffsetList = new Dictionary<SKPoint, int>();
+                foreach (var series in Tabs.Scales.DataPoints)
+                {
+                    var centerPoint = Utilities.GetGraphCoordPoint(series, w, scaleFactors[series.Key], padding, bottomLine, variableValue);
+                    var closeNeighbor = (from s in Tabs.Scales.DataPoints
+                        let centerPoint2 = Utilities.GetGraphCoordPoint(s, w, scaleFactors[s.Key], padding, bottomLine, variableValue)
+                        let diff = centerPoint.Y - centerPoint2.Y
+                        where Math.Abs(diff) <= closeNeighborRadius & !Equals(s.Key, series.Key)
+                        select diff > 0 ? 1 : -1).FirstOrDefault();  // From above : From below
+
+                    var path = new SKPath();
+                    path.MoveTo(new SKPoint(centerPoint.X - crosshairRadius, centerPoint.Y));
+                    path.LineTo(new SKPoint(centerPoint.X - crosshairRadiusInner, centerPoint.Y));
+                    path.MoveTo(new SKPoint(centerPoint.X + crosshairRadius, centerPoint.Y));
+                    path.LineTo(new SKPoint(centerPoint.X + crosshairRadiusInner, centerPoint.Y));
+                    path.MoveTo(new SKPoint(centerPoint.X, centerPoint.Y - crosshairRadius));
+                    path.LineTo(new SKPoint(centerPoint.X, centerPoint.Y - crosshairRadiusInner));
+                    path.MoveTo(new SKPoint(centerPoint.X, centerPoint.Y + crosshairRadius));
+                    path.LineTo(new SKPoint(centerPoint.X, centerPoint.Y + crosshairRadiusInner));
+
+                    surface.Canvas.DrawPath(path, new SKPaint
+                    {
+                        IsAntialias = true,
+                        Style = SKPaintStyle.Stroke,
+                        Color = crosshairColor,
+                        StrokeWidth = 1,
+                        StrokeCap = SKStrokeCap.Butt
+                    });
+
+                    var textValue = seriesHasPercentage[series.Key]
+                        ? $"{series.Value[variableValue].Value:P2}"
+                        : $"{series.Value[variableValue].Value:###0.##}";
+
+                    var textRect = new SKRect();
+                    textPaint.MeasureText(textValue, ref textRect);
+                    var textX = Math.Max(textRect.Width + 4, Math.Min(w - padding.Width - textRect.Width - 4, centerPoint.X - textRect.Width / 2f));
+                    var textY = Math.Max(padding.Height + 6, centerPoint.Y - 6 + textOffset * closeNeighbor);
+                    if (pointsOffsetList.ContainsKey(centerPoint))
+                    {
+                        pointsOffsetList[centerPoint]++;
+                        textY += pointsOffsetList[centerPoint] * (textY < h / 2f ? textOffset : -textOffset);
+                    }
+                    else
+                    {
+                        pointsOffsetList.Add(centerPoint, 0);
+                    }
+
+                    surface.Canvas.DrawTextShort(textValue, 11, textX, textY, textPaint);
                 }
 
                 return surface.Snapshot();
@@ -3638,14 +3691,23 @@ namespace Mids_Reborn.Forms.Controls
             {
                 private static DataView2 Root;
                 private static InfoType LayoutType;
+                private static Dictionary<VariableStatsGraph.PowerStats.FxIdentifier, List<VariableStatsGraph.PowerStats.DataPoint>> _DataPoints;
 
                 public static void Render(DataView2 root, InfoType layoutType)
                 {
                     Root = root;
                     LayoutType = layoutType;
+                    _DataPoints = VariableStatsGraph.PowerStats.GetPOI(HistoryIdx);
 
                     DisplayScales();
                 }
+
+                public static void UpdateGraph()
+                {
+                    Root.skglScalesGraph.Invalidate();
+                }
+
+                public static Dictionary<VariableStatsGraph.PowerStats.FxIdentifier, List<VariableStatsGraph.PowerStats.DataPoint>> DataPoints => _DataPoints;
 
                 private static void DisplayScales()
                 {
@@ -3653,6 +3715,29 @@ namespace Mids_Reborn.Forms.Controls
                     Root.ipbResize5.IconChar = Root.SmallSize
                         ? IconChar.ChevronDown
                         : IconChar.ChevronUp;
+
+                    if (BuildPowerEntry is {Power: {VariableEnabled: true}})
+                    {
+                        Root.powerScaler1.Value = BuildPowerEntry.VariableValue;
+                        Root.powerScaler1.Minimum = BuildPowerEntry.Power.VariableMin;
+                        Root.powerScaler1.Maximum = BuildPowerEntry.Power.VariableMax;
+                    }
+
+                    if (!Root.powerScaler2.Visible & !Root.powerScaler3.Visible)
+                    {
+                        Root.skglScalesGraph.Location = new Point(4, 112);
+                        Root.skglScalesGraph.Size = new Size(353, 264);
+                    }
+                    else if (!Root.powerScaler3.Visible)
+                    {
+                        Root.skglScalesGraph.Location = new Point(4, 134);
+                        Root.skglScalesGraph.Size = new Size(353, 242);
+                    }
+                    else
+                    {
+                        Root.skglScalesGraph.Location = new Point(4, 156);
+                        Root.skglScalesGraph.Size = new Size(353, 220);
+                    }
 
                     Root.scalesTabTitle.Invalidate();
                     Root.skglScalesGraph.Invalidate();
@@ -3718,17 +3803,18 @@ namespace Mids_Reborn.Forms.Controls
 
         protected void powerScaler_ValueChanged(object sender, EventArgs e)
         {
-            var target = (ColorSlider)sender;
+            var target = (ColorSlider) sender;
 
             target.ElapsedInnerColor = Tabs.InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedInnerColor);
             target.ElapsedPenColorBottom = Tabs.InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedPenColorBottom);
             target.ElapsedPenColorTop = Tabs.InterpolateColor(target.Value, target.Minimum, target.Maximum, TrackColors.ElapsedPenColorTop);
 
             if (FreezeScalerCB) return;
+            if (target.Name != "powerScaler1") return;
 
+            BuildPowerEntry.VariableValue = (int) target.Value;
+            Tabs.Scales.UpdateGraph();
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-
-            // Display updated infos (???)
         }
 
         protected void skglEnh_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
@@ -3804,7 +3890,7 @@ namespace Mids_Reborn.Forms.Controls
             var target = (SKGLControl) sender;
 
             e.Surface.Canvas.Clear(SKColors.Black);
-            var graph = VariableStatsGraph.DrawScalesGraphSurface(HistoryIdx, target.Width, target.Height);
+            using var graph = VariableStatsGraph.DrawScalesGraphSurface(this, HistoryIdx, target.Width, target.Height);
             e.Surface.Canvas.DrawImage(graph, new SKPoint(0, 0));
         }
 

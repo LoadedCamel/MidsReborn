@@ -42,5 +42,10 @@ namespace Mids_Reborn.Forms.Controls
             canvas.DrawPath(outlinePath, outlinePaint);
             canvas.DrawText(text, location, textPaint);
         }
+
+        public static void DrawTextShort(this SKCanvas canvas, string text, float fontSize, float x, float y, SKPaint textPaint)
+        {
+            canvas.DrawText(SKTextBlob.Create(text, new SKFont(SKTypeface.Default, fontSize)), x, y, textPaint);
+        }
     }
 }
