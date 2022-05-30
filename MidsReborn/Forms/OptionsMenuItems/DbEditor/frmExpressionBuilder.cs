@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using FastDeepCloner;
 using Mids_Reborn.Forms.Controls;
 using mrbBase;
-using static mrbBase.Base.Data_Classes.Effect;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {

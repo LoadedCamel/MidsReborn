@@ -69,8 +69,8 @@ namespace mrbBase
         string LongName { get; }
 
         //IPower Power { get; set; }
-        IPower GetPower();
-        void SetPower(IPower power);
+        IPower? GetPower();
+        void SetPower(IPower? power);
 
         int CheckAndFixIOLevel(int level);
 

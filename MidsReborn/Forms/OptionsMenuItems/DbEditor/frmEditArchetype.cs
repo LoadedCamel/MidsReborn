@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 
@@ -10,7 +9,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditArchetype : Form
     {
-        public readonly Archetype MyAT;
+        public readonly Archetype? MyAT;
         private readonly bool ONDuplicate;
         private readonly string OriginalName;
         private Button btnCancel;
@@ -75,7 +74,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private NumericUpDown udColumn;
         private NumericUpDown udThreat;
 
-        public frmEditArchetype(ref Archetype iAT)
+        public frmEditArchetype(ref Archetype? iAT)
         {
             Load += frmEditArchetype_Load;
             Loading = true;

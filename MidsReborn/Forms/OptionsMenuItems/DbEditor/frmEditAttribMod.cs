@@ -203,20 +203,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateClassesList();
         }
 
-        private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
+        private void dgCellsLabel_MouseEnter(object? sender, EventArgs e)
         {
             // http://csharphelper.com/blog/2014/09/use-an-event-handler-for-multiple-controls-in-c/
             if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Highlight;
         }
 
-        private void dgCellsLabel_MouseLeave(object sender, EventArgs e)
+        private void dgCellsLabel_MouseLeave(object? sender, EventArgs e)
         {
             if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Control;
         }
 
-        private void dgCellsLabel_Click(object sender, EventArgs e)
+        private void dgCellsLabel_Click(object? sender, EventArgs e)
         {
             if (sender is not Label lbl) return;
             var ev = e as MouseEventArgs;

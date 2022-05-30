@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B762616-CA1E-428A-A62D-E17DD738712D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>mrbControls</RootNamespace>
+    <AssemblyName>mrbControls</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ctlEnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhPicker.Designer.cs">
+      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IPSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IPSlider.Designer.cs">
+      <DependentUpon>IPSlider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SwitchButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SwitchButton.Designer.cs">
+      <DependentUpon>SwitchButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="pnlGFX.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="clsCustomBorderUC.cs" />
+    <Compile Include="clsDrawX.cs" />
+    <Compile Include="ctlAvatar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlAvatar.Designer.cs">
+      <DependentUpon>ctlAvatar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlColorList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlColorList.Designer.cs">
+      <DependentUpon>ctlColorList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlCombo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlCombo.Designer.cs">
+      <DependentUpon>ctlCombo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlDamageDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhancedList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlEnhancedList.Designer.cs">
+      <DependentUpon>ctlEnhancedList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlEnhPopupPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhPopupPanel.Designer.cs">
+      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlEnhTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlEnhTabControl.Designer.cs">
+      <DependentUpon>ctlEnhTabControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlListViewColored.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlListViewColored.Designer.cs">
+      <DependentUpon>ctlListViewColored.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlLockedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlLockedTextBox.Designer.cs">
+      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlMultiGraph.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlOutlinedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlOutlinedLabel.Designer.cs">
+      <DependentUpon>ctlOutlinedLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlPanel.Designer.cs">
+      <DependentUpon>ctlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlPopUp.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlPowerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlPowerButton.Designer.cs">
+      <DependentUpon>ctlPowerButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlPowerList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlPowerList.Designer.cs">
+      <DependentUpon>ctlPowerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlTablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlTablePanel.Designer.cs">
+      <DependentUpon>ctlTablePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditableLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditableLabel.Designer.cs">
+      <DependentUpon>EditableLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GFXLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="I9Picker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ImageButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PairedList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PairedList.Designer.cs">
+      <DependentUpon>PairedList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ctlProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlProgressBar.Designer.cs">
+      <DependentUpon>ctlProgressBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListLabelV3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ListLabelV3.Designer.cs">
+      <DependentUpon>ListLabelV3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlDataGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlDataGraph.Designer.cs">
+      <DependentUpon>ctlDataGraph.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlLayeredBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlLayeredBar.Designer.cs">
+      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlLayeredBarPb.cs" />
+    <Compile Include="ctlLayeredBarPb.Designer.cs">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ctlCombo.resx">
+      <DependentUpon>ctlCombo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlDamageDisplay.resources" />
+    <EmbeddedResource Include="ctlEnhPicker.resx">
+      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlEnhPopupPanel.resx">
+      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLayeredBar.resx">
+      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLayeredBarPb.resx">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLockedTextBox.resx">
+      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlMultiGraph.resources" />
+    <EmbeddedResource Include="ctlPanel.resx">
+      <DependentUpon>ctlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlPopUp.resources" />
+    <EmbeddedResource Include="ctlPowerButton.resx">
+      <DependentUpon>ctlPowerButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlPowerList.resx">
+      <DependentUpon>ctlPowerList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GFXLabel.resources" />
+    <EmbeddedResource Include="I9Picker.resources" />
+    <EmbeddedResource Include="ImageButton.resources" />
+    <EmbeddedResource Include="PairedList.resx">
+      <DependentUpon>PairedList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FastDeepCloner">
+      <Version>1.3.6</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Grid.Windows">
+      <Version>19.3.0.57</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Licensing">
+      <Version>19.3.0.57</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Shared.Base">
+      <Version>19.3.0.57</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Tools.Windows">
+      <Version>19.3.0.57</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\mrbBase\mrbBase.csproj">
+      <Project>{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}</Project>
+      <Name>mrbBase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pSlot2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pSlot3.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

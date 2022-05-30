@@ -1,267 +1,111 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8B762616-CA1E-428A-A62D-E17DD738712D}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <RootNamespace>mrbControls</RootNamespace>
-    <AssemblyName>mrbControls</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>9.0</LangVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ctlEnhPicker.cs">
+    <Compile Update="ctlEnhPicker.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlEnhPicker.Designer.cs">
-      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IPSlider.cs">
+    <Compile Update="IPSlider.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="IPSlider.Designer.cs">
-      <DependentUpon>IPSlider.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SwitchButton.cs">
+    <Compile Update="SwitchButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SwitchButton.Designer.cs">
-      <DependentUpon>SwitchButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="pnlGFX.cs">
+    <Compile Update="pnlGFX.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="clsCustomBorderUC.cs" />
-    <Compile Include="clsDrawX.cs" />
-    <Compile Include="ctlAvatar.cs">
+    <Compile Update="ctlAvatar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlAvatar.Designer.cs">
-      <DependentUpon>ctlAvatar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlColorList.cs">
+    <Compile Update="ctlColorList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlColorList.Designer.cs">
-      <DependentUpon>ctlColorList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlCombo.cs">
+    <Compile Update="ctlCombo.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlCombo.Designer.cs">
-      <DependentUpon>ctlCombo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlDamageDisplay.cs">
+    <Compile Update="ctlDamageDisplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlEnhancedList.cs">
+    <Compile Update="ctlEnhancedList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlEnhancedList.Designer.cs">
-      <DependentUpon>ctlEnhancedList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlEnhPopupPanel.cs">
+    <Compile Update="ctlEnhPopupPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlEnhPopupPanel.Designer.cs">
-      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlEnhTabControl.cs">
+    <Compile Update="ctlEnhTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlEnhTabControl.Designer.cs">
-      <DependentUpon>ctlEnhTabControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlListViewColored.cs">
+    <Compile Update="ctlListViewColored.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlListViewColored.Designer.cs">
-      <DependentUpon>ctlListViewColored.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlLockedTextBox.cs">
+    <Compile Update="ctlLockedTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlLockedTextBox.Designer.cs">
-      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlMultiGraph.cs">
+    <Compile Update="ctlMultiGraph.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlOutlinedLabel.cs">
+    <Compile Update="ctlOutlinedLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlOutlinedLabel.Designer.cs">
-      <DependentUpon>ctlOutlinedLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlPanel.cs">
+    <Compile Update="ctlPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlPanel.Designer.cs">
-      <DependentUpon>ctlPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlPopUp.cs">
+    <Compile Update="ctlPopUp.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlPowerButton.cs">
+    <Compile Update="ctlPowerButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctlPowerButton.Designer.cs">
-      <DependentUpon>ctlPowerButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlPowerList.cs">
+    <Compile Update="ctlPowerList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlPowerList.Designer.cs">
-      <DependentUpon>ctlPowerList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlTablePanel.cs">
+    <Compile Update="ctlTablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlTablePanel.Designer.cs">
-      <DependentUpon>ctlTablePanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EditableLabel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditableLabel.Designer.cs">
-      <DependentUpon>EditableLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GFXLabel.cs">
+    <Compile Update="GFXLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="I9Picker.cs">
+    <Compile Update="I9Picker.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ImageButton.cs">
+    <Compile Update="ImageButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PairedList.cs">
+    <Compile Update="PairedList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PairedList.Designer.cs">
-      <DependentUpon>PairedList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ctlProgressBar.cs">
+    <Compile Update="ctlProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlProgressBar.Designer.cs">
-      <DependentUpon>ctlProgressBar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ListLabelV3.cs">
+    <Compile Update="ListLabelV3.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ListLabelV3.Designer.cs">
-      <DependentUpon>ListLabelV3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlDataGraph.cs">
+    <Compile Update="ctlDataGraph.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ctlDataGraph.Designer.cs">
-      <DependentUpon>ctlDataGraph.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlLayeredBar.cs">
+    <Compile Update="ctlLayeredBar.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ctlLayeredBar.Designer.cs">
-      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ctlLayeredBarPb.cs" />
-    <Compile Include="ctlLayeredBarPb.Designer.cs">
-      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ctlCombo.resx">
-      <DependentUpon>ctlCombo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
-    <EmbeddedResource Include="ctlEnhPicker.resx">
-      <DependentUpon>ctlEnhPicker.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ctlEnhPopupPanel.resx">
-      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ctlLayeredBar.resx">
-      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ctlLayeredBarPb.resx">
-      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ctlLockedTextBox.resx">
-      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ctlMultiGraph.resources" />
-    <EmbeddedResource Include="ctlPanel.resx">
-      <DependentUpon>ctlPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ctlPopUp.resources" />
-    <EmbeddedResource Include="ctlPowerButton.resx">
-      <DependentUpon>ctlPowerButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ctlPowerList.resx">
-      <DependentUpon>ctlPowerList.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
     <EmbeddedResource Include="ImageButton.resources" />
-    <EmbeddedResource Include="PairedList.resx">
-      <DependentUpon>PairedList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resources" />
   </ItemGroup>
   <ItemGroup>
@@ -285,16 +129,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mrbBase\mrbBase.csproj">
-      <Project>{78125AD1-C9F8-4FE9-9BDB-5033D5FA76CC}</Project>
-      <Name>mrbBase</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\mrbBase\mrbBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pSlot2.png" />
+    <Compile Remove="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pSlot3.png" />
+    <None Remove="mrbControls.csproj.old" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

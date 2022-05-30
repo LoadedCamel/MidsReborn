@@ -38,7 +38,7 @@ namespace mrbBase
                 ), "json");
         }
 
-        public static readonly JsonSerializerSettings SerializerSettings = new()
+        public static readonly JsonSerializerSettings? SerializerSettings = new()
         {
             NullValueHandling = NullValueHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.None,

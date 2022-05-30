@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualBasic.CompilerServices;
 using mrbBase.Base.Display;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;

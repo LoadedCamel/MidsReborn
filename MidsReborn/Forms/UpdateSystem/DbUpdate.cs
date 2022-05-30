@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using static Mids_Reborn.Forms.UpdateSystem.clsXMLUpdate;
 

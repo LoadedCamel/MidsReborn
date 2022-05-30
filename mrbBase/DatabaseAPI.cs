@@ -480,7 +480,7 @@ namespace mrbBase
             return Database.Powersets.FirstOrDefault(ps => ps.SetType == Enums.ePowerSetType.Inherent);
         }
 
-        public static Archetype GetArchetypeByName(string iArchetype)
+        public static Archetype? GetArchetypeByName(string iArchetype)
         {
             return Database.Classes.FirstOrDefault(cls =>
                 string.Equals(iArchetype, cls.DisplayName, StringComparison.OrdinalIgnoreCase));
@@ -492,7 +492,7 @@ namespace mrbBase
                 string.Equals(iArchetype, cls.ClassName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static int GetOriginByName(Archetype archetype, string iOrigin)
+        public static int GetOriginByName(Archetype? archetype, string iOrigin)
         {
             for (var index = 0; index < archetype.Origin.Length; ++index)
                 if (string.Equals(iOrigin, archetype.Origin[index], StringComparison.OrdinalIgnoreCase))
@@ -568,7 +568,7 @@ namespace mrbBase
                 : new int[1];
         }
 
-        public static IPowerset[] GetPowersetIndexes(Archetype at, Enums.ePowerSetType iSet)
+        public static IPowerset[] GetPowersetIndexes(Archetype? at, Enums.ePowerSetType iSet)
         {
             return GetPowersetIndexes(at.Idx, iSet);
         }
@@ -889,9 +889,9 @@ namespace mrbBase
             return ret;
         }*/
 
-        public static List<IPower> SlottablePowersSetType(int enhSetType)
+        public static List<IPower?> SlottablePowersSetType(int enhSetType)
         {
-            var retList = new List<IPower>();
+            var retList = new List<IPower?>();
             foreach (var power in Database.Power)
             {
                 var powerset = power.GetPowerSet();
@@ -1404,7 +1404,7 @@ namespace mrbBase
                     return false;
                 }
 
-                Database.Classes = new Archetype[reader.ReadInt32() + 1];
+                Database.Classes = new Archetype?[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Classes.Length; ++index)
                 {
                     Database.Classes[index] = new Archetype(reader)
@@ -1444,7 +1444,7 @@ namespace mrbBase
                     return false;
                 }
 
-                Database.Power = new IPower[reader.ReadInt32() + 1];
+                Database.Power = new IPower?[reader.ReadInt32() + 1];
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
                     Database.Power[index] = new Power(reader);
@@ -2673,7 +2673,7 @@ namespace mrbBase
             }
         }
 
-        private static void MatchRequirementId(IPower power)
+        private static void MatchRequirementId(IPower? power)
 
         {
             if (power.Requires.ClassName.Length > 0)

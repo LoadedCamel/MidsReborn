@@ -3,11 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
-using Microsoft.VisualBasic;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {

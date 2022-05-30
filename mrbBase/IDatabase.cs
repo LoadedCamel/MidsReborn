@@ -20,7 +20,7 @@ namespace mrbBase
 
         DateTime Date { get; set; }
 
-        IPower[] Power { get; set; }
+        IPower?[] Power { get; set; }
 
         Enums.VersionData PowerVersion { get; set; }
 
@@ -32,7 +32,7 @@ namespace mrbBase
 
         Enums.VersionData PowersetVersion { get; set; }
 
-        Archetype[] Classes { get; set; }
+        Archetype?[] Classes { get; set; }
 
         Enums.VersionData ArchetypeVersion { get; set; }
 

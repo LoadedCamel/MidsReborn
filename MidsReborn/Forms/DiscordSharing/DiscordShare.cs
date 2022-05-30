@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,7 +11,6 @@ using Mids_Reborn.Forms.Controls;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
 using RestSharp;
-using Syncfusion.Licensing.crypto;
 using static Mids_Reborn.Forms.DiscordSharing.Structs;
 
 namespace Mids_Reborn.Forms.DiscordSharing

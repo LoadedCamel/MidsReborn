@@ -33,7 +33,7 @@ namespace Mids_Reborn.Forms.JsonImport
 
             foreach (var c in classes)
             {
-                Archetype first = null;
+                Archetype? first = null;
                 foreach (var cls in DatabaseAPI.Database.Classes)
                     if (string.Equals(c.Name, cls.ClassName, StringComparison.OrdinalIgnoreCase))
                     {

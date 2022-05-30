@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private bool _locked;
 
-        private List<IPower> _myPowers;
+        private List<IPower?> _myPowers;
         private ImageButton ibClose;
 
         private Label lblLock;
@@ -34,7 +34,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private VScrollBar VScrollBar1;
 
-        public frmPrestige(frmMain iParent, List<IPower> iPowers)
+        public frmPrestige(frmMain iParent, List<IPower?> iPowers)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -276,7 +276,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPowers[pIDX]);
+            IPower? power1 = new Power(_myPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {

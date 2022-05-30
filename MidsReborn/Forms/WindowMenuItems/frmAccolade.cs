@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private bool _locked;
 
-        private List<IPower> _myPowers;
+        private List<IPower?> _myPowers;
         private ImageButton ibClose;
 
         private Label lblLock;
@@ -34,7 +34,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private VScrollBar VScrollBar1;
 
-        public frmAccolade(frmMain iParent, List<IPower> iPowers)
+        public frmAccolade(frmMain iParent, List<IPower?> iPowers)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -267,7 +267,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                IPower power1 = new Power(_myPowers[pIDX]);
+                IPower? power1 = new Power(_myPowers[pIDX]);
                 var index1 = iPopup.Add();
                 var str = string.Empty;
                 switch (power1.PowerType)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -8,7 +7,6 @@ using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -454,7 +452,7 @@ namespace mrbControls
             }
         }
 
-        public Point DrawPowerSlot(ref PowerEntry iSlot, bool singleDraw = false)
+        public Point DrawPowerSlot(ref PowerEntry? iSlot, bool singleDraw = false)
         {
             Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
             string text = string.Empty;
@@ -1063,7 +1061,7 @@ namespace mrbControls
                     if (idx != -1)
                     {
                         Build currentBuild;
-                        PowerEntry value;
+                        PowerEntry? value;
                         Point point2;
                         Rectangle iValue;
                         Rectangle rectangle;
@@ -2186,7 +2184,7 @@ namespace mrbControls
             };
         }
 
-        private Point PowerPositionCR(PowerEntry powerEntry, int displayLocation = -1)
+        private Point PowerPositionCR(PowerEntry? powerEntry, int displayLocation = -1)
         {
             var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
@@ -2272,14 +2270,14 @@ namespace mrbControls
             }
         }
 
-        public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
+        public Point PowerPosition(PowerEntry? powerEntry, int displayLocation = -1)
         {
             var crPos = PowerPositionCR(powerEntry, displayLocation);
 
             return CRtoXY(crPos.X, crPos.Y);
         }
 
-        public Point PowerPosition(PowerEntry powerEntry, bool ignorePadding, int displayLocation = -1)
+        public Point PowerPosition(PowerEntry? powerEntry, bool ignorePadding, int displayLocation = -1)
         {
             var crPos = PowerPositionCR(powerEntry, displayLocation);
 

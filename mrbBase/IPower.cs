@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using mrbBase.Base.Data_Classes;
-using mrbBase.Utils;
 
 namespace mrbBase
 {
@@ -275,10 +274,10 @@ namespace mrbBase
             bool ignoreConditions = false);
 
         int[] AbsorbEffects(
-            IPower source,
+            IPower? source,
             float nDuration,
             float nDelay,
-            Archetype archetype,
+            Archetype? archetype,
             int stacking,
             bool isGrantPower = false,
             int fxid = -1,

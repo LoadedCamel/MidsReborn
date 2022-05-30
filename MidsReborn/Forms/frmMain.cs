@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design.Serialization;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
@@ -10,14 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
 using Microsoft.Win32;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
@@ -560,7 +556,7 @@ namespace Mids_Reborn.Forms
                 var power = !MainModule.MidsController.Toon.IsHero()
                     ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
                     : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                var iPowers = new List<IPower>();
+                var iPowers = new List<IPower?>();
                 var num = power.NIDSubPower.Length - 1;
                 for (var index = 0; index <= num; ++index)
                 {
@@ -996,7 +992,7 @@ namespace Mids_Reborn.Forms
             GetBestDamageValues();
         }
 
-        private void clearPower(PowerEntry[] tp, int pwrIdx)
+        private void clearPower(PowerEntry?[] tp, int pwrIdx)
         {
             tp[pwrIdx].Slots = Array.Empty<SlotEntry>();
             tp[pwrIdx].SubPowers = Array.Empty<PowerSubEntry>();
@@ -1214,7 +1210,7 @@ namespace Mids_Reborn.Forms
         }
 
 
-        private static PowerEntry[] DeepCopyPowerList()
+        private static PowerEntry?[] DeepCopyPowerList()
         {
             return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x.Clone()).ToArray();
         }
@@ -1713,7 +1709,7 @@ namespace Mids_Reborn.Forms
             if (hIDPower <= -1 || MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length <= 0)
                 return false;
 
-            var iPowers = new List<IPower>();
+            var iPowers = new List<IPower?>();
             var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
@@ -2659,7 +2655,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (flag)
             {
                 var iParent = this;
-                var iPowers = new List<IPower>();
+                var iPowers = new List<IPower?>();
                 foreach (var power in DatabaseAPI.Database.Power)
                     if (power.InherentType == Enums.eGridType.Prestige && power.PowerType == Enums.ePowerType.Toggle)
                         iPowers.Add(power);
@@ -3444,7 +3440,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void RedrawSinglePower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
+        private void RedrawSinglePower(ref PowerEntry? powerEntry, bool singleDraw = false, bool refreshInfo = false)
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
             pnlGFX.Refresh();
@@ -3820,7 +3816,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return remember;
         }
 
-        private int PowerMove(PowerEntry[] tp, int start, int finish)
+        private int PowerMove(PowerEntry?[] tp, int start, int finish)
         {
             if (tp[start].NIDPower != -1 && DatabaseAPI.Database.Power[tp[start].NIDPower].Level - 1 > tp[finish].Level)
             {
@@ -4073,7 +4069,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             //PowerModified(markModified: true);
         }
 
-        private int PowerSwap(int mode, ref PowerEntry[] tp, int start, int finish)
+        private int PowerSwap(int mode, ref PowerEntry?[] tp, int start, int finish)
         {
             int num1;
             if (start < 0 || start > 23 || finish < 0 || finish > 23 || start == finish)
@@ -4667,7 +4663,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return flag2;
         }
 
-        private void RearrangeAllSlotsInBuild(PowerEntry[] tp, bool notifyUser = false)
+        private void RearrangeAllSlotsInBuild(PowerEntry?[] tp, bool notifyUser = false)
         {
             var index1 = 0;
             var numArray1 = new int[tp.Length];
@@ -4821,7 +4817,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void RemoveSlotFromTempList(PowerEntry tp, int slotIDX)
+        private void RemoveSlotFromTempList(PowerEntry? tp, int slotIDX)
         {
             tp.Slots = tp.Slots.RemoveIndex(slotIDX);
         }
@@ -5141,7 +5137,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SetTitleBar(MidsContext.Character.IsHero());
         }
 
-        private static void ShallowCopyPowerList(PowerEntry[] source)
+        private static void ShallowCopyPowerList(PowerEntry?[] source)
         {
             var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
             for (var index = 0; index <= num; ++index)
@@ -5251,7 +5247,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
                 }
 
-                PowerEntry powerEntry = null;
+                PowerEntry? powerEntry = null;
                 if (hIdx > -1)
                 {
                     powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
@@ -5505,7 +5501,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 // Inherent.Inherent.MxD_Temps
                 var power = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
-                var iPowers = new List<IPower>();
+                var iPowers = new List<IPower?>();
                 var num = power.NIDSubPower.Length - 1;
                 for (var index = 0; index <= num; ++index)
                 {
@@ -6400,7 +6396,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
-            var cbAT = new ComboBoxT<Archetype>(this.cbAT);
+            var cbAT = new ComboBoxT<Archetype?>(this.cbAT);
             if (ComboCheckAT(all))
             {
                 cbAT.BeginUpdate();

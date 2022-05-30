@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
-using Newtonsoft.Json;
 
 namespace mrbBase
 {
@@ -49,7 +46,7 @@ namespace mrbBase
             public bool IsBase { get; set; }
         }
 
-        private static string BaseImagePath => Path.Combine(Application.StartupPath, "Images");
+        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Images");
 
         public static string ImagePath(string type = "")
         {

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using mrbBase.Base.Display;
@@ -186,7 +184,7 @@ namespace mrbBase
             }
         }
 
-        public void Assign(PowerEntry iPe)
+        public void Assign(PowerEntry? iPe)
         {
             Level = iPe.Level;
             NIDPowerset = iPe.NIDPowerset;
@@ -308,7 +306,7 @@ namespace mrbBase
             Slots = Array.Empty<SlotEntry>();
         }
 
-        public PopUp.Section PopSubPowerListing(string sTitle, Color disabledColor, Color enabledColor)
+        public PopUp.Section? PopSubPowerListing(string sTitle, Color disabledColor, Color enabledColor)
         {
             var section = new PopUp.Section();
             section.Add(sTitle, PopUp.Colors.Title);

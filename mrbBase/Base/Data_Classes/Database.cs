@@ -21,7 +21,7 @@ namespace mrbBase.Base.Data_Classes
 
         public DateTime Date { get; set; }
 
-        public IPower[] Power { get; set; }
+        public IPower?[] Power { get; set; }
 
         public Enums.VersionData PowerVersion { get; set; } = new Enums.VersionData();
 
@@ -33,7 +33,7 @@ namespace mrbBase.Base.Data_Classes
 
         public Enums.VersionData PowersetVersion { get; set; } = new Enums.VersionData();
 
-        public Archetype[] Classes { get; set; }
+        public Archetype?[] Classes { get; set; }
 
         public Enums.VersionData ArchetypeVersion { get; set; } = new Enums.VersionData();
 

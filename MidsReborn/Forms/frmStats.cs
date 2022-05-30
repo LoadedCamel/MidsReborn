@@ -15,7 +15,7 @@ namespace Mids_Reborn.Forms
     {
         private readonly frmMain myParent;
 
-        private IPower[] BaseArray;
+        private IPower?[] BaseArray;
         private bool BaseOverride;
         private ImageButton btnClose;
 
@@ -27,7 +27,7 @@ namespace Mids_Reborn.Forms
 
         private ImageButton chkOnTop;
 
-        private IPower[] EnhArray;
+        private IPower?[] EnhArray;
         private ctlMultiGraph Graph;
         private float GraphMax;
         private Label lblKey1;
@@ -47,8 +47,8 @@ namespace Mids_Reborn.Forms
             Move += frmStats_Move;
             Resize += frmStats_Resize;
             VisibleChanged += frmStats_VisibleChanged;
-            BaseArray = new IPower[0];
-            EnhArray = new IPower[0];
+            BaseArray = new IPower?[0];
+            EnhArray = new IPower?[0];
             GraphMax = 1f;
             BaseOverride = false;
             Loaded = false;

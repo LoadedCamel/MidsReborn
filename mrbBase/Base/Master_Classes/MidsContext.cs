@@ -25,7 +25,7 @@ namespace mrbBase.Base.Master_Classes
 
         //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
-        public static Archetype Archetype;
+        public static Archetype? Archetype;
         public static Character Character;
         public static Build Build;
 

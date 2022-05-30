@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
@@ -117,7 +116,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
                 var database = DatabaseAPI.Database;
-                var archetypeArray = Array.Empty<Archetype>();
+                Archetype?[] archetypeArray = Array.Empty<Archetype>();
                 Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
                 database.Classes = archetypeArray;
                 DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
@@ -150,7 +149,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                     else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        var archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
+                        var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length - 1 + 1];
                         var index2 = 0;
                         var num3 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num3; ++index3)
@@ -161,7 +160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             ++index2;
                         }
 
-                        DatabaseAPI.Database.Classes = new Archetype[DatabaseAPI.Database.Classes.Length - 2 + 1];
+                        DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 2 + 1];
                         var num4 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num4; ++index3)
                             DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
@@ -192,7 +191,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvGroup.SelectedIndices[0];
             if (selectedIndex >= lvGroup.Items.Count - 1)
                 return;
-            Archetype[] archetypeArray =
+            Archetype?[] archetypeArray =
             {
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex]),
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex + 1])
@@ -259,7 +258,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvGroup.SelectedIndices[0];
             if (selectedIndex < 1)
                 return;
-            Archetype[] archetypeArray =
+            Archetype?[] archetypeArray =
             {
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex]),
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex - 1])
@@ -299,7 +298,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerAdd_Click(object sender, EventArgs e)
         {
-            IPower iPower = new Power();
+            IPower? iPower = new Power();
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -338,7 +337,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 var database = DatabaseAPI.Database;
-                var powerList = new List<IPower>(DatabaseAPI.Database.Power);
+                var powerList = new List<IPower?>(DatabaseAPI.Database.Power);
                 var newPower = powerList.First(x => x.FullName == database.Power[index].FullName).Clone();
                 newPower.StaticIndex = powerList.Last().StaticIndex++;
                 newPower.FullName += "_Clone";
@@ -374,7 +373,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            var powerArray = new IPower[DatabaseAPI.Database.Power.Length - 1 + 1];
+            var powerArray = new IPower?[DatabaseAPI.Database.Power.Length - 1 + 1];
             var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (num1 < 0)
             {
@@ -392,7 +391,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index1;
                 }
 
-                DatabaseAPI.Database.Power = new IPower[DatabaseAPI.Database.Power.Length - 2 + 1];
+                DatabaseAPI.Database.Power = new IPower?[DatabaseAPI.Database.Power.Length - 2 + 1];
                 var num4 = DatabaseAPI.Database.Power.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
                     DatabaseAPI.Database.Power[index2] = new Power(powerArray[index2]);
@@ -426,7 +425,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
@@ -454,7 +453,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     return;
                 }
 
-                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                 {
@@ -504,7 +503,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");

@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using FastDeepCloner;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
-using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -20,10 +17,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private bool _loading;
 
         public IEffect MyFx;
-        private IPower MyPower { get; set; }
+        private IPower? MyPower { get; set; }
         private readonly int _effectIndex;
 
-        public frmPowerEffect(ICloneable iFx, IPower fxPower, int fxIndex = 0)
+        public frmPowerEffect(ICloneable iFx, IPower? fxPower, int fxIndex = 0)
         {
             _loading = true;
             MyPower = fxPower;

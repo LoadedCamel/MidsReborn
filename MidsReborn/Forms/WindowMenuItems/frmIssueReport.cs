@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
-using Newtonsoft.Json;
 using Octokit;
 using RestSharp;
 

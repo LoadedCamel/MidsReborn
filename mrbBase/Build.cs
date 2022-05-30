@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,10 +16,10 @@ namespace mrbBase
         public static HashSet<string> setSlotted = new HashSet<string>();
         private readonly Character _character;
 
-        public readonly List<PowerEntry> Powers;
+        public readonly List<PowerEntry?> Powers;
         public readonly List<I9SetData> SetBonus;
 
-        private IPower _setBonusVirtualPower;
+        private IPower? _setBonusVirtualPower;
 
         public string compareStringSlottedEnh;
 
@@ -30,7 +29,7 @@ namespace mrbBase
         public Build(Character owner, IList<LevelMap> iLevels)
         {
             _character = owner;
-            Powers = new List<PowerEntry>
+            Powers = new List<PowerEntry?>
             {
                 new PowerEntry(0, null, true)
             };
@@ -46,11 +45,11 @@ namespace mrbBase
 
         private string setName { get; set; }
 
-        public IPower SetBonusVirtualPower
+        public IPower? SetBonusVirtualPower
         {
             get
             {
-                IPower power;
+                IPower? power;
                 if ((power = _setBonusVirtualPower) == null)
                     power = _setBonusVirtualPower = GetSetBonusVirtualPower();
                 return power;
@@ -108,7 +107,7 @@ namespace mrbBase
             }
         }
 
-        public PowerEntry AddPower(IPower power, int specialLevel = -1)
+        public PowerEntry AddPower(IPower? power, int specialLevel = -1)
         {
             var powerEntry = GetPowerEntry(power);
             if (powerEntry == null)
@@ -121,7 +120,7 @@ namespace mrbBase
             return powerEntry;
         }
 
-        public void RemovePower(IPower powerToRemove)
+        public void RemovePower(IPower? powerToRemove)
         {
             foreach (var power in Powers)
             {
@@ -132,7 +131,7 @@ namespace mrbBase
             }
         }
 
-        private PowerEntry GetPowerEntry(IPower power)
+        private PowerEntry? GetPowerEntry(IPower? power)
         {
             foreach (var power1 in Powers)
                 if (power1.Power != null && power1.Power.PowerIndex == power.PowerIndex)
@@ -846,7 +845,7 @@ namespace mrbBase
                 }
         }
 
-        public bool MeetsRequirement(IPower power, int nLevel, int skipIdx = -1)
+        public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
         {
             if (nLevel < 0)
                 return false;
@@ -922,7 +921,7 @@ namespace mrbBase
             return -1;
         }
 
-        public bool PowerUsed(IPower power)
+        public bool PowerUsed(IPower? power)
         {
             return FindInToonHistory(power.PowerIndex) > -1;
         }
@@ -1129,9 +1128,9 @@ namespace mrbBase
             _setBonusVirtualPower = null;
         }
 
-        private IPower GetSetBonusVirtualPower()
+        private IPower? GetSetBonusVirtualPower()
         {
-            IPower power1 = new Power();
+            IPower? power1 = new Power();
             if (MidsContext.Config.I9.IgnoreSetBonusFX)
             {
                 return power1;
@@ -1252,7 +1251,7 @@ namespace mrbBase
                 }
                 else
                 {
-                    var powerEntryList = new List<PowerEntry>();
+                    var powerEntryList = new List<PowerEntry?>();
                     var mutexAuto = false;
                     var index1 = -1;
                     for (var index2 = 0; index2 <= DatabaseAPI.Database.MutexList.Length - 1; ++index2)

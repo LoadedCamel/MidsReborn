@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 using FastDeepCloner;
@@ -22,8 +20,8 @@ namespace Mids_Reborn
     {
         private const double BuildFormatChange1 = 1.29999995231628;
         private const double BuildFormatChange2 = 1.39999997615814;
-        private IPower[] _buffedPower = Array.Empty<IPower>();
-        private IPower[] _mathPower = Array.Empty<IPower>();
+        private IPower?[] _buffedPower = Array.Empty<IPower>();
+        private IPower?[] _mathPower = Array.Empty<IPower>();
         private Enums.BuffsX _selfBuffs;
         private Enums.BuffsX _selfEnhance;
 
@@ -40,7 +38,7 @@ namespace Mids_Reborn
         {
             public IEffect GrantPowerFX;
             public IPower TargetPower;
-            public IPower SourcePower;
+            public IPower? SourcePower;
         }
 
         private void ApplyPvpDr()
@@ -326,7 +324,7 @@ namespace Mids_Reborn
                 CurrentBuild.Powers[iPowerSlot].Slots[index].Flip();
         }
 
-        private void RemoveGrantEffectIndirect(ref IPower[] basePower, IPower targetPower, string summon)
+        private void RemoveGrantEffectIndirect(ref IPower?[] basePower, IPower? targetPower, string summon)
         {
             var basePowerPicked = basePower.Where(bp => bp != null).ToList();
             var basePowerIdx = basePowerPicked
@@ -469,7 +467,7 @@ namespace Mids_Reborn
             }
         }
 
-        private static void GBD_Stage(ref IPower tPwr, ref Enums.BuffsX nBuffs, bool enhancementPass)
+        private static void GBD_Stage(ref IPower? tPwr, ref Enums.BuffsX nBuffs, bool enhancementPass)
         {
             if (tPwr == null || tPwr.PowerType == Enums.ePowerType.GlobalBoost)
             {
@@ -661,7 +659,7 @@ namespace Mids_Reborn
             }
         }
 
-        private static bool IsClickPower(IPower power)
+        private static bool IsClickPower(IPower? power)
         {
             return power.PowerType == Enums.ePowerType.Click && !power.ClickBuff;
         }
@@ -812,7 +810,7 @@ namespace Mids_Reborn
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
-        private bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
+        private bool GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
         {
             if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)
                 return false;
@@ -871,7 +869,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private bool GBPA_AddSubPowerEffects(ref IPower ret, int hIDX)
+        private bool GBPA_AddSubPowerEffects(ref IPower? ret, int hIDX)
         {
             if (ret.NIDSubPower.Length <= 0)
                 return false;
@@ -903,7 +901,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private void GBPA_ApplyArchetypeCaps(ref IPower powerMath)
+        private void GBPA_ApplyArchetypeCaps(ref IPower? powerMath)
         {
             if (powerMath.RechargeTime > (double) Archetype.RechargeCap)
             {
@@ -919,7 +917,7 @@ namespace Mids_Reborn
             }
         }
 
-        private static void HandleDefaultIncarnateEnh(ref IPower powerMath, IEffect effect1, IEffect[] buffedPowerEffects)
+        private static void HandleDefaultIncarnateEnh(ref IPower? powerMath, IEffect effect1, IEffect[] buffedPowerEffects)
         {
             for (var index2 = 0; index2 <= powerMath.Effects.Length - 1; ++index2)
             {
@@ -1001,7 +999,7 @@ namespace Mids_Reborn
             }
         }
 
-        private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect1, IPower[] buffedPowers, int effIdx, Archetype at, int hIDX)
+        private static void HandleGrantPowerIncarnate(ref IPower? powerMath, IEffect effect1, IPower?[] buffedPowers, int effIdx, Archetype? at, int hIDX)
         {
             powerMath.AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0.0f, at, 1, true, effIdx);
             for (var index2 = 0; index2 <= powerMath.Effects.Length - 1; ++index2)
@@ -1028,7 +1026,7 @@ namespace Mids_Reborn
             }
         }
 
-        private void GBPA_ApplyIncarnateEnhancements(ref IPower powerMath, int hIDX, IPower power, bool ignoreED, ref Enums.eEffectType effectType)
+        private void GBPA_ApplyIncarnateEnhancements(ref IPower? powerMath, int hIDX, IPower? power, bool ignoreED, ref Enums.eEffectType effectType)
         {
             if (powerMath == null)
                 return;
@@ -1173,7 +1171,7 @@ namespace Mids_Reborn
             }
         }
 
-        private IPower GBPA_ApplyPowerOverride(ref IPower ret)
+        private IPower? GBPA_ApplyPowerOverride(ref IPower? ret)
         {
             if (!ret.HasPowerOverrideEffect)
                 return ret;
@@ -1192,7 +1190,7 @@ namespace Mids_Reborn
             return ret;
         }
 
-        private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
+        private bool GBPA_MultiplyVariable(ref IPower? iPower, int hIDX)
         {
             if (iPower == null)
             {
@@ -1223,8 +1221,8 @@ namespace Mids_Reborn
 
         private bool GBPA_Pass0_InitializePowerArray()
         {
-            _buffedPower = new IPower[CurrentBuild.Powers.Count];
-            _mathPower = new IPower[CurrentBuild.Powers.Count];
+            _buffedPower = new IPower?[CurrentBuild.Powers.Count];
+            _mathPower = new IPower?[CurrentBuild.Powers.Count];
             var refPower = new IPower[CurrentBuild.Powers.Count];
             for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
             {
@@ -1261,7 +1259,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private bool GBPA_Pass1_EnhancePreED(ref IPower powerMath, int hIDX)
+        private bool GBPA_Pass1_EnhancePreED(ref IPower? powerMath, int hIDX)
         {
             if (hIDX < 0)
             {
@@ -1407,7 +1405,7 @@ namespace Mids_Reborn
             return false;
         }
 
-        private static bool GBPA_Pass2_ApplyED(ref IPower powerMath)
+        private static bool GBPA_Pass2_ApplyED(ref IPower? powerMath)
         {
             powerMath.Accuracy = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.Accuracy), powerMath.Accuracy);
             powerMath.EndCost = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.EnduranceDiscount), powerMath.EndCost);
@@ -1471,7 +1469,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private bool GBPA_Pass3_EnhancePostED(ref IPower powerMath, int hIDX)
+        private bool GBPA_Pass3_EnhancePostED(ref IPower? powerMath, int hIDX)
         {
             var okAcc = DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower].IgnoreEnhancement(Enums.eEnhance.Accuracy);
             var okRecharge = DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower].IgnoreEnhancement(Enums.eEnhance.RechargeTime);
@@ -1639,7 +1637,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private static bool GBPA_Pass4_Add(ref IPower powerMath)
+        private static bool GBPA_Pass4_Add(ref IPower? powerMath)
         {
             ++powerMath.EndCost;
             ++powerMath.InterruptTime;
@@ -1653,7 +1651,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private static void GBPA_Pass5_ResyncEffects(ref IPower powerMath, ref IPower powerBuffed)
+        private static void GBPA_Pass5_ResyncEffects(ref IPower? powerMath, ref IPower? powerBuffed)
         {
             var l = Math.Min(powerMath.Effects.Length, powerBuffed.Effects.Length);
             var fxMath = powerMath.Effects.ToList();
@@ -1671,7 +1669,7 @@ namespace Mids_Reborn
             powerMath.Effects = fxMath.ToArray();
         }
 
-        private static bool GBPA_Pass5_MultiplyPreBuff(ref IPower powerMath, ref IPower powerBuffed)
+        private static bool GBPA_Pass5_MultiplyPreBuff(ref IPower? powerMath, ref IPower? powerBuffed)
         {
             if (powerBuffed == null) return false;
             powerBuffed.EndCost /= powerMath.EndCost;
@@ -1693,7 +1691,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private bool GBPA_Pass6_MultiplyPostBuff(ref IPower powerMath, ref IPower powerBuffed)
+        private bool GBPA_Pass6_MultiplyPostBuff(ref IPower? powerMath, ref IPower? powerBuffed)
         {
             if (powerMath == null) return false;
             if (powerBuffed == null) return false;
@@ -1704,11 +1702,11 @@ namespace Mids_Reborn
             return true;
         }
 
-        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
+        private IPower? GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
         {
             if (nIDPower < 0)
                 return null;
-            IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
+            IPower? power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
             GBPA_ApplyPowerOverride(ref power2);
             GBPA_AddEnhFX(ref power2, hIDX);
             power2.AbsorbPetEffects(hIDX, stackingOverride);
@@ -1735,7 +1733,7 @@ namespace Mids_Reborn
             var index1 = DatabaseAPI.NidFromUidPower("Temporary_Powers.Temporary_Powers.PVP_Resist_Bonus");
             if (index1 <= -1)
                 return;
-            IPower tPwr = new Power(DatabaseAPI.Database.Power[index1]);
+            IPower? tPwr = new Power(DatabaseAPI.Database.Power[index1]);
             GBD_Stage(ref tPwr, ref nBuffs, enhancementPass);
         }
 
@@ -1745,8 +1743,8 @@ namespace Mids_Reborn
             _selfBuffs.Reset();
             _selfEnhance.Reset();
             ModifyEffects = new Dictionary<string, float>();
-            _buffedPower = new IPower[CurrentBuild.Powers.Count];
-            _mathPower = new IPower[CurrentBuild.Powers.Count];
+            _buffedPower = new IPower?[CurrentBuild.Powers.Count];
+            _mathPower = new IPower?[CurrentBuild.Powers.Count];
 
             GBPA_Pass0_InitializePowerArray();
 
@@ -1818,7 +1816,7 @@ namespace Mids_Reborn
             }
         }
 
-        public IPower GetBasePower(int iPower, int nIDPower = -1)
+        public IPower? GetBasePower(int iPower, int nIDPower = -1)
         {
             if (iPower > -1)
             {
@@ -1859,7 +1857,7 @@ namespace Mids_Reborn
             return -1;
         }
 
-        public IPower GetEnhancedPower(int iPower)
+        public IPower? GetEnhancedPower(int iPower)
         {
             return !((iPower < 0) | (_buffedPower.Length - 1 < iPower)) ? _buffedPower[iPower] : null;
         }
@@ -2318,7 +2316,7 @@ namespace Mids_Reborn
             return popupData;
         }
 
-        private PopUp.Section PopSlottedEnhInfo(int hIDX)
+        private PopUp.Section? PopSlottedEnhInfo(int hIDX)
         {
             var section = new PopUp.Section();
             section.Add("Buff/Debuff", PopUp.Colors.Text, "Value", PopUp.Colors.Text);
@@ -2408,7 +2406,7 @@ namespace Mids_Reborn
                         continue;
                     }
 
-                    IPower power1 = new Power(CurrentBuild.Powers[index1].Power);
+                    IPower? power1 = new Power(CurrentBuild.Powers[index1].Power);
                     power1.AbsorbPetEffects();
                     power1.ApplyGrantPowerEffects();
                     for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)

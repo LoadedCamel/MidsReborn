@@ -3,7 +3,6 @@ using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -1208,7 +1207,7 @@ namespace mrbBase.Base.Data_Classes
             return strArray2;
         }
 
-        private static PopUp.Section PopSetBonusListing(int sIdx, PowerEntry power)
+        private static PopUp.Section? PopSetBonusListing(int sIdx, PowerEntry power)
         {
             var section1 = new PopUp.Section();
             section1.Add("Set Bonus:", PopUp.Colors.Title);
@@ -1327,7 +1326,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel, Enums.eEnhRelative relLevel = Enums.eEnhRelative.Even)
+        public static PopUp.Section? PopRecipeInfo(int rIdx, int iLevel, Enums.eEnhRelative relLevel = Enums.eEnhRelative.Even)
         {
             var section1 = new PopUp.Section();
             if (rIdx < 0) return section1;
@@ -1504,7 +1503,7 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        private static PopUp.Section PopSetEnhList(int sIdx, PowerEntry power)
+        private static PopUp.Section? PopSetEnhList(int sIdx, PowerEntry power)
         {
             if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1) return new PopUp.Section();
 

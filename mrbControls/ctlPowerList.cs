@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using static mrbControls.ctlPowerList;
-using static mrbControls.PowerListDrawItemEventArgs;
-using ContentAlignment = System.Drawing.ContentAlignment;
 
 namespace mrbControls
 {

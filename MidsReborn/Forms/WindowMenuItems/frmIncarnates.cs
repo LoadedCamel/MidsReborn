@@ -17,7 +17,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private readonly ImageButton[] buttonArray;
         private readonly frmMain myParent;
-        private IPower[] myPowers;
+        private IPower?[] myPowers;
         private bool Locked;
 
         public frmIncarnates(ref frmMain iParent)
@@ -103,8 +103,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             PLLeft.SelectionMode = SelectionMode.None;
             PLRight.SelectionMode = SelectionMode.None;
-            var leftBound = new BindingList<IPower>();
-            var rightBound = new BindingList<IPower>();
+            var leftBound = new BindingList<IPower?>();
+            var rightBound = new BindingList<IPower?>();
             var powersLength = myPowers.Length;
             for (var index = 0; index < powersLength / 2; index++)
             {
@@ -196,7 +196,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (Locked)
                 return;
-            IPower power1 = new Power(myPowers[pIDX]);
+            IPower? power1 = new Power(myPowers[pIDX]);
             power1.AbsorbPetEffects();
             power1.ApplyGrantPowerEffects();
             var iPopup = new PopUp.PopupData();

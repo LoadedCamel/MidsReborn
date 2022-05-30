@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Mids_Reborn.Forms
 {

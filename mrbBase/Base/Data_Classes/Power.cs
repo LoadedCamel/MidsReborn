@@ -1,12 +1,10 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
-using mrbBase.Utils;
 
 namespace mrbBase.Base.Data_Classes
 {
@@ -59,7 +57,7 @@ namespace mrbBase.Base.Data_Classes
             VariableStart = 0;
         }
 
-        public Power(IPower template)
+        public Power(IPower? template)
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
@@ -1888,7 +1886,7 @@ namespace mrbBase.Base.Data_Classes
             return flag;
         }
 
-        public int[] AbsorbEffects(IPower source, float nDuration, float nDelay, Archetype archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
+        public int[] AbsorbEffects(IPower? source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
             var num1 = -1;
             var length = Effects.Length;
@@ -2302,7 +2300,7 @@ namespace mrbBase.Base.Data_Classes
                  Math.Abs(Effects[iID1].BuffedMag - Effects[iID2].BuffedMag) >= 0.01 && Effects[iID1].ToWho != Effects[iID2].ToWho);
         }
 
-        public static Enums.ShortFX[] SplitFX(ref Enums.ShortFX iSfx, ref IPower iPower)
+        public static Enums.ShortFX[] SplitFX(ref Enums.ShortFX iSfx, ref IPower? iPower)
         {
             var shortFxArray1 = new Enums.ShortFX[0];
             Enums.ShortFX[] shortFxArray2;
@@ -2355,7 +2353,7 @@ namespace mrbBase.Base.Data_Classes
             return shortFxArray2;
         }
 
-        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)
+        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower? iPower, bool shortForm)
         {
             var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
             var newValue = string.Empty;

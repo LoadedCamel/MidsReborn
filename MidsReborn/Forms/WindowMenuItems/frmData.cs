@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -182,7 +181,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     var index3 = iPopup.Add();
                     iPopup.Sections[index3].Add("Effects:", PopUp.Colors.Title);
-                    IPower power2 = new Power(DatabaseAPI.Database.Power[powerID]);
+                    IPower? power2 = new Power(DatabaseAPI.Database.Power[powerID]);
                     char[] chArray = {'^'};
                     var num1 = power1.Effects.Length - 1;
                     for (var index4 = 0; index4 <= num1; ++index4)

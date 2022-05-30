@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using mrbBase.Base.Data_Classes;
 
@@ -7,7 +6,7 @@ namespace mrbBase
 {
     public class Enhancement : IEnhancement
     {
-        private IPower _power;
+        private IPower? _power;
 
         public Enhancement()
         {
@@ -172,12 +171,12 @@ namespace mrbBase
 
         public bool IsScalable { get; set; }
 
-        public IPower GetPower()
+        public IPower? GetPower()
         {
             return _power ??= DatabaseAPI.GetPowerByFullName("Boosts." + UID + "." + UID);
         }
 
-        void IEnhancement.SetPower(IPower power)
+        void IEnhancement.SetPower(IPower? power)
         {
             _power = power;
         }

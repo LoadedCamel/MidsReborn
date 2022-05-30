@@ -13,7 +13,7 @@ namespace mrbBase
     {
 
         private static int DisplayIndex { get; set; } = -1;
-        private static List<PowerEntry> InherentPowers { get; set; } = new List<PowerEntry>();
+        private static List<PowerEntry?> InherentPowers { get; set; } = new List<PowerEntry?>();
 
         public enum eLoadReturnCode
         {
@@ -282,7 +282,7 @@ namespace mrbBase
         {
             var useLegacyFormat = false;
             var usePriorFormat = false;
-            InherentPowers = new List<PowerEntry>();
+            InherentPowers = new List<PowerEntry?>();
             DisplayIndex = -1;
             if (buffer.Length < 1)
             {
@@ -430,7 +430,7 @@ namespace mrbBase
                     var nId = -1;
                     var name = string.Empty;
                     var sidPower = -1;
-                    PowerEntry powerEntry = null;
+                    PowerEntry? powerEntry = null;
                     if (qualifiedNames)
                     {
                         name = r.ReadString();

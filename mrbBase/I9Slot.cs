@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -269,7 +267,7 @@ namespace mrbBase
             return str1;
         }
 
-        private string GetEffectsStringLong(IEnhancement enhancement, IPower enhBoostPower)
+        private string GetEffectsStringLong(IEnhancement enhancement, IPower? enhBoostPower)
         {
             string str1;
             var stringBuilder = new StringBuilder();

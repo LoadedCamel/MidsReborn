@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms
         private bool Locked;
 
         private ImageButton loreBtn;
-        private IPower[] myPowers;
+        private IPower?[] myPowers;
 
         private ImageButton OmegaButton;
         private Panel Panel1;
@@ -131,9 +131,9 @@ namespace Mids_Reborn.Forms
             this.destinyBtn = destinyBtn;
         }
 
-        private List<IPower> ParseIncarnate(List<IPower> powerList, string order, string name)
+        private List<IPower> ParseIncarnate(List<IPower?> powerList, string order, string name)
         {
-            var pairList = new List<KeyValuePair<int, IPower>>();
+            var pairList = new List<KeyValuePair<int, IPower?>>();
             var tList = powerList.FindAll(x => x.DisplayName.Contains(name));
             var outList = new List<IPower>();
             int pos = 0;
@@ -183,7 +183,7 @@ namespace Mids_Reborn.Forms
                         pos = (int)Enum.Parse(typeof(Enums.eHybridOrder), value.Replace(" ", "_"));
                         break;
                 }
-                pairList.Add(new KeyValuePair<int, IPower>(pos, power));
+                pairList.Add(new KeyValuePair<int, IPower?>(pos, power));
             }
 
             var oList = pairList.OrderBy(x => x.Key);
@@ -544,7 +544,7 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                IPower power1 = new Power(myPowers[pIDX]);
+                IPower? power1 = new Power(myPowers[pIDX]);
                 power1.AbsorbPetEffects();
                 power1.ApplyGrantPowerEffects();
                 var index1 = iPopup.Add();
