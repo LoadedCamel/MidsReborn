@@ -139,11 +139,11 @@ namespace mrbControls
             bxPower = new List<ExtendedBitmap>();
             checked
             {
-                var filePath = $"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}";
-                DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+                var filePath = Path.Combine(AppContext.BaseDirectory, I9Gfx.ImagePath());
+                var directoryInfo = new DirectoryInfo(filePath);
                 foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
                 {
-                    bxPower.Add(new ExtendedBitmap($"{filePath}{file}"));
+                    bxPower.Add(new ExtendedBitmap($"{file.FullName}"));
                 }
 
                 ColorSwitch();
