@@ -93,6 +93,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 {
                     powerData.StaticIndex = myPower.StaticIndex;
                     lblStaticIndex.Text = powerData.StaticIndex.ToString();
+                    lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
                 }
             }
             myPower = powerData;
@@ -295,28 +296,29 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            if (myPower.StaticIndex != OrigStaticIndex)
+            var siCheck = DatabaseAPI.Database.Power.Where(p => p.StaticIndex == myPower.StaticIndex & p.FullName != myPower.FullName).ToList();
+            var firstAvailableIndex = 0;
+            switch (siCheck.Count)
             {
-                var siCheck = DatabaseAPI.Database.Power.Where(p => p.StaticIndex == myPower.StaticIndex).ToList();
-                switch (siCheck.Count)
+                case 1:
+                    firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
+                    MessageBox.Show(
+                        $"Another power with the same static index ({myPower.StaticIndex}) already exists. Please enter a unique static index.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{siCheck[0].FullName}\r\n\r\nFirst available index: {firstAvailableIndex}",
+                        @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    return;
+                case > 1:
                 {
-                    case 1:
-                        MessageBox.Show(
-                            $"Another power with the same static index ({myPower.StaticIndex}) already exists. Please enter a unique static index.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{siCheck[0].FullName}",
-                            @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    var pList = string.Join(",\r\n", siCheck.Select(p => p.FullName));
+                    firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
+                    MessageBox.Show(
+                        $"Other powers with the same static index ({myPower.StaticIndex}) already exists. Please fix them first.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{pList}\r\n\r\nFirst available index: {firstAvailableIndex}",
+                        @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        return;
-                    case > 1:
-                    {
-                        var pList = string.Join(",\r\n", siCheck.Select(p => p.FullName));
-                        MessageBox.Show(
-                            $"Other powers with the same static index ({myPower.StaticIndex}) already exists. Please fix them first.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{pList}",
-                            @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                        return;
-                    }
+                    return;
                 }
             }
+        
 
             FormClosing -= frmEditPower_CancelClose;
 
@@ -639,6 +641,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 lblEndCost.Text = "";
             }
+        }
+
+        private bool CheckStaticIndex()
+        {
+            var t = int.TryParse(lblStaticIndex.Text, out var pIndex);
+
+            if (!t) return false;
+
+            var hasDuplicate = DatabaseAPI.Database.Power.Any(p => p.StaticIndex == pIndex && p.FullName != myPower.FullName);
+
+            return !hasDuplicate;
         }
 
         private void CheckScaleValues()
@@ -1503,7 +1516,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!result.OK) return;
 
             lblStaticIndex.Text = result.Text;
-            myPower.StaticIndex = int.Parse(result.Text);
+            var t = int.TryParse(result.Text, out var pIndex);
+            if (!t) return;
+            
+            myPower.StaticIndex = pIndex;
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1974,6 +1990,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.FullName})";
             lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture);
+            lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
             FillCombo_Basic();
             FillTab_Basic();
             FillCombo_Attribs();
