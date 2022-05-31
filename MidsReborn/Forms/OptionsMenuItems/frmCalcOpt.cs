@@ -453,14 +453,14 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 csList.SelectedIndex = 0;
         }
 
-        private void frmCalcOpt_Closing(object sender, CancelEventArgs e)
+        private void frmCalcOpt_Closing(object? sender, CancelEventArgs e)
         {
             if (DialogResult != DialogResult.Abort)
                 return;
             e.Cancel = true;
         }
 
-        private void frmCalcOpt_Load(object sender, EventArgs e)
+        private void frmCalcOpt_Load(object? sender, EventArgs e)
         {
             setupScenarios();
             SetControls();

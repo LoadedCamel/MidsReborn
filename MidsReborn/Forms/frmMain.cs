@@ -141,7 +141,7 @@ namespace Mids_Reborn.Forms
             dvAnchored.Floating = false;
             dvAnchored.Font = new Font("Arial", 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 
-            dvAnchored.Location = new Point(16, 391);
+            dvAnchored.Location = new Point(16, 425);
             dvAnchored.Name = "dvAnchored";
 
             dvAnchored.Size = new Size(300, 400);
@@ -162,21 +162,21 @@ namespace Mids_Reborn.Forms
 
         public bool petWindowFlag { get; set; }
 
-        private List<string> MMPets { get; set; } = new List<string>();
+        private List<string> MMPets { get; set; } = new();
 
         // store the instance for reuse, as these things are called per draw/redraw
-        private Lazy<ComboBoxT<Archetype>> CbtAT => new Lazy<ComboBoxT<Archetype>>(() => new ComboBoxT<Archetype>(cbAT));
+        private Lazy<ComboBoxT<Archetype>> CbtAT => new(() => new ComboBoxT<Archetype>(cbAT));
 
-        private Lazy<ComboBoxT<string>> CbtPrimary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPrimary));
+        private Lazy<ComboBoxT<string>> CbtPrimary => new(() => new ComboBoxT<string>(cbPrimary));
 
-        private Lazy<ComboBoxT<string>> CbtSecondary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbSecondary));
+        private Lazy<ComboBoxT<string>> CbtSecondary => new(() => new ComboBoxT<string>(cbSecondary));
 
-        private Lazy<ComboBoxT<string>> CbtAncillary => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbAncillary));
+        private Lazy<ComboBoxT<string>> CbtAncillary => new(() => new ComboBoxT<string>(cbAncillary));
 
-        private Lazy<ComboBoxT<string>> CbtPool0 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool0));
-        private Lazy<ComboBoxT<string>> CbtPool1 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool1));
-        private Lazy<ComboBoxT<string>> CbtPool2 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool2));
-        private Lazy<ComboBoxT<string>> CbtPool3 => new Lazy<ComboBoxT<string>>(() => new ComboBoxT<string>(cbPool3));
+        private Lazy<ComboBoxT<string>> CbtPool0 => new(() => new ComboBoxT<string>(cbPool0));
+        private Lazy<ComboBoxT<string>> CbtPool1 => new(() => new ComboBoxT<string>(cbPool1));
+        private Lazy<ComboBoxT<string>> CbtPool2 => new(() => new ComboBoxT<string>(cbPool2));
+        private Lazy<ComboBoxT<string>> CbtPool3 => new(() => new ComboBoxT<string>(cbPool3));
 
         internal clsDrawX Drawing => drawing;
 
@@ -233,7 +233,7 @@ namespace Mids_Reborn.Forms
             MidsContext.Config.ApplicationRegistered = true;
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
+        private void frmMain_Load(object? sender, EventArgs e)
         {
             loading = true;
             try
@@ -2185,12 +2185,12 @@ namespace Mids_Reborn.Forms
             fData?.UpdateData(dvLastPower);
         }
 
-        private void frmMain_Move(object sender, EventArgs e)
+        private void frmMain_Move(object? sender, EventArgs e)
         {
             MidsContext.Config.Bounds = DesktopBounds;
         }
 
-        private void frmMain_Closed(object sender, EventArgs e)
+        private void frmMain_Closed(object? sender, EventArgs e)
         {
             if (MidsContext.Config.FirstRun)
             {
@@ -2224,12 +2224,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
         }
 
-        private void frmMain_Closing(object sender, FormClosingEventArgs e)
+        private void frmMain_Closing(object? sender, FormClosingEventArgs e)
         {
             e.Cancel = CloseCommand();
         }
 
-        private void frmMain_KeyDown(object sender, KeyEventArgs e)
+        private void frmMain_KeyDown(object? sender, KeyEventArgs e)
         {
             if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)) && !(e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.L)))
             {
@@ -2260,12 +2260,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
         }
 
-        private void frmMain_MouseWheel(object sender, MouseEventArgs e)
+        private void frmMain_MouseWheel(object? sender, MouseEventArgs e)
         {
             dvAnchored.Info_txtLarge.Focus();
         }
 
-        private void frmMain_Resize(object sender, EventArgs e)
+        private void frmMain_Resize(object? sender, EventArgs e)
         {
             if (loading) return;
 
@@ -5132,7 +5132,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             TitleUpdated?.Invoke(this, null);
         }
 
-        private void OnTitleUpdate(object sender, EventArgs eventArgs)
+        private void OnTitleUpdate(object? sender, EventArgs eventArgs)
         {
             SetTitleBar(MidsContext.Character.IsHero());
         }
@@ -5527,7 +5527,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DisplayFormatChanged();
         }
 
-        private void tmrGfx_Tick(object sender, EventArgs e)
+        private void tmrGfx_Tick(object? sender, EventArgs e)
         {
             if (FlipActive)
                 doFlipStep();

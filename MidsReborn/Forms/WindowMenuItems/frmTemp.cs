@@ -116,9 +116,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     : new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState, -1, -1, -1, "",
                         ListLabelV3.LLFontFlags.Bold);
                 if (index >= _myPowers.Count / 2.0)
+                {
                     llRight.AddItem(iItem);
+                }
                 else
+                {
                     llLeft.AddItem(iItem);
+                }
             }
 
             llLeft.SuspendRedraw = false;
@@ -178,7 +182,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             else
             {
                 if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
+                {
                     return;
+                }
+
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
@@ -204,7 +211,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void llLeft_MouseEnter(object sender, EventArgs e)
         {
             if (!ContainsFocus)
+            {
                 return;
+            }
+
             Panel2.Focus();
         }
 
@@ -221,7 +231,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             else
             {
                 if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
+                {
                     return;
+                }
+
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
@@ -252,7 +265,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void MiniPowerInfo(int pIDX)
         {
             if (_locked)
+            {
                 return;
+            }
+
             IPower? power1 = new Power(_myPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
@@ -267,7 +283,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 switch (power1.PowerType)
                 {
                     case Enums.ePowerType.Click:
-                        if (power1.ClickBuff) str = "(Click)";
+                        if (power1.ClickBuff)
+                        {
+                            str = "(Click)";
+                        }
+
                         break;
                     case Enums.ePowerType.Auto_:
                         str = "(Auto)";
@@ -277,54 +297,81 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         break;
                 }
 
-                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
-                iPopup.Sections[index1].Add(str + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
+                iPopup.Sections?[index1].Add(power1.DisplayName, PopUp.Colors.Title);
+                iPopup.Sections?[index1].Add(str + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
                 var index2 = iPopup.Add();
                 if (power1.EndCost > 0.0)
                 {
                     if (power1.ActivatePeriod > 0.0)
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title,
+                    {
+                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title,
                             Utilities.FixDP(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
                             FontStyle.Bold, 1);
+                    }
                     else
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
+                    {
+                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
                             PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    }
                 }
 
                 if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20.0) &
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
-                    iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
+                {
+                    iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
                         Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
+
                 if (power1.RechargeTime > 0.0)
-                    iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,
+                {
+                    iPopup.Sections?[index2].Add("Recharge:", PopUp.Colors.Title,
                         Utilities.FixDP(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
+
                 var durationEffectId = power1.GetDurationEffectID();
                 var iNum = 0.0f;
                 if (durationEffectId > -1)
+                {
                     iNum = power1.Effects[durationEffectId].Duration;
+                }
+
                 if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) &&
                     iNum > 0.0)
-                    iPopup.Sections[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
+                {
+                    iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
+
                 if (power1.Range > 0.0)
-                    iPopup.Sections[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
+                {
+                    iPopup.Sections?[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
+
                 if (power1.Arc > 0)
-                    iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°",
+                {
+                    iPopup.Sections?[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
                 else if (power1.Radius > 0.0)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title,
+                {
+                    iPopup.Sections?[index2].Add("Radius:", PopUp.Colors.Title,
                         Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f,
                         FontStyle.Bold, 1);
+                }
+
                 if (power1.CastTime > 0.0)
-                    iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title,
+                {
+                    iPopup.Sections?[index2].Add("Cast Time:", PopUp.Colors.Title,
                         Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                }
+
                 var power2 = power1;
                 if (power2.Effects.Length > 0)
                 {
-                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
+                    iPopup.Sections?[index2].Add("Effects:", PopUp.Colors.Title);
                     char[] chArray = {'^'};
                     var num1 = power2.Effects.Length - 1;
                     for (var index3 = 0; index3 <= num1; ++index3)
@@ -336,11 +383,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var num2 = strArray.Length - 1;
                         for (var index5 = 0; index5 <= num2; ++index5)
                             if (index5 == 0)
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold,
+                            {
+                                iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold,
                                     1);
+                            }
                             else
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
+                            {
+                                iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
                                     FontStyle.Italic, 2);
+                            }
                     }
                 }
 
@@ -352,7 +403,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void PopInfo_MouseEnter(object sender, EventArgs e)
         {
             if (!ContainsFocus)
+            {
                 return;
+            }
+
             VScrollBar1.Focus();
         }
 
@@ -399,7 +453,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             if (VScrollBar1.Value == -1)
+            {
                 return;
+            }
+
             PopInfo.ScrollY = (float) (VScrollBar1.Value / (double) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
                                        (PopInfo.lHeight - (double) Panel1.Height));
         }

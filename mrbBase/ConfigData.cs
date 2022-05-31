@@ -544,7 +544,7 @@ namespace mrbBase
                 return fntSetting switch
                 {
                     Enums.eFontSizeSetting.PairedBase => 10.25f,
-                    Enums.eFontSizeSetting.PowersSelectBase => 8.50f,
+                    Enums.eFontSizeSetting.PowersSelectBase => 9.25f,
                     Enums.eFontSizeSetting.PowersBase => 9.25f,
                     _ => 8.50f
                 };

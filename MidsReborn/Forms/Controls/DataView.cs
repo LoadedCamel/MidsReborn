@@ -1380,8 +1380,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
-            var font1 = new Font("Arial", 8.55f, FontStyle.Regular);//
-            var font2 = new Font("Arial", 9.55f, FontStyle.Bold);
+            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);//
+            var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);
