@@ -32,9 +32,8 @@ namespace Mids_Reborn.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Label1 = new TransparentLabel();
+            this.Label1 = new Mids_Reborn.Forms.TransparentLabel();
             this.tmrOp = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox1 = new TransparentPictureBox();
             this.SuspendLayout();
             // 
             // Label1
@@ -43,45 +42,30 @@ namespace Mids_Reborn.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Label1.BackColor = System.Drawing.Color.Transparent;
             this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label1.ForeColor = System.Drawing.Color.Gold;
-            this.Label1.Location = new System.Drawing.Point(197, -7);
+            this.Label1.Location = new System.Drawing.Point(52, 0);
+            this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(292, 34);
+            this.Label1.Size = new System.Drawing.Size(699, 27);
             this.Label1.TabIndex = 2;
             this.Label1.Text = "Reading data files, please wait.";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tmrOp
-            // 
-            this.tmrOp.Interval = 50;
-            this.tmrOp.Tick += new System.EventHandler(this.tmrOp_Tick);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::Mids_Reborn.Resources.MRB_Concept;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(645, 432);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            // 
             // frmInitializing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
+            this.BackgroundImage = global::Mids_Reborn.Resources.MRB_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(645, 432);
+            this.ClientSize = new System.Drawing.Size(752, 498);
             this.Controls.Add(this.Label1);
-            this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "frmInitializing";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmInitializing";
+            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Black;
             this.ResumeLayout(false);
 
@@ -90,6 +74,5 @@ namespace Mids_Reborn.Forms
         #endregion
         private TransparentLabel Label1;
         private Timer tmrOp;
-        private TransparentPictureBox pictureBox1;
     }
 }
