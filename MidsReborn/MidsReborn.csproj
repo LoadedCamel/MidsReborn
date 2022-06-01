@@ -25,7 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>9.0</LangVersion>
     <NoWarn>CS1690, CS0169, CA1823, CA2213</NoWarn>
   </PropertyGroup>
@@ -38,7 +39,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>9.0</LangVersion>
+	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+	<LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>reborn.ico</ApplicationIcon>
