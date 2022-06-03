@@ -25,8 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>9.0</LangVersion>
     <NoWarn>CS1690, CS0169, CA1823, CA2213</NoWarn>
   </PropertyGroup>
@@ -39,8 +39,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	<LangVersion>9.0</LangVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>reborn.ico</ApplicationIcon>
@@ -79,6 +79,12 @@
     </Compile>
     <Compile Include="Forms\Controls\SKDamageGraph.Designer.cs">
       <DependentUpon>SKDamageGraph.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDv2Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDv2Settings.Designer.cs">
+      <DependentUpon>frmDv2Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBuildSalvageHud.cs">
       <SubType>Form</SubType>
@@ -408,6 +414,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\SKDamageGraph.resx">
       <DependentUpon>SKDamageGraph.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDv2Settings.resx">
+      <DependentUpon>frmDv2Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain2.resx">
       <DependentUpon>frmMain2.cs</DependentUpon>

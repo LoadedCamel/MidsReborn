@@ -477,6 +477,9 @@ namespace Mids_Reborn.Forms
 
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
+
+                dvAnchored.PushConfig += dvAnchored_PushConfig;
+
                 Show();
                 //Refresh();
             }
@@ -489,6 +492,16 @@ namespace Mids_Reborn.Forms
             }
 
             loading = false;
+        }
+
+        private void dvAnchored_PushConfig(DataView2.Config config)
+        {
+            using var dvSettings = new frmDv2Settings(config);
+            var result = dvSettings.ShowDialog(this);
+
+            if (result != DialogResult.OK) return;
+
+            dvAnchored?.UpdateConfig(dvSettings.Config);
         }
 
         internal void ChildRequestedRedraw()

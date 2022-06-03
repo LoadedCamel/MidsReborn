@@ -14,6 +14,7 @@ using mrbBase.Base.Master_Classes;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using Syncfusion.Windows.Forms.Tools;
+using Color = System.Drawing.Color;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -23,11 +24,13 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void TabChangedEventHandler(int tabIndex);
         public delegate void FileModifiedEventHandler();
         public delegate void RefreshInfoEventHandler();
+        public delegate void PushConfigEventHandler(Config config);
 
         public event UnlockEventHandler Unlock;
         public event TabChangedEventHandler TabChanged;
         public event FileModifiedEventHandler FileModified;
         public event RefreshInfoEventHandler RefreshInfo;
+        public event PushConfigEventHandler PushConfig;
         
         #region Private enums & structs
 
@@ -125,6 +128,22 @@ namespace Mids_Reborn.Forms.Controls
             Extra
         }
 
+        public enum ColorTheme
+        {
+            Default,
+            OldSchool,
+            HeroVillain,
+            NovaGold,
+            ImperialPurple
+        }
+
+        public enum ThemeAlignmentStyle
+        {
+            Auto,
+            Hero,
+            Villain
+        }
+
         #endregion
 
         private static IPower _basePower;
@@ -140,6 +159,7 @@ namespace Mids_Reborn.Forms.Controls
         private GridViewMouseEventInfo GridMouseOverEventLoc;
         private InfoType LayoutType;
         private bool SmallSize;
+        private Config _Config;
 
         private readonly TabControlAdv _tabControlAdv;
 
@@ -166,6 +186,8 @@ namespace Mids_Reborn.Forms.Controls
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
+
+            _Config = new Config();
 
             _tabControlAdv = tabBox;
             _tabControlAdv.SelectedIndexChanged += tabBox_TabIndexChanged;
@@ -235,6 +257,11 @@ namespace Mids_Reborn.Forms.Controls
         public void UpdateData()
         {
             Tabs.RenderTabs(this);
+        }
+
+        public void UpdateConfig(Config config)
+        {
+
         }
 
         public void Lock()
@@ -2176,9 +2203,7 @@ namespace Mids_Reborn.Forms.Controls
                     LayoutType = layoutType;
                     SlottedSets = SlottedSets();
                     Root.ipbLock.Visible = Root.Locked;
-                    Root.ipbResize.IconChar = Root.SmallSize
-                        ? IconChar.ChevronDown
-                        : IconChar.ChevronUp;
+                    Root.ipbSettings.IconChar = IconChar.Cog;
 
                     UpdateDamageGraphSettings();
                     if (LayoutType == InfoType.Power)
@@ -3087,9 +3112,7 @@ namespace Mids_Reborn.Forms.Controls
                 private static void DisplayEffects()
                 {
                     Root.ipbLock2.Visible = Root.Locked;
-                    Root.ipbResize2.IconChar = Root.SmallSize
-                        ? IconChar.ChevronDown
-                        : IconChar.ChevronUp;
+                    Root.ipbSettings2.IconChar = IconChar.Cog;
                     Root.effectsTabTitle.Invalidate();
 
                     var effectGroups = EffectsGroupFilter.FromPower(_enhancedPower);
@@ -3294,9 +3317,7 @@ namespace Mids_Reborn.Forms.Controls
                 private static void DisplayTotals()
                 {
                     Root.ipbLock3.Visible = Root.Locked;
-                    Root.ipbResize3.IconChar = Root.SmallSize
-                        ? IconChar.ChevronDown
-                        : IconChar.ChevronUp;
+                    Root.ipbSettings3.IconChar = IconChar.Cog;
 
                     var displayStats = MidsContext.Character.DisplayStats;
 
@@ -3462,9 +3483,7 @@ namespace Mids_Reborn.Forms.Controls
                 private static void DisplayEnhance()
                 {
                     Root.ipbLock4.Visible = Root.Locked;
-                    Root.ipbResize4.IconChar = Root.SmallSize
-                        ? IconChar.ChevronDown
-                        : IconChar.ChevronUp;
+                    Root.ipbSettings4.IconChar = IconChar.Cog;
 
                     SetViewMode();
 
@@ -3741,9 +3760,7 @@ namespace Mids_Reborn.Forms.Controls
                 private static void DisplayScales()
                 {
                     Root.ipbLock5.Visible = Root.Locked;
-                    Root.ipbResize5.IconChar = Root.SmallSize
-                        ? IconChar.ChevronDown
-                        : IconChar.ChevronUp;
+                    Root.ipbSettings5.IconChar = IconChar.Cog;
 
                     if (BuildPowerEntry is {Power: {VariableEnabled: true}})
                     {
@@ -3772,6 +3789,49 @@ namespace Mids_Reborn.Forms.Controls
                     Root.skglScalesGraph.Invalidate();
                     Root.skglGraphLegend.Invalidate();
                 }
+            }
+        }
+
+        #endregion
+
+        #region DV2 Config sub-class
+
+        public class Config
+        {
+            public TweaksSettings Tweaks;
+            public FontsSettings Fonts;
+            public ColorsSettings Colors;
+
+            public Config()
+            {
+                Tweaks = new TweaksSettings();
+                Fonts = new FontsSettings();
+                Colors = new ColorsSettings();
+            }
+
+            public class TweaksSettings
+            {
+                /* Graph format ? */
+                public bool EnduranceDetail = false;
+                public int FlipAnimationTickDelay = 100; // ???
+                public bool GraphIgnoreConstants = false;
+            }
+
+            public class FontsSettings
+            {
+                public float InfoPanelSize = 8.25f; // ???
+                public float DmgGraphSize = 8.25f; // ???
+                public float GridViewItemSize = 8.25f; // ???
+                public int TotalsBarHeight = 10;
+                public float TotalsItemSize = 10f; // ???
+                public float GraphValuesSize = 10f; // ???
+                public float GraphRefLabelSize = 10f; // ???
+            }
+
+            public class ColorsSettings
+            {
+                public ColorTheme Theme = ColorTheme.Default;
+                public ThemeAlignmentStyle AlignmentMode = ThemeAlignmentStyle.Auto;
             }
         }
 
@@ -3942,11 +4002,11 @@ namespace Mids_Reborn.Forms.Controls
             };
 
             // BackColor doesn't stick when set in the designer
-            ipbResize.BackColor = Color.Black;
-            ipbResize2.BackColor = Color.Black;
-            ipbResize3.BackColor = Color.Black;
-            ipbResize4.BackColor = Color.Black;
-            ipbResize5.BackColor = Color.Black;
+            ipbSettings.BackColor = Color.Black;
+            ipbSettings2.BackColor = Color.Black;
+            ipbSettings3.BackColor = Color.Black;
+            ipbSettings4.BackColor = Color.Black;
+            ipbSettings5.BackColor = Color.Black;
 
             // MaxItems doesn't stick when set in the designer
             dV2TotalsPane1L.MaxItems = 6;
@@ -4133,14 +4193,6 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             Unlock?.Invoke();
-        }
-
-        private void ipbResize_Click(object sender, EventArgs e)
-        {
-            SmallSize = !SmallSize;
-            ipbResize.IconChar = SmallSize
-                ? IconChar.ChevronDown
-                : IconChar.ChevronUp;
         }
 
         private void DvPaneMisc_MouseClick(object sender, MouseEventArgs e)
@@ -4365,6 +4417,11 @@ namespace Mids_Reborn.Forms.Controls
 
                 i++;
             }
+        }
+
+        private void ipbSettings_Click(object sender, EventArgs e)
+        {
+            PushConfig?.Invoke(_Config);
         }
 
         #endregion
