@@ -62,6 +62,7 @@ namespace mrbBase
         public string AppChangeLog { get; set; }
         public string DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
+        public DvConfig DataViewCfg { get; set; }
         public ConfigData()
         {
             DamageMath.Calculate = EDamageMath.Average;
@@ -77,6 +78,8 @@ namespace mrbBase
             Registered = 0;
             DiscordAuthorized = false;
             ShowSelfBuffsAny = false;
+            DataViewCfg = new DvConfig();
+
             InitializeComponent();
         }
 
@@ -860,6 +863,61 @@ namespace mrbBase
                 PowersSelectBold = false;
                 PowersBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PowersBase);
                 PowersBold = true;
+            }
+        }
+
+        public enum ColorTheme
+        {
+            Default,
+            OldSchool,
+            HeroVillain,
+            NovaGold,
+            ImperialPurple
+        }
+
+        public enum ThemeAlignmentStyle
+        {
+            Auto,
+            Hero,
+            Villain
+        }
+
+        public class DvConfig
+        {
+            public TweaksSettings Tweaks { get; set; }
+            public FontsSettings Fonts { get; set; }
+            public ColorsSettings Colors { get; set; }
+
+            public DvConfig()
+            {
+                Tweaks = new TweaksSettings();
+                Fonts = new FontsSettings();
+                Colors = new ColorsSettings();
+            }
+
+            public class TweaksSettings
+            {
+                /* Graph format ? */
+                public bool EnduranceDetail { get; set; } = false;
+                public int FlipAnimationTickDelay { get; set; } = 100; // ???
+                public bool GraphIgnoreConstants { get; set; } = false;
+            }
+
+            public class FontsSettings
+            {
+                public float InfoPanelSize { get; set; } = 8.25f; // ???
+                public float DmgGraphSize { get; set; } = 8.25f; // ???
+                public float GridViewItemSize { get; set; } = 8.25f; // ???
+                public int TotalsBarHeight { get; set; } = 10;
+                public float TotalsItemSize { get; set; } = 10f; // ???
+                public float GraphValuesSize { get; set; } = 10f; // ???
+                public float GraphRefLabelSize { get; set; } = 10f; // ???
+            }
+
+            public class ColorsSettings
+            {
+                public ColorTheme Theme { get; set; } = ColorTheme.Default;
+                public ThemeAlignmentStyle AlignmentMode { get; set; } = ThemeAlignmentStyle.Auto;
             }
         }
     }

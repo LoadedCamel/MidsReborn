@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Windows.Forms;
-using Mids_Reborn.Forms.Controls;
+using FastDeepCloner;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms
 {
     public partial class frmDv2Settings : Form
     {
-        public frmDv2Settings(DataView2.Config config)
+        public ConfigData.DvConfig Config { get; }
+
+        public frmDv2Settings()
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             InitializeComponent();
-            Config = config;
+            Config = MidsContext.Config.DataViewCfg.Clone();
         }
-
-        public DataView2.Config Config { get; }
 
         #region Event handlers
 
@@ -32,11 +34,11 @@ namespace Mids_Reborn.Forms
             numGraphRefFontSize.Value = (decimal)Config.Fonts.GraphRefLabelSize;
 
             cbColorTheme.SelectedIndex = (int)Config.Colors.Theme;
-            checkAutoSwitchAlignmentTheme.Checked = Config.Colors.AlignmentMode == DataView2.ThemeAlignmentStyle.Auto;
-            label14.Visible = Config.Colors.AlignmentMode != DataView2.ThemeAlignmentStyle.Auto;
-            cbThemeAlignmentOverride.Visible = Config.Colors.AlignmentMode != DataView2.ThemeAlignmentStyle.Auto;
-            cbThemeAlignmentOverride.SelectedIndex = Config.Colors.AlignmentMode == DataView2.ThemeAlignmentStyle.Auto
-                ? (int)DataView2.ThemeAlignmentStyle.Hero
+            checkAutoSwitchAlignmentTheme.Checked = Config.Colors.AlignmentMode == ConfigData.ThemeAlignmentStyle.Auto;
+            label14.Visible = Config.Colors.AlignmentMode != ConfigData.ThemeAlignmentStyle.Auto;
+            cbThemeAlignmentOverride.Visible = Config.Colors.AlignmentMode != ConfigData.ThemeAlignmentStyle.Auto;
+            cbThemeAlignmentOverride.SelectedIndex = Config.Colors.AlignmentMode == ConfigData.ThemeAlignmentStyle.Auto
+                ? (int)ConfigData.ThemeAlignmentStyle.Hero
                 : (int)Config.Colors.AlignmentMode - 1;
         }
 
@@ -126,7 +128,7 @@ namespace Mids_Reborn.Forms
         {
             var target = (ComboBox)sender;
 
-            Config.Colors.Theme = (DataView2.ColorTheme)target.SelectedIndex;
+            Config.Colors.Theme = (ConfigData.ColorTheme)target.SelectedIndex;
         }
 
         private void checkAutoSwitchAlignmentTheme_CheckedChanged(object sender, EventArgs e)
@@ -134,8 +136,8 @@ namespace Mids_Reborn.Forms
             var target = (CheckBox)sender;
 
             Config.Colors.AlignmentMode = target.Checked
-                ? DataView2.ThemeAlignmentStyle.Auto
-                : (DataView2.ThemeAlignmentStyle)(cbThemeAlignmentOverride.SelectedIndex + 1);
+                ? ConfigData.ThemeAlignmentStyle.Auto
+                : (ConfigData.ThemeAlignmentStyle)(cbThemeAlignmentOverride.SelectedIndex + 1);
 
             label14.Visible = !target.Checked;
             cbThemeAlignmentOverride.Visible = !target.Checked;
@@ -145,7 +147,7 @@ namespace Mids_Reborn.Forms
         {
             var target = (ComboBox)sender;
 
-            Config.Colors.AlignmentMode = (DataView2.ThemeAlignmentStyle)(target.SelectedIndex + 1);
+            Config.Colors.AlignmentMode = (ConfigData.ThemeAlignmentStyle)(target.SelectedIndex + 1);
         }
 
         #endregion

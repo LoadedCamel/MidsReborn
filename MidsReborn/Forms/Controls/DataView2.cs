@@ -24,13 +24,13 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void TabChangedEventHandler(int tabIndex);
         public delegate void FileModifiedEventHandler();
         public delegate void RefreshInfoEventHandler();
-        public delegate void PushConfigEventHandler(Config config);
+        public delegate void DvOptionsCallEventHandler();
 
         public event UnlockEventHandler Unlock;
         public event TabChangedEventHandler TabChanged;
         public event FileModifiedEventHandler FileModified;
         public event RefreshInfoEventHandler RefreshInfo;
-        public event PushConfigEventHandler PushConfig;
+        public event DvOptionsCallEventHandler DvOptionsCall;
         
         #region Private enums & structs
 
@@ -128,22 +128,6 @@ namespace Mids_Reborn.Forms.Controls
             Extra
         }
 
-        public enum ColorTheme
-        {
-            Default,
-            OldSchool,
-            HeroVillain,
-            NovaGold,
-            ImperialPurple
-        }
-
-        public enum ThemeAlignmentStyle
-        {
-            Auto,
-            Hero,
-            Villain
-        }
-
         #endregion
 
         private static IPower _basePower;
@@ -159,7 +143,6 @@ namespace Mids_Reborn.Forms.Controls
         private GridViewMouseEventInfo GridMouseOverEventLoc;
         private InfoType LayoutType;
         private bool SmallSize;
-        private Config _Config;
 
         private readonly TabControlAdv _tabControlAdv;
 
@@ -186,8 +169,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
-
-            _Config = new Config();
 
             _tabControlAdv = tabBox;
             _tabControlAdv.SelectedIndexChanged += tabBox_TabIndexChanged;
@@ -259,7 +240,7 @@ namespace Mids_Reborn.Forms.Controls
             Tabs.RenderTabs(this);
         }
 
-        public void UpdateConfig(Config config)
+        public void UpdateConfig(ConfigData.DvConfig config)
         {
 
         }
@@ -3794,48 +3775,111 @@ namespace Mids_Reborn.Forms.Controls
 
         #endregion
 
-        #region DV2 Config sub-class
-
-        public class Config
+        private class DvThemes
         {
-            public TweaksSettings Tweaks;
-            public FontsSettings Fonts;
-            public ColorsSettings Colors;
+            private ConfigData.ColorTheme SelectedTheme;
+            private List<Theme> ThemesList;
 
-            public Config()
+            public Color InfoActiveColor => ThemesList[(int)SelectedTheme].Info.ActiveColor;
+            public Color InfoInactiveColor => ThemesList[(int)SelectedTheme].Info.InactiveColor;
+
+            public Color EffectsActiveColor => ThemesList[(int) SelectedTheme].Effects.ActiveColor;
+            public Color EffectsInactiveColor => ThemesList[(int) SelectedTheme].Effects.InactiveColor;
+
+            public Color TotalsActiveColor => ThemesList[(int) SelectedTheme].Totals.ActiveColor;
+            public Color TotalsInactiveColor => ThemesList[(int) SelectedTheme].Totals.InactiveColor;
+
+            public Color EnhanceActiveColor => ThemesList[(int) SelectedTheme].Enhance.ActiveColor;
+            public Color EnhanceInactiveColor => ThemesList[(int) SelectedTheme].Enhance.InactiveColor;
+
+            public Color ScalesActiveColor => ThemesList[(int) SelectedTheme].Scales.ActiveColor;
+            public Color ScalesInactiveColor => ThemesList[(int) SelectedTheme].Scales.InactiveColor;
+
+            public DvThemes()
             {
-                Tweaks = new TweaksSettings();
-                Fonts = new FontsSettings();
-                Colors = new ColorsSettings();
+                SelectedTheme = ConfigData.ColorTheme.Default;
+                ThemesList = new List<Theme>
+                {
+                    // Default
+                    new()
+                    {
+                        Info = new TabColors(Color.FromArgb(12, 56, 100), Color.FromArgb(7, 33, 59), Color.FromArgb(100, 12, 20), Color.FromArgb(59, 7, 12)),
+                        Effects = new TabColors(Color.Indigo, Color.FromArgb(45, 0, 77)),
+                        Totals = new TabColors(Color.FromArgb(2, 85, 55), Color.FromArgb(1, 51, 33)),
+                        Enhance = new TabColors(Color.FromArgb(0, 98, 116), Color.FromArgb(0, 59, 69)),
+                        Scales = new TabColors(Color.FromArgb(148, 117, 46),Color.FromArgb(69, 71, 28))
+                    },
+
+                    // Old school
+                    new()
+                    {
+                        Info = new TabColors(Color.FromArgb(30, 144, 255), Color.FromArgb(7, 33, 59), Color.FromArgb(128, 0, 0), Color.FromArgb(59, 7, 12)),
+                        Effects = new TabColors(Color.FromArgb(75, 0, 130), Color.FromArgb(45, 0, 77)),
+                        Totals = new TabColors(Color.FromArgb(0, 128, 0), Color.FromArgb(1, 51, 33)),
+                        Enhance = new TabColors(Color.FromArgb(0, 128, 128), Color.FromArgb(0, 59, 69)),
+                        Scales = new TabColors(Color.FromArgb(224, 177, 70), Color.FromArgb(69, 71, 28))
+                    }
+                };
             }
 
-            public class TweaksSettings
+            public void SelectTheme(ConfigData.ColorTheme theme)
             {
-                /* Graph format ? */
-                public bool EnduranceDetail = false;
-                public int FlipAnimationTickDelay = 100; // ???
-                public bool GraphIgnoreConstants = false;
+                SelectedTheme = theme;
             }
 
-            public class FontsSettings
+            public class TabColors
             {
-                public float InfoPanelSize = 8.25f; // ???
-                public float DmgGraphSize = 8.25f; // ???
-                public float GridViewItemSize = 8.25f; // ???
-                public int TotalsBarHeight = 10;
-                public float TotalsItemSize = 10f; // ???
-                public float GraphValuesSize = 10f; // ???
-                public float GraphRefLabelSize = 10f; // ???
+                public Color ActiveColor => MidsContext.Config.DataViewCfg.Colors.AlignmentMode switch
+                {
+                    ConfigData.ThemeAlignmentStyle.Hero => ActiveColorHero,
+                    ConfigData.ThemeAlignmentStyle.Villain => ActiveColorVillain,
+                    _ => MidsContext.Character.IsHero()
+                        ? ActiveColorHero
+                        : ActiveColorVillain
+
+                };
+
+                public Color InactiveColor => MidsContext.Config.DataViewCfg.Colors.AlignmentMode switch
+                {
+                    ConfigData.ThemeAlignmentStyle.Hero => InactiveColorHero,
+                    ConfigData.ThemeAlignmentStyle.Villain => InactiveColorVillain,
+                    _ => MidsContext.Character.IsHero()
+                        ? InactiveColorHero
+                        : InactiveColorVillain
+
+                };
+
+                private Color ActiveColorHero { get; }
+                private Color InactiveColorHero { get; }
+                private Color ActiveColorVillain { get; }
+                private Color InactiveColorVillain { get; }
+
+                public TabColors(Color activeColor, Color inactiveColor)
+                {
+                    ActiveColorHero = activeColor;
+                    InactiveColorHero = inactiveColor;
+                    ActiveColorVillain = activeColor;
+                    InactiveColorVillain = inactiveColor;
+                }
+
+                public TabColors(Color activeColorHero, Color inactiveColorHero, Color activeColorVillain, Color inactiveColorVillain)
+                {
+                    ActiveColorHero = activeColorHero;
+                    InactiveColorHero = inactiveColorHero;
+                    ActiveColorVillain = activeColorVillain;
+                    InactiveColorVillain = inactiveColorVillain;
+                }
             }
 
-            public class ColorsSettings
+            public class Theme
             {
-                public ColorTheme Theme = ColorTheme.Default;
-                public ThemeAlignmentStyle AlignmentMode = ThemeAlignmentStyle.Auto;
+                public TabColors Info { get; set; }
+                public TabColors Effects { get; set; }
+                public TabColors Totals { get; set; }
+                public TabColors Enhance { get; set; }
+                public TabColors Scales { get; set; }
             }
         }
-
-        #endregion
 
         #region Event callbacks
 
@@ -4421,7 +4465,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void ipbSettings_Click(object sender, EventArgs e)
         {
-            PushConfig?.Invoke(_Config);
+            DvOptionsCall?.Invoke();
         }
 
         #endregion

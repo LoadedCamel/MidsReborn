@@ -478,7 +478,7 @@ namespace Mids_Reborn.Forms
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
 
-                dvAnchored.PushConfig += dvAnchored_PushConfig;
+                dvAnchored.DvOptionsCall += dvAnchored_DvOptionsCall;
 
                 Show();
                 //Refresh();
@@ -494,9 +494,9 @@ namespace Mids_Reborn.Forms
             loading = false;
         }
 
-        private void dvAnchored_PushConfig(DataView2.Config config)
+        private void dvAnchored_DvOptionsCall()
         {
-            using var dvSettings = new frmDv2Settings(config);
+            using var dvSettings = new frmDv2Settings();
             var result = dvSettings.ShowDialog(this);
 
             if (result != DialogResult.OK) return;
