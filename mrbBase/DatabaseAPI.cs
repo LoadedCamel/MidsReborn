@@ -604,9 +604,14 @@ namespace mrbBase
 
         public static int ToDisplayIndex(IPowerset iPowerset, IPowerset[] iIndexes)
         {
-            for (var index = 0; index <= iIndexes.Length - 1; ++index)
-                if (iIndexes[index].nID == iPowerset.nID)
+            for (var index = 0; index < iIndexes.Length; index++)
+            {
+                if (iIndexes[index].nID == (iPowerset?.nID ?? -1))
+                {
                     return index;
+                }
+            }
+
             return iIndexes.Length > 0 ? 0 : -1;
         }
 

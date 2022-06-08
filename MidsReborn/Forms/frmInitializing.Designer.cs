@@ -47,25 +47,24 @@ namespace Mids_Reborn.Forms
             this.Label1.Location = new System.Drawing.Point(52, 0);
             this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(699, 27);
+            this.Label1.Size = new System.Drawing.Size(699, 29);
             this.Label1.TabIndex = 2;
             this.Label1.Text = "Reading data files, please wait.";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmInitializing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = global::Mids_Reborn.Resources.MRB_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(752, 498);
+            this.ClientSize = new System.Drawing.Size(752, 531);
             this.Controls.Add(this.Label1);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "frmInitializing";
             this.Text = "frmInitializing";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Black;
             this.ResumeLayout(false);
 

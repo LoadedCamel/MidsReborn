@@ -275,7 +275,13 @@ namespace mrbBase.Base.Data_Classes
         public void Lock()
         {
             var powersPlaced = CurrentBuild.PowersPlaced;
-            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(Powersets[1].Powers[0]))
+            var ps1 = Powersets[1] == null || Powersets[1].nID < 0
+                ? DatabaseAPI.Database.Powersets
+                    .First(ps =>
+                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
+                        ps.SetType == Enums.ePowerSetType.Secondary)
+                : Powersets[1];
+            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1.Powers[0]))
             {
                 Locked = false;
                 ResetLevel();
@@ -862,30 +868,22 @@ namespace mrbBase.Base.Data_Classes
                     return false;
             }
 
+            var psID = Powersets[(int) powersetType] == null ? -1 : Powersets[(int) powersetType].nID;
+
             if (powersetType == Enums.PowersetType.None)
                 return false;
-            for (var index = 0; index <= DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Length - 1; ++index)
+            if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Any(t => t == psID))
             {
-                if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets[index] == Powersets[(int)powersetType].nID)
-                {
-                    // Powerset combination is denied
-                    return true;
-                }
+                // Powerset combination is denied
+                return true;
             }
 
-            for (var index = 0; index <= Powersets[(int)powersetType].nIDMutexSets.Length - 1; ++index)
-            {
-                if (Powersets[(int)powersetType].nIDMutexSets[index] == powerSetId)
-                {
-                    // Powerset combination is denied
-                    return true;
-                }
-            }
+            if (Powersets[(int) powersetType] == null)
+                return false;
 
-            return false;
+            return Powersets[(int) powersetType].nIDMutexSets
+                .Where(t => Powersets[(int) powersetType] != null).Any(t => t == powerSetId);
         }
-
-
 
         private void CheckAncillaryPowerSet()
         {

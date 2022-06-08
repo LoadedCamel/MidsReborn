@@ -109,20 +109,34 @@ namespace Mids_Reborn
             return stringValue2;
         }
 
+        public IPowerset PickDefaultSecondaryPowerset()
+        {
+            return Powersets[1] == null || Powersets[1].nID < 0
+                ? DatabaseAPI.Database.Powersets
+                    .First(ps =>
+                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
+                        ps.SetType == Enums.ePowerSetType.Secondary)
+                : Powersets[1];
+        }
+
         public void BuildPower(int iSet, int powerID, bool noPoolShuffle = false)
         {
             if (iSet < 0 || powerID < 0)
+            {
                 return;
+            }
+
+            var ps1 = PickDefaultSecondaryPowerset();
             var inToonHistory = CurrentBuild.FindInToonHistory(powerID);
             ResetLevel();
-            var numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[1].nID);
+            var numArray = DatabaseAPI.NidPowersAtLevelBranch(0, ps1.nID);
             var flag1 = numArray.Length > 1;
             var message = "";
             if (inToonHistory > -1)
             {
                 if (CanRemovePower(inToonHistory, true, out message))
                 {
-                    if (true & (inToonHistory < CurrentBuild.Powers.Count))
+                    if (inToonHistory < CurrentBuild.Powers.Count)
                     {
                         CurrentBuild.Powers[inToonHistory].Reset();
                     }
@@ -139,7 +153,7 @@ namespace Mids_Reborn
             }
             else
             {
-                if ((DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary) & !flag1 && (CurrentBuild.Powers[1].NIDPowerset < 0) & !CurrentBuild.PowerUsed(Powersets[1].Powers[0]) && numArray.Length > 0)
+                if ((DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary) & !flag1 && (CurrentBuild.Powers[1].NIDPowerset < 0) & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
                 {
                     SetPower_NID(1, numArray[0]);
                 }
