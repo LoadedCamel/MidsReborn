@@ -501,7 +501,8 @@ namespace Mids_Reborn.Forms
 
             if (result != DialogResult.OK) return;
 
-            dvAnchored?.UpdateConfig(dvSettings.Config);
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            dvAnchored?.UpdateConfig();
         }
 
         internal void ChildRequestedRedraw()
@@ -6280,7 +6281,7 @@ namespace Mids_Reborn.Forms
                 fSalvageHud.UpdateColorTheme();
             }
 
-            myDataView.UpdateColorTheme();
+            myDataView.UpdateInfoColorTheme();
 
             if (!draw)
                 return;

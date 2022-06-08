@@ -50,6 +50,7 @@ namespace Mids_Reborn.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            MidsContext.Config.DataViewCfg = Config.Clone();
             DialogResult = DialogResult.OK;
             Close();
         }

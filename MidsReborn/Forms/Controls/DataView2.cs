@@ -143,6 +143,7 @@ namespace Mids_Reborn.Forms.Controls
         private GridViewMouseEventInfo GridMouseOverEventLoc;
         private InfoType LayoutType;
         private bool SmallSize;
+        private DvThemes Themes;
 
         private readonly TabControlAdv _tabControlAdv;
 
@@ -186,6 +187,8 @@ namespace Mids_Reborn.Forms.Controls
 
             dV2TotalsPane3R.MouseClick += DvPaneMisc_MouseClick;
             dV2TotalsPane3R.BarHover += DvPaneMisc_BarHover;
+
+            Themes = new DvThemes();
         }
 
         // Set data for power
@@ -240,9 +243,41 @@ namespace Mids_Reborn.Forms.Controls
             Tabs.RenderTabs(this);
         }
 
-        public void UpdateConfig(ConfigData.DvConfig config)
+        public void UpdateConfig()
         {
+            if (_tabsRendered.Info)
+            {
+                tabPageAdv1.BackColor = Themes.InfoActiveColor;
+                tabPageAdv1.TabBackColor = Themes.InfoActiveColor;
+                ipbSettings.BackColor = Themes.InfoActiveColor;
+            }
+            else if (_tabsRendered.Effects)
+            {
+                tabPageAdv2.BackColor = Themes.EffectsActiveColor;
+                tabPageAdv2.TabBackColor = Themes.EffectsActiveColor;
+                ipbSettings2.BackColor = Themes.EffectsActiveColor;
+            }
+            else if (_tabsRendered.Totals)
+            {
+                tabPageAdv3.BackColor = Themes.TotalsActiveColor;
+                tabPageAdv3.TabBackColor = Themes.TotalsActiveColor;
+                ipbSettings3.BackColor = Themes.TotalsActiveColor;
+            }
+            else if (_tabsRendered.Enhance)
+            {
+                tabPageAdv4.BackColor = Themes.EnhanceActiveColor;
+                tabPageAdv4.TabBackColor = Themes.EnhanceActiveColor;
+                ipbSettings4.BackColor = Themes.EnhanceActiveColor;
+            }
+            else if (_tabsRendered.Scales)
+            {
+                tabPageAdv5.BackColor = Themes.ScalesActiveColor;
+                tabPageAdv5.TabBackColor = Themes.ScalesActiveColor;
+                ipbSettings5.BackColor = Themes.ScalesActiveColor;
+            }
 
+            _tabControlAdv.ActiveTabColor = Themes.InfoActiveColor;
+            _tabControlAdv.InactiveTabColor = Themes.InfoInactiveColor;
         }
 
         public void Lock()
@@ -251,24 +286,14 @@ namespace Mids_Reborn.Forms.Controls
             SetLockStatus();
         }
 
-        public void UpdateColorTheme()
+        public void UpdateInfoColorTheme()
         {
             if (_tabControlAdv.SelectedIndex != 0) return;
 
-            if (MidsContext.Character.IsHero())
-            {
-                tabPageAdv1.BackColor = Color.FromArgb(12, 56, 100);
-                tabPageAdv1.TabBackColor = Color.FromArgb(12, 56, 100);
-                _tabControlAdv.ActiveTabColor = Color.FromArgb(12, 56, 100);
-                _tabControlAdv.InactiveTabColor = Color.FromArgb(7, 33, 59);
-            }
-            else
-            {
-                tabPageAdv1.BackColor = Color.FromArgb(100, 12, 20);
-                tabPageAdv1.TabBackColor = Color.FromArgb(100, 12, 20);
-                _tabControlAdv.ActiveTabColor = Color.FromArgb(100, 12, 20);
-                _tabControlAdv.InactiveTabColor = Color.FromArgb(59, 7, 12);
-            }
+            tabPageAdv1.BackColor = Themes.InfoActiveColor;
+            tabPageAdv1.TabBackColor = Themes.InfoActiveColor;
+            _tabControlAdv.ActiveTabColor = Themes.InfoActiveColor;
+            _tabControlAdv.InactiveTabColor = Themes.InfoInactiveColor;
         }
 
         private void SetLockStatus()
@@ -3888,46 +3913,31 @@ namespace Mids_Reborn.Forms.Controls
             switch (_tabControlAdv.SelectedIndex)
             {
                 case 0:
-                    // L=39 / L=23
-                    if (MidsContext.Character.IsHero())
-                    {
-                        tabPageAdv1.BackColor = Color.FromArgb(12, 56, 100);
-                        tabPageAdv1.TabBackColor = Color.FromArgb(12, 56, 100);
-                        _tabControlAdv.ActiveTabColor = Color.FromArgb(12, 56, 100);
-                        _tabControlAdv.InactiveTabColor = Color.FromArgb(7, 33, 59);
-                    }
-                    else
-                    {
-                        tabPageAdv1.BackColor = Color.FromArgb(100, 12, 20);
-                        tabPageAdv1.TabBackColor = Color.FromArgb(100, 12, 20);
-                        _tabControlAdv.ActiveTabColor = Color.FromArgb(100, 12, 20);
-                        _tabControlAdv.InactiveTabColor = Color.FromArgb(59, 7, 12);
-                    }
+                    tabPageAdv1.BackColor = Themes.InfoActiveColor;
+                    tabPageAdv1.TabBackColor = Themes.InfoActiveColor;
+                    _tabControlAdv.ActiveTabColor = Themes.InfoActiveColor;
+                    _tabControlAdv.InactiveTabColor = Themes.InfoInactiveColor;
 
                     break;
 
                 case 1:
-                    // L=51 / L=30
-                    _tabControlAdv.ActiveTabColor = Color.Indigo;
-                    _tabControlAdv.InactiveTabColor = Color.FromArgb(45, 0, 77);
+                    _tabControlAdv.ActiveTabColor = Themes.EffectsActiveColor;
+                    _tabControlAdv.InactiveTabColor = Themes.EffectsInactiveColor;
                     break;
 
                 case 2:
-                    // L=33 / L=20
-                    _tabControlAdv.ActiveTabColor = Color.FromArgb(2, 85, 55);
-                    _tabControlAdv.InactiveTabColor = Color.FromArgb(1, 51, 33);
+                    _tabControlAdv.ActiveTabColor = Themes.TotalsActiveColor;
+                    _tabControlAdv.InactiveTabColor = Themes.TotalsInactiveColor;
                     break;
 
                 case 3:
-                    // L=45 / L=27
-                    _tabControlAdv.ActiveTabColor = Color.FromArgb(0, 98, 116);
-                    _tabControlAdv.InactiveTabColor = Color.FromArgb(0, 59, 69);
+                    _tabControlAdv.ActiveTabColor = Themes.EnhanceActiveColor;
+                    _tabControlAdv.InactiveTabColor = Themes.EnhanceInactiveColor;
                     break;
 
                 case 4:
-                    // L=58 / L=35
-                    _tabControlAdv.ActiveTabColor = Color.FromArgb(148, 117, 46);
-                    _tabControlAdv.InactiveTabColor = Color.FromArgb(69, 71, 28);
+                    _tabControlAdv.ActiveTabColor = Themes.ScalesActiveColor;
+                    _tabControlAdv.InactiveTabColor = Themes.ScalesInactiveColor;
                     break;
             }
 
@@ -4046,11 +4056,11 @@ namespace Mids_Reborn.Forms.Controls
             };
 
             // BackColor doesn't stick when set in the designer
-            ipbSettings.BackColor = Color.Black;
-            ipbSettings2.BackColor = Color.Black;
-            ipbSettings3.BackColor = Color.Black;
-            ipbSettings4.BackColor = Color.Black;
-            ipbSettings5.BackColor = Color.Black;
+            ipbSettings.BackColor = Themes.InfoActiveColor;
+            ipbSettings2.BackColor = Themes.EffectsActiveColor;
+            ipbSettings3.BackColor = Themes.TotalsActiveColor;
+            ipbSettings4.BackColor = Themes.EnhanceActiveColor;
+            ipbSettings5.BackColor = Themes.ScalesActiveColor;
 
             // MaxItems doesn't stick when set in the designer
             dV2TotalsPane1L.MaxItems = 6;
