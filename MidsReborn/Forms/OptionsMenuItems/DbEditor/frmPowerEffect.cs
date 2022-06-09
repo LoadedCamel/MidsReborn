@@ -61,6 +61,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitSelectedItems();
             _loading = false;
             UpdateFxText();
+            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
+            {
+                tableLayoutPanel1.Enabled = false;
+                tpPowerAttribs.Visible = true;
+            }
+            else
+            {
+                tableLayoutPanel1.Enabled = true;
+                tpPowerAttribs.Visible = false;
+            }
 
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
@@ -95,6 +105,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPaste_Click(object sender, EventArgs e)
         {
             FullPaste();
+            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
+            {
+                tableLayoutPanel1.Enabled = false;
+                tpPowerAttribs.Visible = true;
+            }
+            else
+            {
+                tableLayoutPanel1.Enabled = true;
+                tpPowerAttribs.Visible = false;
+            }
         }
 
         private void btnEditConditions_Click(object sender, EventArgs e)
