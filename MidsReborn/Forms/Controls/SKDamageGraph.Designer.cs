@@ -29,21 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.skglControl1 = new SkiaSharp.Views.Desktop.SKGLControl();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
-            // 
-            // skglControl1
-            // 
-            this.skglControl1.BackColor = System.Drawing.Color.Black;
-            this.skglControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skglControl1.Location = new System.Drawing.Point(0, 0);
-            this.skglControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.skglControl1.Name = "skglControl1";
-            this.skglControl1.Size = new System.Drawing.Size(312, 104);
-            this.skglControl1.TabIndex = 0;
-            this.skglControl1.TabStop = false;
-            this.skglControl1.VSync = false;
             // 
             // toolTip1
             // 
@@ -53,11 +41,21 @@
             this.toolTip1.UseAnimation = false;
             this.toolTip1.UseFading = false;
             // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(312, 104);
+            this.panel1.TabIndex = 0;
+            // 
             // SKDamageGraph
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.skglControl1);
+            this.BackColor = System.Drawing.Color.Black;
+            this.Controls.Add(this.panel1);
             this.Name = "SKDamageGraph";
             this.Size = new System.Drawing.Size(312, 104);
             this.ResumeLayout(false);
@@ -65,8 +63,7 @@
         }
 
         #endregion
-
-        private SkiaSharp.Views.Desktop.SKGLControl skglControl1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

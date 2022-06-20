@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -133,10 +134,11 @@ namespace Mids_Reborn.Forms.Controls
             Resize += DV2TotalsPane_Resize;
             PaneVisibilityChanged += OnPaneVisibilityChanged;
             InitializeComponent();
-            
-            skglControl1.PaintSurface += skglControl1_PaintSurface;
-            skglControl1.MouseLeave += skglControl1_MouseLeave;
-            skglControl1.MouseMove += skglControl1_MouseMove;
+
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, panel1, new object[] { true });
+
+            panel1.MouseLeave += panel1_MouseLeave;
+            panel1.MouseMove += panel1_MouseMove;
         }
 
         #region IDrawLock implementation
@@ -190,7 +192,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            skglControl1.Invalidate();
+            panel1.BackgroundImage = PaintSurface().ToBitmap();
         }
 
         #endregion
@@ -207,12 +209,14 @@ namespace Mids_Reborn.Forms.Controls
             Draw();
         }
 
-        private void skglControl1_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+        private SKImage PaintSurface()
         {
             const float barWidthFactor = 0.6f;
             const byte valueOpacity = 0xA9;
 
-            e.Surface.Canvas.Clear(SKColors.Black);
+            using var s = SKSurface.Create(new SKImageInfo(panel1.Width, panel1.Height));
+
+            s.Canvas.Clear(SKColors.Black);
 
             using var bgGradientPaint = new SKPaint
             {
@@ -224,7 +228,7 @@ namespace Mids_Reborn.Forms.Controls
                 )
             };
 
-            e.Surface.Canvas.DrawRect(new SKRect(0, 0, Width, Height), bgGradientPaint);
+            s.Canvas.DrawRect(new SKRect(0, 0, Width, Height), bgGradientPaint);
 
             using var barBg = new SKPaint { Color = SKColors.Black };
             using var linePaint = new SKPaint { Color = SKColors.Black };
@@ -238,7 +242,7 @@ namespace Mids_Reborn.Forms.Controls
 
             if (HoveredBar > -1 & HoveredBar < Math.Min(Items.Count, MaxItems))
             {
-                e.Surface.Canvas.DrawRect(new SKRect(1, HoveredBar * 12 + 2, Width - 1, HoveredBar * 12 + 13), barHighlightBg);
+                s.Canvas.DrawRect(new SKRect(1, HoveredBar * 12 + 2, Width - 1, HoveredBar * 12 + 13), barHighlightBg);
             }
 
             for (var i = 0; i < Math.Min(Items.Count, MaxItems); i++)
@@ -256,49 +260,51 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (EnableUncappedValues)
                 {
-                    e.Surface.Canvas.DrawRect(new SKRect(xStart, i * 12 + 2, xStart + 2 + Items[i].UncappedValue * scale, i * 12 + 13), barBg);
+                    s.Canvas.DrawRect(new SKRect(xStart, i * 12 + 2, xStart + 2 + Items[i].UncappedValue * scale, i * 12 + 13), barBg);
                     if (Math.Abs(Items[i].UncappedValue - Items[i].Value) > float.Epsilon)
                     {
-                        e.Surface.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].UncappedValue * scale, i * 12 + 12), barUncapped);
+                        s.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].UncappedValue * scale, i * 12 + 12), barUncapped);
                     }
 
-                    e.Surface.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].Value * scale, i * 12 + 12), barGradientPaint);
+                    s.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].Value * scale, i * 12 + 12), barGradientPaint);
 
                     if (Math.Abs(Items[i].UncappedValue - Items[i].Value) > float.Epsilon)
                     {
-                        e.Surface.Canvas.DrawLine(new SKPoint(xStart + 2 + Items[i].Value * scale, i * 12 + 2), new SKPoint(xStart + 2 + Items[i].Value * scale, i * 12 + 13), linePaint);
+                        s.Canvas.DrawLine(new SKPoint(xStart + 2 + Items[i].Value * scale, i * 12 + 2), new SKPoint(xStart + 2 + Items[i].Value * scale, i * 12 + 13), linePaint);
                     }
                 }
                 else
                 {
-                    e.Surface.Canvas.DrawRect(new SKRect(xStart, i * 12 + 2, xStart + 2 + Items[i].Value * scale, i * 12 + 13), barBg);
-                    //e.Surface.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].UncappedValue * scale, i * 12 + 12), barUncapped);
-                    e.Surface.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].Value * scale, i * 12 + 12), barGradientPaint);
+                    s.Canvas.DrawRect(new SKRect(xStart, i * 12 + 2, xStart + 2 + Items[i].Value * scale, i * 12 + 13), barBg);
+                    //s.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].UncappedValue * scale, i * 12 + 12), barUncapped);
+                    s.Canvas.DrawRect(new SKRect(xStart + 1, i * 12 + 3, xStart + 1 + Items[i].Value * scale, i * 12 + 12), barGradientPaint);
                 }
 
                 // Bar label
-                //e.Surface.Canvas.DrawText(Items[i].Name, new SKPoint(2, i * 12 + 4), textPaint);
-                e.Surface.Canvas.DrawOutlineText(Items[i].Name, new SKPoint(2, i * 12 + 7 + LabelsFontSize / 2f), SKColors.WhiteSmoke);
+                //s.Canvas.DrawText(Items[i].Name, new SKPoint(2, i * 12 + 4), textPaint);
+                s.Canvas.DrawOutlineText(Items[i].Name, new SKPoint(2, i * 12 + 7 + LabelsFontSize / 2f), SKColors.WhiteSmoke);
 
                 if (ShowNumbers)
                 {
-                    e.Surface.Canvas.DrawOutlineText($"{Items[i].Value:##0.##}%",
+                    s.Canvas.DrawOutlineText($"{Items[i].Value:##0.##}%",
                         new SKPoint(Width - 2, i * 12 + 7 + LabelsFontSize / 2f),
                         Items[i].UncappedValue - Items[i].Value >= 0.01 ? SKColors.Cyan : SKColors.WhiteSmoke,
                         SKTextAlign.Right, valueOpacity);
                 }
             }
+
+            return s.Snapshot();
         }
 
-        private void skglControl1_MouseLeave(object sender, EventArgs e)
+        private void panel1_MouseLeave(object sender, EventArgs e)
         {
             HoveredBar = -1;
-            skglControl1.Invalidate();
+            Draw();
 
-            BarHover?.Invoke(skglControl1, Name, new Point(-1, -1), -1, "", 0, 0);
+            BarHover?.Invoke(panel1, Name, new Point(-1, -1), -1, "", 0, 0);
         }
 
-        private void skglControl1_MouseMove(object sender, MouseEventArgs e)
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             const float outerGrow = 1f;
 
@@ -318,17 +324,17 @@ namespace Mids_Reborn.Forms.Controls
                 indexLower != indexUpper)
             {
                 HoveredBar = -1;
-                skglControl1.Invalidate();
+                Draw();
 
-                BarHover?.Invoke(skglControl1, Name, e.Location, -1, "", 0, 0);
+                BarHover?.Invoke(panel1, Name, e.Location, -1, "", 0, 0);
 
                 return;
             }
 
             HoveredBar = indexLower;
-            skglControl1.Invalidate();
+            Draw();
 
-            BarHover?.Invoke(skglControl1, Name, e.Location, HoveredBar, Items[HoveredBar].Name, Items[HoveredBar].Value, Items[HoveredBar].UncappedValue);
+            BarHover?.Invoke(panel1, Name, e.Location, HoveredBar, Items[HoveredBar].Name, Items[HoveredBar].Value, Items[HoveredBar].UncappedValue);
         }
 
         private void OnPaneVisibilityChanged(object sender, bool e)

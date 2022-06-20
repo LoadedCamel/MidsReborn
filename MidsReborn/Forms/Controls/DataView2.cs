@@ -3854,21 +3854,23 @@ namespace Mids_Reborn.Forms.Controls
 
             public class TabColors
             {
+                // MidsContext.Character can be null
+                private static bool CharacterIsHero => MidsContext.Character == null || MidsContext.Character.IsHero();
+
                 public Color ActiveColor => MidsContext.Config.DataViewCfg.Colors.AlignmentMode switch
                 {
                     ConfigData.ThemeAlignmentStyle.Hero => ActiveColorHero,
                     ConfigData.ThemeAlignmentStyle.Villain => ActiveColorVillain,
-                    _ => MidsContext.Character.IsHero()
+                    _ => CharacterIsHero
                         ? ActiveColorHero
                         : ActiveColorVillain
-
                 };
 
                 public Color InactiveColor => MidsContext.Config.DataViewCfg.Colors.AlignmentMode switch
                 {
                     ConfigData.ThemeAlignmentStyle.Hero => InactiveColorHero,
                     ConfigData.ThemeAlignmentStyle.Villain => InactiveColorVillain,
-                    _ => MidsContext.Character.IsHero()
+                    _ => CharacterIsHero
                         ? InactiveColorHero
                         : InactiveColorVillain
 
@@ -4278,7 +4280,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DvPaneMisc_BarHover(object sender, string containerControlName, Point mouseLoc, int barIndex, string label, float value, float uncappedValue)
         {
-            var target = (SKGLControl) sender;
+            var target = (Panel) sender;
 
             if (barIndex < 0)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using mrbBase;
@@ -56,7 +57,8 @@ namespace Mids_Reborn.Forms.Controls
             Resize += SKDamageGraph_Resize;
 
             InitializeComponent();
-            skglControl1.PaintSurface += skglControl1_PaintSurface;
+
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, panel1, new object[] { true });
         }
 
         private Color ToColor(SKColor color)
@@ -64,7 +66,7 @@ namespace Mids_Reborn.Forms.Controls
             return Color.FromArgb(_FadeBackStart.Red, _FadeBackStart.Green, _FadeBackStart.Blue);
         }
 
-        private SKColor TOSKColor(Color color)
+        private SKColor ToSKColor(Color color)
         {
             return new SKColor(color.R, color.G, color.B);
         }
@@ -106,7 +108,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeBackStart);
             set
             {
-                _FadeBackStart = TOSKColor(value);
+                _FadeBackStart = ToSKColor(value);
 
                 Draw();
             }
@@ -117,7 +119,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeBackEnd);
             set
             {
-                _FadeBackEnd = TOSKColor(value);
+                _FadeBackEnd = ToSKColor(value);
 
                 Draw();
             }
@@ -128,7 +130,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeBaseStart);
             set
             {
-                _FadeBaseStart = TOSKColor(value);
+                _FadeBaseStart = ToSKColor(value);
 
                 Draw();
             }
@@ -139,7 +141,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeBaseEnd);
             set
             {
-                _FadeBaseEnd = TOSKColor(value);
+                _FadeBaseEnd = ToSKColor(value);
 
                 Draw();
             }
@@ -150,7 +152,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeEnhStart);
             set
             {
-                _FadeEnhStart = TOSKColor(value);
+                _FadeEnhStart = ToSKColor(value);
 
                 Draw();
             }
@@ -161,7 +163,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_FadeEnhEnd);
             set
             {
-                _FadeEnhEnd = TOSKColor(value);
+                _FadeEnhEnd = ToSKColor(value);
 
                 Draw();
             }
@@ -172,7 +174,7 @@ namespace Mids_Reborn.Forms.Controls
             get => ToColor(_TextColor);
             set
             {
-                _TextColor = TOSKColor(value);
+                _TextColor = ToSKColor(value);
 
                 Draw();
             }
@@ -423,7 +425,7 @@ namespace Mids_Reborn.Forms.Controls
             return wrappedLines;
         }
 
-        private void skglControl1_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+        private SKImage PaintSurface()
         {
             const int barHeight = 10;
             const int paddingH = 3;
@@ -431,7 +433,8 @@ namespace Mids_Reborn.Forms.Controls
             const float fontSize = 12f;
             const float strokeWidth = 5f;
 
-            e.Surface.Canvas.Clear(SKColors.Black);
+            using var s = SKSurface.Create(new SKImageInfo(Width, Height));
+            s.Canvas.Clear(SKColors.Black);
 
             // Draw background
             // Black to dark red horizontal gradient
@@ -447,7 +450,7 @@ namespace Mids_Reborn.Forms.Controls
                     )
                 };
 
-                e.Surface.Canvas.DrawRect(new SKRect(0, 0, Width, 2 * barHeight), bgPaint);
+                s.Canvas.DrawRect(new SKRect(0, 0, Width, 2 * barHeight), bgPaint);
             }
 
             // Draw graph bars
@@ -480,18 +483,18 @@ namespace Mids_Reborn.Forms.Controls
 
             if (_GraphStyle == Enums.eDDStyle.TextUnderGraph)
             {
-                e.Surface.Canvas.DrawRect(new SKRect(0, 0, baseDmgWidth, barHeight), baseDmgPaint);
-                e.Surface.Canvas.DrawRect(new SKRect(0, barHeight, enhDmgWidth, 2 * barHeight), enhDmgPaint);
+                s.Canvas.DrawRect(new SKRect(0, 0, baseDmgWidth, barHeight), baseDmgPaint);
+                s.Canvas.DrawRect(new SKRect(0, barHeight, enhDmgWidth, 2 * barHeight), enhDmgPaint);
             }
             else if (_GraphStyle is Enums.eDDStyle.TextOnGraph or Enums.eDDStyle.Graph)
             {
-                e.Surface.Canvas.DrawRect(new SKRect(0, 0, baseDmgWidth, Height / 2f), baseDmgPaint);
-                e.Surface.Canvas.DrawRect(new SKRect(0, Height / 2f, enhDmgWidth, Height), enhDmgPaint);
+                s.Canvas.DrawRect(new SKRect(0, 0, baseDmgWidth, Height / 2f), baseDmgPaint);
+                s.Canvas.DrawRect(new SKRect(0, Height / 2f, enhDmgWidth, Height), enhDmgPaint);
             }
 
             if (_GraphStyle == Enums.eDDStyle.Graph)
             {
-                return;
+                return s.Snapshot();
             }
 
             // Damage Text
@@ -505,7 +508,7 @@ namespace Mids_Reborn.Forms.Controls
             };
 
             var textLines = WrapText(_String,
-              e.Surface.Canvas,
+              s.Canvas,
               new SKSize(Width, Height),
               textFont,
               new SKSize(paddingH, paddingV));
@@ -532,8 +535,10 @@ namespace Mids_Reborn.Forms.Controls
                 TextAlign = SKTextAlign.Center
             };
 
-            e.Surface.Canvas.DrawPath(outlinePath, outlinePaint);
-            e.Surface.Canvas.DrawText(infoText, new SKPoint(Width / 2f, y), textPaint);
+            s.Canvas.DrawPath(outlinePath, outlinePaint);
+            s.Canvas.DrawText(infoText, new SKPoint(Width / 2f, y), textPaint);
+
+            return s.Snapshot();
         }
 
         // /////////////////////////////////////////
@@ -545,7 +550,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            skglControl1.Invalidate();
+            panel1.BackgroundImage = PaintSurface().ToBitmap();
         }
     }
 }

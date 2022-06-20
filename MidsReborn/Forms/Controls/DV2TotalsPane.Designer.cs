@@ -28,33 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.skglControl1 = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // skglControl1
+            // panel1
             // 
-            this.skglControl1.BackColor = System.Drawing.Color.Black;
-            this.skglControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skglControl1.Location = new System.Drawing.Point(0, 0);
-            this.skglControl1.Name = "skglControl1";
-            this.skglControl1.Size = new System.Drawing.Size(185, 138);
-            this.skglControl1.TabIndex = 0;
-            this.skglControl1.VSync = false;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(185, 138);
+            this.panel1.TabIndex = 0;
             // 
             // DV2TotalsPane
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.Controls.Add(this.skglControl1);
+            this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "DV2TotalsPane";
             this.Size = new System.Drawing.Size(185, 138);
             this.ResumeLayout(false);
+
         }
 
         #endregion
 
-        private SkiaSharp.Views.Desktop.SKGLControl skglControl1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
