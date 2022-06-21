@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
@@ -170,6 +171,24 @@ namespace Mids_Reborn.Forms.Controls
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
+            // Rename needed on these since they are now panels
+            var panels = new List<Panel>
+            {
+                infoTabTitle,
+                effectsTabTitle,
+                enhanceTabTitle,
+                scalesTabTitle,
+                skglScalesGraph,
+                skglGraphLegend,
+                skglEnhActive,
+                skglEnhAlt
+            };
+
+            // Force activation of double buffering
+            foreach (var p in panels)
+            {
+                typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, p, new object[] { true });
+            }
 
             _tabControlAdv = tabBox;
             _tabControlAdv.SelectedIndexChanged += tabBox_TabIndexChanged;
@@ -1924,6 +1943,120 @@ namespace Mids_Reborn.Forms.Controls
 
         private static class Tabs
         {
+            private static SKImage TabTitlePaintSurface(Panel target, InfoType layoutType)
+            {
+                const int iconSize = 16;
+                const int itemsPadding = 3;
+                const float textSize = 13;
+                const string defaultPowerInfoText = "Info";
+
+                using var s = SKSurface.Create(new SKImageInfo(target.Width, target.Height));
+
+                
+                switch (layoutType)
+                {
+                    case InfoType.Enhancement:
+                    {
+                        var enhName = "";
+                        if (EnhSlot.Enh > -1)
+                        {
+                            enhName = DatabaseAPI.Database.Enhancements[EnhSlot.Enh].LongName;
+                            if ((enhName.Length > 38) & (EnhLevel > -1))
+                            {
+                                enhName = DatabaseAPI.GetEnhancementNameShortWSet(EnhSlot.Enh);
+                            }
+                        }
+                        else
+                        {
+                            // _basePower may be wrong or undefined
+                            enhName = _basePower != null ? _basePower.DisplayName : "";
+                        }
+
+                        var textRect = new SKRect(0, 0, 0, 0);
+                        using var textPaint = new SKPaint
+                        {
+                            Color = SKColors.WhiteSmoke,
+                            TextSize = textSize
+                        };
+
+                        textPaint.MeasureText(enhName, ref textRect);
+                        var maxWidth = target.Width;
+                        var totalWidth = (EnhSlot.Enh > -1 ? iconSize + itemsPadding : 0) + textRect.Width;
+                        var x = (int)Math.Max(0, Math.Round((maxWidth - totalWidth) / 2));
+
+                        s.Canvas.Clear(SKColors.Black);
+                        if (EnhSlot.Enh > -1)
+                        {
+                            var enhImg = FlipAnimator.Bitmaps.CreateBitmap(EnhSlot.Enh);
+                            using var enhIcon = new SKBitmap(new SKImageInfo(16, 16));
+                            enhImg.ScalePixels(enhIcon, SKFilterQuality.High);
+                            s.Canvas.DrawBitmap(enhIcon, new SKRect(0, 0, 16, 16), new SKRect(x, 0, x + 16, 16));
+                        }
+
+                        s.Canvas.DrawText(
+                            SKTextBlob.Create(enhName, new SKFont(SKTypeface.Default, textSize)),
+                            x + (EnhSlot.Enh > -1 ? iconSize + itemsPadding : 0), target.Height - 2 - (target.Height - textRect.Height) / 2,
+                            textPaint
+                        );
+
+                        break;
+                    }
+
+                    default:
+                    {
+                        var powerInfo = $@"{(BuildPowerEntry != null ? $"[{BuildPowerEntry.Level + 1}] " : "")}{_basePower?.DisplayName ?? defaultPowerInfoText}";
+                        var powerNid = BuildPowerEntry?.NIDPower ?? -1;
+                        var powersetNid = powerNid == -1
+                            ? -1
+                            : DatabaseAPI.Database.Power[powerNid].GetPowerSet().nID;
+
+                        using var textPaint = new SKPaint
+                        {
+                            Color = SKColors.WhiteSmoke,
+                            TextSize = textSize
+                        };
+
+                        var textRect = new SKRect(0, 0, 0, 0);
+                        textPaint.MeasureText(powerInfo, ref textRect);
+                        var maxWidth = target.Width;
+                        var hasIcon = !(powersetNid == -1 | powerInfo == (_basePower?.DisplayName ?? defaultPowerInfoText));
+                        var totalWidth = (hasIcon ? iconSize + itemsPadding : 0) + textRect.Width;
+                        var x = (int)Math.Max(0, Math.Round((maxWidth - totalWidth) / 2));
+
+                        s.Canvas.Clear(SKColors.Black);
+                        if (powersetNid > -1)
+                        {
+                            var powersetFullName = DatabaseAPI.Database.Powersets[powersetNid].FullName;
+                            using var powersetImg = FlipAnimator.Utils.GetIncarnateSlotFromPowerset(powersetFullName) switch
+                            {
+                                FlipAnimator.IncarnateSlot.Alpha => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Alpha),
+                                FlipAnimator.IncarnateSlot.Judgement => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Judgement),
+                                FlipAnimator.IncarnateSlot.Interface => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Interface),
+                                FlipAnimator.IncarnateSlot.Lore => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Lore),
+                                FlipAnimator.IncarnateSlot.Destiny => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Destiny),
+                                FlipAnimator.IncarnateSlot.Hybrid => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Hybrid),
+                                _ => FlipAnimator.Bitmaps.CreateBitmap(
+                                    I9Gfx.GetPowersetImage(DatabaseAPI.Database.Powersets[powersetNid]))
+                            };
+
+                            using var powersetIcon = new SKBitmap(new SKImageInfo(16, 16));
+                            powersetImg.ScalePixels(powersetIcon, SKFilterQuality.High);
+                            s.Canvas.DrawBitmap(powersetIcon, new SKRect(0, 0, 16, 16), new SKRect(x, 0, x + 16, 16));
+                        }
+
+                        s.Canvas.DrawText(
+                            SKTextBlob.Create(powerInfo, new SKFont(SKTypeface.Default, textSize)),
+                            x + (hasIcon ? iconSize + itemsPadding : 0), target.Height - 2 - (target.Height - textRect.Height) / 2,
+                            textPaint
+                        );
+
+                        break;
+                    }
+                }
+
+                return s.Snapshot();
+            }
+
             public static Color InterpolateColor(decimal value, decimal valueMin, decimal valueMax, ColorRange colorRange)
             {
                 return Color.FromArgb(
@@ -2266,7 +2399,7 @@ namespace Mids_Reborn.Forms.Controls
                     Root.skDamageGraph1.Visible = true;
                     Root.listSpecialBonuses.Visible = false;
 
-                    Root.infoTabTitle.Invalidate();
+                    Root.infoTabTitle.BackgroundImage = TabTitlePaintSurface(Root.infoTabTitle, LayoutType).ToBitmap();
                     Root.richInfoSmall.Rtf = RTFText.Text2RTF(_basePower?.DescShort ?? "");
                     Root.richInfoLarge.Rtf = RTFText.Text2RTF(_basePower?.DescLong ?? "");
 
@@ -2522,7 +2655,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
 
                     //Root.infoTabTitle.Text = enhName;
-                    Root.infoTabTitle.Invalidate();
+                    Root.infoTabTitle.BackgroundImage = TabTitlePaintSurface(Root.infoTabTitle, LayoutType).ToBitmap();
                     if (EnhSlot.Enh < 0)
                     {
                         return;
@@ -3119,7 +3252,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Root.ipbLock2.Visible = Root.Locked;
                     Root.ipbSettings2.IconChar = IconChar.Cog;
-                    Root.effectsTabTitle.Invalidate();
+                    Root.effectsTabTitle.BackgroundImage = TabTitlePaintSurface(Root.effectsTabTitle, LayoutType).ToBitmap();
 
                     var effectGroups = EffectsGroupFilter.FromPower(_enhancedPower);
                     var labels = effectGroups.Groups.Keys.ToList();
@@ -3493,9 +3626,40 @@ namespace Mids_Reborn.Forms.Controls
 
                     SetViewMode();
 
-                    Root.enhanceTabTitle.Invalidate();
-                    Root.skglEnhActive.Invalidate();
-                    Root.skglEnhAlt.Invalidate();
+                    Root.enhanceTabTitle.BackgroundImage = TabTitlePaintSurface(Root.enhanceTabTitle, LayoutType).ToBitmap();
+                    Root.skglEnhActive.BackgroundImage = EnhTrayPaintSurface(Root.skglEnhActive).ToBitmap();
+                    Root.skglEnhAlt.BackgroundImage = EnhTrayPaintSurface(Root.skglEnhActive).ToBitmap();
+                }
+
+                public static SKImage EnhTrayPaintSurface(Panel target)
+                {
+                    const int enhImgSize = 30;
+                    const int margin = 3;
+
+                    using var s = SKSurface.Create(new SKImageInfo(target.Width, target.Height));
+
+                    s.Canvas.Clear(SKColors.Black);
+                    if (Root._flipAnimator == null)
+                    {
+                        return s.Snapshot();
+                    }
+
+                    var nbMaxSlots = Math.Max(Root._flipAnimator.NbEnhMain, Root._flipAnimator.NbEnhAlt);
+                    var nbSlots = target.Name == "skglEnhActive" ? Root._flipAnimator.NbEnhMain : Root._flipAnimator.NbEnhAlt;
+                    for (var i = 0; i < nbMaxSlots; i++)
+                    {
+                        var mainBitmap = Root._flipAnimator.GetBitmap(Tray.Main, i);
+                        var altBitmap = Root._flipAnimator.GetBitmap(Tray.Alt, i);
+
+                        var skImage = FlipAnimator.Bitmaps.DrawSingle(
+                            target.Name == "skglEnhActive" ? mainBitmap : altBitmap,
+                            target.Name == "skglEnhActive" ? altBitmap : mainBitmap,
+                            Math.Min(180, Math.Max(0, Root._flipAnimator.Angle - FlipAnimator.KerningAngle * i)));
+                        //s.Canvas.DrawImage(skImage, new SKPoint(2 + (enhImgSize + margin) * i, (target.Height - enhImgSize) / 2f)); // Left align, vertical center
+                        s.Canvas.DrawImage(skImage, new SKPoint((target.Width - (nbSlots * (enhImgSize + margin) - margin)) / 2f + (enhImgSize + margin) * i, (target.Height - enhImgSize) / 2f)); // Horizontal center, vertical center
+                    }
+
+                    return s.Snapshot();
                 }
 
                 private static void FillEDFigures()
@@ -3757,8 +3921,83 @@ namespace Mids_Reborn.Forms.Controls
 
                 public static void UpdateGraph()
                 {
-                    Root.skglScalesGraph.Invalidate();
-                    Root.skglGraphLegend.Invalidate();
+                    // Main graph
+                    using var sGraph = SKSurface.Create(new SKImageInfo(Root.skglScalesGraph.Width, Root.skglScalesGraph.Height));
+
+                    sGraph.Canvas.Clear(SKColors.Black);
+                    using var graph = VariableStatsGraph.DrawScalesGraphSurface(Root.skglScalesGraph.Width, Root.skglScalesGraph.Height);
+                    sGraph.Canvas.DrawImage(graph, new SKPoint(0, 0));
+
+                    Root.skglScalesGraph.BackgroundImage = sGraph.Snapshot().ToBitmap();
+
+                    // Graph legend
+                    using var sLegend = SKSurface.Create(new SKImageInfo(Root.skglGraphLegend.Width, Root.skglGraphLegend.Height));
+
+                    sLegend.Canvas.Clear(SKColors.Black);
+                    var ranges = VariableStatsGraph.PowerStats.GetValuesRangeEach(DataPoints);
+                    if (ranges.Count <= 0) return;
+
+                    var padding = new SKSize(3, 5);
+                    const float lineLength = 48;
+                    const int maxCols = 2;
+                    const int maxRows = 3;
+                    var i = 0;
+                    using var textPaint = new SKPaint
+                    {
+                        IsAntialias = true,
+                        Color = SKColors.Gainsboro
+                    };
+
+                    foreach (var range in ranges)
+                    {
+                        using var linePaint = new SKPaint
+                        {
+                            IsAntialias = true,
+                            Color = VariableStatsGraph.GetGraphCurveColor(range.Key),
+                            StrokeWidth = 1
+                        };
+
+                        var row = i % maxRows;
+                        var col = (int) Math.Floor(i / (float) maxRows);
+                        sLegend.Canvas.DrawLine(
+                            new SKPoint(padding.Width + col * (Root.skglGraphLegend.Width - 2 * padding.Width) / maxCols,
+                                padding.Height + 5 + row * 16),
+                            new SKPoint(padding.Width + lineLength + col * (Root.skglGraphLegend.Width - 2 * padding.Width) / maxCols,
+                                padding.Height + 5 + row * 16), linePaint);
+                        var stat = range.Key.EffectType switch
+                        {
+                            Enums.eEffectType.Enhancement => $"Enh({range.Key.ETModifies})",
+                            Enums.eEffectType.Mez => $"{range.Key.MezType}",
+                            Enums.eEffectType.Resistance => range.Key.DamageType == Enums.eDamage.None
+                                ? "Resistance"
+                                : $"Res({range.Key.DamageType})",
+                            Enums.eEffectType.Defense => range.Key.DamageType == Enums.eDamage.None
+                                ? "Defense"
+                                : $"Def({range.Key.DamageType})",
+                            Enums.eEffectType.Elusivity => range.Key.DamageType == Enums.eDamage.None
+                                ? "Elusivity"
+                                : $"Elu({range.Key.DamageType})",
+                            Enums.eEffectType.ResEffect => $"ResEffect({range.Key.ETModifies})",
+                            _ => $"{range.Key.EffectType}"
+                        };
+
+                        var hasPercentage = Math.Abs(range.Value.Min) <= 1 & Math.Abs(range.Value.Max) <= 1;
+                        var rangeText = hasPercentage
+                            ? Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
+                                ? ""
+                                : $"{range.Value.Min:P2} to {range.Value.Max:P2}"
+                            : Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
+                                ? ""
+                                : $"{range.Value.Min:###0.##} to {range.Value.Max:###0.##}";
+
+                        sLegend.Canvas.DrawTextShort($"{stat}{(rangeText != "" ? $" ({rangeText})" : "")}", 11,
+                            padding.Width + lineLength + 6 + col * (Root.skglGraphLegend.Width - 2 * padding.Width) / maxCols,
+                            padding.Height + 8 + row * 16, textPaint);
+
+                        i++;
+                    }
+
+                    Root.skglGraphLegend.BackgroundImage = sLegend.Snapshot().ToBitmap();
                 }
 
                 public static Dictionary<VariableStatsGraph.PowerStats.FxIdentifier, List<VariableStatsGraph.PowerStats.DataPoint>> DataPoints => _DataPoints;
@@ -3791,9 +4030,8 @@ namespace Mids_Reborn.Forms.Controls
                         Root.skglScalesGraph.Size = new Size(353, 220);
                     }
 
-                    Root.scalesTabTitle.Invalidate();
-                    Root.skglScalesGraph.Invalidate();
-                    Root.skglGraphLegend.Invalidate();
+                    Root.scalesTabTitle.BackgroundImage = TabTitlePaintSurface(Root.scalesTabTitle, LayoutType).ToBitmap();
+                    UpdateGraph();
                 }
             }
         }
@@ -3969,34 +4207,6 @@ namespace Mids_Reborn.Forms.Controls
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
         }
 
-        protected void skglEnh_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            var target = (SKGLControl) sender;
-            const int enhImgSize = 30;
-            const int margin = 3;
-
-            e.Surface.Canvas.Clear(SKColors.Black);
-            if (_flipAnimator == null)
-            {
-                return;
-            }
-
-            var nbMaxSlots = Math.Max(_flipAnimator.NbEnhMain, _flipAnimator.NbEnhAlt);
-            var nbSlots = target.Name == "skglEnhActive" ? _flipAnimator.NbEnhMain : _flipAnimator.NbEnhAlt;
-            for (var i = 0; i < nbMaxSlots; i++)
-            {
-                var mainBitmap = _flipAnimator.GetBitmap(Tray.Main, i);
-                var altBitmap = _flipAnimator.GetBitmap(Tray.Alt, i);
-
-                var skImage = FlipAnimator.Bitmaps.DrawSingle(
-                    target.Name == "skglEnhActive" ? mainBitmap : altBitmap,
-                    target.Name == "skglEnhActive" ? altBitmap : mainBitmap,
-                    Math.Min(180, Math.Max(0, _flipAnimator.Angle - FlipAnimator.KerningAngle * i)));
-                //e.Surface.Canvas.DrawImage(skImage, new SKPoint(2 + (enhImgSize + margin) * i, (target.Height - enhImgSize) / 2f)); // Left align, vertical center
-                e.Surface.Canvas.DrawImage(skImage, new SKPoint((Width - (nbSlots * (enhImgSize + margin) - margin)) / 2f + (enhImgSize + margin) * i, (target.Height - enhImgSize) / 2f)); // Horizontal center, vertical center
-            }
-        }
-
         protected void timer1_Tick(object sender, EventArgs e)
         {
             // Rotation seem slower first time it's run.
@@ -4016,8 +4226,8 @@ namespace Mids_Reborn.Forms.Controls
             else
             {
                 _flipAnimator.Angle = Math.Min(_flipAnimator.Angle + 15, _flipAnimator.FullCycleAngle);
-                skglEnhActive.Invalidate();
-                skglEnhAlt.Invalidate();
+                skglEnhActive.BackgroundImage = Tabs.Enhance.EnhTrayPaintSurface(skglEnhActive).ToBitmap();
+                skglEnhAlt.BackgroundImage = Tabs.Enhance.EnhTrayPaintSurface(skglEnhActive).ToBitmap();
             }
         }
 
@@ -4035,15 +4245,6 @@ namespace Mids_Reborn.Forms.Controls
 
             _flipAnimator.Active = true;
             timer1.Start();
-        }
-
-        protected void skglScalesGraph_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            var target = (SKGLControl) sender;
-
-            e.Surface.Canvas.Clear(SKColors.Black);
-            using var graph = VariableStatsGraph.DrawScalesGraphSurface(target.Width, target.Height);
-            e.Surface.Canvas.DrawImage(graph, new SKPoint(0, 0));
         }
 
         private void DataView2_Load(object sender, EventArgs e)
@@ -4119,109 +4320,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             var target = (DataGridView) sender;
             target.ClearSelection();
-        }
-
-        private void tabTitle_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            const int iconSize = 16;
-            const int itemsPadding = 3;
-            const float textSize = 13;
-            string defaultPowerInfoText = "Info";
-
-            var target = (SKGLControl) sender;
-
-            if (LayoutType == InfoType.Enhancement)
-            {
-                var enhName = "";
-                if (EnhSlot.Enh > -1)
-                {
-                    enhName = DatabaseAPI.Database.Enhancements[EnhSlot.Enh].LongName;
-                    if ((enhName.Length > 38) & (EnhLevel > -1))
-                    {
-                        enhName = DatabaseAPI.GetEnhancementNameShortWSet(EnhSlot.Enh);
-                    }
-                }
-                else
-                {
-                    // _basePower may be wrong or undefined
-                    enhName = _basePower != null ? _basePower.DisplayName : "";
-                }
-
-                var textRect = new SKRect(0, 0, 0, 0);
-                using var textPaint = new SKPaint
-                {
-                    Color = SKColors.WhiteSmoke,
-                    TextSize = textSize
-                };
-
-                textPaint.MeasureText(enhName, ref textRect);
-                var maxWidth = target.Width;
-                var totalWidth = (EnhSlot.Enh > -1 ? iconSize + itemsPadding : 0) + textRect.Width;
-                var x = (int) Math.Max(0, Math.Round((maxWidth - totalWidth) / 2));
-
-                e.Surface.Canvas.Clear(SKColors.Black);
-                if (EnhSlot.Enh > -1)
-                {
-                    var enhImg = FlipAnimator.Bitmaps.CreateBitmap(EnhSlot.Enh);
-                    using var enhIcon = new SKBitmap(new SKImageInfo(16, 16));
-                    enhImg.ScalePixels(enhIcon, SKFilterQuality.High);
-                    e.Surface.Canvas.DrawBitmap(enhIcon, new SKRect(0, 0, 16, 16), new SKRect(x, 0, x + 16, 16));
-                }
-
-                e.Surface.Canvas.DrawText(
-                    SKTextBlob.Create(enhName, new SKFont(SKTypeface.Default, textSize)),
-                    x + (EnhSlot.Enh > -1 ? iconSize + itemsPadding : 0), target.Height - 2 - (target.Height - textRect.Height) / 2,
-                    textPaint
-                );
-            }
-            else if (LayoutType == InfoType.Power)
-            {
-                var powerInfo = $@"{(BuildPowerEntry != null ? $"[{BuildPowerEntry.Level + 1}] " : "")}{_basePower?.DisplayName ?? defaultPowerInfoText}";
-                var powerNid = BuildPowerEntry?.NIDPower ?? -1;
-                var powersetNid = powerNid == -1
-                    ? -1
-                    : DatabaseAPI.Database.Power[powerNid].GetPowerSet().nID;
-
-                using var textPaint = new SKPaint
-                {
-                    Color = SKColors.WhiteSmoke,
-                    TextSize = textSize
-                };
-
-                var textRect = new SKRect(0, 0, 0, 0);
-                textPaint.MeasureText(powerInfo, ref textRect);
-                var maxWidth = target.Width;
-                var hasIcon = !(powersetNid == -1 | powerInfo == (_basePower?.DisplayName ?? defaultPowerInfoText));
-                var totalWidth = (hasIcon ? iconSize + itemsPadding : 0) + textRect.Width;
-                var x = (int) Math.Max(0, Math.Round((maxWidth - totalWidth) / 2));
-
-                e.Surface.Canvas.Clear(SKColors.Black);
-                if (powersetNid > -1)
-                {
-                    var powersetFullName = DatabaseAPI.Database.Powersets[powersetNid].FullName;
-                    using var powersetImg = FlipAnimator.Utils.GetIncarnateSlotFromPowerset(powersetFullName) switch
-                    {
-                        FlipAnimator.IncarnateSlot.Alpha => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Alpha),
-                        FlipAnimator.IncarnateSlot.Judgement => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Judgement),
-                        FlipAnimator.IncarnateSlot.Interface => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Interface),
-                        FlipAnimator.IncarnateSlot.Lore => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Lore),
-                        FlipAnimator.IncarnateSlot.Destiny => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Destiny),
-                        FlipAnimator.IncarnateSlot.Hybrid => FlipAnimator.Bitmaps.CreateBitmap(FlipAnimator.IncarnateSlot.Hybrid),
-                        _ => FlipAnimator.Bitmaps.CreateBitmap(
-                            I9Gfx.GetPowersetImage(DatabaseAPI.Database.Powersets[powersetNid]))
-                    };
-
-                    using var powersetIcon = new SKBitmap(new SKImageInfo(16, 16));
-                    powersetImg.ScalePixels(powersetIcon, SKFilterQuality.High);
-                    e.Surface.Canvas.DrawBitmap(powersetIcon, new SKRect(0, 0, 16, 16), new SKRect(x, 0, x + 16, 16));
-                }
-
-                e.Surface.Canvas.DrawText(
-                    SKTextBlob.Create(powerInfo, new SKFont(SKTypeface.Default, textSize)),
-                    x + (hasIcon ? iconSize + itemsPadding : 0), target.Height - 2 - (target.Height - textRect.Height) / 2,
-                    textPaint
-                );
-            }
         }
 
         private void ipbLock_Click(object sender, EventArgs e)
@@ -4416,63 +4514,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             // [user32.dll].HideCaret() doesn't work.
             tabPageAdv4.Focus();
-        }
-
-        private void skglGraphLegend_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            var target = (SKGLControl) sender;
-
-            e.Surface.Canvas.Clear(SKColors.Black);
-            var ranges = VariableStatsGraph.PowerStats.GetValuesRangeEach(Tabs.Scales.DataPoints);
-            if (ranges.Count <= 0) return;
-
-            var padding = new SKSize(3, 5);
-            const float lineLength = 48;
-            const int maxCols = 2;
-            const int maxRows = 3;
-            var i = 0;
-            using var textPaint = new SKPaint
-            {
-                IsAntialias = true,
-                Color = SKColors.Gainsboro
-            };
-
-            foreach (var range in ranges)
-            {
-                using var linePaint = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color = VariableStatsGraph.GetGraphCurveColor(range.Key),
-                    StrokeWidth = 1
-                };
-
-                var row = i % maxRows;
-                var col = (int) Math.Floor(i / (float) maxRows);
-                e.Surface.Canvas.DrawLine(new SKPoint(padding.Width + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 5 + row * 16), new SKPoint(padding.Width + lineLength + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 5 + row * 16), linePaint);
-                var stat = range.Key.EffectType switch
-                {
-                    Enums.eEffectType.Enhancement => $"Enh({range.Key.ETModifies})",
-                    Enums.eEffectType.Mez => $"{range.Key.MezType}",
-                    Enums.eEffectType.Resistance => range.Key.DamageType == Enums.eDamage.None ? "Resistance" : $"Res({range.Key.DamageType})",
-                    Enums.eEffectType.Defense => range.Key.DamageType == Enums.eDamage.None ? "Defense" : $"Def({range.Key.DamageType})",
-                    Enums.eEffectType.Elusivity => range.Key.DamageType == Enums.eDamage.None ? "Elusivity" : $"Elu({range.Key.DamageType})",
-                    Enums.eEffectType.ResEffect => $"ResEffect({range.Key.ETModifies})",
-                    _ => $"{range.Key.EffectType}"
-                };
-
-                var hasPercentage = Math.Abs(range.Value.Min) <= 1 & Math.Abs(range.Value.Max) <= 1;
-                var rangeText = hasPercentage
-                    ? Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
-                        ? ""
-                        : $"{range.Value.Min:P2} to {range.Value.Max:P2}"
-                    : Math.Abs(range.Value.Max - range.Value.Min) < float.Epsilon
-                        ? ""
-                        : $"{range.Value.Min:###0.##} to {range.Value.Max:###0.##}";
-
-                e.Surface.Canvas.DrawTextShort($"{stat}{(rangeText != "" ? $" ({rangeText})" : "")}", 11, padding.Width + lineLength + 6 + col * (target.Width - 2 * padding.Width) / maxCols, padding.Height + 8 + row * 16, textPaint);
-
-                i++;
-            }
         }
 
         private void ipbSettings_Click(object sender, EventArgs e)

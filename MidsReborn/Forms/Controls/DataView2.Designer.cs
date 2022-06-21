@@ -58,7 +58,7 @@ namespace Mids_Reborn.Forms.Controls
             this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.ipbSettings = new FontAwesome.Sharp.IconPictureBox();
             this.ipbLock = new FontAwesome.Sharp.IconPictureBox();
-            this.infoTabTitle = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.infoTabTitle = new System.Windows.Forms.Panel();
             this.listInfos = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -72,7 +72,7 @@ namespace Mids_Reborn.Forms.Controls
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn18 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPageAdv2 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.effectsTabTitle = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.effectsTabTitle = new System.Windows.Forms.Panel();
             this.ipbLock2 = new FontAwesome.Sharp.IconPictureBox();
             this.ipbSettings2 = new FontAwesome.Sharp.IconPictureBox();
             this.gridEffectsBlock3 = new System.Windows.Forms.DataGridView();
@@ -113,21 +113,21 @@ namespace Mids_Reborn.Forms.Controls
             this.dV2TotalsPane1R = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.dV2TotalsPane1L = new Mids_Reborn.Forms.Controls.DV2TotalsPane();
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.enhanceTabTitle = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.enhanceTabTitle = new System.Windows.Forms.Panel();
             this.rtSetsCompareAlt = new System.Windows.Forms.RichTextBox();
             this.rtSetsCompareMain = new System.Windows.Forms.RichTextBox();
             this.ipbSettings4 = new FontAwesome.Sharp.IconPictureBox();
             this.ipbLock4 = new FontAwesome.Sharp.IconPictureBox();
-            this.skglEnhAlt = new SkiaSharp.Views.Desktop.SKGLControl();
-            this.skglEnhActive = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.skglEnhAlt = new System.Windows.Forms.Panel();
+            this.skglEnhActive = new System.Windows.Forms.Panel();
             this.richEnhValues = new System.Windows.Forms.RichTextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.skglGraphLegend = new SkiaSharp.Views.Desktop.SKGLControl();
-            this.scalesTabTitle = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.skglGraphLegend = new System.Windows.Forms.Panel();
+            this.scalesTabTitle = new System.Windows.Forms.Panel();
             this.ipbSettings5 = new FontAwesome.Sharp.IconPictureBox();
             this.ipbLock5 = new FontAwesome.Sharp.IconPictureBox();
-            this.skglScalesGraph = new SkiaSharp.Views.Desktop.SKGLControl();
+            this.skglScalesGraph = new System.Windows.Forms.Panel();
             this.panelPowerScaler3 = new System.Windows.Forms.Panel();
             this.lblPowerScaler3 = new System.Windows.Forms.Label();
             this.powerScaler3 = new Mids_Reborn.Forms.Controls.ColorSlider();
@@ -269,8 +269,6 @@ namespace Mids_Reborn.Forms.Controls
             this.infoTabTitle.Name = "infoTabTitle";
             this.infoTabTitle.Size = new System.Drawing.Size(312, 16);
             this.infoTabTitle.TabIndex = 9;
-            this.infoTabTitle.VSync = false;
-            this.infoTabTitle.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.tabTitle_PaintSurface);
             // 
             // listInfos
             // 
@@ -566,8 +564,6 @@ namespace Mids_Reborn.Forms.Controls
             this.effectsTabTitle.Name = "effectsTabTitle";
             this.effectsTabTitle.Size = new System.Drawing.Size(312, 16);
             this.effectsTabTitle.TabIndex = 25;
-            this.effectsTabTitle.VSync = false;
-            this.effectsTabTitle.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.tabTitle_PaintSurface);
             // 
             // ipbLock2
             // 
@@ -1308,8 +1304,6 @@ namespace Mids_Reborn.Forms.Controls
             this.enhanceTabTitle.Name = "enhanceTabTitle";
             this.enhanceTabTitle.Size = new System.Drawing.Size(312, 16);
             this.enhanceTabTitle.TabIndex = 18;
-            this.enhanceTabTitle.VSync = false;
-            this.enhanceTabTitle.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.tabTitle_PaintSurface);
             // 
             // rtSetsCompareAlt
             // 
@@ -1390,8 +1384,6 @@ namespace Mids_Reborn.Forms.Controls
             this.skglEnhAlt.Name = "skglEnhAlt";
             this.skglEnhAlt.Size = new System.Drawing.Size(353, 43);
             this.skglEnhAlt.TabIndex = 4;
-            this.skglEnhAlt.VSync = false;
-            this.skglEnhAlt.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglEnh_PaintSurface);
             this.skglEnhAlt.Click += new System.EventHandler(this.skglControl_Click);
             // 
             // skglEnhActive
@@ -1402,8 +1394,6 @@ namespace Mids_Reborn.Forms.Controls
             this.skglEnhActive.Name = "skglEnhActive";
             this.skglEnhActive.Size = new System.Drawing.Size(353, 43);
             this.skglEnhActive.TabIndex = 3;
-            this.skglEnhActive.VSync = false;
-            this.skglEnhActive.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglEnh_PaintSurface);
             this.skglEnhActive.Click += new System.EventHandler(this.skglControl_Click);
             // 
             // richEnhValues
@@ -1467,8 +1457,6 @@ namespace Mids_Reborn.Forms.Controls
             this.skglGraphLegend.Name = "skglGraphLegend";
             this.skglGraphLegend.Size = new System.Drawing.Size(353, 54);
             this.skglGraphLegend.TabIndex = 18;
-            this.skglGraphLegend.VSync = false;
-            this.skglGraphLegend.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglGraphLegend_PaintSurface);
             // 
             // scalesTabTitle
             // 
@@ -1478,8 +1466,6 @@ namespace Mids_Reborn.Forms.Controls
             this.scalesTabTitle.Name = "scalesTabTitle";
             this.scalesTabTitle.Size = new System.Drawing.Size(312, 16);
             this.scalesTabTitle.TabIndex = 17;
-            this.scalesTabTitle.VSync = false;
-            this.scalesTabTitle.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.tabTitle_PaintSurface);
             // 
             // ipbSettings5
             // 
@@ -1522,8 +1508,6 @@ namespace Mids_Reborn.Forms.Controls
             this.skglScalesGraph.Name = "skglScalesGraph";
             this.skglScalesGraph.Size = new System.Drawing.Size(353, 220);
             this.skglScalesGraph.TabIndex = 14;
-            this.skglScalesGraph.VSync = false;
-            this.skglScalesGraph.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skglScalesGraph_PaintSurface);
             // 
             // panelPowerScaler3
             // 
@@ -1871,10 +1855,10 @@ namespace Mids_Reborn.Forms.Controls
         private System.Windows.Forms.Panel panelPowerScaler1;
         private System.Windows.Forms.Label labelPowerScaler1;
         private ColorSlider powerScaler1;
-        private SkiaSharp.Views.Desktop.SKGLControl skglEnhAlt;
-        private SkiaSharp.Views.Desktop.SKGLControl skglEnhActive;
+        private System.Windows.Forms.Panel skglEnhAlt;
+        private System.Windows.Forms.Panel skglEnhActive;
         private System.Windows.Forms.Timer timer1;
-        private SkiaSharp.Views.Desktop.SKGLControl skglScalesGraph;
+        private System.Windows.Forms.Panel skglScalesGraph;
         private System.Windows.Forms.DataGridView listInfos;
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Column2;
@@ -1899,13 +1883,13 @@ namespace Mids_Reborn.Forms.Controls
         private DataGridView listSpecialBonuses;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn17;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn18;
-        private SkiaSharp.Views.Desktop.SKGLControl infoTabTitle;
+        private System.Windows.Forms.Panel infoTabTitle;
         private FontAwesome.Sharp.IconPictureBox ipbLock;
         private FontAwesome.Sharp.IconPictureBox ipbSettings;
         private SKDamageGraph skDamageGraph1;
         private FontAwesome.Sharp.IconPictureBox ipbSettings2;
         private FontAwesome.Sharp.IconPictureBox ipbLock2;
-        private SkiaSharp.Views.Desktop.SKGLControl effectsTabTitle;
+        private System.Windows.Forms.Panel effectsTabTitle;
         private Panel panelMiscTypeSelector;
         private Button btnMiscTotals4;
         private Button btnMiscTotals3;
@@ -1922,8 +1906,8 @@ namespace Mids_Reborn.Forms.Controls
         private FontAwesome.Sharp.IconPictureBox ipbSettings5;
         private RichTextBox rtSetsCompareAlt;
         private RichTextBox rtSetsCompareMain;
-        private SkiaSharp.Views.Desktop.SKGLControl enhanceTabTitle;
-        private SkiaSharp.Views.Desktop.SKGLControl scalesTabTitle;
-        private SkiaSharp.Views.Desktop.SKGLControl skglGraphLegend;
+        private System.Windows.Forms.Panel enhanceTabTitle;
+        private System.Windows.Forms.Panel scalesTabTitle;
+        private System.Windows.Forms.Panel skglGraphLegend;
     }
 }
