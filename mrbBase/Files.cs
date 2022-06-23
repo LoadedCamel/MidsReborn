@@ -35,7 +35,7 @@ namespace mrbBase
         public const string BuildsFolder = "Hero & Villain Builds\\";
 
         public static string FileData = string.Empty;
-        public static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
+        private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
         public static string FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
         private static string FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
@@ -58,18 +58,13 @@ namespace mrbBase
         public static string SelectDataFileSave(string iDataFile, string iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
-            if (!Debugger.IsAttached)
-            {
-                return filePath;
-            }
-
-            // Bin path: MidsReborn\bin\(Debug|Release)\net6.0-windows\Data\DatabaseName
-            filePath = Path.GetFullPath(Path.Combine(Path.Combine(AppContext.BaseDirectory, @"..\..\..\"), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+            if (!Debugger.IsAttached) return filePath;
+            filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
             if (!Directory.Exists(FileIO.StripFileName(filePath)))
             {
                 Directory.CreateDirectory(FileIO.StripFileName(filePath));
             }
-            
+
             return filePath;
         }
 
