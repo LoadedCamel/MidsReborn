@@ -1801,13 +1801,16 @@ namespace Mids_Reborn.Forms
                 return;
             for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[index].PowerSet == null)
-                    continue;
-                switch (MidsContext.Character.CurrentBuild.Powers[index].PowerSet.DisplayName)
+                if (MidsContext.Character.CurrentBuild.Powers[index] != null)
                 {
-                    case "Temporary Powers":
-                        MidsContext.Character.CurrentBuild.Powers[index].StatInclude = tempPowersButton.Checked;
-                        break;
+                    if (MidsContext.Character.CurrentBuild.Powers[index].PowerSet == null)
+                        continue;
+                    switch (MidsContext.Character.CurrentBuild.Powers[index].PowerSet.DisplayName)
+                    {
+                        case "Temporary Powers":
+                            MidsContext.Character.CurrentBuild.Powers[index].StatInclude = tempPowersButton.Checked;
+                            break;
+                    }
                 }
             }
         }
@@ -2706,6 +2709,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var num2 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                 for (var index = 0; index <= num2; ++index)
                 {
+                    if (MidsContext.Character.CurrentBuild.Powers[index] == null) continue;
                     if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
                         continue;
                     powIndex = index;
@@ -5903,7 +5907,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoOpen(DlgOpen.FileName);
             FloatTop(true);
             var containsPower = MidsContext.Character.CurrentBuild.Powers
-                .Where(pe => pe.Power != null)
+                .Where(pe => pe?.Power != null)
                 .ToList()
                 .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
             if (containsPower && ActiveForm == this)

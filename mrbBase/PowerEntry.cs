@@ -159,12 +159,14 @@ namespace mrbBase
                 ProcInclude = ProcInclude,
                 Tag = Tag,
                 VariableValue = VariableValue,
+                InherentSlotsUsed = InherentSlotsUsed,
                 SubPowers = (PowerSubEntry[]) SubPowers.Clone(),
                 Slots = new SlotEntry[Slots.Length]
             };
             for (var index = 0; index < SlotCount; ++index)
             {
                 powerEntry.Slots[index].Level = Slots[index].Level;
+                powerEntry.Slots[index].IsInherent = Slots[index].IsInherent;
                 powerEntry.Slots[index].Enhancement = Slots[index].Enhancement.Clone() as I9Slot;
                 powerEntry.Slots[index].FlippedEnhancement = Slots[index].FlippedEnhancement.Clone() as I9Slot;
             }
@@ -194,6 +196,7 @@ namespace mrbBase
             StatInclude = iPe.StatInclude;
             VariableValue = iPe.VariableValue;
             ProcInclude = iPe.ProcInclude;
+            InherentSlotsUsed = iPe.InherentSlotsUsed;
             if (iPe.Slots != null)
             {
                 Slots = new SlotEntry[iPe.Slots.Length];
@@ -300,6 +303,7 @@ namespace mrbBase
             Tag = false;
             StatInclude = false;
             ProcInclude = false;
+            InherentSlotsUsed = 0;
             SubPowers = Array.Empty<PowerSubEntry>();
             if (Slots.Length != 1 || Slots[0].Enhancement.Enh != -1)
                 return;
