@@ -381,19 +381,14 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                switch (AttribType)
+                return AttribType switch
                 {
-                    case Enums.eAttribType.Magnitude:
-                        break;
-                    case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Duration):
-                        return Parse(this, ExpressionType.Duration, out _);
-                    case Enums.eAttribType.Expression:
-                        return Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration;
-                    case Enums.eAttribType.Duration:
-                        return Math.Abs(Math_Duration) <= 0.01 ? Scale * DatabaseAPI.GetModifier(this) : Math_Duration;
-                }
-
-                return 0.0f;
+                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration,
+                    Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Duration) => Parse(this, ExpressionType.Duration, out _),
+                    Enums.eAttribType.Expression or Enums.eAttribType.Magnitude => Math.Abs(Math_Duration) > 0.01 ? Math_Duration : nDuration,
+                    Enums.eAttribType.Duration => Math.Abs(Math_Duration) <= 0.01 ? Scale * DatabaseAPI.GetModifier(this) : Math_Duration,
+                    _ => 0
+                };
             }
         }
 

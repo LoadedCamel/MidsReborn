@@ -1238,25 +1238,27 @@ namespace Mids_Reborn.Forms
             var level = ch.Level;
             if (!((Build.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) & (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
             {
-                str1 = " (Placing " + (ch.Level + 1) + ")";
+                str1 = $" (Placing {ch.Level + 1})";
             }
 
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
-            var str3 = ch.Name + ": ";
+            var str3 = $"{ch.Name}: ";
             if ((MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) & (str1 != ""))
             {
-                str3 = str3 + "Level " + level + str1 + " ";
+                str3 += $"Level {level}{str1} ";
             }
 
-            var str4 = str3 + ch.Archetype.Origin[ch.Origin] + " " + ch.Archetype.DisplayName;
+            var str4 = $"{str3}{ch.Archetype.Origin[ch.Origin]} {ch.Archetype.DisplayName}";
             if (MainModule.MidsController.Toon.Locked)
             {
-                str4 = str4 + " (" + ch.Powersets[0].DisplayName + " / " + ch.Powersets[1].DisplayName + ")" + str2;
+                var ch0name = ch.Powersets[0] == null ? "--" : ch.Powersets[0].DisplayName;
+                var ch1name = ch.Powersets[1] == null ? "--" : ch.Powersets[1].DisplayName;
+                str4 += $" ({ch0name} / {ch1name}){str2}";
             }
 
             if (MidsContext.Config.ExempLow < MidsContext.Config.ExempHigh)
             {
-                str4 = str4 + " - Exemped from " + MidsContext.Config.ExempHigh + " to " + MidsContext.Config.ExempLow;
+                str4 += $" - Exemped from {MidsContext.Config.ExempHigh} to {MidsContext.Config.ExempLow}";
             }
 
             lblHero.Text = str4;
@@ -2332,14 +2334,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     highBase = damageValue;
             }
 
-            for (var index = 0; index <= MidsContext.Character.Powersets[1].Powers.Length - 1; ++index)
+
+            var ps1 = MainModule.MidsController.Toon.PickDefaultSecondaryPowerset();
+            foreach (var power in ps1.Powers)
             {
-                var power = MidsContext.Character.Powersets[1].Powers[index];
                 if (power.SkipMax)
+                {
                     continue;
+                }
+
                 var damageValue = power.FXGetDamageValue();
                 if (damageValue > (double)highBase)
+                {
                     highBase = damageValue;
+                }
             }
 
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
@@ -6708,11 +6716,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var noPrimary = false;
             if (llPrimary.Items.Length == 0)
                 noPrimary = true;
-            else if (llPrimary.Items[llPrimary.Items.Length - 1].nIDSet != MidsContext.Character.Powersets[0].nID)
+            else if (llPrimary.Items[llPrimary.Items.Length - 1].nIDSet != (MidsContext.Character.Powersets[0] == null ? -1 : MidsContext.Character.Powersets[0].nID))
                 noPrimary = true;
             if (llSecondary.Items.Length == 0)
                 noPrimary = true;
-            else if (llSecondary.Items[llSecondary.Items.Length - 1].nIDSet != MidsContext.Character.Powersets[1].nID)
+            else if (llSecondary.Items[llSecondary.Items.Length - 1].nIDSet != (MidsContext.Character.Powersets[1] == null ? -1 : MidsContext.Character.Powersets[1].nID))
                 noPrimary = true;
             var noAncillary = false;
             if (llAncillary.Items.Length == 0 || MidsContext.Character.Powersets[7] == null)
@@ -6833,7 +6841,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private int CountPools(UniqueList<string> listPowersets)
         {
-            return listPowersets.Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0).ToArray()
+            return listPowersets.
+                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray()
                 .Length;
         }
 
@@ -6844,7 +6854,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (nbPools == 4) return;
 
             var pickedPowerPools = listPowersets
-                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0).ToArray();
+                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray();
             var dbPowerPools = Database.Instance.Powersets
                 .Where(ps =>
                     ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
@@ -6853,7 +6864,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Select(e => e.FullName)
                 .ToArray();
 
-            for (var i = 0; i < 4 - nbPools; i++) listPowersets.Add(dbPowerPools[i]);
+            for (var i = 0; i < 4 - nbPools; i++)
+            {
+                listPowersets.Add(dbPowerPools[i]);
+            }
         }
 
         private void FilterVEATPools(ref UniqueList<string> listPowersets)
@@ -6871,13 +6885,36 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     .Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
         }
 
-        private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets,
-            RawCharacterInfo characterInfo)
+        private void FixUndetectedPowersets(ref UniqueList<string> listPowersets)
+        {
+            for (var i = 0; i < listPowersets.Count; i++)
+            {
+                if (i == 2) continue;
+
+                if (listPowersets[i] == null || listPowersets[i] == "")
+                {
+                    var setType = i switch
+                    {
+                        0 => Enums.ePowerSetType.Primary,
+                        1 => Enums.ePowerSetType.Secondary,
+                        7 => Enums.ePowerSetType.Ancillary,
+                        _ => Enums.ePowerSetType.Pool
+                    };
+                    var ps1 = DatabaseAPI.Database.Powersets
+                        .First(ps => ps.ATClass == MidsContext.Character.Archetype.DisplayName & ps.SetType == setType);
+
+                    listPowersets[i] = ps1.FullName;
+                }
+            }
+        }
+
+        private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo)
         {
             // Need to pad pools powerlist so there are 4
             // So epic pools doesn't end up shown as a regular pool...
             PadPowerPools(ref listPowersets);
             FilterVEATPools(ref listPowersets);
+            FixUndetectedPowersets(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -6885,11 +6922,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
-            var k = 0;
             var pickedSlots = 0;
             try
             {
-                for (k = 0; k < listPowers.Count; k++)
+                for (var k = 0; k < listPowers.Count; k++)
                 {
                     if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
                     {
@@ -6902,8 +6938,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
             }
 
-            PowerEntry p;
-            int i;
             var sl = new SlotLevelQueue();
             try
             {
@@ -6914,14 +6948,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     if (pList.Length == 0) continue;
                     if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
 
-                    p = pList.First();
+                    var p = pList.First();
                     while (pe.Slots.Length < p.Slots.Length)
                     {
                         pe.AddSlot(Character.MaxLevel);
                     }
 
                     p.Slots.CopyTo(pe.Slots, 0);
-                    for (i = 0; i < pe.Slots.Length; i++)
+                    for (var i = 0; i < pe.Slots.Length; i++)
                     {
                         if (i == 0)
                         {

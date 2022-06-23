@@ -15,6 +15,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         {
             Load += OnLoad;
             InitializeComponent();
+            Icon = Resources.reborn;
         }
 
         private struct DatabaseItems

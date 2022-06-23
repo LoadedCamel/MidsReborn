@@ -58,14 +58,18 @@ namespace mrbBase
         public static string SelectDataFileSave(string iDataFile, string iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
-            if (Debugger.IsAttached)
+            if (!Debugger.IsAttached)
             {
-                filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
-                if (!Directory.Exists(FileIO.StripFileName(filePath)))
-                {
-                    Directory.CreateDirectory(FileIO.StripFileName(filePath));
-                }
+                return filePath;
             }
+
+            // Bin path: MidsReborn\bin\(Debug|Release)\net6.0-windows\Data\DatabaseName
+            filePath = Path.GetFullPath(Path.Combine(Path.Combine(AppContext.BaseDirectory, @"..\..\..\"), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+            if (!Directory.Exists(FileIO.StripFileName(filePath)))
+            {
+                Directory.CreateDirectory(FileIO.StripFileName(filePath));
+            }
+            
             return filePath;
         }
 
