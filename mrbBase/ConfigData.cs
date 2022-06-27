@@ -121,7 +121,7 @@ namespace mrbBase
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
         public bool DisableExportHex { get; set; }
-        private static ConfigData _current { get; set; }
+        private static ConfigData? _current { get; set; }
 
         public bool ExportBonusTotals { get; set; }
         public bool ExportBonusList { get; set; }
@@ -201,7 +201,7 @@ namespace mrbBase
 
         public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
 
-        internal static ConfigData Current
+        internal static ConfigData? Current
         {
             get
             {

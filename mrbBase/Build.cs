@@ -61,7 +61,7 @@ namespace mrbBase
             get
             {
                 var pplaced = 0;
-                foreach (var power in Powers)
+                foreach (var power in Powers.Where(p => p != null))
                 {
                     if (power.Chosen && power.Power != null)
                     {
@@ -78,7 +78,7 @@ namespace mrbBase
             get
             {
                 var placed = 0;
-                foreach (var power in Powers)
+                foreach (var power in Powers.Where(p => p != null))
                 {
                     if (power.Slots.Length > 1)
                     {
@@ -133,7 +133,7 @@ namespace mrbBase
 
         private PowerEntry? GetPowerEntry(IPower? power)
         {
-            foreach (var power1 in Powers)
+            foreach (var power1 in Powers.Where(p => p != null))
                 if (power1.Power != null && power1.Power.PowerIndex == power.PowerIndex)
                     return power1;
 
@@ -173,7 +173,7 @@ namespace mrbBase
 
         private void FillMissingSubPowers()
         {
-            foreach (var power in Powers)
+            foreach (var power in Powers.Where(power => power != null))
             {
                 if (power.Power == null || power.Power.NIDSubPower.Length <= 0)
                     continue;
@@ -205,7 +205,7 @@ namespace mrbBase
 
         private void ValidateEnhancements()
         {
-            foreach (var power in Powers)
+            foreach (var power in Powers.Where(p => p != null))
                 foreach (var slot in power.Slots)
                 {
                     if (slot.Enhancement.Enh > -1)
@@ -427,7 +427,7 @@ namespace mrbBase
         public int SlotsPlacedAtLevel(int level)
         {
             var slotsPlacedAtLevel = 0;
-            foreach (var powerIdx in Powers)
+            foreach (var powerIdx in Powers.Where(p => p != null))
             {
                 for (var slotIdx = 0; slotIdx < powerIdx.Slots.Length; ++slotIdx)
                 {
@@ -641,7 +641,7 @@ namespace mrbBase
 
         private void CheckAndFixAllEnhancements()
         {
-            foreach (var power in Powers)
+            foreach (var power in Powers.Where(p => p != null))
                 foreach (var slot in power.Slots)
                     if (power.Power != null)
                     {
@@ -676,12 +676,12 @@ namespace mrbBase
         private void CheckAllVariableBounds()
         {
             for (var index = 0; index <= Powers.Count - 1; ++index)
-                Powers[index].CheckVariableBounds();
+                Powers[index]?.CheckVariableBounds();
         }
 
         private void CheckInherentSlotting()
         {
-            foreach (var power in Powers.Where(power => power.Power != null))
+            foreach (var power in Powers.Where(power => power?.Power != null))
             {
                 switch (power.Power.FullName)
                 {
@@ -709,7 +709,7 @@ namespace mrbBase
 
                                 break;
                             case Enums.dmModes.Normal:
-                                var chosenCount = Powers.Where(x => x.Power != null && x.Chosen).ToList().Count;
+                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList().Count;
                                 if (chosenCount > 0)
                                 {
                                     if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
@@ -748,7 +748,7 @@ namespace mrbBase
 
                                 break;
                             case Enums.dmModes.Normal: // Need to check if a build is started if not then do not add slots
-                                var chosenCount = Powers.Where(x => x.Power != null && x.Chosen).ToList().Count;
+                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList().Count;
                                 if (chosenCount > 0)
                                 {
                                     if (power.SlotCount < 2 && power.InherentSlotsUsed < 2)
@@ -787,14 +787,15 @@ namespace mrbBase
             var maxLevel = 0;
             foreach (var power in Powers)
             {
-                if (power.Level > maxLevel)
+                if (power != null && power.Level > maxLevel)
                     maxLevel = power.Level;
-                maxLevel = power.Slots.Select(slot => slot.Level)
-                    .Concat(new[]
-                    {
-                        maxLevel
-                    })
-                    .Max();
+                if (power != null)
+                    maxLevel = power.Slots.Select(slot => slot.Level)
+                        .Concat(new[]
+                        {
+                            maxLevel
+                        })
+                        .Max();
             }
 
             return maxLevel;
@@ -802,16 +803,16 @@ namespace mrbBase
 
         private void ClearInvisibleSlots()
         {
-            foreach (var power in Powers) power.ClearInvisibleSlots();
+            foreach (var power in Powers) power?.ClearInvisibleSlots();
         }
 
         private void ScanAndCleanAutomaticallyGrantedPowers()
         {
             var flag = false;
             var maxLevel = GetMaxLevel();
-            foreach (var power in Powers)
+            foreach (var power in Powers.Where(p => p != null))
             {
-                if (power.Power == null || power.PowerSet == null || power.Chosen ||
+                if (power.Chosen ||
                     power.PowerSet.SetType != Enums.ePowerSetType.Inherent &&
                     power.PowerSet.SetType != Enums.ePowerSetType.Primary &&
                     power.PowerSet.SetType != Enums.ePowerSetType.Secondary)
@@ -915,7 +916,7 @@ namespace mrbBase
         public int FindInToonHistory(int nIDPower)
         {
             for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
-                if (Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == nIDPower)
+                if (Powers[powerIdx]?.Power != null && Powers[powerIdx]?.Power.PowerIndex == nIDPower)
                     return powerIdx;
 
             return -1;
@@ -930,7 +931,7 @@ namespace mrbBase
         {
             for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
             {
-                if (Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == power.PowerIndex)
+                if (Powers[powerIdx] != null && Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == power.PowerIndex)
                 {
                     return Powers[powerIdx].Power.Active;
                 }
@@ -1110,7 +1111,7 @@ namespace mrbBase
                 {
                     PowerIndex = index1
                 };
-                if (Powers[index1].Level <= MidsContext.Config.ForceLevel)
+                if (Powers[index1] != null && Powers[index1].Level <= MidsContext.Config.ForceLevel)
                 {
                     for (var index2 = 0; index2 < Powers[index1].SlotCount; ++index2)
                     {

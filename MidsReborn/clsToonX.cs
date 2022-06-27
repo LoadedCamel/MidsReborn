@@ -685,11 +685,13 @@ namespace Mids_Reborn
             var canFly = false;
             for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
+                if (CurrentBuild.Powers[index1] == null) continue;
                 if (!(CurrentBuild.Powers[index1].StatInclude & (_buffedPower[index1] != null)))
                 {
                     continue;
                 }
 
+                if (_buffedPower[index1] == null) continue;
                 if (_buffedPower[index1].PowerType == Enums.ePowerType.Toggle)
                 {
                     Totals.EndUse += _buffedPower[index1].ToggleCost;
@@ -1237,37 +1239,45 @@ namespace Mids_Reborn
         {
             _buffedPower = new IPower?[CurrentBuild.Powers.Count];
             _mathPower = new IPower?[CurrentBuild.Powers.Count];
-            var refPower = new IPower[CurrentBuild.Powers.Count];
             for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
             {
-                if (CurrentBuild.Powers[hIDX].NIDPower > -1)
+                if (CurrentBuild.Powers[hIDX] == null) continue;
+                if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
                 {
                     _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
                     //_refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
                 }
-            }            
+            }
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
             {
-                if (CurrentBuild.Powers[index1].NIDPower <= -1)
+                if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1]?.NIDPower <= -1)
                     continue;
                 var num3 = CurrentBuild.Powers.Count - 1;
                 for (var index2 = 0; index2 <= num3; ++index2)
                 {
-                    if (!((index1 != index2) & CurrentBuild.Powers[index2].StatInclude & (CurrentBuild.Powers[index2].NIDPower > -1)))
-                        continue;
-                    var effectType = Enums.eEffectType.GrantPower;
-                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false, ref effectType);
+                    switch ((index1 != index2) & CurrentBuild.Powers[index2]?.StatInclude & (CurrentBuild.Powers[index2]?.NIDPower > -1))
+                    {
+                        case false:
+                            continue;
+                        default:
+                        {
+                            var effectType = Enums.eEffectType.GrantPower;
+                            GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false,
+                                ref effectType);
+                            break;
+                        }
+                    }
                 }
             }
 
             for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
             {
-                if (CurrentBuild.Powers[hIDX].NIDPower <= -1)
+                if (CurrentBuild.Powers[hIDX] == null || CurrentBuild.Powers[hIDX].NIDPower <= -1)
                     continue;
                 GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX);
                 _buffedPower[hIDX] = new Power(_mathPower[hIDX]);
-                _buffedPower[hIDX].SetMathMag();
+                _buffedPower[hIDX]?.SetMathMag();
             }
 
             return true;
@@ -1411,6 +1421,7 @@ namespace Mids_Reborn
             var num8 = CurrentBuild.Powers.Count - 1;
             for (var index = 0; index <= num8; ++index)
             {
+                if (CurrentBuild.Powers[index] == null) continue;
                 if (!(CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1))) continue;
                 var effectType = Enums.eEffectType.Enhancement;
                 GBPA_ApplyIncarnateEnhancements(ref powerMath, hIDX, _mathPower[index], false, ref effectType);
@@ -1642,6 +1653,7 @@ namespace Mids_Reborn
 
             for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)
             {
+                if (CurrentBuild.Powers[index] == null) continue;
                 if (!(CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1)))
                     continue;
                 var effectType = Enums.eEffectType.Enhancement;
@@ -1733,6 +1745,7 @@ namespace Mids_Reborn
         {
             for (var i = 0; i < CurrentBuild.Powers.Count; i++)
             {
+                if (CurrentBuild.Powers[i] == null) continue;
                 if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
                     continue;
 
@@ -1792,10 +1805,12 @@ namespace Mids_Reborn
         {
             for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)
             {
+                if (CurrentBuild.Powers[index] == null) continue;
                 if (!(CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1)) || _buffedPower[index] == null)
                     continue;
                 foreach (var effect in _buffedPower[index].Effects)
                 {
+                    if (_buffedPower[index] == null) continue;
                     if (!((effect.EffectType == Enums.eEffectType.GlobalChanceMod) & !string.IsNullOrEmpty(effect.Reward)))
                         continue;
                     if (ModifyEffects.ContainsKey(effect.Reward))
@@ -1834,9 +1849,15 @@ namespace Mids_Reborn
         {
             if (iPower > -1)
             {
-                if (CurrentBuild.Powers.Count - 1 < iPower || CurrentBuild.Powers[iPower].NIDPower < 0)
-                    return null;
-                nIDPower = CurrentBuild.Powers[iPower].NIDPower;
+                if (CurrentBuild.Powers[iPower] != null)
+                {
+                    if (CurrentBuild.Powers.Count - 1 < iPower || CurrentBuild.Powers[iPower].NIDPower < 0)
+                    {
+                        return null;
+                    }
+
+                    nIDPower = CurrentBuild.Powers[iPower].NIDPower;
+                }
             }
             else if (nIDPower <= -1 || nIDPower > DatabaseAPI.Database.Power.Length - 1)
             {
@@ -1846,12 +1867,21 @@ namespace Mids_Reborn
             var powerMath = GBPA_SubPass0_AssemblePowerEntry(nIDPower, iPower);
             for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)
             {
-                if (!((iPower != index) & CurrentBuild.Powers[index].StatInclude &
-                      (CurrentBuild.Powers[index].NIDPower > -1) &
-                      (index < _mathPower.Length)))
-                    continue;
-                var effectType = Enums.eEffectType.GrantPower;
-                GBPA_ApplyIncarnateEnhancements(ref powerMath, -1, _mathPower[index], false, ref effectType);
+                if (CurrentBuild.Powers[index] != null)
+                {
+                    switch (iPower != index & CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1) & (index < _mathPower.Length))
+                    {
+                        case false:
+                            continue;
+                        default:
+                        {
+                            var effectType = Enums.eEffectType.GrantPower;
+                            GBPA_ApplyIncarnateEnhancements(ref powerMath, -1, _mathPower[index], false,
+                                ref effectType);
+                            break;
+                        }
+                    }
+                }
             }
 
             return powerMath;
@@ -2415,12 +2445,12 @@ namespace Mids_Reborn
             {
                 for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
                 {
-                    if (CurrentBuild.Powers[index1].Power == null || !CurrentBuild.Powers[index1].StatInclude)
+                    if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1].Power == null || !CurrentBuild.Powers[index1].StatInclude)
                     {
                         continue;
                     }
 
-                    IPower? power1 = new Power(CurrentBuild.Powers[index1].Power);
+                    IPower? power1 = new Power(CurrentBuild.Powers[index1]?.Power);
                     power1.AbsorbPetEffects();
                     power1.ApplyGrantPowerEffects();
                     for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
@@ -2439,9 +2469,9 @@ namespace Mids_Reborn
 
                         var eBuffDebuff = Enums.eBuffDebuff.Any;
                         var flag = false;
-                        foreach (var str1 in CurrentBuild.Powers[hIDX].Power.BoostsAllowed)
+                        foreach (var str1 in CurrentBuild.Powers[hIDX]?.Power.BoostsAllowed)
                         {
-                            if (power2.BoostsAllowed.Any(str2 => str1 == str2))
+                            if (power2 != null && power2.BoostsAllowed.Any(str2 => str1 == str2))
                             {
                                 if (str1.Contains("Buff"))
                                 {
@@ -2541,7 +2571,7 @@ namespace Mids_Reborn
                         {
                             if (effect.IgnoreED)
                             {
-                                foreach (var str in power2.BoostsAllowed)
+                                foreach (var str in power2?.BoostsAllowed)
                                 {
                                     if (str.StartsWith("Res_Damage"))
                                     {
@@ -2636,7 +2666,10 @@ namespace Mids_Reborn
                 var sContent = new PopUp.StringValue[section.Content.Length + 1];
                 Array.Copy(section.Content, sContent, section.Content.Length);
                 section.Content = sContent;
-                section.Content[section.Content.Length - 1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
+                if (section.Content != null)
+                {
+                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
+                }
             }
 
             if (MidsContext.Config.DisableAlphaPopup)

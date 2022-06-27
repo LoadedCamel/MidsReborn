@@ -309,7 +309,7 @@ namespace mrbControls
                         DrawPowerSlot(ref value, true);
                         currentBuild.Powers[i] = value;
                     }
-                    else if (MidsContext.Character.CurrentBuild.Powers[i].Chosen)
+                    else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Chosen)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers2 = currentBuild.Powers;
@@ -317,7 +317,7 @@ namespace mrbControls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[i] = value;
                     }
-                    else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
+                    else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers3 = currentBuild.Powers;
@@ -986,8 +986,7 @@ namespace mrbControls
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
                     Point point;
-                    if (MidsContext.Character.CurrentBuild.Powers[i].Power == null ||
-                        MidsContext.Character.CurrentBuild.Powers[i].Chosen)
+                    if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen))
                         point = PowerPosition(GetVisualIDX(i));
                     else
                         point = PowerPosition(i);
@@ -1007,8 +1006,7 @@ namespace mrbControls
                 Point point = default;
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[i].Power == null ||
-                        MidsContext.Character.CurrentBuild.Powers[i].Chosen)
+                    if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen))
                         point = PowerPosition(GetVisualIDX(i));
                     else
                         point = PowerPosition(i);
@@ -2196,7 +2194,10 @@ namespace mrbControls
                     var num3 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var i = num2; i <= num3; i++)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Power.PowerIndex != powerEntry.Power.PowerIndex || MidsContext.Character.CurrentBuild.Powers[i].Level != powerEntry.Level)
+                        if (MidsContext.Character.CurrentBuild.Powers[i] == null) continue;
+                        if (MidsContext.Character.CurrentBuild.Powers[i].Power.PowerIndex !=
+                            powerEntry.Power.PowerIndex || MidsContext.Character.CurrentBuild.Powers[i].Level !=
+                            powerEntry.Level)
                             continue;
                         powerIdx = i;
                         break;
@@ -2209,7 +2210,7 @@ namespace mrbControls
                 var iRow = 0;
                 var iCol = 0;
 
-                if (!powerEntry.Chosen)
+                if (powerEntry is { Chosen: false })
                 {
                     if (displayLocation == -1 && powerEntry.Power != null)
                     {
@@ -2302,7 +2303,7 @@ namespace mrbControls
                 result.Height = result.Height + SzPower.Height + PaddingY;
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen && i > MidsContext.Character.CurrentBuild.LastPower)
+                    if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen && i > MidsContext.Character.CurrentBuild.LastPower))
                         continue;
                     var size = new Size(result.Width, PowerPosition(i).Y + SzPower.Height + PaddingY);
                     if (size.Height > result.Height) result.Height = size.Height;

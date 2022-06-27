@@ -394,7 +394,8 @@ namespace Mids_Reborn.Forms.Controls
                     var num5 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var index1 = 0; index1 <= num5; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null || !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
+                        if (MidsContext.Character.CurrentBuild.Powers[index1] == null) continue;
+                        if (!MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
                             continue;
                         IPower? power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
                         power1.AbsorbPetEffects();
@@ -411,9 +412,10 @@ namespace Mids_Reborn.Forms.Controls
 
                             var eBuffDebuff = Enums.eBuffDebuff.Any;
                             var flag = false;
+                            if (MidsContext.Character.CurrentBuild.Powers[inToonHistory] == null) continue;
                             foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[inToonHistory].Power.BoostsAllowed)
                             {
-                                if (power2.BoostsAllowed.Any(str2 => str1 == str2))
+                                if (power2 != null && power2.BoostsAllowed.Any(str2 => str1 == str2))
                                 {
                                     if (str1.Contains("Buff"))
                                         eBuffDebuff = Enums.eBuffDebuff.BuffOnly;
@@ -491,7 +493,7 @@ namespace Mids_Reborn.Forms.Controls
                                 {
                                     case true:
                                     {
-                                        foreach (var str in power2.BoostsAllowed)
+                                        foreach (var str in power2?.BoostsAllowed)
                                         {
                                             if (str.StartsWith("Res_Damage"))
                                             {
@@ -512,7 +514,7 @@ namespace Mids_Reborn.Forms.Controls
                                     }
                                     default:
                                     {
-                                        foreach (var str in power2.BoostsAllowed)
+                                        foreach (var str in power2?.BoostsAllowed)
                                         {
                                             if (str.StartsWith("Res_Damage"))
                                             {
@@ -550,8 +552,7 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         if (numArray1[index] > 0.0)
                         {
-                            enhListing.AddItem(BuildEDItem(index, numArray1, schedule1,
-                                Enum.GetName(eEnhance.GetType(), index), afterED1));
+                            enhListing.AddItem(BuildEDItem(index, numArray1, schedule1, Enum.GetName(eEnhance.GetType(), index), afterED1));
                             if (enhListing.IsSpecialColor())
                                 enhListing.SetUnique();
                         }

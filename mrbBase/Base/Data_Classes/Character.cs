@@ -1620,7 +1620,7 @@ namespace mrbBase.Base.Data_Classes
         private bool PowersetUsed(IPowerset powerset)
         {
             return powerset != null &&
-                   CurrentBuild.Powers.Any(t => (t.NIDPowerset == powerset.nID) & (t.IDXPower > -1));
+                   CurrentBuild.Powers.Any(t => (t?.NIDPowerset == powerset.nID) & (t?.IDXPower > -1));
         }
 
         protected bool CanRemovePower(int index, bool allowSecondary, out string message)
