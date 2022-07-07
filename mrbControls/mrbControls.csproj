@@ -101,7 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
-    <EmbeddedResource Include="ctlMultiGraph.resources" />
     <EmbeddedResource Include="ctlPopUp.resources" />
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
@@ -115,6 +114,7 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.0" />
     <PackageReference Include="Syncfusion.Grid.Windows">
       <Version>19.3.0.57</Version>
     </PackageReference>

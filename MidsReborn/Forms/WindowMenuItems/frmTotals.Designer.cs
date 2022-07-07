@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbBase;
+using mrbControls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -90,7 +90,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblDef
             // 
-            this.lblDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDef.Location = new System.Drawing.Point(3, 0);
             this.lblDef.Name = "lblDef";
             this.lblDef.Size = new System.Drawing.Size(89, 16);
@@ -100,7 +100,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblRes
             // 
-            this.lblRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblRes.Location = new System.Drawing.Point(3, 164);
             this.lblRes.Name = "lblRes";
             this.lblRes.Size = new System.Drawing.Size(125, 16);
@@ -110,7 +110,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblRegenRec
             // 
-            this.lblRegenRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRegenRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblRegenRec.Location = new System.Drawing.Point(3, 302);
             this.lblRegenRec.Name = "lblRegenRec";
             this.lblRegenRec.Size = new System.Drawing.Size(125, 16);
@@ -121,7 +121,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // pnlDRHE
             // 
-            this.pnlDRHE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.pnlDRHE.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.pnlDRHE.Controls.Add(this.graphMaxEnd);
             this.pnlDRHE.Controls.Add(this.graphHP);
             this.pnlDRHE.Controls.Add(this.graphDef);
@@ -135,30 +135,31 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.pnlDRHE.Controls.Add(this.Panel1);
             this.pnlDRHE.Location = new System.Drawing.Point(4, 31);
             this.pnlDRHE.Name = "pnlDRHE";
-            this.pnlDRHE.Size = new System.Drawing.Size(320, 421);
+            this.pnlDRHE.Size = new System.Drawing.Size(320, 433);
             this.pnlDRHE.TabIndex = 9;
             // 
             // graphMaxEnd
             // 
             this.graphMaxEnd.BackColor = System.Drawing.Color.Black;
+            this.graphMaxEnd.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphMaxEnd.BackgroundImage")));
             this.graphMaxEnd.Border = true;
             this.graphMaxEnd.Clickable = false;
             this.graphMaxEnd.ColorBase = System.Drawing.Color.CornflowerBlue;
             this.graphMaxEnd.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphMaxEnd.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(128)))));
+            this.graphMaxEnd.ColorFadeEnd = System.Drawing.Color.FromArgb(64, 64, 128);
             this.graphMaxEnd.ColorFadeStart = System.Drawing.Color.Black;
             this.graphMaxEnd.ColorHighlight = System.Drawing.Color.Gray;
             this.graphMaxEnd.ColorLines = System.Drawing.Color.Black;
             this.graphMaxEnd.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphMaxEnd.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphMaxEnd.Dual = false;
-            this.graphMaxEnd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphMaxEnd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphMaxEnd.ForcedMax = 0F;
-            this.graphMaxEnd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphMaxEnd.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphMaxEnd.Highlight = true;
             this.graphMaxEnd.ItemHeight = 10;
             this.graphMaxEnd.Lines = true;
-            this.graphMaxEnd.Location = new System.Drawing.Point(17, 394);
+            this.graphMaxEnd.Location = new System.Drawing.Point(15, 394);
             this.graphMaxEnd.MarkerValue = 0F;
             this.graphMaxEnd.Max = 100F;
             this.graphMaxEnd.Name = "graphMaxEnd";
@@ -175,20 +176,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphHP
             // 
             this.graphHP.BackColor = System.Drawing.Color.Black;
+            this.graphHP.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphHP.BackgroundImage")));
             this.graphHP.Border = true;
             this.graphHP.Clickable = false;
-            this.graphHP.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(192)))), ((int)(((byte)(96)))));
+            this.graphHP.ColorBase = System.Drawing.Color.FromArgb(96, 192, 96);
             this.graphHP.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphHP.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(64)))));
+            this.graphHP.ColorFadeEnd = System.Drawing.Color.FromArgb(64, 128, 64);
             this.graphHP.ColorFadeStart = System.Drawing.Color.Black;
             this.graphHP.ColorHighlight = System.Drawing.Color.Gray;
             this.graphHP.ColorLines = System.Drawing.Color.Black;
             this.graphHP.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphHP.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphHP.Dual = false;
-            this.graphHP.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphHP.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphHP.ForcedMax = 0F;
-            this.graphHP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphHP.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphHP.Highlight = true;
             this.graphHP.ItemHeight = 10;
             this.graphHP.Lines = true;
@@ -209,9 +211,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphDef
             // 
             this.graphDef.BackColor = System.Drawing.Color.Black;
+            this.graphDef.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphDef.BackgroundImage")));
             this.graphDef.Border = true;
             this.graphDef.Clickable = false;
-            this.graphDef.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.graphDef.ColorBase = System.Drawing.Color.FromArgb(192, 0, 192);
             this.graphDef.ColorEnh = System.Drawing.Color.Yellow;
             this.graphDef.ColorFadeEnd = System.Drawing.Color.Purple;
             this.graphDef.ColorFadeStart = System.Drawing.Color.Black;
@@ -220,9 +223,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphDef.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphDef.Dual = false;
-            this.graphDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDef.ForcedMax = 0F;
-            this.graphDef.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphDef.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphDef.Highlight = true;
             this.graphDef.ItemHeight = 10;
             this.graphDef.Lines = true;
@@ -243,20 +246,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphDrain
             // 
             this.graphDrain.BackColor = System.Drawing.Color.Black;
+            this.graphDrain.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphDrain.BackgroundImage")));
             this.graphDrain.Border = true;
             this.graphDrain.Clickable = false;
             this.graphDrain.ColorBase = System.Drawing.Color.LightSteelBlue;
             this.graphDrain.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphDrain.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(192)))));
+            this.graphDrain.ColorFadeEnd = System.Drawing.Color.FromArgb(64, 64, 192);
             this.graphDrain.ColorFadeStart = System.Drawing.Color.Black;
             this.graphDrain.ColorHighlight = System.Drawing.Color.Gray;
             this.graphDrain.ColorLines = System.Drawing.Color.Black;
             this.graphDrain.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphDrain.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphDrain.Dual = false;
-            this.graphDrain.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphDrain.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDrain.ForcedMax = 0F;
-            this.graphDrain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphDrain.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphDrain.Highlight = true;
             this.graphDrain.ItemHeight = 10;
             this.graphDrain.Lines = true;
@@ -277,10 +281,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphRes
             // 
             this.graphRes.BackColor = System.Drawing.Color.Black;
+            this.graphRes.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphRes.BackgroundImage")));
             this.graphRes.Border = true;
             this.graphRes.Clickable = false;
-            this.graphRes.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.graphRes.ColorEnh = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.graphRes.ColorBase = System.Drawing.Color.FromArgb(0, 192, 192);
+            this.graphRes.ColorEnh = System.Drawing.Color.FromArgb(255, 128, 128);
             this.graphRes.ColorFadeEnd = System.Drawing.Color.Teal;
             this.graphRes.ColorFadeStart = System.Drawing.Color.Black;
             this.graphRes.ColorHighlight = System.Drawing.Color.Gray;
@@ -288,9 +293,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphRes.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphRes.Dual = false;
-            this.graphRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRes.ForcedMax = 0F;
-            this.graphRes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphRes.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphRes.Highlight = true;
             this.graphRes.ItemHeight = 10;
             this.graphRes.Lines = true;
@@ -311,20 +316,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphRec
             // 
             this.graphRec.BackColor = System.Drawing.Color.Black;
+            this.graphRec.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphRec.BackgroundImage")));
             this.graphRec.Border = true;
             this.graphRec.Clickable = false;
             this.graphRec.ColorBase = System.Drawing.Color.RoyalBlue;
             this.graphRec.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphRec.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.graphRec.ColorFadeEnd = System.Drawing.Color.FromArgb(0, 0, 192);
             this.graphRec.ColorFadeStart = System.Drawing.Color.Black;
             this.graphRec.ColorHighlight = System.Drawing.Color.Gray;
             this.graphRec.ColorLines = System.Drawing.Color.Black;
             this.graphRec.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphRec.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphRec.Dual = false;
-            this.graphRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRec.ForcedMax = 0F;
-            this.graphRec.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphRec.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphRec.Highlight = true;
             this.graphRec.ItemHeight = 10;
             this.graphRec.Lines = true;
@@ -345,20 +351,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphRegen
             // 
             this.graphRegen.BackColor = System.Drawing.Color.Black;
+            this.graphRegen.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphRegen.BackgroundImage")));
             this.graphRegen.Border = true;
             this.graphRegen.Clickable = false;
-            this.graphRegen.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
+            this.graphRegen.ColorBase = System.Drawing.Color.FromArgb(64, 255, 64);
             this.graphRegen.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphRegen.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.graphRegen.ColorFadeEnd = System.Drawing.Color.FromArgb(0, 192, 0);
             this.graphRegen.ColorFadeStart = System.Drawing.Color.Black;
             this.graphRegen.ColorHighlight = System.Drawing.Color.Gray;
             this.graphRegen.ColorLines = System.Drawing.Color.Black;
             this.graphRegen.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphRegen.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphRegen.Dual = false;
-            this.graphRegen.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphRegen.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRegen.ForcedMax = 0F;
-            this.graphRegen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphRegen.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphRegen.Highlight = true;
             this.graphRegen.ItemHeight = 10;
             this.graphRegen.Lines = true;
@@ -386,7 +393,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // pnlMisc
             // 
-            this.pnlMisc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.pnlMisc.BackColor = System.Drawing.Color.FromArgb(32, 0, 32);
             this.pnlMisc.Controls.Add(this.rbMSec);
             this.pnlMisc.Controls.Add(this.rbFPS);
             this.pnlMisc.Controls.Add(this.rbKPH);
@@ -402,7 +409,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.pnlMisc.Controls.Add(this.Panel2);
             this.pnlMisc.Location = new System.Drawing.Point(330, 31);
             this.pnlMisc.Name = "pnlMisc";
-            this.pnlMisc.Size = new System.Drawing.Size(320, 423);
+            this.pnlMisc.Size = new System.Drawing.Size(320, 433);
             this.pnlMisc.TabIndex = 10;
             this.pnlMisc.Visible = false;
             // 
@@ -452,7 +459,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblStealth
             // 
-            this.lblStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblStealth.Location = new System.Drawing.Point(3, 109);
             this.lblStealth.Name = "lblStealth";
             this.lblStealth.Size = new System.Drawing.Size(125, 16);
@@ -463,6 +470,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphStealth
             // 
             this.graphStealth.BackColor = System.Drawing.Color.Black;
+            this.graphStealth.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphStealth.BackgroundImage")));
             this.graphStealth.Border = true;
             this.graphStealth.Clickable = false;
             this.graphStealth.ColorBase = System.Drawing.Color.LightSlateGray;
@@ -474,9 +482,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStealth.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphStealth.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphStealth.Dual = false;
-            this.graphStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphStealth.ForcedMax = 0F;
-            this.graphStealth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphStealth.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphStealth.Highlight = true;
             this.graphStealth.ItemHeight = 10;
             this.graphStealth.Lines = true;
@@ -497,6 +505,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphAcc
             // 
             this.graphAcc.BackColor = System.Drawing.Color.Black;
+            this.graphAcc.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphAcc.BackgroundImage")));
             this.graphAcc.Border = true;
             this.graphAcc.Clickable = false;
             this.graphAcc.ColorBase = System.Drawing.Color.Yellow;
@@ -508,9 +517,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAcc.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphAcc.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphAcc.Dual = false;
-            this.graphAcc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphAcc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphAcc.ForcedMax = 0F;
-            this.graphAcc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphAcc.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphAcc.Highlight = true;
             this.graphAcc.ItemHeight = 10;
             this.graphAcc.Lines = true;
@@ -531,20 +540,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphToHit
             // 
             this.graphToHit.BackColor = System.Drawing.Color.Black;
+            this.graphToHit.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphToHit.BackgroundImage")));
             this.graphToHit.Border = true;
             this.graphToHit.Clickable = false;
-            this.graphToHit.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.graphToHit.ColorBase = System.Drawing.Color.FromArgb(255, 255, 128);
             this.graphToHit.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphToHit.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.graphToHit.ColorFadeEnd = System.Drawing.Color.FromArgb(192, 192, 0);
             this.graphToHit.ColorFadeStart = System.Drawing.Color.Black;
             this.graphToHit.ColorHighlight = System.Drawing.Color.Gray;
             this.graphToHit.ColorLines = System.Drawing.Color.Black;
             this.graphToHit.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphToHit.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphToHit.Dual = false;
-            this.graphToHit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphToHit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphToHit.ForcedMax = 0F;
-            this.graphToHit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphToHit.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphToHit.Highlight = true;
             this.graphToHit.ItemHeight = 10;
             this.graphToHit.Lines = true;
@@ -564,7 +574,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblMisc
             // 
-            this.lblMisc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMisc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblMisc.Location = new System.Drawing.Point(3, 177);
             this.lblMisc.Name = "lblMisc";
             this.lblMisc.Size = new System.Drawing.Size(125, 16);
@@ -575,20 +585,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphMovement
             // 
             this.graphMovement.BackColor = System.Drawing.Color.Black;
+            this.graphMovement.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphMovement.BackgroundImage")));
             this.graphMovement.Border = true;
             this.graphMovement.Clickable = false;
-            this.graphMovement.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.graphMovement.ColorEnh = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.graphMovement.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(96)))));
+            this.graphMovement.ColorBase = System.Drawing.Color.FromArgb(0, 192, 128);
+            this.graphMovement.ColorEnh = System.Drawing.Color.FromArgb(255, 128, 128);
+            this.graphMovement.ColorFadeEnd = System.Drawing.Color.FromArgb(0, 128, 96);
             this.graphMovement.ColorFadeStart = System.Drawing.Color.Black;
             this.graphMovement.ColorHighlight = System.Drawing.Color.Gray;
             this.graphMovement.ColorLines = System.Drawing.Color.Black;
             this.graphMovement.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphMovement.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphMovement.Dual = false;
-            this.graphMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphMovement.ForcedMax = 0F;
-            this.graphMovement.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphMovement.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphMovement.Highlight = true;
             this.graphMovement.ItemHeight = 10;
             this.graphMovement.Lines = true;
@@ -608,7 +619,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblMovement
             // 
-            this.lblMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblMovement.Location = new System.Drawing.Point(3, 0);
             this.lblMovement.Name = "lblMovement";
             this.lblMovement.Size = new System.Drawing.Size(125, 16);
@@ -619,20 +630,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphHaste
             // 
             this.graphHaste.BackColor = System.Drawing.Color.Black;
+            this.graphHaste.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphHaste.BackgroundImage")));
             this.graphHaste.Border = true;
             this.graphHaste.Clickable = false;
-            this.graphHaste.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.graphHaste.ColorBase = System.Drawing.Color.FromArgb(255, 128, 0);
             this.graphHaste.ColorEnh = System.Drawing.Color.Yellow;
-            this.graphHaste.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.graphHaste.ColorFadeEnd = System.Drawing.Color.FromArgb(192, 64, 0);
             this.graphHaste.ColorFadeStart = System.Drawing.Color.Black;
             this.graphHaste.ColorHighlight = System.Drawing.Color.Gray;
             this.graphHaste.ColorLines = System.Drawing.Color.Black;
             this.graphHaste.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphHaste.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphHaste.Dual = false;
-            this.graphHaste.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphHaste.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphHaste.ForcedMax = 0F;
-            this.graphHaste.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphHaste.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphHaste.Highlight = true;
             this.graphHaste.ItemHeight = 10;
             this.graphHaste.Lines = true;
@@ -665,9 +677,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphElusivity
             // 
             this.graphElusivity.BackColor = System.Drawing.Color.Black;
+            this.graphElusivity.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphElusivity.BackgroundImage")));
             this.graphElusivity.Border = true;
             this.graphElusivity.Clickable = false;
-            this.graphElusivity.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.graphElusivity.ColorBase = System.Drawing.Color.FromArgb(192, 0, 192);
             this.graphElusivity.ColorEnh = System.Drawing.Color.Yellow;
             this.graphElusivity.ColorFadeEnd = System.Drawing.Color.Purple;
             this.graphElusivity.ColorFadeStart = System.Drawing.Color.Black;
@@ -676,9 +689,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphElusivity.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphElusivity.Dual = false;
-            this.graphElusivity.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphElusivity.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphElusivity.ForcedMax = 0F;
-            this.graphElusivity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphElusivity.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphElusivity.Highlight = true;
             this.graphElusivity.ItemHeight = 10;
             this.graphElusivity.Lines = true;
@@ -699,6 +712,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphThreat
             // 
             this.graphThreat.BackColor = System.Drawing.Color.Black;
+            this.graphThreat.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphThreat.BackgroundImage")));
             this.graphThreat.Border = true;
             this.graphThreat.Clickable = false;
             this.graphThreat.ColorBase = System.Drawing.Color.MediumPurple;
@@ -710,9 +724,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphThreat.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphThreat.Dual = false;
-            this.graphThreat.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphThreat.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphThreat.ForcedMax = 0F;
-            this.graphThreat.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphThreat.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphThreat.Highlight = true;
             this.graphThreat.ItemHeight = 10;
             this.graphThreat.Lines = true;
@@ -733,6 +747,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphEndRdx
             // 
             this.graphEndRdx.BackColor = System.Drawing.Color.Black;
+            this.graphEndRdx.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphEndRdx.BackgroundImage")));
             this.graphEndRdx.Border = true;
             this.graphEndRdx.Clickable = false;
             this.graphEndRdx.ColorBase = System.Drawing.Color.RoyalBlue;
@@ -744,9 +759,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphEndRdx.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphEndRdx.Dual = false;
-            this.graphEndRdx.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphEndRdx.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphEndRdx.ForcedMax = 0F;
-            this.graphEndRdx.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphEndRdx.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphEndRdx.Highlight = true;
             this.graphEndRdx.ItemHeight = 10;
             this.graphEndRdx.Lines = true;
@@ -767,20 +782,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphDam
             // 
             this.graphDam.BackColor = System.Drawing.Color.Black;
+            this.graphDam.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphDam.BackgroundImage")));
             this.graphDam.Border = true;
             this.graphDam.Clickable = false;
             this.graphDam.ColorBase = System.Drawing.Color.Red;
             this.graphDam.ColorEnh = System.Drawing.Color.Brown;
-            this.graphDam.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.graphDam.ColorFadeEnd = System.Drawing.Color.FromArgb(128, 64, 64);
             this.graphDam.ColorFadeStart = System.Drawing.Color.Black;
             this.graphDam.ColorHighlight = System.Drawing.Color.Gray;
             this.graphDam.ColorLines = System.Drawing.Color.Black;
             this.graphDam.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphDam.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphDam.Dual = false;
-            this.graphDam.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphDam.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDam.ForcedMax = 0F;
-            this.graphDam.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphDam.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphDam.Highlight = true;
             this.graphDam.ItemHeight = 10;
             this.graphDam.Lines = true;
@@ -821,7 +837,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // pbTopMost
             // 
             this.pbTopMost.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pbTopMost.Location = new System.Drawing.Point(4, 458);
+            this.pbTopMost.Location = new System.Drawing.Point(4, 468);
             this.pbTopMost.Name = "pbTopMost";
             this.pbTopMost.Size = new System.Drawing.Size(105, 22);
             this.pbTopMost.TabIndex = 95;
@@ -832,7 +848,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // pbClose
             // 
             this.pbClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pbClose.Location = new System.Drawing.Point(220, 458);
+            this.pbClose.Location = new System.Drawing.Point(220, 468);
             this.pbClose.Name = "pbClose";
             this.pbClose.Size = new System.Drawing.Size(105, 22);
             this.pbClose.TabIndex = 96;
@@ -842,7 +858,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // pnlStatus
             // 
-            this.pnlStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(32)))), ((int)(((byte)(0)))));
+            this.pnlStatus.BackColor = System.Drawing.Color.FromArgb(0, 32, 0);
             this.pnlStatus.Controls.Add(this.graphSRes);
             this.pnlStatus.Controls.Add(this.lblSRes);
             this.pnlStatus.Controls.Add(this.graphSDeb);
@@ -851,17 +867,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.pnlStatus.Controls.Add(this.lblSProt);
             this.pnlStatus.Location = new System.Drawing.Point(656, 31);
             this.pnlStatus.Name = "pnlStatus";
-            this.pnlStatus.Size = new System.Drawing.Size(320, 423);
+            this.pnlStatus.Size = new System.Drawing.Size(320, 433);
             this.pnlStatus.TabIndex = 97;
             this.pnlStatus.Visible = false;
             // 
             // graphSRes
             // 
             this.graphSRes.BackColor = System.Drawing.Color.Black;
+            this.graphSRes.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphSRes.BackgroundImage")));
             this.graphSRes.Border = true;
             this.graphSRes.Clickable = false;
             this.graphSRes.ColorBase = System.Drawing.Color.Yellow;
-            this.graphSRes.ColorEnh = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.graphSRes.ColorEnh = System.Drawing.Color.FromArgb(255, 128, 128);
             this.graphSRes.ColorFadeEnd = System.Drawing.Color.Olive;
             this.graphSRes.ColorFadeStart = System.Drawing.Color.Black;
             this.graphSRes.ColorHighlight = System.Drawing.Color.Gray;
@@ -869,9 +886,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSRes.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphSRes.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphSRes.Dual = false;
-            this.graphSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSRes.ForcedMax = 0F;
-            this.graphSRes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphSRes.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphSRes.Highlight = true;
             this.graphSRes.ItemHeight = 9;
             this.graphSRes.Lines = true;
@@ -891,7 +908,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSRes
             // 
-            this.lblSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSRes.Location = new System.Drawing.Point(3, 156);
             this.lblSRes.Name = "lblSRes";
             this.lblSRes.Size = new System.Drawing.Size(125, 16);
@@ -902,6 +919,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphSDeb
             // 
             this.graphSDeb.BackColor = System.Drawing.Color.Black;
+            this.graphSDeb.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphSDeb.BackgroundImage")));
             this.graphSDeb.Border = true;
             this.graphSDeb.Clickable = false;
             this.graphSDeb.ColorBase = System.Drawing.Color.Cyan;
@@ -913,9 +931,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSDeb.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphSDeb.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphSDeb.Dual = false;
-            this.graphSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSDeb.ForcedMax = 0F;
-            this.graphSDeb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphSDeb.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphSDeb.Highlight = true;
             this.graphSDeb.ItemHeight = 9;
             this.graphSDeb.Lines = true;
@@ -935,7 +953,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSDeb
             // 
-            this.lblSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSDeb.Location = new System.Drawing.Point(3, 314);
             this.lblSDeb.Name = "lblSDeb";
             this.lblSDeb.Size = new System.Drawing.Size(125, 16);
@@ -946,20 +964,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // graphSProt
             // 
             this.graphSProt.BackColor = System.Drawing.Color.Black;
+            this.graphSProt.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("graphSProt.BackgroundImage")));
             this.graphSProt.Border = true;
             this.graphSProt.Clickable = false;
-            this.graphSProt.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.graphSProt.ColorEnh = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.graphSProt.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.graphSProt.ColorBase = System.Drawing.Color.FromArgb(255, 128, 0);
+            this.graphSProt.ColorEnh = System.Drawing.Color.FromArgb(255, 128, 128);
+            this.graphSProt.ColorFadeEnd = System.Drawing.Color.FromArgb(128, 64, 0);
             this.graphSProt.ColorFadeStart = System.Drawing.Color.Black;
             this.graphSProt.ColorHighlight = System.Drawing.Color.Gray;
             this.graphSProt.ColorLines = System.Drawing.Color.Black;
             this.graphSProt.ColorMarkerInner = System.Drawing.Color.Black;
             this.graphSProt.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.graphSProt.Dual = false;
-            this.graphSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.graphSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSProt.ForcedMax = 0F;
-            this.graphSProt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.graphSProt.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.graphSProt.Highlight = true;
             this.graphSProt.ItemHeight = 9;
             this.graphSProt.Lines = true;
@@ -979,7 +998,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSProt
             // 
-            this.lblSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSProt.Location = new System.Drawing.Point(3, 0);
             this.lblSProt.Name = "lblSProt";
             this.lblSProt.Size = new System.Drawing.Size(125, 16);
@@ -1001,7 +1020,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(995, 483);
+            this.ClientSize = new System.Drawing.Size(995, 493);
             this.Controls.Add(this.tab2);
             this.Controls.Add(this.pnlStatus);
             this.Controls.Add(this.pbClose);
@@ -1010,12 +1029,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.tab0);
             this.Controls.Add(this.pnlMisc);
             this.Controls.Add(this.pnlDRHE);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1024, 603);
-            this.MinimumSize = new System.Drawing.Size(344, 522);
+            this.MinimumSize = new System.Drawing.Size(344, 532);
             this.Name = "frmTotals";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Totals for Self";
@@ -1034,29 +1053,50 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         }
         #endregion
 
-        Label lblDef;
-        Label lblMisc;
-        Label lblMovement;
-        Label lblRegenRec;
-        Label lblRes;
-        Label lblSDeb;
-        Label lblSProt;
-        Label lblSRes;
-        Label lblStealth;
-        Panel Panel1;
-        Panel Panel2;
-        PictureBox pbClose;
-        PictureBox pbTopMost;
-        Panel pnlDRHE;
-        Panel pnlMisc;
-        Panel pnlStatus;
-        RadioButton rbFPS;
-        RadioButton rbKPH;
-        RadioButton rbMPH;
-        RadioButton rbMSec;
-        PictureBox tab0;
-        PictureBox tab1;
-        PictureBox tab2;
+        private Label lblDef;
+        private Label lblMisc;
+        private Label lblMovement;
+        private Label lblRegenRec;
+        private Label lblRes;
+        private Label lblSDeb;
+        private Label lblSProt;
+        private Label lblSRes;
+        private Label lblStealth;
+        private Panel Panel1;
+        private Panel Panel2;
+        private PictureBox pbClose;
+        private PictureBox pbTopMost;
+        private Panel pnlDRHE;
+        private Panel pnlMisc;
+        private Panel pnlStatus;
+        private RadioButton rbFPS;
+        private RadioButton rbKPH;
+        private RadioButton rbMPH;
+        private RadioButton rbMSec;
+        private PictureBox tab0;
+        private PictureBox tab1;
+        private PictureBox tab2;
+
+        private ctlMultiGraph graphAcc;
+        private ctlMultiGraph graphDam;
+        private ctlMultiGraph graphDef;
+        private ctlMultiGraph graphDrain;
+        private ctlMultiGraph graphElusivity;
+        private ctlMultiGraph graphEndRdx;
+        private ctlMultiGraph graphHaste;
+        private ctlMultiGraph graphHP;
+        private ctlMultiGraph graphMaxEnd;
+        private ctlMultiGraph graphMovement;
+        private ctlMultiGraph graphRec;
+        private ctlMultiGraph graphRegen;
+        private ctlMultiGraph graphRes;
+        private ctlMultiGraph graphSDeb;
+        private ctlMultiGraph graphSProt;
+        private ctlMultiGraph graphSRes;
+        private ctlMultiGraph graphStealth;
+        private ctlMultiGraph graphThreat;
+        private ctlMultiGraph graphToHit;
+
         private ToolTip toolTip1;
     }
 }
