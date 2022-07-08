@@ -164,19 +164,29 @@ namespace Mids_Reborn
                     case Enums.dmModes.LevelUp:
                     {
                         i = GetFirstAvailablePowerIndex(DatabaseAPI.Database.Power[powerID].Level - 1);
-                        if (i < 0)
-                            message = "You cannot place any additional powers unless you first remove one.";
-                        else if (CurrentBuild.Powers[i].Level > Level)
-                            i = -1;
-                        else if (!TestPower(powerID))
-                            i = -1;
+                        switch (i)
+                        {
+                            case < 0:
+                                message = "You cannot place any additional powers unless you first remove one.";
+                                break;
+                            default:
+                            {
+                                if (CurrentBuild.Powers[i].Level <= Level)
+                                {
+                                    if (!TestPower(powerID))
+                                        i = -1;
+                                }
+                                else
+                                {
+                                    i = -1;
+                                }
+
+                                break;
+                            }
+                        }
                         break;
                     }
                     case Enums.dmModes.Normal:
-                    {
-                        i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel, DatabaseAPI.Database.Power[powerID].Level - 1));
-                        break;
-                    }
                     case Enums.dmModes.Respec:
                     {
                         i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel, DatabaseAPI.Database.Power[powerID].Level - 1));
@@ -190,7 +200,7 @@ namespace Mids_Reborn
                     case 0:
                         if (DatabaseAPI.Database.Powersets[iSet].SetType == Enums.ePowerSetType.Primary)
                         {
-                            if (DatabaseAPI.Database.Power[powerID].Level - 1 == 0)
+                            if (DatabaseAPI.Database.Power[powerID].Level == 1)
                             {
                                 flag2 = true;
                                 break;
@@ -217,7 +227,7 @@ namespace Mids_Reborn
                     case 1:
                         if (DatabaseAPI.Database.Powersets[iSet].SetType == Enums.ePowerSetType.Secondary)
                         {
-                            if (DatabaseAPI.Database.Power[powerID].Level - 1 == 0)
+                            if (DatabaseAPI.Database.Power[powerID].Level == 1)
                             {
                                 flag2 = true;
                                 break;

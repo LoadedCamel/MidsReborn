@@ -317,31 +317,32 @@ namespace mrbBase.Base.Data_Classes
             return Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
         }
 
-        // there are 2 versions of this method distributed, going to try to combine the logic bit by bit to see if there are substantial differences
+        // There are 2 versions of this method distributed.
+        // Combining the logic bit by bit to see if there are substantial differences
         // returns the last thing it tried to read from, for inclusion in the error message
         public void LoadPowersetsByName2(IList<string> names, ref string blameName)
         {
             Powersets = new IPowerset[8];
             var m = 0;
             var k = 3;
-            for (var i = 0; i < names.Count; i++)
+            foreach (var e in names)
             {
-                if (string.IsNullOrWhiteSpace(names[i])) continue;
-                if (names[i].IndexOf("Epic.", StringComparison.OrdinalIgnoreCase) == 0)
+                if (string.IsNullOrWhiteSpace(e)) continue;
+                if (e.IndexOf("Epic.", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    Powersets[7] = DatabaseAPI.GetPowersetByName(names[i]);
-                    if (Powersets[7] == null) blameName = names[i];
+                    Powersets[7] = DatabaseAPI.GetPowersetByName(e);
+                    if (Powersets[7] == null) blameName = e;
                 }
-                else if (names[i].IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                else if (e.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    Powersets[k] = DatabaseAPI.GetPowersetByName(names[i]);
-                    if (Powersets[k] == null) blameName = names[i];
+                    Powersets[k] = DatabaseAPI.GetPowersetByName(e);
+                    if (Powersets[k] == null) blameName = e;
                     k++;
                 }
                 else
                 {
-                    Powersets[m] = DatabaseAPI.GetPowersetByName(names[i]);
-                    if (Powersets[m] == null) blameName = names[i];
+                    Powersets[m] = DatabaseAPI.GetPowersetByName(e);
+                    if (Powersets[m] == null) blameName = e;
                     m++;
                 }
             }
@@ -1098,17 +1099,27 @@ namespace mrbBase.Base.Data_Classes
 
         public int GetFirstAvailablePowerIndex(int iLevel = 0)
         {
-            for (var index = 0; index <= CurrentBuild.LastPower; ++index)
+            for (var index = 0; index < Math.Min(CurrentBuild.Powers.Count, CurrentBuild.LastPower); index++)
+            {
                 if (CurrentBuild.Powers[index].NIDPowerset < 0 && CurrentBuild.Powers[index].Level >= iLevel)
+                {
                     return index;
+                }
+            }
+
             return -1;
         }
 
         private static int GetFirstAvailablePowerLevel(Build currentbuild, int iLevel = 0)
         {
-            for (var index = 0; index <= currentbuild.LastPower; ++index)
+            for (var index = 0; index < Math.Min(currentbuild.Powers.Count, currentbuild.LastPower); index++)
+            {
                 if ((currentbuild.Powers[index].NIDPowerset < 0) & (currentbuild.Powers[index].Level >= iLevel))
+                {
                     return currentbuild.Powers[index].Level;
+                }
+            }
+
             return -1;
         }
 
@@ -1119,7 +1130,7 @@ namespace mrbBase.Base.Data_Classes
                 iLevel = 0;
             }
 
-            for (var level = iLevel; level < DatabaseAPI.Database.Levels.Length; ++level)
+            for (var level = iLevel; level < DatabaseAPI.Database.Levels.Length; level++)
             {
                 if (DatabaseAPI.Database.Levels[level].Slots > 0 && DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
                     return level;
@@ -1601,9 +1612,14 @@ namespace mrbBase.Base.Data_Classes
 
         private int GetEarliestPowerIndex(int iSet)
         {
-            for (var index = 0; index <= CurrentBuild.LastPower; ++index)
+            for (var index = 0; index < Math.Min(CurrentBuild.Powers.Count, CurrentBuild.LastPower); index++)
+            {
                 if (CurrentBuild.Powers[index].NIDPowerset == iSet)
+                {
                     return index;
+                }
+            }
+
             return CurrentBuild.LastPower + 1;
         }
 

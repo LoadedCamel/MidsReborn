@@ -5867,7 +5867,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
+                {
                     return;
+                }
             }
 
             if (DlgOpen.ShowDialog() != DialogResult.OK)
@@ -6835,86 +6837,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message + "\r\n\r\n" + e.StackTrace);
-            }
-        }
-
-        private int CountPools(UniqueList<string> listPowersets)
-        {
-            return listPowersets.
-                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
-                .ToArray()
-                .Length;
-        }
-
-        private void PadPowerPools(ref UniqueList<string> listPowersets)
-        {
-            var nbPools = CountPools(listPowersets);
-
-            if (nbPools == 4) return;
-
-            var pickedPowerPools = listPowersets
-                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
-                .ToArray();
-            var dbPowerPools = Database.Instance.Powersets
-                .Where(ps =>
-                    ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
-                    !pickedPowerPools.Contains(ps.FullName))
-                .OrderBy(e => e.DisplayName)
-                .Select(e => e.FullName)
-                .ToArray();
-
-            for (var i = 0; i < 4 - nbPools; i++)
-            {
-                listPowersets.Add(dbPowerPools[i]);
-            }
-        }
-
-        private void FilterVEATPools(ref UniqueList<string> listPowersets)
-        {
-            if (listPowersets.Contains("Training_Gadgets.Bane_Spider_Training") ||
-                listPowersets.Contains("Training_Gadgets.Crab_Spider_Training"))
-            {
-                listPowersets.FromList(listPowersets.Where(e => e != "Training_Gadgets.Training_and_Gadgets").ToList());
-                return;
-            }
-
-            if (listPowersets.Contains("Widow_Training.Fortunata_Training") ||
-                listPowersets.Contains("Widow_Training.Night_Widow_Training"))
-                listPowersets.FromList(listPowersets
-                    .Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
-        }
-
-        private void FixUndetectedPowersets(ref UniqueList<string> listPowersets)
-        {
-            for (var i = 0; i < listPowersets.Count; i++)
-            {
-                if (i == 2) continue;
-
-                if (listPowersets[i] == null || listPowersets[i] == "")
-                {
-                    var setType = i switch
-                    {
-                        0 => Enums.ePowerSetType.Primary,
-                        1 => Enums.ePowerSetType.Secondary,
-                        7 => Enums.ePowerSetType.Ancillary,
-                        _ => Enums.ePowerSetType.Pool
-                    };
-                    var ps1 = DatabaseAPI.Database.Powersets
-                        .First(ps => ps.ATClass == MidsContext.Character.Archetype.DisplayName & ps.SetType == setType);
-
-                    listPowersets[i] = ps1.FullName;
-                }
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
             }
         }
 
         private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo)
         {
-            // Need to pad pools powerlist so there are 4
+            // Need to pad pools powers list so there are 4
             // So epic pools doesn't end up shown as a regular pool...
-            PadPowerPools(ref listPowersets);
-            FilterVEATPools(ref listPowersets);
-            FixUndetectedPowersets(ref listPowersets);
+            ImportBase.PadPowerPools(ref listPowersets);
+            ImportBase.FilterVEATPools(ref listPowersets);
+            ImportBase.FixUndetectedPowersets(ref listPowersets);
+            ImportBase.FinalizePowersetsList(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -6927,15 +6861,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 for (var k = 0; k < listPowers.Count; k++)
                 {
-                    if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    if (powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
                     {
-                        PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+                        continue;
                     }
+
+                    PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
             }
 
             var sl = new SlotLevelQueue();

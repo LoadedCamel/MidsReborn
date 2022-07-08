@@ -70,6 +70,7 @@ namespace Mids_Reborn.Forms
             this.tsFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -612,6 +613,7 @@ namespace Mids_Reborn.Forms
             this.tsFileNew,
             this.ToolStripSeparator7,
             this.tsFileOpen,
+            this.tsBuildRcv,
             this.tsFileSave,
             this.tsFileSaveAs,
             this.ToolStripSeparator8,
@@ -643,6 +645,13 @@ namespace Mids_Reborn.Forms
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(this.tsFileOpen_Click);
+            // 
+            // tsBuildRcv
+            // 
+            this.tsBuildRcv.Name = "tsBuildRcv";
+            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Text = "Build recovery...";
+            this.tsBuildRcv.Click += new System.EventHandler(this.tsBuildRcv_Click);
             // 
             // tsFileSave
             // 
@@ -1652,13 +1661,6 @@ namespace Mids_Reborn.Forms
             this.ibPopup.TextOn = "Pop-Up: On";
             this.ibPopup.Toggle = true;
             this.ibPopup.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPopup_ButtonClicked);
-            // 
-            // tsBuildRcv
-            // 
-            this.tsBuildRcv.Name = "tsBuildRcv";
-            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
-            this.tsBuildRcv.Text = "Attempt Build Recovery...";
-            //this.tsBuildRcv.Click += new System.EventHandler(this.tsBuildRcv_Click);
             // 
             // ToolStripSeparator26
             // 

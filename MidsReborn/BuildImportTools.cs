@@ -1,12 +1,12 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn
@@ -20,9 +20,9 @@ namespace Mids_Reborn
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] excludePowersets { get; } = {"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+        protected string[] ExcludePowersets { get; } = {"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
 
-        protected string[] excludePowers { get; } =
+        protected string[] ExcludePowers { get; } =
         {
             "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation", // Bio armor
             "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul", // Staff Fighting (all but stalkers)
@@ -135,6 +135,7 @@ namespace Mids_Reborn
                         Enhancement = new I9Slot(),
                         FlippedEnhancement = new I9Slot()
                     };
+                    
                     if (p.Slots[i].InternalName == "Empty") continue;
 
                     var i9Slot = SelectEnhancementByIdx(p.Slots[i].eData, p.Slots[i].InternalName);
@@ -187,11 +188,11 @@ namespace Mids_Reborn
             switch (validateType)
             {
                 case Enums.eValidationType.Powerset:
-                    excludes = excludePowersets;
+                    excludes = ExcludePowersets;
                     break;
 
                 case Enums.eValidationType.Power:
-                    excludes = excludePowers;
+                    excludes = ExcludePowers;
                     break;
 
                 default:
@@ -207,18 +208,14 @@ namespace Mids_Reborn
         // Since DatabaseAPI.GetPowersetByName may return null
         protected bool CheckValid(IPowerset? input)
         {
-            if (input == null) return false;
-
-            return !excludePowersets.Any(x => input.FullName.Contains(x));
+            return input != null && !ExcludePowersets.Any(ps => input.FullName.Contains(ps));
         }
 
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowerByName may return null
         protected bool CheckValid(IPower? input)
         {
-            if (input == null) return false;
-
-            return !excludePowers.Any(x => input.FullName.Contains(x));
+            return input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
         protected string FixPowersetsNames(string powerName)
@@ -238,6 +235,84 @@ namespace Mids_Reborn
         public RawCharacterInfo GetCharacterInfo()
         {
             return CharacterInfo;
+        }
+
+        public static int CountPools(UniqueList<string> listPowersets)
+        {
+            return listPowersets.
+                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray()
+                .Length;
+        }
+
+        public static void PadPowerPools(ref UniqueList<string> listPowersets)
+        {
+            var nbPools = CountPools(listPowersets);
+
+            if (nbPools == 4) return;
+
+            var pickedPowerPools = listPowersets
+                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray();
+            var dbPowerPools = Database.Instance.Powersets
+                .Where(ps =>
+                    ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
+                    !pickedPowerPools.Contains(ps.FullName))
+                .OrderBy(e => e.DisplayName)
+                .Select(e => e.FullName)
+                .ToArray();
+
+            for (var i = 0; i < 4 - nbPools; i++)
+            {
+                listPowersets.Add(dbPowerPools[i]);
+            }
+        }
+
+        public static void FilterVEATPools(ref UniqueList<string> listPowersets)
+        {
+            if (listPowersets.Contains("Training_Gadgets.Bane_Spider_Training") ||
+                listPowersets.Contains("Training_Gadgets.Crab_Spider_Training"))
+            {
+                listPowersets.FromList(listPowersets.Where(e => e != "Training_Gadgets.Training_and_Gadgets").ToList());
+                return;
+            }
+
+            if (listPowersets.Contains("Widow_Training.Fortunata_Training") ||
+                listPowersets.Contains("Widow_Training.Night_Widow_Training"))
+                listPowersets.FromList(listPowersets
+                    .Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
+        }
+
+        public static void FixUndetectedPowersets(ref UniqueList<string> listPowersets)
+        {
+            for (var i = 0; i < listPowersets.Count; i++)
+            {
+                if (i == 2) continue;
+
+                if (listPowersets[i] == null || listPowersets[i] == "")
+                {
+                    var setType = i switch
+                    {
+                        0 => Enums.ePowerSetType.Primary,
+                        1 => Enums.ePowerSetType.Secondary,
+                        7 => Enums.ePowerSetType.Ancillary,
+                        _ => Enums.ePowerSetType.Pool
+                    };
+                    var ps1 = DatabaseAPI.Database.Powersets
+                        .First(ps => ps.ATClass == MidsContext.Character.Archetype.DisplayName & ps.SetType == setType);
+
+                    listPowersets[i] = ps1.FullName;
+                }
+            }
+        }
+
+        public static void FinalizePowersetsList(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets.GetRange(0, 7));
+            listPowersets.FromList(listPowersets.Select(e => e.Contains(".")
+                ? e
+                : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
+            ).ToList());
         }
     }
 
@@ -329,7 +404,6 @@ namespace Mids_Reborn
                 {
                     if (p.Valid)
                     {
-                        Debug.WriteLine($"Adding {p.FullName}");
                         AddPowerToBuildSheet(p, ref listPowers);
                     }
 
@@ -337,7 +411,6 @@ namespace Mids_Reborn
                     var rawPowerset = $"{powerIDChunks[0]}.{powerIDChunks[1]}".Trim();
                     var powerBaseName = powerIDChunks[2].Trim();
                     p.FullName = CheckForAliases($"{CheckForPowersetAliases(rawPowerset, CharacterInfo.Archetype)}.{powerBaseName}");
-                    Debug.WriteLine($"Power full name (fixed): {p.FullName}");
                     p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)
@@ -486,28 +559,27 @@ namespace Mids_Reborn
 
         private string ShortNamesConversion(string sn)
         {
-            if (string.IsNullOrEmpty(sn)) return sn;
+            if (string.IsNullOrEmpty(sn))
+            {
+                return sn;
+            }
 
             foreach (var k in OldSetNames)
+            {
                 if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1)
+                {
                     return sn.Replace(k.Key, k.Value);
+                }
+            }
 
             return sn;
         }
 
         public List<PowerEntry>? Parse()
         {
-            Regex r;
-            Regex rs;
-            Match m;
-            Match ms;
-            string cnt;
-            int i;
-
+            var cnt = "";
             var p = new RawPowerData {Valid = false};
-            var powerSlots = new List<RawEnhData>();
             var e = new RawEnhData();
-
             var listPowers = new List<PowerEntry>();
 
             try
@@ -517,6 +589,7 @@ namespace Mids_Reborn
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                
                 return null;
             }
 
@@ -532,15 +605,24 @@ namespace Mids_Reborn
             // Alignment, builder software and version
             // Note: old Pine Hero Designer is listed as 'Hero Hero Designer'
             // Extended: Rogue/Vigilante will be added in a later release.
-            r = new Regex(@"(Hero|Villain|Rogue|Vigilante) Plan by ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
-            m = r.Match(cnt);
+            // Old header
+            var r = new Regex(@"(Hero|Villain|Rogue|Vigilante) Plan by ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
+            var m = r.Match(cnt);
 
             if (!m.Success)
             {
-                _ = MessageBox.Show(
-                    "This build cannot be recovered because it doesn't contain a valid plain text part.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
+                // New header (v3.0+)
+                var rNew = new Regex(@"This (Hero|Villain|Rogue|Vigilante) build was built using ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
+                m = rNew.Match(cnt);
+
+                if (!m.Success)
+                {
+                    MessageBox.Show(
+                        "This build cannot be recovered because it doesn't contain a valid plain text part.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    return null;
+                }
             }
 
             CharacterInfo.Alignment = m.Groups[1].Value;
@@ -553,8 +635,8 @@ namespace Mids_Reborn
             if (!m.Success)
             {
                 // Name is empty
-                rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
-                ms = rs.Match(cnt);
+                var rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
+                var ms = rs.Match(cnt);
                 CharacterInfo.Name = string.Empty;
                 CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
                 CharacterInfo.Origin = ms.Groups[2].Value;
@@ -568,6 +650,16 @@ namespace Mids_Reborn
                 CharacterInfo.Archetype = m.Groups[4].Value;
             }
 
+            var archetype = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
+            if (archetype == null)
+            {
+                MessageBox.Show(
+                    $"Invalid Archetype \"{CharacterInfo.Archetype}\"", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return null;
+            }
+            
             SetCharacterInfo();
 
             // Main powersets
@@ -588,50 +680,57 @@ namespace Mids_Reborn
                 m = m.NextMatch();
             }
 
+            var powersetsFullNamesList = new UniqueList<string>();
+            powersetsFullNamesList.AddRange(PowerSets);
+
+            PadPowerPools(ref powersetsFullNamesList);
+            FilterVEATPools(ref powersetsFullNamesList);
+            FixUndetectedPowersets(ref powersetsFullNamesList);
+            FinalizePowersetsList(ref powersetsFullNamesList);
+
             // Powers
-            string PSlotsStr;
-            string[] PSlots;
-            string[] s;
-            string? sContentEnh;
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
-            m = r.Match(cnt);
-            while (m.Success)
+            var rMatches = r.Matches(cnt);
+
+            foreach (Match mt in rMatches) // var mt is of type object?
             {
                 p = new RawPowerData();
                 e = new RawEnhData();
                 p.Slots = new List<RawEnhData>();
 
-                p.DisplayName = m.Groups[2].Value.Trim();
-                p.Level = Convert.ToInt32(m.Groups[1].Value, null);
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
-                p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
+                p.DisplayName = mt.Groups[2].Value.Trim();
+                p.Level = Convert.ToInt32(mt.Groups[1].Value, null);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsFullNamesList);
+                p.Powerset = p.pData?.GetPowerSet();
                 p.Valid = CheckValid(p.pData);
-                PSlotsStr = m.Groups.Count > 3 ? m.Groups[3].Value.Trim() : string.Empty;
-                if (!string.IsNullOrEmpty(PSlotsStr))
+
+                var pSlotsStr = mt.Groups.Count > 3 ? mt.Groups[3].Value.Trim() : string.Empty;
+                if (!string.IsNullOrEmpty(pSlotsStr))
                 {
                     // Extract enhancement name and slot level ('A' for power inherent slot)
                     // Handle special enhancements with parenthesis like ExpRnf-+Res(Pets)(50)
-                    PSlotsStr = Regex.Replace(PSlotsStr, @"\(([^A0-9]+)\)", "[$1]");
-                    PSlots = Regex.Split(PSlotsStr, @",\s");
+                    pSlotsStr = Regex.Replace(pSlotsStr, @"\(([^A0-9]+)\)", "[$1]");
+                    var pSlots = Regex.Split(pSlotsStr, @",\s");
 
-                    for (i = 0; i < PSlots.Length; i++)
+                    foreach (var ps in pSlots)
                     {
-                        s = Regex.Split(PSlots[i], @"/[\(\)]");
-                        s = Array.FindAll(s, e => !string.IsNullOrWhiteSpace(e));
+                        var s = Regex.Split(ps, @"[\(\)]");
+                        s = Array.FindAll(s, enh => !string.IsNullOrWhiteSpace(enh));
 
-                        sContentEnh =
-                            s[0] == "Empty"
-                                ? null
-                                : ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
+                        var sContentEnh = s[0] == "Empty"
+                            ? s[0]
+                            : ShortNamesConversion(s[0]);
+                        var enhDataIdx = DatabaseAPI.GetEnhancementByShortName(sContentEnh);
+
                         try
                         {
-                            e.InternalName = s[0];
+                            e.InternalName = sContentEnh;
                             e.Level = s[1] == "A"
                                 ? 0
                                 : Convert.ToInt32(s[1], null); // Slot level ("A" is the auto-granted one)
                             e.Boosters = 0; // Not handled
                             e.HasCatalyst = false;
-                            e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
+                            e.eData = enhDataIdx;
                             p.Slots.Add(e);
                         }
                         catch (FormatException) // if (isNaN(s[1]))
@@ -646,21 +745,17 @@ namespace Mids_Reborn
                     }
                 }
 
-                if (p.Valid)
+                if (!p.Valid) continue;
+                
+                if (CheckValid(p.Powerset))
                 {
-                    if (CheckValid(p.Powerset)) PowerSets.Add(p.Powerset.FullName);
-                    AddPowerToBuildSheet(p, ref listPowers);
+                    PowerSets.Add(p.Powerset.FullName);
                 }
+
+                AddPowerToBuildSheet(p, ref listPowers);
             }
 
             return listPowers;
         }
-
-/*
-        public List<string> GetPowerSets()
-        {
-            return PowerSets;
-        }
-*/
     }
 }

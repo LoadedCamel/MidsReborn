@@ -434,11 +434,51 @@ namespace mrbBase
             {
                 if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
                     !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                {
                     continue;
+                }
+
                 if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                {
                     return powerset1;
+                }
+
                 if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                {
                     return powerset1;
+                }
+            }
+
+            return null;
+        }
+
+        public static IPowerset? GetPowersetByName(string iName, string iArchetype, bool restrictGroups)
+        {
+            var idx = GetArchetypeByName(iArchetype).Idx;
+            foreach (var powerset1 in Database.Powersets)
+            {
+                if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
+                    !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (restrictGroups & powerset1.SetType != Enums.ePowerSetType.Primary &
+                    powerset1.SetType != Enums.ePowerSetType.Secondary & powerset1.SetType != Enums.ePowerSetType.Pool &
+                    powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                {
+                    continue;
+                }
+
+                if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                {
+                    return powerset1;
+                }
+
+                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                {
+                    return powerset1;
+                }
             }
 
             return null;
@@ -502,23 +542,29 @@ namespace mrbBase
 
         public static int GetPowerIndexByDisplayName(string iName, int iArchetype)
         {
-            return Array.IndexOf(Database.Power, Database.Power.Where(p =>
-                p.DisplayName == iName &&
-                (p.PowerSetID <= -1 || Database.Powersets[p.PowerSetID].nArchetype == iArchetype ||
-                 Database.Powersets[p.PowerSetID].nArchetype == -1)
-            ));
+            var pw = Database.Power.DefaultIfEmpty(null).FirstOrDefault(p => p.DisplayName == iName && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+            if (pw == null)
+            {
+                return -1;
+            }
+
+            return Array.IndexOf(Database.Power, pw);
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype)
         {
-            var idx = Array.IndexOf(Database.Power, Database.Power.Where(p =>
-                p.DisplayName == iName &&
-                (p.PowerSetID <= -1 || Database.Powersets[p.PowerSetID].nArchetype == iArchetype ||
-                 Database.Powersets[p.PowerSetID].nArchetype == -1)
-            ));
-
-            return idx > -1 ? Database.Power[idx] : null;
+            return Database.Power
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(p => p != null && p.DisplayName == iName && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
         }
+
+        public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
+        {
+            return Database.Power
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(p => p != null && p.DisplayName == iName && listPowersets.Contains(p.GetPowerSet().FullName) && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+        }
+
 
         public static IPower? GetPowerByFullName(string name)
         {
@@ -946,11 +992,45 @@ namespace mrbBase
         public static int GetEnhancmentByBoostName(string iName)
         {
             var enhUid = Regex.Replace(iName, ".*(.*)\\.", "");
+            
             return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(enhUid));
+        }
+
+        public static int GetEnhancementByShortName(string iName)
+        {
+            if (string.IsNullOrWhiteSpace(iName))
+            {
+                return -1;
+            }
+
+            iName = Regex.Replace(iName, @"(.+)\([A0-9]\)$", "$1");
+            // For inventions: remove -I suffix
+            iName = Regex.Replace(iName, @"(.+)\-I$", "$1");
+            if (!iName.Contains("-"))
+            {
+                return Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName));
+            }
+
+            var chunks = iName.Split('-');
+            var enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName.Contains(chunks[0]));
+            if (enhSet < 0)
+            {
+                return -1;
+            }
+
+            var enhShortName = string.Join("-", chunks[1..]).Trim('-');
+            var setEnhancementsShort = Database.EnhancementSets[enhSet].Enhancements.ToDictionary(enhIdx => Database.Enhancements[enhIdx].ShortName);
+
+            return setEnhancementsShort.ContainsKey(enhShortName) ? setEnhancementsShort[enhShortName] : -1;
         }
 
         public static int GetEnhancementByUIDName(string iName)
         {
+            if (string.IsNullOrWhiteSpace(iName))
+            {
+                return -1;
+            }
+
             // Artillery set still use its old name for the UIDs.
             if (iName.Contains("Artillery")) iName = iName.Replace("Artillery", "Shrapnel");
 
