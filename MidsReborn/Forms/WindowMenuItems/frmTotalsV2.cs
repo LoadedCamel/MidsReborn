@@ -452,7 +452,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
 
                 graphDef.AddItemPair(damageVectorsNames[i],
-                    $"{displayStats.Defense(i):##0.##}",
+                    $"{displayStats.Defense(i):##0.##}%",
                     displayStats.Defense(i),
                     displayStats.Defense(i),
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
@@ -470,7 +470,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 var resValue = displayStats.DamageResistance(i, false);
                 var resValueUncapped = displayStats.DamageResistance(i, true);
-                graphRes.AddItemPair(damageVectorsNames[i], $"{resValue:##0.##}",
+                graphRes.AddItemPair(damageVectorsNames[i], $"{resValue:##0.##}%",
                     resValue,
                     resValue,
                     resValueUncapped,

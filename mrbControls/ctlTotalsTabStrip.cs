@@ -126,7 +126,8 @@ namespace mrbControls
             using var textPaint = new SKPaint
             {
                 IsAntialias = true,
-                Color = ForeColor.ToSKColor()
+                Color = ForeColor.ToSKColor(),
+                TextSize = fontSize
             };
 
             using var stripPaint = new SKPaint
@@ -163,7 +164,6 @@ namespace mrbControls
             {
                 var item = Items[i];
                 textPaint.MeasureText(item, ref textRect);
-
 
                 if (i == _SelectedItem)
                 {

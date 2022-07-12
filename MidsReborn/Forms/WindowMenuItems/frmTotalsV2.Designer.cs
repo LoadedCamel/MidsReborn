@@ -145,7 +145,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEnd.Highlight = false;
             this.graphEnd.ItemHeight = 13;
             this.graphEnd.Lines = true;
-            this.graphEnd.Location = new System.Drawing.Point(5, 605);
+            this.graphEnd.Location = new System.Drawing.Point(5, 608);
             this.graphEnd.MarkerValue = 0F;
             this.graphEnd.Max = 100F;
             this.graphEnd.MaxItems = 3;
@@ -155,6 +155,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEnd.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphEnd.OvercapColors")));
             this.graphEnd.PaddingX = 4F;
             this.graphEnd.PaddingY = 6F;
+            this.graphEnd.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphEnd.PerItemScales")));
             this.graphEnd.ScaleHeight = 32;
             this.graphEnd.ScaleIndex = 8;
             this.graphEnd.ShowScale = false;
@@ -187,20 +188,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHP.Highlight = false;
             this.graphHP.ItemHeight = 13;
             this.graphHP.Lines = true;
-            this.graphHP.Location = new System.Drawing.Point(5, 504);
+            this.graphHP.Location = new System.Drawing.Point(5, 511);
             this.graphHP.MarkerValue = 0F;
-            this.graphHP.Max = 3800F;
-            this.graphHP.MaxItems = 3;
+            this.graphHP.Max = 4000F;
+            this.graphHP.MaxItems = 2;
             this.graphHP.Name = "graphHP";
             this.graphHP.OuterBorder = true;
             this.graphHP.Overcap = true;
             this.graphHP.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHP.OvercapColors")));
             this.graphHP.PaddingX = 4F;
             this.graphHP.PaddingY = 6F;
+            this.graphHP.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphHP.PerItemScales")));
             this.graphHP.ScaleHeight = 32;
-            this.graphHP.ScaleIndex = 16;
+            this.graphHP.ScaleIndex = 19;
             this.graphHP.ShowScale = false;
-            this.graphHP.Size = new System.Drawing.Size(600, 62);
+            this.graphHP.Size = new System.Drawing.Size(600, 46);
             this.graphHP.Style = mrbBase.Enums.GraphStyle.Stacked;
             this.graphHP.TabIndex = 107;
             this.graphHP.TabStop = false;
@@ -241,6 +243,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphRes.OvercapColors")));
             this.graphRes.PaddingX = 4F;
             this.graphRes.PaddingY = 6F;
+            this.graphRes.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphRes.PerItemScales")));
             this.graphRes.ScaleHeight = 32;
             this.graphRes.ScaleIndex = 8;
             this.graphRes.ShowScale = false;
@@ -285,6 +288,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDef.OvercapColors")));
             this.graphDef.PaddingX = 4F;
             this.graphDef.PaddingY = 6F;
+            this.graphDef.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphDef.PerItemScales")));
             this.graphDef.ScaleHeight = 32;
             this.graphDef.ScaleIndex = 8;
             this.graphDef.ShowScale = false;
@@ -327,7 +331,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label3.Location = new System.Drawing.Point(9, 480);
+            this.label3.Location = new System.Drawing.Point(9, 487);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 20);
             this.label3.TabIndex = 111;
@@ -340,7 +344,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label4.Location = new System.Drawing.Point(9, 580);
+            this.label4.Location = new System.Drawing.Point(9, 583);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(86, 20);
             this.label4.TabIndex = 112;
@@ -504,6 +508,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphThreat.OvercapColors")));
             this.graphThreat.PaddingX = 4F;
             this.graphThreat.PaddingY = 6F;
+            this.graphThreat.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphThreat.PerItemScales")));
             this.graphThreat.ScaleHeight = 32;
             this.graphThreat.ScaleIndex = 13;
             this.graphThreat.ShowScale = false;
@@ -546,6 +551,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphEndRdx.OvercapColors")));
             this.graphEndRdx.PaddingX = 4F;
             this.graphEndRdx.PaddingY = 6F;
+            this.graphEndRdx.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphEndRdx.PerItemScales")));
             this.graphEndRdx.ScaleHeight = 32;
             this.graphEndRdx.ScaleIndex = 8;
             this.graphEndRdx.ShowScale = false;
@@ -588,6 +594,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDamage.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDamage.OvercapColors")));
             this.graphDamage.PaddingX = 4F;
             this.graphDamage.PaddingY = 6F;
+            this.graphDamage.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphDamage.PerItemScales")));
             this.graphDamage.ScaleHeight = 32;
             this.graphDamage.ScaleIndex = 14;
             this.graphDamage.ShowScale = false;
@@ -630,6 +637,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAccuracy.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphAccuracy.OvercapColors")));
             this.graphAccuracy.PaddingX = 4F;
             this.graphAccuracy.PaddingY = 6F;
+            this.graphAccuracy.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphAccuracy.PerItemScales")));
             this.graphAccuracy.ScaleHeight = 32;
             this.graphAccuracy.ScaleIndex = 8;
             this.graphAccuracy.ShowScale = false;
@@ -672,6 +680,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphToHit.OvercapColors")));
             this.graphToHit.PaddingX = 4F;
             this.graphToHit.PaddingY = 6F;
+            this.graphToHit.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphToHit.PerItemScales")));
             this.graphToHit.ScaleHeight = 32;
             this.graphToHit.ScaleIndex = 8;
             this.graphToHit.ShowScale = false;
@@ -714,6 +723,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHaste.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHaste.OvercapColors")));
             this.graphHaste.PaddingX = 4F;
             this.graphHaste.PaddingY = 6F;
+            this.graphHaste.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphHaste.PerItemScales")));
             this.graphHaste.ScaleHeight = 32;
             this.graphHaste.ScaleIndex = 12;
             this.graphHaste.ShowScale = false;
@@ -749,7 +759,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphPerception.Lines = true;
             this.graphPerception.Location = new System.Drawing.Point(5, 202);
             this.graphPerception.MarkerValue = 0F;
-            this.graphPerception.Max = 100F;
+            this.graphPerception.Max = 1200F;
             this.graphPerception.MaxItems = 3;
             this.graphPerception.Name = "graphPerception";
             this.graphPerception.OuterBorder = true;
@@ -757,8 +767,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphPerception.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphPerception.OvercapColors")));
             this.graphPerception.PaddingX = 4F;
             this.graphPerception.PaddingY = 6F;
+            this.graphPerception.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphPerception.PerItemScales")));
             this.graphPerception.ScaleHeight = 32;
-            this.graphPerception.ScaleIndex = 8;
+            this.graphPerception.ScaleIndex = 15;
             this.graphPerception.ShowScale = false;
             this.graphPerception.Size = new System.Drawing.Size(600, 64);
             this.graphPerception.Style = mrbBase.Enums.GraphStyle.Stacked;
@@ -799,6 +810,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMovement.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphMovement.OvercapColors")));
             this.graphMovement.PaddingX = 4F;
             this.graphMovement.PaddingY = 6F;
+            this.graphMovement.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphMovement.PerItemScales")));
             this.graphMovement.ScaleHeight = 32;
             this.graphMovement.ScaleIndex = 10;
             this.graphMovement.ShowScale = false;
@@ -883,6 +895,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusRes.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphStatusRes.OvercapColors")));
             this.graphStatusRes.PaddingX = 4F;
             this.graphStatusRes.PaddingY = 6F;
+            this.graphStatusRes.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphStatusRes.PerItemScales")));
             this.graphStatusRes.ScaleHeight = 32;
             this.graphStatusRes.ScaleIndex = 13;
             this.graphStatusRes.ShowScale = false;
@@ -926,6 +939,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusProt.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphStatusProt.OvercapColors")));
             this.graphStatusProt.PaddingX = 4F;
             this.graphStatusProt.PaddingY = 6F;
+            this.graphStatusProt.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphStatusProt.PerItemScales")));
             this.graphStatusProt.ScaleHeight = 32;
             this.graphStatusProt.ScaleIndex = 6;
             this.graphStatusProt.ShowScale = false;
@@ -1011,6 +1025,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphElusivity.OvercapColors")));
             this.graphElusivity.PaddingX = 10F;
             this.graphElusivity.PaddingY = 6F;
+            this.graphElusivity.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphElusivity.PerItemScales")));
             this.graphElusivity.ScaleHeight = 32;
             this.graphElusivity.ScaleIndex = 8;
             this.graphElusivity.ShowScale = false;
@@ -1054,6 +1069,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDebuffRes.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDebuffRes.OvercapColors")));
             this.graphDebuffRes.PaddingX = 4F;
             this.graphDebuffRes.PaddingY = 6F;
+            this.graphDebuffRes.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("graphDebuffRes.PerItemScales")));
             this.graphDebuffRes.ScaleHeight = 32;
             this.graphDebuffRes.ScaleIndex = 8;
             this.graphDebuffRes.ShowScale = false;
