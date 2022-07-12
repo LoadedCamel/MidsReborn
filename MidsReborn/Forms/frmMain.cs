@@ -6920,7 +6920,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SetTitleBar();
 
             var idx = -1;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
             {
                 idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
                     .RequestedLevel);

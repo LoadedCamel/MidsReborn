@@ -112,7 +112,8 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.0" />
     <PackageReference Include="Syncfusion.Grid.Windows" Version="20.2.0.36" />
     <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.36" />
     <PackageReference Include="Syncfusion.Shared.Base" Version="20.2.0.36" />

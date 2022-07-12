@@ -74,44 +74,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         #endregion
 
-        #region Controls querying
-
-        private IEnumerable<Control> GetControlHierarchy(Control root)
-        {
-            Queue<Control> queue = new Queue<Control>();
-            queue.Enqueue(root);
-            do
-            {
-                var control = queue.Dequeue();
-                yield return control;
-                foreach (var child in control.Controls.OfType<Control>())
-                {
-                    queue.Enqueue(child);
-                }
-            } while (queue.Count > 0);
-        }
-
-        private IEnumerable<Control> GetControlHierarchy<T>(Control root)
-        {
-            Queue<Control> queue = new Queue<Control>();
-            queue.Enqueue(root);
-            do
-            {
-                var control = queue.Dequeue();
-                if (control.GetType() == typeof(T)) yield return control;
-                foreach (var child in control.Controls.OfType<Control>())
-                {
-                    queue.Enqueue(child);
-                }
-            } while (queue.Count > 0);
-        }
-
-        #endregion
-
-        public frmTotalsV2(ref frmMain iParent)
+        public frmTotalsV2(ref frmMain parentForm)
         {
             try
             {
+                _myParent = parentForm;
                 FormClosed += frmTotalsV2_FormClosed;
                 Load += OnLoad;
 
@@ -127,21 +94,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private static string UcFirst(string s)
         {
             return char.ToUpper(s[0]) + s[1..].ToLower();
-        }
-
-        private int GetBarVectorTypeIndex(int barIndex, string barGroup)
-        {
-            return barGroup switch
-            {
-                "Defense" => (int) DefenseDamageList[barIndex],
-                "Resistance" => (int) ResistanceDamageList[barIndex - 10],
-                "Movement" => (int) MovementTypesList[barIndex - 23],
-                "Perception" => (int) PerceptionEffectsList[barIndex - 27],
-                "Status Protection" => (int) MezList[barIndex - 37],
-                "Status Resistance" => (int) MezList[barIndex - 48],
-                "Debuff Resistance" => (int) DebuffEffectsList[barIndex - 59],
-                _ => -1
-            };
         }
 
         private string FormatVectorType(Type enumType, int vectorTypeIndex)
@@ -307,11 +259,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             CenterToParent();
             tabControl1.SizeMode = TabSizeMode.Fixed;
-            tabControl1.ItemSize = new System.Drawing.Size(0, 1);
+            tabControl1.ItemSize = new Size(0, 1);
             tabControl1.Dock = DockStyle.Fill;
+            ctlTotalsTabStrip1.ClearItems();
+            for (var i = 0; i < tabControl1.TabPages.Count; i++)
+            {
+                ctlTotalsTabStrip1.AddItem(tabControl1.TabPages[i].Text);
+            }
+
+            ctlTotalsTabStrip1.Redraw();
+
             Refresh();
             SetTitle(this);
             SetUnitRadioButtons();
+            UpdateData();
         }
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
@@ -461,8 +422,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var atName = MidsContext.Character.Archetype.DisplayName;
             //var watch = Stopwatch.StartNew();
 
-            #region Bars setup
-
             var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
             var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));
             var excludedDefVectors = new List<Enums.eDamage>
@@ -499,6 +458,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
             }
 
+            graphDef.Draw();
+
             graphRes.Clear();
             for (var i = 0; i < damageVectors.Length; i++)
             {
@@ -517,6 +478,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         ? $"{resValueUncapped:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
+
+            graphRes.Draw();
 
             graphHP.Clear();
             var regenValue = displayStats.HealthRegenPercent(false);
@@ -552,6 +515,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 (absorbValue > 0
                     ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
                     : ""));
+
+            graphHP.Draw();
             
             graphEnd.Clear();
             var endRecValue = displayStats.EnduranceRecoveryNumeric;
@@ -579,6 +544,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 maxEndBase,
                 displayStats.EnduranceMaxEnd,
                 $"{displayStats.EnduranceMaxEnd:##0.##} Maximum Endurance (base: {maxEndBase:##0.##})");
+
+            graphEnd.Draw();
 
             ///////////////////////////////
 
@@ -666,6 +633,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"\r\nBase: {flySpeedBase:##0.##} {movementUnitSpeed}"
                     : ""));
 
+            graphMovement.Draw();
+
             ///////////////////////////////
 
             graphPerception.Clear();
@@ -688,6 +657,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 displayStats.Perception(true),
                 GenericDataTooltip3(displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat), displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat), displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat), "Perception", "", movementUnitDistance)
                 );
+
+            graphPerception.Draw();
 
             ///////////////////////////////
 
@@ -735,6 +706,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 MidsContext.Character.Archetype.BaseThreat * 100,
                 displayStats.ThreatLevel,
                 GenericDataTooltip3(displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100, displayStats.ThreatLevel, "Threat"));
+
+            graphHaste.Draw();
+            graphToHit.Draw();
+            graphAccuracy.Draw();
+            graphDamage.Draw();
+            graphEndRdx.Draw();
+            graphThreat.Draw();
  
             ///////////////////////////////
 
@@ -754,6 +732,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     -MidsContext.Character.Totals.MezRes[(int) m],
                     $"{-MidsContext.Character.Totals.MezRes[(int) m]} Status resistance to {m}");
             }
+
+            graphStatusProt.Draw();
+            graphStatusRes.Draw();
 
             ///////////////////////////////
 
@@ -777,6 +758,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 );
             }
 
+            graphDebuffRes.Draw();
+
             graphElusivity.Clear();
             for (var i = 0; i < damageVectors.Length; i++)
             {
@@ -793,7 +776,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{elValue:##0.##} Elusivity ({damageVectorsNames[i]})");
             }
 
-            #endregion
+            graphElusivity.Draw();
 
             //watch.Stop();
             //Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");

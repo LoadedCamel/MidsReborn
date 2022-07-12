@@ -97,9 +97,30 @@ namespace mrbControls
             InitializeComponent();
         }
 
+        public void AddItem(string item)
+        {
+            Items.Add(item);
+        }
+
+        public void AddItemsRange(IList<string> items)
+        {
+            Items.AddRange(items);
+        }
+
+        public void ClearItems()
+        {
+            Items = new List<string>();
+        }
+
+        public void Redraw()
+        {
+            Draw();
+        }
+
         private void Draw()
         {
             using var s = SKSurface.Create(new SKImageInfo(Width, Height));
+            const float fontSize = 15;
 
             var textRect = new SKRect();
             using var textPaint = new SKPaint
@@ -136,10 +157,8 @@ namespace mrbControls
             };
 
             s.Canvas.Clear(BackColor.ToSKColor());
-            s.Canvas.DrawLine(0, Height, Width, Height, stripPaint);
-
+            
             var x = 0f;
-            const float fontSize = 12;
             for (var i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];
@@ -162,17 +181,20 @@ namespace mrbControls
                 x += _ItemPadding;
                 if (OutlineText)
                 {
-                    s.Canvas.DrawOutlineText(Items[i], new SKPoint(x, (Width - 1 - fontSize) / 2f), ForeColor.ToSKColor());
+                    s.Canvas.DrawOutlineText(Items[i], new SKPoint(x, Height / 2f + 4), ForeColor.ToSKColor(), SKTextAlign.Left, 255, fontSize);
                 }
                 else
                 {
-                    s.Canvas.DrawTextShort(Items[i], fontSize, x, (Width - 1 - fontSize) / 2f, textPaint);
+                    s.Canvas.DrawTextShort(Items[i], fontSize, x, Height / 2f + 4, textPaint);
                 }
 
                 x += textRect.Width + _ItemPadding;
 
                 ItemStops.Add(x);
             }
+
+            s.Canvas.DrawRect(x, 0, Width, Height - 1, inactiveTabPaint);
+            s.Canvas.DrawLine(0, Height, Width, Height, stripPaint);
 
             BackgroundImage = s.Snapshot().ToBitmap();
         }

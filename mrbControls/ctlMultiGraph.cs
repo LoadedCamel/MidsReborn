@@ -47,6 +47,7 @@ namespace mrbControls
         private int YPadding;
         private bool UseDifferentiateColors;
         private bool DisplayOuterBorder;
+        private int MaxItemsCapacity;
 
         public ctlMultiGraph()
         {
@@ -92,6 +93,7 @@ namespace mrbControls
             PMarkerColor2 = Color.Yellow;
             PForcedMax = 0;
             Clickable = false;
+            MaxItemsCapacity = 60;
             
             InitializeComponent();
             FillScales();
@@ -382,6 +384,16 @@ namespace mrbControls
             }
         }
 
+        public int MaxItems
+        {
+            get => MaxItemsCapacity;
+            set
+            {
+                MaxItemsCapacity = value;
+                Draw();
+            }
+        }
+
         public event BarClickEventHandler BarClick;
 
         protected override void Dispose(bool disposing)
@@ -406,30 +418,37 @@ namespace mrbControls
 
         private void ctlMultiGraph_Load(object sender, EventArgs e)
         {
-            checked
+            if (DesignMode)
             {
-                if (Items.Count < 1 && !IsInDesignMode(this))
+                var rng = new Random();
+                var max = Math.Max(0, (int) ScaleValue - 3);
+                Clear();
+                for (var i = 0 ; i < MaxItemsCapacity ; i++)
                 {
-                    var num = 0;
-                    var rng = new Random();
-                    do
+                    var values = new List<int> {rng.Next(0, max), rng.Next(0, max), rng.Next(0, (int) (1.5 * max))};
+                    values.Sort();
+                    if (Overcap)
                     {
-                        AddItemPair($"value {num}", $"value {num}b",
-                            rng.Next(0, 101),
-                            rng.Next(0, 101),
-                            $"{num}");
-                        num++;
-                    } while (num <= 60);
+                        AddItemPair($"value {i}", $"value {i}b",
+                            values[0],
+                            values[1],
+                            values[2],
+                            $"{i}");
+                    }
+                    else
+                    {
+                        AddItemPair($"value {i}", $"value {i}b",
+                            values[0],
+                            values[1],
+                            $"{i}");
+                    }
                 }
-
-                Loaded = true;
-                Draw();
             }
-        }
 
-        public static bool IsInDesignMode(Control c)
-        {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime || c?.Site?.DesignMode == true;
+            Debug.WriteLine($"{Name} loaded");
+
+            Loaded = true;
+            Draw();
         }
 
         public void AddItem(string sName, float nBase, float nEnh, string iTip = "")
@@ -469,155 +488,156 @@ namespace mrbControls
 
         public void Draw()
         {
-            checked
+            Debug.WriteLine($"{Name}: NoDraw: {NoDraw}, Loaded: {Loaded}");
+
+            if (NoDraw) return;
+            if (!Loaded) return;
+
+            using var s = SKSurface.Create(new SKImageInfo(Width, Height));
+            s.Canvas.Clear(new SKColor(BackColor.R, BackColor.G, BackColor.B));
+
+            var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
+            var fullArea = new SKRect(0, 0, Width, Height);
+            using var bgGradientBrush = new SKPaint
             {
-                if (NoDraw) return;
-                if (!Loaded) return;
+                Shader = SKShader.CreateLinearGradient(
+                    new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
+                    new[] {PBlendColor1.ToSKColor(), PBlendColor1.ToSKColor(), PBlendColor2.ToSKColor()},
+                    new[] {0, NameWidth / (float) Width, 1f},
+                    SKShaderTileMode.Clamp
+                ),
+                Style = SKPaintStyle.Fill
+            };
 
-                using var s = SKSurface.Create(new SKImageInfo(Width, Height));
-                s.Canvas.Clear(new SKColor(BackColor.R, BackColor.G, BackColor.B));
+            using var fgBrush = new SKPaint
+            {
+                Color = ForeColor.ToSKColor()
+            };
 
-                var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
-                var fullArea = new SKRect(0, 0, Width, Height);
-                using var bgGradientBrush = new SKPaint
+            using var lineBrush = new SKPaint
+            {
+                IsAntialias = true,
+                Color = PLineColor.ToSKColor(),
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 1,
+                StrokeCap = SKStrokeCap.Butt
+            };
+
+            using var textBrush = new SKPaint
+            {
+                IsAntialias = true,
+                Color = ForeColor.ToSKColor()
+            };
+
+            using var borderBrush = new SKPaint
+            {
+                IsAntialias = true,
+                Color = BorderColor.ToSKColor(),
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 1,
+                StrokeCap = SKStrokeCap.Butt
+            };
+
+            s.Canvas.DrawRect(fullArea, bgGradientBrush);
+
+            DrawBackground(s, drawArea);
+            DrawHighlight(s, drawArea);
+
+            var textPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = ForeColor.ToSKColor()
+            };
+
+            for (var i = 0; i < Items.Count; i++)
+            {
+                var y = YPadding + i * (PItemHeight + YPadding);
+                if (!DualName | Items[i].Name == Items[i].Name2)
                 {
-                    Shader = SKShader.CreateLinearGradient(
-                        new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
-                        new[] {PBlendColor1.ToSKColor(), PBlendColor1.ToSKColor(), PBlendColor2.ToSKColor()},
-                        new[] {0, NameWidth / (float) Width, 1f},
-                        SKShaderTileMode.Clamp
-                    ),
-                    Style = SKPaintStyle.Fill
-                };
-
-                using var fgBrush = new SKPaint
-                {
-                    Color = ForeColor.ToSKColor()
-                };
-
-                using var lineBrush = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color = PLineColor.ToSKColor(),
-                    Style = SKPaintStyle.Stroke,
-                    StrokeWidth = 1,
-                    StrokeCap = SKStrokeCap.Butt
-                };
-
-                using var textBrush = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color = ForeColor.ToSKColor()
-                };
-
-                using var borderBrush = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color = BorderColor.ToSKColor(),
-                    Style = SKPaintStyle.Stroke,
-                    StrokeWidth = 1,
-                    StrokeCap = SKStrokeCap.Butt
-                };
-
-                s.Canvas.DrawRect(fullArea, bgGradientBrush);
-
-                DrawBackground(s, drawArea);
-                DrawHighlight(s, drawArea);
-
-                var textPaint = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color = ForeColor.ToSKColor()
-                };
-
-                for (var i = 0; i < Items.Count; i++)
-                {
-                    var y = YPadding + i * (PItemHeight + YPadding);
-                    if (!DualName | Items[i].Name == Items[i].Name2)
+                    var text = Items[i].Name;
+                    if (text == "")
                     {
-                        var text = Items[i].Name;
-                        if (text == "")
-                        {
-                            text = Items[i].Name2;
-                        }
+                        text = Items[i].Name2;
+                    }
 
-                        if (text != "" && !text.Contains(":"))
-                        {
-                            text += ":";
-                        }
+                    if (text != "" && !text.Contains(":"))
+                    {
+                        text += ":";
+                    }
 
-                        var separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
-                        if (separatorTextIndex < 0)
+                    var separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
+                    if (separatorTextIndex < 0)
+                    {
+                        s.Canvas.DrawText(SKTextBlob.Create(text, new SKFont(SKTypeface.Default, Font.Size)), 0, y + Font.Size / 2 + 1, textBrush);
+                    }
+                    else
+                    {
+                        s.Canvas.DrawText(SKTextBlob.Create(text[..separatorTextIndex], new SKFont(SKTypeface.Default, Font.Size)), 0, y + Font.Size / 2 + 1, textBrush);
+
+                        var textRect = new SKRect();
+                        textBrush.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
+                        s.Canvas.DrawText(SKTextBlob.Create(text[(separatorTextIndex + 1)..], new SKFont(SKTypeface.Default, Font.Size)), NameWidth - 5 - textRect.Width, y + Font.Size / 2 + 1, textBrush);
+                    }
+                }
+
+                Debug.WriteLine($"{Name}: DualName: {DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2}");
+                if (!(DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2))
+                {
+                    BackgroundImage = s.Snapshot().ToBitmap();
+
+                    return;
+                }
+
+                var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / ScaleValue));
+                var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                var layoutRectangle = new SKRect(0, rect.Top, Width - drawArea.Width - XPadding, rect.Height);
+                s.Canvas.DrawText(SKTextBlob.Create($"{Items[i].Name}:", new SKFont(SKTypeface.Default, Font.Size)), layoutRectangle.Left, layoutRectangle.Top, textPaint);
+
+                if (Overcap)
+                {
+                    DrawOvercap(s, i, drawArea, y);
+                }
+
+                switch (PStyle)
+                {
+                    case Enums.GraphStyle.baseOnly:
+                        DrawBase(s, i, drawArea, y);
+                        break;
+                    case Enums.GraphStyle.enhOnly:
+                        DrawEnh(s, i, drawArea, y);
+                        break;
+                    default:
+                        if (Items[i].ValueBase > Items[i].ValueEnh)
                         {
-                            s.Canvas.DrawText(SKTextBlob.Create(text, new SKFont(SKTypeface.Default, Font.Size)), 0, y + Font.Size / 2 + 1, textBrush);
+                            DrawBase(s, i, drawArea, y);
+                            DrawEnh(s, i, drawArea, y);
                         }
                         else
                         {
-                            s.Canvas.DrawText(SKTextBlob.Create(text[..separatorTextIndex], new SKFont(SKTypeface.Default, Font.Size)), 0, y + Font.Size / 2 + 1, textBrush);
-
-                            var textRect = new SKRect();
-                            textBrush.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
-                            s.Canvas.DrawText(SKTextBlob.Create(text[(separatorTextIndex + 1)..], new SKFont(SKTypeface.Default, Font.Size)), NameWidth - 5 - textRect.Width, y + Font.Size / 2 + 1, textBrush);
-                        }
-                    }
-
-                    if (!(DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2))
-                    {
-                        return;
-                    }
-
-                    var width = (int)Math.Round(drawArea.Width * (Items[i].ValueBase / ScaleValue));
-                    var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
-                    var layoutRectangle = new SKRect(0, rect.Top, Width - drawArea.Width - XPadding, rect.Height);
-                    s.Canvas.DrawText(SKTextBlob.Create($"{Items[i].Name}:", new SKFont(SKTypeface.Default, Font.Size)), layoutRectangle.Left, layoutRectangle.Top, textPaint);
-
-                    if (Overcap)
-                    {
-                        DrawOvercap(s, i, drawArea, y);
-                    }
-
-
-                    switch (PStyle)
-                    {
-                        case Enums.GraphStyle.baseOnly:
-                            DrawBase(s, i, drawArea, y);
-                            break;
-                        case Enums.GraphStyle.enhOnly:
                             DrawEnh(s, i, drawArea, y);
-                            break;
-                        default:
-                            if (Items[i].ValueBase > Items[i].ValueEnh)
-                            {
-                                DrawBase(s, i, drawArea, y);
-                                DrawEnh(s, i, drawArea, y);
-                            }
-                            else
-                            {
-                                DrawEnh(s, i, drawArea, y);
-                                DrawBase(s, i, drawArea, y);
-                            }
+                            DrawBase(s, i, drawArea, y);
+                        }
 
-                            break;
-                    }
-
-                    if (Items[i].ValueAbsorbed > 0)
-                    {
-                        DrawAbsorbed(s, i, drawArea, y);
-                    }
+                        break;
                 }
 
-                if (PBorder)
+                if (Items[i].ValueAbsorbed > 0)
                 {
-                    s.Canvas.DrawRect(drawArea, lineBrush);
+                    DrawAbsorbed(s, i, drawArea, y);
                 }
-
-                if (DisplayOuterBorder)
-                {
-                    s.Canvas.DrawRect(fullArea, borderBrush);
-                }
-
-                BackgroundImage = s.Snapshot().ToBitmap();
             }
+
+            if (PBorder)
+            {
+                s.Canvas.DrawRect(drawArea, lineBrush);
+            }
+
+            if (DisplayOuterBorder)
+            {
+                s.Canvas.DrawRect(fullArea, borderBrush);
+            }
+
+            BackgroundImage = s.Snapshot().ToBitmap();
         }
 
         private void DrawHighlight(SKSurface s, SKRect bounds)
@@ -908,7 +928,7 @@ namespace mrbControls
 
             checked
             {
-                var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / ScaleValue));
+                var width = (int) Math.Round(bounds.Width * (Items[index].ValueOvercap / ScaleValue));
                 var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 s.Canvas.DrawRect(rect, fillPaint);
                 if (PDrawLines)
@@ -916,12 +936,12 @@ namespace mrbControls
                     s.Canvas.DrawRect(rect, linePaint);
                 }
 
-                if (!(DualName & Items[index].Name != "" & Items[index].Name != Items[index].Name2))
+                /*if (!(DualName & Items[index].Name != "" & Items[index].Name != Items[index].Name2))
                 {
                     return;
-                }
+                }*/
 
-                var layoutRectangle = new SKRect(0, rect.Top, Width - bounds.Width - XPadding, rect.Height);
+                //var layoutRectangle = new SKRect(0, rect.Top, Width - bounds.Width - XPadding, rect.Height);
                 // s.Canvas.DrawText(SKTextBlob.Create($"{Items[index].Name}:", new SKFont(SKTypeface.Default, Font.Size)), layoutRectangle.Left, layoutRectangle.Top, textPaint);
             }
         }
@@ -1077,29 +1097,29 @@ namespace mrbControls
 
         private void FillScales()
         {
-            Scales = new List<float>();
-            AddScale(1f);
-            AddScale(2f);
-            AddScale(3f);
-            AddScale(5f);
-            AddScale(10f);
-            AddScale(25f);
-            AddScale(50f);
-            AddScale(75f);
-            AddScale(100f);
-            AddScale(150f);
-            AddScale(225f);
-            AddScale(300f);
-            AddScale(450f);
-            AddScale(600f);
-            AddScale(900f);
-            AddScale(1200f);
-            AddScale(2400f);
-        }
-
-        private void AddScale(float iValue)
-        {
-            Scales.Add(iValue);
+            Scales = new List<float>
+            {
+                1,
+                2,
+                3,
+                5,
+                10,
+                25,
+                50,
+                75,
+                100,
+                150,
+                225,
+                300,
+                450,
+                600,
+                900,
+                1200,
+                2400,
+                3000,
+                3600,
+                4000
+            };
         }
 
         public float GetMaxValue()
@@ -1113,9 +1133,9 @@ namespace mrbControls
                         Items.Select(e => e.ValueEnh).Max());
                 }
 
-                ScaleValue = 100f;
+                ScaleValue = 100;
                     
-                return 100f;
+                return 100;
             }
         }
 
@@ -1186,29 +1206,18 @@ namespace mrbControls
 
                 var num = rectangle.Width;
                 var height = ItemHeight + YPadding;
-                for (var i = 0; i < Items.Count; i++)
+                if (!Items.Select((t, i) => (int) Math.Round(YPadding / 2.0 + checked(i * (PItemHeight + YPadding))))
+                        .Select(num4 => new Rectangle(rectangle.Left, rectangle.Top + num4, num, height))
+                        .Any(rectangle2 =>
+                            iX >= rectangle2.X && iY >= rectangle2.Y & iY <= rectangle2.Y + rectangle2.Height |
+                            Items.Count == 1))
                 {
-                    var num4 = (int) Math.Round(YPadding / 2.0 + checked(i * (PItemHeight + YPadding)));
-                    var rectangle2 = new Rectangle(rectangle.Left, rectangle.Top + num4, num, height);
-                    if (iX < rectangle2.X || !(((iY >= rectangle2.Y) & (iY <= rectangle2.Y + rectangle2.Height)) |
-                                               (Items.Count == 1)))
-                        continue;
-                    num -= TextWidth;
-                    float result;
-                    if (iX > TextWidth)
-                    {
-                        iX -= TextWidth;
-                        result = (float) (iX / (double) num * ScaleValue);
-                    }
-                    else
-                    {
-                        result = 0f;
-                    }
-
-                    return result;
+                    return 0;
                 }
 
-                return 0f;
+                num -= TextWidth;
+                
+                return iX > TextWidth ? (iX - TextWidth) / (float) num * ScaleValue : 0;
             }
         }
 
