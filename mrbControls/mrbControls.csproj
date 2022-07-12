@@ -44,9 +44,7 @@
     <Compile Update="ctlEnhPopupPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="ctlEnhTabControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="ctlEnhTabControl.cs" />
     <Compile Update="ctlListViewColored.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -115,18 +113,10 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.0" />
-    <PackageReference Include="Syncfusion.Grid.Windows">
-      <Version>19.3.0.57</Version>
-    </PackageReference>
-    <PackageReference Include="Syncfusion.Licensing">
-      <Version>19.3.0.57</Version>
-    </PackageReference>
-    <PackageReference Include="Syncfusion.Shared.Base">
-      <Version>19.3.0.57</Version>
-    </PackageReference>
-    <PackageReference Include="Syncfusion.Tools.Windows">
-      <Version>19.3.0.57</Version>
-    </PackageReference>
+    <PackageReference Include="Syncfusion.Grid.Windows" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Shared.Base" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.2.0.36" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mrbBase\mrbBase.csproj" />
