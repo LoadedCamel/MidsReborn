@@ -80,7 +80,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 _myParent = parentForm;
                 FormClosed += frmTotalsV2_FormClosed;
-                Load += OnLoad;
+                Load += frmTotalsV2_Load;
 
                 KeepOnTop = true;
                 InitializeComponent();
@@ -255,12 +255,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             base.Refresh();
         }
 
-        private void OnLoad(object sender, EventArgs e)
+        private void frmTotalsV2_Load(object sender, EventArgs e)
         {
             CenterToParent();
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.Dock = DockStyle.Fill;
+            
+            // Tab control border is 3 px thick, move it a little off to hide it
+            // Change the size fixed values so they are the same as in frmTotalsV2_Resize()
+            tabControl1.Location = new Point(-3, 19);
+            tabControl1.Size = new Size(ClientSize.Width + 8, ClientSize.Height - 58);
+            
             ctlTotalsTabStrip1.ClearItems();
             for (var i = 0; i < tabControl1.TabPages.Count; i++)
             {
@@ -437,6 +442,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var excludedResVectors = new List<Enums.eDamage>
             {
                 Enums.eDamage.None,
+                Enums.eDamage.Melee,
+                Enums.eDamage.Ranged,
+                Enums.eDamage.AoE,
                 Enums.eDamage.Special,
                 Enums.eDamage.Unique1,
                 Enums.eDamage.Unique2,
@@ -785,6 +793,44 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void ctlTotalsTabStrip1_TabClick(int index)
         {
             tabControl1.SelectedIndex = index;
+        }
+
+        private void frmTotalsV2_Resize(object sender, EventArgs e)
+        {
+            // ClientSize min: 620x846
+
+            const int tabControlWidthPad = -8;
+            const int tabControlHeightPad = 58;
+            const int graphControlWidthPad = 20;
+            const int pbCloseLocationXPad = 132;
+
+            panel1.Size = ClientSize;
+            tabControl1.Size = new Size(ClientSize.Width - tabControlWidthPad, ClientSize.Height - tabControlHeightPad);
+            
+            graphDef.Width = ClientSize.Width - graphControlWidthPad;
+            graphRes.Width = ClientSize.Width - graphControlWidthPad;
+            graphHP.Width = ClientSize.Width - graphControlWidthPad;
+            graphEnd.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphMovement.Width = ClientSize.Width - graphControlWidthPad;
+            graphPerception.Width = ClientSize.Width - graphControlWidthPad;
+            graphHaste.Width = ClientSize.Width - graphControlWidthPad;
+            graphToHit.Width = ClientSize.Width - graphControlWidthPad;
+            graphAccuracy.Width = ClientSize.Width - graphControlWidthPad;
+            graphDamage.Width = ClientSize.Width - graphControlWidthPad;
+            graphEndRdx.Width = ClientSize.Width - graphControlWidthPad;
+            graphThreat.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphStatusProt.Width = ClientSize.Width - graphControlWidthPad;
+            graphStatusRes.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphDebuffRes.Width = ClientSize.Width - graphControlWidthPad;
+            graphElusivity.Width = ClientSize.Width - graphControlWidthPad;
+
+            pbClose.Location = pbClose.Location with {X = ClientSize.Width - pbCloseLocationXPad};
+
+            // Prevent duplicate headers display (tiling) when stretching window horizontally
+            ctlTotalsTabStrip1.Redraw();
         }
     }
 }

@@ -73,10 +73,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity = new mrbControls.ctlMultiGraph();
             this.graphDebuffRes = new mrbControls.ctlMultiGraph();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ctlTotalsTabStrip1 = new mrbControls.ctlTotalsTabStrip();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbTopMost = new System.Windows.Forms.PictureBox();
+            this.ctlTotalsTabStrip1 = new mrbControls.ctlTotalsTabStrip();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -95,10 +95,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.ItemSize = new System.Drawing.Size(130, 21);
-            this.tabControl1.Location = new System.Drawing.Point(3, 30);
+            this.tabControl1.Location = new System.Drawing.Point(-3, 30);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
+            this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
+            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(618, 770);
+            this.tabControl1.Size = new System.Drawing.Size(623, 770);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 1;
             this.tabControl1.TabStop = false;
@@ -117,7 +120,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tabPage1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(610, 741);
+            this.tabPage1.Size = new System.Drawing.Size(615, 741);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Core Stats";
             // 
@@ -145,7 +148,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEnd.Highlight = false;
             this.graphEnd.ItemHeight = 13;
             this.graphEnd.Lines = true;
-            this.graphEnd.Location = new System.Drawing.Point(5, 608);
+            this.graphEnd.Location = new System.Drawing.Point(8, 608);
             this.graphEnd.MarkerValue = 0F;
             this.graphEnd.Max = 100F;
             this.graphEnd.MaxItems = 3;
@@ -188,7 +191,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHP.Highlight = false;
             this.graphHP.ItemHeight = 13;
             this.graphHP.Lines = true;
-            this.graphHP.Location = new System.Drawing.Point(5, 511);
+            this.graphHP.Location = new System.Drawing.Point(8, 511);
             this.graphHP.MarkerValue = 0F;
             this.graphHP.Max = 4000F;
             this.graphHP.MaxItems = 2;
@@ -232,7 +235,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.Highlight = false;
             this.graphRes.ItemHeight = 13;
             this.graphRes.Lines = true;
-            this.graphRes.Location = new System.Drawing.Point(5, 305);
+            this.graphRes.Location = new System.Drawing.Point(8, 305);
             this.graphRes.Margin = new System.Windows.Forms.Padding(4);
             this.graphRes.MarkerValue = 0F;
             this.graphRes.Max = 100F;
@@ -277,7 +280,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.Highlight = false;
             this.graphDef.ItemHeight = 13;
             this.graphDef.Lines = true;
-            this.graphDef.Location = new System.Drawing.Point(5, 48);
+            this.graphDef.Location = new System.Drawing.Point(8, 48);
             this.graphDef.Margin = new System.Windows.Forms.Padding(4);
             this.graphDef.MarkerValue = 0F;
             this.graphDef.Max = 100F;
@@ -304,7 +307,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label1.Location = new System.Drawing.Point(9, 22);
+            this.label1.Location = new System.Drawing.Point(12, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 20);
@@ -318,7 +321,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label2.Location = new System.Drawing.Point(9, 281);
+            this.label2.Location = new System.Drawing.Point(12, 281);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(87, 20);
             this.label2.TabIndex = 110;
@@ -331,7 +334,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label3.Location = new System.Drawing.Point(9, 487);
+            this.label3.Location = new System.Drawing.Point(12, 487);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 20);
             this.label3.TabIndex = 111;
@@ -344,7 +347,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label4.Location = new System.Drawing.Point(9, 583);
+            this.label4.Location = new System.Drawing.Point(12, 583);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(86, 20);
             this.label4.TabIndex = 112;
@@ -372,7 +375,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tabPage2.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(610, 741);
+            this.tabPage2.Size = new System.Drawing.Size(615, 741);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Misc Buffs";
             // 
@@ -382,7 +385,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label7.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label7.Location = new System.Drawing.Point(9, 288);
+            this.label7.Location = new System.Drawing.Point(12, 288);
             this.label7.Margin = new System.Windows.Forms.Padding(3);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(45, 20);
@@ -396,7 +399,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label6.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label6.Location = new System.Drawing.Point(9, 176);
+            this.label6.Location = new System.Drawing.Point(12, 176);
             this.label6.Margin = new System.Windows.Forms.Padding(3);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 20);
@@ -410,7 +413,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label5.Location = new System.Drawing.Point(9, 22);
+            this.label5.Location = new System.Drawing.Point(12, 22);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(89, 20);
@@ -423,7 +426,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton1.AutoSize = true;
             this.radioButton1.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.radioButton1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.radioButton1.Location = new System.Drawing.Point(20, 137);
+            this.radioButton1.Location = new System.Drawing.Point(23, 137);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(58, 23);
             this.radioButton1.TabIndex = 5;
@@ -437,7 +440,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton2.AutoSize = true;
             this.radioButton2.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.radioButton2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.radioButton2.Location = new System.Drawing.Point(150, 137);
+            this.radioButton2.Location = new System.Drawing.Point(153, 137);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(54, 23);
             this.radioButton2.TabIndex = 6;
@@ -451,7 +454,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton3.AutoSize = true;
             this.radioButton3.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.radioButton3.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.radioButton3.Location = new System.Drawing.Point(273, 137);
+            this.radioButton3.Location = new System.Drawing.Point(276, 137);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(81, 23);
             this.radioButton3.TabIndex = 7;
@@ -465,7 +468,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton4.AutoSize = true;
             this.radioButton4.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.radioButton4.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.radioButton4.Location = new System.Drawing.Point(418, 137);
+            this.radioButton4.Location = new System.Drawing.Point(421, 137);
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(98, 23);
             this.radioButton4.TabIndex = 8;
@@ -498,7 +501,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.Highlight = false;
             this.graphThreat.ItemHeight = 13;
             this.graphThreat.Lines = true;
-            this.graphThreat.Location = new System.Drawing.Point(5, 484);
+            this.graphThreat.Location = new System.Drawing.Point(8, 484);
             this.graphThreat.MarkerValue = 0F;
             this.graphThreat.Max = 600F;
             this.graphThreat.MaxItems = 1;
@@ -541,7 +544,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.Highlight = false;
             this.graphEndRdx.ItemHeight = 13;
             this.graphEndRdx.Lines = true;
-            this.graphEndRdx.Location = new System.Drawing.Point(5, 450);
+            this.graphEndRdx.Location = new System.Drawing.Point(8, 450);
             this.graphEndRdx.MarkerValue = 0F;
             this.graphEndRdx.Max = 100F;
             this.graphEndRdx.MaxItems = 1;
@@ -584,7 +587,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDamage.Highlight = false;
             this.graphDamage.ItemHeight = 13;
             this.graphDamage.Lines = true;
-            this.graphDamage.Location = new System.Drawing.Point(5, 416);
+            this.graphDamage.Location = new System.Drawing.Point(8, 416);
             this.graphDamage.MarkerValue = 0F;
             this.graphDamage.Max = 900F;
             this.graphDamage.MaxItems = 1;
@@ -627,7 +630,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAccuracy.Highlight = false;
             this.graphAccuracy.ItemHeight = 13;
             this.graphAccuracy.Lines = true;
-            this.graphAccuracy.Location = new System.Drawing.Point(5, 382);
+            this.graphAccuracy.Location = new System.Drawing.Point(8, 382);
             this.graphAccuracy.MarkerValue = 0F;
             this.graphAccuracy.Max = 100F;
             this.graphAccuracy.MaxItems = 1;
@@ -670,7 +673,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.Highlight = false;
             this.graphToHit.ItemHeight = 13;
             this.graphToHit.Lines = true;
-            this.graphToHit.Location = new System.Drawing.Point(5, 348);
+            this.graphToHit.Location = new System.Drawing.Point(8, 348);
             this.graphToHit.MarkerValue = 0F;
             this.graphToHit.Max = 100F;
             this.graphToHit.MaxItems = 1;
@@ -713,7 +716,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHaste.Highlight = false;
             this.graphHaste.ItemHeight = 13;
             this.graphHaste.Lines = true;
-            this.graphHaste.Location = new System.Drawing.Point(5, 314);
+            this.graphHaste.Location = new System.Drawing.Point(8, 314);
             this.graphHaste.MarkerValue = 0F;
             this.graphHaste.Max = 450F;
             this.graphHaste.MaxItems = 1;
@@ -757,7 +760,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphPerception.Highlight = true;
             this.graphPerception.ItemHeight = 13;
             this.graphPerception.Lines = true;
-            this.graphPerception.Location = new System.Drawing.Point(5, 202);
+            this.graphPerception.Location = new System.Drawing.Point(8, 202);
             this.graphPerception.MarkerValue = 0F;
             this.graphPerception.Max = 1200F;
             this.graphPerception.MaxItems = 3;
@@ -800,7 +803,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMovement.Highlight = true;
             this.graphMovement.ItemHeight = 13;
             this.graphMovement.Lines = true;
-            this.graphMovement.Location = new System.Drawing.Point(5, 47);
+            this.graphMovement.Location = new System.Drawing.Point(8, 47);
             this.graphMovement.MarkerValue = 0F;
             this.graphMovement.Max = 225F;
             this.graphMovement.MaxItems = 4;
@@ -829,7 +832,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tabPage3.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(610, 741);
+            this.tabPage3.Size = new System.Drawing.Size(615, 741);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Status Protection";
             // 
@@ -839,7 +842,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label9.BackColor = System.Drawing.Color.Transparent;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label9.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label9.Location = new System.Drawing.Point(9, 301);
+            this.label9.Location = new System.Drawing.Point(12, 301);
             this.label9.Margin = new System.Windows.Forms.Padding(3);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(135, 20);
@@ -853,7 +856,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label8.BackColor = System.Drawing.Color.Transparent;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label8.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label8.Location = new System.Drawing.Point(9, 22);
+            this.label8.Location = new System.Drawing.Point(12, 22);
             this.label8.Margin = new System.Windows.Forms.Padding(3);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(134, 20);
@@ -885,7 +888,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusRes.Highlight = false;
             this.graphStatusRes.ItemHeight = 13;
             this.graphStatusRes.Lines = false;
-            this.graphStatusRes.Location = new System.Drawing.Point(5, 327);
+            this.graphStatusRes.Location = new System.Drawing.Point(8, 327);
             this.graphStatusRes.MarkerValue = 0F;
             this.graphStatusRes.Max = 600F;
             this.graphStatusRes.MaxItems = 11;
@@ -929,7 +932,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusProt.Highlight = false;
             this.graphStatusProt.ItemHeight = 13;
             this.graphStatusProt.Lines = false;
-            this.graphStatusProt.Location = new System.Drawing.Point(5, 47);
+            this.graphStatusProt.Location = new System.Drawing.Point(8, 47);
             this.graphStatusProt.MarkerValue = 0F;
             this.graphStatusProt.Max = 50F;
             this.graphStatusProt.MaxItems = 11;
@@ -959,7 +962,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tabPage4.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(610, 741);
+            this.tabPage4.Size = new System.Drawing.Size(615, 741);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Debuff Resistances";
             // 
@@ -969,7 +972,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label11.BackColor = System.Drawing.Color.Transparent;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label11.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label11.Location = new System.Drawing.Point(9, 304);
+            this.label11.Location = new System.Drawing.Point(12, 304);
             this.label11.Margin = new System.Windows.Forms.Padding(3);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 20);
@@ -983,7 +986,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label10.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label10.Location = new System.Drawing.Point(9, 22);
+            this.label10.Location = new System.Drawing.Point(12, 22);
             this.label10.Margin = new System.Windows.Forms.Padding(3);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(140, 20);
@@ -1015,7 +1018,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.Highlight = false;
             this.graphElusivity.ItemHeight = 13;
             this.graphElusivity.Lines = true;
-            this.graphElusivity.Location = new System.Drawing.Point(5, 330);
+            this.graphElusivity.Location = new System.Drawing.Point(8, 330);
             this.graphElusivity.MarkerValue = 0F;
             this.graphElusivity.Max = 100F;
             this.graphElusivity.MaxItems = 60;
@@ -1059,7 +1062,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDebuffRes.Highlight = false;
             this.graphDebuffRes.ItemHeight = 13;
             this.graphDebuffRes.Lines = true;
-            this.graphDebuffRes.Location = new System.Drawing.Point(5, 46);
+            this.graphDebuffRes.Location = new System.Drawing.Point(8, 46);
             this.graphDebuffRes.MarkerValue = 0F;
             this.graphDebuffRes.Max = 100F;
             this.graphDebuffRes.MaxItems = 8;
@@ -1082,31 +1085,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.ctlTotalsTabStrip1);
             this.panel1.Controls.Add(this.tabControl1);
-            this.panel1.Controls.Add(this.panel2);
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(621, 843);
+            this.panel1.Size = new System.Drawing.Size(620, 846);
             this.panel1.TabIndex = 100;
-            // 
-            // ctlTotalsTabStrip1
-            // 
-            this.ctlTotalsTabStrip1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ctlTotalsTabStrip1.BackgroundImage")));
-            this.ctlTotalsTabStrip1.ColorActiveTab = System.Drawing.Color.Goldenrod;
-            this.ctlTotalsTabStrip1.ColorInactiveHoveredTab = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(122)))), ((int)(((byte)(187)))));
-            this.ctlTotalsTabStrip1.ColorInactiveTab = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(85)))), ((int)(((byte)(130)))));
-            this.ctlTotalsTabStrip1.ColorStripLine = System.Drawing.Color.Goldenrod;
-            this.ctlTotalsTabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ctlTotalsTabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.ctlTotalsTabStrip1.ItemPadding = 18;
-            this.ctlTotalsTabStrip1.Location = new System.Drawing.Point(0, 0);
-            this.ctlTotalsTabStrip1.Name = "ctlTotalsTabStrip1";
-            this.ctlTotalsTabStrip1.OutlineText = true;
-            this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(621, 24);
-            this.ctlTotalsTabStrip1.TabIndex = 0;
-            this.ctlTotalsTabStrip1.TabClick += new mrbControls.ctlTotalsTabStrip.TabClickEventHandler(this.ctlTotalsTabStrip1_TabClick);
             // 
             // panel2
             // 
@@ -1114,10 +1100,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.panel2.Controls.Add(this.pbClose);
             this.panel2.Controls.Add(this.pbTopMost);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 799);
+            this.panel2.Location = new System.Drawing.Point(0, 802);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(621, 44);
+            this.panel2.Size = new System.Drawing.Size(620, 44);
             this.panel2.TabIndex = 2;
             // 
             // pbClose
@@ -1146,6 +1132,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.pbTopMost.Click += new System.EventHandler(this.PbTopMostClick);
             this.pbTopMost.Paint += new System.Windows.Forms.PaintEventHandler(this.PbTopMostPaint);
             // 
+            // ctlTotalsTabStrip1
+            // 
+            this.ctlTotalsTabStrip1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ctlTotalsTabStrip1.BackgroundImage")));
+            this.ctlTotalsTabStrip1.ColorActiveTab = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.ColorInactiveHoveredTab = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(122)))), ((int)(((byte)(187)))));
+            this.ctlTotalsTabStrip1.ColorInactiveTab = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(85)))), ((int)(((byte)(130)))));
+            this.ctlTotalsTabStrip1.ColorStripLine = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ctlTotalsTabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.ctlTotalsTabStrip1.ItemPadding = 18;
+            this.ctlTotalsTabStrip1.Location = new System.Drawing.Point(0, 0);
+            this.ctlTotalsTabStrip1.Name = "ctlTotalsTabStrip1";
+            this.ctlTotalsTabStrip1.OutlineText = true;
+            this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(620, 24);
+            this.ctlTotalsTabStrip1.TabIndex = 0;
+            this.ctlTotalsTabStrip1.TabClick += new mrbControls.ctlTotalsTabStrip.TabClickEventHandler(this.ctlTotalsTabStrip1_TabClick);
+            // 
             // frmTotalsV2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1155,7 +1158,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.Control;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(636, 885);
@@ -1165,6 +1168,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Text = "Totals for Self";
             this.TopMost = true;
             this.Move += new System.EventHandler(this.frmTotalsV2_Move);
+            this.Resize += new System.EventHandler(this.frmTotalsV2_Resize);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
