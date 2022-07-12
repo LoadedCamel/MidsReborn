@@ -555,6 +555,7 @@ namespace mrbControls
             };
 
             const float nameXPadding = 3;
+            var separatorTextIndex = 0;
             for (var i = 0; i < Items.Count; i++)
             {
                 var y = YPadding + i * (PItemHeight + YPadding);
@@ -571,7 +572,7 @@ namespace mrbControls
                         text += ":";
                     }
 
-                    var separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
+                    separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
                     if (separatorTextIndex < 0)
                     {
                         s.Canvas.DrawTextShort(text, FontSize, 3, y + FontSize / 2 + 1, textBrush);
@@ -597,6 +598,14 @@ namespace mrbControls
                 var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
                 var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 var layoutRectangle = new SKRect(nameXPadding, rect.Top + (Font.Size + PItemHeight) / 2f, Width - drawArea.Width - XPadding, rect.Height);
+                separatorTextIndex = Items[i].Name.IndexOf("|", StringComparison.Ordinal);
+                if (separatorTextIndex >= 0)
+                {
+                    var combinedLabel = Items[i].Name;
+                    Items[i].Name = combinedLabel[..separatorTextIndex];
+                    Items[i].Name2 = combinedLabel[(separatorTextIndex + 1)..];
+                }
+
                 s.Canvas.DrawTextShort($"{Items[i].Name}:", FontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
                 if (Items[i].Name2 != "" && Items[i].Name2 != Items[i].Name)
                 {
@@ -1204,8 +1213,8 @@ namespace mrbControls
 
         private class GraphItem
         {
-            public readonly string Name;
-            public readonly string Name2;
+            public string Name;
+            public string Name2;
             public readonly string Tip;
             public readonly float ValueBase;
             public readonly float ValueEnh;

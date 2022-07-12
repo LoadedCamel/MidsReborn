@@ -74,7 +74,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             var yOffset = RealmUsesToxicDef() ? 10 : 0;
-            graphDef.Size = new Size(300, 144 + yOffset);
+            graphDef.Size = new Size(300, 152 + yOffset);
             lblRes.Location = new Point(3, 164 + yOffset);
             graphRes.Location = new Point(15, 183 + yOffset);
             lblRegenRec.Location = new Point(3, 302 + yOffset);
@@ -504,7 +504,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 
                 var iTip = $"{displayStats.Defense(dType):##0.##}% {defDmgNames[dType]} defense";
-                graphDef.AddItem($"{defDmgNames[dType]}:| {displayStats.Defense(dType):##0.##}%", displayStats.Defense(dType), 0.0f, iTip);
+                graphDef.AddItem($"{defDmgNames[dType]}| {displayStats.Defense(dType):##0.##}%", displayStats.Defense(dType), 0.0f, iTip);
             }
 
             graphDef.Max = 100;
@@ -523,7 +523,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     MidsContext.Character.TotalsCapped.Res[dType] < MidsContext.Character.Totals.Res[dType]
                         ? $"{displayStats.DamageResistance(dType, true):##0.##}% {defDmgNames[dType]} resistance capped at {displayStats.DamageResistance(dType, false):##0.##}%"
                         : $"{displayStats.DamageResistance(dType, true):##0.##}% {defDmgNames[dType]} resistance. ({str1})";
-                graphRes.AddItem($"{defDmgNames[dType]}:|{displayStats.DamageResistance(dType, false):##0.##}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
+                graphRes.AddItem($"{defDmgNames[dType]}|{displayStats.DamageResistance(dType, false):##0.##}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
 
             }
 
@@ -558,18 +558,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 iTip3 += $"\r\nYour maximum endurance has been increased by {Utilities.FixDP(displayStats.EnduranceMaxEnd - 100f)}%";
             }
 
-            graphMaxEnd.AddItem($"Max End:|{Utilities.FixDP(displayStats.EnduranceMaxEnd)}%", displayStats.EnduranceMaxEnd, 0, iTip3);
+            graphMaxEnd.AddItem($"Max End|{Utilities.FixDP(displayStats.EnduranceMaxEnd)}%", displayStats.EnduranceMaxEnd, 0, iTip3);
             graphMaxEnd.Max = 150;
             graphMaxEnd.MarkerValue = 100;
             graphMaxEnd.Draw();
             
             graphDrain.Clear();
-            graphDrain.AddItem($"EndUse:|{MidsContext.Character.Totals.EndUse:##0.##}/s", MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, drainTip);
+            graphDrain.AddItem($"EndUse|{MidsContext.Character.Totals.EndUse:##0.##}/s", MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, drainTip);
             graphDrain.Max = 4;
             graphDrain.Draw();
             
             graphRec.Clear();
-            graphRec.AddItem($"EndRec:|{displayStats.EnduranceRecoveryPercentage(false):###0}% ({displayStats.EnduranceRecoveryNumeric:##0.##}/s)", displayStats.EnduranceRecoveryPercentage(false), displayStats.EnduranceRecoveryPercentage(true), recTip);
+            graphRec.AddItem($"EndRec|{displayStats.EnduranceRecoveryPercentage(false):###0}% ({displayStats.EnduranceRecoveryNumeric:##0.##}/s)", displayStats.EnduranceRecoveryPercentage(false), displayStats.EnduranceRecoveryPercentage(true), recTip);
             graphRec.Max = 400;
             graphRec.MarkerValue = 100;
             graphRec.Draw();
@@ -581,7 +581,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             graphRegen.Clear();
-            graphRegen.AddItem($"Regeneration:|{displayStats.HealthRegenPercent(false):###0}%", displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
+            graphRegen.AddItem($"Regeneration|{displayStats.HealthRegenPercent(false):###0}%", displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
             graphRegen.Max = graphRegen.GetMaxValue();
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();
@@ -593,7 +593,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 iTip5 += $"\r\n(Capped from a total of: {displayStats.HealthHitpointsNumeric(true):###0.##})";
             }
 
-            graphHP.AddItem($"Max HP:|{displayStats.HealthHitpointsPercentage:###0.##}%", displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
+            graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
             graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap / (double) MidsContext.Character.Archetype.Hitpoints * 100);
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
@@ -651,20 +651,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? jmpTip2 + " m."
                 : jmpTip2 + " ft.";
 
-            AddGraphMovementItem("Run:|", displayStats.MovementRunSpeed, iTip8, speedFormat, rateDisp);
-            AddGraphMovementItem("Jump:|", displayStats.MovementJumpSpeed, jumpTip, speedFormat, rateDisp);
-            graphMovement.AddItem($"Jump Height:|{displayStats.MovementJumpHeight(speedFormat):##0.##}{lengthDisp}", displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
-            AddGraphMovementItem($"Fly:|",displayStats.MovementFlySpeed, fltTip, speedFormat, rateDisp);
+            AddGraphMovementItem("Run|", displayStats.MovementRunSpeed, iTip8, speedFormat, rateDisp);
+            AddGraphMovementItem("Jump|", displayStats.MovementJumpSpeed, jumpTip, speedFormat, rateDisp);
+            graphMovement.AddItem($"Jump Height|{displayStats.MovementJumpHeight(speedFormat):##0.##}{lengthDisp}", displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
+            AddGraphMovementItem($"Fly|",displayStats.MovementFlySpeed, fltTip, speedFormat, rateDisp);
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
             
             graphToHit.Clear();
-            graphToHit.AddItem($"ToHit:|{displayStats.BuffToHit:##0.##}%", displayStats.BuffToHit, 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
+            graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", displayStats.BuffToHit, 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100;
             graphToHit.Draw();
             
             graphAcc.Clear();
-            graphAcc.AddItem($"Accuracy:|{displayStats.BuffAccuracy:##0.##}%", displayStats.BuffAccuracy, 0, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
+            graphAcc.AddItem($"Accuracy|{displayStats.BuffAccuracy:##0.##}%", displayStats.BuffAccuracy, 0, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
             graphAcc.Max = 100;
             graphAcc.Draw();
             
@@ -675,7 +675,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 str7 = $"\r\n\nDamage Capped from {displayStats.BuffDamage(true)}% to {displayStats.BuffDamage(false)}%";
             }
 
-            graphDam.AddItem($"Damage:|{displayStats.BuffDamage(false) - 100:##0.##}%", displayStats.BuffDamage(false), displayStats.BuffDamage(true), $"This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included.{str7}");
+            graphDam.AddItem($"Damage|{displayStats.BuffDamage(false) - 100:##0.##}%", displayStats.BuffDamage(false), displayStats.BuffDamage(true), $"This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included.{str7}");
             graphDam.Max = MidsContext.Character.Archetype.DamageCap * 100f;
             graphDam.MarkerValue = 100f;
             graphDam.Draw();
@@ -687,7 +687,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 str8 = $"\r\n\r\nRecharge Speed Capped from {displayStats.BuffHaste(true)}% to {displayStats.BuffHaste(false)}%";
             }
 
-            graphHaste.AddItem($"Haste:|{displayStats.BuffHaste(false) - 100:##0.##}%", displayStats.BuffHaste(false), displayStats.BuffHaste(true), $"This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included.{str8}");
+            graphHaste.AddItem($"Haste|{displayStats.BuffHaste(false) - 100:##0.##}%", displayStats.BuffHaste(false), displayStats.BuffHaste(true), $"This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included.{str8}");
             graphHaste.MarkerValue = 100f;
             graphHaste.Max = displayStats.BuffHaste(true) switch
             {
@@ -698,27 +698,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphHaste.Draw();
 
             graphEndRdx.Clear();
-            graphEndRdx.AddItem($"EndRdx:|{displayStats.BuffEndRdx:##0.##}%", displayStats.BuffEndRdx, displayStats.BuffEndRdx, "This effect is applied to powers in addition to endurance reduction enhancements.");
+            graphEndRdx.AddItem($"EndRdx|{displayStats.BuffEndRdx:##0.##}%", displayStats.BuffEndRdx, displayStats.BuffEndRdx, "This effect is applied to powers in addition to endurance reduction enhancements.");
             graphEndRdx.Max = 200;
             graphEndRdx.Draw();
             
             graphStealth.Clear();
-            graphStealth.AddItem($"PvE:|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a mob's perception to work out if they can see you.");
-            graphStealth.AddItem($"PvE:|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
-            graphStealth.AddItem($"Perception:|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a mob's perception to work out if they can see you.");
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
+            graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
             var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {MidsContext.Character.Archetype.BaseThreat * 100.0:###}% is included in this figure.";
             var nBase = displayStats.ThreatLevel + 200;
             graphThreat.Clear();
-            graphThreat.AddItem($"Threat Level:|{displayStats.ThreatLevel:##0}%", nBase, 0, iTip10);
+            graphThreat.AddItem($"Threat Level|{displayStats.ThreatLevel:##0}%", nBase, 0, iTip10);
             graphThreat.MarkerValue = MidsContext.Character.Archetype.BaseThreat * 100 + 200;
             graphThreat.Max = 800;
             graphThreat.Draw();
             
             graphElusivity.Clear();
             var sElusivity = MidsContext.Character.Totals.ElusivityMax;
-            graphElusivity.AddItem($"Elusivity:|{sElusivity * 100:##0.##}%", sElusivity * 100, 0, "This effect resists accuracy buffs of enemies attacking you.");
+            graphElusivity.AddItem($"Elusivity|{sElusivity * 100:##0.##}%", sElusivity * 100, 0, "This effect resists accuracy buffs of enemies attacking you.");
             graphElusivity.Max = 100;
             graphElusivity.Draw();
             if (Math.Abs(graphAcc.Font.Size - MidsContext.Config.RtFont.PairedBase) > float.Epsilon)
@@ -753,7 +753,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"You have no protection from {names3[(int) e]} effects.\r\n{str9}"
                     : $"You have mag {totals.Mez[(int) e]:##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
 
-                graphSProt.AddItem($"{names2[(int) e]}:|{totals.Mez[(int) e]:##0.##}", totals.Mez[(int) e], 0, iTip11);
+                graphSProt.AddItem($"{names2[(int) e]}|{totals.Mez[(int) e]:##0.##}", totals.Mez[(int) e], 0, iTip11);
                 var mezResPercent = 100 / (1 + totals.MezRes[(int) e] / 100);
                 var str11 = "";
                 if (e != Enums.eMez.Knockback & e != Enums.eMez.Knockup & e != Enums.eMez.Repel & e != Enums.eMez.Teleport)
@@ -778,7 +778,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"You have no resistance to {names3[(int) e]} effects.\r\n{str10}"
                     : $"You have {totals.Mez[(int) e]:##0.##}% resistance to {names3[(int) e]} effects.{str11}";
 
-                graphSRes.AddItem($"{names2[(int) e]}:|{totals.MezRes[(int) e]:##0.##}%", totals.MezRes[(int) e], 0, iTip12);
+                graphSRes.AddItem($"{names2[(int) e]}|{totals.MezRes[(int) e]:##0.##}%", totals.MezRes[(int) e], 0, iTip12);
             }
 
             graphSProt.Max = graphSProt.GetMaxValue();
@@ -800,7 +800,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"You have no resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs."
                     : $"You have {totals.DebuffRes[(int) eMezArray[index]]:##0.##}% resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs.";
 
-                graphSDeb.AddItem($"{Enums.GetEffectName(eEffectTypeArray[index])}:|{totals.DebuffRes[(int) eEffectTypeArray[index]]:##0.##}%", totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
+                graphSDeb.AddItem($"{Enums.GetEffectName(eEffectTypeArray[index])}|{totals.DebuffRes[(int) eEffectTypeArray[index]]:##0.##}%", totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
             }
 
             graphSDeb.Max = graphSDeb.GetMaxValue() + 1;
