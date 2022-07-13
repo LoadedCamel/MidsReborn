@@ -676,7 +676,9 @@ namespace mrbControls
                     Style = SKPaintStyle.Fill
                 };
 
-                var drawRect = new SKRect(bounds.Left, bounds.Top + PHighlight * (PItemHeight + YPadding), Width - 1, bounds.Top + PHighlight * (PItemHeight + YPadding) + PItemHeight + YPadding);
+                var ny = YPadding + PHighlight * (PItemHeight + YPadding);
+                var drawRect = new SKRect(0, bounds.Top + ny - YPadding / 2f, Width, bounds.Top + ny + PItemHeight + YPadding / 2f);
+
                 s.Canvas.DrawRect(drawRect, fillBrush);
             }
         }

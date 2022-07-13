@@ -145,7 +145,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEnd.Dual = true;
             this.graphEnd.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphEnd.EnhBarColors")));
             this.graphEnd.ForcedMax = 0F;
-            this.graphEnd.Highlight = false;
+            this.graphEnd.Highlight = true;
             this.graphEnd.ItemHeight = 13;
             this.graphEnd.Lines = true;
             this.graphEnd.Location = new System.Drawing.Point(8, 608);
@@ -188,7 +188,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHP.Dual = true;
             this.graphHP.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHP.EnhBarColors")));
             this.graphHP.ForcedMax = 0F;
-            this.graphHP.Highlight = false;
+            this.graphHP.Highlight = true;
             this.graphHP.ItemHeight = 13;
             this.graphHP.Lines = true;
             this.graphHP.Location = new System.Drawing.Point(8, 511);
@@ -232,7 +232,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.Dual = true;
             this.graphRes.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphRes.EnhBarColors")));
             this.graphRes.ForcedMax = 0F;
-            this.graphRes.Highlight = false;
+            this.graphRes.Highlight = true;
             this.graphRes.ItemHeight = 13;
             this.graphRes.Lines = true;
             this.graphRes.Location = new System.Drawing.Point(8, 305);
@@ -277,7 +277,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.Dual = true;
             this.graphDef.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDef.EnhBarColors")));
             this.graphDef.ForcedMax = 0F;
-            this.graphDef.Highlight = false;
+            this.graphDef.Highlight = true;
             this.graphDef.ItemHeight = 13;
             this.graphDef.Lines = true;
             this.graphDef.Location = new System.Drawing.Point(8, 48);
@@ -498,7 +498,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.Dual = true;
             this.graphThreat.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphThreat.EnhBarColors")));
             this.graphThreat.ForcedMax = 0F;
-            this.graphThreat.Highlight = false;
+            this.graphThreat.Highlight = true;
             this.graphThreat.ItemHeight = 13;
             this.graphThreat.Lines = true;
             this.graphThreat.Location = new System.Drawing.Point(8, 484);
@@ -541,7 +541,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.Dual = true;
             this.graphEndRdx.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphEndRdx.EnhBarColors")));
             this.graphEndRdx.ForcedMax = 0F;
-            this.graphEndRdx.Highlight = false;
+            this.graphEndRdx.Highlight = true;
             this.graphEndRdx.ItemHeight = 13;
             this.graphEndRdx.Lines = true;
             this.graphEndRdx.Location = new System.Drawing.Point(8, 450);
@@ -584,7 +584,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDamage.Dual = true;
             this.graphDamage.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDamage.EnhBarColors")));
             this.graphDamage.ForcedMax = 0F;
-            this.graphDamage.Highlight = false;
+            this.graphDamage.Highlight = true;
             this.graphDamage.ItemHeight = 13;
             this.graphDamage.Lines = true;
             this.graphDamage.Location = new System.Drawing.Point(8, 416);
@@ -627,7 +627,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAccuracy.Dual = true;
             this.graphAccuracy.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphAccuracy.EnhBarColors")));
             this.graphAccuracy.ForcedMax = 0F;
-            this.graphAccuracy.Highlight = false;
+            this.graphAccuracy.Highlight = true;
             this.graphAccuracy.ItemHeight = 13;
             this.graphAccuracy.Lines = true;
             this.graphAccuracy.Location = new System.Drawing.Point(8, 382);
@@ -670,7 +670,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.Dual = true;
             this.graphToHit.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphToHit.EnhBarColors")));
             this.graphToHit.ForcedMax = 0F;
-            this.graphToHit.Highlight = false;
+            this.graphToHit.Highlight = true;
             this.graphToHit.ItemHeight = 13;
             this.graphToHit.Lines = true;
             this.graphToHit.Location = new System.Drawing.Point(8, 348);
@@ -713,7 +713,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHaste.Dual = true;
             this.graphHaste.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHaste.EnhBarColors")));
             this.graphHaste.ForcedMax = 0F;
-            this.graphHaste.Highlight = false;
+            this.graphHaste.Highlight = true;
             this.graphHaste.ItemHeight = 13;
             this.graphHaste.Lines = true;
             this.graphHaste.Location = new System.Drawing.Point(8, 314);
@@ -885,7 +885,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusRes.Dual = true;
             this.graphStatusRes.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphStatusRes.EnhBarColors")));
             this.graphStatusRes.ForcedMax = 0F;
-            this.graphStatusRes.Highlight = false;
+            this.graphStatusRes.Highlight = true;
             this.graphStatusRes.ItemHeight = 13;
             this.graphStatusRes.Lines = false;
             this.graphStatusRes.Location = new System.Drawing.Point(8, 327);
@@ -929,7 +929,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStatusProt.Dual = true;
             this.graphStatusProt.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphStatusProt.EnhBarColors")));
             this.graphStatusProt.ForcedMax = 0F;
-            this.graphStatusProt.Highlight = false;
+            this.graphStatusProt.Highlight = true;
             this.graphStatusProt.ItemHeight = 13;
             this.graphStatusProt.Lines = false;
             this.graphStatusProt.Location = new System.Drawing.Point(8, 47);
@@ -1015,7 +1015,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.Dual = true;
             this.graphElusivity.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphElusivity.EnhBarColors")));
             this.graphElusivity.ForcedMax = 0F;
-            this.graphElusivity.Highlight = false;
+            this.graphElusivity.Highlight = true;
             this.graphElusivity.ItemHeight = 13;
             this.graphElusivity.Lines = true;
             this.graphElusivity.Location = new System.Drawing.Point(8, 330);
@@ -1059,7 +1059,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDebuffRes.Dual = true;
             this.graphDebuffRes.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDebuffRes.EnhBarColors")));
             this.graphDebuffRes.ForcedMax = 0F;
-            this.graphDebuffRes.Highlight = false;
+            this.graphDebuffRes.Highlight = true;
             this.graphDebuffRes.ItemHeight = 13;
             this.graphDebuffRes.Lines = true;
             this.graphDebuffRes.Location = new System.Drawing.Point(8, 46);

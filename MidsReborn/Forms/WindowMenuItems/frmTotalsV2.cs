@@ -432,7 +432,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //var cappedStats = MidsContext.Character.TotalsCapped;
             var displayStats = MidsContext.Character.DisplayStats;
             var atName = MidsContext.Character.Archetype.DisplayName;
-            //var watch = Stopwatch.StartNew();
 
             var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
             var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));
@@ -452,6 +451,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 Enums.eDamage.Melee,
                 Enums.eDamage.Ranged,
                 Enums.eDamage.AoE,
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>().ToList();
+
+            var excludedElusivityVectors = new List<Enums.eDamage>
+            {
                 Enums.eDamage.Special,
                 Enums.eDamage.Unique1,
                 Enums.eDamage.Unique2,
@@ -735,17 +742,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphStatusRes.Clear();
             foreach (var m in MezList)
             {
+                // Use Math.Abs() here instead of negative sign to prevent display of "-0"
                 graphStatusProt.AddItemPair($"{m}",
-                    $"{-MidsContext.Character.Totals.Mez[(int) m]:##0.##}",
+                    $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}",
                     0,
-                    -MidsContext.Character.Totals.Mez[(int) m],
-                    $"{-MidsContext.Character.Totals.Mez[(int) m]} Status protection to {m}");
+                    Math.Abs(MidsContext.Character.Totals.Mez[(int) m]),
+                    $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##} Status protection to {m}");
 
                 graphStatusRes.AddItemPair($"{m}",
-                    $"{-MidsContext.Character.Totals.MezRes[(int) m]:##0.##}",
+                    $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%",
                     0,
-                    -MidsContext.Character.Totals.MezRes[(int) m],
-                    $"{-MidsContext.Character.Totals.MezRes[(int) m]} Status resistance to {m}");
+                    MidsContext.Character.Totals.MezRes[(int) m],
+                    $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}% Status resistance to {m}");
             }
 
             graphStatusProt.Draw();
@@ -765,7 +773,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             for (var i = 0; i < cappedDebuffRes.Count; i++)
             {
                 graphDebuffRes.AddItemPair($"{DebuffEffectsList[i]}",
-                    $"{cappedDebuffRes[i]:##0.##}",
+                    $"{cappedDebuffRes[i]:##0.##}%",
                     0,
                     cappedDebuffRes[i],
                     uncappedDebuffRes[i],
@@ -778,7 +786,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphElusivity.Clear();
             for (var i = 0; i < damageVectors.Length; i++)
             {
-                if (excludedResVectors.Contains(i))
+                if (excludedElusivityVectors.Contains(i))
                 {
                     continue;
                 }
@@ -792,9 +800,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             graphElusivity.Draw();
-
-            //watch.Stop();
-            //Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
         }
 
         private void ctlTotalsTabStrip1_TabClick(int index)
