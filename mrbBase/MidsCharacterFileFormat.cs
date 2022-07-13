@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
@@ -356,8 +358,8 @@ namespace mrbBase
 
                 var qualifiedNames = r.ReadBoolean();
                 var hasSubPower = r.ReadBoolean();
-                var nIDClass = DatabaseAPI.NidFromUidClass(r.ReadString());
-                if (nIDClass < 0)
+                var nIdClass = DatabaseAPI.NidFromUidClass(r.ReadString());
+                if (nIdClass < 0)
                 {
                     if (!silent) MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
                     r.Close();
@@ -365,8 +367,10 @@ namespace mrbBase
                     return false;
                 }
 
-                var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIDClass);
-                MidsContext.Character.Reset(DatabaseAPI.Database.Classes[nIDClass], iOrigin);
+                var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIdClass);
+                var charClass = DatabaseAPI.Database.Classes[nIdClass];
+                if (charClass == null) return false;
+                MidsContext.Character.Reset(charClass, iOrigin);
                 if (fVersion > 1.0)
                 {
                     var align = r.ReadInt32();
@@ -430,7 +434,7 @@ namespace mrbBase
                         }
 
                         var flag5 = false;
-                        PowerEntry powerEntry1;
+                        PowerEntry? powerEntry1;
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
                             powerEntry1 = MidsContext.Character.CurrentBuild.Powers[powerIndex];
@@ -441,6 +445,7 @@ namespace mrbBase
                             flag5 = true;
                         }
 
+                        if (powerEntry1 == null) continue;
                         if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
                         {
                             powerEntry1.Level = r.ReadSByte();
@@ -462,10 +467,13 @@ namespace mrbBase
                                     powerEntry1.VariableValue = r.ReadInt32();
                                     break;
                             }
+
                             if (hasSubPower)
                             {
                                 powerEntry1.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
-                                for (var subPowerIndex = 0; subPowerIndex < powerEntry1.SubPowers.Length; ++subPowerIndex)
+                                for (var subPowerIndex = 0;
+                                     subPowerIndex < powerEntry1.SubPowers.Length;
+                                     ++subPowerIndex)
                                 {
                                     var powerSub = new PowerSubEntry();
                                     powerEntry1.SubPowers[subPowerIndex] = powerSub;
@@ -481,10 +489,13 @@ namespace mrbBase
                                         powerSub.nIDPower = DatabaseAPI.NidFromStaticIndexPower(sidPower2);
                                     }
 
+                                    var subPower = DatabaseAPI.Database.Power[powerSub.nIDPower];
+
                                     if (powerSub.nIDPower > -1)
                                     {
-                                        powerSub.Powerset = DatabaseAPI.Database.Power[powerSub.nIDPower].PowerSetID;
-                                        powerSub.Power = DatabaseAPI.Database.Power[powerSub.nIDPower].PowerSetIndex;
+                                        if (subPower == null) continue;
+                                        powerSub.Powerset = subPower.PowerSetID;
+                                        powerSub.Power = subPower.PowerSetIndex;
                                     }
 
                                     powerSub.StatInclude = r.ReadBoolean();
@@ -522,16 +533,20 @@ namespace mrbBase
                             ReadSlotData(r, ref powerEntry1.Slots[index3].Enhancement, qualifiedNames, fVersion);
                             if (r.ReadBoolean())
                             {
-                                ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                                ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames,
+                                    fVersion);
                             }
                         }
+
                         if (powerEntry1.SubPowers.Length > 0)
                             nId = -1;
                         if (nId <= -1)
                             continue;
                         powerEntry1.NIDPower = nId;
-                        powerEntry1.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
-                        powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
+                        var power = DatabaseAPI.Database.Power[nId];
+                        if (power == null) continue;
+                        powerEntry1.NIDPowerset = power.PowerSetID;
+                        powerEntry1.IDXPower = power.PowerSetIndex;
                         if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
                         {
                             powerEntry1.NIDPower = powerEntry1.NIDPower switch
@@ -543,16 +558,18 @@ namespace mrbBase
                                 _ => powerEntry1.NIDPower
                             };
 
-                            powerEntry1.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
-                            powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
+                            powerEntry1.NIDPowerset = power.PowerSetID;
+                            powerEntry1.IDXPower = power.PowerSetIndex;
                         }
 
                         var ps = powerEntry1.Power?.GetPowerSet();
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
-                            if (powerEntry1.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps is {nArchetype: > -1} || powerEntry1.Power.GroupName == "Pool")))
+                            var cPower = MidsContext.Character.CurrentBuild.Powers[powerIndex];
+                            if (cPower == null) continue;
+                            if (powerEntry1.Power != null && !(!cPower.Chosen & (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool")))
                             {
-                                flag5 = !MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen;
+                                flag5 = !cPower.Chosen;
                             }
                             else
                             {
@@ -562,15 +579,15 @@ namespace mrbBase
 
                         if (flag5)
                         {
-                            if (powerEntry1.Power.InherentType != Enums.eGridType.None)
+                            if (powerEntry1.Power != null && powerEntry1.Power.InherentType != Enums.eGridType.None)
                             {
                                 InherentPowers.Add(powerEntry1);
                             }
-                            
+
                             //Console.WriteLine($"{powerEntry1.Power.DisplayName} - {powerEntry1.Power.InherentType}");
                             //MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
                         }
-                        else if (powerEntry1.Power != null && (ps is {nArchetype: > -1} || powerEntry1.Power.GroupName == "Pool"))
+                        else if (powerEntry1.Power != null && (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool"))
                         {
                             MidsContext.Character.CurrentBuild.Powers[powerIndex] = powerEntry1;
                         }

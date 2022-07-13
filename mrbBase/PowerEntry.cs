@@ -8,7 +8,7 @@ namespace mrbBase
 {
     public class PowerEntry : ICloneable
     {
-        public PowerEntry(IPower power)
+        public PowerEntry(IPower? power)
         {
             StatInclude = false;
             Level = -1;
