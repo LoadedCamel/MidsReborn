@@ -1240,6 +1240,8 @@ namespace mrbBase
             }
         }
 
+        public static bool RealmUsesToxicDef() => DatabaseName.Equals("Homecoming");
+
         public static void SaveServerData(string iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileSd, iPath);

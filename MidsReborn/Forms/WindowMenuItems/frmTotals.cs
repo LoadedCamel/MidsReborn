@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
             }
 
-            var yOffset = RealmUsesToxicDef() ? 10 : 0;
+            var yOffset = DatabaseAPI.RealmUsesToxicDef() ? 10 : 0;
             graphDef.Size = new Size(300, 152 + yOffset);
             lblRes.Location = new Point(3, 164 + yOffset);
             graphRes.Location = new Point(15, 183 + yOffset);
@@ -470,13 +470,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMovement.AddItem($"{title}{dispStatsF(speedFormat, false):##0.##}{rateDisp}", dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
         }
 
-        private bool RealmUsesToxicDef()
-        {
-            var dbPath = (MidsContext.Config != null ? MidsContext.Config.DataPath : Files.FDefaultPath).ToLowerInvariant();
-
-            return dbPath.EndsWith("homecoming");
-        }
-
         public void UpdateData()
         {
             var defDmgNames = Enum.GetNames(Enums.eDamage.None.GetType());
@@ -489,7 +482,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             var skipDefVectors = new List<Enums.eDamage>
             {
-                RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
                 Enums.eDamage.Special,
                 Enums.eDamage.Unique1,
                 Enums.eDamage.Unique2,

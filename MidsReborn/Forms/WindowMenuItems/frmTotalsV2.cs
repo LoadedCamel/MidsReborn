@@ -401,13 +401,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Left = MainModule.MidsController.SzFrmTotals.Y;
         }
 
-        private bool RealmUsesToxicDef()
-        {
-            var dbPath = (MidsContext.Config != null ? MidsContext.Config.DataPath : Files.FDefaultPath).ToLowerInvariant();
-
-            return dbPath.EndsWith("homecoming");
-        }
-
         #endregion
 
         private string GenericDataTooltip3(float value, float valueBase, float valueUncapped, string statName, string percentageSign = "%", string movementUnit = "", bool plusSignEnabled = false)
@@ -438,7 +431,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var excludedDefVectors = new List<Enums.eDamage>
             {
                 Enums.eDamage.None,
-                RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
                 Enums.eDamage.Special,
                 Enums.eDamage.Unique1,
                 Enums.eDamage.Unique2,
