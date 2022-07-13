@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,7 +12,7 @@ namespace mrbBase
     {
 
         private static int DisplayIndex { get; set; } = -1;
-        private static List<PowerEntry> InherentPowers { get; set; } = new List<PowerEntry>();
+        private static List<PowerEntry> InherentPowers { get; set; } = new();
 
         public enum eLoadReturnCode
         {
@@ -297,7 +296,7 @@ namespace mrbBase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to read data - " + ex.Message, "ReadSaveData Failed");
+                MessageBox.Show($"Unable to read data - {ex.Message}", "ReadSaveData Failed");
                 return false;
             }
 
@@ -315,10 +314,15 @@ namespace mrbBase
                     {
                         magicFound = true;
                         for (var index = 0; index < MagicNumber.Length; ++index)
+                        {
                             if (MagicNumber[index] != numArray[index])
+                            {
                                 magicFound = false;
-                        if (!magicFound)
-                            ++streamIndex;
+                            }
+                        }
+
+                        if (magicFound) break;
+                        ++streamIndex;
                     }
                     else
                     {
@@ -340,11 +344,9 @@ namespace mrbBase
                         memoryStream.Close();
                         return false;
                     case < PriorVersion:
-                        Debug.WriteLine(@"Using legacy file version format.");
                         formatUsed = Formats.Legacy;
                         break;
                     case < ThisVersion and >= PriorVersion:
-                        Debug.WriteLine(@"Using previous file version format.");
                         formatUsed = Formats.Prior;
                         break;
                     case ThisVersion:
@@ -362,7 +364,7 @@ namespace mrbBase
                     memoryStream.Close();
                     return false;
                 }
-                Debug.WriteLine(DatabaseAPI.Database.Classes[nIDClass].ClassName);
+
                 var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIDClass);
                 MidsContext.Character.Reset(DatabaseAPI.Database.Classes[nIDClass], iOrigin);
                 if (fVersion > 1.0)
@@ -373,9 +375,8 @@ namespace mrbBase
 
                 MidsContext.Character.Name = r.ReadString();
                 var powerSetCount = r.ReadInt32();
-                var expectedArrayLength = new IPowerset[powerSetCount + 1].Length;
                 var names = new List<string>();
-                for (var index = 0; index < powerSetCount + 1; ++index)
+                for (var index = 0; index < powerSetCount + 1; index++)
                 {
                     var iName = r.ReadString();
                     iName = iName switch
@@ -394,16 +395,16 @@ namespace mrbBase
                 var errors = MidsContext.Character.LoadPowersetsByName(names);
                 foreach (var (i, n) in errors)
                 {
-                    MessageBox.Show($"Failed to load powerset by name:{n} at {i}", "Powerset load failure");
+                    MessageBox.Show($"Failed to load powerset by name: {n} at {i}", "Powerset load failure");
                 }
 
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
 
                 var pEntryList = new List<PowerEntry>();
-                var powerCount = r.ReadInt32();
+                var powerCount = r.ReadInt32() + 1;
                 try
                 {
-                    for (var powerIndex = 0; powerIndex <= powerCount; ++powerIndex)
+                    for (var powerIndex = 0; powerIndex < powerCount; powerIndex++)
                     {
                         var nId = -1;
                         var name1 = string.Empty;
@@ -412,7 +413,9 @@ namespace mrbBase
                         {
                             name1 = r.ReadString();
                             if (!string.IsNullOrEmpty(name1))
+                            {
                                 nId = DatabaseAPI.NidFromUidPower(name1);
+                            }
                         }
                         else
                         {
@@ -458,7 +461,6 @@ namespace mrbBase
                                     powerEntry1.StatInclude = r.ReadBoolean();
                                     powerEntry1.VariableValue = r.ReadInt32();
                                     break;
-
                             }
                             if (hasSubPower)
                             {
@@ -487,33 +489,42 @@ namespace mrbBase
 
                                     powerSub.StatInclude = r.ReadBoolean();
                                     if (!((powerSub.nIDPower > -1) & powerSub.StatInclude))
+                                    {
                                         continue;
+                                    }
+
                                     var powerEntry2 = new PowerEntry(DatabaseAPI.Database.Power[powerSub.nIDPower])
                                     {
                                         StatInclude = true
                                     };
+
                                     MidsContext.Character.CurrentBuild.Powers.Add(powerEntry2);
                                 }
                             }
                         }
 
                         if (nId < 0 && powerIndex < DatabaseAPI.Database.Levels_MainPowers.Length)
+                        {
                             powerEntry1.Level = DatabaseAPI.Database.Levels_MainPowers[powerIndex];
+                        }
+
                         powerEntry1.Slots = new SlotEntry[r.ReadSByte() + 1];
-                        for (var index3 = 0; index3 < powerEntry1.Slots.Length; ++index3)
+                        for (var index3 = 0; index3 < powerEntry1.Slots.Length; index3++)
                         {
                             powerEntry1.Slots[index3] = new SlotEntry
                             {
                                 Level = r.ReadSByte(),
-                                IsInherent = r.ReadBoolean(),
+                                IsInherent = formatUsed == Formats.Current && r.ReadBoolean(),
                                 Enhancement = new I9Slot(),
                                 FlippedEnhancement = new I9Slot()
                             };
+
                             ReadSlotData(r, ref powerEntry1.Slots[index3].Enhancement, qualifiedNames, fVersion);
                             if (r.ReadBoolean())
+                            {
                                 ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                            }
                         }
-
                         if (powerEntry1.SubPowers.Length > 0)
                             nId = -1;
                         if (nId <= -1)
@@ -523,14 +534,15 @@ namespace mrbBase
                         powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
                         if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
                         {
-                            if (powerEntry1.NIDPower == 2553)
-                                powerEntry1.NIDPower = 1521;
-                            if (powerEntry1.NIDPower == 2554)
-                                powerEntry1.NIDPower = 1523;
-                            if (powerEntry1.NIDPower == 2555)
-                                powerEntry1.NIDPower = 1522;
-                            if (powerEntry1.NIDPower == 2556)
-                                powerEntry1.NIDPower = 1524;
+                            powerEntry1.NIDPower = powerEntry1.NIDPower switch
+                            {
+                                2553 => 1521,
+                                2554 => 1523,
+                                2555 => 1522,
+                                2556 => 1524,
+                                _ => powerEntry1.NIDPower
+                            };
+
                             powerEntry1.NIDPowerset = DatabaseAPI.Database.Power[nId].PowerSetID;
                             powerEntry1.IDXPower = DatabaseAPI.Database.Power[nId].PowerSetIndex;
                         }
@@ -538,7 +550,7 @@ namespace mrbBase
                         var ps = powerEntry1.Power?.GetPowerSet();
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
-                            if (powerEntry1.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool")))
+                            if (powerEntry1.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps is {nArchetype: > -1} || powerEntry1.Power.GroupName == "Pool")))
                             {
                                 flag5 = !MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen;
                             }
@@ -558,7 +570,7 @@ namespace mrbBase
                             //Console.WriteLine($"{powerEntry1.Power.DisplayName} - {powerEntry1.Power.InherentType}");
                             //MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
                         }
-                        else if (powerEntry1.Power != null && (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool"))
+                        else if (powerEntry1.Power != null && (ps is {nArchetype: > -1} || powerEntry1.Power.GroupName == "Pool"))
                         {
                             MidsContext.Character.CurrentBuild.Powers[powerIndex] = powerEntry1;
                         }
@@ -582,18 +594,22 @@ namespace mrbBase
                 catch (Exception ex)
                 {
                     if (!silent)
+                    {
                         MessageBox.Show($"Error reading some power data, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                    }
+
                     return false;
                 }
 
                 MidsContext.Archetype = MidsContext.Character.Archetype;
                 MidsContext.Character.Validate();
                 MidsContext.Character.Lock();
+                
                 return true;
             }
             catch (Exception ex)
             {
-                if (!silent) MessageBox.Show("Unable to read data - " + ex.Message, "ReadSaveData Failed");
+                if (!silent) MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
                 return false;
             }
         }
@@ -759,7 +775,9 @@ namespace mrbBase
             {
                 var uidEnh = reader.ReadString();
                 if (!string.IsNullOrEmpty(uidEnh))
+                {
                     num = DatabaseAPI.NidFromUidEnh(uidEnh);
+                }
             }
             else
             {
@@ -767,7 +785,10 @@ namespace mrbBase
             }
 
             if (num <= -1)
+            {
                 return;
+            }
+
             slot.Enh = num;
             switch (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID)
             {

@@ -138,7 +138,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 _ => Enums.eSpeedMeasure.MilesPerHour
             };
 
-            if (previousCfgSpeedMeasure != MidsContext.Config.SpeedFormat) UpdateData();
+            if (previousCfgSpeedMeasure != MidsContext.Config.SpeedFormat)
+            {
+                UpdateData();
+            }
         }
 
         private static int GetEpicPowersetIndex()
@@ -149,7 +152,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Fetch ancillary/epic powerset index
             for (i = 0; i < MidsContext.Character.Powersets.Length; i++)
             {
-                if (MidsContext.Character.Powersets[i] == null) continue;
+                if (MidsContext.Character.Powersets[i] == null)
+                {
+                    continue;
+                }
+
                 if (MidsContext.Character.Powersets[i].GroupName == "Epic")
                 {
                     idx = i;
@@ -299,7 +306,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void PbClosePaint(object sender, PaintEventArgs e)
         {
-            if (_myParent?.Drawing == null) return;
+            if (_myParent?.Drawing == null)
+            {
+                return;
+            }
 
             var iStr = "Close";
             var rectangle = new Rectangle();
@@ -308,9 +318,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
             var width = size.Width;
-            size = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[2].Size
-                : _myParent.Drawing.bxPower[4].Size;
             var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             var destRect = new Rectangle(0, 0, 105, 22);

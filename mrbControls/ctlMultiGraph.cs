@@ -596,7 +596,7 @@ namespace mrbControls
 
                 var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[i] : ScaleValue;
                 var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
-                var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 var layoutRectangle = new SKRect(nameXPadding, rect.Top + (Font.Size + PItemHeight) / 2f, Width - drawArea.Width - XPadding, rect.Height);
                 separatorTextIndex = Items[i].Name.IndexOf("|", StringComparison.Ordinal);
                 if (separatorTextIndex >= 0)
@@ -821,7 +821,7 @@ namespace mrbControls
             {
                 var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
                 var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
-                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 s.Canvas.DrawRect(rect, fillPaint);
                 if (PDrawLines)
                 {
@@ -895,7 +895,7 @@ namespace mrbControls
                 var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
                 var width = (int) Math.Round(bounds.Width * (Items[index].ValueEnh / itemScale));
                 var num = PItemHeight;
-                if (Style == 0)
+                if (Style == Enums.GraphStyle.Twin)
                 {
                     num = (int) Math.Round(num / 2.0);
                     ny += num;
@@ -939,7 +939,7 @@ namespace mrbControls
             var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (Items[index].ValueOvercap / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
             if (PDrawLines)
             {
@@ -967,7 +967,7 @@ namespace mrbControls
             var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == 0 ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
             if (PDrawLines)
             {

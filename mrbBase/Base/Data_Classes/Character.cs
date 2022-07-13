@@ -900,11 +900,18 @@ namespace mrbBase.Base.Data_Classes
             else
             {
                 var flag = false;
-                for (var index = 0; index <= powersetIndexes.Length - 1; ++index)
-                    if (Powersets[7].nID == powersetIndexes[index].nID)
+                foreach (var p in powersetIndexes)
+                {
+                    if (Powersets[7].nID == p.nID)
+                    {
                         flag = true;
+                    }
+                }
+
                 if (!flag && powersetIndexes.Length > 0)
+                {
                     Powersets[7] = powersetIndexes[0];
+                }
             }
         }
 
