@@ -49,6 +49,7 @@ namespace mrbControls
         private bool DisplayOuterBorder;
         private int MaxItemsCapacity;
         private float FontSize;
+        private float FontSizeOverride;
         private const float Name2XPadding = 10;
 
         public ctlMultiGraph()
@@ -97,6 +98,7 @@ namespace mrbControls
             Clickable = false;
             MaxItemsCapacity = 60;
             FontSize = PItemHeight;
+            FontSizeOverride = 0;
             
             InitializeComponent();
             FillScales();
@@ -398,6 +400,16 @@ namespace mrbControls
             }
         }
 
+        public float ItemFontSizeOverride
+        {
+            get => FontSizeOverride;
+            set
+            {
+                FontSizeOverride = value;
+                Draw();
+            }
+        }
+
         public List<float> PerItemScales { get; set; } = new();
 
         public event BarClickEventHandler BarClick;
@@ -502,6 +514,7 @@ namespace mrbControls
 
             var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
             var fullArea = new SKRect(0, 0, Width, Height);
+            var fontSize = FontSizeOverride > 0 ? FontSizeOverride : FontSize;
             using var bgGradientBrush = new SKPaint
             {
                 Shader = SKShader.CreateLinearGradient(
@@ -544,14 +557,14 @@ namespace mrbControls
 
             s.Canvas.DrawRect(fullArea, bgGradientBrush);
 
-            DrawBackground(s, drawArea);
+            //DrawBackground(s, drawArea);
             DrawHighlight(s, drawArea);
 
             var textPaint = new SKPaint
             {
                 IsAntialias = true,
                 Color = ForeColor.ToSKColor(),
-                TextSize = FontSize
+                TextSize = fontSize,
             };
 
             const float nameXPadding = 3;
@@ -575,15 +588,15 @@ namespace mrbControls
                     separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
                     if (separatorTextIndex < 0)
                     {
-                        s.Canvas.DrawTextShort(text, FontSize, 3, y + FontSize / 2 + 1, textBrush);
+                        s.Canvas.DrawTextShort(text, fontSize, 3, y + fontSize / 2 + 1, textBrush);
                     }
                     else
                     {
-                        s.Canvas.DrawTextShort(text[..separatorTextIndex], FontSize, nameXPadding, y + FontSize / 2 + 1, textBrush);
+                        s.Canvas.DrawTextShort(text[..separatorTextIndex], fontSize, nameXPadding, y + fontSize / 2 + 1, textBrush);
 
                         var textRect = new SKRect();
                         textBrush.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
-                        s.Canvas.DrawTextShort(text[(separatorTextIndex + 1)..], FontSize, NameWidth - Name2XPadding - textRect.Width, y + FontSize / 2 + 1, textBrush);
+                        s.Canvas.DrawTextShort(text[(separatorTextIndex + 1)..], fontSize, NameWidth - Name2XPadding - textRect.Width, y + fontSize / 2 + 1, textBrush);
                     }
                 }
 
@@ -594,7 +607,7 @@ namespace mrbControls
                     return;
                 }
 
-                var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[i] : ScaleValue;
+                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
                 var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
                 var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 var layoutRectangle = new SKRect(nameXPadding, rect.Top + (Font.Size + PItemHeight) / 2f, Width - drawArea.Width - XPadding, rect.Height);
@@ -606,12 +619,12 @@ namespace mrbControls
                     Items[i].Name2 = combinedLabel[(separatorTextIndex + 1)..];
                 }
 
-                s.Canvas.DrawTextShort($"{Items[i].Name}:", FontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
+                s.Canvas.DrawTextShort($"{Items[i].Name}:", fontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
                 if (Items[i].Name2 != "" && Items[i].Name2 != Items[i].Name)
                 {
                     var textRect = new SKRect();
                     textBrush.MeasureText(Items[i].Name2, ref textRect);
-                    s.Canvas.DrawTextShort(Items[i].Name2, FontSize, NameWidth - Name2XPadding - textRect.Width, layoutRectangle.Top, textBrush);
+                    s.Canvas.DrawTextShort(Items[i].Name2, fontSize, NameWidth - Name2XPadding - textRect.Width, layoutRectangle.Top, textBrush);
                 }
 
                 if (Overcap)
@@ -740,7 +753,7 @@ namespace mrbControls
                         layoutRectangle.Left = num3 - num;
                     }
 
-                    var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[i] : ScaleValue;
+                    var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
                     var formattedValue = Max switch
                     {
                         >= 100f => $"{itemScale / 10f * i:#,##0}",
@@ -821,7 +834,7 @@ namespace mrbControls
 
             checked
             {
-                var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
+                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
                 var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
                 var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
                 s.Canvas.DrawRect(rect, fillPaint);
@@ -894,7 +907,7 @@ namespace mrbControls
 
             checked
             {
-                var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
+                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
                 var width = (int) Math.Round(bounds.Width * (Items[index].ValueEnh / itemScale));
                 var num = PItemHeight;
                 if (Style == Enums.GraphStyle.Twin)
@@ -938,7 +951,7 @@ namespace mrbControls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
+            var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (Items[index].ValueOvercap / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
                 bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
@@ -966,7 +979,7 @@ namespace mrbControls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var itemScale = PerItemScales.Count >= Items.Count ? PerItemScales[index] : ScaleValue;
+            var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
                 bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -47,8 +46,8 @@ namespace Mids_Reborn.Forms
             Move += frmStats_Move;
             Resize += frmStats_Resize;
             VisibleChanged += frmStats_VisibleChanged;
-            BaseArray = new IPower?[0];
-            EnhArray = new IPower?[0];
+            BaseArray = Array.Empty<IPower?>();
+            EnhArray = Array.Empty<IPower?>();
             GraphMax = 1f;
             BaseOverride = false;
             Loaded = false;
@@ -56,19 +55,17 @@ namespace Mids_Reborn.Forms
             btnClose.ButtonClicked += btnClose_Click;
             chkOnTop.ButtonClicked += chkOnTop_CheckedChanged;
             Name = nameof(frmStats);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
             Icon = Resources.reborn;
             myParent = iParent;
         }
 
         private void btnClose_Click()
-
         {
             Close();
         }
 
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (!Loaded)
                 return;
@@ -77,7 +74,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbStyle_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (!Loaded)
                 return;
@@ -86,7 +82,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void cbValues_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (!Loaded)
                 return;
@@ -94,7 +89,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void chkOnTop_CheckedChanged()
-
         {
             TopMost = chkOnTop.Checked;
         }
@@ -102,7 +96,10 @@ namespace Mids_Reborn.Forms
         private void DisplayGraph()
         {
             if ((MainModule.MidsController.Toon == null) | !MainModule.MidsController.IsAppInitialized)
+            {
                 return;
+            }
+
             Graph.BeginUpdate();
             Graph.Clear();
             if (cbValues.SelectedIndex > -1)
@@ -174,7 +171,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void FillComboBoxes()
-
         {
             NewSets();
             cbValues.BeginUpdate();
@@ -206,19 +202,20 @@ namespace Mids_Reborn.Forms
             items2.Add("Active & Alternate");
             items2.Add("Stacked Active + Alt");
             if (MidsContext.Config.StatGraphStyle > (Enums.GraphStyle) (cbStyle.Items.Count - 1))
+            {
                 MidsContext.Config.StatGraphStyle = Enums.GraphStyle.Stacked;
+            }
+
             cbStyle.SelectedIndex = (int) MidsContext.Config.StatGraphStyle;
             cbStyle.EndUpdate();
         }
 
         private void frmStats_FormClosed(object sender, FormClosedEventArgs e)
-
         {
             myParent.FloatStatGraph(false);
         }
 
         private void frmStats_Load(object sender, EventArgs e)
-
         {
             FillComboBoxes();
             Loaded = true;
@@ -228,13 +225,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmStats_Move(object sender, EventArgs e)
-
         {
             StoreLocation();
         }
 
         private void frmStats_Resize(object sender, EventArgs e)
-
         {
             if (Graph != null)
             {
@@ -264,7 +259,7 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    cbStyle.Width = 154;
+                    cbStyle.Width = 186;
                 }
             }
 
@@ -272,7 +267,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmStats_VisibleChanged(object sender, EventArgs e)
-
         {
         }
 
@@ -321,11 +315,12 @@ namespace Mids_Reborn.Forms
                         var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                         for (var iPower = 0; iPower <= num; ++iPower)
                         {
-                            if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) & (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable) continue;
+                            var p = MidsContext.Character.CurrentBuild.Powers[iPower];
+                            if (!((p.NIDPowerset > -1) & (p.IDXPower > -1)) || !DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[p.IDXPower].Slottable) continue;
                             Array.Resize(ref BaseArray, BaseArray.Length + 1);
                             Array.Resize(ref EnhArray, EnhArray.Length + 1);
                             var index = BaseArray.Length - 1;
-                            BaseArray[index] = new Power(DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MainModule.MidsController.Toon.CurrentBuild.Powers[iPower].IDXPower]);
+                            BaseArray[index] = new Power(DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[MainModule.MidsController.Toon.CurrentBuild.Powers[iPower].IDXPower]);
                             EnhArray[index] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
                         }
 
@@ -335,7 +330,8 @@ namespace Mids_Reborn.Forms
                     var num1 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var iPower = 0; iPower <= num1; ++iPower)
                     {
-                        if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) & (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable) continue;
+                        var p = MidsContext.Character.CurrentBuild.Powers[iPower];
+                        if (!((p.NIDPowerset > -1) & (p.IDXPower > -1)) || !DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[p.IDXPower].Slottable) continue;
                         Array.Resize(ref BaseArray, BaseArray.Length + 1);
                         //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
                         BaseArray[BaseArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
@@ -345,11 +341,12 @@ namespace Mids_Reborn.Forms
                     var num2 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var iPower = 0; iPower <= num2; ++iPower)
                     {
-                        if (!((MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset > -1) &
-                              (MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower > -1)) || !DatabaseAPI
+                        var p = MidsContext.Character.CurrentBuild.Powers[iPower];
+                        if (!((p.NIDPowerset > -1) &
+                              (p.IDXPower > -1)) || !DatabaseAPI
                             .Database
-                            .Powersets[MidsContext.Character.CurrentBuild.Powers[iPower].NIDPowerset]
-                            .Powers[MidsContext.Character.CurrentBuild.Powers[iPower].IDXPower].Slottable)
+                            .Powersets[p.NIDPowerset]
+                            .Powers[p.IDXPower].Slottable)
                             continue;
                         Array.Resize(ref EnhArray, EnhArray.Length + 1);
                         //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
@@ -1257,7 +1254,6 @@ namespace Mids_Reborn.Forms
 
         [DebuggerStepThrough]
         private void NewSets()
-
         {
             cbSet.BeginUpdate();
             var items = cbSet.Items;
@@ -1376,7 +1372,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void StoreLocation()
-
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
@@ -1387,7 +1382,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void tbScaleX_Scroll(object sender, EventArgs e)
-
         {
             Graph.ScaleIndex = tbScaleX.Value;
             SetScaleLabel();
