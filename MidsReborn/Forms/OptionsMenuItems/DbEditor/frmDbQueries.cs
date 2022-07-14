@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
@@ -11,6 +11,34 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmDbQueries : Form
     {
+        private class ListViewColumnSorter : IComparer
+        {
+            public int SortColumn { get; set; }
+
+            public SortOrder Order { get; set; }
+
+            public ListViewColumnSorter()
+            {
+                SortColumn = 0;
+                Order = SortOrder.None;
+            }
+
+            public int Compare(object x, object y)
+            {
+                var listViewX = (ListViewItem) x;
+                var listViewY = (ListViewItem) y;
+
+                var compareResult = string.Compare(listViewX.SubItems[SortColumn].Text, listViewY.SubItems[SortColumn].Text, StringComparison.InvariantCultureIgnoreCase);
+
+                return Order switch
+                {
+                    SortOrder.Ascending => compareResult,
+                    SortOrder.Descending => -compareResult,
+                    _ => 0
+                };
+            }
+        }
+
         private enum QueryType
         {
             StaticIndex,
@@ -22,6 +50,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private List<string[]> LvItems;
         private QueryType CurrentQueryType;
+        private ListViewColumnSorter LvColumnSorter;
 
         public frmDbQueries()
         {
@@ -29,6 +58,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Icon = Resources.reborn;
             listView1.EnableDoubleBuffer();
+            LvColumnSorter = new ListViewColumnSorter();
+            listView1.ListViewItemSorter = LvColumnSorter;
         }
 
         private void AddLVPowersData(List<Power> pwList)
@@ -91,6 +122,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var iPowers = DatabaseAPI.Database.Power.Where(pw => pw != null && pw.StaticIndex == staticIndex).ToList();
             var powers = iPowers.Select(pw => new Power(pw)).ToList();
+            
             AddLVPowersData(powers);
         }
 
@@ -108,6 +140,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var iPowers = DatabaseAPI.Database.Power.Where(pw => pw != null && string.Equals(pw.DisplayName, pName, StringComparison.InvariantCultureIgnoreCase)).ToList();
             var powers = iPowers.Select(pw => new Power(pw)).ToList();
+            
             AddLVPowersData(powers);
         }
 
@@ -115,8 +148,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             CurrentQueryType = QueryType.FirstAvailableIndex;
 
-            var indices = Enumerable.Range(0, DatabaseAPI.Database.Power.Length);
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
+            var indices = Enumerable.Range(0, dbIndices.Max() + 1);
 
             var availableIndices = indices.Except(dbIndices).ToList();
             availableIndices.Sort();
@@ -132,15 +165,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             CurrentQueryType = QueryType.HighestAvailableIndex;
 
-            var indices = Enumerable.Range(0, DatabaseAPI.Database.Power.Length);
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
-
-            var availableIndices = indices.Except(dbIndices).ToList();
-            availableIndices.Sort();
 
             AddLVPowersData(new List<string[]>
             {
-                new[] {$"{availableIndices[^1]}", "Highest available", ""},
+                new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             });
         }
@@ -149,13 +178,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             CurrentQueryType = QueryType.AllAvailableIndices;
 
-            var indices = Enumerable.Range(0, DatabaseAPI.Database.Power.Length);
-            var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
+            var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0).ToList();
+            var indices = Enumerable.Range(0, dbIndices.Max() + 1).ToList();
 
             var availableIndices = indices.Except(dbIndices).ToList();
             availableIndices.Sort();
 
-            var lvItems = availableIndices.Select(d => new[] {$"{d}", "Available index", "" }).ToList();
+            var lvItems = availableIndices.Select(d => new[] {$"{d}", "Available index", "In range" }).ToList();
+            lvItems.Add(new[] {$"{dbIndices.Max() + 1}", "Available index", "Index is past DB maximum"});
             lvItems.Add(new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""});
 
             AddLVPowersData(lvItems);
@@ -166,7 +196,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var text = string.Empty;
             if (CurrentQueryType is QueryType.PowerName or QueryType.StaticIndex)
             {
-                text += $"Query: '{(CurrentQueryType == QueryType.PowerName ? tbPowerName.Text.Trim() : tbStaticIndex.Text.Trim())}' (by {(CurrentQueryType == QueryType.PowerName ? "power name" : "static index")})\r\n\r\n";
+                text += $"Query: '{(CurrentQueryType == QueryType.PowerName ? tbPowerName.Text.Trim() : tbStaticIndex.Text.Trim())}' (by {(CurrentQueryType == QueryType.PowerName ? "power name" : "static index")})";
             }
             else
             {
@@ -179,6 +209,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 };
             }
 
+            text += "\r\n\r\n";
             text += string.Join("\r\n", LvItems.Select(it => string.Join("\t", it)));
 
             Clipboard.SetText(text);
@@ -187,6 +218,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void tbStaticIndex_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+
+            btnSearchByIndex.PerformClick();
+        }
+
+        private void tbPowerName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+
+            btnSearchByName.PerformClick();
+        }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == LvColumnSorter.SortColumn)
+            {
+                LvColumnSorter.Order = LvColumnSorter.Order == SortOrder.Ascending
+                    ? SortOrder.Descending
+                    : SortOrder.Ascending;
+            }
+            else
+            {
+                LvColumnSorter.SortColumn = e.Column;
+                LvColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            listView1.Sort();
         }
     }
 }

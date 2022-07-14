@@ -69,20 +69,22 @@
             this.tbStaticIndex.Name = "tbStaticIndex";
             this.tbStaticIndex.Size = new System.Drawing.Size(352, 23);
             this.tbStaticIndex.TabIndex = 2;
+            this.tbStaticIndex.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbStaticIndex_KeyDown);
             // 
             // tbPowerName
             // 
             this.tbPowerName.Location = new System.Drawing.Point(166, 73);
             this.tbPowerName.Name = "tbPowerName";
             this.tbPowerName.Size = new System.Drawing.Size(352, 23);
-            this.tbPowerName.TabIndex = 3;
+            this.tbPowerName.TabIndex = 4;
+            this.tbPowerName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbPowerName_KeyDown);
             // 
             // btnSearchByIndex
             // 
             this.btnSearchByIndex.Location = new System.Drawing.Point(524, 20);
             this.btnSearchByIndex.Name = "btnSearchByIndex";
             this.btnSearchByIndex.Size = new System.Drawing.Size(75, 23);
-            this.btnSearchByIndex.TabIndex = 4;
+            this.btnSearchByIndex.TabIndex = 3;
             this.btnSearchByIndex.Text = "Search";
             this.btnSearchByIndex.UseVisualStyleBackColor = true;
             this.btnSearchByIndex.Click += new System.EventHandler(this.btnSearchByIndex_Click);
@@ -129,16 +131,20 @@
             // 
             // listView1
             // 
+            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(12, 190);
+            this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(607, 193);
             this.listView1.TabIndex = 9;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
             // 
             // columnHeader1
             // 
