@@ -36,6 +36,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         public frmPowerBrowser()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             Load += frmPowerBrowser_Load;
             _updating = false;
             InitializeComponent();
@@ -858,6 +859,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.EnableDoubleBuffer();
             lvPower.EnableDoubleBuffer();
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
+            btnDbQueries.Visible = MidsContext.Config.MasterMode;
 
             try
             {
@@ -1365,6 +1367,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             BusyHide();
+        }
+
+        private void btnDbQueries_Click(object sender, EventArgs e)
+        {
+            using var f = new frmDbQueries();
+            
+            f.ShowDialog();
         }
     }
 }

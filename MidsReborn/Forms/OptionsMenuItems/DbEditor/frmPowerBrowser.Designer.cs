@@ -33,16 +33,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             this.components = new System.ComponentModel.Container();
             this.lvPower = new System.Windows.Forms.ListView();
-            this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader5 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.lvSet = new System.Windows.Forms.ListView();
-            this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader6 = new System.Windows.Forms.ColumnHeader();
             this.ilPS = new System.Windows.Forms.ImageList(this.components);
             this.lvGroup = new System.Windows.Forms.ListView();
-            this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.ilAT = new System.Windows.Forms.ImageList(this.components);
             this.cbFilter = new System.Windows.Forms.ComboBox();
             this.Label1 = new System.Windows.Forms.Label();
@@ -61,6 +61,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnClassDelete = new System.Windows.Forms.Button();
             this.btnClassAdd = new System.Windows.Forms.Button();
             this.pnlGroup = new System.Windows.Forms.Panel();
+            this.btnClassUp = new System.Windows.Forms.Button();
             this.btnClassDown = new System.Windows.Forms.Button();
             this.pnlSet = new System.Windows.Forms.Panel();
             this.btnPSUp = new System.Windows.Forms.Button();
@@ -73,7 +74,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.btnManageHiddenPowers = new System.Windows.Forms.Button();
             this.btnMassOp = new System.Windows.Forms.Button();
-            this.btnClassUp = new System.Windows.Forms.Button();
+            this.btnDbQueries = new System.Windows.Forms.Button();
             this.pnlGroup.SuspendLayout();
             this.pnlSet.SuspendLayout();
             this.pnlPower.SuspendLayout();
@@ -88,7 +89,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader7});
             this.lvPower.FullRowSelect = true;
             this.lvPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPower.HideSelection = false;
             this.lvPower.Location = new System.Drawing.Point(802, 37);
             this.lvPower.MultiSelect = false;
             this.lvPower.Name = "lvPower";
@@ -124,7 +124,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader6});
             this.lvSet.FullRowSelect = true;
             this.lvSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSet.HideSelection = false;
             this.lvSet.Location = new System.Drawing.Point(358, 37);
             this.lvSet.MultiSelect = false;
             this.lvSet.Name = "lvSet";
@@ -163,7 +162,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader2});
             this.lvGroup.FullRowSelect = true;
             this.lvGroup.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvGroup.HideSelection = false;
             this.lvGroup.Location = new System.Drawing.Point(12, 37);
             this.lvGroup.MultiSelect = false;
             this.lvGroup.Name = "lvGroup";
@@ -355,6 +353,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.pnlGroup.Size = new System.Drawing.Size(340, 68);
             this.pnlGroup.TabIndex = 47;
             // 
+            // btnClassUp
+            // 
+            this.btnClassUp.Location = new System.Drawing.Point(3, 3);
+            this.btnClassUp.Name = "btnClassUp";
+            this.btnClassUp.Size = new System.Drawing.Size(64, 23);
+            this.btnClassUp.TabIndex = 47;
+            this.btnClassUp.Text = "Up";
+            this.btnClassUp.UseVisualStyleBackColor = true;
+            this.btnClassUp.Click += new System.EventHandler(this.btnClassUp_Click);
+            // 
             // btnClassDown
             // 
             this.btnClassDown.Location = new System.Drawing.Point(3, 32);
@@ -477,20 +485,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnMassOp.Visible = false;
             this.btnMassOp.Click += new System.EventHandler(this.btnMassOp_Click);
             // 
-            // btnClassUp
+            // btnDbQueries
             // 
-            this.btnClassUp.Location = new System.Drawing.Point(3, 3);
-            this.btnClassUp.Name = "btnClassUp";
-            this.btnClassUp.Size = new System.Drawing.Size(64, 23);
-            this.btnClassUp.TabIndex = 47;
-            this.btnClassUp.Text = "Up";
-            this.btnClassUp.UseVisualStyleBackColor = true;
-            this.btnClassUp.Click += new System.EventHandler(this.btnClassUp_Click);
+            this.btnDbQueries.Location = new System.Drawing.Point(798, 571);
+            this.btnDbQueries.Name = "btnDbQueries";
+            this.btnDbQueries.Size = new System.Drawing.Size(132, 32);
+            this.btnDbQueries.TabIndex = 57;
+            this.btnDbQueries.Text = "DB Queries";
+            this.btnDbQueries.UseVisualStyleBackColor = true;
+            this.btnDbQueries.Click += new System.EventHandler(this.btnDbQueries_Click);
             // 
             // frmPowerBrowser
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1356, 612);
+            this.Controls.Add(this.btnDbQueries);
             this.Controls.Add(this.btnMassOp);
             this.Controls.Add(this.btnManageHiddenPowers);
             this.Controls.Add(this.Label2);
@@ -506,7 +515,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.pnlGroup);
             this.Controls.Add(this.pnlSet);
             this.Controls.Add(this.pnlPower);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -564,5 +573,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnManageHiddenPowers;
         private Button btnMassOp;
         private Button btnClassUp;
+        private Button btnDbQueries;
     }
 }
