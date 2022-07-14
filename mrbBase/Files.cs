@@ -59,7 +59,7 @@ namespace mrbBase
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
             if (!Debugger.IsAttached) return filePath;
-            filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+            filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..", RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
             if (!Directory.Exists(FileIO.StripFileName(filePath)))
             {
                 Directory.CreateDirectory(FileIO.StripFileName(filePath));
