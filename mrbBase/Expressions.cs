@@ -9,9 +9,9 @@ namespace mrbBase
 {
     public class Expressions
     {
-        public string Duration { get; set; }
-        public string Magnitude { get; set; }
-        public string Probability { get; set; }
+        public string Duration { get; set; } = "";
+        public string Magnitude { get; set; } = "";
+        public string Probability { get; set; } = "";
 
         public struct ErrorData
         {
