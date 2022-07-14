@@ -810,13 +810,21 @@ namespace mrbBase
         {
             var flag = false;
             var maxLevel = GetMaxLevel();
-            foreach (var power in Powers.Where(p => p != null))
+            foreach (var power in Powers)
             {
+                if (power?.Power == null)
+                {
+                    continue;
+                }
+
                 if (power.Chosen ||
                     power.PowerSet.SetType != Enums.ePowerSetType.Inherent &&
                     power.PowerSet.SetType != Enums.ePowerSetType.Primary &&
                     power.PowerSet.SetType != Enums.ePowerSetType.Secondary)
+                {
                     continue;
+                }
+
                 if (power.Power.Level > maxLevel + 1 || !MeetsRequirement(power.Power, maxLevel) ||
                     !power.Power.IncludeFlag)
                 {
@@ -825,13 +833,24 @@ namespace mrbBase
                 }
 
                 if (power.Power.Level > power.Level + 1)
+                {
                     power.Level = power.Power.Level - 1;
+                }
             }
 
             if (!flag)
+            {
                 return;
+            }
+
             var powerIdx = 0;
             while (powerIdx < Powers.Count)
+            {
+                if (Powers[powerIdx] == null)
+                {
+                    continue;
+                }
+
                 if (Powers[powerIdx].Tag)
                 {
                     Powers[powerIdx].Reset();
@@ -844,6 +863,7 @@ namespace mrbBase
                 {
                     ++powerIdx;
                 }
+            }
         }
 
         public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
