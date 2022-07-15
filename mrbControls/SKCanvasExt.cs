@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using System.Diagnostics;
+using SkiaSharp;
 
 namespace mrbControls
 {
@@ -45,6 +46,11 @@ namespace mrbControls
 
         public static void DrawTextShort(this SKCanvas canvas, string text, float fontSize, float x, float y, SKPaint textPaint)
         {
+            if (text == null)
+            {
+                return;
+            }
+
             canvas.DrawText(SKTextBlob.Create(text, new SKFont(SKTypeface.Default, fontSize)), x, y, textPaint);
         }
     }

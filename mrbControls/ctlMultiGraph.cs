@@ -540,12 +540,6 @@ namespace mrbControls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            using var textBrush = new SKPaint
-            {
-                IsAntialias = true,
-                Color = ForeColor.ToSKColor()
-            };
-
             using var borderBrush = new SKPaint
             {
                 IsAntialias = true,
@@ -571,6 +565,12 @@ namespace mrbControls
             var separatorTextIndex = 0;
             for (var i = 0; i < Items.Count; i++)
             {
+                // Data sent from some components might contain nulls (e.g. frmCompare)
+                if (string.IsNullOrWhiteSpace(Items[i].Name) & string.IsNullOrWhiteSpace(Items[i].Name2))
+                {
+                    continue;
+                }
+
                 var y = YPadding + i * (PItemHeight + YPadding);
                 if (!DualName | Items[i].Name == Items[i].Name2)
                 {
@@ -588,24 +588,24 @@ namespace mrbControls
                     separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
                     if (separatorTextIndex < 0)
                     {
-                        s.Canvas.DrawTextShort(text, fontSize, 3, y + fontSize / 2 + 1, textBrush);
+                        s.Canvas.DrawTextShort(text, fontSize, 3, y + fontSize / 2 + 1, textPaint);
                     }
                     else
                     {
-                        s.Canvas.DrawTextShort(text[..separatorTextIndex], fontSize, nameXPadding, y + fontSize / 2 + 1, textBrush);
+                        s.Canvas.DrawTextShort(text[..separatorTextIndex], fontSize, nameXPadding, y + fontSize / 2 + 1, textPaint);
 
                         var textRect = new SKRect();
-                        textBrush.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
-                        s.Canvas.DrawTextShort(text[(separatorTextIndex + 1)..], fontSize, NameWidth - Name2XPadding - textRect.Width, y + fontSize / 2 + 1, textBrush);
+                        textPaint.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
+                        s.Canvas.DrawTextShort(text[(separatorTextIndex + 1)..], fontSize, NameWidth - Name2XPadding - textRect.Width, y + fontSize / 2 + 1, textPaint);
                     }
                 }
 
-                if (!(DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2))
+                /*if (!(DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2))
                 {
                     BackgroundImage = s.Snapshot().ToBitmap();
 
                     return;
-                }
+                }*/
 
                 var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
                 var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
@@ -623,8 +623,8 @@ namespace mrbControls
                 if (Items[i].Name2 != "" && Items[i].Name2 != Items[i].Name)
                 {
                     var textRect = new SKRect();
-                    textBrush.MeasureText(Items[i].Name2, ref textRect);
-                    s.Canvas.DrawTextShort(Items[i].Name2, fontSize, NameWidth - Name2XPadding - textRect.Width, layoutRectangle.Top, textBrush);
+                    textPaint.MeasureText(Items[i].Name2, ref textRect);
+                    s.Canvas.DrawTextShort(Items[i].Name2, fontSize, NameWidth - Name2XPadding - textRect.Width, layoutRectangle.Top, textPaint);
                 }
 
                 if (Overcap)
