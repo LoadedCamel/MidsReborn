@@ -1536,6 +1536,9 @@ namespace mrbBase.Base.Data_Classes
                 sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
             }
 
+            // Requires ToHit Check formatting
+            sFinal = sFinal.Replace("( ", "(").Replace("  ", " ");
+
             return sFinal;
         }
 

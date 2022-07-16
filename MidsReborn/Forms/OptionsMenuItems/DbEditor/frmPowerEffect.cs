@@ -349,6 +349,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkFXResistable.Checked = !MyFx.Resistible;
             chkNearGround.Checked = MyFx.NearGround;
             chkCancelOnMiss.Checked = MyFx.CancelOnMiss;
+            chkRqToHitCheck.Checked = MyFx.RequiresToHitCheck;
             IgnoreED.Checked = MyFx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)MyFx.SpecialCase;
             if (MyFx.SpecialCase != Enums.eSpecialCase.None)
@@ -1383,6 +1384,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
         {
             MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
+            UpdateFxText();
+        }
+
+        private void chkRqToHitCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+                return;
+            MyFx.RequiresToHitCheck = chkRqToHitCheck.Checked;
             UpdateFxText();
         }
     }

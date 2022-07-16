@@ -74,6 +74,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkFXBuffable = new System.Windows.Forms.CheckBox();
             this.chkCancelOnMiss = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.chkRqToHitCheck = new System.Windows.Forms.CheckBox();
             this.chkIgnoreScale = new System.Windows.Forms.CheckBox();
             this.Label28 = new System.Windows.Forms.Label();
             this.cbFXClass = new System.Windows.Forms.ComboBox();
@@ -684,11 +685,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.flowLayoutPanel1.Controls.Add(this.chkFXResistable);
             this.flowLayoutPanel1.Controls.Add(this.chkNearGround);
             this.flowLayoutPanel1.Controls.Add(this.chkCancelOnMiss);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(544, 564);
+            this.flowLayoutPanel1.Controls.Add(this.chkRqToHitCheck);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(493, 564);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(746, 31);
             this.flowLayoutPanel1.TabIndex = 185;
+            // 
+            // chkRqToHitCheck
+            // 
+            this.chkRqToHitCheck.AutoSize = true;
+            this.chkRqToHitCheck.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkRqToHitCheck.Location = new System.Drawing.Point(582, 4);
+            this.chkRqToHitCheck.Margin = new System.Windows.Forms.Padding(4);
+            this.chkRqToHitCheck.Name = "chkRqToHitCheck";
+            this.chkRqToHitCheck.Size = new System.Drawing.Size(132, 20);
+            this.chkRqToHitCheck.TabIndex = 175;
+            this.chkRqToHitCheck.Text = "Require ToHit Check";
+            this.chkRqToHitCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkRqToHitCheck.CheckedChanged += new System.EventHandler(this.chkRqToHitCheck_CheckedChanged);
             // 
             // chkIgnoreScale
             // 
@@ -1348,5 +1363,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.TextBox txtFXArc;
         private System.Windows.Forms.TextBox txtFXMaxTargets;
         private System.Windows.Forms.Label lblEffectDescription;
+        private System.Windows.Forms.CheckBox chkRqToHitCheck;
     }
 }
