@@ -27,6 +27,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _conditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             _conditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
             if (conditions != null) Conditionals = conditions.Clone();
+            Text = "Effect Conditions";
+            Icon = Resources.reborn;
             Load += OnLoad;
         }
 
@@ -132,6 +134,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lvConditionalType_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            var lvBoolSizeStandAlone = new Size(112, 259);
+            var lvBoolLocStandAlone = new Point(537, 16);
+
+            var lvBoolSizeSecondary = new Size(112, 170);
+            var lvBoolLocSecondary = new Point(537, 117);
+
             switch (e.Item.Text)
             {
                 case "Power Active":
@@ -156,8 +164,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         }
                     }
 
-                    lvConditionalBool.Size = new Size(97, 259);
-                    lvConditionalBool.Location = new Point(460, 14);
+                    lvConditionalBool.Size = lvBoolSizeStandAlone;
+                    lvConditionalBool.Location = lvBoolLocStandAlone;
                     lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
                     lvSubConditional.Columns[0].Width = -2;
@@ -186,8 +194,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         }
                     }
 
-                    lvConditionalBool.Size = new Size(97, 259);
-                    lvConditionalBool.Location = new Point(460, 14);
+                    lvConditionalBool.Size = lvBoolSizeStandAlone;
+                    lvConditionalBool.Location = lvBoolLocStandAlone;
                     lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
                     lvSubConditional.Columns[0].Width = -2;
@@ -205,17 +213,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         var pSetType = power.GetPowerSet().SetType;
                         var isType = power.VariableEnabled;
                         var isUsable = !eArray.Contains((int)pSetType);
-                        if (isUsable && isType)
-                        {
-                            var pItem = new Regex("[_]");
-                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                            var pMatch = new Regex("[ ].*");
-                            var pArchetype = pMatch.Replace(pStrings[0], "");
-                            lvConditionalBool.Size = new Size(97, 170);
-                            lvConditionalBool.Location = new Point(460, 103);
-                            lvConditionalOp.Visible = true;
-                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
-                        }
+                        if (!isUsable || !isType) continue;
+                        
+                        var pItem = new Regex("[_]");
+                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                        var pMatch = new Regex("[ ].*");
+                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        lvConditionalBool.Size = lvBoolSizeSecondary;
+                        lvConditionalBool.Location = lvBoolLocSecondary;
+                        lvConditionalOp.Visible = true;
+                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                     }
 
                     lvConditionalOp.Columns[0].Text = @"Stacks are?";
@@ -225,8 +232,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.EndUpdate();
                     break;
                 case "Team Members":
-                    lvConditionalBool.Size = new Size(97, 170);
-                    lvConditionalBool.Location = new Point(460, 103);
+                    lvConditionalBool.Size = lvBoolSizeSecondary;
+                    lvConditionalBool.Location = lvBoolLocSecondary;
                     lvConditionalOp.Visible = true;
                     lvConditionalBool.Enabled = true;
                     lvSubConditional.BeginUpdate();
