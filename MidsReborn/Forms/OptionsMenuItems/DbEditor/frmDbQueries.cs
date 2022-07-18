@@ -17,6 +17,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             public SortOrder Order { get; set; }
 
+            private List<string[]> LvData;
+
             public ListViewColumnSorter()
             {
                 SortColumn = 0;
@@ -45,7 +47,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             PowerName,
             FirstAvailableIndex,
             HighestAvailableIndex,
-            AllAvailableIndices
+            AllAvailableIndices,
+            ListStaticIndices
         }
 
         private List<string[]> LvItems;
@@ -60,47 +63,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             listView1.EnableDoubleBuffer();
             LvColumnSorter = new ListViewColumnSorter();
             listView1.ListViewItemSorter = LvColumnSorter;
-        }
-
-        private void AddLVPowersData(List<Power> pwList)
-        {
-            LvItems = new List<string[]>();
-
-            listView1.BeginUpdate();
-            listView1.Items.Clear();
-            if (pwList.Count <= 0)
-            {
-                listView1.Items.Add(new ListViewItem(new[] { "", "Nothing found", "" }));
-                listView1.EndUpdate();
-
-                return;
-            }
-
-            foreach (var p in pwList)
-            {
-                var item = new[] {$"{p.StaticIndex}", p.DisplayName, p.FullName};
-                LvItems.Add(item);
-                listView1.Items.Add(new ListViewItem(item));
-            }
-
-            listView1.EndUpdate();
-        }
-
-        private void AddLVPowersData(List<string[]> items)
-        {
-            LvItems = new List<string[]>();
-
-            listView1.BeginUpdate();
-            listView1.Items.Clear();
-
-            foreach (var p in items)
-            {
-                var item = new[] {$"{p[0]}", p[1], p[2]};
-                LvItems.Add(item);
-                listView1.Items.Add(new ListViewItem(item));
-            }
-
-            listView1.EndUpdate();
         }
 
         private void frmDbQueries_Load(object sender, EventArgs e)
@@ -121,9 +83,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             var iPowers = DatabaseAPI.Database.Power.Where(pw => pw != null && pw.StaticIndex == staticIndex).ToList();
-            var powers = iPowers.Select(pw => new Power(pw)).ToList();
-            
-            AddLVPowersData(powers);
+            LvItems = iPowers.Select(pw => new Power(pw))
+                .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
+                .ToList();
+            listView1.VirtualListSize = LvItems.Count;
         }
 
         private void btnSearchByName_Click(object sender, EventArgs e)
@@ -138,10 +101,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var iPowers = DatabaseAPI.Database.Power.Where(pw => pw != null && string.Equals(pw.DisplayName, pName, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            var powers = iPowers.Select(pw => new Power(pw)).ToList();
-            
-            AddLVPowersData(powers);
+            var iPowers = DatabaseAPI.Database.Power
+                .Where(pw => pw != null && string.Equals(pw.DisplayName, pName, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+            LvItems = iPowers.Select(pw => new Power(pw))
+                .Select(pw => new[] {$"{pw.StaticIndex}", pw.DisplayName, pw.FullName})
+                .ToList();
+            listView1.VirtualListSize = LvItems.Count;
         }
 
         private void btnFirstAvailableIndex_Click(object sender, EventArgs e)
@@ -154,11 +120,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var availableIndices = indices.Except(dbIndices).ToList();
             availableIndices.Sort();
 
-            AddLVPowersData(new List<string[]>
+            LvItems = new List<string[]>
             {
                 new[] {$"{availableIndices[0]}", "First available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
-            });
+            };
+            listView1.VirtualListSize = LvItems.Count;
         }
 
         private void btnHighestAvailableIndex_Click(object sender, EventArgs e)
@@ -167,11 +134,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
 
-            AddLVPowersData(new List<string[]>
+            LvItems = new List<string[]>
             {
                 new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
-            });
+            };
+            listView1.VirtualListSize = LvItems.Count;
         }
 
         private void btnAllAvailableIndices_Click(object sender, EventArgs e)
@@ -188,7 +156,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvItems.Add(new[] {$"{dbIndices.Max() + 1}", "Available index", "Index is past DB maximum"});
             lvItems.Add(new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""});
 
-            AddLVPowersData(lvItems);
+            LvItems = lvItems;
+            listView1.VirtualListSize = LvItems.Count;
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
@@ -205,6 +174,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     QueryType.FirstAvailableIndex => "First available index",
                     QueryType.HighestAvailableIndex => "Highest available index",
                     QueryType.AllAvailableIndices => "All available indices",
+                    QueryType.ListStaticIndices => "List static indices with matched powers",
                     _ => ""
                 };
             }
@@ -250,5 +220,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             listView1.Sort();
         }
+
+        private void btnListIndices_Click(object sender, EventArgs e)
+        {
+            CurrentQueryType = QueryType.ListStaticIndices;
+            var powersList = DatabaseAPI.Database.Power.Where(pw => pw != null).ToList();
+            LvItems = powersList.Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
+            listView1.VirtualListSize = LvItems.Count;
+        }
+
+        private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) => e.Item = new ListViewItem(LvItems[e.ItemIndex]);
     }
 }
