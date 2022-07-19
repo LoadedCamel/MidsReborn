@@ -555,14 +555,20 @@ namespace mrbBase
         {
             return Database.Power
                 .DefaultIfEmpty(null)
-                .FirstOrDefault(p => p != null && p.DisplayName == iName && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+                .FirstOrDefault(p => p != null &&
+                                     p.DisplayName == iName &&
+                                     p.FullName.StartsWith("Inherent") | p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
         {
             return Database.Power
                 .DefaultIfEmpty(null)
-                .FirstOrDefault(p => p != null && p.DisplayName == iName && listPowersets.Contains(p.GetPowerSet().FullName) && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+                .FirstOrDefault(p => p != null &&
+                                     p.DisplayName == iName &&
+                                     p.FullName.StartsWith("Inherent") |
+                                     (listPowersets.Contains(p.GetPowerSet().FullName) &&
+                                      p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1));
         }
 
 
@@ -1004,15 +1010,26 @@ namespace mrbBase
             }
 
             iName = Regex.Replace(iName, @"(.+)\([A0-9]\)$", "$1");
+            var typeId = iName.EndsWith("-I") ? Enums.eType.InventO : Enums.eType.Normal;
             // For inventions: remove -I suffix
             iName = Regex.Replace(iName, @"(.+)\-I$", "$1");
             if (!iName.Contains("-"))
             {
-                return Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName));
+                return typeId == Enums.eType.Normal
+                    ? Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName))
+                    : Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName) && enh.TypeID == typeId);
             }
 
-            var chunks = iName.Split('-');
-            var enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName.Contains(chunks[0]));
+            // Merge double dashes (Gaussian's set)
+            var chunks = iName.Replace("--", "-").Split('-');
+
+            // Gaussian's set short name is GssSynFr-
+            var enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName == chunks[0]);
+            if (enhSet < 0)
+            {
+                enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName.StartsWith(chunks[0]));
+            }
+
             if (enhSet < 0)
             {
                 return -1;
@@ -1034,7 +1051,10 @@ namespace mrbBase
             // Artillery set still use its old name for the UIDs.
             if (iName.Contains("Artillery")) iName = iName.Replace("Artillery", "Shrapnel");
 
-            return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            return e >= 0
+                ? e
+                : GetEnhancementByShortName(iName);
         }
 
         public static int GetEnhancementByName(string iName)

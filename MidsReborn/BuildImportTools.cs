@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -20,7 +21,7 @@ namespace Mids_Reborn
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] ExcludePowersets { get; } = {"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+        protected string[] ExcludePowersets { get; } = { "Redirects." }; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
 
         protected string[] ExcludePowers { get; } =
         {
@@ -100,7 +101,6 @@ namespace Mids_Reborn
             {
                 iName = r.Replace(iName, "Magic");
                 i9Slot.Grade = Enums.eEnhGrade.DualO;
-                // DOs are converted to SOs
             }
 
             i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
@@ -109,7 +109,11 @@ namespace Mids_Reborn
                 return i9Slot;
             }
 
-            MessageBox.Show($"Error getting data for enhancement UID: {enhInternalName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (Debugger.IsAttached)
+            {
+                MessageBox.Show($"Error getting data for enhancement UID: {enhInternalName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             i9Slot.Enh = 0;
 
             return i9Slot;
@@ -695,13 +699,13 @@ namespace Mids_Reborn
             foreach (Match mt in rMatches) // var mt is of type object?
             {
                 p = new RawPowerData();
-                e = new RawEnhData();
                 p.Slots = new List<RawEnhData>();
 
                 p.DisplayName = mt.Groups[2].Value.Trim();
                 p.Level = Convert.ToInt32(mt.Groups[1].Value, null);
                 p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsFullNamesList);
                 p.Powerset = p.pData?.GetPowerSet();
+                p.FullName = p.pData == null ? string.Empty : p.pData.FullName;
                 p.Valid = CheckValid(p.pData);
 
                 var pSlotsStr = mt.Groups.Count > 3 ? mt.Groups[3].Value.Trim() : string.Empty;
@@ -724,22 +728,30 @@ namespace Mids_Reborn
 
                         try
                         {
-                            e.InternalName = sContentEnh;
-                            e.Level = s[1] == "A"
-                                ? 0
-                                : Convert.ToInt32(s[1], null); // Slot level ("A" is the auto-granted one)
-                            e.Boosters = 0; // Not handled
-                            e.HasCatalyst = false;
-                            e.eData = enhDataIdx;
+                            e = new RawEnhData
+                            {
+                                InternalName = sContentEnh,
+                                Level = s[1] == "A"
+                                    ? 0
+                                    : Convert.ToInt32(s[1], null), // Slot level ("A" is the auto-granted one)
+                                Boosters = 0, // Not handled
+                                HasCatalyst = false,
+                                eData = enhDataIdx
+                            };
+
                             p.Slots.Add(e);
                         }
                         catch (FormatException) // if (isNaN(s[1]))
                         {
-                            e.InternalName = "Empty";
-                            e.Level = 0;
-                            e.Boosters = 0;
-                            e.HasCatalyst = false;
-                            e.eData = -1;
+                            e = new RawEnhData
+                            {
+                                InternalName = "Empty",
+                                Level = 0,
+                                Boosters = 0,
+                                HasCatalyst = false,
+                                eData = -1
+                            };
+
                             p.Slots.Add(e);
                         }
                     }
