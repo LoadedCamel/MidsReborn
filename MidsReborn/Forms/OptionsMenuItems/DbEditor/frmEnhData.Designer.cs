@@ -99,8 +99,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.StaticIndex = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
             this.gbFlags = new System.Windows.Forms.GroupBox();
-            this.chkProc = new System.Windows.Forms.CheckBox();
             this.chkScalable = new System.Windows.Forms.CheckBox();
+            this.chkProc = new System.Windows.Forms.CheckBox();
             this.gbBasic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).BeginInit();
@@ -508,7 +508,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnEdit
             // 
-            this.btnEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btnEdit.Location = new System.Drawing.Point(424, 248);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(152, 28);
@@ -518,7 +518,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnAddFX
             // 
-            this.btnAddFX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddFX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btnAddFX.Location = new System.Drawing.Point(8, 208);
             this.btnAddFX.Name = "btnAddFX";
             this.btnAddFX.Size = new System.Drawing.Size(228, 28);
@@ -528,7 +528,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnRemove
             // 
-            this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btnRemove.Location = new System.Drawing.Point(240, 248);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(176, 28);
@@ -538,7 +538,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnAdd
             // 
-            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btnAdd.Location = new System.Drawing.Point(128, 100);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(108, 28);
@@ -619,7 +619,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lstSelected
             // 
-            this.lstSelected.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstSelected.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lstSelected.ItemHeight = 14;
             this.lstSelected.Location = new System.Drawing.Point(240, 20);
             this.lstSelected.Name = "lstSelected";
@@ -629,7 +629,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lstAvailable
             // 
-            this.lstAvailable.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstAvailable.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lstAvailable.ItemHeight = 14;
             this.lstAvailable.Location = new System.Drawing.Point(8, 20);
             this.lstAvailable.Name = "lstAvailable";
@@ -690,7 +690,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lblClass
             // 
             this.lblClass.BackColor = System.Drawing.SystemColors.Control;
-            this.lblClass.ForeColor = System.Drawing.Color.Black;
+            this.lblClass.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblClass.Location = new System.Drawing.Point(8, 248);
             this.lblClass.Name = "lblClass";
             this.lblClass.Size = new System.Drawing.Size(68, 16);
@@ -811,6 +811,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.gbFlags.TabStop = false;
             this.gbFlags.Text = "Enhancement Flags";
             // 
+            // chkScalable
+            // 
+            this.chkScalable.AutoSize = true;
+            this.chkScalable.Location = new System.Drawing.Point(185, 39);
+            this.chkScalable.Name = "chkScalable";
+            this.chkScalable.Size = new System.Drawing.Size(92, 18);
+            this.chkScalable.TabIndex = 23;
+            this.chkScalable.Text = "Allow Scaling";
+            this.chkScalable.UseVisualStyleBackColor = true;
+            // 
             // chkProc
             // 
             this.chkProc.AutoSize = true;
@@ -821,16 +831,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.chkProc.Text = "Proc";
             this.chkProc.UseVisualStyleBackColor = true;
             this.chkProc.CheckedChanged += new System.EventHandler(this.chkProc_CheckedChanged);
-            // 
-            // chkScalable
-            // 
-            this.chkScalable.AutoSize = true;
-            this.chkScalable.Location = new System.Drawing.Point(185, 39);
-            this.chkScalable.Name = "chkScalable";
-            this.chkScalable.Size = new System.Drawing.Size(92, 18);
-            this.chkScalable.TabIndex = 23;
-            this.chkScalable.Text = "Allow Scaling";
-            this.chkScalable.UseVisualStyleBackColor = true;
             // 
             // frmEnhData
             // 
@@ -853,7 +853,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.gbBasic);
             this.Controls.Add(this.gbType);
             this.Controls.Add(this.btnImage);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
