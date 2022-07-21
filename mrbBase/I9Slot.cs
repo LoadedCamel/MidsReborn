@@ -235,8 +235,8 @@ namespace mrbBase
                             }
 
                             stringBuilder.Append("Schedule: ");
-                            stringBuilder.Append(sEffect.Schedule.ToString());
-                            stringBuilder.AppendFormat(" ({0}%)", (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo));
+                            stringBuilder.Append($"{sEffect.Schedule}");
+                            stringBuilder.Append($" ({scheduleMult * 100:##0.###}%)");
                             str2 = stringBuilder.ToString();
                         }
                         else if (!flag)
@@ -341,13 +341,12 @@ namespace mrbBase
                                     stringBuilder.Append("\n");
                                 }
 
-                                stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2, Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule), (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo), (Math.Abs(sEffect.Multiplier) > float.Epsilon) & MidsContext.Config.CoDEffectFormat & (sEffect.Multiplier != 1) & (sEffect.Multiplier != 0.625) & (sEffect.Multiplier != 0.5) & (sEffect.Multiplier != 0.4375) ? $" [x{sEffect.Multiplier}]" : "");
+                                stringBuilder.Append($"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})");
                             }
 
                             break;
                         }
                     case Enums.eEffMode.PowerEnh:
-                        break;
                     case Enums.eEffMode.PowerProc:
                         break;
                     default:
