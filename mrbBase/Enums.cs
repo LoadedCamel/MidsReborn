@@ -1882,6 +1882,21 @@ namespace mrbBase
             }
         }
 
+        public enum eHTextAlign
+        {
+            Left,
+            Center,
+            Right
+        }
+
+        public enum eVTextAlign
+        {
+            Top,
+            Middle,
+            Bottom,
+            BaseLine
+        }
+
         public class VersionData
         {
             public int Revision;

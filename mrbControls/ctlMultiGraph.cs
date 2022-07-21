@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
 using SkiaSharp;
@@ -50,7 +51,7 @@ namespace mrbControls
         private int MaxItemsCapacity;
         private float FontSize;
         private float FontSizeOverride;
-        private const float Name2XPadding = 10;
+        private const float Name2XPadding = 9;
 
         public ctlMultiGraph()
         {
@@ -504,10 +505,22 @@ namespace mrbControls
             Items = new List<GraphItem>();
         }
 
+        private bool BaseLineOffset(string text)
+        {
+            return Regex.IsMatch(text, @"[ypqgjQY]");
+        }
+
         public void Draw()
         {
-            if (NoDraw) return;
-            if (!Loaded) return;
+            if (NoDraw)
+            {
+                return;
+            }
+
+            if (!Loaded)
+            {
+                return;
+            }
 
             using var s = SKSurface.Create(new SKImageInfo(Width, Height));
             s.Canvas.Clear(new SKColor(BackColor.R, BackColor.G, BackColor.B));
@@ -562,7 +575,6 @@ namespace mrbControls
             };
 
             const float nameXPadding = 3;
-            var separatorTextIndex = 0;
             for (var i = 0; i < Items.Count; i++)
             {
                 // Data sent from some components might contain nulls (e.g. frmCompare)
@@ -571,85 +583,51 @@ namespace mrbControls
                     continue;
                 }
 
-                var y = YPadding + i * (PItemHeight + YPadding);
-                if (!DualName | Items[i].Name == Items[i].Name2)
-                {
-                    var text = Items[i].Name;
-                    if (text == "")
-                    {
-                        text = Items[i].Name2;
-                    }
-
-                    if (text != "" && !text.Contains(":"))
-                    {
-                        text += ":";
-                    }
-
-                    separatorTextIndex = text.IndexOf("|", StringComparison.Ordinal);
-                    if (separatorTextIndex < 0)
-                    {
-                        s.Canvas.DrawTextShort(text, fontSize, 3, y + fontSize / 2 + 1, textPaint);
-                    }
-                    else
-                    {
-                        s.Canvas.DrawTextShort(text[..separatorTextIndex], fontSize, nameXPadding, y + fontSize / 2 + 1, textPaint);
-
-                        var textRect = new SKRect();
-                        textPaint.MeasureText(text[(separatorTextIndex + 1)..], ref textRect);
-                        s.Canvas.DrawTextShort(text[(separatorTextIndex + 1)..], fontSize, NameWidth - Name2XPadding - textRect.Width, y + fontSize / 2 + 1, textPaint);
-                    }
-                }
-
-                /*if (!(DualName & Items[i].Name != "" & Items[i].Name != Items[i].Name2))
-                {
-                    BackgroundImage = s.Snapshot().ToBitmap();
-
-                    return;
-                }*/
-
-                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
-                var width = (int) Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
-                var rect = new SKRect(drawArea.Left, drawArea.Top + y, drawArea.Left + width, drawArea.Top + y + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
-                var layoutRectangle = new SKRect(nameXPadding, rect.Top + (Font.Size + PItemHeight) / 2f, Width - drawArea.Width - XPadding, rect.Height);
-                separatorTextIndex = Items[i].Name.IndexOf("|", StringComparison.Ordinal);
+                var ny = YPadding + i * (PItemHeight + YPadding);
+                var textRect = new SKRect(nameXPadding,
+                    drawArea.Top + ny - YPadding / 2f - (BaseLineOffset(Items[i].Name) ? fontSize / 4f : 0),
+                    Math.Max(Name2XPadding, NameWidth) - Name2XPadding,
+                    drawArea.Top + ny + PItemHeight + YPadding / 2f);
+                var separatorTextIndex = Items[i].Name.IndexOf("|", StringComparison.Ordinal);
+                var label1 = Items[i].Name;
+                var label2 = Items[i].Name2;
                 if (separatorTextIndex >= 0)
                 {
                     var combinedLabel = Items[i].Name;
-                    Items[i].Name = combinedLabel[..separatorTextIndex];
-                    Items[i].Name2 = combinedLabel[(separatorTextIndex + 1)..];
+                    label1 = combinedLabel[..separatorTextIndex];
+                    label2 = combinedLabel[(separatorTextIndex + 1)..];
                 }
 
-                s.Canvas.DrawTextShort($"{Items[i].Name}:", fontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
-                if (Items[i].Name2 != "" && Items[i].Name2 != Items[i].Name)
+                // Both texts have to be drawn on the same horizontal line.
+                var label1Coords = s.Canvas.DrawTextShort($"{label1}", fontSize, textRect, textPaint, Enums.eHTextAlign.Left);
+                if (!string.IsNullOrWhiteSpace(label2) && label1 != label2)
                 {
-                    var textRect = new SKRect();
-                    textPaint.MeasureText(Items[i].Name2, ref textRect);
-                    s.Canvas.DrawTextShort(Items[i].Name2, fontSize, NameWidth - Name2XPadding - textRect.Width, layoutRectangle.Top, textPaint);
+                    s.Canvas.DrawTextShort(label2, fontSize, textRect.Right, label1Coords.Y, textPaint, Enums.eHTextAlign.Right, Enums.eVTextAlign.Middle, false, true);
                 }
 
                 if (Overcap)
                 {
-                    DrawOvercap(s, i, drawArea, y);
+                    DrawOvercap(s, i, drawArea, ny);
                 }
 
                 switch (PStyle)
                 {
                     case Enums.GraphStyle.baseOnly:
-                        DrawBase(s, i, drawArea, y);
+                        DrawBase(s, i, drawArea, ny);
                         break;
                     case Enums.GraphStyle.enhOnly:
-                        DrawEnh(s, i, drawArea, y);
+                        DrawEnh(s, i, drawArea, ny);
                         break;
                     default:
                         if (Items[i].ValueBase > Items[i].ValueEnh)
                         {
-                            DrawBase(s, i, drawArea, y);
-                            DrawEnh(s, i, drawArea, y);
+                            DrawBase(s, i, drawArea, ny);
+                            DrawEnh(s, i, drawArea, ny);
                         }
                         else
                         {
-                            DrawEnh(s, i, drawArea, y);
-                            DrawBase(s, i, drawArea, y);
+                            DrawEnh(s, i, drawArea, ny);
+                            DrawBase(s, i, drawArea, ny);
                         }
 
                         break;
@@ -657,7 +635,7 @@ namespace mrbControls
 
                 if (Items[i].ValueAbsorbed > 0)
                 {
-                    DrawAbsorbed(s, i, drawArea, y);
+                    DrawAbsorbed(s, i, drawArea, ny);
                 }
             }
 

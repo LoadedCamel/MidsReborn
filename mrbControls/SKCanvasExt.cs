@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
 using SkiaSharp;
+using static mrbBase.Enums;
 
 namespace mrbControls
 {
@@ -22,7 +23,7 @@ namespace mrbControls
 
             using var textPath = textAlign switch
             {
-                SKTextAlign.Center => textPaint.GetTextPath(text, location.X - textBounds.Width / 2f, location.Y), // location.Y - textBounds.Height / 2f ?
+                SKTextAlign.Center => textPaint.GetTextPath(text, location.X - textBounds.Width / 2f, location.Y),
                 SKTextAlign.Right => textPaint.GetTextPath(text, location.X - textBounds.Width - 0.5f, location.Y),
                 _ => textPaint.GetTextPath(text, location.X, location.Y)
             };
@@ -44,14 +45,89 @@ namespace mrbControls
             canvas.DrawText(text, location, textPaint);
         }
 
-        public static void DrawTextShort(this SKCanvas canvas, string text, float fontSize, float x, float y, SKPaint textPaint)
+        public static SKPoint DrawTextShort(this SKCanvas canvas, string text, float fontSize, float x, float y,
+            SKPaint textPaint, eHTextAlign hTextAlign = eHTextAlign.Left,
+            eVTextAlign vTextAlign = eVTextAlign.Middle, bool ignoreOffsetX = false,
+            bool ignoreOffsetY = false)
         {
             if (text == null)
             {
-                return;
+                return new SKPoint(-1, -1);
             }
 
-            canvas.DrawText(SKTextBlob.Create(text, new SKFont(SKTypeface.Default, fontSize)), x, y, textPaint);
+            using var font = new SKFont(SKTypeface.Default, fontSize);
+            var textRect = new SKRect();
+            textPaint.MeasureText(text, ref textRect);
+            var xOffset = hTextAlign switch
+            {
+                _ when ignoreOffsetX => 0,
+                eHTextAlign.Left => textRect.Left,
+                eHTextAlign.Right => textRect.Width, 
+                eHTextAlign.Center => textRect.Width / 2f,
+                _ => 0
+            };
+
+            var yOffset = vTextAlign switch
+            {
+                _ when ignoreOffsetY => 0,
+                eVTextAlign.Top => textRect.Top,
+                eVTextAlign.Middle => -textRect.Height / 2f,
+                _ => 0
+            };
+
+            var ret = new SKPoint(x - xOffset, y - yOffset);
+
+            canvas.DrawText(SKTextBlob.Create(text, font), ret.X, ret.Y, textPaint);
+
+            return ret;
+        }
+
+        public static SKPoint DrawTextShort(this SKCanvas canvas, string text, float fontSize, SKRect layoutRect,
+            SKPaint textPaint, eHTextAlign hTextAlign, eVTextAlign vTextAlign = eVTextAlign.Middle)
+        {
+            if (text == null)
+            {
+                return new SKPoint(-1, -1);
+            }
+
+            using var font = new SKFont(SKTypeface.Default, fontSize);
+            var textRect = new SKRect();
+            var lw = Math.Abs(layoutRect.Width);
+            var lh = Math.Abs(layoutRect.Height);
+            textPaint.MeasureText(text, ref textRect);
+
+            var xOffset = hTextAlign switch
+            {
+                eHTextAlign.Left => textRect.Left,
+                eHTextAlign.Right => textRect.Width,
+                eHTextAlign.Center => textRect.Width / 2f,
+                _ => 0
+            };
+
+            var yOffset = vTextAlign switch
+            {
+                eVTextAlign.Top => textRect.Top,
+                eVTextAlign.Middle => -textRect.Height / 2f,
+                _ => 0
+            };
+
+            var tx = hTextAlign switch
+            {
+                eHTextAlign.Right => layoutRect.Right - xOffset,
+                eHTextAlign.Center => layoutRect.Left + lw / 2f - xOffset,
+                _ => layoutRect.Left
+            };
+
+            var ty = vTextAlign switch
+            {
+                eVTextAlign.Top => layoutRect.Top - yOffset,
+                eVTextAlign.Middle => layoutRect.Top + lh / 2f - yOffset,
+                _ => layoutRect.Bottom
+            };
+
+            canvas.DrawText(SKTextBlob.Create(text, font), tx, ty, textPaint);
+
+            return new SKPoint(tx, ty);
         }
     }
 }
