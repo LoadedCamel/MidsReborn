@@ -903,8 +903,6 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
             
-            // Debug.WriteLine($"pBase null: {pBase.PowerIndex == -1}, pEnh null: {pEnh.PowerIndex == -1}");
-            // Debug.WriteLine($"pBase: {pBase.PowerIndex}, pEnh: {pEnh.PowerIndex}");
             var baseDamage = pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
             if (pBase.NIDSubPower.Length > 0 & baseDamage == 0)
             {
@@ -2861,7 +2859,6 @@ namespace Mids_Reborn.Forms.Controls
 
             if (Index[ID] > -1)
             {
-                var eEffectTypeShort = Enums.eEffectTypeShort.None;
                 var flag = false;
                 var onlySelf = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self;
                 var onlyTarget = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target;
@@ -2873,9 +2870,12 @@ namespace Mids_Reborn.Forms.Controls
                            (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target);
                 }
 
-                if (pBase.Effects[Index[ID]].DelayedTime > 5.0)
+                if (pBase.Effects[Index[ID]].DelayedTime > 5)
+                {
                     flag = true;
-                var names = Enum.GetNames(eEffectTypeShort.GetType());
+                }
+
+                var names = Enum.GetNames(typeof(Enums.eEffectTypeShort));
                 if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement)
                 {
                     title = pBase.Effects[Index[ID]].ETModifies switch
@@ -2892,10 +2892,12 @@ namespace Mids_Reborn.Forms.Controls
                 }
                 else
                 {
-                    title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez ? names[(int)pBase.Effects[Index[ID]].EffectType] : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
+                    title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
+                        ? names[(int)pBase.Effects[Index[ID]].EffectType]
+                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType);
                 }
-                
-                string temp = string.Empty;
+
+                var temp = string.Empty;
                 switch (pBase.Effects[Index[ID]].EffectType)
                 {
                     case Enums.eEffectType.HitPoints:
@@ -2927,8 +2929,11 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Absorb:
                         shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
                         shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
+                        var absorbPercent = pBase.Effects
+                            .Where(e => e.EffectType == Enums.eEffectType.Absorb)
+                            .Any(e => e.DisplayPercentage);
                         tag2.Assign(shortFxBase);
-                        suffix = "%";
+                        suffix = absorbPercent ? "%" : "";
                         break;
                     case Enums.eEffectType.Endurance:
                         if (pBase.Effects[Index[ID]].BuffedMag < -0.01 && pBase.Effects[Index[ID]].BuffedMag > -1)
@@ -3068,17 +3073,34 @@ namespace Mids_Reborn.Forms.Controls
                 };
 
                 if (flag)
-                    return FastItem("", 0.0f, 0.0f, string.Empty);
+                {
+                    return FastItem("", 0f, 0f, string.Empty);
+                }
             }
 
-            for (var index = 0; index < shortFxEnh.Index.Length -1; index++)
+            for (var index = 0; index < shortFxEnh.Index.Length; index++)
             {
-                if (shortFxEnh.Index[index] <= -1 || !pBase.Effects[shortFxEnh.Index[index]].DisplayPercentage)
+                var sFxIdx = shortFxEnh.Index[index];
+                if (sFxIdx >= pBase.Effects.Length & sFxIdx >= pEnh.Effects.Length)
+                {
                     continue;
-                if (shortFxEnh.Value[index] > 1)
-                    continue;
+                }
 
-                switch (pBase.Effects[shortFxEnh.Index[index]].EffectType)
+                var effect = sFxIdx < pBase.Effects.Length
+                    ? pBase.Effects[sFxIdx]
+                    : pEnh.Effects[sFxIdx];
+
+                if (sFxIdx <= -1 || !effect.DisplayPercentage)
+                {
+                    continue;
+                }
+
+                if (shortFxEnh.Value[index] > 1)
+                {
+                    continue;
+                }
+
+                switch (effect.EffectType)
                 {
                     case Enums.eEffectType.Absorb:
                         //Fixes the Absorb display to correctly show the percentage
@@ -3086,7 +3108,7 @@ namespace Mids_Reborn.Forms.Controls
                         break;
                     case Enums.eEffectType.ToHit:
                         //Fixes the ToHit display to correctly show the percentage
-                        if (pBase.Effects[shortFxEnh.Index[index]].Stacking == Enums.eStacking.Yes)
+                        if (effect.Stacking == Enums.eStacking.Yes)
                         {
                             var overage = pBase.Effects[Index[ID]].Ticks * 0.05f;
                             shortFxEnh.Sum -= overage;
