@@ -742,106 +742,148 @@ namespace Mids_Reborn.Forms.Controls
             var rankedEffects = pBase.GetRankedEffects();
             for (var id = 0; id < rankedEffects.Length; id++)
             {
-                //try
-                //{
-                    if (rankedEffects[id] <= -1)
-                        continue;
-                    if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
-                        continue;
-                    var rankedEffect = GetRankedEffect(rankedEffects, id);
-                    // if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
-                    //     continue;
-                    if (!((pBase.Effects[rankedEffects[id]].Probability > 0.0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
-                        continue;
-                    if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
-                    {
-                        if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
-                        {
-                            switch (pBase.Effects[rankedEffects[id]].EffectType)
-                            {
-                                case Enums.eEffectType.Recovery:
-                                case Enums.eEffectType.Endurance:
-                                    rankedEffect.Name = $"{pBase.Effects[rankedEffects[id]].EffectType}";
-                                    var fxTarget = enhancedPower.Effects[rankedEffects[id]].ToWho switch
-                                    {
-                                        Enums.eToWho.Self => "(Self)",
-                                        Enums.eToWho.Target => "(Tgt)",
-                                        _ => ""
-                                    };
-                                    rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
-                                    break;
-                                
-                                case Enums.eEffectType.EntCreate:
-                                {
-                                    rankedEffect.Name = "Summon";
-                                    if (pBase.Effects[rankedEffects[id]].nSummon > -1)
-                                    {
-                                        rankedEffect.Value = DatabaseAPI.Database.Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                    }
-                                    else
-                                    {
-                                        rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
-                                        if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                        {
-                                            rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                        }
-
-                                        if (rankedEffect.Value.StartsWith("Pets_"))
-                                        {
-                                            rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                        }
-
-                                        if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                        {
-                                            rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
-                                        }
-                                    }
-
-                                    break;
-                                }
-                                case Enums.eEffectType.RevokePower:
-                                {
-                                    rankedEffect.Name = "Revoke";
-                                    if (pBase.Effects[rankedEffects[id]].nSummon > -1)
-                                    {
-                                        rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                    }
-                                    else
-                                    {
-                                        rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
-                                        if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                            rankedEffect.Value =
-                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                        if (rankedEffect.Value.StartsWith("Pets_"))
-                                            rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                        if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                            rankedEffect.Value =
-                                                rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
-                                    }
-
-                                    break;
-                                }
-                                default:
-                                    rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
-                                        Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
-                                    break;
-                            }
-                        }
-                        else
-                            rankedEffect.Name = ShortStr(
-                                Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType),
-                                Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType));
-                    }
-
-                    info_DataList.AddItem(rankedEffect);
-                    if (pBase.Effects[rankedEffects[id]].isEnhancementEffect)
-                        info_DataList.SetUnique();
-                /*}
-                catch (Exception ex)
+                if (rankedEffects[id] <= -1)
                 {
-                    MessageBox.Show($"{ex.Message}\n{ex.StackTrace}");
-                }*/
+                    continue;
+                }
+
+                if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
+                {
+                    continue;
+                }
+
+                var rankedEffect = GetRankedEffect(rankedEffects, id);
+                // if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
+                //     continue;
+
+                if (!((pBase.Effects[rankedEffects[id]].Probability > 0.0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
+                {
+                    continue;
+                }
+
+                if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.RevokePower &&
+                    pBase.Effects[rankedEffects[id]].nSummon <= -1 &&
+                    string.IsNullOrWhiteSpace(pBase.Effects[rankedEffects[id]].Summon))
+                {
+                    continue;
+                }
+
+                if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.GrantPower &&
+                    pBase.Effects[rankedEffects[id]].nSummon <= -1)
+                {
+                    continue;
+                }
+
+                if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
+                {
+                    if (pBase.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
+                    {
+                        switch (pBase.Effects[rankedEffects[id]].EffectType)
+                        {
+                            case Enums.eEffectType.Recovery:
+                            case Enums.eEffectType.Endurance:
+                                rankedEffect.Name = $"{pBase.Effects[rankedEffects[id]].EffectType}";
+                                var fxTarget = enhancedPower.Effects[rankedEffects[id]].ToWho switch
+                                {
+                                    Enums.eToWho.Self => "(Self)",
+                                    Enums.eToWho.Target => "(Tgt)",
+                                    _ => ""
+                                };
+                                rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
+                                break;
+                                
+                            case Enums.eEffectType.EntCreate:
+                            {
+                                rankedEffect.Name = "Summon";
+                                if (pBase.Effects[rankedEffects[id]].nSummon > -1)
+                                {
+                                    rankedEffect.Value = DatabaseAPI.Database.Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
+                                }
+                                else
+                                {
+                                    rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
+                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
+                                    {
+                                        rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                    }
+
+                                    if (rankedEffect.Value.StartsWith("Pets_"))
+                                    {
+                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
+                                    }
+
+                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
+                                    {
+                                        rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                    }
+                                }
+
+                                break;
+                            }
+                            case Enums.eEffectType.GrantPower:
+                            {
+                                rankedEffect.Name = "Grant";
+                                if (pBase.Effects[rankedEffects[id]].nSummon > -1)
+                                {
+                                    rankedEffect.Value = DatabaseAPI.Database
+                                        .Power[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
+                                }
+
+                                break;
+                            }
+
+                            case Enums.eEffectType.CombatModShift:
+                            {
+                                var magSign = pBase.Effects[rankedEffects[id]].Mag > 0 ? "+" : "";
+                                rankedEffect.Name = "LvlShift";
+                                rankedEffect.Value = $"{magSign}{pBase.Effects[rankedEffects[id]].Mag:##0.##}";
+
+                                break;
+                            }
+
+                            case Enums.eEffectType.RevokePower:
+                            {
+                                rankedEffect.Name = "Revoke";
+                                if (pBase.Effects[rankedEffects[id]].nSummon > -1)
+                                {
+                                    rankedEffect.Value = DatabaseAPI.Database
+                                        .Entities[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
+                                }
+                                else
+                                {
+                                    rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
+                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
+                                        rankedEffect.Value =
+                                            rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                    if (rankedEffect.Value.StartsWith("Pets_"))
+                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
+                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
+                                        rankedEffect.Value =
+                                            rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                }
+
+                                break;
+                            }
+
+                            default:
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
+                                    Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        rankedEffect.Name = ShortStr(
+                            Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType),
+                            Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType));
+                    }
+                }
+
+                info_DataList.AddItem(rankedEffect);
+                if (pBase.Effects[rankedEffects[id]].isEnhancementEffect)
+                {
+                    info_DataList.SetUnique();
+                }
             }
 
             info_DataList.Draw();
