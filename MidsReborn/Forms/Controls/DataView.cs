@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using mrbBase;
@@ -600,14 +601,9 @@ namespace Mids_Reborn.Forms.Controls
 
             var enhancedPower = pEnh.PowerIndex == -1 ? pBase : pEnh;
 
-            if (!noLevel & (pBase.Level > 0))
-            {
-                info_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
-            }
-            else
-            {
-                info_Title.Text = pBase.DisplayName;
-            }
+            info_Title.Text = !noLevel & (pBase.Level > 0)
+                ? $"[{pBase.Level}] {pBase.DisplayName}"
+                : pBase.DisplayName;
 
             if (iEnhLvl > -1)
             {
@@ -616,14 +612,15 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             enhNameDisp.Text = "Enhancement Values";
-            info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort) + RTF.EndRTF();
-            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescLong) + RTF.EndRTF();
+            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
+            Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
             info_DataList.Clear();
             var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
-                if ((enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + (double)enhancedPower.CastTime + enhancedPower.InterruptTime > 0.0))
+                if ((enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + (double)enhancedPower.CastTime + enhancedPower.InterruptTime > 0))
                 {
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
