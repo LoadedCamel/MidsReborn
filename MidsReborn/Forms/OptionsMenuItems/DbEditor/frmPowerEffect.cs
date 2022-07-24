@@ -714,6 +714,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         MyFx.Reward = sText;
                         break;
                     case Enums.eEffectType.GrantPower:
+                    case Enums.eEffectType.ExecutePower:
                         MyFx.Summon = sText;
                         break;
                     case Enums.eEffectType.ModifyAttrib:
@@ -1152,6 +1153,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             break;
                         }
                     case Enums.eEffectType.GrantPower:
+                    case Enums.eEffectType.ExecutePower:
                         {
                             strArray = new string[DatabaseAPI.Database.Power.Length];
                             var lower = fx.Summon.ToLower();

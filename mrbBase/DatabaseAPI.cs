@@ -2595,15 +2595,14 @@ namespace mrbBase
             var effPower = iEffect.GetPower();
             if (effPower == null)
             {
-                if (iEffect.Enhancement == null)
-                    return 1f;
+                return iEffect.Enhancement == null
+                    ? 1
+                    : GetModifier(iClass, iEffect.nModifierTable, iLevel);
             }
-            else
-            {
-                iClass = string.IsNullOrEmpty(effPower.ForcedClass)
-                    ? iEffect.Absorbed_Class_nID <= -1 ? MidsContext.Archetype.Idx : iEffect.Absorbed_Class_nID
-                    : NidFromUidClass(effPower.ForcedClass);
-            }
+
+            iClass = string.IsNullOrEmpty(effPower.ForcedClass)
+                ? iEffect.Absorbed_Class_nID <= -1 ? MidsContext.Archetype.Idx : iEffect.Absorbed_Class_nID
+                : NidFromUidClass(effPower.ForcedClass);
 
             //Everything seems to be valid, return the modifier
             return GetModifier(iClass, iEffect.nModifierTable, iLevel);

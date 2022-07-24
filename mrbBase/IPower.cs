@@ -292,5 +292,7 @@ namespace mrbBase
         void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1);
 
         bool AllowedForClass(int classId);
+
+        void ProcessExecutes();
     }
 }

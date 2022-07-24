@@ -2901,8 +2901,8 @@ namespace Mids_Reborn.Forms.Controls
                         shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         tag2.Assign(shortFxBase);
-                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
+                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
                         suffix = "%";
                         break;
                     case Enums.eEffectType.Heal:
@@ -2917,8 +2917,8 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                             shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
-                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
-                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
+                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
                             tag2.Assign(shortFxBase);
                         }
                         suffix = "%";
@@ -3632,6 +3632,9 @@ namespace Mids_Reborn.Forms.Controls
                 pBase.ActivatePeriod = dbPower.ActivatePeriod;
                 pEnh.ActivatePeriod = dbPower.ActivatePeriod;
             }*/
+
+            pBase?.ProcessExecutes();
+            pEnh?.ProcessExecutes();
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();

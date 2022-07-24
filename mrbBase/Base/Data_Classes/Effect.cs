@@ -750,7 +750,7 @@ namespace mrbBase.Base.Data_Classes
                         break;
                     }
 
-                    var str6 = "(" + name1 + ")";
+                    var str6 = $"({name1})";
                     if (DamageType == Enums.eDamage.None)
                     {
                         str6 = string.Empty;
@@ -769,11 +769,12 @@ namespace mrbBase.Base.Data_Classes
                     break;
                 case Enums.eEffectType.Enhancement:
                     var str7 = ETModifies != Enums.eEffectType.Mez ? !((ETModifies == Enums.eEffectType.Defense) | (ETModifies == Enums.eEffectType.Resistance)) ? Enums.GetEffectNameShort(ETModifies) : Enums.GetDamageNameShort(DamageType) + " " + Enums.GetEffectNameShort(ETModifies) : Enums.GetMezNameShort((Enums.eMezShort)MezType);
-                    str5 = str1 + " " + effectNameShort1 + "(" + str7 + ")" + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}({str7}){str3}{str2}";
                     break;
                 case Enums.eEffectType.GrantPower:
+                case Enums.eEffectType.ExecutePower:
                     var powerByName = DatabaseAPI.GetPowerByFullName(Summon);
-                    var str8 = powerByName == null ? " " + Summon : " " + powerByName.DisplayName;
+                    var str8 = powerByName == null ? $" {Summon}" : $" {powerByName.DisplayName}";
                     str5 = effectNameShort1 + str8 + str3;
                     break;
                 case Enums.eEffectType.Heal:
@@ -786,14 +787,14 @@ namespace mrbBase.Base.Data_Classes
 
                     if (Aspect == Enums.eAspect.Cur)
                     {
-                        str5 = Utilities.FixDP(BuffedMag * 100f) + "% " + effectNameShort1 + str3 + str2;
+                        str5 = $"{Utilities.FixDP(BuffedMag * 100)}% {effectNameShort1}{str3}{str2}";
                         break;
                     }
 
                     if (!DisplayPercentage)
                     {
                         str5 = str1 + " (" +
-                               Utilities.FixDP((float)(BuffedMag / (double)MidsContext.Archetype.Hitpoints * 100.0)) +
+                               Utilities.FixDP((float)(BuffedMag / (double)MidsContext.Archetype.Hitpoints * 100)) +
                                "%)" + effectNameShort1 + str3 + str2;
                         break;
                     }
@@ -1435,13 +1436,14 @@ namespace mrbBase.Base.Data_Classes
                     }
                     break;
                 case Enums.eEffectType.GrantPower:
+                case Enums.eEffectType.ExecutePower:
                     sResist = string.Empty;
                     string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
                     tGrant = pID != null
                         ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
-                    sBuild = $"{sEffect}{tGrant}{sTarget}";
+                    sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}";
                     break;
                 case Enums.eEffectType.GlobalChanceMod:
                     sBuild = $"{sMag} {sEffect} {Reward}{sTarget}{sDuration}";

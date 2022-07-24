@@ -456,7 +456,8 @@ namespace mrbBase
             Walk,
             XPDebt,
             ForceMove,
-            ModifyAttrib
+            ModifyAttrib,
+            ExecutePower
         }
 
         public enum eEffectTypeShort
@@ -545,7 +546,8 @@ namespace mrbBase
             Walk,
             XPDebt,
             ForceMove,
-            ModifyAttrib
+            ModifyAttrib,
+            ExecPower
         }
 
         public enum ePowerAttribs

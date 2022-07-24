@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using FastDeepCloner;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -2048,65 +2049,73 @@ namespace mrbBase.Base.Data_Classes
             var flag = true;
             var num1 = 0;
             var num2 = 0;
-            if (!HasGrantPowerEffect)
+            if (HasGrantPowerEffect)
             {
-                return;
-            }
-
-            for (; flag & (num1 < 100); ++num1)
-            {
-                flag = false;
-                var array1 = new int[0];
-                var array2 = new int[0];
-                for (var index = num2; index < Effects.Length; ++index)
+                for (; flag & (num1 < 100); ++num1)
                 {
-                    if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
+                    flag = false;
+                    var array1 = new int[0];
+                    var array2 = new int[0];
+                    for (var index = num2; index < Effects.Length; ++index)
                     {
-                        continue;
+                        if (Effects[index].EffectType != Enums.eEffectType.GrantPower ||
+                            !Effects[index].CanGrantPower() ||
+                            Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
+                        {
+                            continue;
+                        }
+
+                        Array.Resize(ref array1, array1.Length + 1);
+                        Array.Resize(ref array2, array2.Length + 1);
+                        array1[array1.Length - 1] = index;
+                        array2[array2.Length - 1] = Effects[index].nSummon;
                     }
 
-                    Array.Resize(ref array1, array1.Length + 1);
-                    Array.Resize(ref array2, array2.Length + 1);
-                    array1[array1.Length - 1] = index;
-                    array2[array2.Length - 1] = Effects[index].nSummon;
-                }
-
-                num2 = Effects.Length;
-                for (var index1 = 0; index1 <= array1.Length - 1; ++index1)
-                {
-                    flag = true;
-                    Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
-                    var length = Effects.Length;
-                    AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0.0f, MidsContext.Archetype, 1, true, array1[index1]);
-                    for (var index2 = length; index2 < Effects.Length; ++index2)
+                    num2 = Effects.Length;
+                    for (var index1 = 0; index1 <= array1.Length - 1; ++index1)
                     {
-                        if (Effects[array1[index1]].Absorbed_Power_nID > -1)
+                        flag = true;
+                        Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
+                        var length = Effects.Length;
+                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration,
+                            0.0f, MidsContext.Archetype, 1, true, array1[index1]);
+                        for (var index2 = length; index2 < Effects.Length; ++index2)
                         {
-                            Effects[index2].Absorbed_PowerType = Effects[array1[index1]].Absorbed_PowerType;
-                        }
+                            if (Effects[array1[index1]].Absorbed_Power_nID > -1)
+                            {
+                                Effects[index2].Absorbed_PowerType = Effects[array1[index1]].Absorbed_PowerType;
+                            }
 
-                        if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
-                        {
-                            Effects[index2].ToWho = Effects[array1[index1]].ToWho;
-                        }
+                            if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
+                            {
+                                Effects[index2].ToWho = Effects[array1[index1]].ToWho;
+                            }
 
-                        if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
-                        {
-                            Effects[index2].ToWho = Enums.eToWho.Target;
-                        }
-                        else if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
-                        {
-                            Effects[index2].ToWho = Enums.eToWho.Target;
-                        }
+                            if (Effects[index2].ToWho == Enums.eToWho.All &&
+                                ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
+                                 (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
+                            {
+                                Effects[index2].ToWho = Enums.eToWho.Target;
+                            }
+                            else if (Effects[index2].ToWho == Enums.eToWho.All &&
+                                     ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
+                                      (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
+                            {
+                                Effects[index2].ToWho = Enums.eToWho.Target;
+                            }
 
-                        Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                        if (Effects[array1[index1]].Probability < 1.0)
-                        {
-                            Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
+                            Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
+                            if (Effects[array1[index1]].Probability < 1.0)
+                            {
+                                Effects[index2].Probability =
+                                    Effects[array1[index1]].Probability * Effects[index2].Probability;
+                            }
                         }
                     }
                 }
             }
+
+            ProcessExecutes();
         }
 
         public List<int> GetValidEnhancements(Enums.eType iType, int iSubType = 0)
@@ -2379,6 +2388,7 @@ namespace mrbBase.Base.Data_Classes
 
             return str.Replace("%VALUE%", newValue);
         }
+
         /*public static List<string> SplitFXGroupTipL(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)
         {
             var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
@@ -2399,7 +2409,6 @@ namespace mrbBase.Base.Data_Classes
         }*/
 
         private Requirement ImportRequirementString(string iReq)
-
         {
             Requirement requirement1;
             if (NeverAutoUpdateRequirements)
@@ -2664,7 +2673,6 @@ namespace mrbBase.Base.Data_Classes
         }
 
         private int[] GetValidEnhancementsFromSets()
-
         {
             var intList = new List<int>();
             foreach (var enhancementSet in DatabaseAPI.Database.EnhancementSets)
@@ -2679,6 +2687,90 @@ namespace mrbBase.Base.Data_Classes
             }
 
             return intList.ToArray();
+        }
+
+        public void ProcessExecutes()
+        {
+            ProcessExecutesInner(this);
+            foreach (var fx in Effects)
+            {
+                fx.SetPower(this);
+            }
+        }
+
+        public List<IEffect>? ProcessExecutesInner(IPower? power = null, int rLevel = 0)
+        {
+            // Max recursion level
+            if (rLevel > 5)
+            {
+                return new List<IEffect>();
+            }
+
+            power = power ??= this;
+            var pEffects = new List<IEffect>();
+
+            foreach (var fx in power.Effects)
+            {
+                if (fx.EffectType != Enums.eEffectType.ExecutePower)
+                {
+                    pEffects.Add(fx.Clone<IEffect>());
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(fx.Summon))
+                {
+                    continue;
+                }
+
+                var fxPower = DatabaseAPI.GetPowerByFullName(fx.Summon);
+                if (fxPower == null)
+                {
+                    continue;
+                }
+
+                var subEffects = ProcessExecutesInner(fxPower, rLevel + 1);
+                if (subEffects == null)
+                {
+                    continue;
+                }
+
+                for (var i = 0; i < subEffects.Count; i++)
+                {
+                    var sFx = subEffects[i];
+                    
+                    // Cap effect duration to root power
+                    sFx.nDuration = Math.Min(sFx.nDuration, fx.nDuration);
+                    sFx.DelayedTime += fx.DelayedTime;
+                    sFx.Probability = fx.Probability is 0 or 1
+                        ? sFx.Probability
+                        : Math.Min(sFx.Probability, fx.Probability);
+                    sFx.ProcsPerMinute = fx.ProcsPerMinute;
+                    if (fx.ActiveConditionals.Count > 0)
+                    {
+                        sFx.ActiveConditionals.AddRange(fx.ActiveConditionals);
+                    }
+
+                    if (fx.Ticks > 0 && sFx.Ticks == 0)
+                    {
+                        sFx.Ticks = fx.Ticks;
+                    }
+
+                    // Re-set power so calls to DatabaseAPI.GetModifier() don't fail and return 1.
+                    // This call may not work and is redone as post-processing in ProcessExecutes().
+                    sFx.SetPower(power);
+
+                    pEffects.Add(sFx.Clone<IEffect>());
+                }
+            }
+
+            if (rLevel > 0)
+            {
+                return pEffects;
+            }
+
+            Effects = pEffects.ToArray();
+            
+            return null;
         }
 
         public override string ToString()
