@@ -225,6 +225,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_DataList.TabIndex = 19;
             this.info_DataList.ValueWidth = 55;
             this.info_DataList.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.info_DataList.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // Info_txtLarge
             // 
@@ -314,6 +315,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List3.TabIndex = 27;
             this.fx_List3.ValueWidth = 55;
             this.fx_List3.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List3.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // fx_lblHead2
             // 
@@ -359,6 +361,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List2.TabIndex = 24;
             this.fx_List2.ValueWidth = 55;
             this.fx_List2.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List2.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // fx_List1
             // 
@@ -382,6 +385,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List1.TabIndex = 23;
             this.fx_List1.ValueWidth = 60;
             this.fx_List1.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List1.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // pnlTotal
             // 
@@ -647,6 +651,7 @@ namespace Mids_Reborn.Forms.Controls
             this.total_Misc.TabIndex = 27;
             this.total_Misc.ValueWidth = 55;
             this.total_Misc.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.total_Misc.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // total_lblRes
             // 
@@ -741,6 +746,7 @@ namespace Mids_Reborn.Forms.Controls
             this.enhListing.TabIndex = 71;
             this.enhListing.ValueWidth = 65;
             this.enhListing.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.enhListing.ItemOut += new mrbControls.PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
             // 
             // Enh_Title
             // 

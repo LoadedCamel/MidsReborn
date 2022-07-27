@@ -2739,7 +2739,9 @@ namespace mrbBase.Base.Data_Classes
                     var sFx = subEffects[i];
                     
                     // Cap effect duration to root power
-                    sFx.nDuration = Math.Min(sFx.nDuration, fx.nDuration);
+                    sFx.nDuration = fx.nDuration > 0 
+                        ? Math.Min(sFx.nDuration, fx.nDuration)
+                        : sFx.nDuration;
                     sFx.DelayedTime += fx.DelayedTime;
                     sFx.Probability = fx.Probability is 0 or 1
                         ? sFx.Probability

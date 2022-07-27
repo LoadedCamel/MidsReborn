@@ -14,8 +14,10 @@ namespace mrbControls
     {
         public delegate void ItemClickEventHandler(int index, MouseButtons button);
         public delegate void ItemHoverEventHandler(object sender, int index, Enums.ShortFX tagId, string tooltip = "");
+        public delegate void ItemOutEventHandler(object sender);
         public event ItemClickEventHandler ItemClick;
         public event ItemHoverEventHandler ItemHover;
+        public event ItemOutEventHandler ItemOut;
         private int _linePadding;
         private ExtendedBitmap _bxBuffer;
         private int _currentHighlight;
@@ -364,9 +366,7 @@ namespace mrbControls
             checked
             {
                 rectangle.Width = (int)Math.Round(Width / (double)_myColumns);
-                var num4 = 0;
-                var num5 = _myItems.Count - 1;
-                for (var i = num4; i <= num5; i++)
+                for (var i = 0; i < _myItems.Count; i++)
                 {
                     rectangle.X = rectangle.Width * num2;
                     rectangle.Y = (rectangle.Height + _linePadding) * num;
@@ -379,17 +379,34 @@ namespace mrbControls
 
                     num2++;
                     if (num2 < _myColumns)
+                    {
                         continue;
+                    }
+
                     num2 = 0;
                     num++;
                 }
 
                 if (_currentHighlight == num3)
+                {
                     return;
-                _currentHighlight = num3;
-                if (_highlightable) Draw();
+                }
 
-                if (num3 > -1) ItemHover?.Invoke(this, num3, _myItems[num3].TagID, _myItems[num3].SpecialTip);
+                _currentHighlight = num3;
+                if (_highlightable)
+                {
+                    Draw();
+                }
+
+                if (num3 <= -1)
+                {
+                    ItemOut?.Invoke(this);
+
+                    return;
+                }
+
+                
+                ItemHover?.Invoke(this, num3, _myItems[num3].TagID, _myItems[num3].SpecialTip);
             }
         }
 
