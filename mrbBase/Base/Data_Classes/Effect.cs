@@ -1308,7 +1308,9 @@ namespace mrbBase.Base.Data_Classes
                     }
 
                     if (!noMag)
-                        sMag = $" (Mag {sMag})";
+                    {
+                        sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude} x {ModifierTable}" : $"Mag {sMag}")})";
+                    }
 
                     sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
 
