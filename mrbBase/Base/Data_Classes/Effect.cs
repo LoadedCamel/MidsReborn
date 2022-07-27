@@ -1141,6 +1141,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eEffectType.Damage => " over ",
                     Enums.eEffectType.SilentKill => " in ",
+                    Enums.eEffectType.Mez when MezType is Enums.eMez.Knockback or Enums.eMez.Knockup => "For ",
                     _ => " for "
                 };
 
@@ -1159,7 +1160,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                 {
-                    sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds";
+                    sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && MezType is Enums.eMez.Knockback or Enums.eMez.Knockup ? ": " : "")}";
                 }
             }
 
