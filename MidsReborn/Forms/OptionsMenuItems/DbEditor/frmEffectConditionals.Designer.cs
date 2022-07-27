@@ -1,8 +1,9 @@
-﻿using System.Windows.Forms;
+﻿using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    partial class frmEffectConditionals
+    sealed partial class frmEffectConditionals
     {
         /// <summary>
         /// Required designer variable.
@@ -34,10 +35,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lvConditionalOp = new mrbControls.ctlListViewColored();
-            this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
+            this.lvConditionalOp = new mrbControls.ctlListViewColored();
+            this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.lvActiveConditionals = new mrbControls.ctlListViewColored();
             this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
@@ -54,9 +55,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBox2
-            // 
             this.groupBox2.Controls.Add(this.lvConditionalOp);
             this.groupBox2.Controls.Add(this.removeConditional);
             this.groupBox2.Controls.Add(this.addConditional);

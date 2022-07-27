@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,25 +15,25 @@ using mrbControls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    public partial class frmEffectConditionals : Form
+    public sealed partial class frmEffectConditionals : Form
     {
         public readonly List<KeyValue<string, string>> Conditionals;
 
         private readonly List<string> _conditionalTypes;
         private readonly List<string> _conditionalOps;
 
-        public frmEffectConditionals(List<KeyValue<string, string>> conditions)
+        public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
         {
             InitializeComponent();
             _conditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             _conditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
             if (conditions != null) Conditionals = conditions.Clone();
-            Text = "Effect Conditions";
+            Text = @"Effect Conditions";
             Icon = Resources.reborn;
             Load += OnLoad;
         }
 
-        private async void OnLoad(object sender, EventArgs e)
+        private async void OnLoad(object? sender, EventArgs e)
         {
             await UpdateConditionTypes();
             await UpdateConditionals();
