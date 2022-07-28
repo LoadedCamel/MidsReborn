@@ -3217,18 +3217,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void pbDynMode_Click(object sender, EventArgs e)
         {
             if (MainModule.MidsController.Toon == null)
-                return;
-            if (MidsContext.Config.BuildMode != Enums.dmModes.Normal || MidsContext.Config.BuildMode != Enums.dmModes.Respec)
-                return;
-            switch (MidsContext.Config.BuildOption)
             {
-                case Enums.dmItem.Power:
-                    MidsContext.Config.BuildOption = Enums.dmItem.Slot;
-                    break;
-                default:
-                    MidsContext.Config.BuildOption = Enums.dmItem.Power;
-                    break;
+                return;
             }
+
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            {
+                return;
+            }
+
+            MidsContext.Config.BuildOption = MidsContext.Config.BuildOption switch
+            {
+                Enums.dmItem.Power => Enums.dmItem.Slot,
+                _ => Enums.dmItem.Power
+            };
+
             UpdateDMBuffer();
             pbDynMode.Refresh();
         }
