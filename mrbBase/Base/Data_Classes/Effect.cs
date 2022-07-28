@@ -1202,12 +1202,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
                 }
-                
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
                 {
                     var perceptionDistance = Statistics.BasePerception * BuffedMag;
                     sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
-                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
                         : DisplayPercentage
                             ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
                             : $"{perceptionDistance}ft";
@@ -1215,7 +1214,7 @@ namespace mrbBase.Base.Data_Classes
                 else
                 {
                     sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
-                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                         : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
             }
@@ -1227,14 +1226,17 @@ namespace mrbBase.Base.Data_Classes
                 {
                     sSuppress += "\n  Suppressed when Attacking.";
                 }
+
                 if ((Suppression & Enums.eSuppress.Attacked) == Enums.eSuppress.Attacked)
                 {
                     sSuppress += "\n  Suppressed when Attacked.";
                 }
+
                 if ((Suppression & Enums.eSuppress.HitByFoe) == Enums.eSuppress.HitByFoe)
                 {
                     sSuppress += "\n  Suppressed when Hit.";
                 }
+
                 if ((Suppression & Enums.eSuppress.MissionObjectClick) == Enums.eSuppress.MissionObjectClick)
                 {
                     sSuppress += "\n  Suppressed when MissionObjectClick.";
@@ -1248,9 +1250,15 @@ namespace mrbBase.Base.Data_Classes
                 {
                     sSuppress += "\n  Suppressed when Mezzed.";
                 }
+                
                 if ((Suppression & Enums.eSuppress.Knocked) == Enums.eSuppress.Knocked)
                 {
                     sSuppress += "\n  Suppressed when Knocked.";
+                }
+
+                if ((Suppression & Enums.eSuppress.Confused) == Enums.eSuppress.Confused)
+                {
+                    sSuppress += "\n  Suppressed when Confused.";
                 }
             }
             else
@@ -1303,17 +1311,24 @@ namespace mrbBase.Base.Data_Classes
                     break;
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
-                    if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
+                    if (AttribType == Enums.eAttribType.Magnitude & nDuration > 0 & Aspect == Enums.eAspect.Str)
                     {
-                        sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                        sBuild = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale * nMagnitude:####0.####} x {ModifierTable})%" : sMag)} {sSubEffect}{sTarget}{sDuration}";
                     }
-
-                    if (!noMag)
+                    else
                     {
-                        sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude} x {ModifierTable}" : $"Mag {sMag}")})";
-                    }
+                        if (Duration > 0 & (!simple | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
+                        {
+                            sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                        }
 
-                    sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
+                        if (!noMag)
+                        {
+                            sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
+                        }
+
+                        sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
+                    }
 
                     break;
                 case Enums.eEffectType.MezResist:
