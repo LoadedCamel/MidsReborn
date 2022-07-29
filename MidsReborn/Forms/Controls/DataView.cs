@@ -84,7 +84,6 @@ namespace Mids_Reborn.Forms.Controls
             HistoryIDX = -1;
             Compact = false;
             bxFlip = null;
-            //InitializeComponent();
             BackColorChanged += DataView_BackColorChanged;
             Load += DataView_Load;
             Name = nameof(DataView);
@@ -299,6 +298,15 @@ namespace Mids_Reborn.Forms.Controls
             fx_List1.LinePadding = 1;
             fx_List2.LinePadding = 2;
             fx_List3.LinePadding = 3;
+
+            var useToxicDefOffSet = DatabaseAPI.RealmUsesToxicDef() ? 15 : 0;
+            total_lblRes.Location = new Point(4, 135 + useToxicDefOffSet);
+            gRes1.Location = new Point(4, 151 + useToxicDefOffSet);
+            gRes2.Location = new Point(150, 151 + useToxicDefOffSet);
+            total_lblMisc.Location = new Point(4, 227 + useToxicDefOffSet);
+            total_Misc.Location = new Point(4, 243 + useToxicDefOffSet);
+            lblTotal.Location = new Point(3, 323 + useToxicDefOffSet);
+
             Clear();
         }
 
@@ -1337,99 +1345,113 @@ namespace Mids_Reborn.Forms.Controls
         public void DisplayTotals()
         {
             if (MidsContext.Character == null)
+            {
                 return;
-            var names = Enum.GetNames(Enums.eDamage.None.GetType());
-            total_Misc.Clear();
-            var displayStats = MidsContext.Character.DisplayStats;
-            gDef1.Clear();
-            gDef2.Clear();
-            int[] numArray1 =
-            {
-                0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0
-            };
-            var num1 = names.Length - 1;
-            for (var dType = 1; dType <= num1; ++dType)
-            {
-                var iTip = $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}% {names[dType]} defense";
-                //var iTip = Strings.Format(displayStats.Defense(dType), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType] + " defense";
-                if (!((dType != 9) & (dType != 7)))
-                    continue;
-                if (numArray1[dType] == 0)
-                    gDef1.AddItem(names[dType] + ":|" + $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}%", displayStats.Defense(dType), 0.0f, iTip);
-                else
-                    gDef2.AddItem(names[dType] + ":|" + $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}%", displayStats.Defense(dType), 0.0f, iTip);
             }
 
-            var num2 = gDef1.GetMaxValue();
-            var maxValue1 = gDef2.GetMaxValue();
-            if (maxValue1 > (double)num2)
-                num2 = maxValue1;
-            gDef1.Max = num2;
-            gDef2.Max = num2;
+            var dmgNames = Enum.GetNames(typeof(Enums.eDamage));
+            var displayStats = MidsContext.Character.DisplayStats;
+            total_Misc.Clear();
+            gDef1.Clear();
+            gDef2.Clear();
+            var numArray1 = new[]
+            {
+                0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0
+            };
+
+            var unusedVectors = new List<Enums.eDamage>
+            {
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>();
+            const int toxicVector = (int) Enums.eDamage.Toxic;
+
+            for (var dType = 1; dType < dmgNames.Length; dType++)
+            {
+                var iTip = $"{displayStats.Defense(dType):0.##}% {dmgNames[dType]} defense";
+                if (dType == toxicVector && !DatabaseAPI.RealmUsesToxicDef())
+                {
+                    continue;
+                }
+
+                if (unusedVectors.Contains(dType))
+                {
+                    continue;
+                }
+
+                var targetGraph = numArray1[dType] == 0 ? gDef1 : gDef2;
+                //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.##}%", displayStats.Defense(dType), 0, iTip);
+            }
+
+            var maxValue1 = Math.Max(gDef1.GetMaxValue(), gDef2.GetMaxValue());
+            gDef1.Max = maxValue1;
+            gDef2.Max = maxValue1;
             gDef1.Draw();
             gDef2.Draw();
-            var str = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {Convert.ToDecimal(MidsContext.Character.Archetype.ResCap * 100.0):0.##}%";
-            //var str = MidsContext.Character.Archetype.DisplayName + " resistance cap: " + Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
+            
+            var atResCap = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:0.##}%";
             gRes1.Clear();
             gRes2.Clear();
-            int[] numArray2 =
+            var numArray2 = new[]
             {
                 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1
             };
-            var dType1 = 1;
-            do
+
+            unusedVectors = new List<Enums.eDamage>
             {
-                if (dType1 != 9)
+                Enums.eDamage.Melee,
+                Enums.eDamage.Ranged,
+                Enums.eDamage.AoE,
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>();
+
+            for (var dType = 1; dType < dmgNames.Length; dType++)
+            {
+                if (unusedVectors.Contains(dType))
                 {
-                    string iTip;
-                    if (MidsContext.Character.TotalsCapped.Res[dType1] < (double)MidsContext.Character.Totals.Res[dType1])
-                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%";
-                    //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%";
-                    else
-                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance. ({str})";
-                    //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance. (" + str + ")";
-                    if (numArray2[dType1] == 0)
-                        gRes1.AddItem(names[dType1] + ":|" + $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
-                    else
-                        gRes2.AddItem(names[dType1] + ":|" + $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
+                    continue;
                 }
 
-                ++dType1;
-            } while (dType1 <= 9);
+                var iTip = MidsContext.Character.TotalsCapped.Res[dType] < MidsContext.Character.Totals.Res[dType]
+                    ? $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance capped at {displayStats.DamageResistance(dType, false):0.##}%"
+                    : $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({atResCap})";
 
-            var num3 = gRes1.GetMaxValue();
-            var maxValue2 = gRes2.GetMaxValue();
-            if (maxValue2 > (double)num3)
-                num3 = maxValue2;
-            gRes1.Max = num3;
-            gRes2.Max = num3;
+                var targetGraph = numArray2[dType] == 0 ? gRes1 : gRes2;
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.##}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
+            }
+
+            var maxValue2 = Math.Max(gRes1.GetMaxValue(), gRes2.GetMaxValue());
+            gRes1.Max = maxValue2;
+            gRes2.Max = maxValue2;
             gRes1.Draw();
             gRes2.Draw();
+
             var iTip1 = string.Empty;
-            var iTip2 = "Time to go from 0-100% end: " + Utilities.FixDP(displayStats.EnduranceTimeToFull) +
-                        "s.\r\nHover the mouse over the End Drain stats for more info.";
-            if (displayStats.EnduranceRecoveryNet > 0.0)
+            var iTip2 = $"Time to go from 0-100% end: {Utilities.FixDP(displayStats.EnduranceTimeToFull)}s.\r\nHover the mouse over the End Drain stats for more info.";
+            switch (displayStats.EnduranceRecoveryNet)
             {
-                iTip1 = "Net Endurance Gain (Recovery - Drain): " + Utilities.FixDP(displayStats.EnduranceRecoveryNet) +
-                        "/s.";
-                if (Math.Abs(displayStats.EnduranceRecoveryNet - (double)displayStats.EnduranceRecoveryNumeric) >
-                    float.Epsilon)
-                    iTip1 = iTip1 + "\r\nTime to go from 0-100% end (using net gain): " +
-                            Utilities.FixDP(displayStats.EnduranceTimeToFullNet) + "s.";
-            }
-            else if (displayStats.EnduranceRecoveryNet < 0.0)
-            {
-                iTip1 = "With current end drain, you will lose end at a rate of: " +
-                        Utilities.FixDP(displayStats.EnduranceRecoveryLossNet) +
-                        "/s.\r\nFrom 100% you would run out of end in: " +
-                        Utilities.FixDP(displayStats.EnduranceTimeToZero) + "s.";
+                case > 0:
+                {
+                    iTip1 = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(displayStats.EnduranceRecoveryNet)}/s.";
+                    if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > float.Epsilon)
+                    {
+                        iTip1 += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(displayStats.EnduranceTimeToFullNet)}s.";
+                    }
+
+                    break;
+                }
+                case < 0:
+                    iTip1 = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(displayStats.EnduranceRecoveryLossNet)}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(displayStats.EnduranceTimeToZero)}s.";
+                    break;
             }
 
-            var iTip3 = "Time to go from 0-100% health: " + Utilities.FixDP(displayStats.HealthRegenTimeToFull) +
-                        "s.\r\nHealth regenerated per second: " +
-                        Utilities.FixDP(displayStats.HealthRegenHealthPerSec) +
-                        "%\r\nHitPoints regenerated per second at level 50: " +
-                        Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
+            var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
             total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.##}% ({displayStats.EnduranceRecoveryNumeric:0.##}/s)", false, false, false, iTip2));
             total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{displayStats.HealthRegenPercent(false):0.##}%", false, false, false, iTip3));
             total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
@@ -2782,7 +2804,7 @@ namespace Mids_Reborn.Forms.Controls
                                    ? Enums.ePvX.PvE
                                    : Enums.ePvX.PvP)) &
                                (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                           .Select(e => e.BuildEffectString()))).Trim();
+                           .Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
         }
 
         private static string GenerateTipFromEffect(IPower basePower, Enums.ShortFX tag)
@@ -2815,9 +2837,9 @@ namespace Mids_Reborn.Forms.Controls
                     : Enums.ePvX.PvP)) &
                 (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None).ToList();
 
-            return (string.Join("\n", selfEffects.Select(e => e.BuildEffectString()))
+            return (string.Join("\n", selfEffects.Select(e => e.BuildEffectString(false, "", false, false, false, true)))
                     + "\n\n"
-                    + string.Join("\n", targetEffects.Select(e => e.BuildEffectString()))).Trim();
+                    + string.Join("\n", targetEffects.Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
         }
 
         // Def/Res/Elusivity
@@ -2832,7 +2854,7 @@ namespace Mids_Reborn.Forms.Controls
                                     ? Enums.ePvX.PvE
                                     : Enums.ePvX.PvP)) &
                                 (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                            .Select(e => e.BuildEffectString()))
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)))
                     + "\n\n"
                     + string.Join("\n",
                         basePower.Effects.Where(e =>
@@ -2843,7 +2865,7 @@ namespace Mids_Reborn.Forms.Controls
                                     ? Enums.ePvX.PvE
                                     : Enums.ePvX.PvP)) &
                                 (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                            .Select(e => e.BuildEffectString()))).Trim();
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
         }
 
         private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, Enums.ShortFX tag, IPower basePower)

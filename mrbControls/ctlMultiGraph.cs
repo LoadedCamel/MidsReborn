@@ -59,7 +59,6 @@ namespace mrbControls
 
             MouseLeave += ctlMultiGraph_MouseLeave;
             MouseDown += ctlMultiGraph_MouseDown;
-            MouseUp += ctlMultiGraph_MouseUp;
             Load += ctlMultiGraph_Load;
             BackColorChanged += ctlMultiGraph_BackColorChanged;
             SizeChanged += ctlMultiGraph_SizeChanged;
@@ -119,7 +118,7 @@ namespace mrbControls
             set
             {
                 PBaseColor = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -129,7 +128,7 @@ namespace mrbControls
             set
             {
                 PEnhColor = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -139,7 +138,7 @@ namespace mrbControls
             set
             {
                 PBlendColor1 = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -149,7 +148,7 @@ namespace mrbControls
             set
             {
                 PBlendColor2 = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -159,7 +158,7 @@ namespace mrbControls
             set
             {
                 PLineColor = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -169,7 +168,7 @@ namespace mrbControls
             set
             {
                 PHighlightColor = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -179,7 +178,7 @@ namespace mrbControls
             set
             {
                 PMarkerColor = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -191,7 +190,7 @@ namespace mrbControls
             set
             {
                 PMarkerColor2 = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -201,7 +200,7 @@ namespace mrbControls
             set
             {
                 SetBestScale(value);
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -211,7 +210,7 @@ namespace mrbControls
             set
             {
                 XPadding = checked((int) Math.Round(value));
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -221,7 +220,7 @@ namespace mrbControls
             set
             {
                 YPadding = checked((int) Math.Round(value));
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -231,7 +230,7 @@ namespace mrbControls
             set
             {
                 NameWidth = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -242,7 +241,7 @@ namespace mrbControls
             {
                 PItemHeight = value;
                 FontSize = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -252,7 +251,7 @@ namespace mrbControls
             set
             {
                 PDrawLines = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -262,7 +261,7 @@ namespace mrbControls
             set
             {
                 PBorder = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -272,7 +271,7 @@ namespace mrbControls
             set
             {
                 PShowScale = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -282,7 +281,7 @@ namespace mrbControls
             set
             {
                 PShowHighlight = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -292,7 +291,7 @@ namespace mrbControls
             set
             {
                 PScaleHeight = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -302,7 +301,7 @@ namespace mrbControls
             set
             {
                 DualName = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -312,7 +311,7 @@ namespace mrbControls
             set
             {
                 PStyle = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -326,7 +325,7 @@ namespace mrbControls
                     ScaleValue = Scales[value];
                 }
 
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -351,7 +350,7 @@ namespace mrbControls
                     Max = GetMaxValue();
                 }
 
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -371,7 +370,7 @@ namespace mrbControls
             set
             {
                 UseDifferentiateColors = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -387,7 +386,7 @@ namespace mrbControls
             set
             {
                 DisplayOuterBorder = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -397,7 +396,7 @@ namespace mrbControls
             set
             {
                 MaxItemsCapacity = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -407,7 +406,7 @@ namespace mrbControls
             set
             {
                 FontSizeOverride = value;
-                Draw();
+                if (DesignMode) Draw();
             }
         }
 
@@ -464,11 +463,12 @@ namespace mrbControls
                             $"{i}");
                     }
                 }
+
+                Draw();
             }
 
             Loaded = true;
-            Draw();
-        }
+        }   
 
         public void AddItem(string sName, float nBase, float nEnh, string iTip = "")
         {
@@ -513,11 +513,6 @@ namespace mrbControls
         public void Draw()
         {
             if (NoDraw)
-            {
-                return;
-            }
-
-            if (!Loaded)
             {
                 return;
             }
@@ -1198,10 +1193,6 @@ namespace mrbControls
                 
                 return iX > TextWidth ? (iX - TextWidth) / (float) num * ScaleValue : 0;
             }
-        }
-
-        private void ctlMultiGraph_MouseUp(object sender, MouseEventArgs e)
-        {
         }
 
         private class GraphItem
