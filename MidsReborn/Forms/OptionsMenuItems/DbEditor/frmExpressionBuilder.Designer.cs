@@ -60,18 +60,20 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.ForeColor = System.Drawing.Color.Azure;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(769, 370);
+            this.panel1.Size = new System.Drawing.Size(897, 455);
             this.panel1.TabIndex = 0;
             // 
             // btnPowerInsert
             // 
             this.btnPowerInsert.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(101)))), ((int)(((byte)(242)))));
             this.btnPowerInsert.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPowerInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPowerInsert.Location = new System.Drawing.Point(10, 327);
+            this.btnPowerInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnPowerInsert.Location = new System.Drawing.Point(12, 402);
+            this.btnPowerInsert.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnPowerInsert.Name = "btnPowerInsert";
-            this.btnPowerInsert.Size = new System.Drawing.Size(211, 23);
+            this.btnPowerInsert.Size = new System.Drawing.Size(246, 28);
             this.btnPowerInsert.TabIndex = 13;
             this.btnPowerInsert.Text = "Select & Insert Power";
             this.btnPowerInsert.UseMnemonic = false;
@@ -83,124 +85,124 @@
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(674, 329);
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnCancel.Location = new System.Drawing.Point(786, 405);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 33);
+            this.btnCancel.Size = new System.Drawing.Size(88, 41);
             this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(Cancel_Clicked);
+            this.btnCancel.Click += new System.EventHandler(this.Cancel_Clicked);
             // 
             // btnOkay
             // 
             this.btnOkay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(78)))), ((int)(((byte)(237)))));
             this.btnOkay.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOkay.Location = new System.Drawing.Point(593, 329);
+            this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnOkay.Location = new System.Drawing.Point(692, 405);
+            this.btnOkay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOkay.Name = "btnOkay";
-            this.btnOkay.Size = new System.Drawing.Size(75, 33);
+            this.btnOkay.Size = new System.Drawing.Size(88, 41);
             this.btnOkay.TabIndex = 11;
             this.btnOkay.Text = "Okay";
             this.btnOkay.UseVisualStyleBackColor = false;
-            this.btnOkay.Click += new System.EventHandler(Okay_Clicked);
+            this.btnOkay.Click += new System.EventHandler(this.Okay_Clicked);
             // 
             // label5
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(281, 240);
+            this.label5.Location = new System.Drawing.Point(328, 295);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(174, 21);
+            this.label5.Size = new System.Drawing.Size(203, 26);
             this.label5.TabIndex = 10;
             this.label5.Text = "Probability Expression:";
             // 
             // tbProbExpr
             // 
-            this.tbProbExpr.Location = new System.Drawing.Point(284, 264);
+            this.tbProbExpr.Location = new System.Drawing.Point(331, 325);
+            this.tbProbExpr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbProbExpr.Multiline = true;
             this.tbProbExpr.Name = "tbProbExpr";
-            this.tbProbExpr.Size = new System.Drawing.Size(465, 35);
+            this.tbProbExpr.Size = new System.Drawing.Size(542, 42);
             this.tbProbExpr.TabIndex = 9;
-            this.tbProbExpr.GotFocus += ExprOnGotFocus;
-            this.tbProbExpr.TextChanged += ExprOnTextChanged;
-            this.tbProbExpr.MouseDown += ExpOnMouseDown;
-            this.tbProbExpr.MouseMove += ExpOnMouseMove;
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(281, 130);
+            this.label4.Location = new System.Drawing.Point(328, 160);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(174, 21);
+            this.label4.Size = new System.Drawing.Size(203, 26);
             this.label4.TabIndex = 8;
             this.label4.Text = "Magnitude Expression:";
             // 
             // tbMagExpr
             // 
-            this.tbMagExpr.Location = new System.Drawing.Point(284, 154);
+            this.tbMagExpr.Location = new System.Drawing.Point(331, 190);
+            this.tbMagExpr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbMagExpr.Multiline = true;
             this.tbMagExpr.Name = "tbMagExpr";
-            this.tbMagExpr.Size = new System.Drawing.Size(465, 35);
+            this.tbMagExpr.Size = new System.Drawing.Size(542, 42);
             this.tbMagExpr.TabIndex = 7;
-            this.tbMagExpr.GotFocus += ExprOnGotFocus;
-            this.tbMagExpr.TextChanged += ExprOnTextChanged;
-            this.tbMagExpr.MouseDown += ExpOnMouseDown;
-            this.tbMagExpr.MouseMove += ExpOnMouseMove;
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(281, 34);
+            this.label3.Location = new System.Drawing.Point(328, 42);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(174, 21);
+            this.label3.Size = new System.Drawing.Size(203, 26);
             this.label3.TabIndex = 6;
             this.label3.Text = "Duration Expression:";
             // 
             // tbDurationExp
             // 
-            this.tbDurationExp.Location = new System.Drawing.Point(284, 58);
+            this.tbDurationExp.Location = new System.Drawing.Point(331, 71);
+            this.tbDurationExp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbDurationExp.Multiline = true;
             this.tbDurationExp.Name = "tbDurationExp";
-            this.tbDurationExp.Size = new System.Drawing.Size(465, 35);
+            this.tbDurationExp.Size = new System.Drawing.Size(542, 42);
             this.tbDurationExp.TabIndex = 5;
-            this.tbDurationExp.GotFocus += ExprOnGotFocus;
-            this.tbDurationExp.TextChanged += ExprOnTextChanged;
-            this.tbDurationExp.MouseDown += ExpOnMouseDown;
-            this.tbDurationExp.MouseMove += ExpOnMouseMove;
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(10, 7);
+            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(174, 21);
+            this.label2.Size = new System.Drawing.Size(203, 26);
             this.label2.TabIndex = 4;
             this.label2.Text = "Expression Variables:";
             // 
             // lbCommandVars
             // 
             this.lbCommandVars.FormattingEnabled = true;
-            this.lbCommandVars.Location = new System.Drawing.Point(10, 31);
+            this.lbCommandVars.ItemHeight = 16;
+            this.lbCommandVars.Location = new System.Drawing.Point(12, 38);
+            this.lbCommandVars.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lbCommandVars.Name = "lbCommandVars";
-            this.lbCommandVars.Size = new System.Drawing.Size(211, 290);
+            this.lbCommandVars.Size = new System.Drawing.Size(245, 356);
             this.lbCommandVars.TabIndex = 1;
-            this.lbCommandVars.DoubleClick += LbCommandVarsOnDoubleClick;
             // 
             // frmExpressionBuilder
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(170)))), ((int)(((byte)(181)))));
-            this.ClientSize = new System.Drawing.Size(769, 370);
+            this.ClientSize = new System.Drawing.Size(897, 455);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmExpressionBuilder";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmExpressionBuilder";
             this.panel1.ResumeLayout(false);

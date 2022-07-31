@@ -42,6 +42,7 @@ namespace mrbBase
             "maxEndurance",
             "rand()",
             "source.ownPower?(",
+            "source>Base.kHitPoints",
             "source>Max.kHitPoints",
             ">variableVal",
             "modifier>",
@@ -71,7 +72,8 @@ namespace mrbBase
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
                 { "base.kToHit", $"{DatabaseAPI.ServerData.BaseToHit}"},
-                { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" }
+                { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
+                { "source>Base.kHitPoints", $"{MidsContext.Character.Archetype.Hitpoints}"}
             };
         }
 

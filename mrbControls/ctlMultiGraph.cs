@@ -628,10 +628,12 @@ namespace mrbControls
                         break;
                 }
 
-                if (Items[i].ValueAbsorbed > 0)
+                if (Items[i].ValueAbsorbed <= 0)
                 {
-                    DrawAbsorbed(s, i, drawArea, ny);
+                    continue;
                 }
+
+                DrawAbsorbed(s, i, drawArea, ny);
             }
 
             if (PBorder)
@@ -953,7 +955,7 @@ namespace mrbControls
             };
 
             var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
-            var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
+            var width = (int) Math.Round(bounds.Width * (Items[index].ValueAbsorbed / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
                 bounds.Top + ny + (Style == Enums.GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
