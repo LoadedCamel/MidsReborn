@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
+using mrbControls.Extensions;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 

@@ -2427,19 +2427,25 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (fAccolade != null)
                 {
                     if (!fAccolade.IsDisposed)
+                    {
                         fAccolade.Dispose();
+                    }
+
                     var power = MidsContext.Character.IsHero()
                         ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
                         : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                    for (var index = 0; index <= power.NIDSubPower.Length - 1; ++index)
-                        if (MidsContext.Character.CurrentBuild.PowerUsed(
-                            DatabaseAPI.Database.Power[power.NIDSubPower[index]]))
-                            MidsContext.Character.CurrentBuild.RemovePower(
-                                DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                    foreach (var p in power.NIDSubPower)
+                    {
+                        if (MidsContext.Character.CurrentBuild.PowerUsed(DatabaseAPI.Database.Power[p]))
+                        {
+                            MidsContext.Character.CurrentBuild.RemovePower(DatabaseAPI.Database.Power[p]);
+                        }
+                    }
                 }
 
                 drawing.ColorSwitch();
                 fTotals?.Refresh();
+                fTotals2?.Refresh();
                 SetTitleBar();
                 UpdateColors();
 
@@ -2447,7 +2453,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}\r\n\n{ex.StackTrace}");
+                MessageBox.Show($"{ex.Message}\r\n\r\n{ex.StackTrace}");
             }
         }
 

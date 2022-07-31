@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
-using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
-using mrbControls;
+using mrbControls.Extensions;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -16,14 +15,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private class TabColorScheme
         {
-            public readonly Color TabTextColor = Color.WhiteSmoke;
-            public readonly Color TabOutlineColor = Color.Black;
-
             public readonly Color HeroInactiveTabColor = Color.FromArgb(30, 85, 130);
+            public readonly Color HeroInactiveHoveredTabColor = Color.FromArgb(43, 122, 187);
             public readonly Color HeroBorderColor = Color.Goldenrod;
             public readonly Color HeroActiveTabColor = Color.Goldenrod;
 
             public readonly Color VillainInactiveTabColor = Color.FromArgb(86, 12, 12);
+            public readonly Color VillainInactiveHoveredTabColor = Color.FromArgb(143, 20, 20);
             public readonly Color VillainBorderColor = Color.FromArgb(184, 184, 187);
             public readonly Color VillainActiveTabColor = Color.FromArgb(184, 184, 187);
         }
@@ -31,32 +29,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private readonly frmMain _myParent;
         private bool KeepOnTop { get; set; }
         private readonly TabColorScheme _tabColors = new();
-
-        #region Enums sub-lists (groups)
-
-        private readonly List<Enums.eDamage> DefenseDamageList = new()
-        {
-            Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-            Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
-            Enums.eDamage.Ranged, Enums.eDamage.AoE
-        };
-
-        private readonly List<Enums.eDamage> ResistanceDamageList = new()
-        {
-            Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-            Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
-        };
-
-        private readonly List<Enums.eEffectType> MovementTypesList = new()
-        {
-            Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight,
-            Enums.eEffectType.SpeedFlying
-        };
-
-        private readonly List<Enums.eEffectType> PerceptionEffectsList = new()
-        {
-            Enums.eEffectType.StealthRadius, Enums.eEffectType.StealthRadiusPlayer, Enums.eEffectType.PerceptionRadius
-        };
 
         private readonly List<Enums.eMez> MezList = new()
         {
@@ -71,8 +43,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
         };
-
-        #endregion
 
         public frmTotalsV2(ref frmMain parentForm)
         {
@@ -116,7 +86,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
             var sendingControl = (RadioButton) sender;
-            IEnumerable<RadioButton> radioControls = Controls.OfType<RadioButton>();
+            var radioControls = Controls.OfType<RadioButton>();
             if (!sendingControl.Checked) return;
 
             foreach (var radio in radioControls)
@@ -157,20 +127,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     continue;
                 }
 
-                if (MidsContext.Character.Powersets[i].GroupName == "Epic")
+                if (MidsContext.Character.Powersets[i].GroupName != "Epic")
                 {
-                    idx = i;
-                    break;
+                    continue;
                 }
+
+                idx = i;
+                break;
             }
 
-            if (idx == -1) return -1;
+            if (idx == -1)
+            {
+                return -1;
+            }
 
             // Check if power taken in pool
             for (i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset ==
-                    MidsContext.Character.Powersets[idx].nID) return idx;
+                if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset == MidsContext.Character.Powersets[idx].nID)
+                {
+                    return idx;
+                }
             }
 
             return -1;
@@ -250,6 +227,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
                 ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
                 ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
+                ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
             }
             else
             {
@@ -257,13 +235,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
                 ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
                 ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
+                ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
             }
+
+            pbTopMost.DrawImageButton(_myParent?.Drawing, Color.Black, "Keep On Top", KeepOnTop);
+            pbClose.DrawImageButton(_myParent?.Drawing, Color.Black, "Close");
 
             base.Refresh();
         }
 
         private void frmTotalsV2_Load(object sender, EventArgs e)
         {
+            MinimumSize = new Size(636, 788);
+            Size = new Size(636, 788);
             CenterToParent();
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.ItemSize = new Size(0, 1);
@@ -271,8 +255,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Tab control border is 3 px thick, move it a little off to hide it
             // Change the size fixed values so they are the same as in frmTotalsV2_Resize()
             tabControl1.Location = new Point(-3, 19);
-            tabControl1.Size = new Size(ClientSize.Width + 8, ClientSize.Height - 58);
-            
+            tabControl1.Size = new Size(ClientSize.Width + 8, ClientSize.Height - 67);
+
             ctlTotalsTabStrip1.ClearItems();
             for (var i = 0; i < tabControl1.TabPages.Count; i++)
             {
@@ -281,10 +265,55 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             ctlTotalsTabStrip1.Redraw();
 
+            panel1.Size = new Size(620, 697);
+
+            panel2.Location = new Point(0, 705);
+            panel2.Size = ClientSize with {Height = panel2.Height};
+
             Refresh();
             SetTitle(this);
             SetUnitRadioButtons();
             UpdateData();
+        }
+
+        private void frmTotalsV2_Resize(object sender, EventArgs e)
+        {
+            const int tabControlWidthPad = -8;
+            const int tabControlHeightPad = 67;
+            const int graphControlWidthPad = 20;
+            const int pbCloseLocationXPad = 132;
+
+            panel1.Size = new Size(ClientSize.Width, ClientSize.Height - 52);
+
+            panel2.Location = new Point(0, ClientSize.Height - panel2.Height);
+            panel2.Size = ClientSize with {Height = panel2.Height};
+
+            tabControl1.Size = new Size(ClientSize.Width - tabControlWidthPad, ClientSize.Height - tabControlHeightPad);
+
+            graphDef.Width = ClientSize.Width - graphControlWidthPad;
+            graphRes.Width = ClientSize.Width - graphControlWidthPad;
+            graphHP.Width = ClientSize.Width - graphControlWidthPad;
+            graphEnd.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphMovement.Width = ClientSize.Width - graphControlWidthPad;
+            graphPerception.Width = ClientSize.Width - graphControlWidthPad;
+            graphHaste.Width = ClientSize.Width - graphControlWidthPad;
+            graphToHit.Width = ClientSize.Width - graphControlWidthPad;
+            graphAccuracy.Width = ClientSize.Width - graphControlWidthPad;
+            graphDamage.Width = ClientSize.Width - graphControlWidthPad;
+            graphEndRdx.Width = ClientSize.Width - graphControlWidthPad;
+            graphThreat.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphStatusProt.Width = ClientSize.Width - graphControlWidthPad;
+            graphStatusRes.Width = ClientSize.Width - graphControlWidthPad;
+
+            graphDebuffRes.Width = ClientSize.Width - graphControlWidthPad;
+            graphElusivity.Width = ClientSize.Width - graphControlWidthPad;
+
+            pbClose.Location = pbClose.Location with { X = ClientSize.Width - pbCloseLocationXPad };
+
+            // Prevent duplicate headers display (tiling) when stretching window horizontally
+            ctlTotalsTabStrip1.Redraw();
         }
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
@@ -304,80 +333,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Close();
         }
 
-        private void PbClosePaint(object sender, PaintEventArgs e)
+        private void PbTopMostClick(object sender, EventArgs e)
         {
+            KeepOnTop = !KeepOnTop;
+            TopMost = KeepOnTop;
             if (_myParent?.Drawing == null)
             {
                 return;
             }
 
-            var iStr = "Close";
-            var rectangle = new Rectangle();
-            ref var local = ref rectangle;
-            var size = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[2].Size
-                : _myParent.Drawing.bxPower[4].Size;
-            var width = size.Width;
-            var height1 = size.Height;
-            local = new Rectangle(0, 0, width, height1);
-            var destRect = new Rectangle(0, 0, 105, 22);
-            using var stringFormat = new StringFormat();
-            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
-            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
-            extendedBitmap.Graphics.Clear(BackColor);
-            extendedBitmap.Graphics.DrawImage(
-                MidsContext.Character.IsHero()
-                    ? _myParent.Drawing.bxPower[2].Bitmap
-                    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            var height2 = bFont.GetHeight(e.Graphics) + 2;
-            var Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
-            var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
-            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
-        }
-
-        private void PbTopMostClick(object sender, EventArgs e)
-        {
-            KeepOnTop = !KeepOnTop;
-            TopMost = KeepOnTop;
-            pbTopMost.Refresh();
-        }
-
-        private void PbTopMostPaint(object sender, PaintEventArgs e)
-        {
-            if (_myParent?.Drawing == null) return;
-
-            var index = 2;
-            if (KeepOnTop) index = 3;
-            var iStr = "Keep On top";
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-                _myParent.Drawing.bxPower[index].Size.Height);
-            var destRect = new Rectangle(0, 0, 105, 22);
-            using var stringFormat = new StringFormat();
-            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
-            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
-            extendedBitmap.Graphics.Clear(BackColor);
-            if (index == 3)
-            {
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
-                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel);
-            }
-            else
-            {
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
-                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            }
-
-            var height = bFont.GetHeight(e.Graphics) + 2;
-            var Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
-            var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
-            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
+            pbTopMost.DrawImageButton(_myParent?.Drawing, Color.Black, "Keep On Top", KeepOnTop);
         }
 
         #endregion
@@ -798,44 +763,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void ctlTotalsTabStrip1_TabClick(int index)
         {
             tabControl1.SelectedIndex = index;
-        }
-
-        private void frmTotalsV2_Resize(object sender, EventArgs e)
-        {
-            // ClientSize min: 620x846
-
-            const int tabControlWidthPad = -8;
-            const int tabControlHeightPad = 58;
-            const int graphControlWidthPad = 20;
-            const int pbCloseLocationXPad = 132;
-
-            panel1.Size = ClientSize;
-            tabControl1.Size = new Size(ClientSize.Width - tabControlWidthPad, ClientSize.Height - tabControlHeightPad);
-            
-            graphDef.Width = ClientSize.Width - graphControlWidthPad;
-            graphRes.Width = ClientSize.Width - graphControlWidthPad;
-            graphHP.Width = ClientSize.Width - graphControlWidthPad;
-            graphEnd.Width = ClientSize.Width - graphControlWidthPad;
-
-            graphMovement.Width = ClientSize.Width - graphControlWidthPad;
-            graphPerception.Width = ClientSize.Width - graphControlWidthPad;
-            graphHaste.Width = ClientSize.Width - graphControlWidthPad;
-            graphToHit.Width = ClientSize.Width - graphControlWidthPad;
-            graphAccuracy.Width = ClientSize.Width - graphControlWidthPad;
-            graphDamage.Width = ClientSize.Width - graphControlWidthPad;
-            graphEndRdx.Width = ClientSize.Width - graphControlWidthPad;
-            graphThreat.Width = ClientSize.Width - graphControlWidthPad;
-
-            graphStatusProt.Width = ClientSize.Width - graphControlWidthPad;
-            graphStatusRes.Width = ClientSize.Width - graphControlWidthPad;
-
-            graphDebuffRes.Width = ClientSize.Width - graphControlWidthPad;
-            graphElusivity.Width = ClientSize.Width - graphControlWidthPad;
-
-            pbClose.Location = pbClose.Location with {X = ClientSize.Width - pbCloseLocationXPad};
-
-            // Prevent duplicate headers display (tiling) when stretching window horizontally
-            ctlTotalsTabStrip1.Redraw();
         }
     }
 }
