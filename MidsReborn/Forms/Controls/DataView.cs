@@ -745,6 +745,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var rankedEffects = pBase.GetRankedEffects();
+            var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             for (var id = 0; id < rankedEffects.Length; id++)
             {
                 if (rankedEffects[id] <= -1)
@@ -869,6 +870,23 @@ namespace Mids_Reborn.Forms.Controls
 
                                 break;
                             }
+
+                            case Enums.eEffectType.DamageBuff:
+                                var isDefiance = pBase.Effects[rankedEffects[id]].SpecialCase ==
+                                                 Enums.eSpecialCase.Defiance &&
+                                                 pBase.Effects[rankedEffects[id]].ValidateConditional("Active", "Defiance") |
+                                                 MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+                                rankedEffect.Name = isDefiance
+                                    ? "Defiance"
+                                    : ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
+                                        Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.SpecialTip = isDefiance
+                                    ? pBase.Effects[rankedEffects[id]].BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
+                                    : string.Join("\n",
+                                        pBase.Effects
+                                            .Where(e => e.EffectType == Enums.eEffectType.DamageBuff)
+                                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                                break;
 
                             default:
                                 rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
@@ -1671,8 +1689,9 @@ namespace Mids_Reborn.Forms.Controls
                     iList.SetUnique();
                 }
 
-                //original damage buff code (Effects Tab)
+                // Original damage buff code (Effects Tab)
                 var shortFxArray = Power.SplitFX(ref enhSumDmgBuff, ref pEnh);
+                var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
                 for (var index1 = 0; index1 < shortFxArray.Length; index1++)
                 {
                     if (!shortFxArray[index1].Present)
@@ -1680,10 +1699,14 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
-                    var isDefiance = shortFxArray[index1].Index.All(sFx => pEnh.Effects[sFx].SpecialCase == Enums.eSpecialCase.Defiance && pEnh.Effects[sFx].ValidateConditional("active", "defiance"));
+                    var isDefiance = shortFxArray[index1].Index.All(sFx =>
+                        pEnh.Effects[sFx].SpecialCase == Enums.eSpecialCase.Defiance &&
+                        pEnh.Effects[sFx].ValidateConditional("Active", "Defiance") |
+                        MidsContext.Character.CurrentBuild.PowerActive(defiancePower));
+
                     if (isDefiance)
                     {
-                        iList.AddItem(new PairedList.ItemPair("Defiance:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, false, pEnh.Effects[shortFxArray[index1].Index[0]].BuildEffectString(false, "Damage Buff (Defiance)")));
+                        iList.AddItem(new PairedList.ItemPair("Defiance:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, false, pEnh.Effects[shortFxArray[index1].Index[0]].BuildEffectString(false, "DamageBuff (Defiance)")));
                     }
                     else
                     {
@@ -1693,7 +1716,7 @@ namespace Mids_Reborn.Forms.Controls
                         }
                         else if (pEnh.Effects[shortFxArray[index1].Index[0]].ActiveConditionals.Count > 0)
                         {
-                            iList.AddItem(new PairedList.ItemPair("DamageBuff:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("active", "combo"), Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            iList.AddItem(new PairedList.ItemPair("DamageBuff:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("Active", "Combo"), Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                         }
                         else
                         {
