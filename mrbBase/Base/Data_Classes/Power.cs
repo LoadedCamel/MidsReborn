@@ -2708,12 +2708,14 @@ namespace mrbBase.Base.Data_Classes
 
             power = power ??= this;
             var pEffects = new List<IEffect>();
+            var k = 0;
 
             foreach (var fx in power.Effects)
             {
                 if (fx.EffectType != Enums.eEffectType.ExecutePower)
                 {
                     pEffects.Add(fx.Clone<IEffect>());
+                    k++;
                     continue;
                 }
 
@@ -2734,12 +2736,14 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                for (var i = 0; i < subEffects.Count; i++)
+                pEffects.AddRange(subEffects.Select(t => t.Clone<IEffect>()));
+
+                for (var j = k; j < k + subEffects.Count; j++)
                 {
-                    var sFx = subEffects[i];
+                    var sFx = pEffects[j];
                     
                     // Cap effect duration to root power
-                    sFx.nDuration = fx.nDuration > 0 
+                    sFx.nDuration = fx.nDuration > 0
                         ? Math.Min(sFx.nDuration, fx.nDuration)
                         : sFx.nDuration;
                     sFx.DelayedTime += fx.DelayedTime;
@@ -2756,13 +2760,9 @@ namespace mrbBase.Base.Data_Classes
                     {
                         sFx.Ticks = fx.Ticks;
                     }
-
-                    // Re-set power so calls to DatabaseAPI.GetModifier() don't fail and return 1.
-                    // This call may not work and is redone as post-processing in ProcessExecutes().
-                    sFx.SetPower(power);
-
-                    pEffects.Add(sFx.Clone<IEffect>());
                 }
+
+                k += subEffects.Count;
             }
 
             if (rLevel > 0)
