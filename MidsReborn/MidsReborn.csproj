@@ -210,6 +210,7 @@
     <Content Include="Images\Archetypes\Class_Minion_Henchman.png" />
     <Content Include="Images\Archetypes\Class_Minion_Pets.png" />
     <Content Include="Images\Archetypes\Class_Peacebringer.png" />
+	<Content Include="Images\Archetypes\Class_Sentinel.png" />
     <Content Include="Images\Archetypes\Class_Scrapper.png" />
     <Content Include="Images\Archetypes\Class_Stalker.png" />
     <Content Include="Images\Archetypes\Class_Tanker.png" />
