@@ -48,6 +48,8 @@ namespace mrbBase
             "modifier>",
             "powerGroupIn(",
             "powerGroupNotIn(",
+            "powerIs(",
+            "powerIsNot(",
             "eq(",
             "ne(",
             "minmax(",
@@ -85,7 +87,9 @@ namespace mrbBase
                 { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), e => GetVariableValue(e.Groups[1].Value) },
                 { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
                 { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
-                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" }
+                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
+                { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
+                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" }
             };
         }
 
