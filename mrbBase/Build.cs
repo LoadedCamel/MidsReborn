@@ -1123,6 +1123,11 @@ namespace mrbBase
             return false;
         }
 
+        /// <summary>
+        /// Builds a power containing active special enhancement effects from the source power
+        /// </summary>
+        /// <param name="pName">Source power (full name) from current build</param>
+        /// <returns>Power with active set bonuses effects attached. Flattens effects list returned from <see cref="PowerActiveSpecialSetBonuses"/></returns>
         public Power BuildVirtualSetBonusesPower(string pName)
         {
             var power = new Power
@@ -1134,12 +1139,18 @@ namespace mrbBase
             return power;
         }
 
+        /// <summary>
+        /// Builds a list of powers from active special effects on the source power
+        /// </summary>
+        /// <param name="pName">Source power (full name) from current build</param>
+        /// <returns>List of powers matching the active special enhancement effects</returns>
         public List<IPower> PowerActiveSpecialSetBonuses(string pName)
         {
             var pe = Powers
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(e => e.Power != null && e.Power.FullName == pName);
 
+            // PowerEntry -> PowerEntry.Slots -> Dictionary<int:Enhancement index, KeyValuePair<int:Enhancement set index, int:index of enhancement in set>>
             var slottedInSets = pe == null
                 ? new Dictionary<int, KeyValuePair<int, int>>()
                 : pe.Slots.ToDictionary(
@@ -1163,6 +1174,7 @@ namespace mrbBase
                 .SelectMany(e => DatabaseAPI.Database.EnhancementSets[e.Value.Key].SpecialBonus[e.Value.Value].Index.Select(k => DatabaseAPI.Database.Power[k].Clone()))
                 .ToList();
 
+            // Mark all effects as from enhancement
             foreach (var s in activeSetBonuses)
             {
                 foreach (var fx in s.Effects)

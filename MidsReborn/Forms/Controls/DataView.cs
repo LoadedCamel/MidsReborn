@@ -2434,6 +2434,15 @@ namespace Mids_Reborn.Forms.Controls
             return new List<Enums.ShortFX[]> { baseEffects, enhEffects };
         }
 
+        /// <summary>
+        /// Add Mez effects to the effects tab. 
+        /// </summary>
+        /// <param name="sourcePower">Source power to fetch effects from. Can be pBase, pEnh, or a virtual set bonuses power <see cref="Build.BuildVirtualSetBonusesPower"></see></param>
+        /// <param name="iList">Paired list to add items into</param>
+        /// <param name="specialEffects">Set to true if sourcePower is a virtual set bonuses power, otherwise false</param>
+        /// <param name="effectsCount">Number of effects processed</param>
+        /// <param name="iAlternate">Force value to show as enhanced (true) or equal to base (false). Set to null for auto</param>
+        /// <param name="startIndex">Effect index to start processing from. Set to 0 unless processing pEnh effects to avoid duplicates</param>
         private void ProcessMezEffects(IPower sourcePower, ref PairedList iList, bool specialEffects, ref int effectsCount, bool? iAlternate = null, int startIndex = 0)
         {
             var names = Enum.GetNames(typeof(Enums.eMezShort));
@@ -2515,6 +2524,15 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        /// <summary>
+        /// Add MezResist effects to the effects tab
+        /// </summary>
+        ///
+        /// <param name="sourcePower">Source power to fetch effects from. Can be pBase, pEnh, or a virtual set bonuses power <see cref="Build.BuildVirtualSetBonusesPower"></see></param>
+        /// <param name="iList">Paired list to add items into</param>
+        /// <param name="specialEffects">Set to true if sourcePower is a virtual set bonuses power, otherwise false</param>
+        /// <param name="effectsCount">Number of effects processed</param>
+        /// <param name="startIndex">Effect index to start processing from. Set to 0 unless processing pEnh effects to avoid duplicates</param>
         private void ProcessMezResistEffects(IPower sourcePower, ref PairedList iList, bool specialEffects, ref int effectsCount, int startIndex = 0)
         {
             var names = Enum.GetNames(typeof(Enums.eMezShort));
