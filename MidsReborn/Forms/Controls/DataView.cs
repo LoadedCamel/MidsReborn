@@ -2434,117 +2434,131 @@ namespace Mids_Reborn.Forms.Controls
             return new List<Enums.ShortFX[]> { baseEffects, enhEffects };
         }
 
-        private int EffectsStatus(Label iLabel, PairedList iList)
+        private void ProcessMezEffects(IPower sourcePower, ref PairedList iList, bool specialEffects, ref int effectsCount, bool? iAlternate = null, int startIndex = 0)
         {
-            var eMezShort = Enums.eMezShort.None;
-            var shortFx1 = new Enums.ShortFX();
-            var shortFx2 = new Enums.ShortFX();
-            var shortFx3 = new Enums.ShortFX();
-            var shortFx4 = new Enums.ShortFX();
-            var num1 = 0;
-            shortFx1.Assign(pBase.GetEffectMag(Enums.eEffectType.MezResist));
-            shortFx2.Assign(pEnh.GetEffectMag(Enums.eEffectType.MezResist));
-            shortFx3.Assign(pBase.GetEffectMag(Enums.eEffectType.Mez, Enums.eToWho.Unspecified, true));
-            shortFx4.Assign(pEnh.GetEffectMag(Enums.eEffectType.Mez, Enums.eToWho.Unspecified, true));
-            shortFx1.Multiply();
-            shortFx2.Multiply();
-            iList.ValueWidth = 60;
-            if (shortFx1.Present | shortFx3.Present)
+            var names = Enum.GetNames(typeof(Enums.eMezShort));
+            var enhancedPower = specialEffects ? sourcePower : pEnh;
+
+            for (var tagId = startIndex; tagId < sourcePower.Effects.Length; tagId++)
             {
-                if (pBase.AffectsTarget(Enums.eEffectType.MezResist) | pBase.AffectsTarget(Enums.eEffectType.Mez))
+                if (!(sourcePower.Effects[tagId].EffectType == Enums.eEffectType.Mez &
+                      sourcePower.Effects[tagId].Probability > 0 &
+                      sourcePower.Effects[tagId].CanInclude()) || !sourcePower.Effects[tagId].PvXInclude())
                 {
-                    iLabel.Text = @"Status Effects (Target)";
+                    continue;
+                }
+
+                var str = !(sourcePower.Effects[tagId].Duration < 2 | sourcePower.PowerType == Enums.ePowerType.Auto_)
+                    ? $" - {sourcePower.Effects[tagId].Duration:#0.#}s"
+                    : "";
+                if (sourcePower.Effects[tagId].BuffedMag > 0)
+                {
+                    var iAlternate2 = iAlternate ?? Math.Abs(sourcePower.Effects[tagId].Duration - enhancedPower.Effects[tagId].Duration) > float.Epsilon |
+                        !Enums.MezDurationEnhanceable(sourcePower.Effects[tagId].MezType) &
+                        Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
+                    var iValue = (sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
+                        ? "0"
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag)}{str}";
+                    if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                    {
+                        iValue = "0";
+                    }
+
+                    var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
+                    var iItem = new PairedList.ItemPair($"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, iAlternate2,
+                        sourcePower.Effects[tagId].Probability < 1 | sourcePower.Effects[tagId].ValidateConditional("Active", "Combo"),
+                        sourcePower.Effects[tagId].ActiveConditionals.Count > 0, tip);
+                    iList.AddItem(iItem);
+                    if (sourcePower.Effects[tagId].isEnhancementEffect)
+                    {
+                        iList.SetUnique();
+                    }
+                }
+                else if (sourcePower.Effects[tagId].MezType == Enums.eMez.ToggleDrop & sourcePower.Effects[tagId].Probability > 0)
+                {
+                    var iValue = (sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
+                        ? "0%"
+                        : $"{sourcePower.Effects[tagId].Probability * 100}%";
+
+                    var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
+                    var iItem = new PairedList.ItemPair($"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, false,
+                        sourcePower.Effects[tagId].Probability < 1 | sourcePower.Effects[tagId].ValidateConditional("Active", "Combo"),
+                        sourcePower.Effects[tagId].ActiveConditionals.Count > 0, tip);
+                    iList.AddItem(iItem);
+                    if (sourcePower.Effects[tagId].isEnhancementEffect)
+                    {
+                        iList.SetUnique();
+                    }
                 }
                 else
                 {
-                    iLabel.Text = @"Status Effects (Self)";
-                }
-            }
+                    var iAlternate2 = iAlternate ?? Math.Abs(sourcePower.Effects[tagId].Duration - enhancedPower.Effects[tagId].Duration) > float.Epsilon |
+                        !Enums.MezDurationEnhanceable(sourcePower.Effects[tagId].MezType) &
+                        Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
+                    var iValue = (enhancedPower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
+                        ? "0"
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag)}{str}";
 
-            var names = Enum.GetNames(eMezShort.GetType());
-            if (shortFx3.Present)
+                    var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
+                    var iItem = new PairedList.ItemPair(
+                        $"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, iAlternate2,
+                        sourcePower.Effects[tagId].Probability < 1,
+                        sourcePower.Effects[tagId].ActiveConditionals.Count > 0, tip);
+                    iList.AddItem(iItem);
+                    if (sourcePower.Effects[tagId].isEnhancementEffect)
+                    {
+                        iList.SetUnique();
+                    }
+                }
+
+                effectsCount++;
+            }
+        }
+
+        private void ProcessMezResistEffects(IPower sourcePower, ref PairedList iList, bool specialEffects, ref int effectsCount, int startIndex = 0)
+        {
+            var names = Enum.GetNames(typeof(Enums.eMezShort));
+            var enhancedPower = specialEffects ? sourcePower : pEnh;
+            for (var tagId = startIndex; tagId < sourcePower.Effects.Length; tagId++)
             {
-                for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
+                if (!(sourcePower.Effects[tagId].PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE |
+                      sourcePower.Effects[tagId].PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE) ||
+                    !(sourcePower.Effects[tagId].EffectType == Enums.eEffectType.MezResist &
+                      sourcePower.Effects[tagId].Probability > 0))
                 {
-                    if (!(pBase.Effects[iTagID].EffectType == Enums.eEffectType.Mez &
-                          pBase.Effects[iTagID].Probability > 0 &
-                          pBase.Effects[iTagID].CanInclude()) || !pEnh.Effects[iTagID].PvXInclude())
-                    {
-                        continue;
-                    }
-
-                    var str = !(pEnh.Effects[iTagID].Duration < 2 | pBase.PowerType == Enums.ePowerType.Auto_)
-                        ? $" - {pEnh.Effects[iTagID].Duration:#0.#}s"
-                        : "";
-                    if (pBase.Effects[iTagID].BuffedMag > 0)
-                    {
-                        var iAlternate2 =
-                            Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) > float.Epsilon |
-                            !Enums.MezDurationEnhanceable(pBase.Effects[iTagID].MezType) &
-                            Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon;
-                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
-                        if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
-                        {
-                            iValue = "0";
-                        }
-
-                        var tip = GenerateTipFromEffect(pEnh, pEnh.Effects[iTagID]);
-                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2, pBase.Effects[iTagID].Probability < 1 | pBase.Effects[iTagID].ValidateConditional("active", "Combo"), pBase.Effects[iTagID].ActiveConditionals.Count > 0, tip);
-                        iList.AddItem(iItem);
-                        if (pBase.Effects[iTagID].isEnhancementEffect)
-                        {
-                            iList.SetUnique();
-                        }
-                    }
-                    else if (pBase.Effects[iTagID].MezType == Enums.eMez.ToggleDrop & pBase.Effects[iTagID].Probability > 0)
-                    {
-                        var iValue = $"{pBase.Effects[iTagID].Probability * 100}%";
-                        if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
-                        {
-                            iValue = "0%";
-                        }
-
-                        var tip = GenerateTipFromEffect(pEnh, pEnh.Effects[iTagID]);
-                        var iItem = new PairedList.ItemPair($"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, false, pBase.Effects[iTagID].Probability < 1 | pBase.Effects[iTagID].ValidateConditional("active", "Combo"), pBase.Effects[iTagID].ActiveConditionals.Count > 0, tip);
-                        iList.AddItem(iItem);
-                        if (pBase.Effects[iTagID].isEnhancementEffect)
-                        {
-                            iList.SetUnique();
-                        }
-                    }
-                    else
-                    {
-                        var iAlternate2 =
-                            Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) > float.Epsilon |
-                            !Enums.MezDurationEnhanceable(pBase.Effects[iTagID].MezType) &
-                            Math.Abs(pEnh.Effects[iTagID].BuffedMag - (double)pBase.Effects[iTagID].BuffedMag) > float.Epsilon;
-                        var iValue = $"Mag {Utilities.FixDP(pEnh.Effects[iTagID].BuffedMag)}{str}";
-                        if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
-                        {
-                            iValue = "0";
-                        }
-
-                        var tip = GenerateTipFromEffect(pEnh, pEnh.Effects[iTagID]);
-                        var iItem = new PairedList.ItemPair(
-                            $"{CapString(names[(int)pBase.Effects[iTagID].MezType], 7)}:", iValue, iAlternate2,
-                            pBase.Effects[iTagID].Probability < 1,
-                            pBase.Effects[iTagID].ActiveConditionals.Count > 0, tip);
-                        iList.AddItem(iItem);
-                        if (pBase.Effects[iTagID].isEnhancementEffect)
-                        {
-                            iList.SetUnique();
-                        }
-                    }
-
-                    ++num1;
+                    continue;
                 }
-            }
 
-            if (!shortFx1.Present)
-            {
-                return num1;
-            }
+                if (sourcePower.Effects[tagId].ETModifies == Enums.eEffectType.Null)
+                {
+                    continue;
+                }
 
+                var str = enhancedPower.Effects[tagId].Duration >= 15
+                    ? $" - {Utilities.FixDP(enhancedPower.Effects[tagId].Duration)}s"
+                    : "";
+                var iValue = $"{sourcePower.Effects[tagId].MagPercent}%{str}";
+                if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                {
+                    iValue = "0%";
+                }
+
+                var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
+                var iItem = new PairedList.ItemPair(
+                    $"{CapString($"-{names[(int) sourcePower.Effects[tagId].MezType]}", 7)}:", iValue, false, false,
+                    false, tip);
+                iList.AddItem(iItem);
+                if (sourcePower.Effects[tagId].isEnhancementEffect)
+                {
+                    iList.SetUnique();
+                }
+
+                effectsCount++;
+            }
+        }
+
+        private int EffectsStatus(Label iLabel, PairedList iList)
+        {
             if (pEnh.Effects.Length < pBase.Effects.Length)
             {
                 var swappedFX = SwapExtraEffects(pBase.Effects, pEnh.Effects);
@@ -2552,37 +2566,47 @@ namespace Mids_Reborn.Forms.Controls
                 pEnh.Effects = (IEffect[]) swappedFX[1].Clone();
             }
 
-            for (var iTagID = 0; iTagID < pBase.Effects.Length; iTagID++)
+            var sFxBaseMezResist = new Enums.ShortFX();
+            var sFxEnhMezResist = new Enums.ShortFX();
+            var sFxBaseMez = new Enums.ShortFX();
+            var sFxEnhMez = new Enums.ShortFX();
+            var effectsCount = 0;
+            sFxBaseMezResist.Assign(pBase.GetEffectMag(Enums.eEffectType.MezResist));
+            sFxEnhMezResist.Assign(pEnh.GetEffectMag(Enums.eEffectType.MezResist));
+            sFxBaseMez.Assign(pBase.GetEffectMag(Enums.eEffectType.Mez, Enums.eToWho.Unspecified, true));
+            sFxEnhMez.Assign(pEnh.GetEffectMag(Enums.eEffectType.Mez, Enums.eToWho.Unspecified, true));
+            sFxBaseMezResist.Multiply();
+            sFxEnhMezResist.Multiply();
+            iList.ValueWidth = 60;
+            if (sFxBaseMezResist.Present | sFxBaseMez.Present)
             {
-                if (!(pBase.Effects[iTagID].PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE |
-                      pBase.Effects[iTagID].PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE) ||
-                    !(pBase.Effects[iTagID].EffectType == Enums.eEffectType.MezResist &
-                      pBase.Effects[iTagID].Probability > 0))
-                {
-                    continue;
-                }
-
-                var str = (double) pEnh.Effects[iTagID].Duration >= 15
-                    ? $" - {Utilities.FixDP(pEnh.Effects[iTagID].Duration)}s"
-                    : "";
-                var iValue = $"{pBase.Effects[iTagID].MagPercent}%{str}";
-                if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
-                {
-                    iValue = "0%";
-                }
-
-                var tip = GenerateTipFromEffect(pEnh, pEnh.Effects[iTagID]);
-                var iItem = new PairedList.ItemPair($"{CapString($"-{names[(int) pBase.Effects[iTagID].MezType]}", 7)}:", iValue, false, false, false, tip);
-                iList.AddItem(iItem);
-                if (pBase.Effects[iTagID].isEnhancementEffect)
-                {
-                    iList.SetUnique();
-                }
-
-                ++num1;
+                iLabel.Text =
+                    pBase.AffectsTarget(Enums.eEffectType.MezResist) | pBase.AffectsTarget(Enums.eEffectType.Mez)
+                        ? @"Status Effects (Target)"
+                        : @"Status Effects (Self)";
             }
 
-            return num1;
+            if (sFxBaseMez.Present)
+            {
+                ProcessMezEffects(pBase, ref iList, false, ref effectsCount);
+            }
+
+            if (sFxEnhMez.Present)
+            {
+                ProcessMezEffects(pEnh, ref iList, false, ref effectsCount, true, pBase.Effects.Length);
+            }
+
+            if (sFxBaseMezResist.Present)
+            {
+                ProcessMezResistEffects(pBase, ref iList, false, ref effectsCount);
+            }
+
+            if (sFxEnhMezResist.Present)
+            {
+                ProcessMezResistEffects(pEnh, ref iList, false, ref effectsCount, pBase.Effects.Length);
+            }
+
+            return effectsCount;
         }
 
         private int EffectsSummon(Label iLabel, PairedList iList)
@@ -2648,23 +2672,27 @@ namespace Mids_Reborn.Forms.Controls
             effectMagSum.Multiply();
             var flag1 = false;
             var flag2 = false;
-            foreach (var v in effectMagSum.Value)
+            if (effectMagSum.Value != null)
             {
-                switch (v)
+                foreach (var v in effectMagSum.Value)
                 {
-                    case > 0:
-                        flag1 = true;
-                        break;
-                    case < 0:
-                        flag2 = true;
-                        break;
+                    switch (v)
+                    {
+                        case > 0:
+                            flag1 = true;
+                            break;
+                        case < 0:
+                            flag2 = true;
+                            break;
+                    }
                 }
             }
 
             var buffDebuff = !(flag1 & flag2) ? !flag1 ? !flag2 ? 0 : -1 : 1 : 1;
-            var def1 = pBase.GetDef(buffDebuff);
-            var def2 = pEnh.GetDef(buffDebuff);
+            var def1 = pBase.GetDef(buffDebuff).Select(e => e * 100).ToArray();
+            var def2 = pEnh.GetDef(buffDebuff).Select(e => e * 100).ToArray();
             var names = Enum.GetNames(typeof(Enums.eDamage));
+            
             if (pBase.AffectsTarget(Enums.eEffectType.Defense))
             {
                 fx_lblHead1.Text = @"Defense (Target)";
@@ -2673,18 +2701,9 @@ namespace Mids_Reborn.Forms.Controls
             {
                 fx_lblHead1.Text = @"Defense (Self)";
             }
-            //fx_lblHead1.Text = pBase.AffectsTarget(Enums.eEffectType.Defense) ? "Defense (Target)" : "Defense (Self)";
+            
             fx_List1.ValueWidth = 55;
-            for (var index = 0; index < def1.Length; index++)
-            {
-                def1[index] *= 100;
-            }
-
-            for (var index = 0; index < def2.Length; index++)
-            {
-                def2[index] *= 100;
-            }
-
+            
             var defTypes = new List<Enums.eDamage> {
                 Enums.eDamage.Smashing,
                 Enums.eDamage.Lethal,
@@ -2714,8 +2733,9 @@ namespace Mids_Reborn.Forms.Controls
                     effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, defType, true));
                 }
 
-                var dmgIdentifier = (int)defType;
+                var dmgIdentifier = (int) defType;
                 var tip = GenerateTipFromEffect(pEnh, Enums.eEffectType.Defense, defType);
+
                 fx_List1.AddItem(FastItem(names[dmgIdentifier], def1[dmgIdentifier], def2[dmgIdentifier], "%", false, true, false, false, tip));
                 if (sFXCheck(effectMagSum))
                 {
@@ -3960,7 +3980,10 @@ namespace Mids_Reborn.Forms.Controls
         public void SetEnhancement(I9Slot iEnh, int iLevel = -1)
         {
             if (Lock & (TabPage != 3) || iLevel < 0)
+            {
                 return;
+            }
+
             string str1;
             if (iEnh.Enh > -1)
             {
@@ -3976,7 +3999,10 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             if ((iLevel > -1) & !MidsContext.Config.ShowSlotLevels)
-                str1 = str1 + " (Slot Level " + Convert.ToString(iLevel + 1) + ")";
+            {
+                str1 += $" (Slot Level {iLevel + 1})";
+            }
+
             info_Title.Text = str1;
             fx_Title.Text = str1;
             enhNameDisp.Text = str1;

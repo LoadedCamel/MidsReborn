@@ -980,6 +980,13 @@ namespace mrbBase.Base.Data_Classes
                         {
                             sChance += ", Cancels on Miss";
                         }
+
+                        if (ProcsPerMinute > 0)
+                        {
+                            sChance = fromPopup
+                                ? $"{ProcsPerMinute} PPM"
+                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                        }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
                     {
@@ -1009,9 +1016,11 @@ namespace mrbBase.Base.Data_Classes
                             sChance += ", Cancels on Miss";
                         }
 
-                        if (ProcsPerMinute > 0 && fromPopup)
+                        if (ProcsPerMinute > 0)
                         {
-                            sChance = $"{ProcsPerMinute} PPM";
+                            sChance = fromPopup
+                                ? $"{ProcsPerMinute} PPM"
+                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
@@ -1556,8 +1565,9 @@ namespace mrbBase.Base.Data_Classes
                 sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
             }
 
-            // Requires ToHit Check formatting
-            sFinal = sFinal.Replace("( ", "(").Replace("  ", " ");
+            sFinal = sFinal
+                .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
+                .Replace("(, ", "("); // Some Boosts effect with PPM chance and Cancel on Miss
 
             return sFinal;
         }

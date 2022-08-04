@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FastDeepCloner;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
@@ -1120,6 +1121,57 @@ namespace mrbBase
                 MessageBox.Show(@$"{enhancement.LongName} is already slotted in this power. You can only slot one of each enhancement from the set in a given power.", @"Unable To Slot Enhancement");
             }
             return false;
+        }
+
+        public Power BuildVirtualSetBonusesPower(string pName)
+        {
+            var power = new Power
+            {
+                StaticIndex = -1,
+                Effects = PowerActiveSpecialSetBonuses(pName).SelectMany(e => e.Effects).ToArray()
+            };
+
+            return power;
+        }
+
+        public List<IPower> PowerActiveSpecialSetBonuses(string pName)
+        {
+            var pe = Powers
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(e => e.Power != null && e.Power.FullName == pName);
+
+            var slottedInSets = pe == null
+                ? new Dictionary<int, KeyValuePair<int, int>>()
+                : pe.Slots.ToDictionary(
+                    e => e.Enhancement.Enh,
+                    e => new KeyValuePair<int, int>(
+                        e.Enhancement.Enh < 0
+                            ? -1
+                            : DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet,
+                        e.Enhancement.Enh < 0
+                            ? -1
+                            : DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet < 0
+                                ? -1
+                                : Array.FindIndex(
+                                    DatabaseAPI.Database
+                                        .EnhancementSets[DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet]
+                                        .Enhancements, enh => enh == e.Enhancement.Enh)
+                    ));
+
+            var activeSetBonuses = slottedInSets
+                .Where(e => e.Key >= 0 && e.Value.Key >= 0 && e.Value.Value >= 0)
+                .SelectMany(e => DatabaseAPI.Database.EnhancementSets[e.Value.Key].SpecialBonus[e.Value.Value].Index.Select(k => DatabaseAPI.Database.Power[k].Clone()))
+                .ToList();
+
+            foreach (var s in activeSetBonuses)
+            {
+                foreach (var fx in s.Effects)
+                {
+                    fx.isEnhancementEffect = true;
+                }
+            }
+
+            return activeSetBonuses;
         }
 
         public void GenerateSetBonusData()
