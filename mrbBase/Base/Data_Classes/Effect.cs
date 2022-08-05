@@ -957,6 +957,11 @@ namespace mrbBase.Base.Data_Classes
                 if (ProcsPerMinute > 0 && Probability < 0.01)
                 {
                     sChance = $"{ProcsPerMinute} PPM";
+
+                    if (CancelOnMiss)
+                    {
+                        sChance += ", Cancels on Miss";
+                    }
                 }
                 else if (useBaseProbability)
                 {
@@ -971,21 +976,16 @@ namespace mrbBase.Base.Data_Classes
                             sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                         }
 
-                        if (EffectId != "" & EffectId != "Ones")
-                        {
-                            sChance += $"when {EffectId}";
-                        }
-
-                        if (CancelOnMiss)
-                        {
-                            sChance += ", Cancels on Miss";
-                        }
-
                         if (ProcsPerMinute > 0)
                         {
                             sChance = fromPopup
                                 ? $"{ProcsPerMinute} PPM"
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                        }
+
+                        if (CancelOnMiss)
+                        {
+                            sChance += ", Cancels on Miss";
                         }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
@@ -1006,27 +1006,27 @@ namespace mrbBase.Base.Data_Classes
                             sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                         }
 
-                        if (EffectId != "" & EffectId != "Ones")
-                        {
-                            sChance += $"when {EffectId}";
-                        }
-
-                        if (CancelOnMiss)
-                        {
-                            sChance += ", Cancels on Miss";
-                        }
-
                         if (ProcsPerMinute > 0)
                         {
                             sChance = fromPopup
                                 ? $"{ProcsPerMinute} PPM"
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
+
+                        if (CancelOnMiss)
+                        {
+                            sChance += ", Cancels on Miss";
+                        }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
                     {
                         sChance = $"when {EffectId}";
                     }*/
+                }
+
+                if (EffectId != "" & EffectId != "Ones")
+                {
+                    sChance += $"{(sChance != "" ? ", " : "")}when {EffectId}";
                 }
             }
 
