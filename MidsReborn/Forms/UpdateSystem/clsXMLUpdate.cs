@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using mrbBase;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {

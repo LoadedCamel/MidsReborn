@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -54,10 +54,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tbDPSOutput = new System.Windows.Forms.TextBox();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ibAutoMode = new mrbControls.ImageButton();
-            this.ibClear = new mrbControls.ImageButton();
-            this.ibTopmost = new mrbControls.ImageButton();
-            this.ibClose = new mrbControls.ImageButton();
+            this.ibAutoMode = new ImageButton();
+            this.ibClear = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.ibClose = new ImageButton();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -272,7 +272,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibAutoMode.TextOn = "Alt Text";
             this.ibAutoMode.Toggle = false;
             this.ToolTip1.SetToolTip(this.ibAutoMode, "Click to enable Automagical Mode");
-            this.ibAutoMode.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibAutoMode_ButtonClicked);
+            this.ibAutoMode.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibAutoMode_ButtonClicked);
             // 
             // ibClear
             // 
@@ -286,7 +286,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibClear.TextOff = "Clear";
             this.ibClear.TextOn = "Alt Text";
             this.ibClear.Toggle = false;
-            this.ibClear.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibClear_ButtonClicked);
+            this.ibClear.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibClear_ButtonClicked);
             // 
             // ibTopmost
             // 
@@ -300,7 +300,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibTopmost.TextOff = "Keep On Top";
             this.ibTopmost.TextOn = "Keep On Top";
             this.ibTopmost.Toggle = true;
-            this.ibTopmost.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibTopmost_ButtonClicked);
+            this.ibTopmost.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTopmost_ButtonClicked);
             // 
             // ibClose
             // 
@@ -314,7 +314,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibClose.TextOff = "Close";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
-            this.ibClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
+            this.ibClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
             // 
             // frmDPSCalc
             // 

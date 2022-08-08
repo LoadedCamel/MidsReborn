@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Newtonsoft.Json;
 using ContentAlignment = System.Drawing.ContentAlignment;
 

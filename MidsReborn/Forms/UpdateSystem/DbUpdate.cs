@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Xml;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 using static Mids_Reborn.Forms.UpdateSystem.clsXMLUpdate;
 
 namespace Mids_Reborn.Forms.UpdateSystem

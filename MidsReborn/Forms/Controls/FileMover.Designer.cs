@@ -1,4 +1,6 @@
-﻿namespace Mids_Reborn.Forms.Controls
+﻿using Mids_Reborn.Controls;
+
+namespace Mids_Reborn.Forms.Controls
 {
     partial class FileMover
     {
@@ -34,7 +36,7 @@
             this.sourceLabel = new System.Windows.Forms.Label();
             this.destLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ctlProgressBar1 = new mrbControls.ctlProgressBar();
+            this.ctlProgressBar1 = new ctlProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -141,7 +143,7 @@
         private System.Windows.Forms.Label sourceLabel;
         private System.Windows.Forms.Label destLabel;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private mrbControls.ctlProgressBar ctlProgressBar1;
+        private ctlProgressBar ctlProgressBar1;
         private System.Windows.Forms.Panel panel1;
     }
 }

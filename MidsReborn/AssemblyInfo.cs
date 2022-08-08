@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using static mrbBase.Base.Master_Classes.MidsContext;
+using static Mids_Reborn.Core.Base.Master_Classes.MidsContext;
 
 [assembly: CLSCompliant(true)]
 [assembly: AssemblyCompany("LoadedCamel")]

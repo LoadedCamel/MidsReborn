@@ -1,6 +1,6 @@
 ﻿using System;
-using mrbBase.Base.Extensions;
-using mrbBase.Utils;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {

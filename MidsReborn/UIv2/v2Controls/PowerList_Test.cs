@@ -8,8 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.UIv2.v2Controls
 {

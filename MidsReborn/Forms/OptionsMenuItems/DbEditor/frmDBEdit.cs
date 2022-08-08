@@ -5,11 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.JsonImport;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
-using mrbBase.Utils;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {

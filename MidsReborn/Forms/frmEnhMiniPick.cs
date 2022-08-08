@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms
 {

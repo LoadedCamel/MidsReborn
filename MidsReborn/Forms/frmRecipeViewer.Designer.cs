@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -44,18 +44,18 @@ namespace Mids_Reborn.Forms
             this.chkSortByLevel = new System.Windows.Forms.CheckBox();
             this.lblHeader = new System.Windows.Forms.Label();
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.RecipeInfo = new mrbControls.ctlPopUp();
+            this.RecipeInfo = new ctlPopUp();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.chkRecipe = new System.Windows.Forms.CheckBox();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.ibMiniList = new mrbControls.ImageButton();
-            this.ibClipboard = new mrbControls.ImageButton();
-            this.ibTopmost = new mrbControls.ImageButton();
-            this.ibClose = new mrbControls.ImageButton();
-            this.ibEnhCheckMode = new mrbControls.ImageButton();
+            this.ibMiniList = new ImageButton();
+            this.ibClipboard = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.ibClose = new ImageButton();
+            this.ibEnhCheckMode = new ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
@@ -63,13 +63,13 @@ namespace Mids_Reborn.Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
-            this.ctlPopUp1 = new mrbControls.ctlPopUp();
+            this.ctlPopUp1 = new ctlPopUp();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblRewardMerits = new System.Windows.Forms.Label();
-            this.imageButton1 = new mrbControls.ImageButton();
+            this.imageButton1 = new ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();

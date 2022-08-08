@@ -1,4 +1,6 @@
-﻿namespace MRBUpdater
+﻿using MRBUpdater.Controls;
+
+namespace MRBUpdater
 {
     partial class Update
     {
@@ -33,7 +35,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblFileName = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.ctlProgressBar1 = new mrbControls.ctlProgressBar();
+            this.ctlProgressBar1 = new ctlProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -118,7 +120,7 @@
 
         #endregion
 
-        private mrbControls.ctlProgressBar ctlProgressBar1;
+        private ctlProgressBar ctlProgressBar1;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lblFileName;

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using mrbBase;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.UIv2.v2Controls
 {

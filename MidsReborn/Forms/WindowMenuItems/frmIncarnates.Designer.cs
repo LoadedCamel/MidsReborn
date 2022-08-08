@@ -1,4 +1,6 @@
 ﻿
+using Mids_Reborn.Controls;
+
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
     partial class frmIncarnates
@@ -29,24 +31,24 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.OmegaButton = new mrbControls.ImageButton();
-            this.VitaeButton = new mrbControls.ImageButton();
-            this.StanceButton = new mrbControls.ImageButton();
-            this.GenesisButton = new mrbControls.ImageButton();
-            this.hybridBtn = new mrbControls.ImageButton();
-            this.destinyBtn = new mrbControls.ImageButton();
-            this.loreBtn = new mrbControls.ImageButton();
-            this.interfaceBtn = new mrbControls.ImageButton();
-            this.judgementBtn = new mrbControls.ImageButton();
-            this.alphaBtn = new mrbControls.ImageButton();
-            this.PLLeft = new mrbControls.ctlPowerList();
-            this.PLRight = new mrbControls.ctlPowerList();
+            this.OmegaButton = new ImageButton();
+            this.VitaeButton = new ImageButton();
+            this.StanceButton = new ImageButton();
+            this.GenesisButton = new ImageButton();
+            this.hybridBtn = new ImageButton();
+            this.destinyBtn = new ImageButton();
+            this.loreBtn = new ImageButton();
+            this.interfaceBtn = new ImageButton();
+            this.judgementBtn = new ImageButton();
+            this.alphaBtn = new ImageButton();
+            this.PLLeft = new ctlPowerList();
+            this.PLRight = new ctlPowerList();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.PopInfo = new mrbControls.ctlPopUp();
+            this.PopInfo = new ctlPopUp();
             this.lblLock = new System.Windows.Forms.Label();
-            this.ibClose = new mrbControls.ImageButton();
-            this.ctlPanel1 = new mrbControls.ctlPanel();
-            this.ctlPanel2 = new mrbControls.ctlPanel();
+            this.ibClose = new ImageButton();
+            this.ctlPanel1 = new ctlPanel();
+            this.ctlPanel2 = new ctlPanel();
             this.ctlPanel1.SuspendLayout();
             this.ctlPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -311,23 +313,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         #endregion
 
-        private mrbControls.ImageButton OmegaButton;
-        private mrbControls.ImageButton VitaeButton;
-        private mrbControls.ImageButton StanceButton;
-        private mrbControls.ImageButton GenesisButton;
-        private mrbControls.ImageButton hybridBtn;
-        private mrbControls.ImageButton destinyBtn;
-        private mrbControls.ImageButton loreBtn;
-        private mrbControls.ImageButton interfaceBtn;
-        private mrbControls.ImageButton judgementBtn;
-        private mrbControls.ImageButton alphaBtn;
-        private mrbControls.ctlPowerList PLLeft;
-        private mrbControls.ctlPowerList PLRight;
+        private ImageButton OmegaButton;
+        private ImageButton VitaeButton;
+        private ImageButton StanceButton;
+        private ImageButton GenesisButton;
+        private ImageButton hybridBtn;
+        private ImageButton destinyBtn;
+        private ImageButton loreBtn;
+        private ImageButton interfaceBtn;
+        private ImageButton judgementBtn;
+        private ImageButton alphaBtn;
+        private ctlPowerList PLLeft;
+        private ctlPowerList PLRight;
         private System.Windows.Forms.VScrollBar VScrollBar1;
-        private mrbControls.ctlPopUp PopInfo;
+        private ctlPopUp PopInfo;
         private System.Windows.Forms.Label lblLock;
-        private mrbControls.ImageButton ibClose;
-        private mrbControls.ctlPanel ctlPanel1;
-        private mrbControls.ctlPanel ctlPanel2;
+        private ImageButton ibClose;
+        private ctlPanel ctlPanel1;
+        private ctlPanel ctlPanel2;
     }
 }

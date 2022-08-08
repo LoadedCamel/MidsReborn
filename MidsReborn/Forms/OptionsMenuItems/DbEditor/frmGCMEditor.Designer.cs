@@ -1,4 +1,4 @@
-﻿using mrbControls;
+﻿using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -30,7 +30,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.lvModifiers = new mrbControls.ctlListViewColored();
+            this.lvModifiers = new ctlListViewColored();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnRemoveMod = new System.Windows.Forms.Button();
             this.btnAddMod = new System.Windows.Forms.Button();

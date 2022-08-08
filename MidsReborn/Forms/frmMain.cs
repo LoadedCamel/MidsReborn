@@ -15,6 +15,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Win32;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
 using Mids_Reborn.Forms.ImportExportItems;
@@ -22,11 +27,6 @@ using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -86,7 +86,7 @@ namespace Mids_Reborn.Forms
                         ConfigData.Initialize(Serializer.GetSerializer());
                     }
                 }
-                if (!MidsContext.Config.ApplicationRegistered)
+                if (MidsContext.Config is { ApplicationRegistered: false })
                 {
                     RegisterUriScheme();
                 }
@@ -122,11 +122,12 @@ namespace Mids_Reborn.Forms
                 dragdropScenarioAction = new short[20];
                 DoneDblClick = false;
                 DbChangeRequested = false;
+                DisplayApi.FrmMain = this;
             }
             InitializeComponent();
 
             MainInstance = this;
-            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
+            if (MidsContext.Config is { CheckForUpdates: true }) clsXMLUpdate.CheckUpdate(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
@@ -433,8 +434,8 @@ namespace Mids_Reborn.Forms
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;
                 Show();
-                _frmInitializing.Hide();
-                _frmInitializing.Close();
+                _frmInitializing?.Hide();
+                _frmInitializing?.Close();
                 Refresh();
                 if (comLoad)
                 {

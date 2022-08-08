@@ -1,6 +1,6 @@
 ﻿using System;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.Forms
 {

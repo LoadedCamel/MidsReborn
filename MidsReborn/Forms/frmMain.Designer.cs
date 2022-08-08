@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Mids_Reborn.Controls;
 using Mids_Reborn.Forms.Controls;
-using mrbControls;
 
 namespace Mids_Reborn.Forms
 {
@@ -195,7 +195,7 @@ namespace Mids_Reborn.Forms
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.pbDynMode = new System.Windows.Forms.PictureBox();
-            this.pnlGFX = new mrbControls.pnlGFX();
+            this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
             this.lblOrigin = new GFXLabel();
@@ -1997,7 +1997,7 @@ namespace Mids_Reborn.Forms
             this.sbMode.TabIndex = 122;
             this.sbMode.ForeColor = Color.White;
             this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
-            this.sbMode.SwitchedState = mrbControls.SwitchButton.SwitchState.None;
+            this.sbMode.SwitchedState = SwitchButton.SwitchState.None;
             this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
             this.sbMode.Click += new EventHandler(this.sbMode_ButtonClicked);
             // 

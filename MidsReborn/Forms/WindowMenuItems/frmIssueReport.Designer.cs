@@ -1,4 +1,5 @@
 ﻿using System;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -37,7 +38,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tBName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.rTBIssue = new System.Windows.Forms.RichTextBox();
-            this.iBSubmit = new mrbControls.ImageButton();
+            this.iBSubmit = new ImageButton();
             this.label4 = new System.Windows.Forms.Label();
             this.cBOS = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -125,7 +126,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.iBSubmit.TextOff = "SUBMIT";
             this.iBSubmit.TextOn = "Alt Text";
             this.iBSubmit.Toggle = false;
-            this.iBSubmit.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.iBSubmit_ButtonClicked);
+            this.iBSubmit.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.iBSubmit_ButtonClicked);
             // 
             // label4
             // 
@@ -226,7 +227,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private System.Windows.Forms.TextBox tBName;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox rTBIssue;
-        private mrbControls.ImageButton iBSubmit;
+        private ImageButton iBSubmit;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cBOS;
         private System.Windows.Forms.Label label5;

@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Display;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {

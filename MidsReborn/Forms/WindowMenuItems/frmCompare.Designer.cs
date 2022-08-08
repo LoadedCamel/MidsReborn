@@ -1,7 +1,7 @@
 
 using System.ComponentModel;
-using mrbBase;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -50,9 +50,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.chkMatching = new System.Windows.Forms.CheckBox();
             this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.btnTweakMatch = new System.Windows.Forms.Button();
-            this.chkOnTop = new mrbControls.ImageButton();
-            this.btnClose = new mrbControls.ImageButton();
-            this.Graph = new mrbControls.ctlMultiGraph();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
+            this.Graph = new ctlMultiGraph();
             this.GroupBox4 = new System.Windows.Forms.GroupBox();
             this.lstDisplay = new System.Windows.Forms.ListBox();
             this.GroupBox1.SuspendLayout();
@@ -226,7 +226,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.chkOnTop.TextOff = "Keep On Top";
             this.chkOnTop.TextOn = "Keep On Top";
             this.chkOnTop.Toggle = true;
-            this.chkOnTop.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.chkOnTop_CheckedChanged);
+            this.chkOnTop.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.chkOnTop_CheckedChanged);
             // 
             // btnClose
             // 
@@ -242,7 +242,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnClose.TextOff = "Close";
             this.btnClose.TextOn = "Close";
             this.btnClose.Toggle = false;
-            this.btnClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnClose_ButtonClicked);
+            this.btnClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.btnClose_ButtonClicked);
             // 
             // Graph
             // 
@@ -288,7 +288,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.ScaleIndex = 8;
             this.Graph.ShowScale = false;
             this.Graph.Size = new System.Drawing.Size(484, 468);
-            this.Graph.Style = mrbBase.Enums.GraphStyle.Twin;
+            this.Graph.Style = Enums.GraphStyle.Twin;
             this.Graph.TabIndex = 1;
             this.Graph.TextWidth = 120;
             this.Graph.Load += new System.EventHandler(this.Graph_Load);

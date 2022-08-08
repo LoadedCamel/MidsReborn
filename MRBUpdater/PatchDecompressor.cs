@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using mrbBase.Utils;
 
 namespace MRBUpdater
 {
@@ -16,6 +15,13 @@ namespace MRBUpdater
         public event ProgressEventHandler? ProgressUpdate;
         //public event EventHandler<ProgressEventArgs> ProgressUpdate;
         public event EventHandler<ErrorEventArgs>? ErrorUpdate;
+
+        public struct FileData
+        {
+            public string FileName { get; set; }
+            public byte[] Data { get; set; }
+            public string Path { get; set; }
+        }
 
         public static void CleanOldEntries(string extractPath)
         {

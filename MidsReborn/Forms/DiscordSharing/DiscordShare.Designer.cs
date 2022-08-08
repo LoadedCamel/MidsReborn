@@ -1,4 +1,5 @@
-﻿using Mids_Reborn.Forms.Controls;
+﻿using Mids_Reborn.Controls;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.DiscordSharing
 {
@@ -62,7 +63,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.ctlAvatar1 = new mrbControls.ctlAvatar();
+            this.ctlAvatar1 = new ctlAvatar();
             this.lblDiscriminator = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
@@ -736,7 +737,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblUsername;
-        private mrbControls.ctlAvatar ctlAvatar1;
+        private ctlAvatar ctlAvatar1;
         private System.Windows.Forms.Label lblDiscriminator;
         private System.Windows.Forms.ComboBox channelCombo;
         private System.Windows.Forms.ComboBox serverCombo;

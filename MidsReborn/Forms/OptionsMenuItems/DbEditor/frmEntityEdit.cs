@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbBase;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {

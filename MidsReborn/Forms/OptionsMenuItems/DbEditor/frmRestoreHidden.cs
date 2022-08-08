@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Extensions;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Extensions;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {

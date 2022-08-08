@@ -8,7 +8,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using mrbBase.Utils;
 
 namespace MRBUpdater
 {
@@ -16,7 +15,7 @@ namespace MRBUpdater
     {
         private BackgroundWorker UpdateWorker;
         private PatchDecompressor PatchDecompressor;
-        private List<FileData> DecompressedData;
+        private List<PatchDecompressor.FileData> DecompressedData;
         private string UpdatePath { get; set; }
         private string VersionText { get; set; }
         private int ParentPid { get; set; }

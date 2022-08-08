@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
-using mrbControls.Extensions;
+using Mids_Reborn.Controls.Extensions;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {

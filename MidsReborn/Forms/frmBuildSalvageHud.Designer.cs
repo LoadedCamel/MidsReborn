@@ -1,4 +1,6 @@
 ﻿
+using Mids_Reborn.Controls;
+
 namespace Mids_Reborn.Forms
 {
     partial class frmBuildSalvageHud
@@ -36,7 +38,7 @@ namespace Mids_Reborn.Forms
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblEnhObtained = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ibClose = new mrbControls.ImageButton();
+            this.ibClose = new ImageButton();
             this.pSalvageSummary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -133,7 +135,7 @@ namespace Mids_Reborn.Forms
             this.ibClose.TextOff = "Exit check mode";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
-            this.ibClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
+            this.ibClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
             // 
             // frmBuildSalvageHud
             // 
@@ -163,6 +165,6 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblEnhObtained;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private mrbControls.ImageButton ibClose;
+        private ImageButton ibClose;
     }
 }

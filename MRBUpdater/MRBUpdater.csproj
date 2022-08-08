@@ -30,10 +30,11 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mrbBase\mrbBase.csproj" />
-    <ProjectReference Include="..\mrbControls\mrbControls.csproj" />
+    <Content Include="reborn.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="reborn.ico" />
+    <Compile Update="Controls\ctlProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

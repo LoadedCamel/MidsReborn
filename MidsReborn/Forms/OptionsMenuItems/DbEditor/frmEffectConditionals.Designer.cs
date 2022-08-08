@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Forms;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -37,17 +38,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
-            this.lvConditionalOp = new mrbControls.ctlListViewColored();
+            this.lvConditionalOp = new ctlListViewColored();
             this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
-            this.lvActiveConditionals = new mrbControls.ctlListViewColored();
+            this.lvActiveConditionals = new ctlListViewColored();
             this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-            this.lvConditionalBool = new mrbControls.ctlListViewColored();
+            this.lvConditionalBool = new ctlListViewColored();
             this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            this.lvConditionalType = new mrbControls.ctlListViewColored();
+            this.lvConditionalType = new ctlListViewColored();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.lvSubConditional = new mrbControls.ctlListViewColored();
+            this.lvSubConditional = new ctlListViewColored();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.btnOkay = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -303,19 +304,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox2;
-        private mrbControls.ctlListViewColored lvConditionalOp;
+        private ctlListViewColored lvConditionalOp;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.Button removeConditional;
         private System.Windows.Forms.Button addConditional;
-        private mrbControls.ctlListViewColored lvActiveConditionals;
+        private ctlListViewColored lvActiveConditionals;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader6;
-        private mrbControls.ctlListViewColored lvConditionalBool;
+        private ctlListViewColored lvConditionalBool;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private mrbControls.ctlListViewColored lvConditionalType;
+        private ctlListViewColored lvConditionalType;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private mrbControls.ctlListViewColored lvSubConditional;
+        private ctlListViewColored lvSubConditional;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnOkay;
         private System.Windows.Forms.Button btnCancel;

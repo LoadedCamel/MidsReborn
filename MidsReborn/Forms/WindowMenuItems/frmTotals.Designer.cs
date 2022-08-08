@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -38,13 +39,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lblRes = new System.Windows.Forms.Label();
             this.lblRegenRec = new System.Windows.Forms.Label();
             this.pnlDRHE = new System.Windows.Forms.Panel();
-            this.graphMaxEnd = new mrbControls.ctlMultiGraph();
-            this.graphHP = new mrbControls.ctlMultiGraph();
-            this.graphDef = new mrbControls.ctlMultiGraph();
-            this.graphDrain = new mrbControls.ctlMultiGraph();
-            this.graphRes = new mrbControls.ctlMultiGraph();
-            this.graphRec = new mrbControls.ctlMultiGraph();
-            this.graphRegen = new mrbControls.ctlMultiGraph();
+            this.graphMaxEnd = new ctlMultiGraph();
+            this.graphHP = new ctlMultiGraph();
+            this.graphDef = new ctlMultiGraph();
+            this.graphDrain = new ctlMultiGraph();
+            this.graphRes = new ctlMultiGraph();
+            this.graphRec = new ctlMultiGraph();
+            this.graphRegen = new ctlMultiGraph();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.pnlMisc = new System.Windows.Forms.Panel();
             this.rbMSec = new System.Windows.Forms.RadioButton();
@@ -52,28 +53,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.rbKPH = new System.Windows.Forms.RadioButton();
             this.rbMPH = new System.Windows.Forms.RadioButton();
             this.lblStealth = new System.Windows.Forms.Label();
-            this.graphStealth = new mrbControls.ctlMultiGraph();
-            this.graphAcc = new mrbControls.ctlMultiGraph();
-            this.graphToHit = new mrbControls.ctlMultiGraph();
+            this.graphStealth = new ctlMultiGraph();
+            this.graphAcc = new ctlMultiGraph();
+            this.graphToHit = new ctlMultiGraph();
             this.lblMisc = new System.Windows.Forms.Label();
-            this.graphMovement = new mrbControls.ctlMultiGraph();
+            this.graphMovement = new ctlMultiGraph();
             this.lblMovement = new System.Windows.Forms.Label();
-            this.graphHaste = new mrbControls.ctlMultiGraph();
+            this.graphHaste = new ctlMultiGraph();
             this.Panel2 = new System.Windows.Forms.Panel();
-            this.graphElusivity = new mrbControls.ctlMultiGraph();
-            this.graphThreat = new mrbControls.ctlMultiGraph();
-            this.graphEndRdx = new mrbControls.ctlMultiGraph();
-            this.graphDam = new mrbControls.ctlMultiGraph();
+            this.graphElusivity = new ctlMultiGraph();
+            this.graphThreat = new ctlMultiGraph();
+            this.graphEndRdx = new ctlMultiGraph();
+            this.graphDam = new ctlMultiGraph();
             this.tab1 = new System.Windows.Forms.PictureBox();
             this.tab0 = new System.Windows.Forms.PictureBox();
             this.pbTopMost = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pnlStatus = new System.Windows.Forms.Panel();
-            this.graphSRes = new mrbControls.ctlMultiGraph();
+            this.graphSRes = new ctlMultiGraph();
             this.lblSRes = new System.Windows.Forms.Label();
-            this.graphSDeb = new mrbControls.ctlMultiGraph();
+            this.graphSDeb = new ctlMultiGraph();
             this.lblSDeb = new System.Windows.Forms.Label();
-            this.graphSProt = new mrbControls.ctlMultiGraph();
+            this.graphSProt = new ctlMultiGraph();
             this.lblSProt = new System.Windows.Forms.Label();
             this.tab2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -180,7 +181,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMaxEnd.ScaleIndex = 8;
             this.graphMaxEnd.ShowScale = false;
             this.graphMaxEnd.Size = new System.Drawing.Size(300, 15);
-            this.graphMaxEnd.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphMaxEnd.Style = Enums.GraphStyle.baseOnly;
             this.graphMaxEnd.TabIndex = 7;
             this.graphMaxEnd.TextWidth = 125;
             // 
@@ -226,7 +227,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHP.ScaleIndex = 8;
             this.graphHP.ShowScale = false;
             this.graphHP.Size = new System.Drawing.Size(300, 15);
-            this.graphHP.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphHP.Style = Enums.GraphStyle.baseOnly;
             this.graphHP.TabIndex = 9;
             this.graphHP.TextWidth = 125;
             // 
@@ -272,7 +273,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.ScaleIndex = 8;
             this.graphDef.ShowScale = false;
             this.graphDef.Size = new System.Drawing.Size(300, 152);
-            this.graphDef.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphDef.Style = Enums.GraphStyle.baseOnly;
             this.graphDef.TabIndex = 0;
             this.graphDef.TextWidth = 125;
             // 
@@ -318,7 +319,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDrain.ScaleIndex = 8;
             this.graphDrain.ShowScale = false;
             this.graphDrain.Size = new System.Drawing.Size(300, 15);
-            this.graphDrain.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphDrain.Style = Enums.GraphStyle.baseOnly;
             this.graphDrain.TabIndex = 8;
             this.graphDrain.TextWidth = 125;
             // 
@@ -364,7 +365,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.ScaleIndex = 8;
             this.graphRes.ShowScale = false;
             this.graphRes.Size = new System.Drawing.Size(300, 116);
-            this.graphRes.Style = mrbBase.Enums.GraphStyle.Stacked;
+            this.graphRes.Style = Enums.GraphStyle.Stacked;
             this.graphRes.TabIndex = 2;
             this.graphRes.TextWidth = 125;
             // 
@@ -410,7 +411,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRec.ScaleIndex = 8;
             this.graphRec.ShowScale = false;
             this.graphRec.Size = new System.Drawing.Size(300, 15);
-            this.graphRec.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphRec.Style = Enums.GraphStyle.baseOnly;
             this.graphRec.TabIndex = 6;
             this.graphRec.TextWidth = 125;
             // 
@@ -456,7 +457,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRegen.ScaleIndex = 8;
             this.graphRegen.ShowScale = false;
             this.graphRegen.Size = new System.Drawing.Size(300, 15);
-            this.graphRegen.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphRegen.Style = Enums.GraphStyle.baseOnly;
             this.graphRegen.TabIndex = 4;
             this.graphRegen.TextWidth = 125;
             // 
@@ -586,7 +587,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStealth.ScaleIndex = 8;
             this.graphStealth.ShowScale = false;
             this.graphStealth.Size = new System.Drawing.Size(300, 46);
-            this.graphStealth.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphStealth.Style = Enums.GraphStyle.baseOnly;
             this.graphStealth.TabIndex = 12;
             this.graphStealth.TextWidth = 125;
             // 
@@ -632,7 +633,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAcc.ScaleIndex = 8;
             this.graphAcc.ShowScale = false;
             this.graphAcc.Size = new System.Drawing.Size(300, 15);
-            this.graphAcc.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphAcc.Style = Enums.GraphStyle.baseOnly;
             this.graphAcc.TabIndex = 10;
             this.graphAcc.TextWidth = 125;
             // 
@@ -678,7 +679,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.ScaleIndex = 8;
             this.graphToHit.ShowScale = false;
             this.graphToHit.Size = new System.Drawing.Size(300, 15);
-            this.graphToHit.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphToHit.Style = Enums.GraphStyle.baseOnly;
             this.graphToHit.TabIndex = 9;
             this.graphToHit.TextWidth = 125;
             // 
@@ -734,7 +735,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMovement.ScaleIndex = 8;
             this.graphMovement.ShowScale = false;
             this.graphMovement.Size = new System.Drawing.Size(300, 61);
-            this.graphMovement.Style = mrbBase.Enums.GraphStyle.Stacked;
+            this.graphMovement.Style = Enums.GraphStyle.Stacked;
             this.graphMovement.TabIndex = 2;
             this.graphMovement.TextWidth = 125;
             // 
@@ -790,7 +791,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHaste.ScaleIndex = 8;
             this.graphHaste.ShowScale = false;
             this.graphHaste.Size = new System.Drawing.Size(300, 15);
-            this.graphHaste.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphHaste.Style = Enums.GraphStyle.baseOnly;
             this.graphHaste.TabIndex = 7;
             this.graphHaste.TextWidth = 125;
             // 
@@ -848,7 +849,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.ScaleIndex = 8;
             this.graphElusivity.ShowScale = false;
             this.graphElusivity.Size = new System.Drawing.Size(300, 15);
-            this.graphElusivity.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphElusivity.Style = Enums.GraphStyle.baseOnly;
             this.graphElusivity.TabIndex = 14;
             this.graphElusivity.TextWidth = 125;
             // 
@@ -894,7 +895,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.ScaleIndex = 8;
             this.graphThreat.ShowScale = false;
             this.graphThreat.Size = new System.Drawing.Size(300, 15);
-            this.graphThreat.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphThreat.Style = Enums.GraphStyle.baseOnly;
             this.graphThreat.TabIndex = 13;
             this.graphThreat.TextWidth = 125;
             // 
@@ -940,7 +941,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.ScaleIndex = 8;
             this.graphEndRdx.ShowScale = false;
             this.graphEndRdx.Size = new System.Drawing.Size(300, 15);
-            this.graphEndRdx.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphEndRdx.Style = Enums.GraphStyle.baseOnly;
             this.graphEndRdx.TabIndex = 12;
             this.graphEndRdx.TextWidth = 125;
             // 
@@ -986,7 +987,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDam.ScaleIndex = 8;
             this.graphDam.ShowScale = false;
             this.graphDam.Size = new System.Drawing.Size(300, 15);
-            this.graphDam.Style = mrbBase.Enums.GraphStyle.Stacked;
+            this.graphDam.Style = Enums.GraphStyle.Stacked;
             this.graphDam.TabIndex = 11;
             this.graphDam.TextWidth = 125;
             // 
@@ -1089,7 +1090,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSRes.ScaleIndex = 8;
             this.graphSRes.ShowScale = false;
             this.graphSRes.Size = new System.Drawing.Size(300, 136);
-            this.graphSRes.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphSRes.Style = Enums.GraphStyle.baseOnly;
             this.graphSRes.TabIndex = 14;
             this.graphSRes.TextWidth = 125;
             // 
@@ -1145,7 +1146,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSDeb.ScaleIndex = 8;
             this.graphSDeb.ShowScale = false;
             this.graphSDeb.Size = new System.Drawing.Size(300, 88);
-            this.graphSDeb.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphSDeb.Style = Enums.GraphStyle.baseOnly;
             this.graphSDeb.TabIndex = 12;
             this.graphSDeb.TextWidth = 125;
             // 
@@ -1201,7 +1202,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSProt.ScaleIndex = 8;
             this.graphSProt.ShowScale = false;
             this.graphSProt.Size = new System.Drawing.Size(300, 136);
-            this.graphSProt.Style = mrbBase.Enums.GraphStyle.baseOnly;
+            this.graphSProt.Style = Enums.GraphStyle.baseOnly;
             this.graphSProt.TabIndex = 2;
             this.graphSProt.TextWidth = 125;
             // 

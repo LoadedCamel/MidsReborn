@@ -1,6 +1,6 @@
 using System.ComponentModel;
-using mrbBase;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms
 {
@@ -44,9 +44,9 @@ namespace Mids_Reborn.Forms
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.cbValues = new System.Windows.Forms.ComboBox();
             this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new mrbControls.ctlMultiGraph();
-            this.chkOnTop = new mrbControls.ImageButton();
-            this.btnClose = new mrbControls.ImageButton();
+            this.Graph = new ctlMultiGraph();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
             this.SuspendLayout();
             // 
@@ -197,7 +197,7 @@ namespace Mids_Reborn.Forms
             this.Graph.ScaleIndex = 7;
             this.Graph.ShowScale = false;
             this.Graph.Size = new System.Drawing.Size(484, 398);
-            this.Graph.Style = mrbBase.Enums.GraphStyle.Stacked;
+            this.Graph.Style = Enums.GraphStyle.Stacked;
             this.Graph.TabIndex = 0;
             this.Graph.TextWidth = 100;
             // 

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
 using RestSharp;
 using static Mids_Reborn.Forms.DiscordSharing.Structs;
 
