@@ -1280,6 +1280,11 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
+            if (Ticks > 0)
+            {
+                sMag = $"{Ticks} x {sMag}";
+            }
+
             switch (EffectType)
             {
                 case Enums.eEffectType.Elusivity:
@@ -1292,10 +1297,6 @@ namespace mrbBase.Base.Data_Classes
                         sSubEffect = grouped ? "%VALUE%" : Enum.GetName(DamageType.GetType(), DamageType);
                         if (EffectType == Enums.eEffectType.Damage)
                         {
-                            if (Ticks > 0)
-                            {
-                                sMag = $"{Ticks} x {sMag}";
-                            }
                             sBuild = $"{sMag} {sSubEffect} {sEffect}{sTarget}{sDuration}";
                         }
                         else
@@ -1391,10 +1392,6 @@ namespace mrbBase.Base.Data_Classes
                 case Enums.eEffectType.HitPoints:
                     if (!noMag)
                     {
-                        if (Ticks > 0)
-                        {
-                            sMag = $"{Ticks} x {sMag}";
-                        }
                         if (Aspect == Enums.eAspect.Cur)
                         {
                             sBuild = $"{Utilities.FixDP(BuffedMag * 100)}% {sEffect}{sTarget}{sDuration}";
@@ -1447,7 +1444,7 @@ namespace mrbBase.Base.Data_Classes
                     }
                     else
                     {
-                        tSummon = " " + Summon;
+                        tSummon = $" {Summon}";
                     }
                     sBuild = $"{sEffect}{tSummon}{sTarget}{(Duration > 9999 ? "" : sDuration)}";
                     break;
@@ -1526,20 +1523,25 @@ namespace mrbBase.Base.Data_Classes
                 sExtra2 = BuildCs(sResist, sExtra2);
                 if (!string.IsNullOrEmpty(sPvx))
                 {
-                    sExtra = !string.IsNullOrEmpty(sSpecial) ? BuildCs(sPvx + ", if " + sSpecial, sExtra, resistPresent) : BuildCs(sPvx, sExtra, resistPresent);
-                    sExtra2 = !string.IsNullOrEmpty(sConditional) ? BuildCs(sPvx + ", if " + sConditional, sExtra2, resistPresent) : BuildCs(sPvx, sExtra2, resistPresent);
+                    sExtra = !string.IsNullOrEmpty(sSpecial) ? BuildCs($"{sPvx}, if {sSpecial}", sExtra, resistPresent) : BuildCs(sPvx, sExtra, resistPresent);
+                    sExtra2 = !string.IsNullOrEmpty(sConditional) ? BuildCs($"{sPvx}, if {sConditional}", sExtra2, resistPresent) : BuildCs(sPvx, sExtra2, resistPresent);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(sSpecial))
-                        sExtra = BuildCs("if " + sSpecial, sExtra);
+                    {
+                        sExtra = BuildCs($"if {sSpecial}", sExtra);
+                    }
+
                     if (!string.IsNullOrEmpty(sConditional))
-                        sExtra2 = BuildCs("if " + sConditional, sExtra2);
+                    {
+                        sExtra2 = BuildCs($"if {sConditional}", sExtra2);
+                    }
                 }
                 sExtra = BuildCs(sToHit, sExtra);
-                sExtra = " (" + sExtra + ")";
+                sExtra = $" ({sExtra})";
                 sExtra2 = BuildCs(sToHit, sExtra2);
-                sExtra2 = " (" + sExtra2 + ")";
+                sExtra2 = $" ({sExtra2})";
                 if (AttribType == Enums.eAttribType.Expression)
                 {
                     if (!editorDisplay && !dvDisplay)
@@ -1553,7 +1555,10 @@ namespace mrbBase.Base.Data_Classes
 
             sExtra = BuildCs(sNearGround, sExtra);
 
-            if (sExtra.Equals(" ()")) { sExtra = ""; }
+            if (sExtra.Equals(" ()"))
+            {
+                sExtra = "";
+            }
 
             var sFinal = string.Empty;
             if (AttribType == Enums.eAttribType.Expression && editorDisplay)
@@ -1567,8 +1572,8 @@ namespace mrbBase.Base.Data_Classes
 
             sFinal = sFinal
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
-                .Replace("(, ", "("); // Some Boosts effect with PPM chance and Cancel on Miss
-
+                .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
+                .Replace(" , ", ", "); // xx% chance , when something
             return sFinal;
         }
 
