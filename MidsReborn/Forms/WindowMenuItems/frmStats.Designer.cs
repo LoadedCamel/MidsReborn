@@ -1,8 +1,6 @@
 using System.ComponentModel;
-using Mids_Reborn.Controls;
-using Mids_Reborn.Core;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmStats
     {
@@ -44,9 +42,9 @@ namespace Mids_Reborn.Forms
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.cbValues = new System.Windows.Forms.ComboBox();
             this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new ctlMultiGraph();
-            this.chkOnTop = new ImageButton();
-            this.btnClose = new ImageButton();
+            this.Graph = new Mids_Reborn.Controls.ctlMultiGraph();
+            this.chkOnTop = new Mids_Reborn.Controls.ImageButton();
+            this.btnClose = new Mids_Reborn.Controls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
             this.SuspendLayout();
             // 
@@ -158,13 +156,13 @@ namespace Mids_Reborn.Forms
             this.Graph.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.Graph.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Graph.BackgroundImage")));
             this.Graph.BaseBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.BaseBarColors")));
-            this.Graph.Border = true;
+            this.Graph.Border = false;
             this.Graph.BorderColor = System.Drawing.Color.Black;
             this.Graph.Clickable = false;
             this.Graph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
             this.Graph.ColorBase = System.Drawing.Color.Blue;
             this.Graph.ColorEnh = System.Drawing.Color.Yellow;
-            this.Graph.ColorFadeEnd = System.Drawing.Color.Red;
+            this.Graph.ColorFadeEnd = System.Drawing.Color.DarkRed;
             this.Graph.ColorFadeStart = System.Drawing.Color.Black;
             this.Graph.ColorHighlight = System.Drawing.Color.White;
             this.Graph.ColorLines = System.Drawing.Color.Black;
@@ -172,6 +170,7 @@ namespace Mids_Reborn.Forms
             this.Graph.ColorMarkerOuter = System.Drawing.Color.Yellow;
             this.Graph.ColorOvercap = System.Drawing.Color.Cyan;
             this.Graph.DifferentiateColors = false;
+            this.Graph.DrawRuler = true;
             this.Graph.Dual = true;
             this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
             this.Graph.Font = new System.Drawing.Font("Arial", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -193,11 +192,12 @@ namespace Mids_Reborn.Forms
             this.Graph.PaddingX = 2F;
             this.Graph.PaddingY = 4F;
             this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
+            this.Graph.RulerPos = Mids_Reborn.Controls.ctlMultiGraph.RulerPosition.Top;
             this.Graph.ScaleHeight = 16;
             this.Graph.ScaleIndex = 7;
             this.Graph.ShowScale = false;
             this.Graph.Size = new System.Drawing.Size(484, 398);
-            this.Graph.Style = Enums.GraphStyle.Stacked;
+            this.Graph.Style = Mids_Reborn.Core.Enums.GraphStyle.Stacked;
             this.Graph.TabIndex = 0;
             this.Graph.TextWidth = 100;
             // 

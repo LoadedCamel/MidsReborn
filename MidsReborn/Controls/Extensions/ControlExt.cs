@@ -1,14 +1,23 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Core.Base.Master_Classes;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.Controls.Extensions
 {
     public static class ControlExt
     {
+        /// <summary>
+        /// Transforms a compatible control (usually Panel or PictureBox but can be any) into an image button.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="drawing">clsDrawX link, needed to fetch pre-loaded button background images</param>
+        /// <param name="backColor">Color to fill the background with</param>
+        /// <param name="label">Button text</param>
+        /// <param name="active">'Pressed' state for the button</param>
+        /// <remarks>Graphics once drawn are sent to the control BackgroundImage bitmap.</remarks>
         public static void DrawImageButton(this Control target, clsDrawX drawing, Color backColor, string label, bool active = false)
         {
             if (drawing == null)
@@ -35,7 +44,7 @@ namespace Mids_Reborn.Controls.Extensions
                 new SKRect(0, 0, target.Width, target.Height),
                 new SKPaint { ColorFilter = colorFilter });
 
-            s.Canvas.DrawOutlineText(label, new SKPoint(target.Width / 2f, target.Height / 2f), SKColors.WhiteSmoke, SKTextAlign.Center, VerticalAlignment.Center, 255, 13, 3, true);
+            s.Canvas.DrawOutlineText(label, new SKRect(0, 0, target.Width, target.Height), SKColors.WhiteSmoke, eHTextAlign.Center, eVTextAlign.Middle, 255, 13, 3, true);
 
             target.BackgroundImage = s.Snapshot().ToBitmap();
         }

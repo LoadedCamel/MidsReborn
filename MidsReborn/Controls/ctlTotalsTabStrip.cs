@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls.Extensions;
+using Mids_Reborn.Core;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
@@ -165,24 +166,26 @@ namespace Mids_Reborn.Controls
             {
                 var item = Items[i];
                 textPaint.MeasureText(item, ref textRect);
+                var cellRect = new SKRect(x, 0, x + textRect.Width + 2 * _ItemPadding, Height - 1);
 
                 if (i == _SelectedItem)
                 {
-                    s.Canvas.DrawRect(x, 0, x + textRect.Width + 2 * _ItemPadding, Height - 1, activeTabPaint);
+                    s.Canvas.DrawRect(cellRect, activeTabPaint);
                 }
                 else if (i == _HighlightedItem)
                 {
-                    s.Canvas.DrawRect(x, 0, x + textRect.Width + 2 * _ItemPadding, Height - 1, inactiveHoveredTabPaint);
+                    s.Canvas.DrawRect(cellRect, inactiveHoveredTabPaint);
                 }
                 else
                 {
-                    s.Canvas.DrawRect(x, 0, x + textRect.Width + 2 * _ItemPadding, Height - 1, inactiveTabPaint);
+                    s.Canvas.DrawRect(cellRect, inactiveTabPaint);
                 }
 
                 x += _ItemPadding;
                 if (OutlineText)
                 {
-                    s.Canvas.DrawOutlineText(Items[i], new SKPoint(x, Height / 2f + 4), ForeColor.ToSKColor(), SKTextAlign.Left, 255, fontSize);
+                    
+                    s.Canvas.DrawOutlineText(Items[i], cellRect, ForeColor.ToSKColor(), Enums.eHTextAlign.Center, Enums.eVTextAlign.Middle, 255, fontSize);
                 }
                 else
                 {
