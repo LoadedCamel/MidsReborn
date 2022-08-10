@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmSetListing_Load;
             InitializeComponent();
             Name = nameof(frmSetListing);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetListing));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetListing));
             Icon = Resources.reborn;
         }
 
@@ -28,14 +28,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var items = new string[7];
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[idx];
-            items[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
+            items[0] = $"{enhancementSet.DisplayName} ({enhancementSet.ShortName})";
             items[1] = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).ShortName;
-            items[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
-            items[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
-            items[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);
+            items[2] = $"{enhancementSet.LevelMin + 1}";
+            items[3] = $"{enhancementSet.LevelMax + 1}";
+            items[4] = $"{enhancementSet.Enhancements.Length}";
             var num1 = 0;
-            var num2 = enhancementSet.Bonus.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < enhancementSet.Bonus.Length; index++)
             {
                 if (enhancementSet.Bonus[index].Index.Length > 0)
                 {
@@ -43,7 +42,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
-            items[5] = Convert.ToString(num1);
+            items[5] = $"{num1}";
 
             var setContainsPvPfx = false;
             for (var i = 0; i < enhancementSet.Bonus.Length; i++)
@@ -296,29 +295,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void FillImageList()
         {
             var imageSize1 = ilSets.ImageSize;
-            var width1 = imageSize1.Width;
-            imageSize1 = ilSets.ImageSize;
-            var height1 = imageSize1.Height;
-            using var extendedBitmap = new ExtendedBitmap(width1, height1);
+            using var extendedBitmap = new ExtendedBitmap(imageSize1.Width, imageSize1.Height);
             ilSets.Images.Clear();
-            var num = DatabaseAPI.Database.EnhancementSets.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            foreach (var es in DatabaseAPI.Database.EnhancementSets)
             {
-                if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
+                if (es.ImageIdx > -1)
                 {
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancementSet(ref graphics, DatabaseAPI.Database.EnhancementSets[index].ImageIdx);
+                    I9Gfx.DrawEnhancementSet(ref graphics, es.ImageIdx);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
                 {
                     var images = ilSets.Images;
                     var imageSize2 = ilSets.ImageSize;
-                    var width2 = imageSize2.Width;
-                    imageSize2 = ilSets.ImageSize;
-                    var height2 = imageSize2.Height;
-                    var bitmap = new Bitmap(width2, height2);
+                    var bitmap = new Bitmap(imageSize2.Width, imageSize2.Height);
                     images.Add(bitmap);
                 }
             }
