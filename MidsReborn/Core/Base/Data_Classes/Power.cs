@@ -2883,11 +2883,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             foreach (var pvMode in pvModes)
             {
-                // Select distinct mag from effects
-                var effectIdentifiers = Effects
+                // Select identifiers from effects
+                var effectIdentifiers2 = Effects
                     .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
                     .Select(e => e.GenerateIdentifier())
-                    .Distinct();
+                    .ToList();
+
+                // Distinct() with custom comparer
+                var effectIdentifiers = new List<EffectIdentifier>();
+                foreach (var fxId2 in effectIdentifiers2)
+                {
+                    if (effectIdentifiers.Any(e => e.Compare(fxId2)))
+                    {
+                        continue;
+                    }
+
+                    effectIdentifiers.Add(fxId2);
+                }
 
                 var pvxEffects = new List<string>();
                 foreach (var effectId in effectIdentifiers)
@@ -2929,7 +2941,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     pvxEffects.Add(effectsInMode);
                 }
 
-                pvxEffects = pvxEffects.Distinct().ToList();
                 if (pvxEffects.Count <= 0)
                 {
                     continue;
