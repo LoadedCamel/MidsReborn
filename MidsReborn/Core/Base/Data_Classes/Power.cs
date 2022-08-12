@@ -2775,6 +2775,137 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return null;
         }
 
+        /// <summary>
+        /// Build effects tooltip matching effectType from current power.
+        /// If power holds all vectors from effectType and all have the same BuffedMag value (rounded to 3 decimals),
+        /// then it will show for the stat name groupName instead.
+        /// If effect holds Any, PvE and PvP effects (at least 2 of these), display will be separated in PvX groups.
+        /// </summary>
+        /// <param name="effectType">Type of effect to match against</param>
+        /// <param name="groupName">Group name to display for "All" effects. Usually it is effectType + " (All)"</param>
+        /// <param name="includeEnhEffects">Include effects from enhancements (if any). Default is false.</param>
+        /// <remarks>For Defense, it will include Toxic defense if necessary <seealso cref="DatabaseAPI.RealmUsesToxicDef"/></remarks>
+        /// <returns>Tooltip string for the power effects</returns>
+        /// <example>BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Defense, "Defense (All)") on Steamy Mist:
+        /// 3.75% Defense (All) to Self for 2.25 seconds (when Buff_Def)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// </example>
+        /// <example>
+        /// BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Resistance, "Resistance (All)") on Steamy Mist:
+        /// 15% Resistance (Fire) to Self for 2.25 seconds (when Res_Dmg)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// 15% Resistance (Cold) to Self for 2.25 seconds (when Res_Dmg)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// 15% Resistance (Energy) to Self for 2.25 seconds (when Res_Dmg)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// </example>
+        /// <example>
+        /// BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Defense, "Defense (All)") on Combat Jumping:
+        /// 2.13% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvE)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// ---------------------
+        /// 2.13% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvP)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// </example>
+        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName, bool includeEnhEffects = false)
+        {
+            var damageVectors = effectType switch
+            {
+                Enums.eEffectType.Resistance => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic
+                },
+
+                Enums.eEffectType.Defense when !DatabaseAPI.RealmUsesToxicDef() => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                },
+
+                _ => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                }
+            };
+
+            var pvxEffects = string.Empty;
+            var pvModes = new List<Enums.ePvX> { Enums.ePvX.Any, Enums.ePvX.PvE, Enums.ePvX.PvP };
+
+            foreach (var pvMode in pvModes)
+            {
+                // Select distinct damage vectors from effects of the specified kind
+                var effectsVectors = Effects
+                    .Where(e => e.EffectType == effectType && e.PvMode == pvMode)
+                    .Select(e => e.DamageType)
+                    .Distinct();
+
+                // Check if effects contains all the effectType vectors (listed above)
+                // Check if all BuffedMag have the same value (rounded to 3 decimals to avoid epsilon differences)
+                var effectsInMode = string.Empty;
+                if (!damageVectors.Except(effectsVectors).Any() &&
+                    !Effects
+                        .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
+                        .Select(e => Math.Round(e.BuffedMag, 3))
+                        .Distinct()
+                        .Skip(1)
+                        .Any())
+                {
+                    effectsInMode = Effects
+                        .First(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
+                        .BuildEffectString(false, groupName, false, false, false, true);
+                }
+                else
+                {
+                    // Pick all matching effects
+                    effectsInMode = string.Join("\n",
+                        Effects
+                            .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                }
+
+                effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
+                if (string.IsNullOrEmpty(effectsInMode))
+                {
+                    continue;
+                }
+
+                pvxEffects += (!string.IsNullOrEmpty(pvxEffects) ? "\n---------------------\n" : "") + effectsInMode;
+            }
+
+            return pvxEffects;
+        }
+
         public override string ToString()
         {
             return DisplayName;

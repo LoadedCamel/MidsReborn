@@ -294,5 +294,7 @@ namespace Mids_Reborn.Core
         bool AllowedForClass(int classId);
 
         void ProcessExecutes();
+
+        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName, bool includeEnhEffects = false);
     }
 }

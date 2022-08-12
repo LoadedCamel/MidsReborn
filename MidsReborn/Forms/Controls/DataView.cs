@@ -624,6 +624,7 @@ namespace Mids_Reborn.Forms.Controls
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
+            
             info_DataList.Clear();
             var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
@@ -671,38 +672,37 @@ namespace Mids_Reborn.Forms.Controls
                     suffix2 += "*";
                 }
 
-                if ((Math.Abs(accuracy1 - (double)accuracy2) > float.Epsilon) &
-                    (Math.Abs(num2 - (double)accuracy2) > float.Epsilon))
+                if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) &
+                    (Math.Abs(num2 - accuracy2) > float.Epsilon))
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)DatabaseAPI.ServerData.BaseToHit):##0.00000}x{str}";
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), enhancedPower.Accuracy * 100f, suffix2, tip2));
+                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100, enhancedPower.Accuracy * 100, suffix2, tip2));
                 }
                 else
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0),
-                        (float)(DatabaseAPI.ServerData.BaseToHit * (double)pBase.Accuracy * 100.0), suffix2, tip2));
+                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100,
+                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100, suffix2, tip2));
                 }
             }
             else
             {
-                info_DataList.AddItem(new PairedList.ItemPair(string.Empty, string.Empty, false, false, false,
-                    string.Empty));
+                info_DataList.AddItem(new PairedList.ItemPair(string.Empty, string.Empty, false, false, false, string.Empty));
             }
 
             info_DataList.AddItem(FastItem(ShortStr("Recharge", "Rchg"), pBase.RechargeTime, enhancedPower.RechargeTime, "s"));
-            var s1 = 0.0f;
-            var s2 = 0.0f;
+            var s1 = 0f;
+            var s2 = 0f;
             var durationEffectId = pBase.GetDurationEffectID();
             if (durationEffectId > -1)
             {
                 if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate) &
-                    (pBase.Effects[durationEffectId].Duration >= 9999.0))
+                    (pBase.Effects[durationEffectId].Duration >= 9999))
                 {
-                    s1 = 0.0f;
-                    s2 = 0.0f;
+                    s1 = 0f;
+                    s2 = 0f;
                 }
                 else
                 {
@@ -716,8 +716,8 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, string.Empty));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
-                : FastItem("Radius", pBase.Radius, enhancedPower.Radius, string.Empty));
-            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {pBase.CastTime}\r\nArcana CastTime: {(float)(Math.Ceiling(enhancedPower.CastTime / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
+                : FastItem("Radius", pBase.Radius, enhancedPower.Radius, "ft"));
+            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {pBase.CastTime}s\r\nArcana CastTime: {(Math.Ceiling(enhancedPower.CastTime / 0.132f) + 1) * 0.132:####0.###}s", false, true, false, false, 3));
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
@@ -730,18 +730,14 @@ namespace Mids_Reborn.Forms.Controls
             {
                 info_DataList.AddItem(new PairedList.ItemPair("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
-                    pBase.Effects[durationEffectId].Probability < 1.0,
+                    pBase.Effects[durationEffectId].Probability < 1,
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
 
-                var iAlternate =
-                    Math.Abs(pBase.Effects[durationEffectId].BuffedMag -
-                             (double)enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon;
-
                 info_DataList.AddItem(new PairedList.ItemPair("Mag:",
-                    Convert.ToString(enhancedPower.Effects[durationEffectId].BuffedMag, CultureInfo.InvariantCulture),
-                    iAlternate,
-                    pBase.Effects[durationEffectId].Probability < 1.0));
+                    $"{enhancedPower.Effects[durationEffectId].BuffedMag}",
+                    Math.Abs(pBase.Effects[durationEffectId].BuffedMag - enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon,
+                    pBase.Effects[durationEffectId].Probability < 1));
             }
 
             var rankedEffects = pBase.GetRankedEffects();
@@ -762,7 +758,7 @@ namespace Mids_Reborn.Forms.Controls
                 // if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
                 //     continue;
 
-                if (!((pBase.Effects[rankedEffects[id]].Probability > 0.0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
+                if (!((pBase.Effects[rankedEffects[id]].Probability > 0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
                 {
                     continue;
                 }
@@ -808,20 +804,7 @@ namespace Mids_Reborn.Forms.Controls
                                 else
                                 {
                                     rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
-                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                    {
-                                        rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                    }
-
-                                    if (rankedEffect.Value.StartsWith("Pets_"))
-                                    {
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                    }
-
-                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                    {
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
-                                    }
+                                    rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
                                 }
 
                                 break;
@@ -831,8 +814,7 @@ namespace Mids_Reborn.Forms.Controls
                                 rankedEffect.Name = "Grant";
                                 if (pBase.Effects[rankedEffects[id]].nSummon > -1)
                                 {
-                                    rankedEffect.Value = DatabaseAPI.Database
-                                        .Power[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
+                                    rankedEffect.Value = DatabaseAPI.Database.Power[pBase.Effects[rankedEffects[id]].nSummon].DisplayName;
                                 }
 
                                 break;
@@ -840,9 +822,8 @@ namespace Mids_Reborn.Forms.Controls
 
                             case Enums.eEffectType.CombatModShift:
                             {
-                                var magSign = pBase.Effects[rankedEffects[id]].Mag > 0 ? "+" : "";
                                 rankedEffect.Name = "LvlShift";
-                                rankedEffect.Value = $"{magSign}{pBase.Effects[rankedEffects[id]].Mag:##0.##}";
+                                rankedEffect.Value = $"{(pBase.Effects[rankedEffects[id]].Mag > 0 ? "+" : "")}{pBase.Effects[rankedEffects[id]].Mag:##0.##}";
 
                                 break;
                             }
@@ -858,22 +839,14 @@ namespace Mids_Reborn.Forms.Controls
                                 else
                                 {
                                     rankedEffect.Value = pBase.Effects[rankedEffects[id]].Summon;
-                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                        rankedEffect.Value =
-                                            rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Pets_"))
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                        rankedEffect.Value =
-                                            rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                    rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
                                 }
 
                                 break;
                             }
 
                             case Enums.eEffectType.DamageBuff:
-                                var isDefiance = pBase.Effects[rankedEffects[id]].SpecialCase ==
-                                                 Enums.eSpecialCase.Defiance &&
+                                var isDefiance = pBase.Effects[rankedEffects[id]].SpecialCase == Enums.eSpecialCase.Defiance &&
                                                  pBase.Effects[rankedEffects[id]].ValidateConditional("Active", "Defiance") |
                                                  MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
                                 rankedEffect.Name = isDefiance
@@ -886,6 +859,17 @@ namespace Mids_Reborn.Forms.Controls
                                         pBase.Effects
                                             .Where(e => e.EffectType == Enums.eEffectType.DamageBuff)
                                             .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                                break;
+
+                            case Enums.eEffectType.Resistance:
+                            case Enums.eEffectType.Defense:
+                            case Enums.eEffectType.Elusivity:
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
+                                    Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+
+                                rankedEffect.SpecialTip = (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType,
+                                    $"{pBase.Effects[rankedEffects[id]].EffectType} (All)");
+
                                 break;
 
                             default:
