@@ -2813,6 +2813,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
         /// </example>
+        /// <example>
+        ///BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Resistance, "Resistance (All)") on Shriek:
+        /// -9% Resistance (All) to Target for 8 seconds [Ignore Enhancements & Buffs]
+        /// -6% Resistance (All) to Target for 10 seconds [Ignore Enhancements & Buffs]
+        /// </example>
         public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName, bool includeEnhEffects = false)
         {
             var damageVectors = effectType switch
@@ -2859,51 +2864,68 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             };
 
-            var pvxEffects = string.Empty;
+            var effectsList = string.Empty;
             var pvModes = new List<Enums.ePvX> { Enums.ePvX.Any, Enums.ePvX.PvE, Enums.ePvX.PvP };
 
             foreach (var pvMode in pvModes)
             {
-                // Select distinct damage vectors from effects of the specified kind
-                var effectsVectors = Effects
-                    .Where(e => e.EffectType == effectType && e.PvMode == pvMode)
-                    .Select(e => e.DamageType)
+                // Select distinct mag from effects
+                var effectMags = Effects
+                    .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
+                    .Select(e => Math.Round(e.BuffedMag, 3))
                     .Distinct();
 
-                // Check if effects contains all the effectType vectors (listed above)
-                // Check if all BuffedMag have the same value (rounded to 3 decimals to avoid epsilon differences)
-                var effectsInMode = string.Empty;
-                if (!damageVectors.Except(effectsVectors).Any() &&
-                    !Effects
-                        .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
-                        .Select(e => Math.Round(e.BuffedMag, 3))
-                        .Distinct()
-                        .Skip(1)
-                        .Any())
+                var pvxEffects = string.Empty;
+                foreach (var effectMag in effectMags)
                 {
-                    effectsInMode = Effects
-                        .First(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
-                        .BuildEffectString(false, groupName, false, false, false, true);
-                }
-                else
-                {
-                    // Pick all matching effects
-                    effectsInMode = string.Join("\n",
-                        Effects
-                            .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
-                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                    // Select distinct damage vectors from effects of the specified kind
+                    var effectsVectors = Effects.Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                        .Select(e => e.DamageType)
+                        .Distinct();
+
+                    // Check if effects contains all the effectType vectors (listed above)
+                    // Check if all BuffedMag have the same value (rounded to 3 decimals to avoid epsilon differences)
+                    var effectsInMode = string.Empty;
+                    if (!damageVectors.Except(effectsVectors).Any() &&
+                        !Effects
+                            .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                            .Select(e => Math.Round(e.BuffedMag, 3))
+                            .Distinct()
+                            .Skip(1)
+                            .Any())
+                    {
+                        effectsInMode = Effects
+                            .First(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                            .BuildEffectString(false, groupName, false, false, false, true);
+                    }
+                    else
+                    {
+                        // Pick all matching effects
+                        effectsInMode = string.Join("\n",
+                            Effects
+                                .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                                .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                    }
+
+                    effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
+                    if (string.IsNullOrEmpty(effectsInMode))
+                    {
+                        continue;
+                    }
+
+                    pvxEffects += (!string.IsNullOrEmpty(pvxEffects) ? "\n" : "") + effectsInMode;
                 }
 
-                effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
-                if (string.IsNullOrEmpty(effectsInMode))
+                pvxEffects = pvxEffects.Trim();
+                if (string.IsNullOrEmpty(pvxEffects))
                 {
                     continue;
                 }
-
-                pvxEffects += (!string.IsNullOrEmpty(pvxEffects) ? "\n---------------------\n" : "") + effectsInMode;
+                
+                effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + pvxEffects.Trim();
             }
 
-            return pvxEffects;
+            return effectsList;
         }
 
         public override string ToString()
