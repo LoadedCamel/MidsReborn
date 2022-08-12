@@ -713,7 +713,7 @@ namespace Mids_Reborn.Forms.Controls
 
             info_DataList.AddItem(FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
 
-            info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, string.Empty));
+            info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
                 : FastItem("Radius", pBase.Radius, enhancedPower.Radius, "ft"));
@@ -735,7 +735,7 @@ namespace Mids_Reborn.Forms.Controls
                     durationEffectId));
 
                 info_DataList.AddItem(new PairedList.ItemPair("Mag:",
-                    $"{enhancedPower.Effects[durationEffectId].BuffedMag}",
+                    $"{enhancedPower.Effects[durationEffectId].BuffedMag:####0.##}",
                     Math.Abs(pBase.Effects[durationEffectId].BuffedMag - enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon,
                     pBase.Effects[durationEffectId].Probability < 1));
             }
@@ -855,10 +855,8 @@ namespace Mids_Reborn.Forms.Controls
                                         Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = isDefiance
                                     ? pBase.Effects[rankedEffects[id]].BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                                    : string.Join("\n",
-                                        pBase.Effects
-                                            .Where(e => e.EffectType == Enums.eEffectType.DamageBuff)
-                                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                                    : (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType,
+                                        $"{pBase.Effects[rankedEffects[id]].EffectType} (All)");
                                 break;
 
                             case Enums.eEffectType.Resistance:

@@ -2786,13 +2786,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         /// <param name="includeEnhEffects">Include effects from enhancements (if any). Default is false.</param>
         /// <remarks>For Defense, it will include Toxic defense if necessary <seealso cref="DatabaseAPI.RealmUsesToxicDef"/></remarks>
         /// <returns>Tooltip string for the power effects</returns>
-        /// <example>BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Defense, "Defense (All)") on Steamy Mist:
+        /// <example>BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense, "Defense (All)") on Steamy Mist:
         /// 3.75% Defense (All) to Self for 2.25 seconds (when Buff_Def)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
         /// </example>
         /// <example>
-        /// BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Resistance, "Resistance (All)") on Steamy Mist:
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance, "Resistance (All)") on Steamy Mist:
         /// 15% Resistance (Fire) to Self for 2.25 seconds (when Res_Dmg)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
@@ -2804,7 +2804,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         ///   Suppressed when Mezzed.
         /// </example>
         /// <example>
-        /// BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Defense, "Defense (All)") on Combat Jumping:
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense, "Defense (All)") on Combat Jumping:
         /// 2.13% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvE)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
@@ -2814,7 +2814,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         ///   Suppressed when Mezzed.
         /// </example>
         /// <example>
-        ///BuildTooltipStringAllVectorsEffects(power, Enums.eEffectType.Resistance, "Resistance (All)") on Shriek:
+        ///BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance, "Resistance (All)") on Shriek:
         /// -9% Resistance (All) to Target for 8 seconds [Ignore Enhancements & Buffs]
         /// -6% Resistance (All) to Target for 10 seconds [Ignore Enhancements & Buffs]
         /// </example>
@@ -2822,7 +2822,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var damageVectors = effectType switch
             {
-                Enums.eEffectType.Resistance => new List<Enums.eDamage>
+                Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff => new List<Enums.eDamage>
                 {
                     Enums.eDamage.Smashing,
                     Enums.eDamage.Lethal,

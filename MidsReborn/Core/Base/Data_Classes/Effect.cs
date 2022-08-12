@@ -1167,6 +1167,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sDuration += " ";
                 }
 
+                if (EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup)
+                {
+                    sDuration += ": ";
+                }
+
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                 {
                     sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && MezType is Enums.eMez.Knockback or Enums.eMez.Knockup ? ": " : "")}";
@@ -1282,7 +1287,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (Ticks > 0)
             {
-                sMag = $"{Ticks} x {sMag}";
+                sMag = EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
+                    ? $"{sMag} x {Ticks}"
+                    : $"{Ticks} x {sMag}";
             }
 
             switch (EffectType)
