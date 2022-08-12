@@ -3029,6 +3029,33 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }*/
         }
+
+        public EffectIdentifier GenerateIdentifier()
+        {
+            return new EffectIdentifier
+            {
+                Mag = BuffedMag,
+                EffectType = EffectType,
+                ETModifies = ETModifies,
+                ToWho = ToWho,
+                PvMode = PvMode,
+                Suppression = Suppression,
+                Conditionals = ActiveConditionals,
+                IgnoreScaling = IgnoreScaling,
+                IgnoreED = IgnoreED,
+                Buffable = Buffable,
+                Probability = Probability,
+                Duration = Duration,
+                Ticks = Ticks,
+                SpecialCase = SpecialCase,
+                Stacking = Stacking,
+                RequiresToHitCheck = RequiresToHitCheck,
+                CancelOnMiss = CancelOnMiss,
+                Resistible = Resistible,
+                DelayedTime = DelayedTime,
+                PPM = ProcsPerMinute
+            };
+        }
     }
 
     public class KeyValue<TKey, TValue>
@@ -3048,5 +3075,59 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public bool Validated { get; set; }
+    }
+
+    public struct EffectIdentifier
+    {
+        public float Mag;
+        public Enums.eEffectType EffectType;
+        public Enums.eEffectType ETModifies;
+        public Enums.eToWho ToWho;
+        public Enums.ePvX PvMode;
+        public Enums.eSuppress Suppression;
+        public List<KeyValue<string, string>> Conditionals;
+        public bool IgnoreScaling;
+        public bool IgnoreED;
+        public bool Buffable;
+        public float Probability;
+        public float Duration;
+        public int Ticks;
+        public Enums.eSpecialCase SpecialCase;
+        public Enums.eStacking Stacking;
+        public bool RequiresToHitCheck;
+        public bool CancelOnMiss;
+        public bool Resistible;
+        public float DelayedTime;
+        public float PPM;
+
+        /// <summary>
+        /// Compare an EffectIdentifier instance against another.
+        /// </summary>
+        /// <remarks>Only atomic fields are taken in account here, comparing conditionals yields to aberrant results</remarks>
+        /// <param name="target">The other EffectIdentifier instance to compare with.</param>
+        /// <returns>true if all atomic fields are equals, false otherwise. For floats, they're considered equals when distance is below float.Epsilon .</returns>
+        public bool Compare(EffectIdentifier target)
+        {
+            return Math.Abs(Math.Round(Mag, 3) - Math.Round(target.Mag, 3)) < float.Epsilon &
+                   EffectType == target.EffectType &
+                   ETModifies == target.ETModifies &
+                   ToWho == target.ToWho &
+                   PvMode == target.PvMode &
+                   Suppression == target.Suppression &
+                   IgnoreScaling == target.IgnoreScaling &
+                   IgnoreED == target.IgnoreED &
+                   Buffable == target.Buffable &
+                   Math.Abs(Probability - target.Probability) < float.Epsilon &
+                   Math.Abs(Duration - target.Duration) < float.Epsilon &
+                   Ticks == target.Ticks &
+                   SpecialCase == target.SpecialCase &
+                   Stacking == target.Stacking &
+                   RequiresToHitCheck == target.RequiresToHitCheck &
+                   CancelOnMiss == target.CancelOnMiss &
+                   Resistible == target.Resistible &
+                   Math.Abs(DelayedTime - target.DelayedTime) < float.Epsilon &
+                   Math.Abs(PPM - target.PPM) < float.Epsilon;
+            //Conditionals.Equals(target.Conditionals);
+        }
     }
 }

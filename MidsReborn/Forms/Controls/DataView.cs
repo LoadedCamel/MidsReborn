@@ -855,8 +855,7 @@ namespace Mids_Reborn.Forms.Controls
                                         Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = isDefiance
                                     ? pBase.Effects[rankedEffects[id]].BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                                    : (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType,
-                                        $"{pBase.Effects[rankedEffects[id]].EffectType} (All)");
+                                    : (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType);
                                 break;
 
                             case Enums.eEffectType.Resistance:
@@ -865,15 +864,33 @@ namespace Mids_Reborn.Forms.Controls
                                 rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
                                     Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
 
-                                rankedEffect.SpecialTip = (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType,
-                                    $"{pBase.Effects[rankedEffects[id]].EffectType} (All)");
+                                rankedEffect.SpecialTip = (pEnh ?? pBase).BuildTooltipStringAllVectorsEffects(pBase.Effects[rankedEffects[id]].EffectType);
 
                                 break;
 
+                            //case Enums.eEffectType.ToHit:
                             default:
+                                rankedEffect.Value = $"{pEnh.Effects[rankedEffects[id]].BuffedMag * (pEnh.Effects[rankedEffects[id]].DisplayPercentage ? 100 : 1):####0.##}{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? "%" : "")}";
+                                rankedEffect.Value += pEnh.Effects[rankedEffects[id]].ToWho switch
+                                {
+                                    Enums.eToWho.Self => " (Self)",
+                                    Enums.eToWho.Target => " (Tgt)",
+                                    _ => ""
+                                };
+
+                                rankedEffect.AlternateColour = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag - pBase.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
                                 rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
                                     Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
+
                                 break;
+
+                            /*default:
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
+                                    Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
+                                
+                                break;*/
                         }
                     }
                     else

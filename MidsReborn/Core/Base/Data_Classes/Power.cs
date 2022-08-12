@@ -2777,49 +2777,63 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         /// <summary>
         /// Build effects tooltip matching effectType from current power.
-        /// If power holds all vectors from effectType and all have the same BuffedMag value (rounded to 3 decimals),
+        /// If power holds all vectors from effectType and all have the same <see cref="EffectIdentifier"/> key,
         /// then it will show for the stat name groupName instead.
         /// If effect holds Any, PvE and PvP effects (at least 2 of these), display will be separated in PvX groups.
+        /// If effective vectors have less (or equal) than 3 members, it will show up as "All but ..." instead.
         /// </summary>
         /// <param name="effectType">Type of effect to match against</param>
-        /// <param name="groupName">Group name to display for "All" effects. Usually it is effectType + " (All)"</param>
+        /// <param name="groupName">Group name to display for "All" effects. Usually it is effectType + " (All)" - this is the default value if set to blank.</param>
         /// <param name="includeEnhEffects">Include effects from enhancements (if any). Default is false.</param>
         /// <remarks>For Defense, it will include Toxic defense if necessary <seealso cref="DatabaseAPI.RealmUsesToxicDef"/></remarks>
         /// <returns>Tooltip string for the power effects</returns>
-        /// <example>BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense, "Defense (All)") on Steamy Mist:
-        /// 3.75% Defense (All) to Self for 2.25 seconds (when Buff_Def)
+        /// <example>
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance) on Shriek:
+        /// -9% Resistance (All) to Target for 8 seconds [Ignore Enhancements & Buffs]
+        /// Effect does not stack from same caster
+        /// -6% Resistance (All) to Target for 10 seconds [Ignore Enhancements & Buffs]
+        /// Effect does not stack from same caster
+        /// </example>
+        /// <example>
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance) on Steamy Mist:
+        /// 23.43% Resistance (Fire, Cold, Energy) to Self for 2.25 seconds (when Res_Dmg)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
         /// </example>
         /// <example>
-        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance, "Resistance (All)") on Steamy Mist:
-        /// 15% Resistance (Fire) to Self for 2.25 seconds (when Res_Dmg)
-        ///   Effect does not stack from same caster
-        ///   Suppressed when Mezzed.
-        /// 15% Resistance (Cold) to Self for 2.25 seconds (when Res_Dmg)
-        ///   Effect does not stack from same caster
-        ///   Suppressed when Mezzed.
-        /// 15% Resistance (Energy) to Self for 2.25 seconds (when Res_Dmg)
-        ///   Effect does not stack from same caster
-        ///   Suppressed when Mezzed.
-        /// </example>
-        /// <example>
-        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense, "Defense (All)") on Combat Jumping:
-        /// 2.13% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvE)
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense) on Combat Jumping:
+        /// 3.12% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvE)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
         /// ---------------------
-        /// 2.13% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvP)
+        /// 3.12% Defense (All) to Self for 0.75 seconds (when Buff_Def, in PvP)
+        ///   Effect does not stack from same caster
+        /// </example>
+        /// <example>
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance) on Dark Embrace:
+        /// 31.34% Resistance (Smashing, Lethal) to Self for 0.75 seconds (when Res_Dmg, in PvE)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// 17.09% Resistance (Toxic, Negative) to Self for 0.75 seconds (when Res_Dmg, in PvE)
         ///   Effect does not stack from same caster
         ///   Suppressed when Mezzed.
         /// </example>
         /// <example>
-        ///BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Resistance, "Resistance (All)") on Shriek:
-        /// -9% Resistance (All) to Target for 8 seconds [Ignore Enhancements & Buffs]
-        /// -6% Resistance (All) to Target for 10 seconds [Ignore Enhancements & Buffs]
+        /// BuildTooltipStringAllVectorsEffects(Enums.eEffectType.Defense) on Weave:
+        /// 6.68% Defense (All but Toxic) to Self for 0.75 seconds (when Buff_Def, in PvE)
+        ///   Effect does not stack from same caster
+        ///   Suppressed when Mezzed.
+        /// ---------------------
+        /// 6.68% Defense (All but Toxic) to Self for 0.75 seconds (when Buff_Def, in PvP)
+        ///   Effect does not stack from same caster
         /// </example>
-        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName, bool includeEnhEffects = false)
+        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false)
         {
+            if (string.IsNullOrEmpty(groupName))
+            {
+                groupName = $"{effectType} (All)";
+            }
+
             var damageVectors = effectType switch
             {
                 Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff => new List<Enums.eDamage>
@@ -2870,41 +2884,40 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             foreach (var pvMode in pvModes)
             {
                 // Select distinct mag from effects
-                var effectMags = Effects
+                var effectIdentifiers = Effects
                     .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
-                    .Select(e => Math.Round(e.BuffedMag, 3))
+                    .Select(e => e.GenerateIdentifier())
                     .Distinct();
 
-                var pvxEffects = string.Empty;
-                foreach (var effectMag in effectMags)
+                var pvxEffects = new List<string>();
+                foreach (var effectId in effectIdentifiers)
                 {
                     // Select distinct damage vectors from effects of the specified kind
-                    var effectsVectors = Effects.Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                    var effectsVectors = Effects
+                        .Where(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
                         .Select(e => e.DamageType)
-                        .Distinct();
+                        .Distinct()
+                        .ToList();
 
                     // Check if effects contains all the effectType vectors (listed above)
-                    // Check if all BuffedMag have the same value (rounded to 3 decimals to avoid epsilon differences)
                     var effectsInMode = string.Empty;
-                    if (!damageVectors.Except(effectsVectors).Any() &&
-                        !Effects
-                            .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
-                            .Select(e => Math.Round(e.BuffedMag, 3))
-                            .Distinct()
-                            .Skip(1)
-                            .Any())
+                    if (!damageVectors.Except(effectsVectors).Any())
                     {
                         effectsInMode = Effects
-                            .First(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
+                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
                             .BuildEffectString(false, groupName, false, false, false, true);
                     }
                     else
                     {
+                        // If 3 or less vectors are excluded, use the "All but..." format instead and only list those non-matched
+                        var vectors = (damageVectors.Count - effectsVectors.Count <= 3)
+                            ? $"All but {string.Join(", ", damageVectors.Except(effectsVectors))}"
+                            : string.Join(", ", effectsVectors);
+
                         // Pick all matching effects
-                        effectsInMode = string.Join("\n",
-                            Effects
-                                .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect) && Math.Abs(Math.Round(e.BuffedMag, 3) - effectMag) < float.Epsilon)
-                                .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                        effectsInMode = Effects
+                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
+                            .BuildEffectString(false, $"{effectType} ({vectors})", false, false, false, true);
                     }
 
                     effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
@@ -2913,16 +2926,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         continue;
                     }
 
-                    pvxEffects += (!string.IsNullOrEmpty(pvxEffects) ? "\n" : "") + effectsInMode;
+                    pvxEffects.Add(effectsInMode);
                 }
 
-                pvxEffects = pvxEffects.Trim();
-                if (string.IsNullOrEmpty(pvxEffects))
+                pvxEffects = pvxEffects.Distinct().ToList();
+                if (pvxEffects.Count <= 0)
                 {
                     continue;
                 }
                 
-                effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + pvxEffects.Trim();
+                effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + string.Join("\n", pvxEffects);
             }
 
             return effectsList;

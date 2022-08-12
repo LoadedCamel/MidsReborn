@@ -197,5 +197,7 @@ namespace Mids_Reborn.Core
         bool PvXInclude();
 
         string SummonedEntityName { get; }
+
+        EffectIdentifier GenerateIdentifier();
     }
 }

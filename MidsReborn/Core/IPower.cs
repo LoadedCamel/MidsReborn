@@ -295,6 +295,6 @@ namespace Mids_Reborn.Core
 
         void ProcessExecutes();
 
-        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName, bool includeEnhEffects = false);
+        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false);
     }
 }
