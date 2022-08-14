@@ -1182,7 +1182,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var mag = Math.Abs(Parse(this, ExpressionType.Magnitude, out _));
+                    var mag = Parse(this, ExpressionType.Magnitude, out _);
+                    var absAllowed = new List<Enums.eEffectType>
+                    {
+                        Enums.eEffectType.Damage
+                    };
+
+                    /*
                     var absAllowed = new List<Enums.eEffectType>
                     {
                         Enums.eEffectType.Damage,
@@ -1190,30 +1196,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         Enums.eEffectType.Defense,
                         Enums.eEffectType.Resistance
                     };
+                    */
 
                     if (editorDisplay)
                     {
-                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
-                        {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
-                        }
-                        else
-                        {
-                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
-                        }
+                        sMag = absAllowed.Contains(EffectType)
+                            ? $"{Math.Abs(mag) * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")} Variable"
+                            : $"{mag * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")} Variable";
 
                         sMagExp = $"Mag Expression: {Expressions.Magnitude.Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
-                        {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
-                        }
-                        else
-                        {
-                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
-                        }
+                        sMag = absAllowed.Contains(EffectType)
+                            ? $"{Math.Abs(mag) * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")}"
+                            : $"{mag * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")}";
                     }
                 }
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
