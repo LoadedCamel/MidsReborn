@@ -834,6 +834,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 power.AbsorbPetEffects();
             }
 
+            var hasPercentDamage = power.Effects
+                .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | e.Aspect == Enums.eAspect.Str);
+
             foreach (var effect in power.Effects)
             {
                 if (effect.EffectType != Enums.eEffectType.Damage ||
@@ -935,7 +938,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var str2 = $"{dmgString}{Enums.GetDamageName((Enums.eDamage)index)}(";
                 if (numArray1[index] > 0)
                 {
-                    str2 += Utilities.FixDP(numArray1[index]);
+                    str2 += hasPercentDamage ? $"{Utilities.FixDP(numArray1[index] * 100)}%" : Utilities.FixDP(numArray1[index]);
                 }
 
                 if (Math.Abs(numArray2[index, 0]) > 0.01)
@@ -945,17 +948,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         str2 += "+";
                     }
 
-                    str2 += $"{Utilities.FixDP(numArray2[index, 0])}x{Utilities.FixDP(numArray3[index, 0])}";
+                    str2 += $"{(hasPercentDamage ? $"{Utilities.FixDP(numArray2[index, 0] * 100)}%" : Utilities.FixDP(numArray2[index, 0]))}x{Utilities.FixDP(numArray3[index, 0])}";
                     if (Math.Abs(numArray2[index, 1]) > 0.01)
                     {
-                        str2 += $"+{Utilities.FixDP(numArray2[index, 1])}x{Utilities.FixDP(numArray3[index, 1])}";
+                        str2 += $"+{(hasPercentDamage ? $"{Utilities.FixDP(numArray2[index, 1] * 100)}%" : Utilities.FixDP(numArray2[index, 1]))}x{Utilities.FixDP(numArray3[index, 1])}";
                     }
                 }
 
                 dmgString = $"{str2})";
             }
 
-            return $"{dmgString} = {Utilities.FixDP(totalDamage)}";
+            return $"{dmgString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
         }
 
         public int[] GetRankedEffects()

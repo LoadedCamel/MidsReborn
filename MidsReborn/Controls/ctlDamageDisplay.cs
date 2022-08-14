@@ -13,76 +13,32 @@ namespace Mids_Reborn.Controls
 {
     public class ctlDamageDisplay : UserControl
     {
-        // Token: 0x0400002A RID: 42
         private readonly Enums.eDDText pText;
-
-        // Token: 0x04000027 RID: 39
         private ExtendedBitmap bxBuffer;
-
-        // Token: 0x04000025 RID: 37
         private IContainer components;
-
-        // Token: 0x04000028 RID: 40
         private Graphics myGFX;
 
-        // Token: 0x04000026 RID: 38
         [AccessedThroughProperty("myTip")] private ToolTip myTip;
-
-        // Token: 0x04000036 RID: 54
         private float nBase;
 
-        // Token: 0x04000037 RID: 55
         private float nEnhanced;
-
-        // Token: 0x04000039 RID: 57
         private float nHighestBase;
-
-        // Token: 0x0400003A RID: 58
         private float nHighestEnhanced;
-
-        // Token: 0x04000038 RID: 56
         private float nMaxEnhanced;
-
-        // Token: 0x04000035 RID: 53
         private Enums.eDDAlign pAlign;
-
-        // Token: 0x0400002D RID: 45
         private Color pFadeBackEnd;
-
-        // Token: 0x0400002C RID: 44
         private Color pFadeBackStart;
-
-        // Token: 0x0400002F RID: 47
         private Color pFadeBaseEnd;
-
-        // Token: 0x0400002E RID: 46
         private Color pFadeBaseStart;
-
-        // Token: 0x04000031 RID: 49
         private Color pFadeEnhEnd;
-
-        // Token: 0x04000030 RID: 48
         private Color pFadeEnhStart;
-
-        // Token: 0x0400002B RID: 43
         private Enums.eDDGraph pGraph;
-
-        // Token: 0x04000034 RID: 52
         private int phPadding;
-
-        // Token: 0x0400003B RID: 59
         private string pString;
-
-        // Token: 0x04000029 RID: 41
         private Enums.eDDStyle pStyle;
-
-        // Token: 0x04000032 RID: 50
         private Color pTextColor;
-
-        // Token: 0x04000033 RID: 51
         private int pvPadding;
 
-        // Token: 0x0600006D RID: 109 RVA: 0x0000689C File Offset: 0x00004A9C
         public ctlDamageDisplay()
         {
             BackColorChanged += ctlDamageDisplay_BackColorChanged;
@@ -154,9 +110,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000013 RID: 19
-        // (get) Token: 0x06000051 RID: 81 RVA: 0x00006634 File Offset: 0x00004834
-        // (set) Token: 0x06000052 RID: 82 RVA: 0x0000664C File Offset: 0x0000484C
         public Color ColorBaseStart
         {
             get => pFadeBaseStart;
@@ -167,9 +120,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000014 RID: 20
-        // (get) Token: 0x06000053 RID: 83 RVA: 0x00006660 File Offset: 0x00004860
-        // (set) Token: 0x06000054 RID: 84 RVA: 0x00006678 File Offset: 0x00004878
         public Color ColorBaseEnd
         {
             get => pFadeBaseEnd;
@@ -180,9 +130,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000015 RID: 21
-        // (get) Token: 0x06000055 RID: 85 RVA: 0x0000668C File Offset: 0x0000488C
-        // (set) Token: 0x06000056 RID: 86 RVA: 0x000066A4 File Offset: 0x000048A4
         public Color ColorEnhStart
         {
             get => pFadeEnhStart;
@@ -193,9 +140,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000016 RID: 22
-        // (get) Token: 0x06000057 RID: 87 RVA: 0x000066B8 File Offset: 0x000048B8
-        // (set) Token: 0x06000058 RID: 88 RVA: 0x000066D0 File Offset: 0x000048D0
         public Color ColorEnhEnd
         {
             get => pFadeEnhEnd;
@@ -206,9 +150,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000017 RID: 23
-        // (get) Token: 0x06000059 RID: 89 RVA: 0x000066E4 File Offset: 0x000048E4
-        // (set) Token: 0x0600005A RID: 90 RVA: 0x000066FC File Offset: 0x000048FC
         public Color TextColor
         {
             get => pTextColor;
@@ -219,9 +160,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000018 RID: 24
-        // (get) Token: 0x0600005B RID: 91 RVA: 0x00006710 File Offset: 0x00004910
-        // (set) Token: 0x0600005C RID: 92 RVA: 0x00006728 File Offset: 0x00004928
         public Enums.eDDAlign TextAlign
         {
             get => pAlign;
@@ -232,9 +170,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000019 RID: 25
-        // (get) Token: 0x0600005D RID: 93 RVA: 0x0000673C File Offset: 0x0000493C
-        // (set) Token: 0x0600005E RID: 94 RVA: 0x00006754 File Offset: 0x00004954
         public Enums.eDDStyle Style
         {
             get => pStyle;
@@ -245,9 +180,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001A RID: 26
-        // (get) Token: 0x0600005F RID: 95 RVA: 0x00006768 File Offset: 0x00004968
-        // (set) Token: 0x06000060 RID: 96 RVA: 0x00006780 File Offset: 0x00004980
         public Enums.eDDGraph GraphType
         {
             get => pGraph;
@@ -258,9 +190,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001B RID: 27
-        // (get) Token: 0x06000061 RID: 97 RVA: 0x00006794 File Offset: 0x00004994
-        // (set) Token: 0x06000062 RID: 98 RVA: 0x000067AC File Offset: 0x000049AC
         public float nBaseVal
         {
             get => nBase;
@@ -271,9 +200,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001C RID: 28
-        // (get) Token: 0x06000063 RID: 99 RVA: 0x000067C0 File Offset: 0x000049C0
-        // (set) Token: 0x06000064 RID: 100 RVA: 0x000067D8 File Offset: 0x000049D8
         public float nEnhVal
         {
             get => nEnhanced;
@@ -284,9 +210,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001D RID: 29
-        // (get) Token: 0x06000065 RID: 101 RVA: 0x000067EC File Offset: 0x000049EC
-        // (set) Token: 0x06000066 RID: 102 RVA: 0x00006804 File Offset: 0x00004A04
         public float nMaxEnhVal
         {
             get => nMaxEnhanced;
@@ -297,9 +220,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001E RID: 30
-        // (get) Token: 0x06000067 RID: 103 RVA: 0x00006818 File Offset: 0x00004A18
-        // (set) Token: 0x06000068 RID: 104 RVA: 0x00006830 File Offset: 0x00004A30
         public float nHighBase
         {
             get => nHighestBase;
@@ -310,9 +230,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x1700001F RID: 31
-        // (get) Token: 0x06000069 RID: 105 RVA: 0x00006844 File Offset: 0x00004A44
-        // (set) Token: 0x0600006A RID: 106 RVA: 0x0000685C File Offset: 0x00004A5C
         public float nHighEnh
         {
             get => nHighestEnhanced;
@@ -323,9 +240,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x17000020 RID: 32
-        // (get) Token: 0x0600006B RID: 107 RVA: 0x00006870 File Offset: 0x00004A70
-        // (set) Token: 0x0600006C RID: 108 RVA: 0x00006888 File Offset: 0x00004A88
         public override string Text
         {
             get => pString;
@@ -336,7 +250,6 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        // Token: 0x0600006E RID: 110 RVA: 0x000069AC File Offset: 0x00004BAC
         protected override void Dispose(bool disposing)
         {
             if (disposing) components?.Dispose();
@@ -344,7 +257,6 @@ namespace Mids_Reborn.Controls
             base.Dispose(disposing);
         }
 
-        // Token: 0x0600006F RID: 111 RVA: 0x000069E4 File Offset: 0x00004BE4
         [DebuggerStepThrough]
         private void InitializeComponent()
         {
@@ -353,12 +265,11 @@ namespace Mids_Reborn.Controls
             {
                 AutoPopDelay = 20000, InitialDelay = 350, ReshowDelay = 100
             };
+
             Name = "ctlDamageDisplay";
-            var size = new Size(312, 104);
-            Size = size;
+            Size = new Size(312, 104);
         }
 
-        // Token: 0x06000070 RID: 112 RVA: 0x00006A62 File Offset: 0x00004C62
         private void ctlDamageDisplay_Load(object sender, EventArgs e)
         {
             myGFX = CreateGraphics();
@@ -366,7 +277,6 @@ namespace Mids_Reborn.Controls
             Draw();
         }
 
-        // Token: 0x06000071 RID: 113 RVA: 0x00006A8F File Offset: 0x00004C8F
         private void FullUpdate()
         {
             myGFX = CreateGraphics();
@@ -374,32 +284,27 @@ namespace Mids_Reborn.Controls
             Draw();
         }
 
-        // Token: 0x06000072 RID: 114 RVA: 0x00006ABC File Offset: 0x00004CBC
         private void ctlDamageDisplayt_Paint(object sender, PaintEventArgs e)
         {
             if (bxBuffer != null)
                 myGFX.DrawImage(bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
         }
 
-        // Token: 0x06000073 RID: 115 RVA: 0x00006B01 File Offset: 0x00004D01
         protected override void OnFontChanged(EventArgs e)
         {
             Draw();
         }
 
-        // Token: 0x06000074 RID: 116 RVA: 0x00006B0B File Offset: 0x00004D0B
         protected override void OnForeColorChanged(EventArgs e)
         {
             Draw();
         }
 
-        // Token: 0x06000075 RID: 117 RVA: 0x00006B15 File Offset: 0x00004D15
         protected override void OnResize(EventArgs e)
         {
             FullUpdate();
         }
 
-        // Token: 0x06000076 RID: 118 RVA: 0x00006B20 File Offset: 0x00004D20
         private void DrawGraph()
         {
             var height = Font.GetHeight(bxBuffer.Graphics);
@@ -407,7 +312,10 @@ namespace Mids_Reborn.Controls
             var rect = new Rectangle(0, 0, Width, Height - 15);
             checked
             {
-                if (pStyle == (Enums.eDDStyle) 3) rect.Height = (int) Math.Round(rect.Height - height);
+                if (pStyle == (Enums.eDDStyle) 3)
+                {
+                    rect.Height = (int) Math.Round(rect.Height - height);
+                }
 
                 var rectangle2 = new Rectangle(phPadding, pvPadding, Width - phPadding * 2, rect.Height - pvPadding * 2 - 20);
                 var brush = new LinearGradientBrush(rect, pFadeBackStart, pFadeBackEnd, 0f);
@@ -420,11 +328,20 @@ namespace Mids_Reborn.Controls
 
                 unchecked
                 {
-                    if (Math.Abs(nMaxEnhanced) < float.Epsilon) nMaxEnhanced = nBase * 2f;
+                    if (Math.Abs(nMaxEnhanced) < float.Epsilon)
+                    {
+                        nMaxEnhanced = nBase * 2;
+                    }
 
-                    if (Math.Abs(nHighestEnhanced) < float.Epsilon) nHighestEnhanced = nBase * 2f;
+                    if (Math.Abs(nHighestEnhanced) < float.Epsilon)
+                    {
+                        nHighestEnhanced = nBase * 2;
+                    }
 
-                    if (Math.Abs(nHighestBase) < float.Epsilon) nHighestBase = nBase * 2f;
+                    if (Math.Abs(nHighestBase) < float.Epsilon)
+                    {
+                        nHighestBase = nBase * 2;
+                    }
                 }
 
                 if (pGraph == 0)
@@ -454,16 +371,21 @@ namespace Mids_Reborn.Controls
                         case (Enums.eDDGraph) 3:
                         {
                             var num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
-                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y,
-                                (int) Math.Round(nBase / nHighestBase * rectangle2.Width), rectangle2.Height);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            var rect2 = rectangle2 with {Width = (int) Math.Round(nBase / nHighestBase * rectangle2.Width)};
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
                             brush = new LinearGradientBrush(rect2, pFadeBaseStart, pFadeBaseEnd, 0f);
-                            rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
+                            rect2 = rectangle2 with {Width = num};
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
                             var width = (int) Math.Round((nEnhanced - nBase) / nHighestEnhanced * rectangle2.Width);
-                            rect2 = new Rectangle(rectangle2.X + num, rectangle2.Y, width, rectangle2.Height);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            rect2 = rectangle2 with {X = rectangle2.X + num, Width = width};
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
                             brush = new LinearGradientBrush(rectangle2, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
@@ -473,18 +395,26 @@ namespace Mids_Reborn.Controls
                         {
                             var num2 = (int) Math.Round(rectangle2.Height / 2.0);
                             var num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
-                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y,
-                                (int) Math.Round(0.5 * rectangle2.Width), num2);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            var rect2 = rectangle2 with {Width = (int) Math.Round(0.5 * rectangle2.Width), Height = num2};
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
                             brush = new LinearGradientBrush(rectangle2, pFadeBaseStart, pFadeBaseEnd, 0f);
-                            rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, num2);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            rect2 = rectangle2 with {Width = num, Height = num2};
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
                             var width = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
                             rect2 = new Rectangle(rectangle2.X, num2 + rectangle2.Y, width, num2);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
                             brush = new LinearGradientBrush(rectangle2, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
@@ -493,11 +423,13 @@ namespace Mids_Reborn.Controls
                         case (Enums.eDDGraph) 1:
                         {
                             var num = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
-                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
-                            if (rect2.Width < 1) rect2.Width = 1;
+                            var rect2 = rectangle2 with {Width = num};
+                            if (rect2.Width < 1)
+                            {
+                                rect2.Width = 1;
+                            }
 
-                            var rectangle3 = new Rectangle(rectangle2.X + num, rectangle2.Y, rectangle2.Width - num,
-                                rectangle2.Height);
+                            var rectangle3 = rectangle2 with {X = rectangle2.X + num, Width = rectangle2.Width - num};
                             brush = new LinearGradientBrush(rectangle3, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
                             break;
@@ -512,8 +444,7 @@ namespace Mids_Reborn.Controls
                         break;
                     case (Enums.eDDStyle) 3:
                     {
-                        var rectangle3 = new Rectangle(rectangle2.X, rectangle2.Y + rectangle2.Height, rectangle2.Width,
-                            rectangle.Height - (rectangle2.Y + rectangle2.Height));
+                        var rectangle3 = rectangle2 with {Y = rectangle2.Y + rectangle2.Height, Height = rectangle.Height - (rectangle2.Y + rectangle2.Height)};
                         DrawText(rectangle3);
                         break;
                     }

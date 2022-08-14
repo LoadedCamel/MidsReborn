@@ -1220,10 +1220,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     var perceptionDistance = Statistics.BasePerception * BuffedMag;
                     sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
-                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance:####0.##}ft)"
                         : DisplayPercentage
-                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
-                            : $"{perceptionDistance}ft";
+                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance:####0.##}ft)"
+                            : $"{perceptionDistance:####0.##}ft";
                 }
                 else
                 {

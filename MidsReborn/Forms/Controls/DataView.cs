@@ -600,7 +600,7 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private void display_Info(bool noLevel = false, int iEnhLvl = -1)
+        private void DisplayInfo(bool noLevel = false, int iEnhLvl = -1)
         {
             if (pBase == null)
             {
@@ -944,13 +944,19 @@ namespace Mids_Reborn.Forms.Controls
                 //Info_Damage.nBaseVal = damageValue1;
                 //Info_Damage.nMaxEnhVal = baseDamage * (1f + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
                 //Info_Damage.nEnhVal = damageValue2;
-                Info_Damage.nBaseVal = Math.Max(0, baseDamage); // Negative damage ? (see Toxins)
-                Info_Damage.nEnhVal = Math.Max(0, enhancedDamage);
-                Info_Damage.nMaxEnhVal = Math.Max(baseDamage * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage);
-                Info_Damage.nHighEnh = Math.Max(414, enhancedDamage); // Maximum graph value
 
+                // Mids has no awareness of target data.
+                // When using damage %, estimate damage value based on character HP.
+                var hasPercentDamage = pEnh.Effects
+                    .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | e.Aspect == Enums.eAspect.Str);
+                var dmgMultiplier = hasPercentDamage ? MidsContext.Character.Totals.HPMax : 1;
+                
+                Info_Damage.nBaseVal = Math.Max(0, baseDamage * dmgMultiplier); // Negative damage ? (see Toxins)
+                Info_Damage.nEnhVal = Math.Max(0, enhancedDamage * dmgMultiplier);
+                Info_Damage.nMaxEnhVal = Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage * dmgMultiplier);
+                Info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier); // Maximum graph value
                 Info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
-                    ? $"{enhancedPower.FXGetDamageString(pEnh.PowerIndex == -1)} ({Utilities.FixDP(baseDamage)})"
+                    ? $"{enhancedPower.FXGetDamageString(pEnh.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))}"
                     : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
             }
 
@@ -983,7 +989,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             lblLock.Visible = Lock & (TabPage != 2);
-            display_Info(noLevel, iEnhLevel);
+            DisplayInfo(noLevel, iEnhLevel);
             DisplayEffects(noLevel, iEnhLevel);
             Display_EDFigures();
         }
@@ -2466,7 +2472,7 @@ namespace Mids_Reborn.Forms.Controls
                         Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
                     var iValue = (sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
                         ? "0"
-                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag)}{str}";
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{str}";
                     if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     {
                         iValue = "0";
@@ -2505,7 +2511,7 @@ namespace Mids_Reborn.Forms.Controls
                         Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
                     var iValue = (enhancedPower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
                         ? "0"
-                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag)}{str}";
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{str}";
 
                     var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
                     var iItem = new PairedList.ItemPair(
@@ -2554,7 +2560,7 @@ namespace Mids_Reborn.Forms.Controls
                 var str = enhancedPower.Effects[tagId].Duration >= 15
                     ? $" - {Utilities.FixDP(enhancedPower.Effects[tagId].Duration)}s"
                     : "";
-                var iValue = $"{sourcePower.Effects[tagId].MagPercent}%{str}";
+                var iValue = $"{sourcePower.Effects[tagId].MagPercent:####0.##}%{str}";
                 if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
                     iValue = "0%";
@@ -3699,7 +3705,7 @@ namespace Mids_Reborn.Forms.Controls
             /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
             {
                 effect.UpdateAttrib();
-                display_Info();
+                DisplayInfo();
             }*/
             if (num == pLastScaleVal)
                 return;

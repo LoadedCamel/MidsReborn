@@ -185,6 +185,8 @@ namespace Mids_Reborn.Core
             }
             catch (ParseException ex)
             {
+                //Debug.WriteLine($"Expression failed in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
+
                 error.Type = expressionType;
                 error.Found = true;
                 error.Message = ex.Message;
@@ -208,7 +210,6 @@ namespace Mids_Reborn.Core
                 return 0;
             }
         }
-
 
         public struct Validation
         {
