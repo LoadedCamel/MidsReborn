@@ -1024,7 +1024,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }*/
                 }
 
-                if (EffectId != "" & EffectId != "Ones")
+                if (EffectId != "" & EffectId != "Ones" & !fromPopup)
                 {
                     sChance += $"{(sChance != "" ? ", " : "")}when {EffectId}";
                 }

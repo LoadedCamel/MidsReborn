@@ -2275,12 +2275,12 @@ namespace Mids_Reborn
 
                         var setInfo = CurrentBuild.SetBonus[index2].SetInfo;
                         var enhancementSet = DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
-                        popupData.Sections[index1].Add(enhancementSet.DisplayName + " (" + Convert.ToString(setInfo[senInfoIdx].SlottedCount) + "/" + Convert.ToString(enhancementSet.Enhancements.Length) + ")", PopUp.Colors.Title);
+                        popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
                         for (var bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
                         {
                             if ((setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted) & (((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
                             {
-                                var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true, false);
+                                var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true);
                                 if (!string.IsNullOrWhiteSpace(enhString))
                                 {
                                     popupData.Sections[index1].Add(enhString.Replace(", ", "\n"), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
