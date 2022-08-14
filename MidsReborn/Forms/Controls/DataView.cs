@@ -791,7 +791,7 @@ namespace Mids_Reborn.Forms.Controls
                                     Enums.eToWho.Target => "(Tgt)",
                                     _ => ""
                                 };
-                                rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
+                                rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
                                 break;
                                 
                             case Enums.eEffectType.EntCreate:
@@ -956,7 +956,7 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.nMaxEnhVal = Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage * dmgMultiplier);
                 Info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier); // Maximum graph value
                 Info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
-                    ? $"{enhancedPower.FXGetDamageString(pEnh.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))}"
+                    ? $"{enhancedPower.FXGetDamageString(pEnh.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
                     : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
             }
 
