@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Jace;
@@ -50,6 +51,7 @@ namespace Mids_Reborn.Core
             "powerGroupNotIn(",
             "powerIs(",
             "powerIsNot(",
+            "powerVectorsContains(",
             "eq(",
             "ne(",
             "minmax(",
@@ -89,8 +91,21 @@ namespace Mids_Reborn.Core
                 { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
                 { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" }
+                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
+                { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) }
             };
+        }
+
+        private static string PowerVectorsContains(IPower sourcePower, string vector)
+        {
+            var ret = Enum.TryParse(typeof(Enums.eVector), vector, out var eValue);
+
+            if (!ret)
+            {
+                return "0";
+            }
+
+            return (sourcePower.AttackTypes & (Enums.eVector) eValue) == Enums.eVector.None ? "0" : "1";
         }
 
         private static string GetModifier(string modifierName)
@@ -185,7 +200,7 @@ namespace Mids_Reborn.Core
             }
             catch (ParseException ex)
             {
-                //Debug.WriteLine($"Expression failed in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
+                Debug.WriteLine($"Expression failed in {expr}\n  Power: {sourceFx.GetPower()?.FullName}");
 
                 error.Type = expressionType;
                 error.Found = true;
@@ -195,6 +210,8 @@ namespace Mids_Reborn.Core
             }
             catch (VariableNotDefinedException ex)
             {
+                Debug.WriteLine($"Expression failed (variable not defined) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
+
                 error.Type = expressionType;
                 error.Found = true;
                 error.Message = ex.Message;
@@ -203,6 +220,8 @@ namespace Mids_Reborn.Core
             }
             catch (InvalidOperationException ex)
             {
+                Debug.WriteLine($"Expression failed (invalid operation) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
+
                 error.Type = expressionType;
                 error.Found = true;
                 error.Message = ex.Message;
