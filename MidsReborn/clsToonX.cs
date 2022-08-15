@@ -260,6 +260,13 @@ namespace Mids_Reborn
                 {
                     SetPower_NID(i, powerID);
                     Lock();
+
+                    if (MidsContext.Character.CurrentBuild.Powers[i]?.Power is {VariableEnabled: true})
+                    {
+                        var initialVariableValue = MidsContext.Character.CurrentBuild.Powers[i].Power.VariableStart;
+                        MidsContext.Character.CurrentBuild.Powers[i].VariableValue = initialVariableValue;
+                        MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = initialVariableValue;
+                    }
                 }
                 else if (!string.IsNullOrEmpty(message))
                 {
