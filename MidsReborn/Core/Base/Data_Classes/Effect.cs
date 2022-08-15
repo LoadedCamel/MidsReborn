@@ -735,18 +735,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         if (Ticks > 0)
                         {
-                            str1 = Ticks + " * " + str1;
+                            str1 = $"{Ticks} * {str1}";
                             if (Duration > 0.0)
                             {
-                                str2 = " over " + Utilities.FixDP(Duration) + " seconds";
+                                str2 = $" over {Utilities.FixDP(Duration)} seconds";
                             }
                             else if (Absorbed_Duration > 0.0)
                             {
-                                str2 = " over " + Utilities.FixDP(Absorbed_Duration) + " seconds";
+                                str2 = $" over {Utilities.FixDP(Absorbed_Duration)} seconds";
                             }
                         }
 
-                        str5 = str1 + " " + name1 + " " + effectNameShort1 + str3 + str2;
+                        str5 = $"{str1} {name1} {effectNameShort1}{str3}{str2}";
                         break;
                     }
 
@@ -756,7 +756,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         str6 = string.Empty;
                     }
 
-                    str5 = str1 + " " + effectNameShort1 + str6 + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}{str6}{str3}{str2}";
                     break;
                 case Enums.eEffectType.Endurance:
                     if (noMag)
@@ -765,7 +765,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         break;
                     }
 
-                    str5 = str1 + " " + effectNameShort1 + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.Enhancement:
                     var str7 = ETModifies != Enums.eEffectType.Mez ? !((ETModifies == Enums.eEffectType.Defense) | (ETModifies == Enums.eEffectType.Resistance)) ? Enums.GetEffectNameShort(ETModifies) : Enums.GetDamageNameShort(DamageType) + " " + Enums.GetEffectNameShort(ETModifies) : Enums.GetMezNameShort((Enums.eMezShort)MezType);
@@ -793,14 +793,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     if (!DisplayPercentage)
                     {
-                        str5 = str1 + " (" +
-                               Utilities.FixDP((float)(BuffedMag / (double)MidsContext.Archetype.Hitpoints * 100)) +
-                               "%)" + effectNameShort1 + str3 + str2;
+                        str5 = $"{str1} ({Utilities.FixDP((float) (BuffedMag / (double) MidsContext.Archetype.Hitpoints * 100))}%){effectNameShort1}{str3}{str2}";
                         break;
                     }
 
-                    str5 = Utilities.FixDP(BuffedMag / 100f * MidsContext.Archetype.Hitpoints) + " (" + str1 + ") " +
-                           effectNameShort1 + str3 + str2;
+                    str5 = $"{Utilities.FixDP(BuffedMag / 100f * MidsContext.Archetype.Hitpoints)} ({str1}) {effectNameShort1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.Mez:
                     var name2 = Enum.GetName(MezType.GetType(), MezType);
@@ -810,17 +807,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         str2 = Utilities.FixDP(Duration) + " second ";
                     }
 
-                    var str9 = " (Mag " + str1 + ")";
-                    str5 = str2 + name2 + str9 + str3;
+                    var str9 = $" (Mag {str1})";
+                    str5 = $"{str2}{name2}{str9}{str3}";
                     break;
                 case Enums.eEffectType.MezResist:
                     var name3 = Enum.GetName(MezType.GetType(), MezType);
                     if (!noMag)
                     {
-                        str1 = " " + str1;
+                        str1 = $" {str1}";
                     }
 
-                    str5 = effectNameShort1 + "(" + name3 + ")" + str1 + str3 + str2;
+                    str5 = $"{effectNameShort1}({name3}){str1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.Recovery:
                     if (noMag)
@@ -831,13 +828,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     if (DisplayPercentage)
                     {
-                        str5 = str1 + " (" +
-                               Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic)) +
-                               " /s) " + effectNameShort1 + str3 + str2;
+                        str5 = $"{str1} ({Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic))} /s) {effectNameShort1}{str3}{str2}";
                         break;
                     }
 
-                    str5 = str1 + " " + effectNameShort1 + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.Regeneration:
                     if (noMag)
@@ -848,42 +843,42 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     if (DisplayPercentage)
                     {
-                        str5 = str1 + " (" + Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 * (BuffedMag * (double)MidsContext.Archetype.BaseRegen * 1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 + str2;
+                        str5 = $"{str1} ({Utilities.FixDP((float) (MidsContext.Archetype.Hitpoints / 100.0 * (BuffedMag * (double) MidsContext.Archetype.BaseRegen * 1.66666662693024)))} HP/s) {effectNameShort1}{str3}{str2}";
                         break;
                     }
 
-                    str5 = str1 + " " + effectNameShort1 + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.ResEffect:
                     var effectNameShort2 = Enums.GetEffectNameShort(ETModifies);
-                    str5 = str1 + " " + effectNameShort1 + "(" + effectNameShort2 + ")" + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}({effectNameShort2}){str3}{str2}";
                     break;
                 case Enums.eEffectType.StealthRadius:
                 case Enums.eEffectType.StealthRadiusPlayer:
-                    str5 = str1 + "ft " + effectNameShort1 + str3 + str2;
+                    str5 = $"{str1}ft {effectNameShort1}{str3}{str2}";
                     break;
                 case Enums.eEffectType.EntCreate:
                     var index = DatabaseAPI.NidFromUidEntity(Summon);
-                    var str10 = index <= -1 ? " " + Summon : " " + DatabaseAPI.Database.Entities[index].DisplayName;
-                    str5 = Duration <= 9999.0
-                        ? effectNameShort1 + str10 + str3 + str2
-                        : effectNameShort1 + str10 + str3;
+                    var str10 = index <= -1 ? $" {Summon}" : $" {DatabaseAPI.Database.Entities[index].DisplayName}";
+                    str5 = Duration <= 9999
+                        ? $"{effectNameShort1}{str10}{str3}{str2}"
+                        : $"{effectNameShort1}{str10}{str3}";
                     break;
                 case Enums.eEffectType.GlobalChanceMod:
-                    str5 = str1 + " " + effectNameShort1 + " " + Reward + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1} {Reward}{str3}{str2}";
                     break;
                 default:
-                    str5 = str1 + " " + effectNameShort1 + str3 + str2;
+                    str5 = $"{str1} {effectNameShort1}{str3}{str2}";
                     break;
             }
 
             var iStr = string.Empty;
             if (!string.IsNullOrEmpty(iValue))
             {
-                iStr = " (" + BuildCs(iValue, iStr) + ")";
+                iStr = $" ({BuildCs(iValue, iStr)})";
             }
 
-            return str5.Trim() + iStr + str4;
+            return $"{str5.Trim()}{iStr}{str4}";
         }
 
         public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false)
@@ -1577,7 +1572,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             sFinal = sFinal
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
                 .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
-                .Replace(" , ", ", "); // xx% chance , when something
+                .Replace(" , ", ", ") // xx% chance , when something
+                .Trim(' ', ':'); // Knockback/Knockup with no duration/ticks
             return sFinal;
         }
 
