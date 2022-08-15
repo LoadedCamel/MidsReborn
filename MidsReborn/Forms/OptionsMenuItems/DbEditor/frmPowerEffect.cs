@@ -126,6 +126,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 MyFx.ActiveConditionals = editConditions.Conditionals;
             }
             editConditions.Dispose();
+            UpdateFxText();
         }
 
         private void btnExprBuilder_Click(object sender, EventArgs e)

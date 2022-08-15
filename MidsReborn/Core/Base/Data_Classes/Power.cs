@@ -964,9 +964,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int[] GetRankedEffects()
         {
             var numArray1 = new int[Effects.Length];
-            for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
+            for (var index1 = 0; index1 < Effects.Length; index1++)
             {
-                if (((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None) & ((!MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvE))))
+                if ((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvP) | MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvE)))
                 {
                     numArray1[index1] = (int) (Effects[index1].EffectClass + 1);
                     if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
@@ -979,49 +979,49 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         numArray1[index1] += 50;
                     }
 
-                    if (Effects[index1].DelayedTime > 1.0)
+                    if (Effects[index1].DelayedTime > 1)
                     {
-                        numArray1[index1] += -100;
+                        numArray1[index1] -= 100;
                     }
 
-                    if ((Effects[index1].DelayedTime > 0.0) & (Effects[index1].DelayedTime <= 1.0))
+                    if ((Effects[index1].DelayedTime > 0) & (Effects[index1].DelayedTime <= 1))
                     {
-                        numArray1[index1] += -25;
+                        numArray1[index1] -= 25;
                     }
 
                     if (Effects[index1].InherentSpecial)
                     {
-                        numArray1[index1] += -100;
+                        numArray1[index1] -= 100;
                     }
 
                     if (Effects[index1].InherentSpecial2)
                     {
-                        numArray1[index1] += -100;
+                        numArray1[index1] -= 100;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].BuffedMag > 0.0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].BuffedMag > 0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag < 0.0))
+                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag < 0))
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag > 0.0) & Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag > 0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].BuffedMag > 0.0) & Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].BuffedMag > 0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
 
                     if (Effects[index1].isEnhancementEffect)
                     {
-                        numArray1[index1] += -30;
+                        numArray1[index1] -= 30;
                     }
 
                     if (Effects[index1].VariableModified)
@@ -1032,10 +1032,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     switch (Effects[index1].EffectType)
                     {
                         case Enums.eEffectType.None:
-                            numArray1[index1] += -1000;
+                            numArray1[index1] -= 1000;
                             continue;
                         case Enums.eEffectType.Damage:
-                            numArray1[index1] += -500;
+                            numArray1[index1] -= 500;
                             continue;
                         case Enums.eEffectType.DamageBuff:
                             numArray1[index1] += 10;
@@ -1072,7 +1072,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             numArray1[index1] += 5;
                             continue;
                         case Enums.eEffectType.GrantPower:
-                            numArray1[index1] += -20;
+                            numArray1[index1] -= 20;
                             continue;
                         case Enums.eEffectType.Heal:
                             numArray1[index1] += 15;
@@ -1089,7 +1089,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         case Enums.eEffectType.Mez:
                             if (!Effects[index1].Buffable)
                             {
-                                numArray1[index1] += -1;
+                                numArray1[index1] -= 1;
                             }
 
                             if ((Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf) | (Effects[index1].MezType == Enums.eMez.Untouchable))
@@ -1126,7 +1126,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             numArray1[index1] += 20;
                             continue;
                         case Enums.eEffectType.RevokePower:
-                            numArray1[index1] += -20;
+                            numArray1[index1] -= 20;
                             continue;
                         case Enums.eEffectType.SpeedRunning:
                             numArray1[index1] += 5;
@@ -1143,13 +1143,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         case Enums.eEffectType.EntCreate:
                             if (HasAbsorbedEffects)
                             {
-                                numArray1[index1] += -500;
-                                continue;
+                                numArray1[index1] -= 500;
                             }
-
-                            var numArray2 = numArray1;
-                            var index2 = index1;
-                            numArray2[index2] = numArray2[index2];
                             continue;
                         case Enums.eEffectType.ToHit:
                             numArray1[index1] += 10;
@@ -1178,7 +1173,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var num1 = -1;
             var num2 = 0;
             var num3 = 0;
-            for (var iID2 = 0; iID2 <= numArray1.Length - 1; ++iID2)
+            for (var iID2 = 0; iID2 < numArray1.Length; iID2++)
                 if (numArray1[iID2] > num2)
                 {
                     num1 = iID1;
@@ -1551,6 +1546,72 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 shortFx.Add(iIndex, mag);
+            }
+
+            return shortFx;
+        }
+
+        public Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false)
+        {
+            var shortFx = new Enums.ShortFX();
+            for (var i = 0; i < Effects.Length; i++)
+            {
+                var fx = Effects[i];
+                if (fx.EffectType != iEffect || fx.ETModifies != etModifies || fx.DamageType != damageType || fx.MezType != mezType)
+                {
+                    continue;
+                }
+
+                var includeFlag = fx.ToWho switch
+                {
+                    Enums.eToWho.Target when !onlySelf => true,
+                    Enums.eToWho.Self when !onlyTarget => true,
+                    Enums.eToWho.All => true,
+                    _ => false
+                };
+
+                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
+                    fx.Aspect == Enums.eAspect.Max ||
+                    (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
+                    (fx.Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
+                    !maxMode & (fx.Aspect == Enums.eAspect.Max))
+                {
+                    includeFlag = false;
+                }
+
+                if ((MidsContext.Config.Suppression & fx.Suppression) != Enums.eSuppress.None)
+                {
+                    includeFlag = false;
+                }
+
+                if (!includeFlag || fx.Probability <= 0 ||
+                    maxMode && fx.Aspect != Enums.eAspect.Max || fx.EffectType != iEffect ||
+                    fx.EffectClass is Enums.eEffectClass.Ignored or Enums.eEffectClass.Special ||
+                    fx.DelayedTime > 5 && !includeDelayed || !fx.CanInclude() || !fx.PvXInclude())
+                {
+                    continue;
+                }
+
+                /*if (fx.ActiveConditionals.Count > 0)
+                {
+                    if (!fx.ValidateConditional())
+                    {
+                        continue;
+                    }
+                }*/
+
+                var mag = fx.BuffedMag;
+                if (fx.Ticks > 1 && fx.Stacking == Enums.eStacking.Yes)
+                {
+                    mag *= fx.Ticks;
+                }
+
+                if (Math.Abs(mag) < float.Epsilon)
+                {
+                    continue;
+                }
+
+                shortFx.Add(i, mag);
             }
 
             return shortFx;
@@ -2949,6 +3010,140 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
                 
+                effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + string.Join("\n", pvxEffects);
+            }
+
+            return effectsList;
+        }
+
+        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false)
+        {
+            if (string.IsNullOrEmpty(groupName))
+            {
+                groupName = $"{effectType} (All)";
+            }
+
+            var damageVectors = (effectType == Enums.eEffectType.Enhancement ? etModifies : effectType) switch
+            {
+                Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic
+                },
+
+                Enums.eEffectType.Defense when !DatabaseAPI.RealmUsesToxicDef() => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                },
+
+                _ => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                }
+            };
+
+            var effectsList = string.Empty;
+            var pvModes = new List<Enums.ePvX> { Enums.ePvX.Any };
+
+            foreach (var pvMode in pvModes)
+            {
+                // Select identifiers from effects
+                var effectIdentifiers2 = Effects
+                    .Where(e => e.EffectType == effectType && e.ETModifies == etModifies &&
+                                e.MezType == mezType && e.DamageType == damageType
+                                && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
+                    .Select(e => e.GenerateIdentifier())
+                    .ToList();
+
+                // Distinct() with custom comparer
+                var effectIdentifiers = new List<EffectIdentifier>();
+                foreach (var fxId2 in effectIdentifiers2)
+                {
+                    if (effectIdentifiers.Any(e => e.Compare(fxId2)))
+                    {
+                        continue;
+                    }
+
+                    effectIdentifiers.Add(fxId2);
+                }
+
+                var pvxEffects = new List<string>();
+                foreach (var effectId in effectIdentifiers)
+                {
+                    // Select distinct damage vectors from effects of the specified kind
+                    var effectsVectors = Effects
+                        .Where(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
+                        .Select(e => e.DamageType)
+                        .Distinct()
+                        .ToList();
+
+                    // Check if effects contains all the effectType vectors (listed above)
+                    var effectsInMode = string.Empty;
+                    if (!damageVectors.Except(effectsVectors).Any())
+                    {
+                        effectsInMode = Effects
+                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
+                            .BuildEffectString(false, groupName, false, false, false, true);
+                    }
+                    else
+                    {
+                        // If 3 or less vectors are excluded, use the "All but..." format instead and only list those non-matched
+                        var vectors = (damageVectors.Count - effectsVectors.Count <= 3)
+                            ? $"All but {string.Join(", ", damageVectors.Except(effectsVectors))}"
+                            : string.Join(", ", effectsVectors);
+
+                        // Pick all matching effects
+                        var fxLabel = effectType switch
+                        {
+                            Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => $"{effectType}({etModifies})",
+                            Enums.eEffectType.Mez or Enums.eEffectType.MezResist => $"{effectType}({mezType})",
+                            _ => $"{effectType} ({vectors})"
+                        };
+
+                        effectsInMode = Effects
+                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
+                            .BuildEffectString(false, $"{fxLabel}", false, false, false, true);
+                    }
+
+                    effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
+                    if (string.IsNullOrEmpty(effectsInMode))
+                    {
+                        continue;
+                    }
+
+                    pvxEffects.Add(effectsInMode);
+                }
+
+                if (pvxEffects.Count <= 0)
+                {
+                    continue;
+                }
+
                 effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + string.Join("\n", pvxEffects);
             }
 

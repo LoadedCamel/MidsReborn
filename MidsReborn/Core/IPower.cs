@@ -243,7 +243,9 @@ namespace Mids_Reborn.Core
         Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 
         Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false);
-        
+
+        Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false);
+
         Enums.ShortFX GetDamageMagSum(
             Enums.eEffectType iEffect,
             Enums.eDamage iSub,
@@ -296,5 +298,7 @@ namespace Mids_Reborn.Core
         void ProcessExecutes();
 
         string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false);
+
+        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false);
     }
 }

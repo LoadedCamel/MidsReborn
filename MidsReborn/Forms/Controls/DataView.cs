@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -1575,28 +1576,6 @@ namespace Mids_Reborn.Forms.Controls
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
-        private string GetToolTip(Enums.ShortFX fx)
-        {
-            string iTip = string.Empty;
-            List<string> iTemp = new List<string>();
-            var shortFxArray = Power.SplitFX(ref fx, ref pEnh);
-            for (var index1 = 0; index1 < shortFxArray.Length; index1++)
-            {
-                if (!shortFxArray[index1].Present)
-                    continue;
-                iTemp.Add(Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false));
-            }
-            foreach (var str in iTemp)
-            {
-                if (string.IsNullOrWhiteSpace(iTip))
-                    iTip = str;
-                else
-                    iTip += $"{Environment.NewLine}{str}";
-            }
-
-            return iTip;
-        }
-
         private int EffectsBuffDebuff(Control iLabel, PairedList iList)
         {
             var baseSumToHit = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
@@ -2954,12 +2933,12 @@ namespace Mids_Reborn.Forms.Controls
             }
             else if (Math.Abs(s1.Sum) < float.Epsilon)
             {
-                iItem = new PairedList.ItemPair(title + ":", string.Empty, false);
+                iItem = new PairedList.ItemPair($"{title}:", string.Empty, false);
             }
             else
             {
                 var iAlternate = false;
-                if (Math.Abs(s1.Sum - (double)s2.Sum) > float.Epsilon)
+                if (Math.Abs(s1.Sum - s2.Sum) > float.Epsilon)
                 {
                     if (!skipBase)
                     {
@@ -3220,6 +3199,14 @@ namespace Mids_Reborn.Forms.Controls
                         Enums.eEffectType.Resistance => "Enh(Res)",
                         _ => CapString(Enum.GetName(pBase.Effects[Index[ID]].ETModifies.GetType(), pBase.Effects[Index[ID]].ETModifies), 7)
                     };
+
+                    shortFxBase.Assign(pBase.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType,
+                        pBase.Effects[Index[ID]].ETModifies, pBase.Effects[Index[ID]].DamageType,
+                        pBase.Effects[Index[ID]].MezType, false, onlySelf, onlyTarget));
+
+                    shortFxEnh.Assign(enhancedPower.GetEffectMagSum(enhancedPower.Effects[Index[ID]].EffectType,
+                        enhancedPower.Effects[Index[ID]].ETModifies, enhancedPower.Effects[Index[ID]].DamageType,
+                        enhancedPower.Effects[Index[ID]].MezType, false, onlySelf, onlyTarget));
                 }
                 else
                 {
@@ -3368,11 +3355,23 @@ namespace Mids_Reborn.Forms.Controls
                                  pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Jumppack |
                                  pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.GlobalChanceMod)
                         {
-                           
-                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                            shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].BuffedMag);
+                            
+                            if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement)
+                            {
+                                // shortFxBase, shortFxEnh have already the correct mag in.
+                                // Keep the same number of items by adding a null one.
+                                shortFxBase.Add(Index[ID], 0);
+                                shortFxEnh.Add(Index[ID], 0);
+                            }
+                            else
+                            {
+                                shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                                shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].BuffedMag);
+                            }
+
                             shortFxBase.Multiply();
                             shortFxEnh.Multiply();
+
                             tag2.Assign(enhancedPower.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
@@ -3454,19 +3453,21 @@ namespace Mids_Reborn.Forms.Controls
 
                 break;
             }
-            
-            var iTip = GetToolTip(shortFxEnh);
+
+            var tip = pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[shortFxEnh.Index[0]].EffectType,
+                pEnh.Effects[shortFxEnh.Index[0]].ETModifies, pEnh.Effects[shortFxEnh.Index[0]].DamageType,
+                pEnh.Effects[shortFxEnh.Index[0]].MezType);
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
+                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, tip);
             }
 
             if (pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None)
             {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
+                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, tip);
             }
 
-            return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
+            return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, tip);
         }
 
         public void Init()

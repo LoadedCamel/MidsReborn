@@ -1119,11 +1119,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (!condition.Equals("Stacks") && !condition.Equals("Team"))
                         {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
                         }
                         else if (condition.Equals("Stacks"))
                         {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
                         }
                         else if (condition.Equals("Team"))
                         {
@@ -1219,7 +1219,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
                 else
                 {
-                    sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
+                    sMag = MidsContext.Config.CoDEffectFormat & !fromPopup & EffectType != Enums.eEffectType.Mez
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                         : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
@@ -1333,7 +1333,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (!noMag)
                         {
-                            sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
+                            sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
                         }
 
                         sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
@@ -1437,7 +1437,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     string tSummon;
                     if (summon > -1)
                     {
-                        tSummon = " " + (MidsContext.Config.CoDEffectFormat
+                        tSummon = " " + (MidsContext.Config.CoDEffectFormat & !fromPopup
                             ? $"({DatabaseAPI.Database.Entities[summon].UID})"
                             : DatabaseAPI.Database.Entities[summon].DisplayName);
                     }
@@ -1464,7 +1464,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
                     tGrant = pID != null
-                        ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
+                        ? $" {(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
                     sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}";
                     break;
@@ -1562,18 +1562,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var sFinal = string.Empty;
             if (AttribType == Enums.eAttribType.Expression && editorDisplay)
             {
-                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\n{sProbExp}";
+                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\r\n{sProbExp}";
             }
             else
             {
                 sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
             }
 
+            sFinal = Regex.Replace(sFinal, @"^\-0(\%?)[^\.]", e => $"0{e.Groups[1].Value} "); // +Recharge with mag == 0
             sFinal = sFinal
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
                 .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
                 .Replace(" , ", ", ") // xx% chance , when something
                 .Trim(' ', ':'); // Knockback/Knockup with no duration/ticks
+
             return sFinal;
         }
 

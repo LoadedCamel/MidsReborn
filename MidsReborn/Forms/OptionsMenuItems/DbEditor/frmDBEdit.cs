@@ -110,6 +110,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            MidsContext.Config.CoDEffectFormat = false;
             Hide();
         }
 

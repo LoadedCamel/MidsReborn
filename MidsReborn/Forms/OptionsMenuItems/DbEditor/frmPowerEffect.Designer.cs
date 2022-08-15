@@ -1,7 +1,4 @@
-﻿using System;
-using Mids_Reborn.Controls;
-
-namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
+﻿namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     partial class frmPowerEffect
     {
@@ -54,11 +51,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbAttribute = new System.Windows.Forms.ComboBox();
             this.Label5 = new System.Windows.Forms.Label();
             this.cbAspect = new System.Windows.Forms.ComboBox();
-            this.lvSubSub = new ctlListViewColored();
+            this.lvSubSub = new Mids_Reborn.Controls.ctlListViewColored();
             this.chSubSub = new System.Windows.Forms.ColumnHeader();
-            this.lvSubAttribute = new ctlListViewColored();
+            this.lvSubAttribute = new Mids_Reborn.Controls.ctlListViewColored();
             this.chSub = new System.Windows.Forms.ColumnHeader();
-            this.lvEffectType = new ctlListViewColored();
+            this.lvEffectType = new Mids_Reborn.Controls.ctlListViewColored();
             this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.cbTarget = new System.Windows.Forms.ComboBox();
@@ -1298,11 +1295,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.ComboBox cbAttribute;
         private System.Windows.Forms.Label Label5;
         private System.Windows.Forms.ComboBox cbAspect;
-        private ctlListViewColored lvSubSub;
+        private Mids_Reborn.Controls.ctlListViewColored lvSubSub;
         private System.Windows.Forms.ColumnHeader chSubSub;
-        private ctlListViewColored lvSubAttribute;
+        private Mids_Reborn.Controls.ctlListViewColored lvSubAttribute;
         private System.Windows.Forms.ColumnHeader chSub;
-        private ctlListViewColored lvEffectType;
+        private Mids_Reborn.Controls.ctlListViewColored lvEffectType;
         private System.Windows.Forms.ColumnHeader ColumnHeader1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.ComboBox cbAffects;
