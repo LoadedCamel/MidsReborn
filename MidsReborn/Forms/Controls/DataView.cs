@@ -3317,79 +3317,57 @@ namespace Mids_Reborn.Forms.Controls
                         tag2.Assign(shortFxBase);
                         suffix = "%";
                         break;
-                    default:
-                        if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Mez) &
-                            ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
-                             (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
-                        {
-                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
-                            shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].Duration);
-                            tag2.Assign(shortFxBase);
-                            suffix = "s";
-                        }
-                        /*else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
-                        {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
-                            s2.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
-                            tag2.Assign(shortFx);
-                        }*/
-                        // Set list of effects below that are treated as percentages
-                        // Base and enhanced values will be multiplied by 100
-                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MezResist |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.RechargeTime |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedRunning |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedJumping |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.JumpHeight |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.PerceptionRadius |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Meter |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxFlySpeed |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxRunSpeed |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.MaxJumpSpeed |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Jumppack |
-                                 pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.GlobalChanceMod)
-                        {
-                            
-                            if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement)
-                            {
-                                // shortFxBase, shortFxEnh have already the correct mag in.
-                                // Keep the same number of items by adding a null one.
-                                shortFxBase.Add(Index[ID], 0);
-                                shortFxEnh.Add(Index[ID], 0);
-                            }
-                            else
-                            {
-                                shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
-                                shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].BuffedMag);
-                            }
+                    case Enums.eEffectType.Mez when pBase.Effects[Index[ID]].MezType is Enums.eMez.Taunt or Enums.eMez.Placate:
+                        shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
+                        shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].Duration);
+                        tag2.Assign(shortFxBase);
+                        suffix = "s";
+                        break;
 
-                            shortFxBase.Multiply();
-                            shortFxEnh.Multiply();
-
-                            tag2.Assign(enhancedPower.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
-                        }
-                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
-                        {
-                            shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
-                            shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].Absorbed_Duration);
-                            tag2.Assign(shortFxBase);
-                        }
-                        else
+                    // Set list of effects below that are treated as percentages
+                    // Base and enhanced values will be multiplied by 100
+                    case Enums.eEffectType.DamageBuff:
+                    case Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.ResEffect:
+                    case Enums.eEffectType.Enhancement:
+                    case Enums.eEffectType.MezResist:
+                    case Enums.eEffectType.RechargeTime:
+                    case Enums.eEffectType.SpeedFlying:
+                    case Enums.eEffectType.SpeedRunning:
+                    case Enums.eEffectType.SpeedJumping:
+                    case Enums.eEffectType.JumpHeight:
+                    case Enums.eEffectType.PerceptionRadius:
+                    case Enums.eEffectType.Meter:
+                    case Enums.eEffectType.Range:
+                    case Enums.eEffectType.MaxFlySpeed:
+                    case Enums.eEffectType.MaxRunSpeed:
+                    case Enums.eEffectType.MaxJumpSpeed:
+                    case Enums.eEffectType.Jumppack:
+                    case Enums.eEffectType.GlobalChanceMod:
+                        if (pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Enhancement)
                         {
                             shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
                             shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].BuffedMag);
-                            tag2.Assign(shortFxBase);
                         }
 
+                        shortFxBase.Multiply();
+                        shortFxEnh.Multiply();
+
+                        tag2.Assign(enhancedPower.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
+                        break;
+                    case Enums.eEffectType.SilentKill:
+                        shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
+                        shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].Absorbed_Duration);
+                        tag2.Assign(shortFxBase);
+                        break;
+                    default:
+                        shortFxBase.Add(Index[ID], pBase.Effects[Index[ID]].BuffedMag);
+                        shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].BuffedMag);
+                        tag2.Assign(shortFxBase);
                         break;
                 }
-                
+
                 if (pBase.Effects[Index[ID]].DisplayPercentage)
                 {
                     suffix = "%";
@@ -3454,20 +3432,26 @@ namespace Mids_Reborn.Forms.Controls
                 break;
             }
 
-            var tip = pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[shortFxEnh.Index[0]].EffectType,
+            // shortFxEnh.Index.Length == 0 will occur if all effects of the same kind
+            // have non validated conditionals.
+            // E.g. -Recovery on Kick if Cross Punch has not been picked.
+            var tip = shortFxEnh.Index.Length <= 0
+                ? ""
+                : pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[shortFxEnh.Index[0]].EffectType,
                 pEnh.Effects[shortFxEnh.Index[0]].ETModifies, pEnh.Effects[shortFxEnh.Index[0]].DamageType,
                 pEnh.Effects[shortFxEnh.Index[0]].MezType);
+
             if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
             {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, tip);
+                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, tip);
             }
 
             if (pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None)
             {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, tip);
+                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, tip);
             }
 
-            return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, tip);
+            return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, pBase.Effects[Index[ID]].Probability < 1, false, tip);
         }
 
         public void Init()
