@@ -1037,8 +1037,25 @@ namespace Mids_Reborn.Core
 
             var enhShortName = string.Join("-", chunks[1..]).Trim('-');
             var setEnhancementsShort = Database.EnhancementSets[enhSet].Enhancements.ToDictionary(enhIdx => Database.Enhancements[enhIdx].ShortName);
+            if (setEnhancementsShort.ContainsKey(enhShortName))
+            {
+                return setEnhancementsShort[enhShortName];
+            }
 
-            return setEnhancementsShort.ContainsKey(enhShortName) ? setEnhancementsShort[enhShortName] : -1;
+            foreach (var k in setEnhancementsShort.Keys)
+            {
+                // Fetch enhancements with ShortName containing dashes, e.g. SuddAcc--KB/+KD
+                if (!Regex.IsMatch(k, $@"^(\-*){Regex.Escape(enhShortName)}(\-*)$"))
+                {
+                    continue;
+                }
+
+                var m = Regex.Match(k, $@"^(\-*){Regex.Escape(enhShortName)}(\-*)$");
+
+                return setEnhancementsShort[m.Groups[0].Value];
+            }
+
+            return -1;
         }
 
         public static int GetEnhancementByUIDName(string iName)
@@ -1049,7 +1066,10 @@ namespace Mids_Reborn.Core
             }
 
             // Artillery set still use its old name for the UIDs.
-            if (iName.Contains("Artillery")) iName = iName.Replace("Artillery", "Shrapnel");
+            if (iName.Contains("Artillery"))
+            {
+                iName = iName.Replace("Artillery", "Shrapnel");
+            }
 
             var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
             return e >= 0
