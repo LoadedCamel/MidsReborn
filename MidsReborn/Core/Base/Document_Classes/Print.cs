@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
@@ -14,10 +15,20 @@ namespace Mids_Reborn.Core.Base.Document_Classes
         private int _pIndex;
         private bool _printingHistory;
         private bool _printingProfile;
+        private bool _printingStats;
+
+        private Dictionary<PageType, bool> _completedPrintTasks;
 
         private PrintWhat _sectionCompleted;
         public PrintDocument Document;
 
+        private enum PageType
+        {
+            ProfileShort,
+            ProfileLong,
+            History,
+            Stats
+        }
 
         public Print()
         {
@@ -72,7 +83,28 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             _pIndex = 0;
             _printingProfile = MidsContext.Config.PrintProfile != ConfigData.PrintOptionProfile.None;
             _printingHistory = MidsContext.Config.PrintHistory;
+            _printingStats = MidsContext.Config.PrintProfile == ConfigData.PrintOptionProfile.MultiPage;
             _sectionCompleted = PrintWhat.None;
+            _completedPrintTasks = new Dictionary<PageType, bool>();
+            if (MidsContext.Config.PrintProfile == ConfigData.PrintOptionProfile.SinglePage & _printingProfile)
+            {
+                _completedPrintTasks.Add(PageType.ProfileShort, false);
+            }
+
+            if (MidsContext.Config.PrintProfile == ConfigData.PrintOptionProfile.MultiPage & _printingProfile)
+            {
+                _completedPrintTasks.Add(PageType.ProfileLong, false);
+            }
+
+            if (_printingHistory)
+            {
+                _completedPrintTasks.Add(PageType.History, false);
+            }
+
+            if (_printingStats)
+            {
+                _completedPrintTasks.Add(PageType.Stats, false);
+            }
         }
 
         private void PrintEnd(object sender, PrintEventArgs e)
@@ -87,16 +119,30 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var num = PageBorder(RectConvert(visibleClipBounds), args);
             visibleClipBounds.Y += num;
             visibleClipBounds.Height -= num;
-            if ((MidsContext.Config.PrintProfile == ConfigData.PrintOptionProfile.SinglePage) & _printingProfile)
-                PrintProfileShort(RectConvert(visibleClipBounds), args);
-            else if ((MidsContext.Config.PrintProfile == ConfigData.PrintOptionProfile.MultiPage) & _printingProfile)
-                PrintProfileLong(RectConvert(visibleClipBounds), args);
-            else if (MidsContext.Config.PrintHistory & _printingHistory)
-                PrintHistory(RectConvert(visibleClipBounds), args);
-            if (_printingProfile | _printingHistory)
-                args.HasMorePages = true;
-            else
-                args.HasMorePages = false;
+            switch (MidsContext.Config.PrintProfile)
+            {
+                case ConfigData.PrintOptionProfile.SinglePage when _printingProfile:
+                    PrintProfileShort(RectConvert(visibleClipBounds), args);
+                    break;
+
+                case ConfigData.PrintOptionProfile.MultiPage when _printingProfile:
+                    PrintProfileLong(RectConvert(visibleClipBounds), args);
+                    break;
+
+                case ConfigData.PrintOptionProfile.MultiPage when _printingStats:
+                    PrintStats(RectConvert(visibleClipBounds), args);
+                    break;
+
+                default:
+                    if (MidsContext.Config.PrintHistory & _printingHistory)
+                    {
+                        PrintHistory(RectConvert(visibleClipBounds), args);
+                    }
+
+                    break;
+            }
+
+            args.HasMorePages = !_completedPrintTasks.Values.All(e => e);
         }
 
         private int PageBorder(Rectangle bounds, PrintPageEventArgs args)
@@ -148,8 +194,8 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 Alignment = StringAlignment.Near,
                 LineAlignment = StringAlignment.Near
             };
-            var historyMapArray =
-                MidsContext.Character.CurrentBuild.BuildHistoryMap(true, !MidsContext.Config.I9.DisablePrintIOLevels);
+            
+            var historyMapArray = MidsContext.Character.CurrentBuild.BuildHistoryMap(true, !MidsContext.Config.I9.DisablePrintIOLevels);
             var lvl = 0;
             var s = $"{MidsContext.Character.Alignment} Build History";
             var layoutRectangle = new RectangleF(bounds.Left + 15, top, bounds.Width, 12.5f);
@@ -158,14 +204,14 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var y1 = top + Convert.ToInt32(12.5f);
             var y2 = y1;
             var font2 = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
-            for (var index = 0; index <= historyMapArray.Length - 1; ++index)
+            foreach (var hItem in historyMapArray)
             {
-                if (historyMapArray[index].Level < 25)
+                if (hItem.Level < 25)
                 {
-                    if (historyMapArray[index].Level != lvl)
+                    if (hItem.Level != lvl)
                     {
                         y1 += Convert.ToInt32(10f);
-                        lvl = historyMapArray[index].Level;
+                        lvl = hItem.Level;
                     }
 
                     layoutRectangle = new RectangleF(bounds.Left + 15, y1, bounds.Width / 2 - 15, 12.5f);
@@ -173,21 +219,228 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 }
                 else
                 {
-                    if (historyMapArray[index].Level != lvl)
+                    if (hItem.Level != lvl)
                     {
-                        if (historyMapArray[index].Level > 25)
+                        if (hItem.Level > 25)
+                        {
                             y2 += 10;
-                        lvl = historyMapArray[index].Level;
+                        }
+
+                        lvl = hItem.Level;
                     }
 
                     layoutRectangle = new RectangleF(bounds.Left + bounds.Width / 2, y2, bounds.Width / 2f, 12.5f);
                     y2 += 12;
                 }
 
-                args.Graphics.DrawString(historyMapArray[index].Text, font2, solidBrush, layoutRectangle, format);
+                args.Graphics.DrawString(hItem.Text, font2, solidBrush, layoutRectangle, format);
             }
 
             _printingHistory = false;
+            if (_completedPrintTasks.ContainsKey(PageType.History))
+            {
+                _completedPrintTasks[PageType.History] = true;
+            }
+        }
+
+        private void PrintStats(Rectangle bounds, PrintPageEventArgs args)
+        {
+            var leftColumnItems = new List<string>();
+            var rightColumnItems = new List<string>();
+
+            var displayStats = MidsContext.Character.DisplayStats;
+
+            var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
+            var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));
+            var excludedDefVectors = new List<Enums.eDamage>
+            {
+                Enums.eDamage.None,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>().ToList();
+
+            var excludedResVectors = new List<Enums.eDamage>
+            {
+                Enums.eDamage.None,
+                Enums.eDamage.Melee,
+                Enums.eDamage.Ranged,
+                Enums.eDamage.AoE,
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>().ToList();
+
+            var excludedElusivityVectors = new List<Enums.eDamage>
+            {
+                Enums.eDamage.Special,
+                Enums.eDamage.Unique1,
+                Enums.eDamage.Unique2,
+                Enums.eDamage.Unique3
+            }.Cast<int>().ToList();
+
+            var mezList = new List<Enums.eMez>
+            {
+                Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
+                Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
+                Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
+            };
+
+            var debuffEffectsList = new List<Enums.eEffectType>
+            {
+                Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
+                Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
+                Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
+            };
+
+            leftColumnItems.Add("- Defense -");
+
+            for (var i = 0; i < damageVectors.Length; i++)
+            {
+                if (excludedDefVectors.Contains(i))
+                {
+                    continue;
+                }
+
+                leftColumnItems.Add($"{damageVectorsNames[i]}: {displayStats.Defense(i):##0.##}%");
+            }
+
+            rightColumnItems.Add("- Resistance -");
+
+            for (var i = 0; i < damageVectors.Length; i++)
+            {
+                if (excludedResVectors.Contains(i))
+                {
+                    continue;
+                }
+
+                var resValue = displayStats.DamageResistance(i, false);
+                rightColumnItems.Add($"{damageVectorsNames[i]}: {resValue:##0.##}%");
+            }
+
+            leftColumnItems.Add("");
+            leftColumnItems.Add("- HP & Endurance -");
+
+            var regenValue = displayStats.HealthRegenPercent(false);
+            var hpValue = displayStats.HealthHitpointsNumeric(false);
+            var hpBase = MidsContext.Character.Archetype.Hitpoints;
+            var absorbValue = Math.Min(displayStats.Absorb, hpBase);
+            var endRecValue = displayStats.EnduranceRecoveryNumeric;
+            leftColumnItems.Add($"Regeneration: {regenValue:###0.##}%");
+            leftColumnItems.Add($"Max HP: {hpValue:###0.##} {(absorbValue > 0 ? $" (Absorb: {absorbValue:##0.##} -- {absorbValue / hpBase * 100:##0.##}% of base HP)" : "")}");
+            leftColumnItems.Add($"End Recovery: {endRecValue:##0.##}/s");
+            leftColumnItems.Add($"End Use: {displayStats.EnduranceUsage:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)");
+            leftColumnItems.Add($"Max End: {displayStats.EnduranceMaxEnd:##0.##}");
+
+            rightColumnItems.Add("");
+            rightColumnItems.Add("- Movement -");
+
+            var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
+            var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
+            var runSpdValue = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
+            var jumpSpdValue = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
+            var jumpHeightValue = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
+            var flySpeedValue = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
+            rightColumnItems.Add($"Run Speed: {runSpdValue:##0.##} {movementUnitSpeed}");
+            rightColumnItems.Add($"Jump Speed: {jumpSpdValue:##0.##} {movementUnitSpeed}");
+            rightColumnItems.Add($"Jump Height: {jumpHeightValue:##0.##} {movementUnitDistance}");
+            rightColumnItems.Add($"Fly Speed: {flySpeedValue:##0.##} {movementUnitSpeed}");
+
+            leftColumnItems.Add("");
+            leftColumnItems.Add("- Stealth & Perception -");
+            
+            leftColumnItems.Add($"Stealth (PvE): {displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
+            leftColumnItems.Add($"Stealth (PvP): {displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
+            leftColumnItems.Add($"Perception: {displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
+
+            rightColumnItems.Add("");
+            rightColumnItems.Add("- Misc -");
+
+            rightColumnItems.Add($"Haste: {displayStats.BuffHaste(false):##0.##}%");
+            rightColumnItems.Add($"ToHit: {displayStats.BuffToHit:##0.##}%");
+            rightColumnItems.Add($"Accuracy: {displayStats.BuffAccuracy:##0.##}%");
+            rightColumnItems.Add($"Damage: {displayStats.BuffDamage(false):##0.##}%");
+            rightColumnItems.Add($"End Rdx: {displayStats.BuffEndRdx:##0.##}%");
+            rightColumnItems.Add($"Threat: {displayStats.ThreatLevel:##0.##}");
+
+            leftColumnItems.Add("");
+            leftColumnItems.Add("- Status Protection -");
+
+            rightColumnItems.Add("");
+            rightColumnItems.Add("- Status Resistance -");
+
+            foreach (var m in mezList)
+            {
+                // Use Math.Abs() here instead of negative sign to prevent display of "-0"
+                leftColumnItems.Add($"{m}: {Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}");
+                rightColumnItems.Add($"{m}: {MidsContext.Character.Totals.MezRes[(int)m]:####0.##}%");
+            }
+
+            leftColumnItems.Add("");
+            leftColumnItems.Add("- Debuff Resistance -");
+
+            var cappedDebuffRes = debuffEffectsList.Select(e => Math.Min(
+                    e == Enums.eEffectType.Defense
+                        ? Statistics.MaxDefenseDebuffRes
+                        : Statistics.MaxGenericDebuffRes,
+                    MidsContext.Character.Totals.DebuffRes[(int)e]))
+                .ToList();
+
+            leftColumnItems.AddRange(cappedDebuffRes.Select((v, i) => $"{debuffEffectsList[i]}: {v:##0.##}%"));
+
+            rightColumnItems.Add("");
+            rightColumnItems.Add("- Elusivity (PvP) -");
+
+            for (var i = 0; i < damageVectors.Length; i++)
+            {
+                if (excludedElusivityVectors.Contains(i))
+                {
+                    continue;
+                }
+
+                var elValue = (MidsContext.Character.Totals.Elusivity[i] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100;
+                rightColumnItems.Add($"{damageVectorsNames[i]}: {elValue:##0.##}%");
+            }
+
+            var top = bounds.Top;
+            var solidBrush = new SolidBrush(Color.Black);
+            var format = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip)
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near
+            };
+
+            var layoutRectangle = new RectangleF(bounds.Left + 15, top, bounds.Width, 12.5f);
+            var font1 = new Font("Arial", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
+            args.Graphics.DrawString("Build Statistics", font1, solidBrush, layoutRectangle, format);
+            var y1 = top + Convert.ToInt32(12.5f);
+            var y2 = y1;
+            var font2 = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+
+            foreach (var item in leftColumnItems)
+            {
+                y1 += 18;
+                layoutRectangle = new RectangleF(bounds.Left + 15, y1, bounds.Width / 2 - 15, 12.5f);
+
+                args.Graphics.DrawString(item, font2, solidBrush, layoutRectangle, format);
+            }
+
+            foreach (var item in rightColumnItems)
+            {
+                y2 += 18;
+                layoutRectangle = new RectangleF(bounds.Left + bounds.Width / 2, y2, bounds.Width / 2f, 12.5f);
+
+                args.Graphics.DrawString(item, font2, solidBrush, layoutRectangle, format);
+            }
+
+            _printingStats = false;
+            if (_completedPrintTasks.ContainsKey(PageType.Stats))
+            {
+                _completedPrintTasks[PageType.Stats] = true;
+            }
         }
 
         private static int PpInfo(Rectangle bounds, PrintPageEventArgs args)
@@ -244,10 +497,12 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 // mutates vPos
                 var num = BuildPowerListLong(ref vPos, bounds, 12, PrintWhat.Powers, args);
                 if (_endOfPage)
+                {
                     return;
+                }
+
                 var s = "------------";
-                args.Graphics.DrawString(s, font1, solidBrush, new RectangleF(bounds.Left + 15, num, bounds.Width, 15f),
-                    format);
+                args.Graphics.DrawString(s, font1, solidBrush, new RectangleF(bounds.Left + 15, num, bounds.Width, 15f), format);
                 vPos = num + 15;
                 _sectionCompleted = PrintWhat.Powers;
             }
@@ -257,7 +512,10 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 _endOfPage = false;
                 vPos = BuildPowerListLong(ref vPos, bounds, 12, PrintWhat.Inherent, args);
                 if (_endOfPage)
+                {
                     return;
+                }
+
                 _sectionCompleted = PrintWhat.Inherent;
                 if (MidsContext.Character.Archetype.Epic)
                 {
@@ -273,10 +531,16 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 _endOfPage = false;
                 BuildPowerListLong(ref vPos, bounds, 12, PrintWhat.EpicInherent, args);
                 if (_endOfPage)
+                {
                     return;
+                }
             }
 
             _printingProfile = false;
+            if (_completedPrintTasks.ContainsKey(PageType.ProfileLong))
+            {
+                _completedPrintTasks[PageType.ProfileLong] = true;
+            }
         }
 
         private int BuildPowerListLong(
@@ -467,6 +731,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 Alignment = StringAlignment.Near,
                 LineAlignment = StringAlignment.Near
             };
+
             var vPos = PpInfo(bounds, args) + 6;
             var font1 = new Font("Arial", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
             args.Graphics.DrawString(MidsContext.Character.Alignment + " Profile", font1, solidBrush,
@@ -475,17 +740,23 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var font2 = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             BuildPowerListShort(ref vPos, bounds, 12, true, false, false, args);
             var s2 = "------------";
-            args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f),
-                format);
+            args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, false, args);
             if (!MidsContext.Character.Archetype.Epic)
+            {
                 return;
+            }
+
             var s3 = "------------";
-            args.Graphics.DrawString(s3, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f),
-                format);
+            args.Graphics.DrawString(s3, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, true, args);
+
+            if (_completedPrintTasks.ContainsKey(PageType.ProfileShort))
+            {
+                _completedPrintTasks[PageType.ProfileShort] = true;
+            }
         }
 
         private static void BuildPowerListShort(

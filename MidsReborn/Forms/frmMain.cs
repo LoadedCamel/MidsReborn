@@ -5952,7 +5952,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFilePrint_Click(object sender, EventArgs e)
         {
-            new frmPrint().Show();
+            new frmPrint().ShowDialog(this);
         }
 
         private void tsFileQuit_Click(object sender, EventArgs e)

@@ -345,19 +345,23 @@ namespace Mids_Reborn.Core
         public HistoryMap[] BuildHistoryMap(bool enhNames, bool ioLevel = true)
         {
             var historyMapList = new List<HistoryMap>();
-            for (var lvlIdx = 0; lvlIdx <= DatabaseAPI.Database.Levels.Length - 1; ++lvlIdx)
+            for (var lvlIdx = 0; lvlIdx < DatabaseAPI.Database.Levels.Length; lvlIdx++)
             {
-                for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+                for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
                 {
                     var power = Powers[powerIdx];
                     if (!power.Chosen && power.SubPowers.Length != 0 && power.SlotCount != 0 || power.Level != lvlIdx ||
                         power.Power == null)
+                    {
                         continue;
+                    }
+
                     var historyMap = new HistoryMap
                     {
                         Level = lvlIdx,
                         HID = powerIdx
                     };
+
                     var appendText = string.Empty;
                     var choiceText = power.Chosen ? "Added" : "Received";
                     if (power.Slots.Length > 0)
@@ -366,9 +370,15 @@ namespace Mids_Reborn.Core
                         if (power.Slots[0].Enhancement.Enh > -1)
                         {
                             if (enhNames)
-                                appendText = " [" + DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[0].Enhancement.Enh);
+                            {
+                                appendText = $" [{DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[0].Enhancement.Enh)}";
+                            }
+
                             if (ioLevel && DatabaseAPI.Database.Enhancements[power.Slots[0].Enhancement.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
-                                appendText = appendText + "-" + power.Slots[0].Enhancement.IOLevel;
+                            {
+                                appendText = $"{appendText}-{power.Slots[0].Enhancement.IOLevel + 1}";
+                            }
+
                             appendText += "]";
                         }
                         else if (enhNames)
@@ -377,33 +387,41 @@ namespace Mids_Reborn.Core
                         }
                     }
 
-                    historyMap.Text = "Level " + (lvlIdx + 1) + ": " + choiceText + " " + power.Power.DisplayName + " (" +
-                                      Enum.GetName(DatabaseAPI.Database.Powersets[power.NIDPowerset].SetType.GetType(),
-                                          DatabaseAPI.Database.Powersets[power.NIDPowerset].SetType) + ")" + appendText;
+                    historyMap.Text = $"Level {lvlIdx + 1}: {choiceText} {power.Power.DisplayName} ({Enum.GetName(DatabaseAPI.Database.Powersets[power.NIDPowerset].SetType.GetType(), DatabaseAPI.Database.Powersets[power.NIDPowerset].SetType)}){appendText}";
                     historyMapList.Add(historyMap);
                 }
 
-                for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+                for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
                 {
                     var power = Powers[powerIdx];
-                    for (var slotIdx = 1; slotIdx <= power.Slots.Length - 1; ++slotIdx)
+                    for (var slotIdx = 1; slotIdx < power.Slots.Length; slotIdx++)
                     {
                         if (power.Slots[slotIdx].Level != lvlIdx)
+                        {
                             continue;
+                        }
+
                         var historyMap = new HistoryMap
                         {
                             Level = lvlIdx,
                             HID = powerIdx,
                             SID = slotIdx
                         };
+
                         var str = string.Empty;
                         if (power.Slots[slotIdx].Enhancement.Enh > -1)
                         {
                             if (enhNames)
-                                str = " [" + DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[slotIdx].Enhancement.Enh);
+                            {
+                                str = $" [{DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[slotIdx].Enhancement.Enh)}";
+                            }
+
                             if (ioLevel &&
                                 DatabaseAPI.Database.Enhancements[power.Slots[slotIdx].Enhancement.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
-                                str = str + "-" + power.Slots[slotIdx].Enhancement.IOLevel;
+                            {
+                                str = $"{str}-{power.Slots[slotIdx].Enhancement.IOLevel + 1}";
+                            }
+
                             str += "]";
                         }
                         else if (enhNames)
@@ -411,7 +429,7 @@ namespace Mids_Reborn.Core
                             str = " [Empty]";
                         }
 
-                        historyMap.Text = "Level " + (lvlIdx + 1) + ": Added Slot to " + power.Power.DisplayName + str;
+                        historyMap.Text = $"Level {lvlIdx + 1}: Added Slot to {power.Power.DisplayName}{str}";
                         historyMapList.Add(historyMap);
                     }
                 }
