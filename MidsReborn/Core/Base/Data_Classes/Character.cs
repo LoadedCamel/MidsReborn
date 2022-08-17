@@ -1106,7 +1106,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int GetFirstAvailablePowerIndex(int iLevel = 0)
         {
-            for (var index = 0; index < Math.Min(CurrentBuild.Powers.Count, CurrentBuild.LastPower); index++)
+            for (var index = 0; index < Math.Min(CurrentBuild.Powers.Count, CurrentBuild.LastPower + 1); index++)
             {
                 if (CurrentBuild.Powers[index].NIDPowerset < 0 && CurrentBuild.Powers[index].Level >= iLevel)
                 {
@@ -1119,7 +1119,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static int GetFirstAvailablePowerLevel(Build currentbuild, int iLevel = 0)
         {
-            for (var index = 0; index < Math.Min(currentbuild.Powers.Count, currentbuild.LastPower); index++)
+            for (var index = 0; index < Math.Min(currentbuild.Powers.Count, currentbuild.LastPower + 1); index++)
             {
                 if ((currentbuild.Powers[index].NIDPowerset < 0) & (currentbuild.Powers[index].Level >= iLevel))
                 {

@@ -2915,7 +2915,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void llAncillary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Item.ItemState == ListLabelV3.LLItemState.Heading)
+            {
                 return;
+            }
+
             switch (Button)
             {
                 case MouseButtons.Left:
@@ -3768,12 +3771,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MainModule.MidsController.Toon.Complete = false;
             fixStatIncludes();
             if (markModified)
+            {
                 FileModified = true;
+            }
+
             if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
             {
                 index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)
+                {
                     index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                }
             }
             else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
             {
@@ -3782,7 +3790,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             if (MainModule.MidsController.Toon.Complete)
+            {
                 drawing.HighlightSlot(-1);
+            }
 
             var slotCounts = MainModule.MidsController.Toon.GetSlotCounts();
             slotCounts[0] = Build.TotalSlotsAvailable - MidsContext.Character.CurrentBuild.SlotsPlaced;
@@ -3796,8 +3806,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (slotCounts[0] < 0)
                 {
                     ibAccolade.TextOff = Math.Abs(slotCounts[0]) + " slot" + (slotCounts[0] == 1 ? string.Empty : "s") + " over";
-                    MessageBox.Show($@"This build exceeds the slot limit.
- Please remove {Math.Abs(slotCounts[0])} slots from the build.", @"Invalid Slotting", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"This build exceeds the slot limit.\r\nPlease remove {Math.Abs(slotCounts[0])} slots from the build.", @"Invalid Slotting", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
@@ -3815,7 +3824,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             if ((index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
+            {
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
+            }
+
             MidsContext.Character.Validate();
             if (redraw)
             {
@@ -3823,6 +3835,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 Application.DoEvents();
                 UpdateControls();
             }
+
             RefreshInfo();
             UpdateModeInfo();
             pbDynMode.Refresh();
