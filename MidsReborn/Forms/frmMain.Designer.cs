@@ -613,7 +613,6 @@ namespace Mids_Reborn.Forms
             this.tsFileNew,
             this.ToolStripSeparator7,
             this.tsFileOpen,
-            this.tsBuildRcv,
             this.tsFileSave,
             this.tsFileSaveAs,
             this.ToolStripSeparator8,
@@ -698,6 +697,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ImportExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsImport,
+            this.tsBuildRcv,
             this.ToolStripSeparator12,
             this.tsExport,
             this.tsExportLong,
