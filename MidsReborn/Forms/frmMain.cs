@@ -2129,13 +2129,14 @@ namespace Mids_Reborn.Forms
             {
                 if (show)
                 {
-                    if (fTotals2 == null)
+                    if (fTotals2 != null)
                     {
-                        var iParent = this;
-                        fTotals2 = new frmTotalsV2(ref iParent);
+                        return;
                     }
 
-                    DoRedraw();
+                    var iParent = this;
+                    fTotals2 = new frmTotalsV2(ref iParent);
+
                     fTotals2.SetLocation();
                     fTotals2.Show();
                     fTotals2.BringToFront();
@@ -2146,7 +2147,10 @@ namespace Mids_Reborn.Forms
                 else
                 {
                     if (fTotals2 == null)
+                    {
                         return;
+                    }
+
                     fTotals2.Hide();
                     fTotals2.Dispose();
                     fTotals2 = null;
@@ -2156,12 +2160,14 @@ namespace Mids_Reborn.Forms
             {
                 if (show)
                 {
-                    if (fTotals == null)
+                    if (fTotals != null)
                     {
-                        var iParent = this;
-                        fTotals = new frmTotals(ref iParent);
+                        return;
                     }
-                    DoRedraw();
+
+                    var iParent = this;
+                    fTotals = new frmTotals(ref iParent);
+
                     fTotals.SetLocation();
                     fTotals.Show();
                     fTotals.BringToFront();
@@ -2171,7 +2177,10 @@ namespace Mids_Reborn.Forms
                 else
                 {
                     if (fTotals == null)
+                    {
                         return;
+                    }
+
                     fTotals.Hide();
                     fTotals.Dispose();
                     fTotals = null;
