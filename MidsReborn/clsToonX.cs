@@ -2350,7 +2350,7 @@ namespace Mids_Reborn
             }
 
             popupData.Sections[index1].Add("Set Type: " + Enum.GetName(powerset.SetType.GetType(), powerset.SetType), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
-            popupData.Sections[index1].Add(powerset.Description, PopUp.Colors.Text);
+            popupData.Sections[index1].Add(powerset.Description.Replace("  ", " "), PopUp.Colors.Text);
             if (extraString != "")
             {
                 var index2 = popupData.Add();
