@@ -2979,9 +2979,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var effectsInMode = string.Empty;
                     if (!damageVectors.Except(effectsVectors).Any())
                     {
-                        effectsInMode = Effects
-                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
-                            .BuildEffectString(false, groupName, false, false, false, true);
+                        var effectsInModeBase = Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
+                            
+                            effectsInMode = effectsInModeBase.Value.BuildEffectString(false, groupName, false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
                     }
                     else
                     {
@@ -2991,9 +2993,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             : string.Join(", ", effectsVectors);
 
                         // Pick all matching effects
-                        effectsInMode = Effects
-                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
-                            .BuildEffectString(false, $"{effectType} ({vectors})", false, false, false, true);
+                        var effectsInModeBase = Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
+                            
+                            effectsInMode = effectsInModeBase.Value.BuildEffectString(false, $"{effectType} ({vectors})", false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
                     }
 
                     effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
@@ -3106,9 +3110,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var effectsInMode = string.Empty;
                     if (!damageVectors.Except(effectsVectors).Any())
                     {
-                        effectsInMode = Effects
-                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
-                            .BuildEffectString(false, groupName, false, false, false, true);
+                        var effectsInModeBase = Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
+                            
+                        effectsInMode = effectsInModeBase.Value.BuildEffectString(false, groupName, false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
                     }
                     else
                     {
@@ -3125,9 +3131,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             _ => $"{effectType} ({vectors})"
                         };
 
-                        effectsInMode = Effects
-                            .First(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
-                            .BuildEffectString(false, $"{fxLabel}", false, false, false, true);
+                        var effectsInModeBase = Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
+
+                        effectsInMode = effectsInModeBase.Value.BuildEffectString(false, $"{fxLabel}", false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
                     }
 
                     effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
@@ -3148,6 +3156,102 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return effectsList;
+        }
+
+        /// <summary>
+        /// Fetch summoned entities powerset info.
+        /// For each EntCreate effect, will get the summoned entity nId, how many powers there are in its first associated powerset,
+        /// and for each power in it, its full name and how many effects this power holds.
+        /// Finally it will return effects indexes and the source power from the entity powerset.
+        /// </summary>
+        /// <returns>Dictionary of (effect index => entity power full name)</returns>
+        /// <remarks>Powers from entities are added in sequence. So if first power has 3 effects, and the EntCreate is #6, effects #7, #8 and #9 will belong to this first power.</remarks>
+        public Dictionary<int, string> GetEffectInSummons()
+        {
+            // Dictionary(index of EntCreate effect => KeyValuePair(KeyValuePair(entityPowerset[0].nId, entityPowerset[0].Powers.Length), Dictionary(entityPowerset[0].Powers[n].FullName, entityPowerset[0].Powers[n].Effects.Length)))
+            var powerSummons = Effects
+                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                .Where(e => AbsorbSummonEffects & AbsorbSummonAttributes & e.Value.EffectType == Enums.eEffectType.EntCreate)
+                .ToDictionary(e => e.Key, e => new KeyValuePair<KeyValuePair<int, int>, Dictionary<string, int>>(
+                    new KeyValuePair<int, int>(DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0],
+                        DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers.Length),
+                    DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers
+                        .Where(p => p != null)
+                        .ToDictionary(p => p.FullName, p => p.Effects.Length)));
+
+            var effectsInSummons = new Dictionary<int, string>();
+            foreach (var ps in powerSummons)
+            {
+                var baseIndex = ps.Key;
+                var powers = ps.Value.Value;
+                var k = 0;
+                foreach (var p in powers)
+                {
+                    for (var i = 0; i < p.Value; i++)
+                    {
+                        effectsInSummons.Add(baseIndex + 1 + i + k, p.Key);
+                    }
+
+                    k += p.Value;
+                }
+            }
+
+            return effectsInSummons;
+        }
+
+        /// <summary>
+        /// If effect is from an absorbed entity, check which attribute differs and return a comma-separated string of them, with an extra starting comma.
+        /// Returns empty string if no difference.
+        /// </summary>
+        /// <param name="fxIndex">Index of effect in basePower</param>
+        /// <returns>String containing value that differs from host power. Values listed will be those from the entity.</returns>
+        /// <remarks>Will only check for these attributes: Range, Secondary Range, Radius, Arc, Max Targets.</remarks>
+        public string GetDifferentAttributesSubPower(int fxIndex)
+        {
+            if (fxIndex <= -1)
+            {
+                return "";
+            }
+
+            var effectsInSummons = GetEffectInSummons();
+            if (!effectsInSummons.ContainsKey(fxIndex))
+            {
+                return "";
+            }
+
+            var extraAttribs = new List<string>();
+            var subPower = DatabaseAPI.GetPowerByFullName(effectsInSummons[fxIndex]);
+            if (subPower == null)
+            {
+                return "";
+            }
+
+            if (Math.Abs(subPower.Range - Range) > float.Epsilon)
+            {
+                extraAttribs.Add($"Range: {subPower.Range:###0.##}ft");
+            }
+
+            if (Math.Abs(subPower.RangeSecondary - RangeSecondary) > float.Epsilon)
+            {
+                extraAttribs.Add($"Secondary Range: {subPower.RangeSecondary:###0.##}ft");
+            }
+
+            if (Math.Abs(subPower.Radius - Radius) > float.Epsilon)
+            {
+                extraAttribs.Add($"Radius: {subPower.Radius:###0.##}ft");
+            }
+
+            if (subPower.Arc != Arc)
+            {
+                extraAttribs.Add($"Arc: {subPower.Arc:###0.##}deg");
+            }
+
+            if (subPower.MaxTargets != MaxTargets)
+            {
+                extraAttribs.Add($"Max Targets: {subPower.MaxTargets}");
+            }
+
+            return $", {string.Join(", ", extraAttribs)}";
         }
 
         public override string ToString()

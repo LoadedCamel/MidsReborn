@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -795,7 +794,7 @@ namespace Mids_Reborn.Forms.Controls
                                 rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
                                 break;
                                 
-                            case Enums.eEffectType.EntCreate:
+                            case Enums.eEffectType.EntCreate when !pBase.AbsorbSummonEffects | !pBase.AbsorbSummonAttributes:
                             {
                                 rankedEffect.Name = "Summon";
                                 if (pBase.Effects[rankedEffects[id]].nSummon > -1)
@@ -880,8 +879,7 @@ namespace Mids_Reborn.Forms.Controls
                                 };
 
                                 rankedEffect.AlternateColour = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag - pBase.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
-                                    Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType), Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
 
                                 break;
@@ -899,6 +897,15 @@ namespace Mids_Reborn.Forms.Controls
                         rankedEffect.Name = ShortStr(
                             Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType),
                             Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[id]].MezType));
+                    }
+                }
+
+                // Ignore fully absorbed entities
+                if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.EntCreate)
+                {
+                    if (pBase.AbsorbSummonEffects & pBase.AbsorbSummonAttributes)
+                    {
+                        continue;
                     }
                 }
 
@@ -1061,7 +1068,7 @@ namespace Mids_Reborn.Forms.Controls
                     flag1 = true;
                 }
 
-                if ((num1 > 2) | ((num1 > 0) & (index == 0)))
+                if (num1 > 2 | num1 > 0 & index == 0)
                 {
                     ++index;
                     if (index < PairedListArray.Length)
@@ -1071,14 +1078,14 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            if (!flag1 & flag2 & (num1 < 3))
+            if (!flag1 & flag2 & num1 < 3)
             {
                 --index;
             }
 
             if (index < PairedListArray.Length &&
-                (EffectsBuffDebuff(labelArray[index], PairedListArray[index]) > 0) &
-                (PairedListArray[index].ItemCount > 2) & (index + 1 < PairedListArray.Length))
+                EffectsBuffDebuff(labelArray[index], PairedListArray[index]) > 0 &
+                PairedListArray[index].ItemCount > 2 & index + 1 < PairedListArray.Length)
             {
                 ++index;
                 if (index < PairedListArray.Length)
@@ -2623,6 +2630,11 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
+                if (pBase.AbsorbSummonEffects & pBase.AbsorbSummonAttributes)
+                {
+                    continue;
+                }
+
                 var iValue = pEnh.Effects[index].SummonedEntityName;
                 if (iValue.StartsWith("MastermindPets_"))
                 {
@@ -2826,30 +2838,38 @@ namespace Mids_Reborn.Forms.Controls
         private static string GenerateTipFromEffect(IPower basePower, IEffect baseFx)
         {
             return (string.Join("\n",
-                       basePower.Effects.Where(e =>
-                               e.EffectType == baseFx.EffectType &
-                               e.DamageType == baseFx.DamageType &
-                               e.MezType == baseFx.MezType &
-                               e.ETModifies == baseFx.ETModifies &
-                               e.ToWho == Enums.eToWho.Self &
-                               (e.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                   ? Enums.ePvX.PvE
-                                   : Enums.ePvX.PvP)) &
-                               (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                           .Select(e => e.BuildEffectString()))
-                   + "\n\n"
-                   + string.Join("\n",
-                       basePower.Effects.Where(e =>
-                               e.EffectType == baseFx.EffectType &
-                               e.DamageType == baseFx.DamageType &
-                               e.MezType == baseFx.MezType &
-                               e.ETModifies == baseFx.ETModifies &
-                               e.ToWho == Enums.eToWho.Target &
-                               (e.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                   ? Enums.ePvX.PvE
-                                   : Enums.ePvX.PvP)) &
-                               (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                           .Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
+                        basePower.Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .Where(e =>
+                                e.Value.EffectType == baseFx.EffectType &
+                                e.Value.DamageType == baseFx.DamageType &
+                                e.Value.MezType == baseFx.MezType &
+                                e.Value.ETModifies == baseFx.ETModifies &
+                                e.Value.ToWho == Enums.eToWho.Self &
+                                (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
+                                    ? Enums.ePvX.PvE
+                                    : Enums.ePvX.PvP)) &
+                                (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                            .Select(e =>
+                                (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                 basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))
+                    + "\n\n"
+                    + string.Join("\n",
+                        basePower.Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .Where(e =>
+                                e.Value.EffectType == baseFx.EffectType &
+                                e.Value.DamageType == baseFx.DamageType &
+                                e.Value.MezType == baseFx.MezType &
+                                e.Value.ETModifies == baseFx.ETModifies &
+                                e.Value.ToWho == Enums.eToWho.Target &
+                                (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
+                                    ? Enums.ePvX.PvE
+                                    : Enums.ePvX.PvP)) &
+                                (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                            .Select(e =>
+                                (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                 basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))).Trim();
         }
 
         private static string GenerateTipFromEffect(IPower basePower, Enums.ShortFX tag)
@@ -2860,57 +2880,71 @@ namespace Mids_Reborn.Forms.Controls
             var effectETModifies = effects.Select(e => e.ETModifies).ToList();
             var effectMezTypes = effects.Select(e => e.MezType).ToList();
 
-            var selfEffects = basePower.Effects.Where(e =>
-                effectTypes.Contains(e.EffectType) &
-                effectDmgTypes.Contains(e.DamageType) &
-                effectETModifies.Contains(e.ETModifies) &
-                effectMezTypes.Contains(e.MezType) &
-                e.ToWho == Enums.eToWho.Self &
-                (e.PvMode != (MidsContext.Config.Inc.DisablePvE
-                    ? Enums.ePvX.PvE
-                    : Enums.ePvX.PvP)) &
-                (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None).ToList();
-
-            var targetEffects = basePower.Effects.Where(e =>
-                effectTypes.Contains(e.EffectType) &
-                effectDmgTypes.Contains(e.DamageType) &
-                effectETModifies.Contains(e.ETModifies) &
-                effectMezTypes.Contains(e.MezType) &
-                e.ToWho == Enums.eToWho.Target &
-                (e.PvMode != (MidsContext.Config.Inc.DisablePvE
-                    ? Enums.ePvX.PvE
-                    : Enums.ePvX.PvP)) &
-                (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None).ToList();
-
-            return (string.Join("\n", selfEffects.Select(e => e.BuildEffectString(false, "", false, false, false, true)))
-                    + "\n\n"
-                    + string.Join("\n", targetEffects.Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
+            return string.Join("\n",
+                       basePower.Effects
+                           .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                           .Where(e =>
+                               effectTypes.Contains(e.Value.EffectType) &
+                               effectDmgTypes.Contains(e.Value.DamageType) &
+                               effectETModifies.Contains(e.Value.ETModifies) &
+                               effectMezTypes.Contains(e.Value.MezType) &
+                               e.Value.ToWho == Enums.eToWho.Self &
+                               (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
+                                   ? Enums.ePvX.PvE
+                                   : Enums.ePvX.PvP)) &
+                               (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                           .Select(e =>
+                               (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))
+                   + "\n\n"
+                   + string.Join("\n",
+                       basePower.Effects
+                           .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                           .Where(e =>
+                               effectTypes.Contains(e.Value.EffectType) &
+                               effectDmgTypes.Contains(e.Value.DamageType) &
+                               effectETModifies.Contains(e.Value.ETModifies) &
+                               effectMezTypes.Contains(e.Value.MezType) &
+                               e.Value.ToWho == Enums.eToWho.Target &
+                               (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
+                                   ? Enums.ePvX.PvE
+                                   : Enums.ePvX.PvP)) &
+                               (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                           .Select(e =>
+                               (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ","))).Trim();
         }
 
         // Def/Res/Elusivity
         private static string GenerateTipFromEffect(IPower basePower, Enums.eEffectType effectType, Enums.eDamage dmgType)
         {
             return (string.Join("\n",
-                        basePower.Effects.Where(e =>
-                                e.EffectType == effectType &
-                                e.DamageType == dmgType &
-                                e.ToWho == Enums.eToWho.Self &
-                                (e.PvMode != (MidsContext.Config.Inc.DisablePvE
+                        basePower.Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .Where(e =>
+                                e.Value.EffectType == effectType &
+                                e.Value.DamageType == dmgType &
+                                e.Value.ToWho == Enums.eToWho.Self &
+                                (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
                                     ? Enums.ePvX.PvE
                                     : Enums.ePvX.PvP)) &
-                                (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)))
+                                (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                            .Select(e => (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                          basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))
                     + "\n\n"
                     + string.Join("\n",
-                        basePower.Effects.Where(e =>
-                                e.EffectType == effectType &
-                                e.DamageType == dmgType &
-                                e.ToWho == Enums.eToWho.Target &
-                                (e.PvMode != (MidsContext.Config.Inc.DisablePvE
+                        basePower.Effects
+                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                            .Where(e =>
+                                e.Value.EffectType == effectType &
+                                e.Value.DamageType == dmgType &
+                                e.Value.ToWho == Enums.eToWho.Target &
+                                (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
                                     ? Enums.ePvX.PvE
                                     : Enums.ePvX.PvP)) &
-                                (e.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)))).Trim();
+                                (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
+                            .Select(e => (e.Value.BuildEffectString(false, "", false, false, false, true) +
+                                          basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))).Trim();
         }
 
         private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, Enums.ShortFX tag, IPower basePower)

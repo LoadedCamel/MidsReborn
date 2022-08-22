@@ -300,5 +300,9 @@ namespace Mids_Reborn.Core
         string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false);
 
         string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false);
+
+        Dictionary<int, string> GetEffectInSummons();
+
+        string GetDifferentAttributesSubPower(int fxIndex);
     }
 }
