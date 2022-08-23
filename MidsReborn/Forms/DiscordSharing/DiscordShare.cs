@@ -17,7 +17,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
 {
     public partial class DiscordShare : Form
     {
-        private Models.OAuthModel _oAuth;
+        private Models.OAuthModel? _oAuth;
         private Models.MbAuthModel _mrbAuth;
         private Models.DiscordUserModel _discordUser;
         private Models.MbServersResponseModel _mbServers;
@@ -54,14 +54,14 @@ namespace Mids_Reborn.Forms.DiscordSharing
             statusBarAdvPanel1.Text = text;
         }
 
-        private void OnClosing(object sender, CancelEventArgs e)
+        private void OnClosing(object? sender, CancelEventArgs e)
         {
             _dataStore.Dispose();
         }
 
-        private async void OnLoad(object sender, EventArgs e)
+        private async void OnLoad(object? sender, EventArgs e)
         {
-            if (!MidsContext.Config.Authorized)
+            if (MidsContext.Config is { Authorized: false })
             {
                 SetTabPage(0);
                 return;
@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             if (DateTime.Now < dTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > dTokenExpiry.Subtract(TimeSpan.FromHours(8)))
             {
                 _oAuth = await _discord.RefreshAccessToken(_oAuth.RefreshToken);
-                _discordUser = await _discord.GetUserInfo(_oAuth.AccessToken);
+                _discordUser = await _discord.GetUserInfo(_oAuth?.AccessToken);
                 await _dataStore.Repsert(_oAuth);
                 await _dataStore.Repsert(_discordUser);
             }
@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                 return;
             }
 
-            if (!MidsContext.Config.Registered)
+            if (MidsContext.Config is { Registered: false })
             {
                 SetTabPage(1);
                 return;
@@ -116,7 +116,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
         // Page 0 - Primary
 
-        private async void WebView21OnSourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        private async void WebView21OnSourceChanged(object? sender, CoreWebView2SourceChangedEventArgs e)
         {
             if (!e.IsNewDocument)
             {
@@ -129,28 +129,29 @@ namespace Mids_Reborn.Forms.DiscordSharing
                 var redirectUrl = Regex.Replace(currentUrl.ToString(), "(\\?.*)", string.Empty);
                 var accessCode = Regex.Replace(currentUrl.Query, "(\\?code=)", string.Empty);
                 _oAuth = await _discord.RequestAccessToken(accessCode, redirectUrl);
-                _discordUser = await _discord.GetUserInfo(_oAuth.AccessToken);
+                if (_oAuth?.AccessToken == null) return;
+                _discordUser = await _discord.GetUserInfo(_oAuth?.AccessToken);
                 if (!_discordUser.Bot)
                 {
                     if (_discordUser.Verified)
                     {
                         await _dataStore.Repsert(_oAuth);
                         await _dataStore.Repsert(_discordUser);
-                        MidsContext.Config.Authorized = true;
+                        if (MidsContext.Config != null) MidsContext.Config.Authorized = true;
                         SetTabPage(1);
                     }
                     else
                     {
-                        await _discord.RevokeAccessToken(_oAuth.AccessToken);
-                        SetStatusText(@"Access Denied: Only Discord users with a verified email address are allowed to use this feature.");
+                        await _discord.RevokeAccessToken(_oAuth?.AccessToken);
+                        SetStatusText(
+                            @"Access Denied: Only Discord users with a verified email address are allowed to use this feature.");
                     }
                 }
                 else
                 {
-                    await _discord.RevokeAccessToken(_oAuth.AccessToken);
+                    await _discord.RevokeAccessToken(_oAuth?.AccessToken);
                     SetStatusText(@"Access Denied: Bot accounts are not allowed to use this feature.");
                 }
-
             }
             else if (currentUrl.Query.Contains("access_denied"))
             {
@@ -158,7 +159,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
         }
 
-        private async void TabControlAdv1OnSelectedIndexChanged(object sender, EventArgs e)
+        private async void TabControlAdv1OnSelectedIndexChanged(object? sender, EventArgs e)
         {
             switch (tabControlAdv1.SelectedIndex)
             {
@@ -214,7 +215,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
 
             await _dataStore.Repsert(_mrbAuth);
-            MidsContext.Config.Registered = true;
+            if (MidsContext.Config != null) MidsContext.Config.Registered = true;
             SetTabPage(3);
         }
 
@@ -241,7 +242,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
 
             await _dataStore.Repsert(_mrbAuth);
-            MidsContext.Config.Registered = true;
+            if (MidsContext.Config != null) MidsContext.Config.Registered = true;
             SetTabPage(3);
         }
 
@@ -288,7 +289,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
         }
 
-        private void ServerComboOnSelectedIndexChanged(object sender, EventArgs e)
+        private void ServerComboOnSelectedIndexChanged(object? sender, EventArgs e)
         {
             if (serverCombo.SelectedItem == null)
             {

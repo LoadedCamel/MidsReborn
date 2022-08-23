@@ -124,3 +124,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~P:Mids_Reborn.UIv2.v2Controls.PowerList_Test.Font")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:Mids_Reborn.Forms.Controls.Initializer.SelectBitmap(System.Drawing.Bitmap,System.Int32)")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:Mids_Reborn.Forms.Controls.Initializer.#ctor")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:Mids_Reborn.Forms.WindowMenuItems.frmPrestige.UpdateLlColours(Mids_Reborn.Controls.ListLabelV3@)")]

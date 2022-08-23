@@ -10,7 +10,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         internal class OAuthModel
         {
             [JsonProperty("access_token")]
-            public string AccessToken { get; set; }
+            public string? AccessToken { get; set; }
             [JsonProperty("token_type")]
             public string TokenType { get; set; }
             [JsonProperty("expires_in")]
@@ -69,7 +69,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             public string client_id { get; set; }
             public string client_secret { get; set; }
-            public string access_token { get; set; }
+            public string? access_token { get; set; }
         }
 
         internal class MbRegisterModel

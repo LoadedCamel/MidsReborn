@@ -23,7 +23,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             _restClient.UseNewtonsoftJson();
         }
 
-        internal async Task<OAuthModel> RequestAccessToken(string accessCode, string redirectUrl)
+        internal async Task<OAuthModel?> RequestAccessToken(string accessCode, string redirectUrl)
         {
             var atrParams = new AtRequestModel
             {
@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             return await _restClient.PostAsync<OAuthModel>(atRequest);
         }
 
-        internal async Task<OAuthModel> RefreshAccessToken(string refreshToken)
+        internal async Task<OAuthModel?> RefreshAccessToken(string refreshToken)
         {
             var rftParams = new RftRequestModel
             {
@@ -53,7 +53,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             return await _restClient.PostAsync<OAuthModel>(rftRequest);
         }
 
-        internal async Task<bool> RevokeAccessToken(string accessToken)
+        internal async Task<bool> RevokeAccessToken(string? accessToken)
         {
             var rtParams = new RtRequestModel
             {
@@ -66,7 +66,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             return await _restClient.PostAsync<bool>(rtRequest);
         }
 
-        internal async Task<DiscordUserModel> GetUserInfo(string accessToken)
+        internal async Task<DiscordUserModel> GetUserInfo(string? accessToken)
         {
             DiscordUserModel result = default;
             var infoRequest = new RestRequest("users/@me");
