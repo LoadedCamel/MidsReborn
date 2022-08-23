@@ -32,7 +32,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             case "version":
                             {
                                 Version = Version.Parse(xmlReader.ReadElementContentAsString());
-                                Debug.WriteLine($"Version from Manifest: {Version}");
                                 break;
                             }
                             case "changelog":

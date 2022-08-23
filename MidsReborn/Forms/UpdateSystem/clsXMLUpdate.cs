@@ -75,7 +75,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
         public static bool CompareVersions(Version serverVersion, Version localVersion)
         {
             var comparisonResult = serverVersion.CompareTo(localVersion);
-            Debug.WriteLine($"Local Version: {localVersion}\r\nVersion compare result: {comparisonResult}");
             return comparisonResult > 0;
         }
 
