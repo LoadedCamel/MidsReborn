@@ -4,7 +4,21 @@
     {
         public static ServerData Instance { get; } = new();
 
-        public string ManifestUri { get; set; } = "";
+        private string? _manifestUri;
+
+        public string ManifestUri
+        {
+            get
+            {
+                if (DatabaseAPI.DatabaseName.Equals("Homecoming"))
+                {
+                    _manifestUri = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+                }
+
+                return _manifestUri ?? "";
+            }
+            set => _manifestUri = value;
+        }
         public float BaseToHit { get; set; } = 0.75f;
         public float BaseFlySpeed { get; set; } = 31.5f;
         public float BaseJumpSpeed { get; set; } = 21f;

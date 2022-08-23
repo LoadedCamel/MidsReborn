@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -31,6 +32,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             case "version":
                             {
                                 Version = Version.Parse(xmlReader.ReadElementContentAsString());
+                                Debug.WriteLine($"Version from Manifest: {Version}");
                                 break;
                             }
                             case "changelog":

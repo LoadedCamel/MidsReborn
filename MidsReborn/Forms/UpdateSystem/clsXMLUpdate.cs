@@ -57,25 +57,26 @@ namespace Mids_Reborn.Forms.UpdateSystem
             if (AppUpdate.IsAvailable)
             {
                 AppUpdate.InitiateQuery(parent);
+                return;
             }
-            else if (!string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri))
+            if (!string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri))
             {
                 if (DbUpdate.IsAvailable)
                 {
                     DbUpdate.InitiateQuery(parent);
+                    return;
                 }
             }
-            else
-            {
-                MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            
+            MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
             
         }
 
         public static bool CompareVersions(Version serverVersion, Version localVersion)
         {
             var comparisonResult = serverVersion.CompareTo(localVersion);
-            return comparisonResult > -1;
+            Debug.WriteLine($"Local Version: {localVersion}\r\nVersion compare result: {comparisonResult}");
+            return comparisonResult > 0;
         }
 
         public static void Update(string path, string updateVersion, string extractionPath)

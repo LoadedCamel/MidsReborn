@@ -12,7 +12,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             InitializeComponent();
         }
 
-        private void OnQuery_Load(object sender, EventArgs e)
+        private void OnQuery_Load(object? sender, EventArgs e)
         {
             CenterToParent();
         }
