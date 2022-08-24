@@ -254,8 +254,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             
             // Tab control border is 3 px thick, move it a little off to hide it
             // Change the size fixed values so they are the same as in frmTotalsV2_Resize()
-            tabControl1.Location = new Point(-3, 19);
-            tabControl1.Size = new Size(ClientSize.Width + 8, ClientSize.Height - 67);
+            tabControl1.Location = new Point(-4, 19);
+            tabControl1.Size = new Size(ClientSize.Width + 9, ClientSize.Height - 67);
 
             ctlTotalsTabStrip1.ClearItems();
             for (var i = 0; i < tabControl1.TabPages.Count; i++)
@@ -278,7 +278,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmTotalsV2_Resize(object sender, EventArgs e)
         {
-            const int tabControlWidthPad = -8;
+            const int tabControlWidthPad = -9;
             const int tabControlHeightPad = 67;
             const int graphControlWidthPad = 20;
             const int pbCloseLocationXPad = 132;

@@ -3166,7 +3166,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         /// </summary>
         /// <returns>Dictionary of (effect index => entity power full name)</returns>
         /// <remarks>Powers from entities are added in sequence. So if first power has 3 effects, and the EntCreate is #6, effects #7, #8 and #9 will belong to this first power.</remarks>
-        public Dictionary<int, string> GetEffectInSummons()
+        public Dictionary<int, string> GetEffectsInSummons()
         {
             // Dictionary(index of EntCreate effect => KeyValuePair(KeyValuePair(entityPowerset[0].nId, entityPowerset[0].Powers.Length), Dictionary(entityPowerset[0].Powers[n].FullName, entityPowerset[0].Powers[n].Effects.Length)))
             var powerSummons = Effects
@@ -3180,16 +3180,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         .ToDictionary(p => p.FullName, p => p.Effects.Length)));
 
             var effectsInSummons = new Dictionary<int, string>();
+            var k = 0;
             foreach (var ps in powerSummons)
             {
                 var baseIndex = ps.Key;
                 var powers = ps.Value.Value;
-                var k = 0;
                 foreach (var p in powers)
                 {
                     for (var i = 0; i < p.Value; i++)
                     {
-                        effectsInSummons.Add(baseIndex + 1 + i + k, p.Key);
+                        var pIndex = baseIndex + 1 + i + k;
+                        if (!effectsInSummons.ContainsKey(pIndex))
+                        {
+                            effectsInSummons.Add(pIndex, p.Key);
+                        }
                     }
 
                     k += p.Value;
@@ -3213,7 +3217,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return "";
             }
 
-            var effectsInSummons = GetEffectInSummons();
+            var effectsInSummons = GetEffectsInSummons();
             if (!effectsInSummons.ContainsKey(fxIndex))
             {
                 return "";

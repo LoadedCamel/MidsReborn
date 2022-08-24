@@ -263,7 +263,7 @@ namespace Mids_Reborn
 
                     if (MidsContext.Character.CurrentBuild.Powers[i]?.Power is {VariableEnabled: true})
                     {
-                        var initialVariableValue = MidsContext.Character.CurrentBuild.Powers[i].Power.VariableStart;
+                        var initialVariableValue = Math.Max(MidsContext.Character.CurrentBuild.Powers[i].Power.VariableMin, MidsContext.Character.CurrentBuild.Powers[i].Power.VariableStart);
                         MidsContext.Character.CurrentBuild.Powers[i].VariableValue = initialVariableValue;
                         MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = initialVariableValue;
                     }
