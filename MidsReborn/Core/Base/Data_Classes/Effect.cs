@@ -1277,7 +1277,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (Ticks > 0)
+            if (Ticks > 1)
             {
                 sMag = EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
                     ? $"{sMag} x {Ticks}"
@@ -1574,6 +1574,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
                 .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
                 .Replace(" , ", ", ") // xx% chance , when something
+                .Replace("chance )", "chance)") // (xx% chance )
                 .Trim(' ', ':'); // Knockback/Knockup with no duration/ticks
 
             return sFinal;
