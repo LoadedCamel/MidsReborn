@@ -898,14 +898,14 @@ namespace Mids_Reborn.Controls
                             if (Ui.SetTypes.Length > 3)
                             {
                                 _rows = Ui.SetTypes.Length;
-                                Height = 100 + (_nSize + 2 + _nPad) * (Ui.SetTypes.Length);
+                                Height = 100 + (_nSize + 2 + _nPad) * Ui.SetTypes.Length;
                             }
                             break;
                         case Enums.eType.SpecialO:
                             if (Ui.SpecialO.Length > 9)
                             {
                                 _rows = 5;
-                                Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length / 4); //
+                                Height = (_nSize + 2 + _nPad) * (Ui.SpecialO.Length / 4);
                             }
                             break;
                         default:
@@ -913,30 +913,32 @@ namespace Mids_Reborn.Controls
                             Height = 315;
                             break;
                     }
-                    if ((cellXy.X == 4) & (Ui.SetTypes.Length > 0))
+
+                    if (cellXy.X == 4 & Ui.SetTypes.Length > 0)
                     {
-                        Ui.View.SetTypeId = 0;
-                        if (Ui.View.RelLevel < Enums.eEnhRelative.Even)
+                        if (Ui.View.SetTypeId != 4)
                         {
-                            Ui.View.RelLevel = Enums.eEnhRelative.Even;
+                            Ui.View.SetTypeId = 0;
+
+                            if (Ui.View.RelLevel < Enums.eEnhRelative.Even)
+                            {
+                                Ui.View.RelLevel = Enums.eEnhRelative.Even;
+                            }
                         }
                     }
                     else
                     {
                         Ui.View.RelLevel = Enums.eEnhRelative.Even;
-                        if (cellXy.X == 2)
+                        switch (cellXy.X)
                         {
-                            if (Ui.Initial.TabId == Enums.eType.Normal)
-                            {
+                            case 2 when Ui.Initial.TabId == Enums.eType.Normal:
                                 Ui.Initial.TabId = Enums.eType.InventO;
-                            }
-                        }
-                        else if (cellXy.X == 1)
-                        {
-                            if (Ui.Initial.TabId == Enums.eType.InventO)
-                            {
+
+                                break;
+                            case 1 when Ui.Initial.TabId == Enums.eType.InventO:
                                 Ui.Initial.TabId = Enums.eType.Normal;
-                            }
+
+                                break;
                         }
                     }
 
