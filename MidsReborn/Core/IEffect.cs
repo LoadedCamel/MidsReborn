@@ -167,7 +167,7 @@ namespace Mids_Reborn.Core
         float AtrModRechargeTime { get; set; }
         float AtrModSecondaryRange { get; set; }
 
-        List<KeyValue<string, string>> ActiveConditionals { get; set; }
+        List<KeyValue<string, string>>? ActiveConditionals { get; set; }
         bool Validated { get; set; }
         bool IsFromProc { get; }
         IPower? GetPower();

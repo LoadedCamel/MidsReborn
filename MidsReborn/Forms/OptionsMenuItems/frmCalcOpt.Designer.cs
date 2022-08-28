@@ -1034,9 +1034,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TeamSize.Name = "TeamSize";
             this.TeamSize.Size = new System.Drawing.Size(88, 20);
             this.TeamSize.TabIndex = 70;
-            this.myTip.SetToolTip(this.TeamSize, "Set this to the number of players on your team.");
+            this.myTip.SetToolTip(this.TeamSize, "Sets the number of players on your team. (Depreciated: Use TeamMembers from main window.)");
             this.TeamSize.Value = new decimal(new int[] {
-            8,
+            0,
             0,
             0,
             0});
