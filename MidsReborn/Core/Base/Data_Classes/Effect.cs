@@ -1322,13 +1322,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (AttribType == Enums.eAttribType.Magnitude & nDuration > 0 & Aspect == Enums.eAspect.Str)
                     {
-                        sBuild = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale * nMagnitude:####0.####} x {ModifierTable})%" : sMag)} {sSubEffect}{sTarget}{sDuration}";
+                        sBuild = $"{(MidsContext.Config != null && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale * nMagnitude:####0.####} x {ModifierTable})%" : sMag)} {sSubEffect}{sTarget}{sDuration}";
                     }
                     else
                     {
                         if (Duration > 0 & (!simple | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
                         {
-                            sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                            sDuration = $"{(MidsContext.Config != null && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
                         }
 
                         if (!noMag)
@@ -1341,6 +1341,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     break;
                 case Enums.eEffectType.MezResist:
+
                     sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
                     if (noMag == false)
                     {

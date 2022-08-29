@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
+using System.Windows.Forms;
 
 namespace Mids_Reborn.Core
 {
@@ -1588,10 +1590,19 @@ namespace Mids_Reborn.Core
             else
             {
                 var str2 = "";
-                if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] &&
-                    iDamage[7])
-                    str2 = "All";
+
+                var validList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+                var damageList = iDamage.ToList();
+                var foundTypes = damageList.FindIndexes(x => x.Equals(true));
+
+                var allElementsFound = foundTypes.SequenceEqual(validList);
+
+                if (allElementsFound)
+                {
+                    str2 = @"All";
+                }
                 else
+                {
                     for (var index = 0; index < iDamage.Length; ++index)
                     {
                         if (!iDamage[index])
@@ -1601,6 +1612,7 @@ namespace Mids_Reborn.Core
                             str2 += ",";
                         str2 += str3;
                     }
+                }
 
                 str1 = str2;
             }
@@ -1657,6 +1669,7 @@ namespace Mids_Reborn.Core
             else
             {
                 var str2 = "";
+                
                 if (iMez[1] && iMez[2] && iMez[10] && iMez[9])
                     str2 = "Mez";
                 else if (iMez[4] && iMez[5] && iMez[1] && iMez[2] && iMez[10] && iMez[9])

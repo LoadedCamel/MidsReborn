@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Media.Effects;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core
 {
@@ -361,6 +365,7 @@ namespace Mids_Reborn.Core
                 IPower power = new Power(enhBoostPower);
                 power.ApplyGrantPowerEffects();
                 var returnMask = Array.Empty<int>();
+
                 for (var index1 = 0; index1 < power.Effects.Length; index1++)
                 {
                     if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
@@ -371,14 +376,21 @@ namespace Mids_Reborn.Core
                         }
 
                         stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
+                        
                         var empty = string.Empty;
-                        for (var idEffect = 0; idEffect < power.Effects.Length; idEffect++)
+
+                        var groupedEffectsArray = power.Effects.Where(x => x.EffectType.Equals(Enums.eEffectType.DamageBuff) || x.EffectType.Equals(Enums.eEffectType.Defense) || x.EffectType.Equals(Enums.eEffectType.Resistance) || x.EffectType.Equals(Enums.eEffectType.Elusivity) || x.EffectType.Equals(Enums.eEffectType.Mez)).ToArray();
+                        for (var effectId = 0; effectId < groupedEffectsArray.Length; effectId++)
                         {
-                            power.Effects[idEffect].Stacking = Enums.eStacking.Yes;
-                            power.Effects[idEffect].Buffable = true;
-                            if (power.Effects[idEffect].Absorbed_EffectID == index1)
+                            if (power.Effects[index1] == groupedEffectsArray[effectId])
                             {
-                                power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true, true);
+                                groupedEffectsArray[effectId].Stacking = Enums.eStacking.Yes;
+                                groupedEffectsArray[effectId].Buffable = true;
+                            }
+
+                            if (groupedEffectsArray[effectId].Absorbed_EffectID == index1)
+                            {
+                                power.GetEffectStringGrouped(effectId, ref empty, ref returnMask, false, false, false, true, true);
                             }
 
                             if (returnMask.Length <= 0)
@@ -395,33 +407,51 @@ namespace Mids_Reborn.Core
                             break;
                         }
 
-                        for (var index2 = 0; index2 < power.Effects.Length; index2++)
+                        var empty2 = string.Empty;
+                        var groupedMezEffectsArray = power.Effects.Where(x => x.EffectType == Enums.eEffectType.MezResist).ToArray();
+                        if (groupedMezEffectsArray.Length > 0)
                         {
-                            var flag6 = false;
-                            foreach (var m in returnMask)
+                            for (var effectId = 0; effectId < power.Effects.Length; effectId++)
                             {
-                                if (m != index2)
+                                var flag6 = returnMask.Any(m => m == effectId);
+                                
+                                if (power.Effects[effectId].Absorbed_EffectID != index1 || flag6)
+                                {
+                                    continue;
+                                }
+                                if (stringBuilder.Length > 0)
+                                {
+                                    stringBuilder.Append("\n");
+                                }
+
+                                power.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false,
+                                    true, true);
+                                stringBuilder.AppendFormat("  {0}",  empty2);
+                                break;
+                            }
+                        }
+                        else
+                        {
+
+                            for (var index2 = 0; index2 < power.Effects.Length; index2++)
+                            {
+                                var flag6 = returnMask.Any(m => m == index2);
+
+                                if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
                                 {
                                     continue;
                                 }
 
-                                flag6 = true;
-                                break;
-                            }
+                                if (stringBuilder.Length > 0)
+                                {
+                                    stringBuilder.Append("\n");
+                                }
 
-                            if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
-                            {
-                                continue;
-                            }
+                                power.Effects[index2].Stacking = Enums.eStacking.Yes;
+                                power.Effects[index2].Buffable = true;
 
-                            if (stringBuilder.Length > 0)
-                            {
-                                stringBuilder.Append("\n");
+                                stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
                             }
-
-                            power.Effects[index2].Stacking = Enums.eStacking.Yes;
-                            power.Effects[index2].Buffable = true;
-                            stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
                         }
                     }
                     else if (!power.Effects[index1].Absorbed_Effect) // (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
@@ -439,7 +469,7 @@ namespace Mids_Reborn.Core
                             var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
                             if (enhSetSpecials.SpecialBonus.Length > 0)
                             {
-                                effectString = enhSetSpecials.SpecialBonus[enhSetSpecials.SpecialBonus.Length - 1].Index.Length switch
+                                effectString = enhSetSpecials.SpecialBonus[^1].Index.Length switch
                                 {
                                     0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true, true),
                                     _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true, true)
