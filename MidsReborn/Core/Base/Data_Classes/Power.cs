@@ -1781,28 +1781,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public bool GetEffectStringGrouped2(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
-        {
-            if ((idEffect < 0) | (idEffect > Effects.Length - 1))
-            {
-                return false;
-            }
-
-            var effect = (IEffect)Effects[idEffect].Clone();
-            switch (effect.EffectType)
-            {
-                case Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
-                    break;
-                case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
-                    break;
-                case Enums.eEffectType.Enhancement:
-                    break;
-            }
-
-            return false;
-        }
-
-        
         public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
         {
             bool flag;
