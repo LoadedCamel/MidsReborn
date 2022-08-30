@@ -8,7 +8,7 @@ namespace Mids_Reborn
 {
     public static class BuildSalvageSummary
     {
-        private static readonly Color ColorNormalText = Color.White;
+        private static readonly Color ColorNormalText = Color.WhiteSmoke;
         private static readonly Color ColorFullBuild = Color.FromArgb(0, 255, 128);
 
         public static int EnhObtained { get; private set; }

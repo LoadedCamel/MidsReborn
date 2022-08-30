@@ -45,6 +45,7 @@ namespace Mids_Reborn.Forms
         private void frmBuildSalvageHud_Load(object sender, EventArgs e)
         {
             TopMost = true;
+            MaximizeBox = false;
             BringToFront();
             Location = new Point(myParent.Location.X + 2, myParent.Location.Y + 56);
             UpdateColorTheme();
