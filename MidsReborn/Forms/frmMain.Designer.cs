@@ -216,6 +216,7 @@ namespace Mids_Reborn.Forms
             this.ibSets = new ImageButton();
             this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
+            this.enhCheckMode = new EnhCheckMode(this);
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -2063,6 +2064,13 @@ namespace Mids_Reborn.Forms
             this.poolsPanel.Controls.Add(this.llPool2);
             this.poolsPanel.Controls.Add(this.llPool3);
             this.poolsPanel.Controls.Add(this.llAncillary);
+            //
+            // enhCheckMode
+            //
+            this.enhCheckMode.Location = new Point(5, poolsPanel.Bottom + 2);
+            this.enhCheckMode.Name = "enhCheckMode";
+            this.enhCheckMode.Size = new Size(445, 35);
+            this.enhCheckMode.Visible = false;
             // 
             // frmMain
             // 
@@ -2097,6 +2105,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.llPrimary);
             this.Controls.Add(this.llSecondary);
             this.Controls.Add(this.poolsPanel);
+            this.Controls.Add(this.enhCheckMode);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
@@ -2300,5 +2309,6 @@ namespace Mids_Reborn.Forms
         Panel poolsPanel;
         ToolStripSeparator ToolStripSeparator29;
         ToolStripMenuItem ShareToolStripMenuItem;
+        EnhCheckMode enhCheckMode;
     }
 }

@@ -457,6 +457,7 @@ namespace Mids_Reborn.Forms
                 setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 UpdatePoolsPanelSize();
                 InitializeDv();
+
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -3509,9 +3510,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         fRecipe.UpdateEnhObtained();
                     }
 
-                    if (fSalvageHud != null && fSalvageHud.Visible)
+                    if (enhCheckMode.Visible)
                     {
-                        fSalvageHud.UpdateEnhObtained();
+                        enhCheckMode.UpdateEnhObtained();
                     }
 
                     var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
@@ -6817,7 +6818,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 fRecipe.UpdateData();
             }
 
-            FloatBuildSalvageHud(MidsContext.EnhCheckMode);
+            enhCheckMode.Visible = MidsContext.EnhCheckMode;
+
+            //FloatBuildSalvageHud(MidsContext.EnhCheckMode);
             DoRedraw();
         }
 

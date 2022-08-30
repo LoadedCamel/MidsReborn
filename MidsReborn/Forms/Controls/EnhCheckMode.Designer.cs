@@ -1,16 +1,15 @@
-﻿
-using Mids_Reborn.Controls;
+﻿using Mids_Reborn.Controls;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.Controls
 {
-    partial class frmBuildSalvageHud
+    partial class EnhCheckMode
     {
-        /// <summary>
+        /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -23,15 +22,15 @@ namespace Mids_Reborn.Forms
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Component Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBuildSalvageHud));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnhCheckMode));
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
@@ -55,40 +54,42 @@ namespace Mids_Reborn.Forms
             this.pSalvageSummary.Controls.Add(this.pictureBox2);
             this.pSalvageSummary.Controls.Add(this.lblEnhObtained);
             this.pSalvageSummary.Controls.Add(this.pictureBox1);
+            this.pSalvageSummary.Controls.Add(this.ibClose);
+            this.pSalvageSummary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pSalvageSummary.Location = new System.Drawing.Point(0, 0);
             this.pSalvageSummary.Margin = new System.Windows.Forms.Padding(0);
             this.pSalvageSummary.Name = "pSalvageSummary";
-            this.pSalvageSummary.Size = new System.Drawing.Size(390, 37);
-            this.pSalvageSummary.TabIndex = 18;
+            this.pSalvageSummary.Size = new System.Drawing.Size(445, 35);
+            this.pSalvageSummary.TabIndex = 20;
             // 
             // lblCatalysts
             // 
             this.lblCatalysts.AutoSize = true;
             this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblCatalysts.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblCatalysts.Location = new System.Drawing.Point(224, 9);
+            this.lblCatalysts.Location = new System.Drawing.Point(204, 12);
             this.lblCatalysts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCatalysts.Name = "lblCatalysts";
-            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
+            this.lblCatalysts.Size = new System.Drawing.Size(33, 15);
             this.lblCatalysts.TabIndex = 6;
-            this.lblCatalysts.Text = "x50";
+            this.lblCatalysts.Text = "x100";
             // 
             // lblBoosters
             // 
             this.lblBoosters.AutoSize = true;
             this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblBoosters.Location = new System.Drawing.Point(328, 9);
+            this.lblBoosters.Location = new System.Drawing.Point(290, 12);
             this.lblBoosters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBoosters.Name = "lblBoosters";
-            this.lblBoosters.Size = new System.Drawing.Size(26, 15);
+            this.lblBoosters.Size = new System.Drawing.Size(33, 15);
             this.lblBoosters.TabIndex = 5;
-            this.lblBoosters.Text = "x50";
+            this.lblBoosters.Text = "x100";
             // 
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(283, 0);
+            this.pictureBox3.Location = new System.Drawing.Point(245, 0);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(37, 37);
@@ -99,7 +100,7 @@ namespace Mids_Reborn.Forms
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(179, 0);
+            this.pictureBox2.Location = new System.Drawing.Point(159, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(37, 37);
@@ -112,7 +113,7 @@ namespace Mids_Reborn.Forms
             this.lblEnhObtained.AutoSize = true;
             this.lblEnhObtained.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEnhObtained.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblEnhObtained.Location = new System.Drawing.Point(42, 9);
+            this.lblEnhObtained.Location = new System.Drawing.Point(42, 12);
             this.lblEnhObtained.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEnhObtained.Name = "lblEnhObtained";
             this.lblEnhObtained.Size = new System.Drawing.Size(109, 15);
@@ -132,31 +133,30 @@ namespace Mids_Reborn.Forms
             // 
             // ibClose
             // 
+            this.ibClose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.ibClose.Checked = false;
             this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibClose.Location = new System.Drawing.Point(395, 7);
+            this.ibClose.Location = new System.Drawing.Point(332, 8);
             this.ibClose.Margin = new System.Windows.Forms.Padding(5);
             this.ibClose.Name = "ibClose";
             this.ibClose.Size = new System.Drawing.Size(105, 22);
-            this.ibClose.TabIndex = 19;
-            this.ibClose.TextOff = "Exit check mode";
+            this.ibClose.TabIndex = 21;
+            this.ibClose.TextOff = "Exit Check Mode";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
             this.ibClose.ButtonClicked += new Mids_Reborn.Controls.ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
             // 
-            // frmBuildSalvageHud
+            // EnhCheckMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(505, 37);
-            this.Controls.Add(this.ibClose);
             this.Controls.Add(this.pSalvageSummary);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "frmBuildSalvageHud";
-            this.Text = "Build Salvage Status";
+            this.DoubleBuffered = true;
+            this.Name = "EnhCheckMode";
+            this.Size = new System.Drawing.Size(445, 35);
             this.pSalvageSummary.ResumeLayout(false);
             this.pSalvageSummary.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -175,6 +175,6 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblEnhObtained;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private ImageButton ibClose;
+        private Mids_Reborn.Controls.ImageButton ibClose;
     }
 }
