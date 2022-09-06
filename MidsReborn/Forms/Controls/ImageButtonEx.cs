@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -83,8 +79,8 @@ namespace Mids_Reborn.Forms.Controls
         private Color _outlineColor;
         private bool _useAlt;
 
-        private static Color ColorWhenClicked 
-        { 
+        private static Color ColorWhenClicked
+        {
             get
             {
                 var origColor = _foreColor.ToArgb();
@@ -92,9 +88,8 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        #endregion
 
-    #endregion
-        
         #region Designer Properties (Appearance)
 
         [Description("The font used to display text in the control.")]
@@ -260,8 +255,6 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Classes
 
-
-
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public class BaseImages
         {
@@ -410,7 +403,9 @@ namespace Mids_Reborn.Forms.Controls
 
         public ImageButtonEx()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw, true);
             ButtonTypeChanged += OnButtonTypeChanged;
             FontChanged += OnFontChanged;
             ForeColorChanged += OnForeColorChanged;
@@ -432,7 +427,7 @@ namespace Mids_Reborn.Forms.Controls
             ToggleText = new StateText();
         }
 
-                private void OnUseAltChanged(object? sender, bool e)
+        private void OnUseAltChanged(object? sender, bool e)
         {
             if (Images == null) return;
             var usedImage = e switch
@@ -450,6 +445,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 ForeColorChanged?.Invoke(this, _foreColor);
             }
+
             Click?.Invoke(this, e);
         }
 
@@ -482,6 +478,7 @@ namespace Mids_Reborn.Forms.Controls
                                 throw new ArgumentOutOfRangeException();
                         }
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -502,6 +499,7 @@ namespace Mids_Reborn.Forms.Controls
                     usedImage = _baseImage;
                     break;
             }
+
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
         }
@@ -520,6 +518,7 @@ namespace Mids_Reborn.Forms.Controls
                     usedImage = _hoverImage;
                     break;
             }
+
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
         }
@@ -538,6 +537,7 @@ namespace Mids_Reborn.Forms.Controls
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e), e, null);
             }
+
             Refresh();
         }
 
@@ -620,7 +620,7 @@ namespace Mids_Reborn.Forms.Controls
             // Assign variable to be used in drawing operations (some may be wrapped in using statements)
             var rect = ClientRectangle with { X = 0, Y = 0 };
             var rectPen = new Pen(Color.Cyan, 1f);
-            var outlinePen = new Pen(_outlineColor, _outlineWidth) { LineJoin = LineJoin.Round};
+            var outlinePen = new Pen(_outlineColor, _outlineWidth) { LineJoin = LineJoin.Round };
             var brush = new SolidBrush(_currentTextColor);
             var sFormat = new StringFormat
             {
@@ -634,7 +634,8 @@ namespace Mids_Reborn.Forms.Controls
             if (_currentImage == null)
             {
                 e.Graphics.DrawRectangle(rectPen, rect);
-                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle, sFormat);
+                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
+                    sFormat);
                 outlinePen.LineJoin = LineJoin.Round;
                 e.Graphics.DrawPath(outlinePen, gfxPath);
                 e.Graphics.FillPath(brush, gfxPath);
@@ -642,7 +643,8 @@ namespace Mids_Reborn.Forms.Controls
             else
             {
                 e.Graphics.DrawImage(_currentImage, ClientRectangle);
-                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle, sFormat);
+                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
+                    sFormat);
                 outlinePen.LineJoin = LineJoin.Round;
                 e.Graphics.DrawPath(outlinePen, gfxPath);
                 e.Graphics.FillPath(brush, gfxPath);
