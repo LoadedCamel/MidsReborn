@@ -7,10 +7,15 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>true</Optimize>
-	  <NoWarn>CS1690, CS0169, CA1823, CA2213</NoWarn>
+	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Optimize>true</Optimize>
+    <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
@@ -275,7 +280,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1293.44</Version>
+      <Version>1.0.1343.22</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
@@ -291,10 +296,10 @@
     </PackageReference>
     <PackageReference Include="SkiaSharp" Version="2.88.1" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.1" />
-    <PackageReference Include="Syncfusion.Grid.Windows" Version="20.2.0.45" />
-    <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.45" />
-    <PackageReference Include="Syncfusion.Shared.Base" Version="20.2.0.45" />
-    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.2.0.45" />
+    <PackageReference Include="Syncfusion.Grid.Windows" Version="20.2.0.48" />
+    <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.48" />
+    <PackageReference Include="Syncfusion.Shared.Base" Version="20.2.0.48" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.2.0.48" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
@@ -312,5 +317,6 @@
   </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 </Project>
