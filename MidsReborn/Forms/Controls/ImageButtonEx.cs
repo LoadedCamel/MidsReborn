@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -258,6 +260,8 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Classes
 
+
+
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public class BaseImages
         {
@@ -428,7 +432,7 @@ namespace Mids_Reborn.Forms.Controls
             ToggleText = new StateText();
         }
 
-        private void OnUseAltChanged(object? sender, bool e)
+                private void OnUseAltChanged(object? sender, bool e)
         {
             if (Images == null) return;
             var usedImage = e switch
@@ -437,7 +441,7 @@ namespace Mids_Reborn.Forms.Controls
                 false => _baseImage
             };
             ImageChanged?.Invoke(this, usedImage);
-            Invalidate(true);
+            Refresh();
         }
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
@@ -499,7 +503,7 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
             ImageChanged?.Invoke(this, usedImage);
-            Invalidate();
+            Refresh();
         }
 
         private void OnMouseEnter(object? sender, EventArgs e)
@@ -517,7 +521,7 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
             ImageChanged?.Invoke(this, usedImage);
-            Invalidate();
+            Refresh();
         }
 
         private void OnButtonTypeChanged(object? sender, ButtonTypes e)
@@ -534,19 +538,19 @@ namespace Mids_Reborn.Forms.Controls
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e), e, null);
             }
-            Invalidate();
+            Refresh();
         }
 
         private void OnForeColorChanged(object? sender, Color e)
         {
             _currentTextColor = e;
-            Invalidate();
+            Refresh();
         }
 
         private void OnFontChanged(object? sender, Font e)
         {
             _font = e;
-            Invalidate();
+            Refresh();
         }
 
         private static void OnThreeStateChanged(object? sender, bool e)
@@ -557,25 +561,25 @@ namespace Mids_Reborn.Forms.Controls
         private void OnOutlineColorChanged(object? sender, Color e)
         {
             _outlineColor = e;
-            Invalidate();
+            Refresh();
         }
 
         private void OnOutlineWidthChanged(object? sender, int e)
         {
             _outlineWidth = e;
-            Invalidate();
+            Refresh();
         }
 
         private void OnImageChanged(object? sender, Image? e)
         {
             if (e != null) _currentImage = e;
-            Invalidate();
+            Refresh();
         }
 
         private void OnTextChanged(object? sender, string? e)
         {
             if (e != null) _currentText = e;
-            Invalidate();
+            Refresh();
         }
 
         private void OnStateChanged(States state)

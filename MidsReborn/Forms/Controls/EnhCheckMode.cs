@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Drawing;
 using Mids_Reborn.Core.Base.Master_Classes;
 using System.Windows.Forms;
+using System.ComponentModel;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -86,18 +88,33 @@ namespace Mids_Reborn.Forms.Controls
             }
             MidsContext.EnhCheckMode = false;
             _myParent.UpdateEnhCheckModeToolStrip();
-            //_myParent.DoRedraw();
+            Invalidate(true);
         }
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            // BringToFront();
-            // Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+            BringToFront();
+            Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+            imageButtonEx1.UseAlt = !MidsContext.Character.IsHero();
+            MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
             // UpdateColorTheme();
             // RecalcSalvage();
             // MidsContext.EnhCheckMode = true;
             // _myParent.UpdateEnhCheckModeToolStrip();
             // _myParent.DoRedraw();
+        }
+
+        private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
+        {
+            switch (e)
+            {
+                case Enums.Alignment.Hero:
+                    imageButtonEx1.UseAlt = false;
+                    break;
+                case Enums.Alignment.Villain:
+                    imageButtonEx1.UseAlt = true;
+                    break;
+            }
         }
 
         private void RecalcSalvage()
@@ -110,18 +127,7 @@ namespace Mids_Reborn.Forms.Controls
             BuildSalvageSummary.UpdateEnhObtained(this);
         }
 
-        private void UpdateColorTheme()
-        {
-            ibClose.IA = _myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[2].Bitmap
-                : _myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[3].Bitmap
-                : _myParent.Drawing.bxPower[5].Bitmap;
-        }
-
-        private void ibClose_ButtonClicked()
+        private void imageButtonEx1_Click(object sender, EventArgs e)
         {
             Hide();
         }

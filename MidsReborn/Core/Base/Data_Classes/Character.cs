@@ -12,12 +12,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     public class Character
     {
         public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
-        private Archetype _archetype;
+        private Archetype? _archetype;
         private bool? _completeCache;
         public Dictionary<string, int> SetSlotLoc = new Dictionary<string, int>();
         public HashSet<string> setSlotted = new HashSet<string>();
+        public event EventHandler<Enums.Alignment>? AlignmentChanged;
 
-        protected Character()
+        internal Character()
         {
             Name = string.Empty;
             Powersets = new IPowerset[8];
@@ -32,7 +33,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public List<string> PEnhancementsList { get; set; }
 
-        public string setName { get; set; }
+        public string? setName { get; set; }
 
         public string Name { get; set; }
 
@@ -74,17 +75,26 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Build CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
 
-        public Archetype Archetype
+        public Archetype? Archetype
         {
             get => _archetype;
             set
             {
                 _archetype = value;
-                Alignment = _archetype.Hero ? Enums.Alignment.Hero : Enums.Alignment.Villain;
+                Alignment = _archetype is { Hero: true } ? Enums.Alignment.Hero : Enums.Alignment.Villain;
             }
         }
 
-        public Enums.Alignment Alignment { get; set; }
+        private Enums.Alignment _alignment;
+        public Enums.Alignment Alignment
+        {
+            get => _alignment;
+            set
+            {
+                _alignment = value;
+                AlignmentChanged?.Invoke(this, value);
+            }
+        }
 
         public int Origin { get; set; }
 
@@ -117,7 +127,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int PerfectionOfSoulLevel => !IsStalker && PerfectionType == "soul" ? ActiveComboLevel : 0;
 
-        private string PerfectionType { get; set; }
+        private string? PerfectionType { get; set; }
 
         public bool AcceleratedActive { get; private set; }
 
@@ -172,7 +182,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool FastSnipe { get; private set; }
         public bool NotFastSnipe { get; private set; }
 
-        public Dictionary<string, float> ModifyEffects { get; protected set; }
+        public Dictionary<string, float>? ModifyEffects { get; protected set; }
 
         public TotalStatistics Totals { get; }
 
@@ -181,7 +191,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Statistics DisplayStats { get; }
 
         public int displayIndex { get; set; }
-        public List<IPower> inherentPowers { get; set; }
+        public List<IPower>? inherentPowers { get; set; }
         public int SlotsRemaining
         {
             get
@@ -364,7 +374,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] }).Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
         }
 
-        public void Reset(Archetype iArchetype = null, int iOrigin = 0)
+        public void Reset(Archetype? iArchetype = null, int iOrigin = 0)
         {
             Name = string.Empty;
             var flag1 = Archetype != null && iArchetype != null && Archetype.Idx == iArchetype.Idx;

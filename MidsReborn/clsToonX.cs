@@ -1832,7 +1832,7 @@ namespace Mids_Reborn
                         continue;
                     if (ModifyEffects.ContainsKey(effect.Reward))
                     {
-                        Dictionary<string, float> modifyEffects;
+                        Dictionary<string, float>? modifyEffects;
                         string reward;
                         (modifyEffects = ModifyEffects)[reward = effect.Reward] = modifyEffects[reward] + effect.Scale;
                     }
@@ -1851,7 +1851,7 @@ namespace Mids_Reborn
                     continue;
                 if (ModifyEffects.ContainsKey(effect.Reward))
                 {
-                    Dictionary<string, float> modifyEffects;
+                    Dictionary<string, float>? modifyEffects;
                     string reward;
                     (modifyEffects = ModifyEffects)[reward = effect.Reward] = modifyEffects[reward] + effect.Scale;
                 }
