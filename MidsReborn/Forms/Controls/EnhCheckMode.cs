@@ -95,26 +95,18 @@ namespace Mids_Reborn.Forms.Controls
         {
             BringToFront();
             Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
-            imageButtonEx1.UseAlt = !MidsContext.Character.IsHero();
+            //imageButtonEx1.UseAlt = !MidsContext.Character.IsHero();
             MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
-            // UpdateColorTheme();
-            // RecalcSalvage();
-            // MidsContext.EnhCheckMode = true;
-            // _myParent.UpdateEnhCheckModeToolStrip();
-            // _myParent.DoRedraw();
         }
 
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
-            switch (e)
+            imageButtonEx1.UseAlt = e switch
             {
-                case Enums.Alignment.Hero:
-                    imageButtonEx1.UseAlt = false;
-                    break;
-                case Enums.Alignment.Villain:
-                    imageButtonEx1.UseAlt = true;
-                    break;
-            }
+                Enums.Alignment.Hero => false,
+                Enums.Alignment.Villain => true,
+                _ => imageButtonEx1.UseAlt
+            };
         }
 
         private void RecalcSalvage()

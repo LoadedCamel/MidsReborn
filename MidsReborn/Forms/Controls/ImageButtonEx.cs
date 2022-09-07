@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
+using static Mids_Reborn.Controls.SwitchButton;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -129,9 +130,7 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
-        [SettingsBindable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [NotifyParentProperty(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public BaseImages? Images { get; set; }
 
         [Description("The alternate images to be used by the control.")]
@@ -139,9 +138,7 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
-        [SettingsBindable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [NotifyParentProperty(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public AltImages? ImagesAlt { get; set; }
 
         [Description("The text to display on the control when not in toggle mode.")]
@@ -165,9 +162,7 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
-        [SettingsBindable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [NotifyParentProperty(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Outline TextOutline { get; set; }
 
         [Description("Indicates the state of the control when in toggle mode.")]
@@ -175,7 +170,6 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
-        [SettingsBindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public States ToggleState
         {
@@ -192,9 +186,7 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
-        [SettingsBindable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [NotifyParentProperty(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public StateText ToggleText { get; set; }
 
         [Description("Indicates whether the control should use alternate images.")]
@@ -253,9 +245,26 @@ namespace Mids_Reborn.Forms.Controls
 
         #endregion
 
+        #region TypeConverter<T>
+
+        public class ImageButtonExTypeConverter<T> : TypeConverter
+        {
+            public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
+            {
+                return true;
+            }
+
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
+            {
+                return TypeDescriptor.GetProperties(typeof(T));
+            }
+        }
+
+        #endregion
+
         #region Classes
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [TypeConverter(typeof(ImageButtonExTypeConverter<BaseImages>))]
         public class BaseImages
         {
             [Description("The base image to be used by the control.")]
@@ -286,11 +295,11 @@ namespace Mids_Reborn.Forms.Controls
 
             public override string ToString()
             {
-                return @"Base ImagesCollection";
+                return "Base Images";
             }
         }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [TypeConverter(typeof(ImageButtonExTypeConverter<AltImages>))]
         public class AltImages
         {
             [Description("The alternate base image used when the 'UseAlt' flag is true.")]
@@ -317,11 +326,11 @@ namespace Mids_Reborn.Forms.Controls
 
             public override string ToString()
             {
-                return @"Alternate ImagesCollection";
+                return @"Alternate Images";
             }
         }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [TypeConverter(typeof(ImageButtonExTypeConverter<StateText>))]
         public class StateText
         {
             [Description("Text to set for the '1st' state.")]
@@ -357,7 +366,7 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [TypeConverter(typeof(ImageButtonExTypeConverter<Outline>))]
         public class Outline
         {
             private int _width = 2;

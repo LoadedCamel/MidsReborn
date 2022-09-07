@@ -31,19 +31,15 @@ namespace Mids_Reborn.Forms.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            Mids_Reborn.Forms.Controls.ImageButtonEx.BaseImages baseImages1 = new Mids_Reborn.Forms.Controls.ImageButtonEx.BaseImages();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnhCheckMode));
-            Mids_Reborn.Forms.Controls.ImageButtonEx.AltImages altImages1 = new Mids_Reborn.Forms.Controls.ImageButtonEx.AltImages();
-            Mids_Reborn.Forms.Controls.ImageButtonEx.Outline outline1 = new Mids_Reborn.Forms.Controls.ImageButtonEx.Outline();
-            Mids_Reborn.Forms.Controls.ImageButtonEx.StateText stateText1 = new Mids_Reborn.Forms.Controls.ImageButtonEx.StateText();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
-            this.imageButtonEx1 = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblEnhObtained = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.imageButtonEx1 = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.pSalvageSummary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -66,32 +62,6 @@ namespace Mids_Reborn.Forms.Controls
             this.pSalvageSummary.Name = "pSalvageSummary";
             this.pSalvageSummary.Size = new System.Drawing.Size(434, 35);
             this.pSalvageSummary.TabIndex = 20;
-            // 
-            // imageButtonEx1
-            // 
-            this.imageButtonEx1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.imageButtonEx1.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            baseImages1.Background = ((System.Drawing.Image)(resources.GetObject("baseImages1.Background")));
-            baseImages1.Hover = ((System.Drawing.Image)(resources.GetObject("baseImages1.Hover")));
-            this.imageButtonEx1.Images = baseImages1;
-            altImages1.Background = ((System.Drawing.Image)(resources.GetObject("altImages1.Background")));
-            altImages1.Hover = ((System.Drawing.Image)(resources.GetObject("altImages1.Hover")));
-            this.imageButtonEx1.ImagesAlt = altImages1;
-            this.imageButtonEx1.Location = new System.Drawing.Point(330, 4);
-            this.imageButtonEx1.Name = "imageButtonEx1";
-            this.imageButtonEx1.Size = new System.Drawing.Size(97, 28);
-            this.imageButtonEx1.TabIndex = 7;
-            this.imageButtonEx1.Text = "Exit Check Mode";
-            outline1.Color = System.Drawing.Color.Black;
-            outline1.Width = 3;
-            this.imageButtonEx1.TextOutline = outline1;
-            this.imageButtonEx1.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            stateText1.Indeterminate = "Indeterminate State";
-            stateText1.ToggledOff = "ToggledOff State";
-            stateText1.ToggledOn = "ToggledOn State";
-            this.imageButtonEx1.ToggleText = stateText1;
-            this.imageButtonEx1.UseAlt = false;
-            this.imageButtonEx1.Click += new System.EventHandler(this.imageButtonEx1_Click);
             // 
             // lblCatalysts
             // 
@@ -161,6 +131,27 @@ namespace Mids_Reborn.Forms.Controls
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // imageButtonEx1
+            // 
+            this.imageButtonEx1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.imageButtonEx1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.imageButtonEx1.Images.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background")));
+            this.imageButtonEx1.Images.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover")));
+            this.imageButtonEx1.ImagesAlt.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background1")));
+            this.imageButtonEx1.ImagesAlt.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover1")));
+            this.imageButtonEx1.Location = new System.Drawing.Point(330, 0);
+            this.imageButtonEx1.Name = "imageButtonEx1";
+            this.imageButtonEx1.Size = new System.Drawing.Size(101, 35);
+            this.imageButtonEx1.TabIndex = 7;
+            this.imageButtonEx1.Text = "Exit Check Mode";
+            this.imageButtonEx1.TextOutline.Color = System.Drawing.Color.Black;
+            this.imageButtonEx1.TextOutline.Width = 3;
+            this.imageButtonEx1.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.imageButtonEx1.ToggleText.Indeterminate = "Indeterminate State";
+            this.imageButtonEx1.ToggleText.ToggledOff = "ToggledOff State";
+            this.imageButtonEx1.ToggleText.ToggledOn = "ToggledOn State";
+            this.imageButtonEx1.UseAlt = false;
             // 
             // EnhCheckMode
             // 
