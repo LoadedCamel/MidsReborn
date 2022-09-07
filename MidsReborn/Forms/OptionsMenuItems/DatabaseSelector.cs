@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
@@ -15,7 +16,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         {
             Load += OnLoad;
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private struct DatabaseItems

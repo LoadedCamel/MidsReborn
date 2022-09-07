@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MRBResourceLib;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms
@@ -57,7 +58,7 @@ namespace Mids_Reborn.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = global::Mids_Reborn.Resources.MRB_Concept;
+            this.BackgroundImage = Resources.MRB_Splash_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(752, 531);
             this.Controls.Add(this.Label1);

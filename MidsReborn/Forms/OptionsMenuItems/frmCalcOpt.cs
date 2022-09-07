@@ -8,6 +8,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
@@ -34,7 +35,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optTO.Image = Resources.optTO_Image;
             optDO.Image = Resources.optDO_Image;
             optSO.Image = Resources.optSO_Image;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
         }
 

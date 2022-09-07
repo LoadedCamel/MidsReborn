@@ -7,6 +7,7 @@ using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -75,7 +76,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             chkOnTop.ButtonClicked += chkOnTop_CheckedChanged;
             Name = nameof(frmStats);
             //var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
         }
 

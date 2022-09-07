@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -11,7 +12,7 @@ namespace Mids_Reborn.Forms
         public frmInitializing()
         {
             InitializeComponent();
-            SelectBitmap(Resources.MRB_Concept, 100);
+            SelectBitmap(Resources.MRB_Splash_Concept, 100);
         }
 
         public sealed override string Text

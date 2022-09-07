@@ -1,5 +1,6 @@
 ﻿using Mids_Reborn.Controls;
 using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.DiscordSharing
 {
@@ -508,7 +509,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // ctlAvatar1
             // 
             this.ctlAvatar1.BackColor = System.Drawing.Color.White;
-            this.ctlAvatar1.Image = global::Mids_Reborn.Resources.defaultAvatar;
+            this.ctlAvatar1.Image = Resources.defaultAvatar;
             this.ctlAvatar1.Location = new System.Drawing.Point(6, 3);
             this.ctlAvatar1.Name = "ctlAvatar1";
             this.ctlAvatar1.Size = new System.Drawing.Size(64, 64);

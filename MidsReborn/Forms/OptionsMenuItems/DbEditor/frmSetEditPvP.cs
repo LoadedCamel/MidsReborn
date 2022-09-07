@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -24,8 +25,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _loading = true;
             InitializeComponent();
             Name = nameof(FrmSetEditPvP);
-            var componentResourceManager = new ComponentResourceManager(typeof(FrmSetEditPvP));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             btnImage.Image = Resources.enhData;
             MySet = new EnhancementSet(iSet);
         }

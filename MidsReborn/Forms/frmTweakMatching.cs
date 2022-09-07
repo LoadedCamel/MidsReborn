@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -17,8 +18,7 @@ namespace Mids_Reborn.Forms
             Loaded = false;
             InitializeComponent();
             Name = nameof(frmTweakMatching);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmTweakMatching));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

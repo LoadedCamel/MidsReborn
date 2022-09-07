@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -20,8 +21,7 @@ namespace Mids_Reborn.Forms
                 ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw,
                 true);
             Name = nameof(frmColorOptions);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmColorOptions));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             _myFs.Assign(MidsContext.Config.RtFont);
         }
 

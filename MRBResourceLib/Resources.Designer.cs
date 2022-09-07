@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Mids_Reborn {
+namespace MRBResourceLib {
     using System;
     
     
@@ -19,10 +19,10 @@ namespace Mids_Reborn {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace Mids_Reborn {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mids_Reborn.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MRBResourceLib.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace Mids_Reborn {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap AncientScroll {
+        public static System.Drawing.Bitmap AncientScroll {
             get {
                 object obj = ResourceManager.GetObject("AncientScroll", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap defaultAvatar {
+        public static System.Drawing.Bitmap defaultAvatar {
             get {
                 object obj = ResourceManager.GetObject("defaultAvatar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -83,7 +83,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap EnhancementBooster {
+        public static System.Drawing.Bitmap EnhancementBooster {
             get {
                 object obj = ResourceManager.GetObject("EnhancementBooster", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +93,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap EnhancementCatalyst {
+        public static System.Drawing.Bitmap EnhancementCatalyst {
             get {
                 object obj = ResourceManager.GetObject("EnhancementCatalyst", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +103,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap enhData {
+        public static System.Drawing.Bitmap enhData {
             get {
                 object obj = ResourceManager.GetObject("enhData", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,9 +113,9 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Gradient {
+        public static System.Drawing.Bitmap HeroButton {
             get {
-                object obj = ResourceManager.GetObject("Gradient", resourceCulture);
+                object obj = ResourceManager.GetObject("HeroButton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,7 +123,17 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Icon_AncientMemories {
+        public static System.Drawing.Bitmap HeroButtonHover {
+            get {
+                object obj = ResourceManager.GetObject("HeroButtonHover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Icon_AncientMemories {
             get {
                 object obj = ResourceManager.GetObject("Icon_AncientMemories", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +143,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Icon_DisorientingField {
+        public static System.Drawing.Bitmap Icon_DisorientingField {
             get {
                 object obj = ResourceManager.GetObject("Icon_DisorientingField", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -141,11 +151,21 @@ namespace Mids_Reborn {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon MRB_Icon_Concept {
+            get {
+                object obj = ResourceManager.GetObject("MRB_Icon_Concept", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap MRB_Concept {
+        public static System.Drawing.Bitmap MRB_Splash_Concept {
             get {
-                object obj = ResourceManager.GetObject("MRB_Concept", resourceCulture);
+                object obj = ResourceManager.GetObject("MRB_Splash_Concept", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,7 +173,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap optDO_Image {
+        public static System.Drawing.Bitmap optDO_Image {
             get {
                 object obj = ResourceManager.GetObject("optDO_Image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +183,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap optSO_Image {
+        public static System.Drawing.Bitmap optSO_Image {
             get {
                 object obj = ResourceManager.GetObject("optSO_Image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +193,7 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap optTO_Image {
+        public static System.Drawing.Bitmap optTO_Image {
             get {
                 object obj = ResourceManager.GetObject("optTO_Image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -181,21 +201,41 @@ namespace Mids_Reborn {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Icon reborn {
+        public static System.Drawing.Bitmap pbTitle_Image {
             get {
-                object obj = ResourceManager.GetObject("reborn", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                object obj = ResourceManager.GetObject("pbTitle_Image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap splash {
+        public static System.Drawing.Bitmap PictureBox1_Image {
             get {
-                object obj = ResourceManager.GetObject("splash", resourceCulture);
+                object obj = ResourceManager.GetObject("PictureBox1_Image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap VillainButton {
+            get {
+                object obj = ResourceManager.GetObject("VillainButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap VillainButtonHover {
+            get {
+                object obj = ResourceManager.GetObject("VillainButtonHover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

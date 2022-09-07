@@ -11,6 +11,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -48,8 +49,7 @@ namespace Mids_Reborn.Forms
             FormClosed += frmSetFind_FormClosed;
             Load += frmSetFind_Load;
             InitializeComponent();
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetFind);
             ibClose.ButtonClicked += ibClose_ButtonClicked;
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;

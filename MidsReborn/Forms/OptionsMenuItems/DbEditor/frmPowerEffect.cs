@@ -9,6 +9,7 @@ using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -26,7 +27,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             MyPower = fxPower;
             InitializeComponent();
             Load += frmPowerEffect_Load;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             if (iFx != null) MyFx = (IEffect)iFx.Clone();
             _effectIndex = fxIndex;
         }
@@ -36,7 +37,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _loading = true;
             InitializeComponent();
             Load += frmPowerEffect_Load;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             if (iFx != null) MyFx = (IEffect)iFx.Clone();
             _effectIndex = fxIndex;
         }

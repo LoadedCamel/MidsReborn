@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -221,7 +222,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Mids_Reborn.Resources.AncientScroll;
+            this.pictureBox1.Image = Resources.AncientScroll;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
@@ -232,7 +233,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::Mids_Reborn.Resources.EnhancementCatalyst;
+            this.pictureBox2.Image = Resources.EnhancementCatalyst;
             this.pictureBox2.Location = new System.Drawing.Point(222, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(32, 32);
@@ -243,7 +244,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::Mids_Reborn.Resources.EnhancementBooster;
+            this.pictureBox3.Image = Resources.EnhancementBooster;
             this.pictureBox3.Location = new System.Drawing.Point(370, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(32, 32);

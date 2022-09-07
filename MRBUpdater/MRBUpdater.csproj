@@ -14,7 +14,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>reborn.ico</ApplicationIcon>
+    <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MRBUpdater.Program</StartupObject>
@@ -35,7 +35,7 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="reborn.ico" />
+    <Content Include="MRB_Icon_Concept.ico" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Controls\ctlProgressBar.cs">

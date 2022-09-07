@@ -12,6 +12,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -97,8 +98,7 @@ namespace Mids_Reborn.Forms
 
             loreBtn.ButtonClicked += loreBtn_ButtonClicked;
             Name = nameof(frmIncarnate);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmIncarnate));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;

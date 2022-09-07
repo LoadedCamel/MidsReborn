@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -12,7 +13,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             Load += frmServerData_OnLoad;
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void frmServerData_OnLoad(object sender, EventArgs e)

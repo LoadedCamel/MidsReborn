@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -41,7 +42,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             typeIO.Image = Resources.enhData;
             typeRegular.Image = Resources.enhData;
             typeHO.Image = Resources.enhData;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
             if (newStaticIndex > 0)

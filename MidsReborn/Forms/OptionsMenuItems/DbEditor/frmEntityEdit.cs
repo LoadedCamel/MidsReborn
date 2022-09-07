@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -18,7 +19,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             loading = true;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEntityEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Label4.Text = componentResourceManager.GetString("Label4.Text");
             Name = nameof(frmEntityEdit);
             myEntity = new SummonedEntity(iEntity);

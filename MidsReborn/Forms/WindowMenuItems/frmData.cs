@@ -7,6 +7,7 @@ using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -22,8 +23,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             ResizeEnd += frmData_ResizeEnd;
             InitializeComponent();
             Name = nameof(frmData);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmData));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             _onClosing = onClosing;
         }
 

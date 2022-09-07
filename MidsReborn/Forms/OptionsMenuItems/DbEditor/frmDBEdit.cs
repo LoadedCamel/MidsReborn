@@ -10,6 +10,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.JsonImport;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -60,7 +61,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Initialized = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
         }
 

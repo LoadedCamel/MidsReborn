@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,4 +117,59 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AncientScroll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AncientScroll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="defaultAvatar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\defaultAvatar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnhancementBooster" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\EnhancementBooster.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnhancementCatalyst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\EnhancementCatalyst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="enhData" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\enhData.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeroButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\HeroButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeroButtonHover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\HeroButtonHover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_AncientMemories" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Icon_AncientMemories.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_DisorientingField" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Icon_DisorientingField.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MRB_Icon_Concept" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\MRB_Icon_Concept.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MRB_Splash_Concept" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\MRB_Splash_Concept.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="optDO_Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\optDO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="optSO_Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\optSO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="optTO_Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\optTO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pbTitle_Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\pbTitle.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PictureBox1_Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PictureBox1.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VillainButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\VillainButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VillainButtonHover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\VillainButtonHover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

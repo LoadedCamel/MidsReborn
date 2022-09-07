@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Document_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -16,8 +17,7 @@ namespace Mids_Reborn.Forms
         {
             Load += frmPrint_Load;
             InitializeComponent();
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmPrint));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmPrint);
         }
 

@@ -6,6 +6,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using MRBResourceLib;
 
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
@@ -32,8 +33,7 @@ namespace Mids_Reborn.Forms
         {
             Load += frmEntityListing_Load;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEntityListing));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEntityListing);
         }
 

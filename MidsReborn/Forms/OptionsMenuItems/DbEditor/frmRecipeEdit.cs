@@ -8,6 +8,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.WindowMenuItems;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -80,7 +81,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _noUpdate = true;
             InitializeComponent();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             _tempRecipes = (Recipe[])DatabaseAPI.Database.Recipes.Clone();
             _tempEnhancements = (IEnhancement[])DatabaseAPI.Database.Enhancements.Clone();
             FillList();

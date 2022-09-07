@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>reborn.ico</ApplicationIcon>
+    <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Mids_Reborn.Program</StartupObject>
@@ -37,6 +37,11 @@
     </Compile>
     <Compile Update="Forms\Controls\InfoPanel.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Resources.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
     <Compile Update="UIv2\v2Controls\PowerList.cs">
       <SubType>UserControl</SubType>
@@ -125,6 +130,7 @@
     <Content Include="Data\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="MRB_Icon_Concept.ico" />
     <None Update="Data\Generic\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -191,7 +197,10 @@
     <Content Include="Data\Rebirth\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="reborn.ico" />
+    <None Include="..\MRBResourceLib\Resources.resx" Link="Resources.resx">
+      <Generator>None</Generator>
+      <CustomToolNamespace>MRBResourceLib</CustomToolNamespace>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -233,6 +242,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MRBResourceLib\MRBResourceLib.csproj" />
     <ProjectReference Include="..\MRBUpdater\MRBUpdater.csproj" />
   </ItemGroup>
   <ItemGroup>

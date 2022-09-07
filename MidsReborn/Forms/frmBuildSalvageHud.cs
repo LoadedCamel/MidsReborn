@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -14,7 +15,7 @@ namespace Mids_Reborn.Forms
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Load += frmBuildSalvageHud_Load;
             Closed += frmBuildSalvageHud_Closed;
             myParent = iParent;

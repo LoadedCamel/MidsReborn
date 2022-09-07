@@ -12,6 +12,7 @@ using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Import;
 using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -41,7 +42,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ReqChanging = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
             backup_Requires = new Requirement(myPower.Requires);

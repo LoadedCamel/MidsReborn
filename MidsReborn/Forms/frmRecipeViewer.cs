@@ -10,6 +10,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -36,8 +37,7 @@ namespace Mids_Reborn.Forms
             Loading = true;
             InitializeComponent();
             Name = nameof(frmRecipeViewer);
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             lvPower.MouseEnter += lvPower_MouseEnter;
             lvPower.ItemChecked += lvPower_ItemChecked;
             lvDPA.SelectedIndexChanged += lvDPA_SelectedIndexChanged;
@@ -539,7 +539,7 @@ namespace Mids_Reborn.Forms
             var extendedBitmap = new ExtendedBitmap(bxRecipe.Size);
             extendedBitmap.Graphics.Clear(Color.Black);
             extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_AncientMemories, 0, 0);
-            //extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
+            extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
             extendedBitmap.Graphics.DrawImageUnscaled(bxRecipe.Bitmap, 0, 0);
             pbRecipe.Image = new Bitmap(extendedBitmap.Bitmap);
         }
