@@ -92,7 +92,7 @@ namespace Mids_Reborn.Forms.Controls
         #region Public Properties
 
         /// <summary>
-        /// The current text of the component. Sets from Text and ToggleText but can be override by assigning to it directly.
+        /// The current text of the component. Sets from Text and ToggleText but can be overriden by assigning to it directly.
         /// </summary>
         public string? CurrentText { get; set; }
 
