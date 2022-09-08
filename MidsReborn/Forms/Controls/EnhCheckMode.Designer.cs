@@ -68,7 +68,7 @@ namespace Mids_Reborn.Forms.Controls
             // imageButtonEx1
             // 
             this.imageButtonEx1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.imageButtonEx1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.imageButtonEx1.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.imageButtonEx1.Images.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background")));
             this.imageButtonEx1.Images.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover")));
             this.imageButtonEx1.ImagesAlt.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background1")));

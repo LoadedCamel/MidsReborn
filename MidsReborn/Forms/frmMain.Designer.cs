@@ -1684,7 +1684,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibDynMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibDynMode.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibDynMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ibDynMode.ForeColor = Color.White;
             this.ibDynMode.Images.Background = Resources.HeroButton;
             this.ibDynMode.Images.Hover = Resources.HeroButtonHover;
@@ -2020,7 +2020,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibModeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibModeEx.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibModeEx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ibModeEx.ForeColor = Color.White;
             this.ibModeEx.Images.Background = Resources.HeroButton;
             this.ibModeEx.Images.Hover = Resources.HeroButtonHover;

@@ -67,7 +67,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Private Properties
 
-        private Font _font = DefaultFont;
+        private Font _font = new("MS Sans Serif", DefaultFont.Size);
         private static Color _foreColor = Color.WhiteSmoke;
 
         private Color _currentTextColor = _foreColor;
