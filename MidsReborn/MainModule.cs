@@ -21,11 +21,11 @@ namespace Mids_Reborn
             public static Rectangle SzFrmTotals = new();
 
             public static bool IsAppInitialized { get; private set; }
-            private static frmBusy _bFrm;
+            private static frmBusy? _bFrm;
 
-            public static clsToonX Toon
+            public static clsToonX? Toon
             {
-                get => (clsToonX) MidsContext.Character;
+                get => MidsContext.Character as clsToonX;
                 set => MidsContext.Character = value;
             }
 
@@ -71,6 +71,7 @@ namespace Mids_Reborn
                     dbSelected = Files.FDefaultPath;
                 }
 
+                if (MidsContext.Config == null) return;
                 MidsContext.Config.DataPath = dbSelected;
                 MidsContext.Config.SavePath = dbSelected;
                 LoadData(ref iFrm, MidsContext.Config.DataPath);

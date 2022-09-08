@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -194,7 +195,8 @@ namespace Mids_Reborn.Forms
             this.ibPopup = new ImageButton();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
-            this.pbDynMode = new System.Windows.Forms.PictureBox();
+            //this.pbDynMode = new System.Windows.Forms.PictureBox();
+            this.ibDynMode = new ImageButtonEx();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
@@ -212,14 +214,14 @@ namespace Mids_Reborn.Forms
             this.ibTotals = new ImageButton();
             this.ibSlotLevels = new ImageButton();
             this.ibTeam = new ImageButton();
-            this.sbMode = new SwitchButton();
+            this.ibModeEx = new ImageButtonEx();
             this.ibSets = new ImageButton();
             this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
             this.enhCheckMode = new EnhCheckMode(this);
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).BeginInit();
             this.pnlGFXFlow.SuspendLayout();
             this.SuspendLayout();
@@ -1670,13 +1672,38 @@ namespace Mids_Reborn.Forms
             // 
             // pbDynMode
             // 
-            this.pbDynMode.Location = new System.Drawing.Point(355, 80);
-            this.pbDynMode.Name = "pbDynMode";
-            this.pbDynMode.Size = new System.Drawing.Size(105, 22);
-            this.pbDynMode.TabIndex = 92;
-            this.pbDynMode.TabStop = false;
-            this.pbDynMode.Click += new System.EventHandler(this.pbDynMode_Click);
-            this.pbDynMode.Paint += new System.Windows.Forms.PaintEventHandler(this.pbDynMode_Paint);
+            // this.pbDynMode.Location = new System.Drawing.Point(355, 80);
+            // this.pbDynMode.Name = "pbDynMode";
+            // this.pbDynMode.Size = new System.Drawing.Size(105, 22);
+            // this.pbDynMode.TabIndex = 92;
+            // this.pbDynMode.TabStop = false;
+            // this.pbDynMode.Click += new System.EventHandler(this.pbDynMode_Click);
+            // this.pbDynMode.Paint += new System.Windows.Forms.PaintEventHandler(this.pbDynMode_Paint);
+            // 
+            // ibDynMode
+            // 
+            this.ibDynMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibDynMode.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.ibDynMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibDynMode.ForeColor = Color.White;
+            this.ibDynMode.Images.Background = Resources.HeroButton;
+            this.ibDynMode.Images.Hover = Resources.HeroButtonHover;
+            this.ibDynMode.ImagesAlt.Background = Resources.VillainButton;
+            this.ibDynMode.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibDynMode.Location = new System.Drawing.Point(355, 80);
+            this.ibDynMode.Name = "ibDynMode";
+            this.ibDynMode.Size = new System.Drawing.Size(105, 22);
+            this.ibDynMode.TabIndex = 122;
+            this.ibDynMode.Text = "ibDynMode1";
+            this.ibDynMode.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibDynMode.TextOutline.Width = 3;
+            this.ibDynMode.ThreeState = false;
+            this.ibDynMode.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibDynMode.ToggleText.Indeterminate = "Power / Slot";
+            this.ibDynMode.ToggleText.ToggledOff = "Power";
+            this.ibDynMode.ToggleText.ToggledOn = "Slot";
+            this.ibDynMode.UseAlt = false;
+            this.ibDynMode.Click += new EventHandler(ibDynMode_Click);
             // 
             // pnlGFX
             // 
@@ -1989,18 +2016,30 @@ namespace Mids_Reborn.Forms
             this.ibTeam.Toggle = false;
             this.ibTeam.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
             // 
-            // ibMode
+            // ibModeEx
             // 
-            this.sbMode.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbMode.Location = new System.Drawing.Point(244, 80);
-            this.sbMode.Name = "sbMode";
-            this.sbMode.Size = new System.Drawing.Size(105, 22);
-            this.sbMode.TabIndex = 122;
-            this.sbMode.ForeColor = Color.White;
-            this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
-            this.sbMode.SwitchedState = SwitchButton.SwitchState.None;
-            this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
-            this.sbMode.Click += new EventHandler(this.sbMode_ButtonClicked);
+            this.ibModeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibModeEx.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.ibModeEx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibModeEx.ForeColor = Color.White;
+            this.ibModeEx.Images.Background = Resources.HeroButton;
+            this.ibModeEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibModeEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibModeEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibModeEx.Location = new System.Drawing.Point(244, 80);
+            this.ibModeEx.Name = "ibModeEx";
+            this.ibModeEx.Size = new System.Drawing.Size(105, 22);
+            this.ibModeEx.TabIndex = 122;
+            this.ibModeEx.Text = "ibModeEx1";
+            this.ibModeEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibModeEx.TextOutline.Width = 3;
+            this.ibModeEx.ThreeState = true;
+            this.ibModeEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibModeEx.ToggleText.Indeterminate = "Respec";
+            this.ibModeEx.ToggleText.ToggledOff = "Level-Up";
+            this.ibModeEx.ToggleText.ToggledOn = "Normal";
+            this.ibModeEx.UseAlt = false;
+            this.ibModeEx.Click += new EventHandler(ibModeEx_OnClick);
             // 
             // ibSets
             // 
@@ -2085,8 +2124,10 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.ibTotals);
             this.Controls.Add(this.ibSlotLevels);
             this.Controls.Add(this.sbMode);
+            this.Controls.Add(this.ibModeEx);
             this.Controls.Add(this.ibSets);
-            this.Controls.Add(this.pbDynMode);
+            //this.Controls.Add(this.pbDynMode);
+            this.Controls.Add(this.ibDynMode);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.MenuBar);
             this.Controls.Add(this.lblName);
@@ -2119,7 +2160,7 @@ namespace Mids_Reborn.Forms
             this.MenuBar.PerformLayout();
             this.topPanel.ResumeLayout(false);
             this.topPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).EndInit();
             this.pnlGFXFlow.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -2227,6 +2268,7 @@ namespace Mids_Reborn.Forms
         ImageButton ibAccolade;
         ImageButton ibTeam;
         SwitchButton sbMode;
+        ImageButtonEx ibModeEx;
         ImageButton ibPopup;
         ImageButton ibPvX;
         ImageButton ibRecipe;
@@ -2265,7 +2307,8 @@ namespace Mids_Reborn.Forms
         ListLabelV3 llSecondary;
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
-        PictureBox pbDynMode;
+        //PictureBox pbDynMode;
+        ImageButtonEx ibDynMode;
         public pnlGFX pnlGFX;
         public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;

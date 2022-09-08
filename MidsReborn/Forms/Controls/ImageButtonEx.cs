@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using static Mids_Reborn.Controls.SwitchButton;
 
@@ -19,6 +22,11 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(false)] public new BorderStyle BorderStyle { get; set; }
         [Browsable(false)] public new ImeMode ImeMode { get; set; }
         [Browsable(false)] public override AutoValidate AutoValidate { get; set; }
+        [Browsable(false)] public override bool AutoSize { get; set; }
+        [Browsable(false)] public override bool AutoScroll { get; set; }
+        [Browsable(false)] public override Point AutoScrollOffset { get; set; }
+        [Browsable(false)] public override Size MaximumSize { get; set; }
+        [Browsable(false)] public override Size MinimumSize { get; set; }
 
         #endregion
 
@@ -26,16 +34,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private new event EventHandler<Font>? FontChanged;
         private new event EventHandler<Color>? ForeColorChanged;
-        private static event EventHandler<Image?>? ImageChanged;
+        private event EventHandler<Image?>? ImageChanged;
         private new event EventHandler<string?>? TextChanged;
         private event EventHandler<bool> ThreeStateChanged;
         private event EventHandler<ButtonTypes>? ButtonTypeChanged;
         private event EventHandler<bool>? UseAltChanged;
 
-        private static event EventHandler<int>? OutlineWidthChanged;
-        private static event EventHandler<Color>? OutlineColorChanged;
-
-        private delegate void StateChangedEventHandler(States state);
+        private delegate void StateChangedEventHandler(object? sender, States state);
 
         private event StateChangedEventHandler? StateChanged;
 
@@ -68,16 +73,9 @@ namespace Mids_Reborn.Forms.Controls
         private Color _currentTextColor = _foreColor;
         private States _state = States.ToggledOff;
         private Image? _currentImage;
-        private static Image? _baseImage;
-        private static Image? _hoverImage;
-        private static Image? _altImage;
-        private static Image? _altHoverImage;
-        private string? _currentText;
         private string? _text;
         private ButtonTypes _buttonType = ButtonTypes.Normal;
         private static bool _isThreeState;
-        private int _outlineWidth;
-        private Color _outlineColor;
         private bool _useAlt;
 
         private static Color ColorWhenClicked
@@ -88,6 +86,20 @@ namespace Mids_Reborn.Forms.Controls
                 return Color.FromArgb(origColor ^ 0xFFFFFF);
             }
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// The current text of the component. Sets from Text and ToggleText but can be override by assigning to it directly.
+        /// </summary>
+        public string? CurrentText { get; set; }
+
+        /// <summary>
+        /// Turns locking mechanism on/off for the component, preventing it from switching states.
+        /// </summary>
+        public bool Lock { get; set; }
 
         #endregion
 
@@ -177,7 +189,7 @@ namespace Mids_Reborn.Forms.Controls
             set
             {
                 _state = value;
-                StateChanged?.Invoke(value);
+                StateChanged?.Invoke(this, value);
             }
         }
 
@@ -265,68 +277,78 @@ namespace Mids_Reborn.Forms.Controls
         #region Classes
 
         [TypeConverter(typeof(ImageButtonExTypeConverter<BaseImages>))]
-        public class BaseImages
+        public sealed class BaseImages : INotifyPropertyChanged
         {
             [Description("The base image to be used by the control.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public Image? Background
-            {
-                get => _baseImage;
-                set
-                {
-                    _baseImage = value;
-                    ImageChanged?.Invoke(this, value);
-                }
-            }
+            public Image? Background { get; set; }
 
             [Description("The image to be used when hovering over the control.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public Image? Hover
-            {
-                get => _hoverImage;
-                set => _hoverImage = value;
-            }
+            public Image? Hover { get; set; }
 
             public override string ToString()
             {
                 return "Base Images";
             }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
+            }
         }
 
         [TypeConverter(typeof(ImageButtonExTypeConverter<AltImages>))]
-        public class AltImages
+        public sealed class AltImages : INotifyPropertyChanged
         {
             [Description("The alternate base image used when the 'UseAlt' flag is true.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public Image? Background
-            {
-                get => _altImage;
-                set => _altImage = value;
-            }
+            public Image? Background { get; set; }
 
             [Description("The alternate hover image used when the 'UseAlt' flag is true.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public Image? Hover
-            {
-                get => _altHoverImage;
-                set => _altHoverImage = value;
-            }
+            public Image? Hover { get; set; }
 
             public override string ToString()
             {
                 return @"Alternate Images";
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
             }
         }
 
@@ -367,44 +389,40 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         [TypeConverter(typeof(ImageButtonExTypeConverter<Outline>))]
-        public class Outline
+        public sealed class Outline : INotifyPropertyChanged
         {
-            private int _width = 2;
-            private Color _color = Color.Black;
-
             [Description("The color to be used for the outline.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public Color Color
-            {
-                get => _color;
-                set
-                {
-                    _color = value;
-                    OutlineColorChanged?.Invoke(this, value);
-                }
-            }
+            public Color Color { get; set; } = Color.Black;
 
             [Description("The width of the outline to be used.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
             [NotifyParentProperty(true)]
-            public int Width
-            {
-                get => _width;
-                set
-                {
-                    _width = value;
-                    OutlineWidthChanged?.Invoke(this, value);
-                }
-            }
+            public int Width { get; set; } = 2;
 
             public override string ToString()
             {
                 return $"{Color}, {Width}";
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
             }
         }
 
@@ -423,17 +441,29 @@ namespace Mids_Reborn.Forms.Controls
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
             MouseUp += OnMouseUp;
-            OutlineColorChanged += OnOutlineColorChanged;
-            OutlineWidthChanged += OnOutlineWidthChanged;
             StateChanged += OnStateChanged;
             TextChanged += OnTextChanged;
             ThreeStateChanged += OnThreeStateChanged;
             UseAltChanged += OnUseAltChanged;
             InitializeComponent();
             Images = new BaseImages();
+            Images.PropertyChanged += ImagesOnPropertyChanged;
             ImagesAlt = new AltImages();
             TextOutline = new Outline();
+            TextOutline.PropertyChanged += TextOutlineOnPropertyChanged;
             ToggleText = new StateText();
+        }
+
+        #region Event Methods
+
+        private void TextOutlineOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            Refresh();
+        }
+
+        private void ImagesOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Background") ImageChanged?.Invoke(this, Images?.Background);
         }
 
         private void OnUseAltChanged(object? sender, bool e)
@@ -441,8 +471,8 @@ namespace Mids_Reborn.Forms.Controls
             if (Images == null) return;
             var usedImage = e switch
             {
-                true => _altImage,
-                false => _baseImage
+                true => ImagesAlt?.Background,
+                false => Images?.Background
             };
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
@@ -450,6 +480,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
+            if (Lock) return;
             if (ButtonType == ButtonTypes.Normal)
             {
                 ForeColorChanged?.Invoke(this, _foreColor);
@@ -466,22 +497,23 @@ namespace Mids_Reborn.Forms.Controls
                     ForeColorChanged?.Invoke(this, ColorWhenClicked);
                     break;
                 case ButtonTypes.Toggle:
+                    if (Lock) return;
                     if (!_isThreeState)
                     {
-                        StateChanged?.Invoke(_state == States.ToggledOff ? States.ToggledOn : States.ToggledOff);
+                        StateChanged?.Invoke(this, _state == States.ToggledOff ? States.ToggledOn : States.ToggledOff);
                     }
                     else
                     {
                         switch (ToggleState)
                         {
                             case States.ToggledOff:
-                                StateChanged?.Invoke(States.ToggledOn);
+                                StateChanged?.Invoke(this, States.ToggledOn);
                                 break;
                             case States.ToggledOn:
-                                StateChanged?.Invoke(States.Indeterminate);
+                                StateChanged?.Invoke(this, States.Indeterminate);
                                 break;
                             case States.Indeterminate:
-                                StateChanged?.Invoke(States.ToggledOff);
+                                StateChanged?.Invoke(this, States.ToggledOff);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -500,12 +532,12 @@ namespace Mids_Reborn.Forms.Controls
             switch (UseAlt)
             {
                 case true:
-                    if (_altImage == null || _currentImage == _altImage || _currentImage != _altHoverImage) return;
-                    usedImage = _altImage;
+                    if (ImagesAlt?.Background == null || _currentImage == ImagesAlt?.Background || _currentImage != ImagesAlt?.Hover) return;
+                    usedImage = ImagesAlt?.Background;
                     break;
                 case false:
-                    if (_baseImage == null || _currentImage == _baseImage || _currentImage != _hoverImage) return;
-                    usedImage = _baseImage;
+                    if (Images?.Background == null || _currentImage == Images?.Background || _currentImage != Images?.Hover) return;
+                    usedImage = Images?.Background;
                     break;
             }
 
@@ -515,16 +547,18 @@ namespace Mids_Reborn.Forms.Controls
 
         private void OnMouseEnter(object? sender, EventArgs e)
         {
+            var control = sender as ImageButtonEx;
+            if (control?.Name != Name) return;
             Image? usedImage;
             switch (UseAlt)
             {
                 case true:
-                    if (_altHoverImage == null) return;
-                    usedImage = _altHoverImage;
+                    if (ImagesAlt?.Hover == null) return;
+                    usedImage = ImagesAlt?.Hover;
                     break;
                 case false:
-                    if (_hoverImage == null) return;
-                    usedImage = _hoverImage;
+                    if (Images?.Hover == null) return;
+                    usedImage = Images?.Hover;
                     break;
             }
 
@@ -541,7 +575,7 @@ namespace Mids_Reborn.Forms.Controls
                     TextChanged?.Invoke(this, _text);
                     break;
                 case ButtonTypes.Toggle:
-                    StateChanged?.Invoke(ToggleState);
+                    StateChanged?.Invoke(this, ToggleState);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e), e, null);
@@ -567,18 +601,6 @@ namespace Mids_Reborn.Forms.Controls
             _isThreeState = e;
         }
 
-        private void OnOutlineColorChanged(object? sender, Color e)
-        {
-            _outlineColor = e;
-            Refresh();
-        }
-
-        private void OnOutlineWidthChanged(object? sender, int e)
-        {
-            _outlineWidth = e;
-            Refresh();
-        }
-
         private void OnImageChanged(object? sender, Image? e)
         {
             if (e != null) _currentImage = e;
@@ -587,13 +609,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private void OnTextChanged(object? sender, string? e)
         {
-            if (e != null) _currentText = e;
+            if (e != null) CurrentText = e;
             Refresh();
         }
 
-        private void OnStateChanged(States state)
+        private void OnStateChanged(object? sender, States state)
         {
-            if (ButtonType != ButtonTypes.Toggle) return;
+            if (ButtonType != ButtonTypes.Toggle || Lock) return;
             switch (state)
             {
                 case States.ToggledOff:
@@ -612,6 +634,8 @@ namespace Mids_Reborn.Forms.Controls
             _state = state;
         }
 
+        #endregion
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -629,7 +653,7 @@ namespace Mids_Reborn.Forms.Controls
             // Assign variable to be used in drawing operations (some may be wrapped in using statements)
             var rect = ClientRectangle with { X = 0, Y = 0 };
             var rectPen = new Pen(Color.Cyan, 1f);
-            var outlinePen = new Pen(_outlineColor, _outlineWidth) { LineJoin = LineJoin.Round };
+            var outlinePen = new Pen(TextOutline.Color, TextOutline.Width) { LineJoin = LineJoin.Round };
             var brush = new SolidBrush(_currentTextColor);
             var sFormat = new StringFormat
             {
@@ -643,7 +667,7 @@ namespace Mids_Reborn.Forms.Controls
             if (_currentImage == null)
             {
                 e.Graphics.DrawRectangle(rectPen, rect);
-                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
+                gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
                     sFormat);
                 outlinePen.LineJoin = LineJoin.Round;
                 e.Graphics.DrawPath(outlinePen, gfxPath);
@@ -652,7 +676,7 @@ namespace Mids_Reborn.Forms.Controls
             else
             {
                 e.Graphics.DrawImage(_currentImage, ClientRectangle);
-                gfxPath.AddString($"{_currentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
+                gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
                     sFormat);
                 outlinePen.LineJoin = LineJoin.Round;
                 e.Graphics.DrawPath(outlinePen, gfxPath);

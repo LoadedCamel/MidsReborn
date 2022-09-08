@@ -1,6 +1,6 @@
 ﻿namespace Mids_Reborn.Forms.Controls
 {
-    sealed partial class ImageButtonEx
+    partial class ImageButtonEx
     {
         /// <summary> 
         /// Required designer variable.
@@ -32,8 +32,8 @@
             // 
             // ImageButtonEx
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            // this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            // this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "ImageButtonEx";
             this.Size = new System.Drawing.Size(100, 30);
             this.ResumeLayout(false);

@@ -457,7 +457,7 @@ namespace Mids_Reborn.Forms
                 setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 UpdatePoolsPanelSize();
                 InitializeDv();
-
+                MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -493,55 +493,85 @@ namespace Mids_Reborn.Forms
 
         //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
 
-        private void sbMode_ButtonClicked(object sender, EventArgs eventArgs)
+        private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
+        {
+            ibModeEx.UseAlt = e switch
+            {
+                Enums.Alignment.Hero => false,
+                Enums.Alignment.Villain => true,
+                _ => ibModeEx.UseAlt
+            };
+
+            ibDynMode.UseAlt = e switch
+            {
+                Enums.Alignment.Hero => false,
+                Enums.Alignment.Villain => true,
+                _ => ibDynMode.UseAlt
+            };
+        }
+
+        private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
         {
             if (MainModule.MidsController.Toon == null)
                 return;
-            switch (sbMode.SwitchedState)
+
+            if (MidsContext.Config == null) return;
+            switch (ibModeEx.ToggleState)
             {
-                case SwitchButton.SwitchState.StateA:
+                case ImageButtonEx.States.ToggledOff:
                     MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
                     if (DatabaseAPI.ServerData.EnableInherentSlotting)
                     {
                         MainModule.MidsController.Toon.ClearInvalidInherentSlots();
                     }
+
                     break;
-                case SwitchButton.SwitchState.StateB:
+                case ImageButtonEx.States.ToggledOn:
                     MidsContext.Config.BuildMode = Enums.dmModes.Normal;
                     break;
-                case SwitchButton.SwitchState.StateC:
+                case ImageButtonEx.States.Indeterminate:
                     MidsContext.Config.BuildMode = Enums.dmModes.Respec;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (!DatabaseAPI.LoadLevelsDatabase(MidsContext.Config.DataPath)) return;
-            MidsContext.Character.ResetLevel();
+            MidsContext.Character?.ResetLevel();
             PowerModified(markModified: false);
-            UpdateDMBuffer();
-            pbDynMode.Refresh();
+            UpdateDmBuffer();
         }
 
         private void UpdateModeInfo()
         {
-            if (sbMode.SwitchedState == SwitchButton.SwitchState.None) sbMode.SwitchedState = SwitchButton.SwitchState.StateA;
+            if (MidsContext.Config == null) return;
             switch (MidsContext.Config.BuildMode)
             {
                 case Enums.dmModes.LevelUp:
-                    sbMode.SwitchText.StateA = !MainModule.MidsController.Toon.Complete ? $"Level-Up: {MidsContext.Character.Level + 1}" : @"Level-Up";
-                    if (sbMode.DisplayText != sbMode.SwitchText.StateA)
+                    ibModeEx.ToggleText.ToggledOff = MainModule.MidsController.Toon is { Complete: false }
+                        ? $"Level-Up: {MidsContext.Character?.Level + 1}"
+                        : @"Level-Up";
+                    if (ibModeEx.CurrentText != ibModeEx.ToggleText.ToggledOff)
                     {
-                        sbMode.DisplayText = !MainModule.MidsController.Toon.Complete ? $"Level-Up: {MidsContext.Character.Level + 1}" : @"Level-Up";
+                        ibModeEx.CurrentText = MainModule.MidsController.Toon is { Complete: false }
+                            ? $"Level-Up: {MidsContext.Character?.Level + 1}"
+                            : @"Level-Up";
                     }
-                    sbMode.SwitchedState = SwitchButton.SwitchState.StateA;
+
+                    ibModeEx.ToggleState = ImageButtonEx.States.ToggledOff;
                     break;
                 case Enums.dmModes.Normal:
-                    sbMode.SwitchText.StateB = @"Normal";
-                    sbMode.SwitchedState = SwitchButton.SwitchState.StateB;
+                    ibModeEx.ToggleText.ToggledOn = @"Normal";
+                    ibModeEx.ToggleState = ImageButtonEx.States.ToggledOn;
                     break;
                 case Enums.dmModes.Respec:
-                    sbMode.SwitchText.StateC = @"Respec";
-                    sbMode.SwitchedState = SwitchButton.SwitchState.StateC;
+                    ibModeEx.ToggleText.Indeterminate = @"Respec";
+                    ibModeEx.ToggleState = ImageButtonEx.States.Indeterminate;
                     break;
+                case Enums.dmModes.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -3234,7 +3264,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        private void pbDynMode_Click(object sender, EventArgs e)
+        /*private void pbDynMode_Click(object sender, EventArgs e)
         {
             if (MainModule.MidsController.Toon == null)
             {
@@ -3252,18 +3282,35 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 _ => Enums.dmItem.Power
             };
 
-            UpdateDMBuffer();
+            UpdateDmBuffer();
             pbDynMode.Refresh();
+        }*/
+
+        private void ibDynMode_Click(object? sender, EventArgs e)
+        {
+            if (MainModule.MidsController.Toon == null || MidsContext.Config == null) return;
+            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp && !ibDynMode.Lock)
+            {
+                ibDynMode.Lock = true;
+            }
+
+            MidsContext.Config.BuildOption = MidsContext.Config.BuildOption switch
+            {
+                Enums.dmItem.Power => Enums.dmItem.Slot,
+                _ => Enums.dmItem.Power
+            };
+
+            UpdateDmBuffer();
         }
 
-        private void pbDynMode_Paint(object sender, PaintEventArgs e)
-        {
-            if (dmBuffer == null)
-                UpdateDMBuffer();
-            if (dmBuffer == null)
-                return;
-            e.Graphics.DrawImage(dmBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
-        }
+        // private void pbDynMode_Paint(object sender, PaintEventArgs e)
+        // {
+        //     if (dmBuffer == null)
+        //         UpdateDmBuffer();
+        //     if (dmBuffer == null)
+        //         return;
+        //     e.Graphics.DrawImage(dmBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
+        // }
 
         private void pnlGFX_DragDrop(object sender, DragEventArgs e)
         {
@@ -3848,7 +3895,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             RefreshInfo();
             UpdateModeInfo();
-            pbDynMode.Refresh();
+            //pbDynMode.Refresh();
         }
 
         private bool? CheckInitDdsaValue(int index, int? defaultOpt, string descript, params string[] options)
@@ -6389,9 +6436,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
 
-            sbMode.Image = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap;
-            sbMode.HoverImage = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap;
-
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
@@ -6427,8 +6471,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             if (!skipDraw)
                 DoRedraw();
-            UpdateDMBuffer();
-            pbDynMode.Refresh();
+            UpdateDmBuffer();
         }
 
         private void UpdatePoolsPanelSize()
@@ -6552,85 +6595,70 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
             if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
             {
-                UpdateDMBuffer();
-                pbDynMode.Refresh();
+                UpdateDmBuffer();
+                //pbDynMode.Refresh();
             }
 
-            sbMode.Outline.Enabled = true;
             DoResize();
             NoUpdate = false;
         }
 
-        private void UpdateDMBuffer()
+        private void UpdateDmBuffer()
         {
-            if (drawing == null || MainModule.MidsController.Toon == null)
-                return;
-            dmBuffer ??= new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
-            Enums.ePowerState ePowerState;
-            string iStr;
-            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            if (MainModule.MidsController.Toon == null || MidsContext.Config == null || MidsContext.Character == null) return;
+
+            Enums.ePowerState powerState;
+            string? text;
+            switch (MidsContext.Config.BuildMode)
             {
-                if (MidsContext.Config.BuildOption == Enums.dmItem.Slot)
+                case Enums.dmModes.Normal or Enums.dmModes.Respec when MidsContext.Config.BuildOption == Enums.dmItem.Slot:
+                    powerState = Enums.ePowerState.Open;
+                    text = @"Power / Slot";
+                    break;
+                case Enums.dmModes.Normal or Enums.dmModes.Respec:
+                    powerState = Enums.ePowerState.Used;
+                    text = @"Power Only";
+                    break;
+                case Enums.dmModes.LevelUp when DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power:
+                    powerState = Enums.ePowerState.Used;
+                    text = @"Power";
+                    break;
+                default:
                 {
-                    ePowerState = Enums.ePowerState.Open;
-                    iStr = "Power / Slot";
+                    var slotsLeft = MainModule.MidsController.Toon.SlotsRemaining;
+                    var slotText = slotsLeft > 9 ? @"Slots" : @"Slot";
+                    powerState = Enums.ePowerState.Open;
+                    text = $"{slotsLeft} {slotText}";
+                    break;
                 }
-                else
-                {
-                    ePowerState = Enums.ePowerState.Used;
-                    iStr = "Power Only";
-                }
-            }
-            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
-            {
-                ePowerState = Enums.ePowerState.Used;
-                iStr = "Power";
-            }
-            else
-            {
-                var slotsRemaining = MainModule.MidsController.Toon.SlotsRemaining;
-                ePowerState = Enums.ePowerState.Open;
-                iStr = slotsRemaining + " Slot";
-                if (slotsRemaining > 1)
-                    iStr += "s";
             }
 
             if (MainModule.MidsController.Toon.Complete)
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+                if (MidsContext.Config is { BuildMode: Enums.dmModes.LevelUp })
                 {
-                    ePowerState = Enums.ePowerState.Used;
+                    powerState = Enums.ePowerState.Used;
                 }
 
-                iStr = "Complete";
+                text = @"Complete";
             }
 
-            var rectangle = new Rectangle();
-            ref var local = ref rectangle;
-            var size = drawing.bxPower[(int)ePowerState].Size;
-            var width = size.Width;
-            size = drawing.bxPower[(int)ePowerState].Size;
-            var height1 = size.Height;
-            local = new Rectangle(0, 0, width, height1);
-            var destRect = new Rectangle(0, 0, pbDynMode.Width, pbDynMode.Height);
-            using var stringFormat = new StringFormat();
-            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Pixel);
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
-            if (ePowerState == Enums.ePowerState.Open)
-                dmBuffer.Graphics.DrawImage(MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width,
-                    rectangle.Height,
-                    GraphicsUnit.Pixel);
-            else
-                dmBuffer.Graphics.DrawImage(
-                    MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap, destRect, 0,
-                    0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, drawing.pImageAttributes);
-            var height2 = bFont.GetHeight(dmBuffer.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float)((pbDynMode.Height - (double)height2) / 2.0), pbDynMode.Width,
-                height2);
-            var graphics = dmBuffer.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            if (ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) ibDynMode.Lock = false;
+            else if (MidsContext.Config.BuildMode != Enums.dmModes.LevelUp) ibDynMode.Lock = false;
+            switch (powerState)
+            {
+                case Enums.ePowerState.Used:
+                    ibDynMode.ToggleText.ToggledOff = text;
+                    ibDynMode.ToggleState = ImageButtonEx.States.ToggledOff;
+                    break;
+                case Enums.ePowerState.Open:
+                    ibDynMode.ToggleText.ToggledOn = text;
+                    ibDynMode.ToggleState = ImageButtonEx.States.ToggledOn;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if (!ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) ibDynMode.Lock = true;
         }
 
         private void UpdateLLColors(ListLabelV3 iList)
@@ -7045,7 +7073,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         // dragdrop scenario action
         private readonly short[] dragdropScenarioAction;
-        private ExtendedBitmap dmBuffer;
+        //private ExtendedBitmap? dmBuffer;
         private bool DoneDblClick;
         private int dragFinishPower;
         private int dragFinishSlot;
@@ -7056,11 +7084,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private int dragStartY;
         private int dragXOffset;
         private int dragYOffset;
-        private clsDrawX drawing;
-        public clsDrawX DrawX
-        {
-            get => drawing;
-        }
+        private clsDrawX? drawing;
+        public clsDrawX? DrawX => drawing;
         private int dvLastEnh;
         private bool dvLastNoLev;
         private int dvLastPower;

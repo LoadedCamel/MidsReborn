@@ -8,7 +8,7 @@ namespace Mids_Reborn.Forms
     // avoid mutation and the service location pattern
     public static class MainUILogic
     {
-        public static void ChangeSets(clsToonX toon, Character ch, int primaryIndex, int secondaryIndex, int pool0Index,
+        public static void ChangeSets(clsToonX toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index,
             int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex,
             Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action enableSecondary)
         {

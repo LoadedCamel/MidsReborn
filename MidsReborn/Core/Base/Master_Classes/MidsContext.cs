@@ -26,7 +26,7 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public static Archetype? Archetype;
-        public static Character Character;
+        public static Character? Character;
         public static Build Build;
 
         public static ConfigData? Config => ConfigData.Current;
