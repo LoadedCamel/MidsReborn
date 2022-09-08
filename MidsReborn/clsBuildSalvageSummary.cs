@@ -141,7 +141,7 @@ namespace Mids_Reborn
                 : $"x{EnhBoosters}";
         }
 
-        public static void UpdateAllSalvage(Control? control)
+        public static void UpdateAllSalvage(Control? control, bool useNegativeCount = false)
         {
             CalcAll();
             switch (control)
@@ -150,7 +150,11 @@ namespace Mids_Reborn
                     mode.EnhObtainedColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
                         ? ColorFullBuild
                         : ColorNormalText;
-                    mode.EnhObtained = $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+                    mode.EnhObtained = useNegativeCount
+                        ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                            ? "Complete"
+                            : $"{TotalEnhancements - EnhObtained} to go"
+                        : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
                     mode.Catalyst = EnhCatalysts == 0
                         ? "--"
                         : $"x{EnhCatalysts}";
@@ -161,16 +165,20 @@ namespace Mids_Reborn
             }
         }
 
-        public static void UpdateEnhObtained(Label lblEnhObtained)
+        public static void UpdateEnhObtained(Label lblEnhObtained, bool useNegativeCount = false)
         {
             CalcEnhObtained();
             lblEnhObtained.ForeColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
                 ? ColorFullBuild
                 : ColorNormalText;
-            lblEnhObtained.Text = $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+            lblEnhObtained.Text = useNegativeCount
+                ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                    ? "Complete"
+                    : $"{TotalEnhancements - EnhObtained} to go"
+                : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
         }
 
-        public static void UpdateEnhObtained(Control? control)
+        public static void UpdateEnhObtained(Control? control, bool useNegativeCount = false)
         {
             CalcEnhObtained();
             switch (control)
@@ -179,7 +187,11 @@ namespace Mids_Reborn
                     mode.EnhObtainedColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
                         ? ColorFullBuild
                         : ColorNormalText;
-                    mode.EnhObtained = $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+                    mode.EnhObtained = useNegativeCount
+                        ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                            ? "Complete"
+                            : $"{TotalEnhancements - EnhObtained} to go"
+                        : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
                     break;
             }
         }

@@ -31,15 +31,17 @@ namespace Mids_Reborn.Forms.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnhCheckMode));
             this.pSalvageSummary = new System.Windows.Forms.Panel();
+            this.imageButtonEx1 = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblEnhObtained = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.imageButtonEx1 = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pSalvageSummary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -60,15 +62,38 @@ namespace Mids_Reborn.Forms.Controls
             this.pSalvageSummary.Location = new System.Drawing.Point(0, 0);
             this.pSalvageSummary.Margin = new System.Windows.Forms.Padding(0);
             this.pSalvageSummary.Name = "pSalvageSummary";
-            this.pSalvageSummary.Size = new System.Drawing.Size(434, 35);
+            this.pSalvageSummary.Size = new System.Drawing.Size(434, 37);
             this.pSalvageSummary.TabIndex = 20;
+            // 
+            // imageButtonEx1
+            // 
+            this.imageButtonEx1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.imageButtonEx1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.imageButtonEx1.Images.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background")));
+            this.imageButtonEx1.Images.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover")));
+            this.imageButtonEx1.ImagesAlt.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background1")));
+            this.imageButtonEx1.ImagesAlt.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover1")));
+            this.imageButtonEx1.Location = new System.Drawing.Point(324, 5);
+            this.imageButtonEx1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.imageButtonEx1.Name = "imageButtonEx1";
+            this.imageButtonEx1.Size = new System.Drawing.Size(107, 28);
+            this.imageButtonEx1.TabIndex = 7;
+            this.imageButtonEx1.Text = "Exit Check Mode";
+            this.imageButtonEx1.TextOutline.Color = System.Drawing.Color.Black;
+            this.imageButtonEx1.TextOutline.Width = 3;
+            this.imageButtonEx1.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.imageButtonEx1.ToggleText.Indeterminate = "Indeterminate State";
+            this.imageButtonEx1.ToggleText.ToggledOff = "ToggledOff State";
+            this.imageButtonEx1.ToggleText.ToggledOn = "ToggledOn State";
+            this.imageButtonEx1.UseAlt = false;
+            this.imageButtonEx1.Click += new System.EventHandler(this.imageButtonEx1_Click);
             // 
             // lblCatalysts
             // 
             this.lblCatalysts.AutoSize = true;
             this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblCatalysts.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblCatalysts.Location = new System.Drawing.Point(204, 12);
+            this.lblCatalysts.Location = new System.Drawing.Point(196, 13);
             this.lblCatalysts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCatalysts.Name = "lblCatalysts";
             this.lblCatalysts.Size = new System.Drawing.Size(33, 15);
@@ -80,7 +105,7 @@ namespace Mids_Reborn.Forms.Controls
             this.lblBoosters.AutoSize = true;
             this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblBoosters.Location = new System.Drawing.Point(290, 12);
+            this.lblBoosters.Location = new System.Drawing.Point(286, 13);
             this.lblBoosters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBoosters.Name = "lblBoosters";
             this.lblBoosters.Size = new System.Drawing.Size(33, 15);
@@ -93,7 +118,7 @@ namespace Mids_Reborn.Forms.Controls
             this.pictureBox3.Location = new System.Drawing.Point(245, 0);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(37, 37);
+            this.pictureBox3.Size = new System.Drawing.Size(37, 39);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 4;
             this.pictureBox3.TabStop = false;
@@ -104,22 +129,25 @@ namespace Mids_Reborn.Forms.Controls
             this.pictureBox2.Location = new System.Drawing.Point(159, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(37, 37);
+            this.pictureBox2.Size = new System.Drawing.Size(37, 39);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
             // 
             // lblEnhObtained
             // 
-            this.lblEnhObtained.AutoSize = true;
+            this.lblEnhObtained.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblEnhObtained.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEnhObtained.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblEnhObtained.Location = new System.Drawing.Point(42, 12);
+            this.lblEnhObtained.Location = new System.Drawing.Point(40, 11);
             this.lblEnhObtained.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEnhObtained.Name = "lblEnhObtained";
-            this.lblEnhObtained.Size = new System.Drawing.Size(109, 15);
+            this.lblEnhObtained.Size = new System.Drawing.Size(116, 19);
             this.lblEnhObtained.TabIndex = 1;
             this.lblEnhObtained.Text = "Obtained: 100/100";
+            this.lblEnhObtained.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolTip1.SetToolTip(this.lblEnhObtained, "Left click to toggle all slots, right click to toggle display format");
+            this.lblEnhObtained.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lblEnhObtained_MouseClick);
             // 
             // pictureBox1
             // 
@@ -127,41 +155,28 @@ namespace Mids_Reborn.Forms.Controls
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(37, 37);
+            this.pictureBox1.Size = new System.Drawing.Size(37, 39);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // imageButtonEx1
+            // toolTip1
             // 
-            this.imageButtonEx1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.imageButtonEx1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.imageButtonEx1.Images.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background")));
-            this.imageButtonEx1.Images.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover")));
-            this.imageButtonEx1.ImagesAlt.Background = ((System.Drawing.Image)(resources.GetObject("resource.Background1")));
-            this.imageButtonEx1.ImagesAlt.Hover = ((System.Drawing.Image)(resources.GetObject("resource.Hover1")));
-            this.imageButtonEx1.Location = new System.Drawing.Point(330, 0);
-            this.imageButtonEx1.Name = "imageButtonEx1";
-            this.imageButtonEx1.Size = new System.Drawing.Size(101, 35);
-            this.imageButtonEx1.TabIndex = 7;
-            this.imageButtonEx1.Text = "Exit Check Mode";
-            this.imageButtonEx1.TextOutline.Color = System.Drawing.Color.Black;
-            this.imageButtonEx1.TextOutline.Width = 3;
-            this.imageButtonEx1.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.imageButtonEx1.ToggleText.Indeterminate = "Indeterminate State";
-            this.imageButtonEx1.ToggleText.ToggledOff = "ToggledOff State";
-            this.imageButtonEx1.ToggleText.ToggledOn = "ToggledOn State";
-            this.imageButtonEx1.UseAlt = false;
+            this.toolTip1.AutoPopDelay = 10000;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 100;
+            this.toolTip1.UseAnimation = false;
+            this.toolTip1.UseFading = false;
             // 
             // EnhCheckMode
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.pSalvageSummary);
             this.DoubleBuffered = true;
             this.Name = "EnhCheckMode";
-            this.Size = new System.Drawing.Size(434, 35);
+            this.Size = new System.Drawing.Size(434, 37);
             this.pSalvageSummary.ResumeLayout(false);
             this.pSalvageSummary.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -181,5 +196,6 @@ namespace Mids_Reborn.Forms.Controls
         private System.Windows.Forms.Label lblEnhObtained;
         private System.Windows.Forms.PictureBox pictureBox1;
         private ImageButtonEx imageButtonEx1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

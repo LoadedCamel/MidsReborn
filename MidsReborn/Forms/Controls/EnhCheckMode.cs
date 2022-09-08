@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using Mids_Reborn.Core.Base.Master_Classes;
 using System.Windows.Forms;
-using System.ComponentModel;
 using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.Controls
 {
     public partial class EnhCheckMode : UserControl
     {
-        private readonly frmMain _myParent;
-
-
         private delegate void UpdateLabelHandler(Control control, string? text = null, Color? color = null);
         private event UpdateLabelHandler UpdateLabel;
 
+        private readonly frmMain _myParent;
+        private bool _UseNegativeCount;
 
         public string Catalyst
         {
@@ -53,6 +50,22 @@ namespace Mids_Reborn.Forms.Controls
             set => UpdateLabel.Invoke(lblEnhObtained, null, value);
         }
 
+        public bool UseNegativeCount
+        {
+            get => _UseNegativeCount;
+            set
+            {
+                if (DesignMode)
+                {
+                    lblEnhObtained.Text = value
+                        ? "50 to go"
+                        : "Obtained: 100/100";
+                }
+
+                _UseNegativeCount = value;
+            }
+        }
+
         public EnhCheckMode(frmMain myParent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
@@ -84,8 +97,10 @@ namespace Mids_Reborn.Forms.Controls
                 Refresh();
                 MidsContext.EnhCheckMode = true;
                 _myParent.UpdateEnhCheckModeToolStrip();
+                
                 return;
             }
+
             MidsContext.EnhCheckMode = false;
             _myParent.UpdateEnhCheckModeToolStrip();
             Invalidate(true);
@@ -95,8 +110,8 @@ namespace Mids_Reborn.Forms.Controls
         {
             BringToFront();
             Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
-            //imageButtonEx1.UseAlt = !MidsContext.Character.IsHero();
             MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
+            _UseNegativeCount = false;
         }
 
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
@@ -111,17 +126,63 @@ namespace Mids_Reborn.Forms.Controls
 
         private void RecalcSalvage()
         {
-            BuildSalvageSummary.UpdateAllSalvage(this);
+            BuildSalvageSummary.UpdateAllSalvage(this, _UseNegativeCount);
         }
 
         public void UpdateEnhObtained()
         {
-            BuildSalvageSummary.UpdateEnhObtained(this);
+            BuildSalvageSummary.UpdateEnhObtained(this, _UseNegativeCount);
         }
 
         private void imageButtonEx1_Click(object sender, EventArgs e)
         {
+            MidsContext.EnhCheckMode = false;
+            _myParent.ChildRequestedRedraw();
+            _myParent.UpdateEnhCheckModeToolStrip();
             Hide();
+        }
+
+        private void lblEnhObtained_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (MidsContext.Character == null)
+            {
+                return;
+            }
+
+            if (MidsContext.Character.CurrentBuild == null)
+            {
+                return;
+            }
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+                    {
+                        if (pe.Power == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var s in pe.Slots)
+                        {
+                            s.Enhancement.Obtained = !s.Enhancement.Obtained;
+                            s.FlippedEnhancement.Obtained = s.Enhancement.Obtained;
+                        }
+                    }
+
+                    _myParent.ChildRequestedRedraw();
+                    break;
+
+                case MouseButtons.Right:
+                    _UseNegativeCount = !_UseNegativeCount;
+                    break;
+
+                default:
+                    return;
+            }
+
+            UpdateEnhObtained();
         }
     }
 }
