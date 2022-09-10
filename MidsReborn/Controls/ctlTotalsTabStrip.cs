@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls.Extensions;
@@ -159,9 +160,10 @@ namespace Mids_Reborn.Controls
                 Style = SKPaintStyle.Fill
             };
 
-            s.Canvas.Clear(BackColor.ToSKColor());
+            s.Canvas.Clear(_InactiveTabColor.ToSKColor());
             
-            var x = 0f;
+            // If initial x position is set to zero, a 1px bar of highlighted color appear on the right on load.
+            var x = 1f;
             for (var i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];

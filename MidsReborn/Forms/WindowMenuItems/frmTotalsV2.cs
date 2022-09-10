@@ -5,9 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Controls.Extensions;
+using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -219,35 +220,40 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
-        public override void Refresh()
-        {
-            if (MidsContext.Character.IsHero())
-            {
-                ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.HeroInactiveTabColor;
-                ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
-                ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
-                ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
-                ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
-            }
-            else
-            {
-                ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.VillainInactiveTabColor;
-                ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
-                ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
-                ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
-                ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
-            }
-
-            pbTopMost.DrawImageButton(_myParent?.Drawing, Color.Black, "Keep On Top", KeepOnTop);
-            pbClose.DrawImageButton(_myParent?.Drawing, Color.Black, "Close");
-
-            base.Refresh();
-        }
-
         private void frmTotalsV2_Load(object sender, EventArgs e)
         {
-            MinimumSize = new Size(636, 788);
-            Size = new Size(636, 788);
+            MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
+            switch (MidsContext.Character.Alignment)
+            {
+                case Enums.Alignment.Hero:
+                case Enums.Alignment.Vigilante:
+                case Enums.Alignment.Resistance:
+
+                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
+                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
+                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
+                    ibTopMost.UseAlt = false;
+                    ibClose.UseAlt = false;
+
+                    break;
+
+                default:
+                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
+                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
+                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
+                    ibTopMost.UseAlt = true;
+                    ibClose.UseAlt = true;
+
+                    break;
+            }
+
+            ibTopMost.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
+            MinimumSize = new Size(561, 771);
+            Size = new Size(561, 771);
             CenterToParent();
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.ItemSize = new Size(0, 1);
@@ -255,7 +261,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Tab control border is 3 px thick, move it a little off to hide it
             // Change the size fixed values so they are the same as in frmTotalsV2_Resize()
             tabControl1.Location = new Point(-4, 19);
-            tabControl1.Size = new Size(ClientSize.Width + 9, ClientSize.Height - 67);
+            tabControl1.Size = new Size(Size.Width + 9, Size.Height - 67);
 
             ctlTotalsTabStrip1.ClearItems();
             for (var i = 0; i < tabControl1.TabPages.Count; i++)
@@ -265,10 +271,52 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             ctlTotalsTabStrip1.Redraw();
 
-            panel1.Size = new Size(620, 697);
+            panel1.Size = new Size(561, 697);
+            panel2.Location = new Point(0, 684);
+            panel2.Size = Size with {Width = panel1.Width};
+            // graph width: 526
 
-            panel2.Location = new Point(0, 705);
-            panel2.Size = ClientSize with {Height = panel2.Height};
+            var cList = new List<Control>
+            {
+                label1,
+                label2,
+                label3,
+                label4,
+                label5,
+                label6,
+                label7,
+                label8,
+                label9,
+                label10,
+                label11,
+
+                graphDef,
+                graphRes,
+                graphHP,
+                graphEnd,
+                graphMovement,
+                graphPerception,
+                graphHaste,
+                graphToHit,
+                graphAccuracy,
+                graphDamage,
+                graphEndRdx,
+                graphThreat,
+                graphStatusProt,
+                graphStatusRes,
+                graphDebuffRes,
+                graphElusivity,
+
+                radioButton1,
+                radioButton2,
+                radioButton3,
+                radioButton4
+            };
+
+            foreach (var c in cList)
+            {
+                c.Location = c.Location with {Y = c.Location.Y - 16};
+            }
 
             Refresh();
             SetTitle(this);
@@ -276,41 +324,70 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             UpdateData();
         }
 
+        private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
+        {
+            switch (e)
+            {
+                case Enums.Alignment.Hero:
+                case Enums.Alignment.Vigilante:
+                case Enums.Alignment.Resistance:
+
+                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
+                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
+                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
+                    ibTopMost.UseAlt = false;
+                    ibClose.UseAlt = false;
+                    break;
+
+                default:
+                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
+                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
+                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
+                    ibTopMost.UseAlt = true;
+                    ibClose.UseAlt = true;
+                    break;
+            }
+        }
+
         private void frmTotalsV2_Resize(object sender, EventArgs e)
         {
             const int tabControlWidthPad = -9;
             const int tabControlHeightPad = 67;
-            const int graphControlWidthPad = 20;
-            const int pbCloseLocationXPad = 132;
+            const int graphControlWidthPad = 33;
+            const int pbCloseLocationXPad = 148;
 
-            panel1.Size = new Size(ClientSize.Width, ClientSize.Height - 52);
+            panel1.Size = new Size(Size.Width, Size.Height - 74);
 
-            panel2.Location = new Point(0, ClientSize.Height - panel2.Height);
-            panel2.Size = ClientSize with {Height = panel2.Height};
+            panel2.Size = new Size(panel1.Width, 44);
+            panel2.Location = new Point(0, Size.Height - panel2.Height - 43);
+            
+            tabControl1.Size = new Size(Size.Width - tabControlWidthPad, Size.Height - tabControlHeightPad);
 
-            tabControl1.Size = new Size(ClientSize.Width - tabControlWidthPad, ClientSize.Height - tabControlHeightPad);
+            graphDef.Width = Size.Width - graphControlWidthPad;
+            graphRes.Width = Size.Width - graphControlWidthPad;
+            graphHP.Width = Size.Width - graphControlWidthPad;
+            graphEnd.Width = Size.Width - graphControlWidthPad;
 
-            graphDef.Width = ClientSize.Width - graphControlWidthPad;
-            graphRes.Width = ClientSize.Width - graphControlWidthPad;
-            graphHP.Width = ClientSize.Width - graphControlWidthPad;
-            graphEnd.Width = ClientSize.Width - graphControlWidthPad;
+            graphMovement.Width = Size.Width - graphControlWidthPad;
+            graphPerception.Width = Size.Width - graphControlWidthPad;
+            graphHaste.Width = Size.Width - graphControlWidthPad;
+            graphToHit.Width = Size.Width - graphControlWidthPad;
+            graphAccuracy.Width = Size.Width - graphControlWidthPad;
+            graphDamage.Width = Size.Width - graphControlWidthPad;
+            graphEndRdx.Width = Size.Width - graphControlWidthPad;
+            graphThreat.Width = Size.Width - graphControlWidthPad;
 
-            graphMovement.Width = ClientSize.Width - graphControlWidthPad;
-            graphPerception.Width = ClientSize.Width - graphControlWidthPad;
-            graphHaste.Width = ClientSize.Width - graphControlWidthPad;
-            graphToHit.Width = ClientSize.Width - graphControlWidthPad;
-            graphAccuracy.Width = ClientSize.Width - graphControlWidthPad;
-            graphDamage.Width = ClientSize.Width - graphControlWidthPad;
-            graphEndRdx.Width = ClientSize.Width - graphControlWidthPad;
-            graphThreat.Width = ClientSize.Width - graphControlWidthPad;
+            graphStatusProt.Width = Size.Width - graphControlWidthPad;
+            graphStatusRes.Width = Size.Width - graphControlWidthPad;
 
-            graphStatusProt.Width = ClientSize.Width - graphControlWidthPad;
-            graphStatusRes.Width = ClientSize.Width - graphControlWidthPad;
+            graphDebuffRes.Width = Size.Width - graphControlWidthPad;
+            graphElusivity.Width = Size.Width - graphControlWidthPad;
 
-            graphDebuffRes.Width = ClientSize.Width - graphControlWidthPad;
-            graphElusivity.Width = ClientSize.Width - graphControlWidthPad;
-
-            pbClose.Location = pbClose.Location with { X = ClientSize.Width - pbCloseLocationXPad };
+            ibClose.Location = ibClose.Location with { X = Size.Width - pbCloseLocationXPad };
 
             // Prevent duplicate headers display (tiling) when stretching window horizontally
             ctlTotalsTabStrip1.Redraw();
@@ -326,23 +403,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             StoreLocation();
         }
 
-        #region PictureBox buttons handlers
+        #region ImageButtonEx buttons handlers
 
-        private void PbCloseClick(object sender, EventArgs e)
+        private void IbCloseClick(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void PbTopMostClick(object sender, EventArgs e)
+        private void IbTopMostClick(object sender, EventArgs e)
         {
             KeepOnTop = !KeepOnTop;
             TopMost = KeepOnTop;
-            if (_myParent?.Drawing == null)
-            {
-                return;
-            }
-
-            pbTopMost.DrawImageButton(_myParent?.Drawing, Color.Black, "Keep On Top", KeepOnTop);
+            ibTopMost.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
         }
 
         #endregion
