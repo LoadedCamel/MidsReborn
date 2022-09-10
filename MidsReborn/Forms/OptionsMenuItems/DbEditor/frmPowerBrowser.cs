@@ -531,7 +531,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPowerset template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
                 DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
@@ -558,7 +558,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPowerset template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
                 DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
@@ -570,7 +570,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnSetAdd_Click(object sender, EventArgs e)
         {
-            IPowerset iSet = new Powerset();
+            IPowerset? iSet = new Powerset();
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -614,7 +614,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                           " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
                 if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-                var powersetArray = new IPowerset[DatabaseAPI.Database.Powersets.Length - 1 + 1];
+                var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1 + 1];
                 var index2 = 0;
                 var num2 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num2; ++index3)
@@ -625,7 +625,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index2;
                 }
 
-                DatabaseAPI.Database.Powersets = new IPowerset[DatabaseAPI.Database.Powersets.Length - 2 + 1];
+                DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 2 + 1];
                 var num3 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num3; ++index3)
                     DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };

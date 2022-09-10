@@ -109,7 +109,7 @@ namespace Mids_Reborn
             return stringValue2;
         }
 
-        public IPowerset PickDefaultSecondaryPowerset()
+        public IPowerset? PickDefaultSecondaryPowerset()
         {
             return Powersets[1] == null || Powersets[1].nID < 0
                 ? DatabaseAPI.Database.Powersets
@@ -2112,7 +2112,7 @@ namespace Mids_Reborn
             return strArray;
         }
 
-        public bool Load(string iFileName, ref Stream mStream)
+        public bool Load(string iFileName, ref Stream? mStream)
         {
             if (mStream == null || !string.IsNullOrEmpty(iFileName))
                 mStream = new FileStream(iFileName, FileMode.Open, FileAccess.Read);
@@ -3137,7 +3137,7 @@ namespace Mids_Reborn
                     return false;
                 }
 
-                Stream mStream = null;
+                Stream? mStream = null;
                 if (Load(FileIO.AddSlash(Application.StartupPath) + "import.tmp", ref mStream))
                 {
                     MessageBox.Show(@"Build data imported!", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);

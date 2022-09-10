@@ -28,7 +28,7 @@ namespace Mids_Reborn.Core
 
         Enums.VersionData PowerLevelVersion { get; set; }
 
-        IPowerset[] Powersets { get; set; }
+        IPowerset?[] Powersets { get; set; }
 
         Enums.VersionData PowersetVersion { get; set; }
 

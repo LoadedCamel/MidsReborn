@@ -353,7 +353,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableStart = reader.ReadInt32();
         }
 
-        public IPowerset GetPowerSet()
+        public IPowerset? GetPowerSet()
         {
             if (!((PowerSetID < 0) | (PowerSetID > DatabaseAPI.Database.Powersets.Length)))
             {

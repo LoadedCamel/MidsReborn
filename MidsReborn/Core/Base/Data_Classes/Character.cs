@@ -21,12 +21,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         internal Character()
         {
             Name = string.Empty;
-            Powersets = new IPowerset[8];
+            Powersets = new IPowerset?[8];
             PoolLocked = new bool[5];
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Builds = new[] { new Build(this, DatabaseAPI.Database.Levels) };
+            Builds = new Build?[] { new Build(this, DatabaseAPI.Database.Levels) };
             PEnhancementsList = new List<string>();
             Reset();
         }
@@ -70,10 +70,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int RequestedLevel { get; set; }
 
-        private Build[] Builds { get; }
+        private Build?[] Builds { get; }
 
 
-        public Build CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
+        public Build? CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
 
         public Archetype? Archetype
         {
@@ -98,7 +98,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int Origin { get; set; }
 
-        public IPowerset[] Powersets { get; set; }
+        public IPowerset?[] Powersets { get; set; }
 
         public bool[] PoolLocked { get; private set; }
 
@@ -332,7 +332,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         // returns the last thing it tried to read from, for inclusion in the error message
         public void LoadPowersetsByName2(IList<string> names, ref string blameName)
         {
-            Powersets = new IPowerset[8];
+            Powersets = new IPowerset?[8];
             var m = 0;
             var k = 3;
             foreach (var e in names)
@@ -1127,7 +1127,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return -1;
         }
 
-        private static int GetFirstAvailablePowerLevel(Build currentbuild, int iLevel = 0)
+        private static int GetFirstAvailablePowerLevel(Build? currentbuild, int iLevel = 0)
         {
             for (var index = 0; index < Math.Min(currentbuild.Powers.Count, currentbuild.LastPower + 1); index++)
             {
@@ -1650,7 +1650,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return true;
         }
 
-        private bool PowersetUsed(IPowerset powerset)
+        private bool PowersetUsed(IPowerset? powerset)
         {
             return powerset != null &&
                    CurrentBuild.Powers.Any(t => (t?.NIDPowerset == powerset.nID) & (t?.IDXPower > -1));
@@ -1675,7 +1675,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return false;
         }
 
-        public void SwitchSets(IPowerset newPowerset, IPowerset oldPowerset)
+        public void SwitchSets(IPowerset? newPowerset, IPowerset? oldPowerset)
         {
             int oldTrunk;
             int oldBranch;

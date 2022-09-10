@@ -204,7 +204,7 @@ namespace Mids_Reborn.Core
         bool HasGrantPowerEffect { get; set; }
 
         bool HasPowerOverrideEffect { get; set; }
-        IPowerset GetPowerSet();
+        IPowerset? GetPowerSet();
 
         void StoreTo(ref BinaryWriter writer);
 

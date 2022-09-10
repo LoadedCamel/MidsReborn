@@ -11,6 +11,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -43,18 +44,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Load += frmAccolade_Load;
             _locked = false;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmAccolade));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmAccolade);
             _myParent = iParent;
             _myPowers = iPowers;
-            FormClosing += FrmAccolade_FormClosing;
-        }
-
-        private void FrmAccolade_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing) _myParent.accoladeButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) _myParent.accoladeButton.Checked = false;
         }
 
         public void UpdateFonts(Font font)
@@ -135,8 +128,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             llRight.Refresh();
         }
 
-        private void frmAccolade_Load(object sender, EventArgs e)
+        private void frmAccolade_Load(object? sender, EventArgs e)
         {
+            CenterToParent();
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
             var llLeft = this.llLeft;

@@ -11,6 +11,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -47,14 +48,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmPrestige);
             _myParent = iParent;
+            Parent = _myParent;
             _myPowers = iPowers;
             FormClosing += FrmPrestige_FormClosing;
         }
 
         private void FrmPrestige_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) _myParent.prestigeButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) _myParent.prestigeButton.Checked = false;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                _myParent.ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+
+            if (DialogResult == DialogResult.Cancel)
+            {
+                _myParent.ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
         }
 
         public void UpdateFonts(Font font)
@@ -135,8 +144,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             llRight.Refresh();
         }
 
-        private void frmPrestige_Load(object sender, EventArgs e)
+        private void frmPrestige_Load(object? sender, EventArgs e)
         {
+            CenterToParent();
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
             var llLeft = this.llLeft;

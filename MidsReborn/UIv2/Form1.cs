@@ -170,7 +170,7 @@ namespace Mids_Reborn.UIv2
             // Assign this method to Mouse_Move event of that Form or Panel
             if (_isMoving)
             {
-                this.SetDesktopLocation(MousePosition.X - _movX, MousePosition.Y - _movY);
+                SetDesktopLocation(MousePosition.X - _movX, MousePosition.Y - _movY);
             }
         }
 

@@ -17,7 +17,7 @@ namespace Mids_Reborn.Core
         public static HashSet<string> setSlotted = new HashSet<string>();
         private readonly Character _character;
 
-        public readonly List<PowerEntry?> Powers;
+        public readonly List<PowerEntry?>? Powers;
         public readonly List<I9SetData> SetBonus;
 
         private IPower? _setBonusVirtualPower;
@@ -981,7 +981,7 @@ namespace Mids_Reborn.Core
         private void AddAutomaticGrantedPowers()
         {
             var maxLevel = GetMaxLevel();
-            var powersetList = new List<IPowerset>();
+            var powersetList = new List<IPowerset?>();
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
             {

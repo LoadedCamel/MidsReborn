@@ -202,7 +202,7 @@ namespace Mids_Reborn.Controls
         public Font Font { get; }
         public Rectangle Bounds { get; }
         public int Index { get; }
-        public ctlPowerList.ItemState State { get; }
+        public ItemState State { get; }
         public Color ForeColor { get; }
         public Color BackColor { get; }
 

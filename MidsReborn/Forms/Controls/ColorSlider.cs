@@ -299,7 +299,7 @@ namespace Mids_Reborn.Forms.Controls
                     _barOrientation = value;
                     // Switch from horizontal to vertical (design mode)
                     // Comment these lines if problems in Run mode
-                    if (this.DesignMode)
+                    if (DesignMode)
                     {
                         int temp = Width;
                         Width = Height;
@@ -977,7 +977,7 @@ namespace Mids_Reborn.Forms.Controls
 
             // Font
             //this.Font = new Font("Tahoma", 6.75f);
-            this.Font = new Font("Microsoft Sans Serif", 6f);
+            Font = new Font("Microsoft Sans Serif", 6f);
 
             Minimum = min;
             Maximum = max;
@@ -1367,7 +1367,7 @@ namespace Mids_Reborn.Forms.Controls
                     // Calculate max size of text 
                     //string str = String.Format("{0,0:D}", (int)_maximum);
                     string str = String.Format("{0,0:##}", _maximum);
-                    Font font = this.Font;
+                    Font font = Font;
                     SizeF maxsize = e.Graphics.MeasureString(str, font);
 
                     for (int i = 0; i <= _scaleDivisions; i++)

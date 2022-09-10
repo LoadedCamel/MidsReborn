@@ -12,6 +12,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
@@ -106,8 +107,15 @@ namespace Mids_Reborn.Forms
 
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) myParent.incarnateButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) myParent.incarnateButton.Checked = false;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+
+            if (DialogResult == DialogResult.Cancel)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
         }
 
         private void alphaBtn_ButtonClicked()

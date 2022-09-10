@@ -11,6 +11,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -52,6 +53,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmMMPowers);
             _myParent = iParent;
+            Parent = _myParent;
             PetPowers = PetPowersList;
             FormClosing += FrmMMPowers_FormClosing;
             Panel1.GotFocus += Panel1OnGotFocus;
@@ -69,15 +71,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                _myParent.petsButton.Checked = false;
+                _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
                 _myParent.petWindowFlag = false;
             }
 
-            if (DialogResult == DialogResult.Cancel)
-            {
-                _myParent.petsButton.Checked = false;
-                _myParent.petWindowFlag = false;
-            }
+            if (DialogResult != DialogResult.Cancel) return;
+            _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            _myParent.petWindowFlag = false;
         }
 
         public void UpdateFonts(Font font)
@@ -156,6 +156,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmMMPowers_Load(object sender, EventArgs e)
         {
+            CenterToParent();
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
             var llLeft = this.llLeft;

@@ -29,7 +29,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Enums.VersionData PowerLevelVersion { get; set; } = new Enums.VersionData();
 
-        public IPowerset[] Powersets { get; set; }
+        public IPowerset?[] Powersets { get; set; }
 
         public Enums.VersionData PowersetVersion { get; set; } = new Enums.VersionData();
 

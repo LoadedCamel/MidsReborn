@@ -629,7 +629,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static eLoadReturnCode MxDExtractAndLoad(Stream iStream)
+        public static eLoadReturnCode MxDExtractAndLoad(Stream? iStream)
         {
             StreamReader streamReader;
             try

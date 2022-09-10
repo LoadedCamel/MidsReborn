@@ -515,7 +515,7 @@ namespace Mids_Reborn.Core
                 iSet == ps.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static IPowerset GetInherentPowerset()
+        public static IPowerset? GetInherentPowerset()
         {
             return Database.Powersets.FirstOrDefault(ps => ps.SetType == Enums.ePowerSetType.Inherent);
         }
@@ -620,14 +620,14 @@ namespace Mids_Reborn.Core
                 : new int[1];
         }
 
-        public static IPowerset[] GetPowersetIndexes(Archetype? at, Enums.ePowerSetType iSet)
+        public static IPowerset?[] GetPowersetIndexes(Archetype? at, Enums.ePowerSetType iSet)
         {
             return GetPowersetIndexes(at.Idx, iSet);
         }
 
-        public static IPowerset[] GetPowersetIndexes(int iAt, Enums.ePowerSetType iSet)
+        public static IPowerset?[] GetPowersetIndexes(int iAt, Enums.ePowerSetType iSet)
         {
-            var powersetList = new List<IPowerset>();
+            var powersetList = new List<IPowerset?>();
             if ((iSet != Enums.ePowerSetType.Pool) & (iSet != Enums.ePowerSetType.Inherent))
             {
                 foreach (var ps in Database.Powersets)
@@ -654,7 +654,7 @@ namespace Mids_Reborn.Core
         //     return new List<IPowerset>();
         // }
 
-        public static int ToDisplayIndex(IPowerset iPowerset, IPowerset[] iIndexes)
+        public static int ToDisplayIndex(IPowerset? iPowerset, IPowerset?[] iIndexes)
         {
             for (var index = 0; index < iIndexes.Length; index++)
             {
@@ -980,15 +980,15 @@ namespace Mids_Reborn.Core
             return new List<IPowerset>();
         }
 
-        public static List<IPowerset> GetEpicPowersets(string atClass)
+        public static List<IPowerset?> GetEpicPowersets(string atClass)
         {
             if (string.IsNullOrWhiteSpace(atClass) | atClass == "Class_Peacebringer" | atClass == "Class_Warshade")
             {
-                return new List<IPowerset>();
+                return new List<IPowerset?>();
             }
 
             var archetype = GetArchetypeByClassName(atClass);
-            if (archetype == null) return new List<IPowerset>();
+            if (archetype == null) return new List<IPowerset?>();
 
             return archetype.Ancillary
                 .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
@@ -1549,7 +1549,7 @@ namespace Mids_Reborn.Core
                 }
 
                 var num3 = 0;
-                Database.Powersets = new IPowerset[reader.ReadInt32() + 1];
+                Database.Powersets = new IPowerset?[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Powersets.Length; ++index)
                 {
                     Database.Powersets[index] = new Powerset(reader)

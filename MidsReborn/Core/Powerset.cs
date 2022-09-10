@@ -34,7 +34,7 @@ namespace Mids_Reborn.Core
             UIDMutexSets = new string[0];
         }
 
-        public Powerset(IPowerset template)
+        public Powerset(IPowerset? template)
         {
             nID = template.nID;
             nArchetype = template.nArchetype;

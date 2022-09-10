@@ -7,7 +7,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using static Mids_Reborn.Controls.SwitchButton;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -39,12 +38,11 @@ namespace Mids_Reborn.Forms.Controls
         private event EventHandler<bool> ThreeStateChanged;
         private event EventHandler<ButtonTypes>? ButtonTypeChanged;
         private event EventHandler<bool>? UseAltChanged;
+        private event EventHandler<MouseButtons>? ToggleMouseButtonChanged;
 
         private delegate void StateChangedEventHandler(object? sender, States state);
 
         private event StateChangedEventHandler? StateChanged;
-
-        public new event EventHandler? Click;
 
         #endregion
 
@@ -63,27 +61,36 @@ namespace Mids_Reborn.Forms.Controls
             Indeterminate
         }
 
+        public enum MouseClicks
+        {
+            LeftButton,
+            RightButton
+        }
+
         #endregion
 
         #region Private Properties
 
-        private Font _font = new("MS Sans Serif", DefaultFont.Size);
-        private static Color _foreColor = Color.WhiteSmoke;
+        private Font _font = new("MS Sans Serif", DefaultFont.Size, FontStyle.Regular, GraphicsUnit.Point);
+        private Color _foreColor = Color.White;
 
-        private Color _currentTextColor = _foreColor;
+        private Color _currentTextColor;
         private States _state = States.ToggledOff;
         private Image? _currentImage;
         private string? _text;
         private ButtonTypes _buttonType = ButtonTypes.Normal;
-        private static bool _isThreeState;
+        private bool _isThreeState;
         private bool _useAlt;
+        private bool _setByToggle;
+        private MouseButtons _toggleMouseButton = MouseButtons.Left;
+        private MouseClicks _toggleActivation = MouseClicks.LeftButton;
 
-        private static Color ColorWhenClicked
+        private Color ColorWhenClicked
         {
             get
             {
-                var origColor = _foreColor.ToArgb();
-                return Color.FromArgb(origColor ^ 0xFFFFFF);
+                var origColor = ForeColor.ToArgb();
+                return _useAlt ? Color.FromArgb(origColor ^ 0x161CCA) : Color.FromArgb(origColor ^ 0xCA1616);
             }
         }
 
@@ -100,6 +107,7 @@ namespace Mids_Reborn.Forms.Controls
         /// Turns locking mechanism on/off for the component, preventing it from switching states.
         /// </summary>
         public bool Lock { get; set; }
+
 
         #endregion
 
@@ -255,6 +263,31 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        [Description("Indicates which mouse button activates the Toggle mechanism.")]
+        [Category("Behavior")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DefaultValue(MouseClicks.LeftButton)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public MouseClicks ToggleActivation
+        {
+            get => _toggleActivation;
+            set
+            {
+                _toggleActivation = value;
+                var mouseButton = MouseButtons.None;
+                mouseButton = _toggleActivation switch
+                {
+                    MouseClicks.LeftButton => MouseButtons.Left,
+                    MouseClicks.RightButton => MouseButtons.Right,
+                    _ => mouseButton
+                };
+                ToggleMouseButtonChanged?.Invoke(this, mouseButton);
+            }
+        }
+
+
         #endregion
 
         #region TypeConverter<T>
@@ -286,7 +319,7 @@ namespace Mids_Reborn.Forms.Controls
             [NotifyParentProperty(true)]
             public Image? Background { get; set; }
 
-            [Description("The image to be used when hovering over the control.")]
+            [Description("The image to be used when hovering over the control.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
@@ -324,7 +357,7 @@ namespace Mids_Reborn.Forms.Controls
             [NotifyParentProperty(true)]
             public Image? Background { get; set; }
 
-            [Description("The alternate hover image used when the 'UseAlt' flag is true.")]
+            [Description("The alternate hover image used when the 'UseAlt' flag is true.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
@@ -378,13 +411,7 @@ namespace Mids_Reborn.Forms.Controls
 
             public override string ToString()
             {
-                var output = _isThreeState switch
-                {
-                    false => $"{ToggledOff}, {ToggledOn}",
-                    true => $"{ToggledOff}, {ToggledOn}, {Indeterminate}"
-                };
-
-                return output;
+                return @"Toggle State Texts";
             }
         }
 
@@ -430,9 +457,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public ImageButtonEx()
         {
-            SetStyle(
-                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint |
-                ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
             ButtonTypeChanged += OnButtonTypeChanged;
             FontChanged += OnFontChanged;
             ForeColorChanged += OnForeColorChanged;
@@ -445,6 +470,8 @@ namespace Mids_Reborn.Forms.Controls
             TextChanged += OnTextChanged;
             ThreeStateChanged += OnThreeStateChanged;
             UseAltChanged += OnUseAltChanged;
+            ToggleMouseButtonChanged += OnToggleMouseButtonChanged;
+            if (_currentTextColor == Color.Empty) _currentTextColor = _foreColor;
             InitializeComponent();
             Images = new BaseImages();
             Images.PropertyChanged += ImagesOnPropertyChanged;
@@ -452,6 +479,11 @@ namespace Mids_Reborn.Forms.Controls
             TextOutline = new Outline();
             TextOutline.PropertyChanged += TextOutlineOnPropertyChanged;
             ToggleText = new StateText();
+        }
+
+        private void OnToggleMouseButtonChanged(object? sender, MouseButtons e)
+        {
+            _toggleMouseButton = e;
         }
 
         #region Event Methods
@@ -480,13 +512,10 @@ namespace Mids_Reborn.Forms.Controls
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
-            if (Lock) return;
             if (ButtonType == ButtonTypes.Normal)
             {
                 ForeColorChanged?.Invoke(this, _foreColor);
             }
-
-            Click?.Invoke(this, e);
         }
 
         private void OnMouseDown(object? sender, MouseEventArgs e)
@@ -497,14 +526,16 @@ namespace Mids_Reborn.Forms.Controls
                     ForeColorChanged?.Invoke(this, ColorWhenClicked);
                     break;
                 case ButtonTypes.Toggle:
+                    if (e.Button != _toggleMouseButton) return;
                     if (Lock) return;
                     if (!_isThreeState)
                     {
-                        StateChanged?.Invoke(this, _state == States.ToggledOff ? States.ToggledOn : States.ToggledOff);
+                        StateChanged?.Invoke(this,
+                            _state == States.ToggledOff ? States.ToggledOn : States.ToggledOff);
                     }
                     else
                     {
-                        switch (ToggleState)
+                        switch (_state)
                         {
                             case States.ToggledOff:
                                 StateChanged?.Invoke(this, States.ToggledOn);
@@ -529,14 +560,17 @@ namespace Mids_Reborn.Forms.Controls
         private void OnMouseLeave(object? sender, EventArgs e)
         {
             Image? usedImage;
+            if (_setByToggle) return;
             switch (UseAlt)
             {
                 case true:
-                    if (ImagesAlt?.Background == null || _currentImage == ImagesAlt?.Background || _currentImage != ImagesAlt?.Hover) return;
+                    if (ImagesAlt?.Background == null || _currentImage == ImagesAlt?.Background ||
+                        _currentImage != ImagesAlt?.Hover) return;
                     usedImage = ImagesAlt?.Background;
                     break;
                 case false:
-                    if (Images?.Background == null || _currentImage == Images?.Background || _currentImage != Images?.Hover) return;
+                    if (Images?.Background == null || _currentImage == Images?.Background ||
+                        _currentImage != Images?.Hover) return;
                     usedImage = Images?.Background;
                     break;
             }
@@ -547,6 +581,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void OnMouseEnter(object? sender, EventArgs e)
         {
+            if (_setByToggle) return;
             var control = sender as ImageButtonEx;
             if (control?.Name != Name) return;
             Image? usedImage;
@@ -596,7 +631,7 @@ namespace Mids_Reborn.Forms.Controls
             Refresh();
         }
 
-        private static void OnThreeStateChanged(object? sender, bool e)
+        private void OnThreeStateChanged(object? sender, bool e)
         {
             _isThreeState = e;
         }
@@ -620,9 +655,37 @@ namespace Mids_Reborn.Forms.Controls
             {
                 case States.ToggledOff:
                     TextChanged?.Invoke(this, ToggleText.ToggledOff);
+                    if (!ThreeState)
+                    {
+                        switch (UseAlt)
+                        {
+                            case true:
+                                ImageChanged?.Invoke(this, ImagesAlt?.Background);
+                                break;
+                            case false:
+                                ImageChanged?.Invoke(this, Images?.Background);
+                                break;
+                        }
+
+                        _setByToggle = false;
+                    }
                     break;
                 case States.ToggledOn:
                     TextChanged?.Invoke(this, ToggleText.ToggledOn);
+                    if (!ThreeState)
+                    {
+                        switch (UseAlt)
+                        {
+                            case true:
+                                ImageChanged?.Invoke(this, ImagesAlt?.Hover);
+                                break;
+                            case false:
+                                ImageChanged?.Invoke(this, Images?.Hover);
+                                break;
+                        }
+
+                        _setByToggle = true;
+                    }
                     break;
                 case States.Indeterminate:
                     if (_isThreeState) TextChanged?.Invoke(this, ToggleText.Indeterminate);

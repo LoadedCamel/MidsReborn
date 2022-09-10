@@ -8,12 +8,12 @@ namespace Mids_Reborn.Core
         public PowersetGroup(string name)
         {
             Name = name;
-            Powersets = new Dictionary<string, IPowerset>();
+            Powersets = new Dictionary<string, IPowerset?>();
         }
 
         public string Name { get; }
 
-        public IDictionary<string, IPowerset> Powersets { get; }
+        public IDictionary<string, IPowerset?> Powersets { get; }
 
         public int CompareTo(object obj)
         {

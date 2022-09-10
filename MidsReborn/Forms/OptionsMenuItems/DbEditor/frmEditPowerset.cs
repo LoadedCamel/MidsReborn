@@ -12,11 +12,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPowerset : Form
     {
-        public readonly IPowerset myPS;
+        public readonly IPowerset? myPS;
         private bool Loading;
 
 
-        public frmEditPowerset(ref IPowerset iSet)
+        public frmEditPowerset(ref IPowerset? iSet)
         {
             Load += frmEditPowerset_Load;
             Loading = true;

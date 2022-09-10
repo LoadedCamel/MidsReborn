@@ -183,20 +183,25 @@ namespace Mids_Reborn.Forms
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
-            this.lblHero = new System.Windows.Forms.Label();
-            this.heroVillain = new ImageButton();
-            this.petsButton = new ImageButton();
-            this.tempPowersButton = new ImageButton();
-            this.accoladeButton = new ImageButton();
-            this.incarnateButton = new ImageButton();
-            this.prestigeButton = new ImageButton();
-            this.ibPvX = new ImageButton();
-            this.ibRecipe = new ImageButton();
-            this.ibPopup = new ImageButton();
+            this.lblCharacter = new System.Windows.Forms.Label();
+            this.ibModeEx = new ImageButtonEx();
+            this.ibDynMode = new ImageButtonEx();
+            this.ibAlignmentEx = new ImageButtonEx();
+            this.ibSlotInfoEx = new ImageButtonEx();
+            this.ibAccoladesEx = new ImageButtonEx();
+            this.ibPetsEx = new ImageButtonEx();
+            this.ibTeamEx = new ImageButtonEx();
+            this.ibPopupEx = new ImageButtonEx();
+            this.ibPvXEx = new ImageButtonEx();
+            this.ibRecipeEx = new ImageButtonEx();
+            this.ibSetsEx = new ImageButtonEx();
+            this.ibSlotLevelsEx = new ImageButtonEx();
+            this.ibTotalsEx = new ImageButtonEx();
+            this.ibPrestigePowersEx = new ImageButtonEx();
+            this.ibIncarnatePowersEx = new ImageButtonEx();
+            this.ibTempPowersEx = new ImageButtonEx();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
-            //this.pbDynMode = new System.Windows.Forms.PictureBox();
-            this.ibDynMode = new ImageButtonEx();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
@@ -211,12 +216,6 @@ namespace Mids_Reborn.Forms
             this.llAncillary = new ListLabelV3();
             this.i9Picker = new I9Picker();
             this.I9Popup = new ctlPopUp();
-            this.ibTotals = new ImageButton();
-            this.ibSlotLevels = new ImageButton();
-            this.ibTeam = new ImageButton();
-            this.ibModeEx = new ImageButtonEx();
-            this.ibSets = new ImageButton();
-            this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
             this.enhCheckMode = new EnhCheckMode(this);
             this.MenuBar.SuspendLayout();
@@ -1500,17 +1499,17 @@ namespace Mids_Reborn.Forms
             // 
             // topPanel
             // 
-            this.topPanel.Controls.Add(this.lblHero);
-            this.topPanel.Controls.Add(this.ibTeam);
-            this.topPanel.Controls.Add(this.heroVillain);
-            this.topPanel.Controls.Add(this.petsButton);
-            this.topPanel.Controls.Add(this.tempPowersButton);
-            this.topPanel.Controls.Add(this.accoladeButton);
-            this.topPanel.Controls.Add(this.incarnateButton);
-            this.topPanel.Controls.Add(this.prestigeButton);
-            this.topPanel.Controls.Add(this.ibPvX);
-            this.topPanel.Controls.Add(this.ibRecipe);
-            this.topPanel.Controls.Add(this.ibPopup);
+            this.topPanel.Controls.Add(this.lblCharacter);
+            this.topPanel.Controls.Add(this.ibTeamEx);
+            this.topPanel.Controls.Add(this.ibAlignmentEx);
+            this.topPanel.Controls.Add(this.ibPetsEx);
+            this.topPanel.Controls.Add(this.ibTempPowersEx);
+            this.topPanel.Controls.Add(this.ibAccoladesEx);
+            this.topPanel.Controls.Add(this.ibIncarnatePowersEx);
+            this.topPanel.Controls.Add(this.ibPrestigePowersEx);
+            this.topPanel.Controls.Add(this.ibPvXEx);
+            this.topPanel.Controls.Add(this.ibRecipeEx);
+            this.topPanel.Controls.Add(this.ibPopupEx);
             this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.topPanel.Location = new System.Drawing.Point(0, 24);
             this.topPanel.Name = "topPanel";
@@ -1519,172 +1518,257 @@ namespace Mids_Reborn.Forms
             // 
             // lblHero
             // 
-            this.lblHero.AutoSize = true;
-            this.lblHero.BackColor = System.Drawing.Color.Transparent;
-            this.lblHero.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.lblHero.ForeColor = System.Drawing.Color.White;
-            this.lblHero.Location = new System.Drawing.Point(3, 3);
-            this.lblHero.Name = "lblHero";
-            this.lblHero.Size = new System.Drawing.Size(310, 15);
-            this.lblHero.TabIndex = 43;
-            this.lblHero.Text = "Name: Level 0 Origin Archetype (Primary / Secondary)";
+            this.lblCharacter.AutoSize = true;
+            this.lblCharacter.BackColor = System.Drawing.Color.Transparent;
+            this.lblCharacter.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblCharacter.ForeColor = System.Drawing.Color.White;
+            this.lblCharacter.Location = new System.Drawing.Point(3, 3);
+            this.lblCharacter.Name = "lblCharacter";
+            this.lblCharacter.Size = new System.Drawing.Size(310, 15);
+            this.lblCharacter.TabIndex = 43;
+            this.lblCharacter.Text = "Name: Level 0 Origin Archetype (Primary / Secondary)";
             // 
-            // heroVillain
+            // ibAlignmentEx
             // 
-            this.heroVillain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.heroVillain.Checked = false;
-            this.heroVillain.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.heroVillain.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.heroVillain.Location = new System.Drawing.Point(713, 3);
-            this.heroVillain.Name = "heroVillain";
-            this.heroVillain.Size = new System.Drawing.Size(105, 22);
-            this.heroVillain.TabIndex = 116;
-            this.heroVillain.TextOff = "Hero";
-            this.heroVillain.TextOn = "Villain";
-            this.heroVillain.Toggle = true;
-            this.heroVillain.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.heroVillain_ButtonClicked);
+            this.ibAlignmentEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibAlignmentEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibAlignmentEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAlignmentEx.CurrentText = "ibAlignmentEx";
+            this.ibAlignmentEx.Images.Background = Resources.HeroButton;
+            this.ibAlignmentEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibAlignmentEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibAlignmentEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibAlignmentEx.Location = new System.Drawing.Point(713, 3);
+            this.ibAlignmentEx.Lock = false;
+            this.ibAlignmentEx.Name = "ibAlignmentEx";
+            this.ibAlignmentEx.Size = new System.Drawing.Size(105, 22);
+            this.ibAlignmentEx.TabIndex = 116;
+            this.ibAlignmentEx.Text = "ibAlignmentEx";
+            this.ibAlignmentEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibAlignmentEx.TextOutline.Width = 3;
+            this.ibAlignmentEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibAlignmentEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibAlignmentEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibAlignmentEx.ToggleText.ToggledOff = "Hero";
+            this.ibAlignmentEx.ToggleText.ToggledOn = "Villain";
+            this.ibAlignmentEx.UseAlt = false;
+            this.ibAlignmentEx.Click += new EventHandler(this.ibAlignmentEx_OnClick);
             // 
-            // petsButton
+            // ibPetsEx
             // 
-            this.petsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.petsButton.Checked = false;
-            this.petsButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.petsButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.petsButton.Location = new System.Drawing.Point(602, 29);
-            this.petsButton.Name = "petsButton";
-            this.petsButton.Size = new System.Drawing.Size(105, 22);
-            this.petsButton.TabIndex = 117;
-            this.petsButton.TextOff = "Pet Powers";
-            this.petsButton.TextOn = "Pet Powers";
-            this.petsButton.Toggle = true;
-            this.petsButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.petsButton_ButtonClicked);
+            this.ibPetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibPetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPetsEx.CurrentText = "ibPetsEx";
+            this.ibPetsEx.Images.Background = Resources.HeroButton;
+            this.ibPetsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPetsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPetsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPetsEx.Location = new System.Drawing.Point(602, 29);
+            this.ibPetsEx.Lock = false;
+            this.ibPetsEx.Name = "ibPetsEx";
+            this.ibPetsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPetsEx.TabIndex = 116;
+            this.ibPetsEx.Text = "Pet Powers";
+            this.ibPetsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPetsEx.TextOutline.Width = 3;
+            this.ibPetsEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPetsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPetsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPetsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibPetsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibPetsEx.UseAlt = false;
+            this.ibPetsEx.Click += new EventHandler(this.ibPetsEx_OnClick);
             // 
-            // tempPowersButton
+            // ibTempPowersEx
             // 
-            this.tempPowersButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tempPowersButton.Checked = false;
-            this.tempPowersButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.tempPowersButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.tempPowersButton.Location = new System.Drawing.Point(1046, 29);
-            this.tempPowersButton.Name = "tempPowersButton";
-            this.tempPowersButton.Size = new System.Drawing.Size(105, 22);
-            this.tempPowersButton.TabIndex = 115;
-            this.tempPowersButton.TextOff = "Temp Powers (Off)";
-            this.tempPowersButton.TextOn = "Temp Powers (On)";
-            this.tempPowersButton.Toggle = true;
-            this.tempPowersButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.tempPowersButton_ButtonClicked);
-            this.tempPowersButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempPowersButton_MouseDown);
+            this.ibTempPowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTempPowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTempPowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTempPowersEx.Images.Background = Resources.HeroButton;
+            this.ibTempPowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTempPowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTempPowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTempPowersEx.Location = new System.Drawing.Point(1046, 29);
+            this.ibTempPowersEx.Lock = false;
+            this.ibTempPowersEx.Name = "ibTempPowersEx";
+            this.ibTempPowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTempPowersEx.TabIndex = 116;
+            this.ibTempPowersEx.Text = "Temp Powers";
+            this.ibTempPowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTempPowersEx.TextOutline.Width = 3;
+            this.ibTempPowersEx.ThreeState = false;
+            this.ibTempPowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTempPowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTempPowersEx.ToggleText.ToggledOff = "Temp Powers: Off";
+            this.ibTempPowersEx.ToggleText.ToggledOn = "Temp Powers: On";
+            this.ibTempPowersEx.UseAlt = false;
+            this.ibTempPowersEx.Click += new EventHandler(ibTempPowersEx_OnClick);
             // 
-            // accoladeButton
+            // ibAccoladesEx
             // 
-            this.accoladeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.accoladeButton.Checked = false;
-            this.accoladeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.accoladeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.accoladeButton.Location = new System.Drawing.Point(824, 29);
-            this.accoladeButton.Name = "accoladeButton";
-            this.accoladeButton.Size = new System.Drawing.Size(105, 22);
-            this.accoladeButton.TabIndex = 114;
-            this.accoladeButton.TextOff = "Accolades";
-            this.accoladeButton.TextOn = "Accolades";
-            this.accoladeButton.Toggle = true;
-            this.accoladeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.accoladeButton_ButtonClicked);
+            this.ibAccoladesEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibAccoladesEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibAccoladesEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAccoladesEx.CurrentText = "ibAccoladesEx";
+            this.ibAccoladesEx.Images.Background = Resources.HeroButton;
+            this.ibAccoladesEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibAccoladesEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibAccoladesEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibAccoladesEx.Location = new System.Drawing.Point(824, 29);
+            this.ibAccoladesEx.Lock = false;
+            this.ibAccoladesEx.Name = "ibAccoladesEx";
+            this.ibAccoladesEx.Size = new System.Drawing.Size(105, 22);
+            this.ibAccoladesEx.TabIndex = 116;
+            this.ibAccoladesEx.Text = "Accolades";
+            this.ibAccoladesEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibAccoladesEx.TextOutline.Width = 3;
+            this.ibAccoladesEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibAccoladesEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibAccoladesEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibAccoladesEx.ToggleText.ToggledOff = "Accolades: Off";
+            this.ibAccoladesEx.ToggleText.ToggledOn = "Accolades: On";
+            this.ibAccoladesEx.UseAlt = false;
+            this.ibAccoladesEx.Click += new EventHandler(this.ibAccoladesEx_OnClick);
             // 
-            // incarnateButton
+            // ibIncarnatePowersEx
             // 
-            this.incarnateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.incarnateButton.Checked = false;
-            this.incarnateButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.incarnateButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.incarnateButton.Location = new System.Drawing.Point(935, 29);
-            this.incarnateButton.Name = "incarnateButton";
-            this.incarnateButton.Size = new System.Drawing.Size(105, 22);
-            this.incarnateButton.TabIndex = 113;
-            this.incarnateButton.TextOff = "Incarnates";
-            this.incarnateButton.TextOn = "Incarnates";
-            this.incarnateButton.Toggle = true;
-            this.incarnateButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.incarnateButton_ButtonClicked);
+            this.ibIncarnatePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibIncarnatePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibIncarnatePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibIncarnatePowersEx.Images.Background = Resources.HeroButton;
+            this.ibIncarnatePowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibIncarnatePowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibIncarnatePowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibIncarnatePowersEx.Location = new System.Drawing.Point(935, 29);
+            this.ibIncarnatePowersEx.Lock = false;
+            this.ibIncarnatePowersEx.Name = "ibIncarnatePowersEx";
+            this.ibIncarnatePowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibIncarnatePowersEx.TabIndex = 116;
+            this.ibIncarnatePowersEx.Text = "Incarnate Powers";
+            this.ibIncarnatePowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibIncarnatePowersEx.TextOutline.Width = 3;
+            this.ibIncarnatePowersEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibIncarnatePowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibIncarnatePowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibIncarnatePowersEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibIncarnatePowersEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibIncarnatePowersEx.UseAlt = false;
+            this.ibIncarnatePowersEx.Click += new EventHandler(this.ibIncarnatesEx_OnClick);
             // 
-            // prestigeButton
+            // ibPrestigePowersEx
             // 
-            this.prestigeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.prestigeButton.Checked = false;
-            this.prestigeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.prestigeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.prestigeButton.Location = new System.Drawing.Point(713, 29);
-            this.prestigeButton.Name = "prestigeButton";
-            this.prestigeButton.Size = new System.Drawing.Size(105, 22);
-            this.prestigeButton.TabIndex = 111;
-            this.prestigeButton.TextOff = "Prestige Powers";
-            this.prestigeButton.TextOn = "Prestige Powers";
-            this.prestigeButton.Toggle = true;
-            this.prestigeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.prestige_ButtonClicked);
+            this.ibPrestigePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPrestigePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibPrestigePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPrestigePowersEx.Images.Background = Resources.HeroButton;
+            this.ibPrestigePowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPrestigePowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPrestigePowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPrestigePowersEx.Location = new System.Drawing.Point(713, 29);
+            this.ibPrestigePowersEx.Lock = false;
+            this.ibPrestigePowersEx.Name = "ibPrestigePowersEx";
+            this.ibPrestigePowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPrestigePowersEx.TabIndex = 116;
+            this.ibPrestigePowersEx.Text = "Prestige Powers";
+            this.ibPrestigePowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPrestigePowersEx.TextOutline.Width = 3;
+            this.ibPrestigePowersEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPrestigePowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPrestigePowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPrestigePowersEx.ToggleText.ToggledOff = "ToggledOff State";
+            this.ibPrestigePowersEx.ToggleText.ToggledOn = "ToggledOn State";
+            this.ibPrestigePowersEx.UseAlt = false;
+            this.ibPrestigePowersEx.Click += new EventHandler(this.ibPrestigePowersEx_OnClick);
             // 
-            // ibPvX
+            // ibPvXEx
             // 
-            this.ibPvX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibPvX.Checked = false;
-            this.ibPvX.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPvX.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibPvX.Location = new System.Drawing.Point(824, 3);
-            this.ibPvX.Name = "ibPvX";
-            this.ibPvX.Size = new System.Drawing.Size(105, 22);
-            this.ibPvX.TabIndex = 111;
-            this.ibPvX.TextOff = "Mode: PvE";
-            this.ibPvX.TextOn = "Mode: PvP";
-            this.ibPvX.Toggle = true;
-            this.ibPvX.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPvX_ButtonClicked);
+            this.ibPvXEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPvXEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibPvXEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPvXEx.Images.Background = Resources.HeroButton;
+            this.ibPvXEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPvXEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPvXEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPvXEx.Location = new System.Drawing.Point(824, 3);
+            this.ibPvXEx.Lock = false;
+            this.ibPvXEx.Name = "ibPvXEx";
+            this.ibPvXEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPvXEx.TabIndex = 116;
+            this.ibPvXEx.Text = "ibPvXEx";
+            this.ibPvXEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPvXEx.TextOutline.Width = 3;
+            this.ibPvXEx.ThreeState = false;
+            this.ibPvXEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPvXEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPvXEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPvXEx.ToggleText.ToggledOff = "PvE";
+            this.ibPvXEx.ToggleText.ToggledOn = "PvP";
+            this.ibPvXEx.UseAlt = false;
+            this.ibPvXEx.Click += new EventHandler(this.ibPvXEx_OnClick);
             // 
-            // ibRecipe
+            // ibRecipeEx
             // 
-            this.ibRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibRecipe.Checked = false;
-            this.ibRecipe.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibRecipe.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibRecipe.Location = new System.Drawing.Point(935, 3);
-            this.ibRecipe.Name = "ibRecipe";
-            this.ibRecipe.Size = new System.Drawing.Size(105, 22);
-            this.ibRecipe.TabIndex = 105;
-            this.ibRecipe.TextOff = "Recipes: Off";
-            this.ibRecipe.TextOn = "Recipes: On";
-            this.ibRecipe.Toggle = true;
-            this.ibRecipe.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibRecipe_ButtonClicked);
+            this.ibRecipeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibRecipeEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibRecipeEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibRecipeEx.Images.Background = Resources.HeroButton;
+            this.ibRecipeEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibRecipeEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibRecipeEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibRecipeEx.Location = new System.Drawing.Point(935, 3);
+            this.ibRecipeEx.Lock = false;
+            this.ibRecipeEx.Name = "ibRecipeEx";
+            this.ibRecipeEx.Size = new System.Drawing.Size(105, 22);
+            this.ibRecipeEx.TabIndex = 116;
+            this.ibRecipeEx.Text = "ibRecipeEx";
+            this.ibRecipeEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibRecipeEx.TextOutline.Width = 3;
+            this.ibRecipeEx.ThreeState = false;
+            this.ibRecipeEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibRecipeEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibRecipeEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibRecipeEx.ToggleText.ToggledOff = "Recipes: Off";
+            this.ibRecipeEx.ToggleText.ToggledOn = "Recipes: On";
+            this.ibRecipeEx.UseAlt = false;
+            this.ibRecipeEx.Click += new EventHandler(this.ibRecipeEx_OnClick);
             // 
-            // ibPopup
+            // ibPopupEx
             // 
-            this.ibPopup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibPopup.Checked = false;
-            this.ibPopup.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPopup.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibPopup.Location = new System.Drawing.Point(1046, 3);
-            this.ibPopup.Name = "ibPopup";
-            this.ibPopup.Size = new System.Drawing.Size(105, 22);
-            this.ibPopup.TabIndex = 104;
-            this.ibPopup.TextOff = "Pop-Up: Off";
-            this.ibPopup.TextOn = "Pop-Up: On";
-            this.ibPopup.Toggle = true;
-            this.ibPopup.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPopup_ButtonClicked);
+            this.ibPopupEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPopupEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibPopupEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPopupEx.Images.Background = Resources.HeroButton;
+            this.ibPopupEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPopupEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPopupEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPopupEx.Location = new System.Drawing.Point(1046, 3);
+            this.ibPopupEx.Lock = false;
+            this.ibPopupEx.Name = "ibPopupEx";
+            this.ibPopupEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPopupEx.TabIndex = 116;
+            this.ibPopupEx.Text = "ibPopupEx";
+            this.ibPopupEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPopupEx.TextOutline.Width = 3;
+            this.ibPopupEx.ThreeState = false;
+            this.ibPopupEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPopupEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPopupEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPopupEx.ToggleText.ToggledOff = "Popup: Off";
+            this.ibPopupEx.ToggleText.ToggledOn = "Popup: On";
+            this.ibPopupEx.UseAlt = false;
+            this.ibPopupEx.Click += new EventHandler(this.ibPopupEx_OnClick);
             // 
             // ToolStripSeparator26
             // 
             this.ToolStripSeparator26.Name = "ToolStripSeparator26";
             this.ToolStripSeparator26.Size = new System.Drawing.Size(255, 6);
             // 
-            // pbDynMode
-            // 
-            // this.pbDynMode.Location = new System.Drawing.Point(355, 80);
-            // this.pbDynMode.Name = "pbDynMode";
-            // this.pbDynMode.Size = new System.Drawing.Size(105, 22);
-            // this.pbDynMode.TabIndex = 92;
-            // this.pbDynMode.TabStop = false;
-            // this.pbDynMode.Click += new System.EventHandler(this.pbDynMode_Click);
-            // this.pbDynMode.Paint += new System.Windows.Forms.PaintEventHandler(this.pbDynMode_Paint);
-            // 
             // ibDynMode
             // 
             this.ibDynMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibDynMode.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ibDynMode.ForeColor = Color.White;
             this.ibDynMode.Images.Background = Resources.HeroButton;
             this.ibDynMode.Images.Hover = Resources.HeroButtonHover;
@@ -1698,6 +1782,7 @@ namespace Mids_Reborn.Forms
             this.ibDynMode.TextOutline.Color = System.Drawing.Color.Black;
             this.ibDynMode.TextOutline.Width = 3;
             this.ibDynMode.ThreeState = false;
+            this.ibDynMode.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
             this.ibDynMode.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
             this.ibDynMode.ToggleText.Indeterminate = "Power / Slot";
             this.ibDynMode.ToggleText.ToggledOff = "Power";
@@ -1973,54 +2058,85 @@ namespace Mids_Reborn.Forms
             this.I9Popup.Visible = false;
             this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);
             // 
-            // ibTotals
+            // ibTotalsEx
             // 
-            this.ibTotals.Checked = false;
-            this.ibTotals.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTotals.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTotals.Location = new System.Drawing.Point(355, 109);
-            this.ibTotals.Name = "ibTotals";
-            this.ibTotals.Size = new System.Drawing.Size(105, 22);
-            this.ibTotals.TabIndex = 99;
-            this.ibTotals.TextOff = "View Totals";
-            this.ibTotals.TextOn = "Alt Text";
-            this.ibTotals.Toggle = false;
-            this.ibTotals.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTotals_ButtonClicked);
+            this.ibTotalsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTotalsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTotalsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTotalsEx.Images.Background = Resources.HeroButton;
+            this.ibTotalsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTotalsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTotalsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTotalsEx.Location = new System.Drawing.Point(355, 109);
+            this.ibTotalsEx.Lock = false;
+            this.ibTotalsEx.Name = "ibTotalsEx";
+            this.ibTotalsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTotalsEx.TabIndex = 116;
+            this.ibTotalsEx.Text = "View Totals";
+            this.ibTotalsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTotalsEx.TextOutline.Width = 3;
+            this.ibTotalsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTotalsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTotalsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibTotalsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibTotalsEx.UseAlt = false;
+            this.ibTotalsEx.Click += new EventHandler(this.ibTotalsEx_OnClick);
             // 
-            // ibSlotLevels
+            // ibSlotLevelsEx
             // 
-            this.ibSlotLevels.Checked = false;
-            this.ibSlotLevels.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSlotLevels.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibSlotLevels.Location = new System.Drawing.Point(244, 133);
-            this.ibSlotLevels.Name = "ibSlotLevels";
-            this.ibSlotLevels.Size = new System.Drawing.Size(105, 22);
-            this.ibSlotLevels.TabIndex = 101;
-            this.ibSlotLevels.TextOff = "Slot Levels: Off";
-            this.ibSlotLevels.TextOn = "Slot Levels: On";
-            this.ibSlotLevels.Toggle = true;
-            this.ibSlotLevels.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSlotLevels_ButtonClicked);
+            this.ibSlotLevelsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSlotLevelsEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibSlotLevelsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotLevelsEx.Images.Background = Resources.HeroButton;
+            this.ibSlotLevelsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSlotLevelsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSlotLevelsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSlotLevelsEx.Location = new System.Drawing.Point(244, 133);
+            this.ibSlotLevelsEx.Lock = false;
+            this.ibSlotLevelsEx.Name = "ibSlotLevelsEx";
+            this.ibSlotLevelsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSlotLevelsEx.TabIndex = 116;
+            this.ibSlotLevelsEx.Text = "ibSlotLevelsEx";
+            this.ibSlotLevelsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSlotLevelsEx.TextOutline.Width = 3;
+            this.ibSlotLevelsEx.ThreeState = false;
+            this.ibSlotLevelsEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibSlotLevelsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSlotLevelsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSlotLevelsEx.ToggleText.ToggledOff = "Slot Levels: Off";
+            this.ibSlotLevelsEx.ToggleText.ToggledOn = "Slot Levels: On";
+            this.ibSlotLevelsEx.UseAlt = false;
+            this.ibSlotLevelsEx.Click += new EventHandler(this.ibSlotLevelsEx_OnClick);
             // 
-            // ibTeam
+            // ibTeamEx
             // 
-            this.ibTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibTeam.Checked = false;
-            this.ibTeam.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTeam.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTeam.Location = new System.Drawing.Point(602, 3);
-            this.ibTeam.Name = "ibTeam";
-            this.ibTeam.Size = new System.Drawing.Size(105, 22);
-            this.ibTeam.TabIndex = 100;
-            this.ibTeam.TextOff = "Team Members";
-            this.ibTeam.TextOn = "Alt Text";
-            this.ibTeam.Toggle = false;
-            this.ibTeam.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
+            this.ibTeamEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTeamEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTeamEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTeamEx.Images.Background = Resources.HeroButton;
+            this.ibTeamEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTeamEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTeamEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTeamEx.Location = new System.Drawing.Point(602, 3);
+            this.ibTeamEx.Lock = false;
+            this.ibTeamEx.Name = "ibTeamEx";
+            this.ibTeamEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTeamEx.TabIndex = 116;
+            this.ibTeamEx.Text = "Team Members";
+            this.ibTeamEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTeamEx.TextOutline.Width = 3;
+            this.ibTeamEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTeamEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTeamEx.ToggleText.ToggledOff = "Toggle Off State";
+            this.ibTeamEx.ToggleText.ToggledOn = "Toggle On State";
+            this.ibTeamEx.UseAlt = false;
+            this.ibTeamEx.Click += new EventHandler(this.ibTeamEx_OnClick);
             // 
             // ibModeEx
             // 
             this.ibModeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibModeEx.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ibModeEx.ForeColor = Color.White;
             this.ibModeEx.Images.Background = Resources.HeroButton;
             this.ibModeEx.Images.Hover = Resources.HeroButtonHover;
@@ -2034,6 +2150,7 @@ namespace Mids_Reborn.Forms
             this.ibModeEx.TextOutline.Color = System.Drawing.Color.Black;
             this.ibModeEx.TextOutline.Width = 3;
             this.ibModeEx.ThreeState = true;
+            this.ibModeEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
             this.ibModeEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
             this.ibModeEx.ToggleText.Indeterminate = "Respec";
             this.ibModeEx.ToggleText.ToggledOff = "Level-Up";
@@ -2041,32 +2158,55 @@ namespace Mids_Reborn.Forms
             this.ibModeEx.UseAlt = false;
             this.ibModeEx.Click += new EventHandler(ibModeEx_OnClick);
             // 
-            // ibSets
+            // ibSetsEx
             // 
-            this.ibSets.Checked = false;
-            this.ibSets.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSets.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibSets.Location = new System.Drawing.Point(244, 109);
-            this.ibSets.Name = "ibSets";
-            this.ibSets.Size = new System.Drawing.Size(105, 22);
-            this.ibSets.TabIndex = 98;
-            this.ibSets.TextOff = "View Active Sets";
-            this.ibSets.TextOn = "Alt Text";
-            this.ibSets.Toggle = false;
-            this.ibSets.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSets_ButtonClicked);
+            this.ibSetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibSetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSetsEx.Images.Background = Resources.HeroButton;
+            this.ibSetsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSetsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSetsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSetsEx.Location = new System.Drawing.Point(244, 109);
+            this.ibSetsEx.Lock = false;
+            this.ibSetsEx.Name = "ibSetsEx";
+            this.ibSetsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSetsEx.TabIndex = 116;
+            this.ibSetsEx.Text = "View Active Sets";
+            this.ibSetsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSetsEx.TextOutline.Width = 3;
+            this.ibSetsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSetsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSetsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibSetsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibSetsEx.UseAlt = false;
+            this.ibSetsEx.Click += new EventHandler(this.ibSetsEx_OnClick);
             // 
-            // ibAccolade
+            // ibSlotInfoEx
             // 
-            this.ibAccolade.Checked = false;
-            this.ibAccolade.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibAccolade.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibAccolade.Location = new System.Drawing.Point(355, 133);
-            this.ibAccolade.Name = "ibAccolade";
-            this.ibAccolade.Size = new System.Drawing.Size(105, 22);
-            this.ibAccolade.TabIndex = 106;
-            this.ibAccolade.TextOff = "67 Slots to go";
-            this.ibAccolade.TextOn = "0 Slots placed";
-            this.ibAccolade.Toggle = true;
+            this.ibSlotInfoEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSlotInfoEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibSlotInfoEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotInfoEx.CurrentText = "ibSlotInfoEx";
+            this.ibSlotInfoEx.Images.Background = Resources.HeroButton;
+            this.ibSlotInfoEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSlotInfoEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSlotInfoEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSlotInfoEx.Location = new System.Drawing.Point(355, 133);
+            this.ibSlotInfoEx.Lock = false;
+            this.ibSlotInfoEx.Name = "ibSlotInfoEx";
+            this.ibSlotInfoEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSlotInfoEx.TabIndex = 116;
+            this.ibSlotInfoEx.Text = "ibSlotInfoEx";
+            this.ibSlotInfoEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSlotInfoEx.TextOutline.Width = 3;
+            this.ibSlotInfoEx.ThreeState = false;
+            this.ibSlotInfoEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibSlotInfoEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSlotInfoEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSlotInfoEx.ToggleText.ToggledOff = "X Slots to go";
+            this.ibSlotInfoEx.ToggleText.ToggledOn = "X Slots placed";
+            this.ibSlotInfoEx.UseAlt = false;
             // 
             // poolsPanel
             //
@@ -2121,12 +2261,10 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.i9Picker);
             this.Controls.Add(this.I9Popup);
             this.Controls.Add(this.lblLockedSecondary);
-            this.Controls.Add(this.ibTotals);
-            this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.sbMode);
+            this.Controls.Add(this.ibTotalsEx);
+            this.Controls.Add(this.ibSlotLevelsEx);
             this.Controls.Add(this.ibModeEx);
-            this.Controls.Add(this.ibSets);
-            //this.Controls.Add(this.pbDynMode);
+            this.Controls.Add(this.ibSetsEx);
             this.Controls.Add(this.ibDynMode);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.MenuBar);
@@ -2140,7 +2278,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.cbPrimary);
             this.Controls.Add(this.cbOrigin);
             this.Controls.Add(this.cbAT);
-            this.Controls.Add(this.ibAccolade);
+            this.Controls.Add(this.ibSlotInfoEx);
             this.Controls.Add(this.lblPrimary);
             this.Controls.Add(this.pnlGFXFlow);
             this.Controls.Add(this.llPrimary);
@@ -2244,8 +2382,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;
         ToolStripMenuItem tsViewTotals;
-        public ImageButton accoladeButton;
-        public ImageButton petsButton;
         ToolStripMenuItem AccoladesWindowToolStripMenuItem;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
@@ -2262,28 +2398,13 @@ namespace Mids_Reborn.Forms
         DataView dvAnchored;
         ToolStripMenuItem FileToolStripMenuItem;
         ToolStripMenuItem HelpToolStripMenuItem1;
-        ImageButton heroVillain;
-        I9Picker i9Picker;
-        ctlPopUp I9Popup;
-        ImageButton ibAccolade;
-        ImageButton ibTeam;
-        SwitchButton sbMode;
-        ImageButtonEx ibModeEx;
-        ImageButton ibPopup;
-        ImageButton ibPvX;
-        ImageButton ibRecipe;
-        ImageButton ibSets;
-        ImageButton ibSlotLevels;
-        ImageButton ibTotals;
-        public ImageButton prestigeButton;
         ToolStripMenuItem ImportExportToolStripMenuItem;
-        public ImageButton incarnateButton;
         ToolStripMenuItem IncarnateWindowToolStripMenuItem;
         ToolStripMenuItem InGameRespecHelperToolStripMenuItem;
         GFXLabel lblAT;
         Label lblATLocked;
         Label lblEpic;
-        Label lblHero;
+        Label lblCharacter;
         Label lblLocked0;
         Label lblLocked1;
         Label lblLocked2;
@@ -2307,16 +2428,12 @@ namespace Mids_Reborn.Forms
         ListLabelV3 llSecondary;
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
-        //PictureBox pbDynMode;
-        ImageButtonEx ibDynMode;
         public pnlGFX pnlGFX;
         public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
         ToolStripMenuItem TemporaryPowersWindowToolStripMenuItem;
-        public ImageButton tempPowersButton;
         ToolStripMenuItem tlsDPA;
-        Timer tmrGfx;
         ToolStripMenuItem ToolStripMenuItem1;
         ToolStripMenuItem ToolStripMenuItem2;
         ToolStripMenuItem ToggleCheckModeToolStripMenuItem;
@@ -2345,13 +2462,35 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator7;
         ToolStripSeparator ToolStripSeparator8;
         ToolStripSeparator ToolStripSeparator9;
-        ToolTip tTip;
-        TextBox txtName;
         ToolStripMenuItem ViewToolStripMenuItem;
         ToolStripMenuItem WindowToolStripMenuItem;
-        Panel poolsPanel;
         ToolStripSeparator ToolStripSeparator29;
         ToolStripMenuItem ShareToolStripMenuItem;
+        Timer tmrGfx;
+        Panel poolsPanel;
+        ToolTip tTip;
+        TextBox txtName;
+        I9Picker i9Picker;
+        ctlPopUp I9Popup;
         EnhCheckMode enhCheckMode;
+        ImageButtonEx ibModeEx;
+        ImageButtonEx ibDynMode;
+        ImageButtonEx ibAlignmentEx;
+        ImageButtonEx ibSlotInfoEx;
+        public ImageButtonEx ibAccoladesEx;
+        public ImageButtonEx ibPetsEx;
+        ImageButtonEx ibTeamEx;
+        ImageButtonEx ibPopupEx;
+        ImageButtonEx ibPvXEx;
+        ImageButtonEx ibRecipeEx;
+        ImageButtonEx ibSetsEx;
+        ImageButtonEx ibSlotLevelsEx;
+        ImageButtonEx ibTotalsEx;
+        public ImageButtonEx ibPrestigePowersEx;
+        public ImageButtonEx ibIncarnatePowersEx;
+        public ImageButtonEx ibTempPowersEx;
+
+
+
     }
 }

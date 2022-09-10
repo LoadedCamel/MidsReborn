@@ -10,6 +10,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -51,17 +52,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             loreBtn.ButtonClicked += loreBtn_ButtonClicked;
             Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
+            Parent = myParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;
         }
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) myParent.incarnateButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) myParent.incarnateButton.Checked = false;
-        }
-        private void frmIncarnate_Load(object sender, EventArgs e)
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
 
+            if (DialogResult == DialogResult.Cancel)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+        }
+        private void frmIncarnate_Load(object? sender, EventArgs e)
         {
+            CenterToParent();
             buttonArray[0] = alphaBtn;
             buttonArray[1] = destinyBtn;
             buttonArray[2] = hybridBtn;
