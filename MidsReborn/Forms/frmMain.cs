@@ -6598,14 +6598,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             if (cbAT.SelectedItem == null)
+            {
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
+            }
             else if (cbAT.SelectedItem.Idx != MidsContext.Character.Archetype.Idx)
+            {
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
+            }
 
             ibPvXEx.ToggleState = MidsContext.Config.Inc.DisablePvE switch
             {
-                true => ImageButtonEx.States.ToggledOff,
-                false => ImageButtonEx.States.ToggledOn
+                true => ImageButtonEx.States.ToggledOn,
+                false => ImageButtonEx.States.ToggledOff
             };
 
             var cbOrigin = new ComboBoxT<string>(this.cbOrigin);
