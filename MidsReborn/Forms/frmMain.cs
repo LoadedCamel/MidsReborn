@@ -3294,19 +3294,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var str = !MainModule.MidsController.Toon.Locked ? MidsContext.Character.Name : string.Empty;
                 MidsContext.Character.Reset((Archetype)cbAT.SelectedItem, cbOrigin.SelectedIndex);
                 if (MidsContext.Character.Powersets[0].nIDLinkSecondary > -1)
+                {
                     MidsContext.Character.Powersets[1] =
                         DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
+                }
+
                 MidsContext.Character.Name = str;
             }
 
             if (fAccolade is { IsDisposed: false })
+            {
                 fAccolade.Dispose();
+            }
+
             if (fTemp is { IsDisposed: false })
+            {
                 fTemp.Dispose();
+            }
+
             if (fIncarnate is { IsDisposed: false })
+            {
                 fIncarnate.Dispose();
+            }
+
             if (fPrestige is { IsDisposed: false })
+            {
                 fPrestige.Dispose();
+            }
+
             switch (MidsContext.Character?.Archetype?.DisplayName)
             {
                 case "Mastermind":
@@ -3323,6 +3338,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             UpdateControls(true);
             SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero());
             UpdateColors();
+            MidsContext.EnhCheckMode = false;
+            UpdateEnhCheckModeToolStrip();
+            enhCheckMode.Hide();
             info_Totals();
             FileModified = false;
             DoRedraw();
