@@ -364,8 +364,6 @@ namespace Mids_Reborn.Forms
                 lblLockedAncillary.Size = cbAncillary.Size;
                 lblLockedAncillary.Visible = false;
 
-
-
                 if (MidsContext.Config.Bounds.Location.IsEmpty)
                 {
                     Location = new Point((Screen.PrimaryScreen.Bounds.Width - Width) / 2, (Screen.PrimaryScreen.Bounds.Height - Height) / 2);
@@ -434,6 +432,7 @@ namespace Mids_Reborn.Forms
                     true => ImageButtonEx.States.ToggledOn,
                     false => ImageButtonEx.States.ToggledOff
                 };
+                
                 UpdateModeInfo();
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopupEx.ToggleState = MidsContext.Config.DisableShowPopup switch
@@ -441,11 +440,19 @@ namespace Mids_Reborn.Forms
                     true => ImageButtonEx.States.ToggledOff,
                     false => ImageButtonEx.States.ToggledOn
                 };
+
                 ibRecipeEx.ToggleState = MidsContext.Config.PopupRecipes switch
                 {
                     true => ImageButtonEx.States.ToggledOn,
                     false => ImageButtonEx.States.ToggledOff
                 };
+
+                ibPvXEx.ToggleState = MidsContext.Config.Inc.DisablePvE switch
+                {
+                    true => ImageButtonEx.States.ToggledOn,
+                    false => ImageButtonEx.States.ToggledOff
+                };
+
                 Show();
                 _frmInitializing?.Hide();
                 _frmInitializing?.Close();
