@@ -15,5 +15,5 @@
 10853, 10918   # Pool.Leadership_beta.Victory_Rush            -->  Pool.Leadership.Victory_Rush
 
 # Afterburner
-5632, 10946    # Pool.Flight.Afterburner                      -->  Pool.Flight.Evasive_Maneuvers
+5632, 5632    # Pool.Flight.Afterburner                      -->  Pool.Flight.Evasive_Maneuvers
 5600, 10949    # Peacebringer_Defensive.Quantum_Acceleration  -->  Peacebringer_Defensive.Quantum_Maneuvers
