@@ -12,7 +12,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool IsModified;
         public bool IsNew;
 
-        public Image Image(List<string> atImages)
+        public Image? Image(List<string> atImages)
         {
             var img = atImages.FirstOrDefault(i => i.Contains(ClassName));
             return System.Drawing.Image.FromFile(img ?? throw new InvalidOperationException());

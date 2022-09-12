@@ -5869,12 +5869,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             clsXMLUpdate.Patreon();
         }
 
-        private void tsBugReportCrytilis_Click(object sender, EventArgs e)
+        private void tsSupport_Click(object sender, EventArgs e)
         {
-            var iParent = this;
-            var frmIssues = new frmIssueReport(ref iParent);
-            frmIssues.ShowDialog(this);
-            //clsXMLUpdate.BugReportCrytilis();
+            clsXMLUpdate.SupportServer();
         }
 
         private void OnRelativeClick(Enums.eEnhRelative newVal)

@@ -150,8 +150,7 @@ namespace Mids_Reborn.Forms
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsHCMRBForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
@@ -176,12 +175,10 @@ namespace Mids_Reborn.Forms
             this.tsHelperShort2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelperLong2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.AccoladesWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.IncarnateWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TemporaryPowersWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DonateToolStripMenuItem = new ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblCharacter = new System.Windows.Forms.Label();
             this.ibModeEx = new ImageButtonEx();
@@ -602,7 +599,8 @@ namespace Mids_Reborn.Forms
             this.CharacterToolStripMenuItem,
             this.ViewToolStripMenuItem,
             this.WindowToolStripMenuItem,
-            this.HelpToolStripMenuItem1});
+            this.HelpToolStripMenuItem1,
+            this.DonateToolStripMenuItem});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
@@ -1248,19 +1246,16 @@ namespace Mids_Reborn.Forms
             // 
             // HelpToolStripMenuItem1
             // 
-            this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            //this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
             this.tsUpdateCheck,
             this.ToolStripSeparator10,
-            this.tsBugCrytilis,
-            this.ToolStripSeparator23,
-            this.tsKoFi,
-            this.tsPatreon});
+            this.tsSupport});
             this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
             this.HelpToolStripMenuItem1.Size = new System.Drawing.Size(102, 20);
-            this.HelpToolStripMenuItem1.Text = "&Help && Support";
+            this.HelpToolStripMenuItem1.Text = "Help";
             // 
             // tsHelp
             // 
@@ -1271,7 +1266,7 @@ namespace Mids_Reborn.Forms
             //
             this.tsPatchNotes.Name = "tsPatchNotes";
             this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
-            this.tsPatchNotes.Text = "&Read Patch Notes";
+            this.tsPatchNotes.Text = "Read Patch Notes";
             this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
@@ -1281,28 +1276,32 @@ namespace Mids_Reborn.Forms
             // 
             // tsBugCrytilis
             // 
-            this.tsBugCrytilis.Name = "tsBugCrytilis";
-            this.tsBugCrytilis.Size = new System.Drawing.Size(266, 22);
-            this.tsBugCrytilis.Text = "B&ug Report/Suggestion";
-            this.tsBugCrytilis.Click += new System.EventHandler(this.tsBugReportCrytilis_Click);
-            // 
-            // tsHCMRBForum
-            // 
-            this.tsHCMRBForum.Name = "tsHCMRBForum";
-            this.tsHCMRBForum.Size = new System.Drawing.Size(266, 22);
-            this.tsHCMRBForum.Text = "Official Homecoming Forum Thread";
-            this.tsHCMRBForum.Click += new System.EventHandler(this.tsForumLink);
+            this.tsSupport.Name = "tsSupport";
+            this.tsSupport.Size = new System.Drawing.Size(266, 22);
+            this.tsSupport.Text = "Support (Discord)";
+            this.tsSupport.Click += new System.EventHandler(this.tsSupport_Click);
             // 
             // ToolStripSeparator23
             // 
             this.ToolStripSeparator23.Name = "ToolStripSeparator23";
             this.ToolStripSeparator23.Size = new System.Drawing.Size(263, 6);
+            //
+            // DonateToolStripMenuItem
+            //
+            this.DonateToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.tsKoFi,
+                this.tsPatreon});
+            this.DonateToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.DonateToolStripMenuItem.Name = "DonateToolStripMenuItem";
+            this.DonateToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
+            this.DonateToolStripMenuItem.Text = "Donate?";
             // 
             // tsKoFi
             // 
             this.tsKoFi.Name = "tsKoFi";
             this.tsKoFi.Size = new System.Drawing.Size(266, 22);
-            this.tsKoFi.Text = "Support MRB via Ko-Fi";
+            this.tsKoFi.Text = "Donate via Ko-Fi";
             this.tsKoFi.Click += new System.EventHandler(this.tsKoFi_Click);
             // 
             // ToolStripSeparator24
@@ -1314,7 +1313,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsPatreon.Name = "tsPatreon";
             this.tsPatreon.Size = new System.Drawing.Size(266, 22);
-            this.tsPatreon.Text = "Support MRB via Patreon";
+            this.tsPatreon.Text = "Donate via Patreon";
             this.tsPatreon.Click += new System.EventHandler(this.tsPatreon_Click);
             // 
             // tsGitHubCrytilis
@@ -1338,11 +1337,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator19,
             this.tsSetFind,
             this.ToolStripSeparator21,
-            this.InGameRespecHelperToolStripMenuItem,
-            this.ToolStripMenuItem4,
-            this.AccoladesWindowToolStripMenuItem,
-            this.IncarnateWindowToolStripMenuItem,
-            this.TemporaryPowersWindowToolStripMenuItem});
+            this.InGameRespecHelperToolStripMenuItem});
             this.WindowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             this.WindowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
@@ -1475,27 +1470,6 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
             this.ToolStripMenuItem4.Size = new System.Drawing.Size(229, 6);
-            // 
-            // AccoladesWindowToolStripMenuItem
-            // 
-            this.AccoladesWindowToolStripMenuItem.Name = "AccoladesWindowToolStripMenuItem";
-            this.AccoladesWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.AccoladesWindowToolStripMenuItem.Text = "&Accolades Window";
-            this.AccoladesWindowToolStripMenuItem.Click += new System.EventHandler(this.AccoladesWindowToolStripMenuItem_Click);
-            // 
-            // IncarnateWindowToolStripMenuItem
-            // 
-            this.IncarnateWindowToolStripMenuItem.Name = "IncarnateWindowToolStripMenuItem";
-            this.IncarnateWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.IncarnateWindowToolStripMenuItem.Text = "&Incarnate Window";
-            this.IncarnateWindowToolStripMenuItem.Click += new System.EventHandler(this.IncarnateWindowToolStripMenuItem_Click);
-            // 
-            // TemporaryPowersWindowToolStripMenuItem
-            // 
-            this.TemporaryPowersWindowToolStripMenuItem.Name = "TemporaryPowersWindowToolStripMenuItem";
-            this.TemporaryPowersWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.TemporaryPowersWindowToolStripMenuItem.Text = "T&emporary Powers Window";
-            this.TemporaryPowersWindowToolStripMenuItem.Click += new System.EventHandler(this.TemporaryPowersWindowToolStripMenuItem_Click);
             // 
             // topPanel
             // 
@@ -2312,7 +2286,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsAdvDBEdit;
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
-        ToolStripMenuItem tsBugCrytilis;
+        ToolStripMenuItem tsSupport;
         ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsClearAllEnh;
         ToolStripMenuItem tsChangeDb;
@@ -2362,7 +2336,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsDPSCalc;
         ToolStripMenuItem tsRemoveAllSlots;
         ToolStripMenuItem tsSetFind;
-        ToolStripMenuItem tsHCMRBForum;
         ToolStripMenuItem tsGitHubCrytilis;
         ToolStripMenuItem tsUpdateCheck;
         ToolStripMenuItem tsView2Col;
@@ -2382,7 +2355,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;
         ToolStripMenuItem tsViewTotals;
-        ToolStripMenuItem AccoladesWindowToolStripMenuItem;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
         ComboBox cbAncillary;
@@ -2399,7 +2371,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem FileToolStripMenuItem;
         ToolStripMenuItem HelpToolStripMenuItem1;
         ToolStripMenuItem ImportExportToolStripMenuItem;
-        ToolStripMenuItem IncarnateWindowToolStripMenuItem;
         ToolStripMenuItem InGameRespecHelperToolStripMenuItem;
         GFXLabel lblAT;
         Label lblATLocked;
@@ -2432,7 +2403,6 @@ namespace Mids_Reborn.Forms
         public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
-        ToolStripMenuItem TemporaryPowersWindowToolStripMenuItem;
         ToolStripMenuItem tlsDPA;
         ToolStripMenuItem ToolStripMenuItem1;
         ToolStripMenuItem ToolStripMenuItem2;
@@ -2466,6 +2436,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem WindowToolStripMenuItem;
         ToolStripSeparator ToolStripSeparator29;
         ToolStripMenuItem ShareToolStripMenuItem;
+        ToolStripMenuItem DonateToolStripMenuItem;
         Timer tmrGfx;
         Panel poolsPanel;
         ToolTip tTip;

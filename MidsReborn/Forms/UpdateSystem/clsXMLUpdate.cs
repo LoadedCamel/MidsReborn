@@ -10,9 +10,9 @@ namespace Mids_Reborn.Forms.UpdateSystem
     {
         public bool RestartNeeded = false;
 
-        public static void BugReportCrytilis()
+        public static void SupportServer()
         {
-            LaunchBrowser("https://github.com/LoadedCamel/MidsReborn/issues");
+            LaunchBrowser("https://discord.gg/eAUuNQ3nxk");
         }
 
         public static void DownloadFromDomain()
