@@ -1282,7 +1282,7 @@ namespace Mids_Reborn.Core
 
         public static bool RealmUsesToxicDef() => DatabaseName.Equals("Homecoming");
 
-        public static void SaveServerData(string iPath)
+        public static void SaveServerData(string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileSd, iPath);
             FileStream fileStream;
@@ -1330,7 +1330,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static bool LoadServerData(string iPath)
+        public static bool LoadServerData(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
 
@@ -1393,7 +1393,7 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void SaveMainDatabase(ISerialize serializer, string iPath)
+        public static void SaveMainDatabase(ISerialize serializer, string? iPath)
         {
             CheckEhcBoosts();
             var path = Files.SelectDataFileSave(Files.MxdbFileDb, iPath);
@@ -1473,7 +1473,7 @@ namespace Mids_Reborn.Core
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
             File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
-        public static bool LoadMainDatabase(string iPath)
+        public static bool LoadMainDatabase(string? iPath)
         {
             ClearLookups();
             var path = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
@@ -1605,7 +1605,7 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void LoadDatabaseVersion(string iPath)
+        public static void LoadDatabaseVersion(string? iPath)
         {
             var target = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
             Database.Version = GetDatabaseVersion(target);
@@ -1646,7 +1646,7 @@ namespace Mids_Reborn.Core
             return version;
         }
 
-        public static bool LoadEffectIdsDatabase(string iPath)
+        public static bool LoadEffectIdsDatabase(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
             if (File.Exists(path))
@@ -1688,7 +1688,7 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void SaveEffectIdsDatabase(string iPath)
+        public static void SaveEffectIdsDatabase(string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
 
@@ -1723,7 +1723,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static bool LoadLevelsDatabase(string iPath)
+        public static bool LoadLevelsDatabase(string? iPath)
         {
             var path = string.Empty;
             switch (MidsContext.Config.BuildMode)
@@ -1763,7 +1763,7 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void LoadOrigins(string iPath)
+        public static void LoadOrigins(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileOrigins, iPath);
 
@@ -1921,7 +1921,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static void LoadRecipes(string iPath)
+        public static void LoadRecipes(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileRecipe, iPath);
 
@@ -1985,7 +1985,7 @@ namespace Mids_Reborn.Core
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveRecipes(ISerialize serializer, string iPath)
+        public static void SaveRecipes(ISerialize serializer, string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileRecipe, iPath);
 
@@ -2023,7 +2023,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static void LoadSalvage(string iPath)
+        public static void LoadSalvage(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileSalvage, iPath);
 
@@ -2087,7 +2087,7 @@ namespace Mids_Reborn.Core
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveSalvage(ISerialize serializer, string iPath)
+        public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
             var  path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
 
@@ -2149,7 +2149,7 @@ namespace Mids_Reborn.Core
             ConfigData.SaveRawMhd(serializer, toSerialize, filename, null);
         }
 
-        public static void SaveEnhancementDb(ISerialize serializer, string iPath)
+        public static void SaveEnhancementDb(ISerialize serializer, string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileEnhDb, iPath);
 
@@ -2180,7 +2180,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static void LoadEnhancementDb(string iPath)
+        public static void LoadEnhancementDb(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileEnhDb, iPath);
 
@@ -2256,7 +2256,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static bool LoadEnhancementClasses(string iPath)
+        public static bool LoadEnhancementClasses(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
 
@@ -2303,7 +2303,7 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void LoadTypeGrades(string iPath)
+        public static void LoadTypeGrades(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.JsonFileTypeGrades, iPath);
             var jsonData = File.ReadAllText(path);
@@ -2477,7 +2477,7 @@ namespace Mids_Reborn.Core
             streamReader.Close();
         }*/
 
-        public static bool LoadMaths(string iPath)
+        public static bool LoadMaths(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
 

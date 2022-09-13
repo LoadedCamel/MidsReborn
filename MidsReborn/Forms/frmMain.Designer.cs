@@ -217,6 +217,7 @@ namespace Mids_Reborn.Forms
             this.I9Popup = new ctlPopUp();
             this.poolsPanel = new Panel();
             this.enhCheckMode = new EnhCheckMode(this);
+            this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -601,12 +602,24 @@ namespace Mids_Reborn.Forms
             this.ViewToolStripMenuItem,
             this.WindowToolStripMenuItem,
             this.HelpToolStripMenuItem,
+            this.EnemyRelativeToolStripComboBox,
             this.DonateToolStripMenuItem});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
             this.MenuBar.TabIndex = 84;
             this.MenuBar.Text = "MenuStrip1";
+            //
+            // DynamicToHitToolStripComboBox
+            //
+            this.EnemyRelativeToolStripComboBox.FlatStyle = FlatStyle.Flat;
+            this.EnemyRelativeToolStripComboBox.ComboBox.BackColor = SystemColors.Control;
+            this.EnemyRelativeToolStripComboBox.Name = "EnemyRelativeToolStripComboBox";
+            this.EnemyRelativeToolStripComboBox.Size = new Size(185, 22);
+            this.EnemyRelativeToolStripComboBox.Text = "Enemy Relative Level";
+            this.EnemyRelativeToolStripComboBox.Margin = new Padding(70, 0, 0,0);
+            this.EnemyRelativeToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.EnemyRelativeToolStripComboBox.ComboBox.SelectionChangeCommitted += new EventHandler(this.EnemyRelativeLevel_Changed);
             // 
             // FileToolStripMenuItem
             // 
@@ -2444,6 +2457,7 @@ namespace Mids_Reborn.Forms
         private ToolStripSeparator ToolStripSeparator30;
         ToolStripMenuItem ShareToolStripMenuItem;
         ToolStripMenuItem DonateToolStripMenuItem;
+        public ToolStripComboBox EnemyRelativeToolStripComboBox;
         Timer tmrGfx;
         Panel poolsPanel;
         ToolTip tTip;

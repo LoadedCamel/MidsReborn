@@ -66,7 +66,7 @@ namespace Mids_Reborn.Core
             return retList;
         }
 
-        private static IEnumerable<ImageInfo> GetExtendedImages(string path)
+        private static IEnumerable<ImageInfo> GetExtendedImages(string? path)
         {
             var retList = new List<ImageInfo>();
             var files = Directory.GetFiles(path, ImageFilter, SearchOption.AllDirectories).ToList();
@@ -97,7 +97,7 @@ namespace Mids_Reborn.Core
             OriginIndex = DatabaseAPI.GetOriginIDByName(iOrigin);
         }
 
-        public static async Task Initialize(string path)
+        public static async Task Initialize(string? path)
         {
             var baseImages = GetBaseImages().ToList();
             var extendedImages = GetExtendedImages(path).ToList();
