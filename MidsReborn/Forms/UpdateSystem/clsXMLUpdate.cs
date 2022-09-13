@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Threading;
 using System.Windows.Forms;
-using mrbBase;
-using MRBUpdater;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -14,9 +10,9 @@ namespace Mids_Reborn.Forms.UpdateSystem
     {
         public bool RestartNeeded = false;
 
-        public static void BugReportCrytilis()
+        public static void SupportServer()
         {
-            LaunchBrowser("https://github.com/LoadedCamel/MidsReborn/issues");
+            LaunchBrowser("https://discord.gg/eAUuNQ3nxk");
         }
 
         public static void DownloadFromDomain()
@@ -61,19 +57,28 @@ namespace Mids_Reborn.Forms.UpdateSystem
             if (AppUpdate.IsAvailable)
             {
                 AppUpdate.InitiateQuery(parent);
+                return;
             }
-            else if (DbUpdate.IsAvailable)
+            if (!string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri))
             {
-                DbUpdate.InitiateQuery(parent);
+                if (DbUpdate.IsAvailable)
+                {
+                    DbUpdate.InitiateQuery(parent);
+                    return;
+                }
             }
-            else
-            {
-                MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            
+            MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
             
         }
 
-        public static void Update(string path, string updateVersion)
+        public static bool CompareVersions(Version serverVersion, Version localVersion)
+        {
+            var comparisonResult = serverVersion.CompareTo(localVersion);
+            return comparisonResult > 0;
+        }
+
+        public static void Update(string path, string updateVersion, string extractionPath)
         {
             try
             {
@@ -83,7 +88,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = Application.StartupPath,
                     FileName = @"MRBUpdater.exe",
-                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id}"
+                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id} {extractionPath}"
                 };
 
                 Process.Start(startInfo);

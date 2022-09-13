@@ -2,8 +2,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Extensions;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -18,7 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Name = nameof(frmSalvageEdit);
             var componentResourceManager = new ComponentResourceManager(typeof(frmSalvageEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void AddListItem(int Index)
@@ -50,7 +52,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.LoadSalvage();
+            DatabaseAPI.LoadSalvage(MidsContext.Config.DataPath);
             Close();
         }
 
@@ -132,7 +134,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.SaveSalvage(Serializer.GetSerializer());
+            DatabaseAPI.SaveSalvage(Serializer.GetSerializer(), MidsContext.Config.SavePath);
             Close();
         }
 

@@ -1,28 +1,24 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
-using WK.Libraries.BetterFolderBrowserNS;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
     public partial class frmCalcOpt : Form
     {
-        private readonly clsOAuth clsOAuth;
         private readonly short[] defActs;
         private readonly frmMain myParent;
         private readonly string[][] scenActs;
 
         private readonly string[] scenarioExample;
-
-        //public List<bool> checkStats = new List<bool>();
-        private readonly List<string> useStats = new List<string>();
 
         private bool fcNoUpdate;
 
@@ -39,30 +35,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optTO.Image = Resources.optTO_Image;
             optDO.Image = Resources.optDO_Image;
             optSO.Image = Resources.optSO_Image;
-            myTip.SetToolTip(udExHigh, "Set this to the level of your character.\r\n" +
-                    "This setting will not reduce the number of slots / powers placed to match the level.\r\n" +
-                    "Powers available after the level set here will still be calculated unless you disable them."
-            );
-            Label15.Text = "Swap = two powers are swapped. The powers in between are unaffected by the transition.\r\n"
-                           + "Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.\r\n"
-                           + "Shift = cascading swaps.Shifting down means powers are moved to a lower level, starting with the lowest.Shifting up means powers are moved to a higher level, starting with the highest.";
-
-            Label5.Text =
-                "When exemplared below level 32, the game scales your enhancements down. If you want to see the approximate values for your character when exemplared, enter a starting level and exemplar level"
-                + " (Remember that if your build's level is different to the starting level set here, the numbers will be wrong!)";
-
-            Label9.Text =
-                "Some attacks have a chance to deal additional damage (such as fire). Because this damage isn't always going to happen, the attack's damage can be calculated either as an average,"
-                + " at maximum possible (as thought the extra damage always happens), or at minimum (as though it never happens).\r\n"
-                + "Note that this also affects how Scrapper damage is displayed with Critical Hit is toggled on.\r\n"
-                + "Where an attack has a chance to do additional damage:";
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
-        }
-
-        private void btnBaseReset_Click(object sender, EventArgs e)
-        {
-            udBaseToHit.Value = new decimal(75);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -96,20 +70,53 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
         private void btnSaveFolder_Click(object sender, EventArgs e)
         {
+            var priorPath = lblSaveFolder.Text;
             fbdSave.SelectedPath = lblSaveFolder.Text;
             if (fbdSave.ShowDialog() != DialogResult.OK)
                 return;
             lblSaveFolder.Text = fbdSave.SelectedPath;
+            MovePrior(priorPath, fbdSave.SelectedPath);
+        }
+
+        private void MovePrior(string priorPath, string currentPath)
+        {
+            Debug.WriteLine($"Prev: {priorPath}\nCurrent: {currentPath}");
+            if (currentPath == priorPath)
+            {
+                return;
+            }
+
+            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath).ToList().Any();
+            if (!previousHasBuilds)
+            {
+                return;
+            }
+
+            var msgResult = MessageBox.Show(@"Do you want to move your builds to the new location?", @"Builds Path Change Detected!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (msgResult != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using var fMover = new FileMover(priorPath, currentPath);
+            var result = fMover.ShowDialog(this);
+            if (result == DialogResult.Yes)
+            {
+                Directory.Delete(priorPath, true);
+                MessageBox.Show(@"All items have been moved to the new location.", @"Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(@"Some items could not be moved to the new location.
+Please move these items manually.", @"Operation Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void btnSaveFolderReset_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.CreateDefaultSaveFolder();
-            MidsContext.Config.DefaultSaveFolderOverride = null;
-            lblSaveFolder.Text = MidsContext.Config.GetSaveFolder();
+            MidsContext.Config.ResetBuildsPath();
+            lblSaveFolder.Text = MidsContext.Config.BuildsPath;
         }
-
-        //void btnUpdatePathReset_Click(object sender, EventArgs e) => this.txtUpdatePath.Text = "http://repo.cohtitan.com/mids_updates/";
 
         private void clbSuppression_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -306,14 +313,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             fcDisplay();
         }
 
-
-        private void InvBot_Click(object sender, EventArgs e)
-        {
-            var botLink = clsDiscord.ShrinkTheDatalink(
-                "https://discordapp.com/api/oauth2/authorize?client_id=593333282234695701&permissions=18432&redirect_uri=https%3A%2F%2Fmidsreborn.com&scope=bot");
-            Process.Start(botLink);
-        }
-
         private void fcNotes_TextChanged(object sender, EventArgs e)
         {
             if ((fcList.SelectedIndex < 0) | fcNoUpdate)
@@ -455,14 +454,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 csList.SelectedIndex = 0;
         }
 
-        private void frmCalcOpt_Closing(object sender, CancelEventArgs e)
+        private void frmCalcOpt_Closing(object? sender, CancelEventArgs e)
         {
             if (DialogResult != DialogResult.Abort)
                 return;
             e.Cancel = true;
         }
 
-        private void frmCalcOpt_Load(object sender, EventArgs e)
+        private void frmCalcOpt_Load(object? sender, EventArgs e)
         {
             setupScenarios();
             SetControls();
@@ -482,6 +481,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             else
             {
                 lblAssocStatus.Text = @"Status: Ok";
+            }
+        }
+
+        private void ServerSpecificEnablement()
+        {
+            if (!MidsContext.Config.MasterMode)
+            {
+                TabControl1.TabPages[TabControl1.TabPages.Count - 1].Enabled = false;
             }
         }
 
@@ -561,9 +568,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
             cbEnhLevel.SelectedIndex = (int)config.CalcEnhLevel;
-            udExHigh.Value = new decimal(config.ExempHigh);
-            udExLow.Value = new decimal(config.ExempLow);
-            udForceLevel.Value = new decimal(config.ForceLevel);
             chkHighVis.Checked = config.EnhanceVisibility;
             rbGraphTwoLine.Checked = config.DataGraphType == Enums.eDDGraph.Both;
             rbGraphStacked.Checked = config.DataGraphType == Enums.eDDGraph.Stacked;
@@ -573,9 +577,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             rbChanceAverage.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Average;
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
-            udBaseToHit.Value = new decimal(config.BaseAcc * 100f);
+
             chkUpdates.Checked = config.CheckForUpdates;
-            chkShowSOLevels.Checked = config.ShowSOLevels;
+            chkShowSOLevels.Checked = config.ShowSoLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
             rbGraphTwoLine.Enabled = chkEnableDmgGraph.Checked;
             rbGraphStacked.Enabled = chkEnableDmgGraph.Checked;
@@ -589,7 +593,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
             chkColorPrint.Checked = config.PrintInColor;
-            if (config.DiscordEnabled != null) chkDiscordEnabled.Checked = (bool) config.DiscordEnabled;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
@@ -599,14 +602,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkPowSelBold.Checked = config.RtFont.PowersSelectBold;
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
-            lblSaveFolder.Text = config.GetSaveFolder();
-            lblDatabaseLoc.Text = config.DataPath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
-            cbUpdateURL.Text = MidsContext.Config.UpdatePath;
-            cbDBUpdateURL.Text = MidsContext.Config.DbUpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             var index = 0;
             do
@@ -624,8 +623,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             }
 
             cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
-            chkShowSelfBuffsAny.Checked = MidsContext.Config.ShowSelfBuffsAny;
-
+            chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
+            lblSaveFolder.Text = config.BuildsPath;
             ResumeLayout();
         }
 
@@ -783,11 +782,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             else if (optTO.Checked)
                 config.CalcEnhOrigin = Enums.eEnhGrade.TrainingO;
             config.CalcEnhLevel = (Enums.eEnhRelative)cbEnhLevel.SelectedIndex;
-            config.ExempHigh = Convert.ToInt32(udExHigh.Value);
-            config.ExempLow = Convert.ToInt32(udExLow.Value);
-            if (config.ExempHigh < config.ExempLow)
-                config.ExempHigh = config.ExempLow;
-            config.ForceLevel = Convert.ToInt32(udForceLevel.Value);
             if (rbGraphTwoLine.Checked)
                 config.DataGraphType = Enums.eDDGraph.Both;
             else if (rbGraphStacked.Checked)
@@ -801,7 +795,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Max;
             else if (rbChanceIgnore.Checked)
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
-            config.BaseAcc = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
             config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
@@ -809,10 +802,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.I9.IgnoreSetBonusFX = !chkSetBonus.Checked;
             config.I9.HideIOLevels = !chkIOLevel.Checked;
             config.ShowRelSymbols = chkRelSignOnly.Checked;
-            config.ShowSOLevels = chkShowSOLevels.Checked;
+            config.ShowSoLevels = chkShowSOLevels.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColor = chkColorPrint.Checked;
-            config.DiscordEnabled = chkDiscordEnabled.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;
@@ -822,11 +814,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.RtFont.PowersBase = Convert.ToSingle(udPowersSize.Value);
             config.RtFont.PowersBold = chkPowersBold.Checked;
             config.DisableLoadLastFileOnStart = !chkLoadLastFile.Checked;
-            if (config.DefaultSaveFolderOverride != lblSaveFolder.Text)
+            if (config.BuildsPath != lblSaveFolder.Text)
             {
-                config.DefaultSaveFolderOverride = lblSaveFolder.Text;
-                myParent.DlgOpen.InitialDirectory = config.DefaultSaveFolderOverride;
-                myParent.DlgSave.InitialDirectory = config.DefaultSaveFolderOverride;
+                config.BuildsPath = lblSaveFolder.Text;
+                myParent.DlgOpen.InitialDirectory = config.BuildsPath;
+                myParent.DlgSave.InitialDirectory = config.BuildsPath;
             }
 
             config.EnhanceVisibility = chkHighVis.Checked;
@@ -837,8 +829,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
-            config.UpdatePath = cbUpdateURL.Text;
-            config.DbUpdatePath = cbDBUpdateURL.Text;
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
@@ -847,7 +837,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
-            config.DataPath = lblDatabaseLoc.Text;
             config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
         }
 
@@ -863,27 +852,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             {
                 MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnDatabaseLoc_Click(object sender, EventArgs e)
-        {
-            using var fBrowse = new BetterFolderBrowser
-            {
-                Multiselect = false,
-                RootFolder = Path.Combine(Files.GetAssemblyLoc(), Files.RoamingFolder),
-                Title = @"Select the location of the database files"
-            };
-            if (fBrowse.ShowDialog(this) == DialogResult.OK)
-            {
-                myParent.DbChangeRequested = true;
-                lblDatabaseLoc.Text = fBrowse.SelectedPath;
-            }
-
-        }
-
-        private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
-        {
-            lblDatabaseLoc.Text = Files.FDefaultPath;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)

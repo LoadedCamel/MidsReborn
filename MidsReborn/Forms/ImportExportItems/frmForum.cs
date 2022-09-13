@@ -3,9 +3,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -22,9 +23,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             Paint += frmForum_Paint;
             InitializeComponent();
             Name = nameof(frmForum);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmForum));
-            pbTitle.Image = (Image) componentResourceManager.GetObject("pbTitle.Image");
-            Icon = Resources.reborn;
+            pbTitle.Image = Resources.pbTitle_Image;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         internal ImageButton IBCancel { get; private set; }

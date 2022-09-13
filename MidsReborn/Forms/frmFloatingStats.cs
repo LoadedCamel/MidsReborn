@@ -1,3 +1,4 @@
+using MRBResourceLib;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -15,8 +16,7 @@ namespace Mids_Reborn.Forms
             Load += frmFloatingStats_Load;
             Closed += frmFloatingStats_Closed;
             Name = nameof(frmFloatingStats);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmFloatingStats));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myOwner = iOwner;
         }
 

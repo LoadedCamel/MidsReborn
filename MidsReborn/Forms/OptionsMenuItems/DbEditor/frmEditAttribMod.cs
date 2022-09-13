@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Newtonsoft.Json;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
@@ -143,21 +143,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var m = new Modifiers();
             var src = File.ReadAllText(f.FileName);
-            var jsonOpt = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                NullValueHandling = NullValueHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
 
             try
             {
                 if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("["))
                 {
                     //Modifiers.ModifierTable[]? tables = JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
-                    var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, jsonOpt);
+                    var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, Serializer.SerializerSettings);
                     if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
 
                     m.Modifier = (List<Modifiers.ModifierTable>) tables.Clone();
@@ -168,7 +160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
                 else if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("{"))
                 {
-                    m = JsonConvert.DeserializeObject<Modifiers>(src, jsonOpt);
+                    m = JsonConvert.DeserializeObject<Modifiers>(src, Serializer.SerializerSettings);
                     if (m == null) throw new FormatException("JSON file contains no usable data.");
                 }
                 else
@@ -211,20 +203,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateClassesList();
         }
 
-        private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
+        private void dgCellsLabel_MouseEnter(object? sender, EventArgs e)
         {
             // http://csharphelper.com/blog/2014/09/use-an-event-handler-for-multiple-controls-in-c/
             if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Highlight;
         }
 
-        private void dgCellsLabel_MouseLeave(object sender, EventArgs e)
+        private void dgCellsLabel_MouseLeave(object? sender, EventArgs e)
         {
             if (sender is not Label lbl) return;
             lbl.BackColor = SystemColors.Control;
         }
 
-        private void dgCellsLabel_Click(object sender, EventArgs e)
+        private void dgCellsLabel_Click(object? sender, EventArgs e)
         {
             if (sender is not Label lbl) return;
             var ev = e as MouseEventArgs;

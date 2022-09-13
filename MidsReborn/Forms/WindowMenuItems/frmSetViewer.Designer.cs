@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -44,10 +44,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Label2 = new System.Windows.Forms.Label();
             this.panelBars = new System.Windows.Forms.Panel();
             this.panelButtons = new System.Windows.Forms.Panel();
-            this.btnSmall = new mrbControls.ImageButton();
-            this.btnDetailFx = new mrbControls.ImageButton();
-            this.chkOnTop = new mrbControls.ImageButton();
-            this.btnClose = new mrbControls.ImageButton();
+            this.btnSmall = new ImageButton();
+            this.btnDetailFx = new ImageButton();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
             this.panelButtons.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -185,7 +185,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnSmall.TextOff = "<< Shrink";
             this.btnSmall.TextOn = ">>";
             this.btnSmall.Toggle = false;
-            this.btnSmall.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnSmall_Click);
+            this.btnSmall.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.btnSmall_Click);
             // 
             // btnDetailFx
             // 
@@ -200,7 +200,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnDetailFx.TextOff = "FX summary";
             this.btnDetailFx.TextOn = "FX by source";
             this.btnDetailFx.Toggle = true;
-            this.btnDetailFx.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnDetailFx_ButtonClicked);
+            this.btnDetailFx.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.btnDetailFx_ButtonClicked);
             // 
             // chkOnTop
             // 
@@ -214,7 +214,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.chkOnTop.TextOff = "Keep On Top";
             this.chkOnTop.TextOn = "Keep On Top";
             this.chkOnTop.Toggle = true;
-            this.chkOnTop.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.chkOnTop_CheckedChanged);
+            this.chkOnTop.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.chkOnTop_CheckedChanged);
             // 
             // btnClose
             // 
@@ -229,7 +229,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnClose.TextOff = "Close";
             this.btnClose.TextOn = "Close";
             this.btnClose.Toggle = false;
-            this.btnClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnClose_Click);
+            this.btnClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.btnClose_Click);
             // 
             // frmSetViewer
             // 

@@ -2,9 +2,10 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Printing;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Document_Classes;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Document_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -16,8 +17,7 @@ namespace Mids_Reborn.Forms
         {
             Load += frmPrint_Load;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmPrint));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmPrint);
         }
 
@@ -83,8 +83,12 @@ namespace Mids_Reborn.Forms
             var printerName = "";
             var printerIndex = -1;
             if (_printer.Document.PrinterSettings.IsDefaultPrinter)
+            {
                 printerName = _printer.Document.PrinterSettings.PrinterName;
-            for (var index = 0; index <= PrinterSettings.InstalledPrinters.Count - 1; ++index)
+            }
+
+            for (var index = 0; index < PrinterSettings.InstalledPrinters.Count; index++)
+            {
                 if (PrinterSettings.InstalledPrinters[index] == MidsContext.Config.LastPrinter)
                 {
                     printerIndex = index;
@@ -95,6 +99,7 @@ namespace Mids_Reborn.Forms
                     printerIndex = index;
                     _printer.Document.PrinterSettings.PrinterName = PrinterSettings.InstalledPrinters[index];
                 }
+            }
 
             lblPrinter.Text = _printer.Document.PrinterSettings.PrinterName;
             switch (MidsContext.Config.PrintProfile)

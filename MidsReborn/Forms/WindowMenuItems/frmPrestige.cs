@@ -6,11 +6,13 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -20,7 +22,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private bool _locked;
 
-        private List<IPower> _myPowers;
+        private List<IPower?> _myPowers;
         private ImageButton ibClose;
 
         private Label lblLock;
@@ -34,7 +36,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private VScrollBar VScrollBar1;
 
-        public frmPrestige(frmMain iParent, List<IPower> iPowers)
+        public frmPrestige(frmMain iParent, List<IPower?> iPowers)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -43,17 +45,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             _locked = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmPrestige));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmPrestige);
             _myParent = iParent;
+            Parent = _myParent;
             _myPowers = iPowers;
             FormClosing += FrmPrestige_FormClosing;
         }
 
         private void FrmPrestige_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) _myParent.prestigeButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) _myParent.prestigeButton.Checked = false;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                _myParent.ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+
+            if (DialogResult == DialogResult.Cancel)
+            {
+                _myParent.ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
         }
 
         public void UpdateFonts(Font font)
@@ -134,8 +144,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             llRight.Refresh();
         }
 
-        private void frmPrestige_Load(object sender, EventArgs e)
+        private void frmPrestige_Load(object? sender, EventArgs e)
         {
+            CenterToParent();
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
             var llLeft = this.llLeft;
@@ -276,7 +287,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPowers[pIDX]);
+            IPower? power1 = new Power(_myPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {
@@ -318,7 +329,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.BaseAcc * (double) power1.Accuracy * 100.0)) + "%",
+                        Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.RechargeTime > 0.0)
                     iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,

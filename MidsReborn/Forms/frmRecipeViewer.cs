@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Extensions;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -37,15 +37,11 @@ namespace Mids_Reborn.Forms
             Loading = true;
             InitializeComponent();
             Name = nameof(frmRecipeViewer);
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
-            Icon = Resources.reborn;
-            RecipeInfo.MouseWheel += RecipeInfo_MouseWheel;
-            RecipeInfo.MouseEnter += RecipeInfo_MouseEnter;
+            Icon = Resources.MRB_Icon_Concept;
             lvPower.MouseEnter += lvPower_MouseEnter;
             lvPower.ItemChecked += lvPower_ItemChecked;
             lvDPA.SelectedIndexChanged += lvDPA_SelectedIndexChanged;
             lvDPA.MouseEnter += lvDPA_MouseEnter;
-            VScrollBar1.Scroll += VScrollBar1_Scroll;
             chkRecipe.CheckedChanged += chkRecipe_CheckedChanged;
             chkSortByLevel.CheckedChanged += chkSortByLevel_CheckedChanged;
             ibClipboard.ButtonClicked += ibClipboard_ButtonClicked;
@@ -139,25 +135,19 @@ namespace Mids_Reborn.Forms
             return popupData.Sections?.Sum(s => s.Content.Length) ?? 0;
         }
 
-        private void ChangeVScrollBarState(PopUp.PopupData popupData)
-        {
-            var lines = GetPopupDataLines(popupData);
-            VScrollBar1.Enabled = lines > 12;
-            VScrollBar1.Visible = lines > 12;
-        }
-
-        private PopUp.PopupData BuildList(bool Mini)
+        private PopUp.PopupData BuildList(bool mini)
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
-            var tl = Array.Empty<CountingList>();
+            var tl = new List<CountingList>();
             if (lvDPA.SelectedIndices.Count < 1)
             {
-                ChangeVScrollBarState(popupData);
                 return popupData;
             }
+
             var boosterSalvageIdx = Array.IndexOf(DatabaseAPI.Database.Salvage,
                 DatabaseAPI.Database.Salvage.First(s => s.ExternalName == "Enhancement Booster"));
+            
             RecipeInfo.SuspendLayout();
             var numBoosters = 0;
             if (lvDPA.SelectedIndices[0] == 0)
@@ -177,15 +167,20 @@ namespace Mids_Reborn.Forms
                     if (lvDPA.Items[i].SubItems[1].Text == "*")
                     {
                         rIDX = -1;
-                        putInList(ref tl, lvDPA.Items[i].Text);
+                        PutInList(ref tl, lvDPA.Items[i].Text);
                     }
 
                     if (rIDX <= -1)
+                    {
                         continue;
+                    }
+
                     var iLevel = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text) - 1;
                     var itemId = FindItemID(rIDX, iLevel);
                     if (itemId <= -1)
+                    {
                         continue;
+                    }
 
                     if (chkRecipe.Checked)
                     {
@@ -205,7 +200,10 @@ namespace Mids_Reborn.Forms
                     {
                         var cs = recipeEntry.SalvageIdx[j];
                         var csc = recipeEntry.Count[j];
-                        if (cs <= -1 || csc <= 0) continue;
+                        if (cs <= -1 || csc <= 0)
+                        {
+                            continue;
+                        }
 
                         if (!salvageTotalCount.ContainsKey(cs))
                         {
@@ -231,17 +229,26 @@ namespace Mids_Reborn.Forms
 
                     num1 += recipeEntry.CraftCost;
                     if (recipeEntry.CraftCostM > 0)
+                    {
                         num3 += recipeEntry.CraftCostM;
+                    }
                     else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[i].Tag)].TypeID == Enums.eType.SetO)
+                    {
                         num3 += recipeEntry.CraftCost;
+                    }
+
                     num2 += recipeEntry.BuyCost;
                 }
 
                 var index3 = popupData.Add();
-                if (Mini)
+                if (mini)
+                {
                     iIndent = 0;
+                }
+
                 lblHeader.Text = "Shopping List";
                 if (lvPower.CheckedIndices.Count == 1)
+                {
                     popupData.Sections[index3].Add(
                         !lvPower.Items[0].Checked
                             ? DatabaseAPI.Database
@@ -250,23 +257,36 @@ namespace Mids_Reborn.Forms
                                         .Powers[Convert.ToInt32(lvPower.CheckedItems[0].Tag)].NIDPower]
                                 .DisplayName
                             : "All Powers", PopUp.Colors.Title);
+                }
                 else
+                {
                     popupData.Sections[index3].Add($"{lvPower.CheckedIndices.Count} Powers",
                         PopUp.Colors.Title);
+                }
+
                 if (!chkRecipe.Checked)
+                {
                     popupData.Sections[index3].Add($"{lvDPA.Items.Count - nonRecipeCount} Recipes:",
                         PopUp.Colors.Title);
+                }
+
                 if (num2 > 0)
-                    popupData.Sections[index3].Add($"Buy{(Mini ? "" : " Cost")}: {num2:###,###,##0}",
+                {
+                    popupData.Sections[index3].Add($"Buy{(mini ? "" : " Cost")}: {num2:###,###,##0}",
                         PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
+                }
 
                 if (num1 > 0)
-                    popupData.Sections[index3].Add($"Craft{(Mini ? "" : " Cost")}: {num1:###,###,##0}",
+                {
+                    popupData.Sections[index3].Add($"Craft{(mini ? "" : " Cost")}: {num1:###,###,##0}",
                         PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
+                }
 
                 if ((num3 > 0) & (num3 != num1))
-                    popupData.Sections[index3].Add($"Craft ({(Mini ? "Mem'd" : "Memorized Common")}): {num3:###,###,##0}",
+                {
+                    popupData.Sections[index3].Add($"Craft ({(mini ? "Mem'd" : "Memorized Common")}): {num3:###,###,##0}",
                         PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
+                }
 
                 if (chkRecipe.Checked)
                 {
@@ -285,36 +305,43 @@ namespace Mids_Reborn.Forms
                             Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                             _ => PopUp.Colors.Text
                         };
-                        if (Mini)
+
+                        var craftedEnhName = DatabaseAPI.Database.Recipes[rId].IsGeneric | DatabaseAPI.Database.Recipes[rId].IsVirtual
+                            ? DatabaseAPI.Database.Recipes[rId].ExternalName
+                            : DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rId].EnhIdx);
+
+                        if (craftedEnhName.Contains("Merits Recipe")) continue;
+                        
+                        if (mini)
                         {
                             popupData.Sections[index1].Add($" {rAmt} x",
                                 color,
-                                $"{DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rId].EnhIdx)} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
+                                $"{craftedEnhName} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
                                 color, 0.9f, FontStyle.Bold, iIndent);
                         }
                         else
                         {
                             popupData.Sections[index1].Add(
-                                $"{DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rId].EnhIdx)} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
+                                $"{craftedEnhName} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
                                 color, Convert.ToString(rAmt), color, 0.9f, FontStyle.Bold, iIndent);
                         }
                     }
 
-                    popupData.Sections[index1].Content = sortPopupStrings(Mini, 2, popupData.Sections[index1].Content);
+                    popupData.Sections[index1].Content = sortPopupStrings(mini, 2, popupData.Sections[index1].Content);
                 }
                 else
                 {
                     RecipeInfo.ColumnPosition = 0.5f;
                 }
 
-                if (Mini)
+                if (mini)
                 {
                     popupData.ColPos = 0.15f;
                     popupData.ColRight = false;
                 }
 
                 var index5 = popupData.Add();
-                var iText1 = Mini ? $"{num4} Items:" : $"{num4} Salvage Items:";
+                var iText1 = mini ? $"{num4} Items:" : $"{num4} Salvage Items:";
                 popupData.Sections[index5].Add(iText1, PopUp.Colors.Title);
                 foreach (var sl in salvageTotalCount)
                 {
@@ -326,7 +353,7 @@ namespace Mids_Reborn.Forms
                         _ => Color.White
                     };
 
-                    if (Mini)
+                    if (mini)
                     {
                         popupData.Sections[index5].Add($" {sl.Value} x", color,
                             DatabaseAPI.Database.Salvage[sl.Key].ExternalName, color, 0.9f);
@@ -338,19 +365,19 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                popupData.Sections[index5].Content = sortPopupStrings(Mini, 1, popupData.Sections[index5].Content);
+                popupData.Sections[index5].Content = sortPopupStrings(mini, 1, popupData.Sections[index5].Content);
                 if (nonRecipeCount == 1)
                     return popupData;
                 {
                     var index1 = popupData.Add();
-                    var iText2 = Mini
+                    var iText2 = mini
                         ? $"{nonRecipeCount - 1} Enhs:"
                         : $"{nonRecipeCount - 1} Non-Crafted Enhancements:";
 
                     popupData.Sections[index1].Add(iText2, PopUp.Colors.Title);
-                    for (var index2 = 0; index2 < tl.Length; index2++)
+                    for (var index2 = 0; index2 < tl.Count; index2++)
                     {
-                        if (Mini)
+                        if (mini)
                         {
                             popupData.Sections[index1].Add($" {tl[index2].Count} x", PopUp.Colors.Common,
                                 tl[index2].Text, PopUp.Colors.Common, 0.9f);
@@ -362,10 +389,10 @@ namespace Mids_Reborn.Forms
                         }
                     }
 
-                    popupData.Sections[index1].Content = sortPopupStrings(Mini, 1, popupData.Sections[index1].Content);
+                    popupData.Sections[index1].Content = sortPopupStrings(mini, 1, popupData.Sections[index1].Content);
                 }
 
-                ChangeVScrollBarState(popupData);
+                RecipeInfo.Height = (int) Math.Round(RecipeInfo.lHeight) + Panel1.Height + 16;
                 RecipeInfo.ResumeLayout();
 
                 return popupData;
@@ -381,6 +408,7 @@ namespace Mids_Reborn.Forms
                 5 => Enums.eEnhRelative.PlusFive,
                 _ => Enums.eEnhRelative.Even
             };
+
             var headerText = $"{DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName} ({lvDPA.SelectedItems[0].SubItems[1].Text}{(numBoosters > 0 ? $"+{numBoosters}" : "")})";
             lblHeader.SuspendLayout();
             lblHeader.Font = GetBestFitFont(lblHeader, headerText, 10f, 18f, FontStyle.Bold);
@@ -395,8 +423,6 @@ namespace Mids_Reborn.Forms
             DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
             if (rIdx <= -1)
             {
-                ChangeVScrollBarState(popupData);
-
                 return popupData;
             }
 
@@ -408,7 +434,6 @@ namespace Mids_Reborn.Forms
             {
                 var content = popupData.Sections[index4].Content;
                 content[0].Text = $"{content[0].Text} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
-                ChangeVScrollBarState(popupData);
 
                 return popupData;
             }
@@ -416,16 +441,9 @@ namespace Mids_Reborn.Forms
             var sContent = popupData.Sections[index4].Content;
             if (sContent != null) sContent[0].Text = "";
 
-            ChangeVScrollBarState(popupData);
             RecipeInfo.ResumeLayout();
-            return popupData;
-        }
 
-        private void ChangedRecipeInfoElements()
-        {
-            VScrollBar1.Value = 0;
-            VScrollBar1.Maximum =
-                (int) Math.Round(RecipeInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
+            return popupData;
         }
 
         private void chkRecipe_CheckedChanged(object sender, EventArgs e)
@@ -521,7 +539,7 @@ namespace Mids_Reborn.Forms
             var extendedBitmap = new ExtendedBitmap(bxRecipe.Size);
             extendedBitmap.Graphics.Clear(Color.Black);
             extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_AncientMemories, 0, 0);
-            //extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
+            extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
             extendedBitmap.Graphics.DrawImageUnscaled(bxRecipe.Bitmap, 0, 0);
             pbRecipe.Image = new Bitmap(extendedBitmap.Bitmap);
         }
@@ -703,11 +721,12 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
         {
+            // Bug: open dps calc form then the recipe viewer, form size differs
+            Size = new Size(738, 543);
             lvPower.EnableDoubleBuffer();
             lvDPA.EnableDoubleBuffer();
             UpdateColorTheme();
             RecipeInfo.SetPopup(new PopUp.PopupData());
-            ChangedRecipeInfoElements();
             chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
             RecalcSalvage();
             SalvageHudVisible = myParent.IsSalvageHudVisible();
@@ -788,24 +807,20 @@ namespace Mids_Reborn.Forms
 
         private void CopyToClipboard()
         {
-            var str1 = "";
+            var ret = "";
             var popupData = BuildList(true);
             for (var index1 = 0; index1 < RecipeInfo.pData.Sections.Length; index1++)
             {
                 for (var index2 = 0; index2 < RecipeInfo.pData.Sections[index1].Content.Length; index2++)
                 {
                     var content = popupData.Sections[index1].Content;
-                    var index3 = index2;
-                    var str2 = str1 + content[index3].Text;
-                    if (content[index3].TextColumn != "")
-                        str2 += $"  {content[index3].TextColumn}";
-                    str1 = str2 + "\r\n";
+                    ret += $"{content[index2].Text}{(content[index2].TextColumn != "" ? $"  {content[index2].TextColumn}" : "")}\r\n";
                 }
 
-                str1 += "\r\n";
+                ret += "\r\n";
             }
 
-            Clipboard.SetDataObject(str1, true);
+            Clipboard.SetDataObject(ret, true);
             MessageBox.Show("Data copied to clipboard!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -886,39 +901,22 @@ namespace Mids_Reborn.Forms
 
         private void lvDPA_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RecipeInfo.ScrollY = 0.0f;
             RecipeInfo.SetPopup(BuildList(false));
-            ChangedRecipeInfoElements();
         }
 
-        private static void putInList(ref CountingList[] tl, string item)
+        private static void PutInList(ref List<CountingList> tl, string item)
         {
-            var num = tl.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < tl.Count; index++)
             {
-                if (tl[index].Text != item)
-                    continue;
-                ++tl[index].Count;
+                var e = tl[index];
+                if (e.Text != item) continue;
+                
+                e.Count++;
+                
                 return;
             }
 
-            Array.Resize(ref tl, tl.Length + 1);
-            //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
-            tl[tl.Length - 1].Count = 1;
-            tl[tl.Length - 1].Text = item;
-        }
-
-        private void RecipeInfo_MouseEnter(object sender, EventArgs e)
-        {
-            VScrollBar1.Focus();
-        }
-
-        private void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
-        {
-            //VScrollBar1.Value =
-                //Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
-            VScrollBar1.Value = Math.Max(VScrollBar1.Minimum, Math.Min(VScrollBar1.Maximum - 9, VScrollBar1.Value + (e.Delta > 0 ? -1 : 1)));
-            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            tl.Add(new CountingList { Count = 1, Text = item });
         }
 
         public void SetLocation()
@@ -971,8 +969,8 @@ namespace Mids_Reborn.Forms
                     };
 
                     if ((num1 != 0 || string.CompareOrdinal(
-                        Convert.ToString(Mini ? inStrs[index1].TextColumn : inStrs[index1].Text), // Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)
-                        Convert.ToString(Mini ? inStrs[numArray[index2]].TextColumn : inStrs[numArray[index2]].Text)) >= 0) && num1 <= 0) // Interaction.IIf(Mini, inStrs[numArray[index2]].TextColumn, inStrs[numArray[index2]].Text)
+                        Convert.ToString(Mini ? inStrs[index1].TextColumn : inStrs[index1].Text), // Interaction.IIf(mini, inStrs[index1].TextColumn, inStrs[index1].Text)
+                        Convert.ToString(Mini ? inStrs[numArray[index2]].TextColumn : inStrs[numArray[index2]].Text)) >= 0) && num1 <= 0) // Interaction.IIf(mini, inStrs[numArray[index2]].TextColumn, inStrs[numArray[index2]].Text)
                         continue;
                     var num4 = index2;
                     for (var index3 = index1 - 1; index3 >= num4; index3 += -1)
@@ -1016,12 +1014,6 @@ namespace Mids_Reborn.Forms
             if (Loading)
                 return;
             FillPowerList();
-        }
-
-        private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            RecipeInfo.ScrollY = VScrollBar1.Value / (float) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
-                                 (RecipeInfo.lHeight - Panel1.Height);
         }
 
         private struct CountingList

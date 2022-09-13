@@ -6,11 +6,13 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -20,7 +22,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private bool _locked;
 
-        private List<IPower> _myPetPowers;
+        private List<IPower?> _myPetPowers;
         private List<IPower> _myPowers;
 
         private ComboBox cbSelPetPower;
@@ -48,9 +50,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             _locked = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmMMPowers));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmMMPowers);
             _myParent = iParent;
+            Parent = _myParent;
             PetPowers = PetPowersList;
             FormClosing += FrmMMPowers_FormClosing;
             Panel1.GotFocus += Panel1OnGotFocus;
@@ -68,15 +71,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                _myParent.petsButton.Checked = false;
+                _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
                 _myParent.petWindowFlag = false;
             }
 
-            if (DialogResult == DialogResult.Cancel)
-            {
-                _myParent.petsButton.Checked = false;
-                _myParent.petWindowFlag = false;
-            }
+            if (DialogResult != DialogResult.Cancel) return;
+            _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            _myParent.petWindowFlag = false;
         }
 
         public void UpdateFonts(Font font)
@@ -155,6 +156,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmMMPowers_Load(object sender, EventArgs e)
         {
+            CenterToParent();
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
             var llLeft = this.llLeft;
@@ -314,7 +316,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //var pow = DatabaseAPI.NidFromUidPower("Mastermind_Summon.Demon_Summoning.Summon_Demons");
             //var psetp = DatabaseAPI.Database.Power[pow].FXGetDamageValue();
             //MessageBox.Show(psetp.ToString());
-            _myPetPowers = new List<IPower>();
+            _myPetPowers = new List<IPower?>();
             var ent = DatabaseAPI.NidFromUidEntity($"Pets_{cbSelPets.SelectedItem.ToString().Replace(" ", "_")}");
             var pset = DatabaseAPI.Database.Entities[ent].GetNPowerset();
             foreach (var entity in pset)
@@ -428,7 +430,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPetPowers[pIDX]);
+            IPower? power1 = new Power(_myPetPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {
@@ -470,7 +472,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.BaseAcc * (double) power1.Accuracy *
+                        Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy *
                                                  100.0)) + "%", PopUp.Colors.Title, 0.9f, FontStyle.Bold,
                         1);
                 if (power1.RechargeTime > 0.0)

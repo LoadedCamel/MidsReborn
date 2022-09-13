@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -44,15 +44,15 @@ namespace Mids_Reborn.Forms
             this.ColumnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilSets = new System.Windows.Forms.ImageList(this.components);
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.SetInfo = new mrbControls.ctlPopUp();
+            this.SetInfo = new ctlPopUp();
             this.lvPowers = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.cbArchetype = new System.Windows.Forms.ComboBox();
-            this.ibClose = new mrbControls.ImageButton();
-            this.ibTopmost = new mrbControls.ImageButton();
+            this.ibClose = new ImageButton();
+            this.ibTopmost = new ImageButton();
             this.lvVector = new System.Windows.Forms.ListView();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Panel1.SuspendLayout();

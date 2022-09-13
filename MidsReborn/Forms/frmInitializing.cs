@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using mrbBase.Base.IO_Classes;
+using Mids_Reborn.Core.Base.IO_Classes;
+using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
-    public partial class frmInitializing : Form, IMessager
+    public partial class frmInitializing : PerPixelAlpha, IMessager
     {
         public frmInitializing()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
-            Label1.Parent = pictureBox1;
-            Load += On_Load;
+            SelectBitmap(Resources.MRB_Splash_Concept, 100);
         }
 
         public sealed override string Text
@@ -41,30 +41,8 @@ namespace Mids_Reborn.Forms
                 Refresh();
             }
         }
-
-        private void On_Load(object sender, EventArgs e)
-        {
-            CenterToScreen();
-            Opacity = 0;
-            tmrOp.Enabled = true;
-            //Width = BackgroundImage.Width;
-            //Height = BackgroundImage.Height;
-        }
-
-        private void tmrOp_Tick(object sender, EventArgs e)
-        {
-            if (Opacity < 1.0)
-            {
-                Opacity += 0.05;
-            }
-            else
-            {
-                tmrOp.Enabled = false;
-            }
-        }
     }
 
-    // https://stackoverflow.com/questions/5522337/c-sharp-picturebox-transparent-background-doesnt-seem-to-work
     public sealed class TransparentLabel : Label
     {
         public TransparentLabel()
@@ -107,77 +85,6 @@ namespace Mids_Reborn.Forms
                 g.DrawImageUnscaled(bmp, Point.Empty);
                 g.TranslateTransform(Left - c.Left, Top - c.Top);
                 bmp.Dispose();
-            }
-        }
-    }
-
-    public sealed class TransparentPictureBox : Control
-    {
-        private readonly Timer _refresher;
-        private Image _image;
-
-        public TransparentPictureBox()
-        {
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.Opaque, false);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            BackColor = Color.Transparent;
-            _refresher = new Timer();
-            _refresher.Tick += TimerOnTick;
-            _refresher.Interval = 50;
-            _refresher.Enabled = true;
-            _refresher.Start();
-        }
-
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                var cp = base.CreateParams;
-                cp.ExStyle |= 0x20; // EX_TRANSPARENT
-                return cp;
-            }
-        }
-
-        protected override void OnMove(EventArgs e)
-        {
-            RecreateHandle();
-        }
-
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            if (_image == null) return;
-
-            e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-            e.Graphics.DrawImage(_image, (Width / 2) - (_image.Width / 2), (Height / 2) - (_image.Height / 2));
-        }
-
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            //Do not paint background
-        }
-
-        //Hack
-        public void Redraw()
-        {
-            RecreateHandle();
-        }
-
-        private void TimerOnTick(object source, EventArgs e)
-        {
-            RecreateHandle();
-            _refresher.Stop();
-        }
-
-        public Image Image
-        {
-            get => _image;
-            set
-            {
-                _image = value;
-                RecreateHandle();
             }
         }
     }

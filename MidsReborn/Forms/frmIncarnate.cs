@@ -7,11 +7,13 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -42,7 +44,7 @@ namespace Mids_Reborn.Forms
         private bool Locked;
 
         private ImageButton loreBtn;
-        private IPower[] myPowers;
+        private IPower?[] myPowers;
 
         private ImageButton OmegaButton;
         private Panel Panel1;
@@ -97,8 +99,7 @@ namespace Mids_Reborn.Forms
 
             loreBtn.ButtonClicked += loreBtn_ButtonClicked;
             Name = nameof(frmIncarnate);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmIncarnate));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;
@@ -106,8 +107,15 @@ namespace Mids_Reborn.Forms
 
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) myParent.incarnateButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) myParent.incarnateButton.Checked = false;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+
+            if (DialogResult == DialogResult.Cancel)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
         }
 
         private void alphaBtn_ButtonClicked()
@@ -131,9 +139,9 @@ namespace Mids_Reborn.Forms
             this.destinyBtn = destinyBtn;
         }
 
-        private List<IPower> ParseIncarnate(List<IPower> powerList, string order, string name)
+        private List<IPower> ParseIncarnate(List<IPower?> powerList, string order, string name)
         {
-            var pairList = new List<KeyValuePair<int, IPower>>();
+            var pairList = new List<KeyValuePair<int, IPower?>>();
             var tList = powerList.FindAll(x => x.DisplayName.Contains(name));
             var outList = new List<IPower>();
             int pos = 0;
@@ -183,7 +191,7 @@ namespace Mids_Reborn.Forms
                         pos = (int)Enum.Parse(typeof(Enums.eHybridOrder), value.Replace(" ", "_"));
                         break;
                 }
-                pairList.Add(new KeyValuePair<int, IPower>(pos, power));
+                pairList.Add(new KeyValuePair<int, IPower?>(pos, power));
             }
 
             var oList = pairList.OrderBy(x => x.Key);
@@ -238,7 +246,7 @@ namespace Mids_Reborn.Forms
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Knives of Vengeance"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Longbow"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Nemesis"));
-                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Phantoms"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Phantom"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Polar Lights"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Rikti"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Robotic Drones"));
@@ -544,7 +552,7 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                IPower power1 = new Power(myPowers[pIDX]);
+                IPower? power1 = new Power(myPowers[pIDX]);
                 power1.AbsorbPetEffects();
                 power1.ApplyGrantPowerEffects();
                 var index1 = iPopup.Add();
@@ -582,7 +590,7 @@ namespace Mids_Reborn.Forms
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.BaseAcc * (double) power1.Accuracy * 100.0)) + "%",
+                        Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.RechargeTime > 0.0)
                     iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,

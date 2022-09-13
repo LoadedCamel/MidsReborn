@@ -5,11 +5,13 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -17,7 +19,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private readonly ImageButton[] buttonArray;
         private readonly frmMain myParent;
-        private IPower[] myPowers;
+        private IPower?[] myPowers;
         private bool Locked;
 
         public frmIncarnates(ref frmMain iParent)
@@ -48,19 +50,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             judgementBtn.ButtonClicked += judgementBtn_ButtonClicked;
             lblLock.Click += lblLock_Click;
             loreBtn.ButtonClicked += loreBtn_ButtonClicked;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
+            Parent = myParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;
         }
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) myParent.incarnateButton.Checked = false;
-            if (DialogResult == DialogResult.Cancel) myParent.incarnateButton.Checked = false;
-        }
-        private void frmIncarnate_Load(object sender, EventArgs e)
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
 
+            if (DialogResult == DialogResult.Cancel)
+            {
+                myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+        }
+        private void frmIncarnate_Load(object? sender, EventArgs e)
         {
+            CenterToParent();
             buttonArray[0] = alphaBtn;
             buttonArray[1] = destinyBtn;
             buttonArray[2] = hybridBtn;
@@ -103,8 +113,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             PLLeft.SelectionMode = SelectionMode.None;
             PLRight.SelectionMode = SelectionMode.None;
-            var leftBound = new BindingList<IPower>();
-            var rightBound = new BindingList<IPower>();
+            var leftBound = new BindingList<IPower?>();
+            var rightBound = new BindingList<IPower?>();
             var powersLength = myPowers.Length;
             for (var index = 0; index < powersLength / 2; index++)
             {
@@ -196,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (Locked)
                 return;
-            IPower power1 = new Power(myPowers[pIDX]);
+            IPower? power1 = new Power(myPowers[pIDX]);
             power1.AbsorbPetEffects();
             power1.ApplyGrantPowerEffects();
             var iPopup = new PopUp.PopupData();
@@ -242,7 +252,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float)(MidsContext.Config.BaseAcc * (double)power1.Accuracy * 100.0)) + "%",
+                        Utilities.FixDP((float)(DatabaseAPI.ServerData.BaseToHit * (double)power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.RechargeTime > 0.0)
                     iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,

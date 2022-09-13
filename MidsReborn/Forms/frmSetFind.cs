@@ -5,12 +5,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Extensions;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -48,8 +49,7 @@ namespace Mids_Reborn.Forms
             FormClosed += frmSetFind_FormClosed;
             Load += frmSetFind_Load;
             InitializeComponent();
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetFind);
             ibClose.ButtonClicked += ibClose_ButtonClicked;
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
@@ -274,8 +274,7 @@ namespace Mids_Reborn.Forms
             lvSet.Items.Add(new ListViewItem(new[]
             {
                 DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName,
-                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}",
-                DatabaseAPI.Database.SetTypeStringLong[(int) DatabaseAPI.Database.EnhancementSets[nIDSet].SetType],
+                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}", DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nIDSet].SetType).Name,
                 BonusID >= 0
                     ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)}"
                     : "Special"
@@ -747,7 +746,7 @@ namespace Mids_Reborn.Forms
             FillMatchingPowers(sIdx);
         }
 
-        private bool IsPeacebringerInherent(IPower power)
+        private bool IsPeacebringerInherent(IPower? power)
         {
             return power.GetPowerSet().SetName == "Inherent" &
                    (power.PowerName == "Energy_Flight" |
@@ -757,7 +756,7 @@ namespace Mids_Reborn.Forms
                     power.PowerName.StartsWith("White_Dwarf"));
         }
 
-        private bool IsWarshadeInherent(IPower power)
+        private bool IsWarshadeInherent(IPower? power)
         {
             return power.GetPowerSet().SetName == "Inherent" &
                    (power.PowerName == "Shadow_Recall" |

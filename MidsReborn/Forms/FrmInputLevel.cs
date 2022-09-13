@@ -1,7 +1,7 @@
+using MRBResourceLib;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Mids_Reborn.Forms
 {
@@ -17,8 +17,7 @@ namespace Mids_Reborn.Forms
         {
             InitializeComponent();
             Name = nameof(FrmInputLevel);
-            var componentResourceManager = new ComponentResourceManager(typeof(FrmInputLevel));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myparent = iParent;
             longFormat = iLF;
             mode2 = iMode2;

@@ -6,9 +6,11 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Display;
-using mrbBase.Base.Extensions;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -19,25 +21,29 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmSetListing_Load;
             InitializeComponent();
             Name = nameof(frmSetListing);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetListing));
-            Icon = Resources.reborn;
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetListing));
+            Icon = Resources.MRB_Icon_Concept;
         }
 
-        private void AddListItem(int Index)
+        private void AddListItem(int idx)
         {
             var items = new string[7];
-            var enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
-            items[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
-            items[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
-            items[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
-            items[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
-            items[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[idx];
+            items[0] = $"{enhancementSet.DisplayName} ({enhancementSet.ShortName})";
+            items[1] = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).ShortName;
+            items[2] = $"{enhancementSet.LevelMin + 1}";
+            items[3] = $"{enhancementSet.LevelMax + 1}";
+            items[4] = $"{enhancementSet.Enhancements.Length}";
             var num1 = 0;
-            var num2 = enhancementSet.Bonus.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < enhancementSet.Bonus.Length; index++)
+            {
                 if (enhancementSet.Bonus[index].Index.Length > 0)
+                {
                     ++num1;
-            items[5] = Convert.ToString(num1);
+                }
+            }
+
+            items[5] = $"{num1}";
 
             var setContainsPvPfx = false;
             for (var i = 0; i < enhancementSet.Bonus.Length; i++)
@@ -51,7 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             items[6] = setContainsPvPfx ? "X" : "";
-            lvSets.Items.Add(new ListViewItem(items, Index));
+            lvSets.Items.Add(new ListViewItem(items, idx));
             lvSets.Items[lvSets.Items.Count - 1].Selected = true;
             lvSets.Items[lvSets.Items.Count - 1].EnsureVisible();
         }
@@ -243,7 +249,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnSave_Click(object sender, EventArgs e)
         {
             var serializer = Serializer.GetSerializer();
-            DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
             Hide();
         }
 
@@ -290,30 +296,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void FillImageList()
         {
             var imageSize1 = ilSets.ImageSize;
-            var width1 = imageSize1.Width;
-            imageSize1 = ilSets.ImageSize;
-            var height1 = imageSize1.Height;
-            using var extendedBitmap = new ExtendedBitmap(width1, height1);
+            using var extendedBitmap = new ExtendedBitmap(imageSize1.Width, imageSize1.Height);
             ilSets.Images.Clear();
-            var num = DatabaseAPI.Database.EnhancementSets.Count - 1;
-            for (var index = 0; index <= num; ++index)
-                if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
+            foreach (var es in DatabaseAPI.Database.EnhancementSets)
+            {
+                if (es.ImageIdx > -1)
                 {
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancementSet(ref graphics, DatabaseAPI.Database.EnhancementSets[index].ImageIdx);
+                    I9Gfx.DrawEnhancementSet(ref graphics, es.ImageIdx);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
                 {
                     var images = ilSets.Images;
                     var imageSize2 = ilSets.ImageSize;
-                    var width2 = imageSize2.Width;
-                    imageSize2 = ilSets.ImageSize;
-                    var height2 = imageSize2.Height;
-                    var bitmap = new Bitmap(width2, height2);
+                    var bitmap = new Bitmap(imageSize2.Width, imageSize2.Height);
                     images.Add(bitmap);
                 }
+            }
         }
 
         private void frmSetListing_Load(object sender, EventArgs e)
@@ -322,11 +323,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DisplayList();
         }
 
-        private void ImageUpdate()
+        private async void ImageUpdate()
         {
             if (NoReload.Checked)
                 return;
-            I9Gfx.LoadSets();
+            await I9Gfx.LoadSets();
             FillImageList();
         }
 
@@ -358,7 +359,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var strArray = new string[7];
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             strArray[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
-            strArray[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
+            strArray[1] = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).ShortName;
             strArray[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
             strArray[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
             strArray[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);

@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Import;
 using Mids_Reborn.Forms.Controls;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbBase.Import;
+using MRBResourceLib;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -27,11 +27,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private ExtendedBitmap bxSet;
         private ExtendedBitmap bxSetList;
         private bool cancelClose;
-        public IPower myPower;
+        public IPower? myPower;
         private bool ReqChanging;
         private bool Updating;
+        private bool EditMode;
+        private int OrigStaticIndex;
 
-        public frmEditPower(IPower iPower)
+        public frmEditPower(IPower? iPower, bool editMode = false)
         {
             Load += frmEditPower_Load;
             enhPadding = 6;
@@ -40,10 +42,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ReqChanging = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
             backup_Requires = new Requirement(myPower.Requires);
+            EditMode = editMode;
+            OrigStaticIndex = EditMode ? myPower.StaticIndex : -1;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -70,47 +74,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFullCopy_Click(object sender, EventArgs e)
         {
-            var format = DataFormats.GetFormat("mhdPowerBIN");
-            var memoryStream = new MemoryStream();
-            var writer = new BinaryWriter(memoryStream);
-            myPower.StoreTo(ref writer);
-            writer.Close();
-            Clipboard.SetDataObject(new DataObject(format.Name, memoryStream.GetBuffer()));
-            memoryStream.Close();
+            var data = JsonConvert.SerializeObject(myPower, Formatting.None, Serializer.SerializerSettings);
+            Clipboard.SetData(@"MidsPowerData", data);
         }
 
         private void btnFullPaste_Click(object sender, EventArgs e)
         {
-            var format = DataFormats.GetFormat("mhdPowerBIN");
-            var groupName = myPower.GroupName;
-            var setName = myPower.SetName;
-            if (!Clipboard.ContainsData(format.Name))
+            if (!Clipboard.ContainsData(@"MidsPowerData"))
             {
-                MessageBox.Show("No power data on the clipboard!", "Unable to Paste", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show(@"The clipboard does not contain any power data.", @"Invalid Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
-            {
-                var oldStaticIndex = myPower.StaticIndex;
-                var memoryStream = new MemoryStream((byte[]) Clipboard.GetDataObject()?.GetData(format.Name) ??
-                                                    throw new InvalidOperationException());
-                var reader = new BinaryReader(memoryStream);
-                myPower = new Power(reader) {GroupName = groupName, SetName = setName};
-                if (oldStaticIndex != myPower.StaticIndex)
-                {
-                    var ret = MessageBox.Show("Overwrite static index with the imported one?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (ret == DialogResult.No)
-                    {
-                        myPower.StaticIndex = oldStaticIndex;
-                        lblStaticIndex.Text = Convert.ToString(oldStaticIndex, CultureInfo.InvariantCulture);
-                    }
-                }
 
-                SetFullName();
-                refresh_PowerData();
-                reader.Close();
-                memoryStream.Close();
+            var powerData = JsonConvert.DeserializeObject<Power>((string)Clipboard.GetData(@"MidsPowerData"), Serializer.SerializerSettings) ?? throw new InvalidOperationException();
+            if (powerData.StaticIndex != myPower.StaticIndex)
+            {
+                var result = MessageBox.Show(@"Do you want to overwrite the static index with the imported one?", @"Static Index Is Different!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    powerData.StaticIndex = myPower.StaticIndex;
+                    lblStaticIndex.Text = powerData.StaticIndex.ToString();
+                    lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
+                }
             }
+            myPower = powerData;
+            SetFullName();
+            refresh_PowerData();
         }
 
         private void btnFXAdd_Click(object sender, EventArgs e)
@@ -126,7 +115,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
             var effectList = myPower.Effects.ToList();
-            effectList.Add((IEffect) frmPowerEffect.myFX.Clone());
+            effectList.Add((IEffect) frmPowerEffect.MyFx.Clone());
             myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
@@ -139,9 +128,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+            if (frmPowerEffect.ShowDialog(this) != DialogResult.OK) return;
 
-            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
+            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.MyFx.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = selectedIndex;
         }
@@ -169,13 +158,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
 
-            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
+            var selectedEffect = (IEffect) myPower.Effects[lvFX.SelectedIndices[0]].Clone();
+            using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
 
             var effectList = myPower.Effects.ToList();
-            effectList.Add(frmPowerEffect.myFX);
+            effectList.Add(frmPowerEffect.MyFx);
             myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
@@ -254,7 +244,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
-            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
+            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", false, "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
             if (!result.OK) return;
 
             var b = result.Text.Replace(" ", "_");
@@ -274,65 +264,106 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private void frmEditPower_CancelClose(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
-            var power = myPower;
-            lblNameFull.Text = $@"{power.GroupName}.{power.SetName}.{power.PowerName}";
-            if (string.IsNullOrWhiteSpace(power.GroupName) | string.IsNullOrWhiteSpace(power.SetName) |
-                string.IsNullOrWhiteSpace(power.PowerName))
+            FormClosing += frmEditPower_CancelClose;
+            lblNameFull.Text = $@"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
+            if (string.IsNullOrWhiteSpace(myPower.GroupName) | string.IsNullOrWhiteSpace(myPower.SetName) |
+                string.IsNullOrWhiteSpace(myPower.PowerName))
             {
-                MessageBox.Show(@$"Power name ({power.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
+                MessageBox.Show(@$"Power name ({myPower.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
+
+            if (!PowerFullNameIsUnique(myPower.FullName, EditMode ? DatabaseAPI.NidFromUidPower(myPower.FullName) : -1))
             {
-                MessageBox.Show(@$"Power name ({power.FullName}) already exists. Please enter a unique name.",
+                MessageBox.Show(@$"Power name ({myPower.FullName}) already exists. Please enter a unique name.",
                     @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
+
+            if (myPower.StaticIndex < 0)
             {
-                Array.Sort(myPower.UIDSubPower);
-                Store_Req_Classes();
-                myPower.IsModified = true;
-                if (myPower.VariableEnabled)
-                {
-                    if (myPower.VariableMin >= myPower.VariableMax)
-                    {
-                        myPower.VariableMin = 0;
-                        if (myPower.VariableMax == 0)
-                            myPower.VariableMax = 1;
-                    }
+                MessageBox.Show(@$"Invalid static index. Please enter a positive integer.", @"No Can Do",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                    if (!myPower.VariableOverride)
-                    {
-                        if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
-                        {
-                            myPower.VariableMax = myPower.MaxTargets;
-                        }
-                    }
-                    else
-                    {
-                        myPower.VariableMax = (int) Math.Round(udScaleMax.Value);
-                    }
-                }
-
-                myPower.GroupMembership = new string[clbMutex.CheckedItems.Count];
-                myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count];
-                var checkedMutexCount = clbMutex.CheckedItems.Count - 1;
-                for (var index = 0; index <= checkedMutexCount; ++index)
-                {
-                    myPower.GroupMembership[index] =
-                        Convert.ToString(clbMutex.CheckedItems[index], CultureInfo.InvariantCulture);
-                    myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
-                }
-
-                myPower.BoostsAllowed = myPower.Enhancements
-                    .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
-                    .ToArray();
-
-                DialogResult = DialogResult.OK;
-                Hide();
+                return;
             }
+
+            var siCheck = DatabaseAPI.Database.Power.Where(p => p.StaticIndex == myPower.StaticIndex & p.FullName != myPower.FullName).ToList();
+            var firstAvailableIndex = 0;
+            switch (siCheck.Count)
+            {
+                case 1:
+                    firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
+                    MessageBox.Show(
+                        $"Another power with the same static index ({myPower.StaticIndex}) already exists. Please enter a unique static index.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{siCheck[0].FullName}\r\n\r\nFirst available index: {firstAvailableIndex}",
+                        @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    return;
+                case > 1:
+                {
+                    var pList = string.Join(",\r\n", siCheck.Select(p => p.FullName));
+                    firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
+                    MessageBox.Show(
+                        $"Other powers with the same static index ({myPower.StaticIndex}) already exists. Please fix them first.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{pList}\r\n\r\nFirst available index: {firstAvailableIndex}",
+                        @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+            }
+        
+
+            FormClosing -= frmEditPower_CancelClose;
+
+            Array.Sort(myPower.UIDSubPower);
+            Store_Req_Classes();
+            myPower.IsModified = true;
+            if (myPower.VariableEnabled)
+            {
+                if (myPower.VariableMin >= myPower.VariableMax)
+                {
+                    myPower.VariableMin = 0;
+                    if (myPower.VariableMax == 0)
+                        myPower.VariableMax = 1;
+                }
+
+                if (!myPower.VariableOverride)
+                {
+                    if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
+                    {
+                        myPower.VariableMax = myPower.MaxTargets;
+                    }
+                }
+                else
+                {
+                    myPower.VariableMax = (int) Math.Round(udScaleMax.Value);
+                }
+            }
+
+            myPower.GroupMembership = new string[clbMutex.CheckedItems.Count];
+            myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count];
+            var checkedMutexCount = clbMutex.CheckedItems.Count - 1;
+            for (var index = 0; index <= checkedMutexCount; ++index)
+            {
+                myPower.GroupMembership[index] =
+                    Convert.ToString(clbMutex.CheckedItems[index], CultureInfo.InvariantCulture);
+                myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
+            }
+
+            myPower.BoostsAllowed = myPower.Enhancements
+                .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
+                .ToArray();
+
+            DialogResult = DialogResult.OK;
+            Hide();
         }
 
         private void btnPrDown_Click(object sender, EventArgs e)
@@ -545,7 +576,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             myPower.GroupName = cbNameGroup.Text;
             DisplayNameData();
             FillComboNameSet();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -554,7 +585,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.GroupName = cbNameGroup.Text;
             SetFullName();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameGroup_TextChanged(object sender, EventArgs e)
@@ -571,7 +602,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.SetName = cbNameSet.Text;
             DisplayNameData();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameSet_SelectedIndexChanged(object sender, EventArgs e)
@@ -580,7 +611,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.SetName = cbNameSet.Text;
             SetFullName();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameSet_TextChanged(object sender, EventArgs e)
@@ -611,6 +642,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 lblEndCost.Text = "";
             }
+        }
+
+        private bool CheckStaticIndex()
+        {
+            var t = int.TryParse(lblStaticIndex.Text, out var pIndex);
+
+            if (!t) return false;
+
+            var hasDuplicate = DatabaseAPI.Database.Power.Any(p => p.StaticIndex == pIndex && p.FullName != myPower.FullName);
+
+            return !hasDuplicate;
         }
 
         private void CheckScaleValues()
@@ -910,13 +952,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             format.LineAlignment = StringAlignment.Center;
             using var solidBrush3 = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxSet.Graphics.FillRectangle(solidBrush3, bxSet.ClipRect);
-            var num = myPower.SetTypes.Length - 1;
+            var num = myPower.SetTypes.Count - 1;
             for (var index = 0; index <= num; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxSet.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect,
-                    I9Gfx.GetImageRect((int) myPower.SetTypes[index]), GraphicsUnit.Pixel);
-                var s = myPower.SetTypes[index] switch
+                bxSet.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(myPower.SetTypes[index]), GraphicsUnit.Pixel);
+                /*var s = myPower.SetTypes[index] switch
                 {
                     Enums.eSetType.MeleeST => "M\r\nST",
                     Enums.eSetType.RangedST => "R\r\nST",
@@ -943,7 +984,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 --layoutRectangle.X;
                 bxSet.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);
                 layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
-                bxSet.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);
+                bxSet.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);*/
                 enhPadding2 += 30 + enhPadding;
             }
 
@@ -952,7 +993,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DrawSetList()
         {
-            var eSetType = Enums.eSetType.Untyped;
+            //var eSetType = Enums.eSetType.Untyped;
             bxSetList = new ExtendedBitmap(pbInvSetList.Width, pbInvSetList.Height);
             var enhPadding1 = enhPadding;
             var enhPadding2 = enhPadding;
@@ -963,16 +1004,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             using var solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
-            var names = Enum.GetNames(eSetType.GetType());
+            //var names = Enum.GetNames(eSetType.GetType());
+            var setTypes = DatabaseAPI.Database.SetTypes;
             using var solidBrush3 = new SolidBrush(Color.FromArgb(0, 0, 0));
             bxSetList.Graphics.FillRectangle(solidBrush3, bxSetList.ClipRect);
-            var num2 = names.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            //var num2 = names.Length - 1;
+            for (var index = 0; index <= setTypes.Count -1; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxSetList.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(index),
-                    GraphicsUnit.Pixel);
-                var s = (Enums.eSetType) index switch
+                bxSetList.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(index), GraphicsUnit.Pixel);
+                /*var s = (Enums.eSetType) index switch
                 {
                     Enums.eSetType.MeleeST => "M\r\nST",
                     Enums.eSetType.RangedST => "R\r\nST",
@@ -1000,7 +1041,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 --layoutRectangle.X;
                 bxSetList.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);
                 layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
-                bxSetList.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);
+                bxSetList.Graphics.DrawString(s, font, solidBrush2, layoutRectangle, format);*/
                 enhPadding2 += 30 + enhPadding;
                 ++num1;
                 if (num1 != enhAcross)
@@ -1472,11 +1513,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
+            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", false, $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
             if (!result.OK) return;
 
             lblStaticIndex.Text = result.Text;
-            myPower.StaticIndex = int.Parse(result.Text);
+            var t = int.TryParse(result.Text, out var pIndex);
+            if (!t) return;
+            
+            myPower.StaticIndex = pIndex;
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1679,41 +1723,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void pbInvSetList_MouseDown(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            if (!((invSetListIndex < names.Length) & (invSetListIndex > -1))) return;
+            var setTypes = DatabaseAPI.Database.SetTypes;
+            
+            if (!((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))) return;
+
             var flag = false;
-            var num = myPower.SetTypes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+
+            for (var index = 0; index <= myPower.SetTypes.Count - 1; ++index)
             {
-                if (myPower.SetTypes[index] == (Enums.eSetType) invSetListIndex)
+                if (myPower.SetTypes[index] == invSetListIndex)
                 {
                     flag = true;
                 }
             }
 
-            if (flag | (myPower.SetTypes.Length > 15))
+            if (flag | (myPower.SetTypes.Count > 15))
             {
                 return;
             }
 
-            var eSetTypeList = myPower.SetTypes.ToList();
-            eSetTypeList.Add((Enums.eSetType)invSetListIndex);
-            myPower.SetTypes = eSetTypeList.ToArray();
-            Array.Sort(myPower.SetTypes);
+            var eSetTypeList = myPower.SetTypes;
+            eSetTypeList.Add(invSetListIndex);
+            myPower.SetTypes = eSetTypeList;
             DrawAcceptedSets();
         }
 
         private void pbInvSetList_MouseMove(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            if ((invSetListIndex < names.Length) & (invSetListIndex > -1))
-                lblInvSet.Text = names[invSetListIndex];
+            var setTypes = DatabaseAPI.Database.SetTypes;
+
+            if ((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))
+            {
+                lblInvSet.Text = DatabaseAPI.GetSetTypeByIndex(invSetListIndex).Name;
+            }
             else
+            {
                 lblInvSet.Text = "";
+            }
         }
 
         private void pbInvSetList_Paint(object sender, PaintEventArgs e)
@@ -1726,45 +1774,28 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbInvSetUsed_MouseDown(object sender, MouseEventArgs e)
         {
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
-            if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
+            if (!((invSetIndex < myPower.SetTypes.Count) & (invSetIndex > -1)))
             {
                 return;
             }
 
-            var numArray = new int[myPower.SetTypes.Length];
-            var num1 = myPower.SetTypes.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-            {
-                numArray[index] = (int) myPower.SetTypes[index];
-            }
+            myPower.SetTypes.Remove(myPower.SetTypes[invSetIndex]);
 
-            var index1 = 0;
-            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
-            var num2 = numArray.Length - 1;
-            for (var index2 = 0; index2 <= num2; ++index2)
-            {
-                if (index2 == invSetIndex)
-                {
-                    continue;
-                }
-
-                myPower.SetTypes[index1] = (Enums.eSetType) numArray[index2];
-                ++index1;
-            }
-
-            Array.Sort(myPower.SetTypes);
             DrawAcceptedSets();
         }
 
         private void pbInvSetUsed_MouseMove(object sender, MouseEventArgs e)
         {
-            var eSetType = Enums.eSetType.Untyped;
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
-            var names = Enum.GetNames(eSetType.GetType());
-            if ((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1))
-                lblInvSet.Text = names[(int) myPower.SetTypes[invSetIndex]];
+
+            if (invSetIndex < myPower.SetTypes.Count & invSetIndex > -1)
+            {
+                lblInvSet.Text = DatabaseAPI.GetSetTypeByIndex(myPower.SetTypes[invSetIndex]).Name;
+            }
             else
+            {
                 lblInvSet.Text = "";
+            }
         }
 
         private void pbInvSetUsed_Paint(object sender, PaintEventArgs e)
@@ -1777,16 +1808,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private static bool PowerFullNameIsUnique(string iFullName, int skipId = -1)
         {
             if (string.IsNullOrEmpty(iFullName))
-                return true;
-            var num = DatabaseAPI.Database.Power.Length;
-            for (var index = 0; index < num; index++)
             {
-                if (index != skipId && string.Equals(DatabaseAPI.Database.Power[index].FullName, iFullName,
-                    StringComparison.OrdinalIgnoreCase))
-                    return false;
+                return true;
             }
 
-            return true;
+            return !DatabaseAPI.Database.Power
+                .Where((t, index) => index != skipId && string.Equals(t.FullName, iFullName, StringComparison.OrdinalIgnoreCase))
+                .Any();
         }
 
         private void rbFlagX_CheckedChanged(object sender, EventArgs e)
@@ -1961,8 +1989,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void refresh_PowerData()
         {
-            Text = "Edit Power (" + myPower.FullName + ")";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.FullName})";
             lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture);
+            lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
             FillCombo_Basic();
             FillTab_Basic();
             FillCombo_Attribs();
@@ -2160,8 +2189,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lblEndCost.Text = "";
             }
 
-            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.BaseAcc * 100.0):##0.##}%)";
-            //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) MidsContext.Config.BaseAcc * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
+            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * DatabaseAPI.ServerData.BaseToHit * 100.0):##0.##}%)";
+            //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) DatabaseAPI.ServerData.BaseToHit * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
         }
 
         private void SetFullName()
@@ -2283,7 +2312,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             power.Accuracy = num;
-            lblAcc.Text = $"({power.Accuracy * MidsContext.Config.BaseAcc * 100:##0.##}%)";
+            lblAcc.Text = $"({power.Accuracy * DatabaseAPI.ServerData.BaseToHit * 100:##0.##}%)";
         }
 
         private void txtActivate_Leave(object sender, EventArgs e)
@@ -2499,7 +2528,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.PowerName = txtNamePower.Text;
             DisplayNameData();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void txtNamePower_TextChanged(object sender, EventArgs e)
@@ -2508,7 +2537,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.PowerName = txtNamePower.Text;
             SetFullName();
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void txtNumCharges_Leave(object sender, EventArgs e)
@@ -2708,7 +2737,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtNameDisplay_Leave(object sender, EventArgs e)
         {
-            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+            Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)

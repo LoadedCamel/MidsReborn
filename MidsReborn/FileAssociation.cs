@@ -45,10 +45,19 @@ namespace Mids_Reborn
 
         private static string GetMxdType()
         {
-            return CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd")
-                ? OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd").GetValue(null).ToString()
-                : "RebornTeam.Mids Reborn";
+            const string typeName = "RebornTeam.Mids Reborn";
+            
+            if (!CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd"))
+            {
+                return typeName;
+            }
+
+            var ret = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd").GetValue(null);
+            return ret == null
+                ? typeName
+                : ret.ToString();
         }
+
         public static string CheckdAssociatedProgram()
         {
             var mxdOpenKey = @"HKEY_CURRENT_USER\SOFTWARE\Classes\" + GetMxdType();
@@ -73,39 +82,45 @@ namespace Mids_Reborn
 
                 if (!mxdTypeKeyExists)
                 {
-                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\Classes", true);
-                    rk.CreateSubKey(@".mxd\" + mxdType + @"\ShellNew");
-                    rk.Close();
+                    Registry.CurrentUser.CreateSubKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd");
+                    Registry.CurrentUser.CreateSubKey($@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd\{mxdType}");
+                    Registry.CurrentUser.CreateSubKey($@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd\{mxdType}\ShellNew");
+                    Registry.CurrentUser.CreateSubKey($@"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}");
                 }
 
-                if (!CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType))
+                rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd", true);
+                rk?.SetValue(null, mxdType);
+                rk?.Close();
+
+                rk = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{mxdType}\DefaultIcon");
+                rk?.SetValue(null, @$"{Application.ExecutablePath},0");
+
+                rk = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{mxdType}\shell\open\command");
+                rk?.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+
+                rk = OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}", true);
+                rk?.SetValue(null, "Mids Reborn Character Build File");
+
+                rk = OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}\shell", true);
+                rk?.SetValue(null, "open");
+                rk?.Close();
+
+                rk = OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}\shell\open", true);
+                rk?.SetValue(null, "&Open");
+                rk?.Close();
+
+                if (OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}\shell\open\command").GetValue("command") == null)
                 {
-                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
-                    rk.CreateSubKey(mxdType + @"\DefaultIcon");
-                    rk.CreateSubKey(mxdType + @"shell\open\command");
-                    rk.Close();
-                }
-
-                rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell", true);
-                rk.SetValue(null, "open");
-                rk.Close();
-
-                rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open", true);
-                rk.SetValue(null, "&Open");
-                rk.Close();
-
-                if (OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command").GetValue("command") == null)
-                {
-                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
-                    rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
-                    rk.Close();
+                    rk = OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}\shell\open\command", true);
+                    rk?.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+                    rk?.Close();
                 }
                 else
                 {
-                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
-                    rk.DeleteValue("command");
-                    rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
-                    rk.Close();
+                    rk = OpenRegistryKey(@$"HKEY_CURRENT_USER\SOFTWARE\Classes\{mxdType}\shell\open\command", true);
+                    rk?.DeleteValue("command");
+                    rk?.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+                    rk?.Close();
                 }
 
                 // Tell explorer the file association has been changed

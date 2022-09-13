@@ -4,16 +4,16 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
-using mrbBase.Base.Extensions;
-using mrbBase.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -32,24 +32,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private const int FILTER_ORPHAN_SETS = 4;
 
         private frmBusy BusyForm { get; set; }
-        private frmDBDiffing _diffFrm;
 
         private bool _updating;
 
         public frmPowerBrowser()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             Load += frmPowerBrowser_Load;
             _updating = false;
             InitializeComponent();
             Name = nameof(frmPowerBrowser);
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             BusyMsg("Discarding Changes...");
-            DatabaseAPI.LoadMainDatabase();
+            DatabaseAPI.LoadMainDatabase(MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
             BusyHide();
             DialogResult = DialogResult.Cancel;
@@ -69,7 +69,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case 0:
                 {
-                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", false, "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
                     if (inputResult.OK)
                     {
                         var iPsg = new PowersetGroup(inputResult.Text);
@@ -89,11 +89,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var num = (int)frmEditArchetype.ShowDialog();
                     if (frmEditArchetype.DialogResult != DialogResult.OK)
                         return;
-                    var database = DatabaseAPI.Database;
-                    var archetypeArray = Array.Empty<Archetype>();
-                    Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
-                    database.Classes = archetypeArray;
-                    DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                    var classes = DatabaseAPI.Database.Classes.ToList();
+                    classes.Add(new Archetype(frmEditArchetype.MyAT) { IsNew = true });
+                    DatabaseAPI.Database.Classes = classes.ToArray();
                     Sort(0);
                     break;
                 }
@@ -120,7 +118,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
                 var database = DatabaseAPI.Database;
-                var archetypeArray = Array.Empty<Archetype>();
+                Archetype?[] archetypeArray = Array.Empty<Archetype>();
                 Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
                 database.Classes = archetypeArray;
                 DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
@@ -153,7 +151,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                     else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        var archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
+                        var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length - 1 + 1];
                         var index2 = 0;
                         var num3 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num3; ++index3)
@@ -164,7 +162,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             ++index2;
                         }
 
-                        DatabaseAPI.Database.Classes = new Archetype[DatabaseAPI.Database.Classes.Length - 2 + 1];
+                        DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 2 + 1];
                         var num4 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num4; ++index3)
                             DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
@@ -195,7 +193,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvGroup.SelectedIndices[0];
             if (selectedIndex >= lvGroup.Items.Count - 1)
                 return;
-            Archetype[] archetypeArray =
+            Archetype?[] archetypeArray =
             {
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex]),
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex + 1])
@@ -262,7 +260,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectedIndex = lvGroup.SelectedIndices[0];
             if (selectedIndex < 1)
                 return;
-            Archetype[] archetypeArray =
+            Archetype?[] archetypeArray =
             {
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex]),
                 new Archetype(DatabaseAPI.Database.Classes[selectedIndex - 1])
@@ -302,7 +300,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerAdd_Click(object sender, EventArgs e)
         {
-            IPower iPower = new Power();
+            IPower? iPower = new Power();
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -341,7 +339,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 var database = DatabaseAPI.Database;
-                var powerList = new List<IPower>(DatabaseAPI.Database.Power);
+                var powerList = new List<IPower?>(DatabaseAPI.Database.Power);
                 var newPower = powerList.First(x => x.FullName == database.Power[index].FullName).Clone();
                 newPower.StaticIndex = powerList.Last().StaticIndex++;
                 newPower.FullName += "_Clone";
@@ -377,7 +375,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            var powerArray = new IPower[DatabaseAPI.Database.Power.Length - 1 + 1];
+            var powerArray = new IPower?[DatabaseAPI.Database.Power.Length - 1 + 1];
             var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (num1 < 0)
             {
@@ -395,7 +393,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index1;
                 }
 
-                DatabaseAPI.Database.Power = new IPower[DatabaseAPI.Database.Power.Length - 2 + 1];
+                DatabaseAPI.Database.Power = new IPower?[DatabaseAPI.Database.Power.Length - 2 + 1];
                 var num4 = DatabaseAPI.Database.Power.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
                     DatabaseAPI.Database.Power[index2] = new Power(powerArray[index2]);
@@ -429,7 +427,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
@@ -451,27 +449,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
+                {
                     return;
-                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                }
+
+                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
+                {
                     return;
+                }
+
                 //Update the full power name in the powerset array
                 if (newPower.PowerSetID > -1)
+                {
                     DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName =
                         newPower.FullName;
+                }
 
-                var num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
-                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName =
-                        DatabaseAPI.Database.Power[index1].FullName;
+                foreach (var p in DatabaseAPI.Database.Power[index1].Effects)
+                {
+                    p.PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
+                }
+
                 var strArray = DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
-                var str1 = "";
-                var num3 = strArray.Length - 1;
-                for (var index2 = 0; index2 <= num3; ++index2)
-                    str1 = str1 + strArray[index2] + "\r\n";
+                var str1 = strArray.Aggregate("", (current, t) => $"{current}{t}\r\n");
                 if (strArray.Length > 0)
                 {
                     var str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
@@ -501,7 +505,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
@@ -527,7 +531,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPowerset template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
                 DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
@@ -554,7 +558,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPowerset template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
                 DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
                 DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
                 BusyMsg("Re-Indexing...");
@@ -566,7 +570,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnSetAdd_Click(object sender, EventArgs e)
         {
-            IPowerset iSet = new Powerset();
+            IPowerset? iSet = new Powerset();
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -610,7 +614,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                           " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
                 if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-                var powersetArray = new IPowerset[DatabaseAPI.Database.Powersets.Length - 1 + 1];
+                var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1 + 1];
                 var index2 = 0;
                 var num2 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num2; ++index3)
@@ -621,7 +625,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index2;
                 }
 
-                DatabaseAPI.Database.Powersets = new IPowerset[DatabaseAPI.Database.Powersets.Length - 2 + 1];
+                DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 2 + 1];
                 var num3 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num3; ++index3)
                     DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
@@ -667,94 +671,111 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void BuildATImageList()
+        private async void BuildATImageList()
 
         {
             ilAT.Images.Clear();
-            var num = DatabaseAPI.Database.Classes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var loadedArchetypes = await I9Gfx.LoadArchetypes();
+            foreach (var archetype in loadedArchetypes)
             {
-                var str = I9Gfx.GetOriginsPath() + DatabaseAPI.Database.Classes[index].ClassName + ".png";
-                if (!File.Exists(str)) str = I9Gfx.ImagePath() + "Unknown.png";
-                using var extendedBitmap = new ExtendedBitmap(str);
+                using var extendedBitmap = new ExtendedBitmap(archetype);
                 ilAT.Images.Add(new Bitmap(extendedBitmap.Bitmap));
             }
         }
 
-        private void BuildPowersetImageList(int[] iSets)
-
+        private async void BuildPowersetImageList(IReadOnlyList<int> iSets)
         {
             ilPS.Images.Clear();
-            var imageSize = ilPS.ImageSize;
-            var width = imageSize.Width;
-            imageSize = ilPS.ImageSize;
-            var height = imageSize.Height;
-            using var extendedBitmap1 = new ExtendedBitmap(width, height);
-            using var solidBrush1 = new SolidBrush(Color.Black);
-            using var solidBrush2 = new SolidBrush(Color.White);
-            using var solidBrush3 = new SolidBrush(Color.Transparent);
+            using var extendedBitmap1 = new ExtendedBitmap(ilPS.ImageSize);
+            using var blackLabelBrush = new SolidBrush(Color.Black);
+            using var whiteLabelBrush = new SolidBrush(Color.White);
+            using var transparentLabelBrush = new SolidBrush(Color.Transparent);
             using var format = new StringFormat(StringFormatFlags.NoWrap)
             {
                 LineAlignment = StringAlignment.Center,
                 Alignment = StringAlignment.Center
             };
+
             using var font = new Font(Font, FontStyle.Bold);
-            var layoutRectangle = new RectangleF(17f, 0.0f, 16f, 18f);
-            var num = iSets.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var layoutRectangle = new RectangleF(17f, 0f, 16f, 18f);
+            var loadedPowerSets = await I9Gfx.LoadPowerSets();
+            foreach (var powerSet in iSets)
             {
-                var str = I9Gfx.GetPowersetsPath() + DatabaseAPI.Database.Powersets[iSets[index]].ImageName;
-                if (!File.Exists(str))
-                    str = I9Gfx.ImagePath() + "Unknown.png";
-                using var extendedBitmap2 = new ExtendedBitmap(str);
+                var imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
+                if (string.IsNullOrEmpty(imagePath))
+                {
+                    imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains("Unknown"));
+                }
+
+                using var extendedBitmap2 = new ExtendedBitmap(imagePath);
                 string s;
                 SolidBrush solidBrush4;
-                switch (DatabaseAPI.Database.Powersets[iSets[index]].SetType)
+                switch (DatabaseAPI.Database.Powersets[powerSet].SetType)
                 {
                     case Enums.ePowerSetType.Primary:
                         extendedBitmap1.Graphics.Clear(Color.Blue);
                         s = "1";
-                        solidBrush4 = solidBrush2;
+                        solidBrush4 = whiteLabelBrush;
                         break;
                     case Enums.ePowerSetType.Secondary:
                         extendedBitmap1.Graphics.Clear(Color.Red);
                         s = "2";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                     case Enums.ePowerSetType.Ancillary:
                         extendedBitmap1.Graphics.Clear(Color.Green);
                         s = "A";
-                        solidBrush4 = solidBrush2;
+                        solidBrush4 = whiteLabelBrush;
                         break;
                     case Enums.ePowerSetType.Inherent:
                         extendedBitmap1.Graphics.Clear(Color.Silver);
                         s = "I";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                     case Enums.ePowerSetType.Pool:
                         extendedBitmap1.Graphics.Clear(Color.Cyan);
                         s = "P";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                     case Enums.ePowerSetType.Accolade:
                         extendedBitmap1.Graphics.Clear(Color.Goldenrod);
                         s = "+";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                     case Enums.ePowerSetType.Temp:
                         extendedBitmap1.Graphics.Clear(Color.WhiteSmoke);
                         s = "T";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                     case Enums.ePowerSetType.Pet:
                         extendedBitmap1.Graphics.Clear(Color.Brown);
                         s = "x";
-                        solidBrush4 = solidBrush2;
+                        solidBrush4 = whiteLabelBrush;
+                        break;
+                    case Enums.ePowerSetType.Redirect:
+                        extendedBitmap1.Graphics.Clear(Color.BlueViolet);
+                        s = "R";
+                        solidBrush4 = whiteLabelBrush;
+                        break;
+                    case Enums.ePowerSetType.SetBonus:
+                        extendedBitmap1.Graphics.Clear(Color.LightSeaGreen);
+                        s = "S";
+                        solidBrush4 = blackLabelBrush;
+                        break;
+                    case Enums.ePowerSetType.Boost:
+                        extendedBitmap1.Graphics.Clear(Color.LightSeaGreen);
+                        s = "B";
+                        solidBrush4 = blackLabelBrush;
+                        break;
+                    case Enums.ePowerSetType.Incarnate:
+                        extendedBitmap1.Graphics.Clear(Color.SandyBrown);
+                        s = "X";
+                        solidBrush4 = blackLabelBrush;
                         break;
                     default:
                         extendedBitmap1.Graphics.Clear(Color.White);
                         s = "";
-                        solidBrush4 = solidBrush1;
+                        solidBrush4 = blackLabelBrush;
                         break;
                 }
 
@@ -860,6 +881,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.EnableDoubleBuffer();
             lvPower.EnableDoubleBuffer();
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
+            btnDbQueries.Visible = MidsContext.Config.MasterMode;
 
             try
             {
@@ -1117,8 +1139,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSet.Items.Clear();
             if ((cbFilter.SelectedIndex == 0) & (lvGroup.SelectedItems.Count > 0))
             {
-                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "",
-                    Enums.ePowerSetType.None);
+                var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "", Enums.ePowerSetType.None);
                 BuildPowersetImageList(iSets);
                 List_Sets_AddBlock(iSets);
                 lvSet.Enabled = true;
@@ -1368,6 +1389,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             BusyHide();
+        }
+
+        private void btnDbQueries_Click(object sender, EventArgs e)
+        {
+            using var f = new frmDbQueries();
+            
+            f.ShowDialog();
         }
     }
 }

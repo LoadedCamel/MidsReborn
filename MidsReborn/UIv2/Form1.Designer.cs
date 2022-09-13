@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.UIv2
 {
@@ -33,40 +33,40 @@ namespace Mids_Reborn.UIv2
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BGImage = new System.Windows.Forms.PictureBox();
-            this.MainPanel = new mrbControls.ctlPanel();
+            this.MainPanel = new ctlPanel();
             this.label12 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.Ancillary_Powers = new mrbControls.ctlPowerList();
-            this.cbAncillary = new mrbControls.ctlCombo();
+            this.Ancillary_Powers = new ctlPowerList();
+            this.cbAncillary = new ctlCombo();
             this.label11 = new System.Windows.Forms.Label();
-            this.Pool3_Powers = new mrbControls.ctlPowerList();
-            this.cbPool3 = new mrbControls.ctlCombo();
+            this.Pool3_Powers = new ctlPowerList();
+            this.cbPool3 = new ctlCombo();
             this.label10 = new System.Windows.Forms.Label();
-            this.Pool2_Powers = new mrbControls.ctlPowerList();
-            this.cbPool2 = new mrbControls.ctlCombo();
+            this.Pool2_Powers = new ctlPowerList();
+            this.cbPool2 = new ctlCombo();
             this.label9 = new System.Windows.Forms.Label();
-            this.Pool1_Powers = new mrbControls.ctlPowerList();
-            this.cbPool1 = new mrbControls.ctlCombo();
+            this.Pool1_Powers = new ctlPowerList();
+            this.cbPool1 = new ctlCombo();
             this.label8 = new System.Windows.Forms.Label();
-            this.Pool0_Powers = new mrbControls.ctlPowerList();
-            this.cbPool0 = new mrbControls.ctlCombo();
+            this.Pool0_Powers = new ctlPowerList();
+            this.cbPool0 = new ctlCombo();
             this.label7 = new System.Windows.Forms.Label();
-            this.Secondary_Powers = new mrbControls.ctlPowerList();
-            this.Primary_Powers = new mrbControls.ctlPowerList();
-            this.cbSecondary = new mrbControls.ctlCombo();
+            this.Secondary_Powers = new ctlPowerList();
+            this.Primary_Powers = new ctlPowerList();
+            this.cbSecondary = new ctlCombo();
             this.label6 = new System.Windows.Forms.Label();
-            this.cbPrimary = new mrbControls.ctlCombo();
+            this.cbPrimary = new ctlCombo();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbOrigin = new mrbControls.ctlCombo();
+            this.cbOrigin = new ctlCombo();
             this.label4 = new System.Windows.Forms.Label();
-            this.cbAT = new mrbControls.ctlCombo();
+            this.cbAT = new ctlCombo();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.TopPanel = new mrbControls.ctlPanel();
+            this.TopPanel = new ctlPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.ExitPanel = new mrbControls.ctlPanel();
+            this.ExitPanel = new ctlPanel();
             ((System.ComponentModel.ISupportInitialize)(this.BGImage)).BeginInit();
             this.MainPanel.SuspendLayout();
             this.TopPanel.SuspendLayout();
@@ -163,7 +163,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbAncillary
             // 
-            this.cbAncillary.ComboType = mrbControls.ctlCombo.ComboBoxType.Ancillary;
+            this.cbAncillary.ComboType = ctlCombo.ComboBoxType.Ancillary;
             this.cbAncillary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbAncillary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAncillary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -211,7 +211,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbPool3
             // 
-            this.cbPool3.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
+            this.cbPool3.ComboType = ctlCombo.ComboBoxType.Pool;
             this.cbPool3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -259,7 +259,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbPool2
             // 
-            this.cbPool2.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
+            this.cbPool2.ComboType = ctlCombo.ComboBoxType.Pool;
             this.cbPool2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -307,7 +307,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbPool1
             // 
-            this.cbPool1.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
+            this.cbPool1.ComboType = ctlCombo.ComboBoxType.Pool;
             this.cbPool1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -355,7 +355,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbPool0
             // 
-            this.cbPool0.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
+            this.cbPool0.ComboType = ctlCombo.ComboBoxType.Pool;
             this.cbPool0.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool0.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -433,7 +433,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbSecondary
             // 
-            this.cbSecondary.ComboType = mrbControls.ctlCombo.ComboBoxType.Secondary;
+            this.cbSecondary.ComboType = ctlCombo.ComboBoxType.Secondary;
             this.cbSecondary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSecondary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -460,7 +460,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbPrimary
             // 
-            this.cbPrimary.ComboType = mrbControls.ctlCombo.ComboBoxType.Primary;
+            this.cbPrimary.ComboType = ctlCombo.ComboBoxType.Primary;
             this.cbPrimary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPrimary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPrimary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -487,7 +487,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbOrigin
             // 
-            this.cbOrigin.ComboType = mrbControls.ctlCombo.ComboBoxType.Origin;
+            this.cbOrigin.ComboType = ctlCombo.ComboBoxType.Origin;
             this.cbOrigin.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbOrigin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOrigin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -514,7 +514,7 @@ namespace Mids_Reborn.UIv2
             // 
             // cbAT
             // 
-            this.cbAT.ComboType = mrbControls.ctlCombo.ComboBoxType.Archetype;
+            this.cbAT.ComboType = ctlCombo.ComboBoxType.Archetype;
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAT.FlatStyle = System.Windows.Forms.FlatStyle.Popup;

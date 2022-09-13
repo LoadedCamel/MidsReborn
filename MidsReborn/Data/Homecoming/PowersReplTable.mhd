@@ -2,10 +2,11 @@
 # When loading a build, powers' ID with a match will be automatically replaced.
 # Ensure old power IDs are unique.
 
-# Version: 1.0
-# Revision date: 06/18/21
+# Version: 1.1
+# Revision date: 04/03/22
 # Realm: Homecoming
 
+[Global]
 # Old zc_Leadership
 10849, 1809    # Pool.Leadership_beta.Defense                 -->  Pool.Leadership.Defense
 10850, 1810    # Pool.Leadership_beta.Assault                 -->  Pool.Leadership.Assault
@@ -16,3 +17,6 @@
 # Afterburner
 5632, 10946    # Pool.Flight.Afterburner                      -->  Pool.Flight.Evasive_Maneuvers
 5600, 10949    # Peacebringer_Defensive.Quantum_Acceleration  -->  Peacebringer_Defensive.Quantum_Maneuvers
+
+[Defender]
+10965, 11038   # Blaster_Ranged.Seismic_Blast.Meteor          --> Defender_Ranged.Seismic_Blast.Meteor

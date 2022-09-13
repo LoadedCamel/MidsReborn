@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
+using static Mids_Reborn.Forms.UpdateSystem.clsXMLUpdate;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -29,7 +31,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         {
                             case "version":
                             {
-                                Version = new Version(xmlReader.ReadElementContentAsString());
+                                Version = Version.Parse(xmlReader.ReadElementContentAsString());
                                 break;
                             }
                             case "changelog":
@@ -52,7 +54,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
-                return Convert.ToBoolean(Version.CompareTo(MidsContext.AppFileVersion));
+                return CompareVersions(Version, MidsContext.AppFileVersion);
             }
         }
 
@@ -62,7 +64,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 var appResult = new UpdateQuery(parent)
                 {
-                    Type = clsXMLUpdate.UpdateType.App.ToString()
+                    Type = UpdateType.App.ToString()
                 };
                 appResult.ShowDialog();
                 switch (appResult.DialogResult)
@@ -71,7 +73,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     {
                         var patchNotes = new PatchNotes(parent, true)
                         {
-                            Type = clsXMLUpdate.UpdateType.App.ToString(),
+                            Type = UpdateType.App.ToString(),
                             Version = Version.ToString()
                         };
                         patchNotes.ShowDialog();
@@ -81,13 +83,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         appResult.Close();
                         break;
                     case DialogResult.OK:
-                        clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version.ToString());
+                        Update(MidsContext.Config.UpdatePath, Version.ToString(), AppContext.BaseDirectory);
                         break;
                 }
             }
             else
             {
-                clsXMLUpdate.Update(MidsContext.Config.UpdatePath, Version.ToString());
+                Update(MidsContext.Config.UpdatePath, Version.ToString(), AppContext.BaseDirectory);
             }
         }
     }

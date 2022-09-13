@@ -33,12 +33,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             this.components = new System.ComponentModel.Container();
             this.lvEnh = new System.Windows.Forms.ListView();
-            this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.ilEnh = new System.Windows.Forms.ImageList(this.components);
             this.btnUp = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
@@ -56,7 +56,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lvEnh
             // 
-            this.lvEnh.BackColor = System.Drawing.Color.White;
+            this.lvEnh.BackColor = System.Drawing.SystemColors.Window;
+            this.lvEnh.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvEnh.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnHeader2,
             this.ColumnHeader3,
@@ -64,10 +65,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader4,
             this.ColumnHeader1,
             this.ColumnHeader5});
-            this.lvEnh.ForeColor = System.Drawing.Color.Black;
+            this.lvEnh.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lvEnh.FullRowSelect = true;
             this.lvEnh.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvEnh.HideSelection = false;
             this.lvEnh.Location = new System.Drawing.Point(8, 8);
             this.lvEnh.MultiSelect = false;
             this.lvEnh.Name = "lvEnh";
@@ -107,7 +107,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Set";
-            this.ColumnHeader5.Width = 145;
+            this.ColumnHeader5.Width = 88;
             // 
             // ilEnh
             // 
@@ -118,7 +118,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnUp
             // 
             this.btnUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnUp.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUp.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUp.Location = new System.Drawing.Point(748, 28);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(83, 23);
@@ -130,7 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnDown
             // 
             this.btnDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnDown.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDown.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDown.Location = new System.Drawing.Point(748, 56);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(83, 23);
@@ -142,7 +142,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnAdd
             // 
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnAdd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnAdd.Location = new System.Drawing.Point(748, 104);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(83, 23);
@@ -154,7 +154,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnDelete
             // 
             this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnDelete.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDelete.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDelete.Location = new System.Drawing.Point(748, 224);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(83, 23);
@@ -166,7 +166,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnEdit
             // 
             this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnEdit.Location = new System.Drawing.Point(748, 184);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(83, 23);
@@ -179,7 +179,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSave.Location = new System.Drawing.Point(719, 570);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(112, 32);
@@ -192,7 +192,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnCancel.Location = new System.Drawing.Point(493, 570);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(207, 32);
@@ -204,7 +204,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnClone
             // 
             this.btnClone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnClone.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClone.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnClone.Location = new System.Drawing.Point(748, 144);
             this.btnClone.Name = "btnClone";
             this.btnClone.Size = new System.Drawing.Size(83, 23);
@@ -225,10 +225,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblLoading
             // 
-            this.lblLoading.BackColor = System.Drawing.Color.White;
-            this.lblLoading.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoading.ForeColor = System.Drawing.Color.Black;
-            this.lblLoading.Location = new System.Drawing.Point(256, 264);
+            this.lblLoading.BackColor = System.Drawing.SystemColors.Window;
+            this.lblLoading.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblLoading.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblLoading.Location = new System.Drawing.Point(317, 264);
             this.lblLoading.Name = "lblLoading";
             this.lblLoading.Size = new System.Drawing.Size(116, 24);
             this.lblLoading.TabIndex = 26;
@@ -273,7 +273,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnUp);
             this.Controls.Add(this.lvEnh);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

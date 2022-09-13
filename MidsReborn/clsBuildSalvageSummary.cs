@@ -1,14 +1,16 @@
-﻿using System.Drawing;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Master_Classes;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn
 {
     public static class BuildSalvageSummary
     {
-        private static readonly Color ColorNormalText = Color.White;
+        private static readonly Color ColorNormalText = Color.WhiteSmoke;
         private static readonly Color ColorFullBuild = Color.FromArgb(0, 255, 128);
 
         public static int EnhObtained { get; private set; }
@@ -16,7 +18,7 @@ namespace Mids_Reborn
         public static int EnhBoosters { get; private set; }
         public static int TotalEnhancements { get; private set; }
 
-        public static void CalcAll()
+        private static void CalcAll()
         {
             TotalEnhancements = 0;
             EnhObtained = 0;
@@ -68,12 +70,12 @@ namespace Mids_Reborn
             }
         }
 
-        public static void CalcEnhObtained()
+        private static void CalcEnhObtained()
         {
             EnhObtained = 0;
             foreach (var p in MidsContext.Character.CurrentBuild.Powers)
             {
-                for (var j = 0; j < p.Slots.Length; j++)
+                for (var j = 0; j < p?.Slots.Length; j++)
                 {
                     if (p.Slots[j].Enhancement.Obtained & p.Slots[j].Enhancement.Enh > -1)
                     {
@@ -88,7 +90,7 @@ namespace Mids_Reborn
             EnhCatalysts = 0;
             foreach (var p in MidsContext.Character.CurrentBuild.Powers)
             {
-                for (var j = 0; j < p.Slots.Length; j++)
+                for (var j = 0; j < p?.Slots.Length; j++)
                 {
                     var enhIdx = p.Slots[j].Enhancement.Enh;
                     if (enhIdx == -1) continue;
@@ -130,7 +132,7 @@ namespace Mids_Reborn
             lblEnhObtained.ForeColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
                 ? ColorFullBuild
                 : ColorNormalText;
-            lblEnhObtained.Text = $"Obtained: {EnhObtained}/{TotalEnhancements}";
+            lblEnhObtained.Text = $@"Obtained: {EnhObtained}/{TotalEnhancements}";
             lblCatalysts.Text = EnhCatalysts == 0
                 ? "--"
                 : $"x{EnhCatalysts}";
@@ -139,13 +141,59 @@ namespace Mids_Reborn
                 : $"x{EnhBoosters}";
         }
 
-        public static void UpdateEnhObtained(Label lblEnhObtained)
+        public static void UpdateAllSalvage(Control? control, bool useNegativeCount = false)
+        {
+            CalcAll();
+            switch (control)
+            {
+                case EnhCheckMode mode:
+                    mode.EnhObtainedColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                        ? ColorFullBuild
+                        : ColorNormalText;
+                    mode.EnhObtained = useNegativeCount
+                        ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                            ? "Complete"
+                            : $"{TotalEnhancements - EnhObtained} to go"
+                        : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+                    mode.Catalyst = EnhCatalysts == 0
+                        ? "--"
+                        : $"x{EnhCatalysts}";
+                    mode.Boosters = EnhBoosters == 0
+                        ? "--"
+                        : $"x{EnhBoosters}";
+                    break;
+            }
+        }
+
+        public static void UpdateEnhObtained(Label lblEnhObtained, bool useNegativeCount = false)
         {
             CalcEnhObtained();
             lblEnhObtained.ForeColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
                 ? ColorFullBuild
                 : ColorNormalText;
-            lblEnhObtained.Text = $"Obtained: {EnhObtained}/{TotalEnhancements}";
+            lblEnhObtained.Text = useNegativeCount
+                ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                    ? "Complete"
+                    : $"{TotalEnhancements - EnhObtained} to go"
+                : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+        }
+
+        public static void UpdateEnhObtained(Control? control, bool useNegativeCount = false)
+        {
+            CalcEnhObtained();
+            switch (control)
+            {
+                case EnhCheckMode mode:
+                    mode.EnhObtainedColor = EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                        ? ColorFullBuild
+                        : ColorNormalText;
+                    mode.EnhObtained = useNegativeCount
+                        ? EnhObtained == TotalEnhancements & TotalEnhancements > 0
+                            ? "Complete"
+                            : $"{TotalEnhancements - EnhObtained} to go"
+                        : $@"Obtained: {EnhObtained}/{TotalEnhancements}";
+                    break;
+            }
         }
     }
 }

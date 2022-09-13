@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(583, 84);
+            this.btnOk.Location = new System.Drawing.Point(95, 102);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 0;
@@ -50,7 +50,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(694, 84);
+            this.btnCancel.Location = new System.Drawing.Point(176, 102);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -62,7 +62,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(52, 38);
+            this.label1.Location = new System.Drawing.Point(12, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 2;
@@ -70,7 +70,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // textBoxPowerName
             // 
-            this.textBoxPowerName.Location = new System.Drawing.Point(138, 35);
+            this.textBoxPowerName.Location = new System.Drawing.Point(98, 18);
             this.textBoxPowerName.Name = "textBoxPowerName";
             this.textBoxPowerName.Size = new System.Drawing.Size(238, 20);
             this.textBoxPowerName.TabIndex = 3;
@@ -80,7 +80,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(447, 38);
+            this.label2.Location = new System.Drawing.Point(12, 64);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(106, 13);
             this.label2.TabIndex = 4;
@@ -90,9 +90,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbAtGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAtGroup.FormattingEnabled = true;
-            this.cbAtGroup.Location = new System.Drawing.Point(559, 34);
+            this.cbAtGroup.Location = new System.Drawing.Point(124, 61);
             this.cbAtGroup.Name = "cbAtGroup";
-            this.cbAtGroup.Size = new System.Drawing.Size(183, 21);
+            this.cbAtGroup.Size = new System.Drawing.Size(212, 21);
             this.cbAtGroup.TabIndex = 5;
             this.cbAtGroup.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbAtGroup_KeyDown);
             // 
@@ -101,14 +101,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(800, 137);
+            this.ClientSize = new System.Drawing.Size(346, 137);
             this.Controls.Add(this.cbAtGroup);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxPowerName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmConditionalAttributeSearch";
             this.ShowInTaskbar = false;
             this.Text = "Conditional attribute search";

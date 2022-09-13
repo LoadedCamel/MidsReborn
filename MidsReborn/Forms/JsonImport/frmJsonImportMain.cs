@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.JsonImport
@@ -33,7 +33,7 @@ namespace Mids_Reborn.Forms.JsonImport
 
             foreach (var c in classes)
             {
-                Archetype first = null;
+                Archetype? first = null;
                 foreach (var cls in DatabaseAPI.Database.Classes)
                     if (string.Equals(c.Name, cls.ClassName, StringComparison.OrdinalIgnoreCase))
                     {

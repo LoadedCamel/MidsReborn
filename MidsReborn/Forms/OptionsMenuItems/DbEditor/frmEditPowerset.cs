@@ -4,24 +4,25 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Display;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPowerset : Form
     {
-        public readonly IPowerset myPS;
+        public readonly IPowerset? myPS;
         private bool Loading;
 
 
-        public frmEditPowerset(ref IPowerset iSet)
+        public frmEditPowerset(ref IPowerset? iSet)
         {
             Load += frmEditPowerset_Load;
             Loading = true;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditPowerset));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPowerset);
             myPS = new Powerset(iSet);
         }
@@ -74,20 +75,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            ImagePicker.InitialDirectory = I9Gfx.GetPowersetsPath();
+            ImagePicker.InitialDirectory = I9Gfx.GetDbPowerSetsPath();
             ImagePicker.FileName = myPS.ImageName;
-            if (ImagePicker.ShowDialog() != DialogResult.OK)
-                return;
-            var str = FileIO.StripPath(ImagePicker.FileName);
-            if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
+            if (ImagePicker.ShowDialog(this) != DialogResult.OK) return;
+
+            var imageFile = FileIO.StripPath(ImagePicker.FileName);
+            if (!File.Exists(Path.Combine(I9Gfx.GetDbPowerSetsPath(), imageFile)))
             {
-                MessageBox.Show(
-                    $"You must select an image from the {I9Gfx.GetPowersetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it the folder and then select it.",
-                    "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($@"You must select an image from the {I9Gfx.GetDbPowerSetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                myPS.ImageName = str;
+                myPS.ImageName = imageFile;
                 DisplayIcon();
             }
         }

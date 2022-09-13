@@ -1,16 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.JsonImport;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
-using Newtonsoft.Json;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -23,8 +23,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnEditEntity;
 
         private Button btnEditIOSetPvE;
-
-        private Button btnFileReport;
 
         private Button btnPSBrowse;
 
@@ -55,6 +53,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label lblCountRecipe;
         private Label lblCountSalvage;
         private Label lblDate;
+        private frmBusy _frmBusy;
 
         public frmDBEdit()
         {
@@ -62,7 +61,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Initialized = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
         }
 
@@ -112,6 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            MidsContext.Config.CoDEffectFormat = false;
             Hide();
         }
 
@@ -193,15 +193,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmDBEdit_Load(object sender, EventArgs e)
         {
-            UdIssue.Enabled = MidsContext.Config.MasterMode;
-            UdPageVol.Enabled = MidsContext.Config.MasterMode;
-            txtPageVol.Enabled = MidsContext.Config.MasterMode;
-            btnFileReport.Visible = MidsContext.Config.MasterMode;
-            btnExportJSON.Visible = MidsContext.Config.MasterMode;
-            btnJsonImporter.Visible = MidsContext.Config.MasterMode;
-            btnGCMIO.Visible = MidsContext.Config.MasterMode;
-            btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
-            btnDBConverter.Visible = MidsContext.Config.MasterMode;
+            Text = $@"{DatabaseAPI.DatabaseName} Database Menu";
             DisplayInfo();
         }
 
@@ -260,20 +252,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private readonly frmMain _frmMain;
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var entJson = JsonConvert.DeserializeObject<List<SummonedEntity>>(File.ReadAllText($@"{Application.StartupPath}\\Data\\Ents.json"));
-            DatabaseAPI.Database.Entities = entJson.ToArray();
-            MessageBox.Show(@"Entities should now be restored. Verify via Entity editor then open and save Main DB.");
-        }
-
-        private void btnDBConverter_Click(object sender, EventArgs e)
-        {
-            var iParent = _frmMain;
-            frmDBConvert dbConvert = new frmDBConvert(ref iParent);
-            dbConvert.ShowDialog();
-        }
-
         private void txtPageVol_MouseHover(object sender, EventArgs e)
         {
             txtPageVol.ForeColor = Color.Gold;
@@ -289,6 +267,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case "Volume":
                     txtPageVol.Text = @"Page";
                     break;
+                case "PageVol":
+                    txtPageVol.Text = @"Volume";
+                    break;
             }
 
             DatabaseAPI.Database.PageVolText = txtPageVol.Text;
@@ -297,6 +278,88 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtPageVol_MouseLeave(object sender, EventArgs e)
         {
             txtPageVol.ForeColor = Color.White;
+        }
+
+        private async void btnDbCreate_Click(object sender, EventArgs e)
+        {
+            var iResult = InputBox.Show("Enter a name for your database", "Name your Database", false, "Enter the database name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!iResult.OK) return;
+            var dbName = iResult.Text;
+            var path = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, dbName);
+            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(Path.Combine(path, "Images"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Archetypes"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Enhancements"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Powersets"));
+            Directory.CreateDirectory(Path.Combine(path, "Images", "Sets"));
+            var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, "Generic"));
+            foreach (var file in files)
+            {
+                File.Copy(file, Path.Combine(path, Path.GetFileName(file)));
+            }
+
+            var result = MessageBox.Show(@"Would you like to load your new database now so you can start editing?", @"Load New Database?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes) return;
+            MidsContext.Config.DataPath = path;
+            MidsContext.Config.SavePath = path;
+            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            using var iFrm = new frmBusy();
+            _frmBusy = iFrm;
+            _frmBusy.SetTitle(@"Changing Database");
+            _frmBusy.Show();
+            await MainModule.MidsController.ChangeDatabase(_frmBusy);
+        }
+
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
+        }
+
+        private void btnServerDataEdit_Click(object sender, EventArgs e)
+        {
+            using var iFrmServerData = new frmServerData();
+            iFrmServerData.ShowDialog(this);
+        }
+
+        private async void btnGeneratePatch_Click(object sender, EventArgs e)
+        {
+            PatchCompressor compressor;
+            bool patchGenerated;
+            var pgQuery = !MidsContext.Config.IsLcAdmin ? new PatchGenQuery("Do You Wish To Generate A Database Patch Now?") : new PatchGenQuery("Select The Patch Type To Generate Below", true, "Database", "None");
+
+            var result = pgQuery.ShowDialog(this);
+            
+            switch (result)
+            {
+                case GenResult.Application:
+                    compressor = PatchCompressor.AppPatchCompressor;
+                    patchGenerated = compressor.CreatePatchFile(AppContext.BaseDirectory, PatchCompressor.EPatchType.Application);
+                    
+                    break;
+                case GenResult.Database:
+                    compressor = PatchCompressor.DbPatchCompressor;
+                    patchGenerated =compressor.CreatePatchFile(MidsContext.Config.DataPath, PatchCompressor.EPatchType.Database);
+                    
+                    break;
+                case GenResult.Cancel:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (patchGenerated)
+            {
+                MessageBox.Show(@"Patch generation complete", @"Patch Generation Status", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(
+                    @"Patch generation failed due to an unknown error, please relaunch the application and try again.",
+                    @"Patch Generation Status", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

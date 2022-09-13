@@ -5,10 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.UIv2
 {
@@ -73,11 +73,9 @@ namespace Mids_Reborn.UIv2
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
                     MidsContext.Config.CheckForUpdates = false;
-                    MidsContext.Config.DefaultSaveFolderOverride = null;
-                    MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
                 }
-                MainModule.MidsController.LoadData(ref _frmInitializing);
+                MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                 _frmInitializing?.SetMessage("Setting up UI...");
 
                 Show();
@@ -172,7 +170,7 @@ namespace Mids_Reborn.UIv2
             // Assign this method to Mouse_Move event of that Form or Panel
             if (_isMoving)
             {
-                this.SetDesktopLocation(MousePosition.X - _movX, MousePosition.Y - _movY);
+                SetDesktopLocation(MousePosition.X - _movX, MousePosition.Y - _movY);
             }
         }
 
@@ -244,12 +242,12 @@ namespace Mids_Reborn.UIv2
             if (cbPrimary.SelectedIndex < 0)
                 return;
             IPowerset selectedPri;
-            var primaryList = new BindingList<IPower>();
+            var primaryList = new BindingList<IPower?>();
             var selectedPowerset = (Powerset) cbPrimary.Items[cbPrimary.SelectedIndex];
             switch (selectedPowerset.DisplayName)
             {
                 case "Arachnos Soldier":
-                    primaryList = new BindingList<IPower>(selectedPowerset.Powers);
+                    primaryList = new BindingList<IPower?>(selectedPowerset.Powers);
                     cbSecondary.SelectedIndex = 2;
                     break;
                 case "Bane Spider Soldier":
@@ -285,17 +283,17 @@ namespace Mids_Reborn.UIv2
                     cbSecondary.SelectedIndex = 2;
                     break;
                 case "Widow Training":
-                    primaryList = new BindingList<IPower>(selectedPowerset.Powers);
+                    primaryList = new BindingList<IPower?>(selectedPowerset.Powers);
                     cbSecondary.SelectedIndex = 1;
                     break;
                 default:
-                    primaryList = new BindingList<IPower>(selectedPowerset.Powers);
+                    primaryList = new BindingList<IPower?>(selectedPowerset.Powers);
                     break;
             }
             FillPrimaryPowers(primaryList);
         }
 
-        public void FillPrimaryPowers(BindingList<IPower> primaryPowers)
+        public void FillPrimaryPowers(BindingList<IPower?> primaryPowers)
         {
             Primary_Powers.SelectionMode = SelectionMode.None;
             Primary_Powers.DisplayMember = "DisplayName";
@@ -321,7 +319,7 @@ namespace Mids_Reborn.UIv2
             if (cbSecondary.SelectedIndex < 0)
                 return;
             IPowerset selectedSec;
-            var secondaryList = new BindingList<IPower>();
+            var secondaryList = new BindingList<IPower?>();
             var selectedPowerset = (Powerset) cbSecondary.Items[cbSecondary.SelectedIndex];
             switch (selectedPowerset.DisplayName)
             {
@@ -356,14 +354,14 @@ namespace Mids_Reborn.UIv2
                         secondaryList.Add(power);
                     break;
                 default:
-                    secondaryList = new BindingList<IPower>(selectedPowerset.Powers);
+                    secondaryList = new BindingList<IPower?>(selectedPowerset.Powers);
                     break;
             }
 
             FillSecondaryPowers(secondaryList);
         }
 
-        public void FillSecondaryPowers(BindingList<IPower> secondaryPowers)
+        public void FillSecondaryPowers(BindingList<IPower?> secondaryPowers)
         {
             Secondary_Powers.SelectionMode = SelectionMode.None;
             Secondary_Powers.DisplayMember = "DisplayName";
@@ -398,10 +396,10 @@ namespace Mids_Reborn.UIv2
                 return;
             }
             var selectedPowerset = (Powerset)cbAncillary.Items[cbAncillary.SelectedIndex];
-            FillAncillaryPowers(new BindingList<IPower>(selectedPowerset.Powers));
+            FillAncillaryPowers(new BindingList<IPower?>(selectedPowerset.Powers));
         }
 
-        public void FillAncillaryPowers(BindingList<IPower> ancillaryPowers)
+        public void FillAncillaryPowers(BindingList<IPower?> ancillaryPowers)
         {
             Ancillary_Powers.SelectionMode = SelectionMode.None;
             Ancillary_Powers.DisplayMember = "DisplayName";
@@ -424,10 +422,10 @@ namespace Mids_Reborn.UIv2
             if (cbPool0.SelectedIndex < 0)
                 return;
             var selectedPowerset = (Powerset) cbPool0.Items[cbPool0.SelectedIndex];
-            FillPool0Powers(new BindingList<IPower>(selectedPowerset.Powers));
+            FillPool0Powers(new BindingList<IPower?>(selectedPowerset.Powers));
         }
 
-        public void FillPool0Powers(BindingList<IPower> poolPowers)
+        public void FillPool0Powers(BindingList<IPower?> poolPowers)
         {
             Pool0_Powers.SelectionMode = SelectionMode.None;
             Pool0_Powers.DisplayMember = "DisplayName";
@@ -450,10 +448,10 @@ namespace Mids_Reborn.UIv2
             if (cbPool1.SelectedIndex < 0)
                 return;
             var selectedPowerset = (Powerset)cbPool1.Items[cbPool1.SelectedIndex];
-            FillPool1Powers(new BindingList<IPower>(selectedPowerset.Powers));
+            FillPool1Powers(new BindingList<IPower?>(selectedPowerset.Powers));
         }
 
-        public void FillPool1Powers(BindingList<IPower> poolPowers)
+        public void FillPool1Powers(BindingList<IPower?> poolPowers)
         {
             Pool1_Powers.SelectionMode = SelectionMode.None;
             Pool1_Powers.DisplayMember = "DisplayName";
@@ -475,10 +473,10 @@ namespace Mids_Reborn.UIv2
             if (cbPool2.SelectedIndex < 0)
                 return;
             var selectedPowerset = (Powerset)cbPool2.Items[cbPool2.SelectedIndex];
-            FillPool2Powers(new BindingList<IPower>(selectedPowerset.Powers));
+            FillPool2Powers(new BindingList<IPower?>(selectedPowerset.Powers));
         }
 
-        public void FillPool2Powers(BindingList<IPower> poolPowers)
+        public void FillPool2Powers(BindingList<IPower?> poolPowers)
         {
             Pool2_Powers.SelectionMode = SelectionMode.None;
             Pool2_Powers.DisplayMember = "DisplayName";
@@ -500,10 +498,10 @@ namespace Mids_Reborn.UIv2
             if (cbPool3.SelectedIndex < 0)
                 return;
             var selectedPowerset = (Powerset)cbPool3.Items[cbPool3.SelectedIndex];
-            FillPool3Powers(new BindingList<IPower>(selectedPowerset.Powers));
+            FillPool3Powers(new BindingList<IPower?>(selectedPowerset.Powers));
         }
 
-        public void FillPool3Powers(BindingList<IPower> poolPowers)
+        public void FillPool3Powers(BindingList<IPower?> poolPowers)
         {
             Pool3_Powers.SelectionMode = SelectionMode.None;
             Pool3_Powers.DisplayMember = "DisplayName";

@@ -1,12 +1,14 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn
 {
@@ -19,19 +21,21 @@ namespace Mids_Reborn
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] excludePowersets { get; } = {"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+        protected string[] ExcludePowersets { get; } = { "Redirects." }; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
 
-        protected string[] excludePowers { get; } =
+        protected string[] ExcludePowers { get; } =
         {
-            "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation",
-            "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul",
-            "Ammunition",
+            "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation", // Bio armor
+            "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul", // Staff Fighting (all but stalkers)
+            "Ammunition", // Dual Pistols
             "Build_Up_Proc", // Martial Manipulation (Blasters)
             /*"Black_Dwarf_", "Dark_Nova_", "White_Dwarf_", "Bright_Nova_",*/
-            "Sorcery.Translocation", "Experimentation.Jaunt", "Force_of_Will.Stomp"
+            "Sorcery.Translocation", "Experimentation.Jaunt", "Force_of_Will.Stomp",
+            "Speed.SpeedPhase", "Leaping.Double_Jump",
+            "Flight.Fly_Boost" // Afterburner
         };
 
-        protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new Dictionary<int, int>
+        protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
         {
             [2553] = 1521,
             [2554] = 1523,
@@ -44,10 +48,10 @@ namespace Mids_Reborn
             // Warning: DatabaseAPI.GetArchetypeByName looks up archetype info by display name, not by internal name.
             // Meaning underscores have to be replaced with spaces for VEATs...
             MidsContext.Character.Archetype = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype.Replace("_", " "));
-            MidsContext.Character.Origin =
-                DatabaseAPI.GetOriginByName(MidsContext.Character.Archetype, CharacterInfo.Origin);
+            MidsContext.Character.Origin = DatabaseAPI.GetOriginByName(MidsContext.Character.Archetype, CharacterInfo.Origin);
             MidsContext.Character.Reset(MidsContext.Character.Archetype, MidsContext.Character.Origin);
             MidsContext.Character.Name = CharacterInfo.Name;
+            /*
             MidsContext.Character.Alignment = CharacterInfo.Alignment switch
             {
                 "Hero" => Enums.Alignment.Hero,
@@ -56,6 +60,14 @@ namespace Mids_Reborn
                 "Villain" => Enums.Alignment.Villain,
                 "Loyalist" => Enums.Alignment.Loyalist,
                 "Resistance" => Enums.Alignment.Resistance,
+                _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain
+            };
+            */
+
+            MidsContext.Character.Alignment = CharacterInfo.Alignment switch
+            {
+                "Hero" or "Vigilante" or "Resistance" => Enums.Alignment.Hero,
+                "Villain" or "Rogue" or "Loyalist" => Enums.Alignment.Villain,
                 _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain
             };
 
@@ -71,24 +83,44 @@ namespace Mids_Reborn
             };
 
             //str1 = buildFileLinesArray[index3].enhancementName;
-            if (i9Slot.Enh == -1)
+            if (i9Slot.Enh != -1)
             {
-                var iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
-                i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
-                if (i9Slot.Enh == -1)
-                {
-                    _ = MessageBox.Show("Error getting data for enhancement UID: " + enhInternalName, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    i9Slot.Enh = 0;
-                }
+                return i9Slot;
             }
+
+            var iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
+            var r = new Regex(@"^(Science|Mutation|Technology|Natural)_(?!Science|Mutation|Technology|Natural|Magic)"); // SOs
+            if (r.IsMatch(iName))
+            {
+                iName = r.Replace(iName, "Magic_");
+                i9Slot.Grade = Enums.eEnhGrade.SingleO;
+            }
+
+            r = new Regex(@"^(Science|Mutation|Technology|Natural|Magic)_(Science|Mutation|Technology|Natural|Magic)"); // DOs
+            if (r.IsMatch(iName))
+            {
+                iName = r.Replace(iName, "Magic");
+                i9Slot.Grade = Enums.eEnhGrade.DualO;
+            }
+
+            i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
+            if (i9Slot.Enh != -1)
+            {
+                return i9Slot;
+            }
+
+            if (Debugger.IsAttached)
+            {
+                MessageBox.Show($"Error getting data for enhancement UID: {enhInternalName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            i9Slot.Enh = 0;
 
             return i9Slot;
         }
 
         protected void AddPowerToBuildSheet(RawPowerData p, ref List<PowerEntry> listPowers)
         {
-            int i;
             var powerEntry = new PowerEntry
             {
                 Level = p.Level,
@@ -99,7 +131,7 @@ namespace Mids_Reborn
 
             if (p.Slots.Count > 0)
             {
-                for (i = 0; i < powerEntry.Slots.Length; i++)
+                for (var i = 0; i < powerEntry.Slots.Length; i++)
                 {
                     powerEntry.Slots[i] = new SlotEntry
                     {
@@ -107,24 +139,24 @@ namespace Mids_Reborn
                         Enhancement = new I9Slot(),
                         FlippedEnhancement = new I9Slot()
                     };
+                    
                     if (p.Slots[i].InternalName == "Empty") continue;
 
                     var i9Slot = SelectEnhancementByIdx(p.Slots[i].eData, p.Slots[i].InternalName);
                     var enhType = DatabaseAPI.Database.Enhancements[i9Slot.Enh].TypeID;
 
-                    if (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO)
+                    switch (enhType)
                     {
-                        i9Slot.RelativeLevel =
-                            (Enums.eEnhRelative) (p.Slots[i].Boosters + 4); // +4 === 5 boosters ??? Damn you, maths.
-                        i9Slot.Grade = Enums.eEnhGrade.SingleO;
-                    }
-
-                    if (enhType == Enums.eType.InventO || enhType == Enums.eType.SetO)
-                    {
-                        // Current enhancement level: //p.Slots[i].Level;
-                        // Set to maximum since attuned ones will give the lowest level possible.
-                        i9Slot.IOLevel = DatabaseAPI.Database.Enhancements[i9Slot.Enh].LevelMax;
-                        i9Slot.RelativeLevel = (Enums.eEnhRelative) (p.Slots[i].Boosters + 4);
+                        case Enums.eType.Normal or Enums.eType.SpecialO:
+                            i9Slot.RelativeLevel = (Enums.eEnhRelative) (p.Slots[i].Boosters + 4); // +4 === 5 boosters ??? Damn you, maths.
+                            i9Slot.Grade = Enums.eEnhGrade.SingleO;
+                            break;
+                        case Enums.eType.InventO or Enums.eType.SetO:
+                            // Current enhancement level: //p.Slots[i].Level;
+                            // Set to maximum since attuned ones will give the lowest level possible.
+                            i9Slot.IOLevel = DatabaseAPI.Database.Enhancements[i9Slot.Enh].LevelMax;
+                            i9Slot.RelativeLevel = (Enums.eEnhRelative) (p.Slots[i].Boosters + 4);
+                            break;
                     }
 
                     powerEntry.Slots[i].Enhancement = i9Slot;
@@ -160,11 +192,11 @@ namespace Mids_Reborn
             switch (validateType)
             {
                 case Enums.eValidationType.Powerset:
-                    excludes = excludePowersets;
+                    excludes = ExcludePowersets;
                     break;
 
                 case Enums.eValidationType.Power:
-                    excludes = excludePowers;
+                    excludes = ExcludePowers;
                     break;
 
                 default:
@@ -180,26 +212,23 @@ namespace Mids_Reborn
         // Since DatabaseAPI.GetPowersetByName may return null
         protected bool CheckValid(IPowerset? input)
         {
-            if (input == null) return false;
-
-            return !excludePowersets.Any(x => input.FullName.Contains(x));
+            return input != null && !ExcludePowersets.Any(ps => input.FullName.Contains(ps));
         }
 
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowerByName may return null
         protected bool CheckValid(IPower? input)
         {
-            if (input == null) return false;
-
-            return !excludePowers.Any(x => input.FullName.Contains(x));
+            return input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
-        protected string FixKheldPowerNames(string powerName)
+        protected string FixPowersetsNames(string powerName)
         {
             return powerName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
                 .Replace("Warshade_Offensive.Umbral_Blast.", "Inherent.Inherent.")
                 .Replace("Peacebringer_Offensive.Luminous_Blast.", "Inherent.Inherent.")
-                .Replace("Peacebringer_Defensive.Luminous_Aura.", "Inherent.Inherent.");
+                .Replace("Peacebringer_Defensive.Luminous_Aura.", "Inherent.Inherent.")
+                .Replace("Mastermind_Buff.Shock_Therapy.", "Mastermind_Buff.Electrical_Affinity.");
         }
 
         public UniqueList<string> GetPowersets()
@@ -210,6 +239,84 @@ namespace Mids_Reborn
         public RawCharacterInfo GetCharacterInfo()
         {
             return CharacterInfo;
+        }
+
+        public static int CountPools(UniqueList<string> listPowersets)
+        {
+            return listPowersets.
+                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray()
+                .Length;
+        }
+
+        public static void PadPowerPools(ref UniqueList<string> listPowersets)
+        {
+            var nbPools = CountPools(listPowersets);
+
+            if (nbPools == 4) return;
+
+            var pickedPowerPools = listPowersets
+                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .ToArray();
+            var dbPowerPools = Database.Instance.Powersets
+                .Where(ps =>
+                    ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
+                    !pickedPowerPools.Contains(ps.FullName))
+                .OrderBy(e => e.DisplayName)
+                .Select(e => e.FullName)
+                .ToArray();
+
+            for (var i = 0; i < 4 - nbPools; i++)
+            {
+                listPowersets.Add(dbPowerPools[i]);
+            }
+        }
+
+        public static void FilterVEATPools(ref UniqueList<string> listPowersets)
+        {
+            if (listPowersets.Contains("Training_Gadgets.Bane_Spider_Training") ||
+                listPowersets.Contains("Training_Gadgets.Crab_Spider_Training"))
+            {
+                listPowersets.FromList(listPowersets.Where(e => e != "Training_Gadgets.Training_and_Gadgets").ToList());
+                return;
+            }
+
+            if (listPowersets.Contains("Widow_Training.Fortunata_Training") ||
+                listPowersets.Contains("Widow_Training.Night_Widow_Training"))
+                listPowersets.FromList(listPowersets
+                    .Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
+        }
+
+        public static void FixUndetectedPowersets(ref UniqueList<string> listPowersets)
+        {
+            for (var i = 0; i < listPowersets.Count; i++)
+            {
+                if (i == 2) continue;
+
+                if (listPowersets[i] == null || listPowersets[i] == "")
+                {
+                    var setType = i switch
+                    {
+                        0 => Enums.ePowerSetType.Primary,
+                        1 => Enums.ePowerSetType.Secondary,
+                        7 => Enums.ePowerSetType.Ancillary,
+                        _ => Enums.ePowerSetType.Pool
+                    };
+                    var ps1 = DatabaseAPI.Database.Powersets
+                        .First(ps => ps.ATClass == MidsContext.Character.Archetype.DisplayName & ps.SetType == setType);
+
+                    listPowersets[i] = ps1.FullName;
+                }
+            }
+        }
+
+        public static void FinalizePowersetsList(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets.GetRange(0, 7));
+            listPowersets.FromList(listPowersets.Select(e => e.Contains(".")
+                ? e
+                : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
+            ).ToList());
         }
     }
 
@@ -238,24 +345,34 @@ namespace Mids_Reborn
             };
         }
 
+        private string CheckForPowersetAliases(string fullName, string archetype)
+        {
+            archetype = archetype.ToLowerInvariant();
+            
+            return fullName.ToLowerInvariant() switch
+            {
+                "epic.defender_flame_mastery" when archetype == "defender" => "Epic.Def_Flame_Mastery",
+                "epic.stalker_mace_mastery" when archetype == "scrapper" => "Epic.Scrapper_Mace_Mastery",
+                "epic.corruptor_fire_mastery" when archetype == "corruptor" => "Epic.Corr_Flame_Mastery",
+                "epic.sentinel_electricity_mastery" when archetype == "sentinel" => "Epic.Sentinel_Elec_Mastery",
+                "epic.sentinel_leviathan_mastery" when archetype == "sentinel" => "Epic.Sentinel_Lev_Mastery",
+                "epic.sentinel_psionic_mastery" when archetype == "sentinel" => "Epic.Sentinel_Psi_Mastery",
+                _ => fullName
+            };
+        }
+
         public List<PowerEntry>? Parse()
         {
-            string rawPowerset;
             var p = new RawPowerData {Valid = false};
-            var powerSlots = new List<RawEnhData>();
-            RawEnhData e;
-
             var listPowers = new List<PowerEntry>();
-            string[] powerIDChunks;
 
             var r1 = new Regex(@"^Level ([0-9]+)\: (.+)$");
             var r2 = new Regex(@"^[\t\s]*EMPTY$");
             var r3 = new Regex(@"^[\t\s]*([0-9a-zA-Z\+\:\-_]+) \(([0-9]+)(\+([1-5]))?\)$");
 
             var line = -1;
-            string lineText;
             using var streamReader = new StreamReader(BuildString);
-            while ((lineText = streamReader.ReadLine()) != null)
+            while (streamReader.ReadLine() is { } lineText)
             {
                 line++;
 
@@ -289,18 +406,22 @@ namespace Mids_Reborn
 
                 if (m1.Success)
                 {
-                    if (p.Valid) AddPowerToBuildSheet(p, ref listPowers);
+                    if (p.Valid)
+                    {
+                        AddPowerToBuildSheet(p, ref listPowers);
+                    }
 
-                    powerIDChunks = m1.Groups[2].Value.Split(' ');
-                    rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
-                    p.FullName = CheckForAliases(m1.Groups[2].Value.Replace(" ", "."));
+                    var powerIDChunks = m1.Groups[2].Value.Split(' ');
+                    var rawPowerset = $"{powerIDChunks[0]}.{powerIDChunks[1]}".Trim();
+                    var powerBaseName = powerIDChunks[2].Trim();
+                    p.FullName = CheckForAliases($"{CheckForPowersetAliases(rawPowerset, CharacterInfo.Archetype)}.{powerBaseName}");
                     p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)
                     {
-                        p.FullName = FixKheldPowerNames(p.FullName);
+                        p.FullName = FixPowersetsNames(p.FullName);
                         powerIDChunks = p.FullName.Split('.');
-                        rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
+                        rawPowerset = $"{powerIDChunks[0]}.{powerIDChunks[1]}".Trim();
                         p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                         p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     }
@@ -308,12 +429,15 @@ namespace Mids_Reborn
                     p.Valid = CheckValid(p.pData);
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
-                    if (CheckValid(p.Powerset)) PowerSets.Add(p.Powerset.FullName);
+                    if (p.Valid && CheckValid(p.Powerset))
+                    {
+                        PowerSets.Add(p.Powerset.FullName);
+                    }
                 }
                 else if (m2.Success)
                 {
                     // Empty slot
-                    e = new RawEnhData
+                    var e = new RawEnhData
                     {
                         InternalName = "Empty",
                         Level = 0,
@@ -321,12 +445,13 @@ namespace Mids_Reborn
                         HasCatalyst = false,
                         eData = -1
                     };
+
                     p.Slots.Add(e);
                 }
                 else if (m3.Success)
                 {
                     // Enhancement: internal name, level, (dummy), boosters
-                    e = new RawEnhData
+                    var e = new RawEnhData
                     {
                         InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value),
                         Level = Convert.ToInt32(m3.Groups[2].Value, null),
@@ -342,7 +467,10 @@ namespace Mids_Reborn
             }
 
             streamReader.Close();
-            if (p.Valid) AddPowerToBuildSheet(p, ref listPowers);
+            if (p.Valid)
+            {
+                AddPowerToBuildSheet(p, ref listPowers);
+            }
 
             return listPowers;
         }
@@ -357,7 +485,7 @@ namespace Mids_Reborn
     {
         private readonly BuilderApp BuilderApp;
 
-        private readonly Dictionary<string, string> OldSetNames = new Dictionary<string, string>
+        private readonly Dictionary<string, string> OldSetNames = new()
         {
             ["Achilles"] = "AchHee",
             ["AdjTgt"] = "AdjTrg",
@@ -435,28 +563,27 @@ namespace Mids_Reborn
 
         private string ShortNamesConversion(string sn)
         {
-            if (string.IsNullOrEmpty(sn)) return sn;
+            if (string.IsNullOrEmpty(sn))
+            {
+                return sn;
+            }
 
             foreach (var k in OldSetNames)
+            {
                 if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1)
+                {
                     return sn.Replace(k.Key, k.Value);
+                }
+            }
 
             return sn;
         }
 
         public List<PowerEntry>? Parse()
         {
-            Regex r;
-            Regex rs;
-            Match m;
-            Match ms;
-            string cnt;
-            int i;
-
+            var cnt = "";
             var p = new RawPowerData {Valid = false};
-            var powerSlots = new List<RawEnhData>();
             var e = new RawEnhData();
-
             var listPowers = new List<PowerEntry>();
 
             try
@@ -466,6 +593,7 @@ namespace Mids_Reborn
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                
                 return null;
             }
 
@@ -481,15 +609,24 @@ namespace Mids_Reborn
             // Alignment, builder software and version
             // Note: old Pine Hero Designer is listed as 'Hero Hero Designer'
             // Extended: Rogue/Vigilante will be added in a later release.
-            r = new Regex(@"(Hero|Villain|Rogue|Vigilante) Plan by ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
-            m = r.Match(cnt);
+            // Old header
+            var r = new Regex(@"(Hero|Villain|Rogue|Vigilante) Plan by ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
+            var m = r.Match(cnt);
 
             if (!m.Success)
             {
-                _ = MessageBox.Show(
-                    "This build cannot be recovered because it doesn't contain a valid plain text part.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
+                // New header (v3.0+)
+                var rNew = new Regex(@"This (Hero|Villain|Rogue|Vigilante) build was built using ([a-zA-Z\:\'\s]+) ([0-9\.]+)");
+                m = rNew.Match(cnt);
+
+                if (!m.Success)
+                {
+                    MessageBox.Show(
+                        "This build cannot be recovered because it doesn't contain a valid plain text part.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    return null;
+                }
             }
 
             CharacterInfo.Alignment = m.Groups[1].Value;
@@ -502,8 +639,8 @@ namespace Mids_Reborn
             if (!m.Success)
             {
                 // Name is empty
-                rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
-                ms = rs.Match(cnt);
+                var rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
+                var ms = rs.Match(cnt);
                 CharacterInfo.Name = string.Empty;
                 CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
                 CharacterInfo.Origin = ms.Groups[2].Value;
@@ -517,6 +654,16 @@ namespace Mids_Reborn
                 CharacterInfo.Archetype = m.Groups[4].Value;
             }
 
+            var archetype = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
+            if (archetype == null)
+            {
+                MessageBox.Show(
+                    $"Invalid Archetype \"{CharacterInfo.Archetype}\"", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return null;
+            }
+            
             SetCharacterInfo();
 
             // Main powersets
@@ -537,80 +684,90 @@ namespace Mids_Reborn
                 m = m.NextMatch();
             }
 
+            var powersetsFullNamesList = new UniqueList<string>();
+            powersetsFullNamesList.AddRange(PowerSets);
+
+            PadPowerPools(ref powersetsFullNamesList);
+            FilterVEATPools(ref powersetsFullNamesList);
+            FixUndetectedPowersets(ref powersetsFullNamesList);
+            FinalizePowersetsList(ref powersetsFullNamesList);
+
             // Powers
-            string PSlotsStr;
-            string[] PSlots;
-            string[] s;
-            string? sContentEnh;
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
-            m = r.Match(cnt);
-            while (m.Success)
+            var rMatches = r.Matches(cnt);
+
+            foreach (Match mt in rMatches) // var mt is of type object?
             {
                 p = new RawPowerData();
-                e = new RawEnhData();
                 p.Slots = new List<RawEnhData>();
 
-                p.DisplayName = m.Groups[2].Value.Trim();
-                p.Level = Convert.ToInt32(m.Groups[1].Value, null);
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName,
-                    DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
-                p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
+                p.DisplayName = mt.Groups[2].Value.Trim();
+                p.Level = Convert.ToInt32(mt.Groups[1].Value, null);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsFullNamesList);
+                p.Powerset = p.pData?.GetPowerSet();
+                p.FullName = p.pData == null ? string.Empty : p.pData.FullName;
                 p.Valid = CheckValid(p.pData);
-                PSlotsStr = m.Groups.Count > 3 ? m.Groups[3].Value.Trim() : string.Empty;
-                if (!string.IsNullOrEmpty(PSlotsStr))
+
+                var pSlotsStr = mt.Groups.Count > 3 ? mt.Groups[3].Value.Trim() : string.Empty;
+                if (!string.IsNullOrEmpty(pSlotsStr))
                 {
                     // Extract enhancement name and slot level ('A' for power inherent slot)
                     // Handle special enhancements with parenthesis like ExpRnf-+Res(Pets)(50)
-                    PSlotsStr = Regex.Replace(PSlotsStr, @"\(([^A0-9]+)\)", "[$1]");
-                    PSlots = Regex.Split(PSlotsStr, @",\s");
+                    pSlotsStr = Regex.Replace(pSlotsStr, @"\(([^A0-9]+)\)", "[$1]");
+                    var pSlots = Regex.Split(pSlotsStr, @",\s");
 
-                    for (i = 0; i < PSlots.Length; i++)
+                    foreach (var ps in pSlots)
                     {
-                        s = Regex.Split(PSlots[i], @"/[\(\)]");
-                        s = Array.FindAll(s, e => !string.IsNullOrWhiteSpace(e));
+                        var s = Regex.Split(ps, @"[\(\)]");
+                        s = Array.FindAll(s, enh => !string.IsNullOrWhiteSpace(enh));
 
-                        sContentEnh =
-                            s[0] == "Empty"
-                                ? null
-                                : ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
+                        var sContentEnh = s[0] == "Empty"
+                            ? s[0]
+                            : ShortNamesConversion(s[0]);
+                        var enhDataIdx = DatabaseAPI.GetEnhancementByShortName(sContentEnh);
+
                         try
                         {
-                            e.InternalName = s[0];
-                            e.Level = s[1] == "A"
-                                ? 0
-                                : Convert.ToInt32(s[1], null); // Slot level ("A" is the auto-granted one)
-                            e.Boosters = 0; // Not handled
-                            e.HasCatalyst = false;
-                            e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
+                            e = new RawEnhData
+                            {
+                                InternalName = sContentEnh,
+                                Level = s[1] == "A"
+                                    ? 0
+                                    : Convert.ToInt32(s[1], null), // Slot level ("A" is the auto-granted one)
+                                Boosters = 0, // Not handled
+                                HasCatalyst = false,
+                                eData = enhDataIdx
+                            };
+
                             p.Slots.Add(e);
                         }
-                        catch (FormatException) // if (isNaN(s[1]
+                        catch (FormatException) // if (isNaN(s[1]))
                         {
-                            e.InternalName = "Empty";
-                            e.Level = 0;
-                            e.Boosters = 0;
-                            e.HasCatalyst = false;
-                            e.eData = -1;
+                            e = new RawEnhData
+                            {
+                                InternalName = "Empty",
+                                Level = 0,
+                                Boosters = 0,
+                                HasCatalyst = false,
+                                eData = -1
+                            };
+
                             p.Slots.Add(e);
                         }
                     }
                 }
 
-                if (p.Valid)
+                if (!p.Valid) continue;
+                
+                if (CheckValid(p.Powerset))
                 {
-                    if (CheckValid(p.Powerset)) PowerSets.Add(p.Powerset.FullName);
-                    AddPowerToBuildSheet(p, ref listPowers);
+                    PowerSets.Add(p.Powerset.FullName);
                 }
+
+                AddPowerToBuildSheet(p, ref listPowers);
             }
 
             return listPowers;
         }
-
-/*
-        public List<string> GetPowerSets()
-        {
-            return PowerSets;
-        }
-*/
     }
 }

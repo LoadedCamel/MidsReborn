@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MidsReborn": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

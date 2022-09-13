@@ -1,3 +1,4 @@
+using MRBResourceLib;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -9,7 +10,7 @@ namespace Mids_Reborn.Forms
         {
             Closing += Busy_Closing;
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         public void SetMessage(string iMsg)

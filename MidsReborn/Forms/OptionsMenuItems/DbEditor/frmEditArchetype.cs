@@ -2,15 +2,15 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditArchetype : Form
     {
-        public readonly Archetype MyAT;
+        public readonly Archetype? MyAT;
         private readonly bool ONDuplicate;
         private readonly string OriginalName;
         private Button btnCancel;
@@ -75,7 +75,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private NumericUpDown udColumn;
         private NumericUpDown udThreat;
 
-        public frmEditArchetype(ref Archetype iAT)
+        public frmEditArchetype(ref Archetype? iAT)
         {
             Load += frmEditArchetype_Load;
             Loading = true;
@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ONDuplicate = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditArchetype));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditArchetype);
             MyAT = new Archetype(iAT);
             OriginalName = MyAT.ClassName;

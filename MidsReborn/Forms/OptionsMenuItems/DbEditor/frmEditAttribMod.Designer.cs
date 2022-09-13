@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -57,7 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblRevision = new System.Windows.Forms.NumericUpDown();
             this.lblRevisionDate = new System.Windows.Forms.TextBox();
             this.btnExportJson = new System.Windows.Forms.Button();
-            this.pbGraph = new mrbControls.ctlDataGraph();
+            this.pbGraph = new ctlDataGraph();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
             this.SuspendLayout();

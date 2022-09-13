@@ -2,9 +2,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
-using mrbBase;
-using mrbBase.Base.Extensions;
+using MRBResourceLib;
 
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
@@ -31,8 +33,7 @@ namespace Mids_Reborn.Forms
         {
             Load += frmEntityListing_Load;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEntityListing));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEntityListing);
         }
 
@@ -55,7 +56,7 @@ namespace Mids_Reborn.Forms
         private void btnCancel_Click(object sender, EventArgs e)
         {
             BusyMsg("Re-Indexing...");
-            DatabaseAPI.LoadMainDatabase();
+            DatabaseAPI.LoadMainDatabase(MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
             BusyHide();
             Hide();
@@ -142,7 +143,7 @@ namespace Mids_Reborn.Forms
         {
             DatabaseAPI.MatchSummonIDs();
             var serializer = Serializer.GetSerializer();
-            DatabaseAPI.SaveMainDatabase(serializer);
+            DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.SavePath);
             frmMain.MainInstance.UpdateTitle();
             Hide();
         }

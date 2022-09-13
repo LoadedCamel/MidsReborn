@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.UIv2.v2Controls
 {
@@ -30,10 +31,10 @@ namespace Mids_Reborn.UIv2.v2Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.ctlOutlinedLabel1 = new mrbControls.ctlOutlinedLabel();
-            this.ctlCombo1 = new mrbControls.ctlCombo();
-            this.Panel1 = new mrbControls.ctlPanel();
-            this.ctlPowerList1 = new mrbControls.ctlPowerList();
+            this.ctlOutlinedLabel1 = new ctlOutlinedLabel();
+            this.ctlCombo1 = new ctlCombo();
+            this.Panel1 = new ctlPanel();
+            this.ctlPowerList1 = new ctlPowerList();
             this.SuspendLayout();
             // 
             // ctlOutlinedLabel1
@@ -55,7 +56,7 @@ namespace Mids_Reborn.UIv2.v2Controls
             // 
             // ctlCombo1
             // 
-            this.ctlCombo1.ComboType = mrbControls.ctlCombo.ComboBoxType.Archetype;
+            this.ctlCombo1.ComboType = ctlCombo.ComboBoxType.Archetype;
             this.ctlCombo1.Dock = System.Windows.Forms.DockStyle.Top;
             this.ctlCombo1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.ctlCombo1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -109,9 +110,9 @@ namespace Mids_Reborn.UIv2.v2Controls
 
         #endregion
 
-        protected mrbControls.ctlOutlinedLabel ctlOutlinedLabel1;
-        protected mrbControls.ctlCombo ctlCombo1;
+        protected ctlOutlinedLabel ctlOutlinedLabel1;
+        protected ctlCombo ctlCombo1;
         protected Panel Panel1;
-        protected mrbControls.ctlPowerList ctlPowerList1;
+        protected ctlPowerList ctlPowerList1;
     }
 }

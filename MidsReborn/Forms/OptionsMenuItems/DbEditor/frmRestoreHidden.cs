@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Extensions;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Extensions;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmRestoreHidden : Form
     {
-        private List<IPower> _hiddenPowers;
+        private List<IPower?> _hiddenPowers;
         private bool _ignoreTemps = true;
 
         public frmRestoreHidden()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void frmRestoreHidden_Load(object sender, EventArgs e)

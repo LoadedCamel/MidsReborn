@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn
 {
@@ -270,29 +270,18 @@ namespace Mids_Reborn
                                                 iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO);
                                         break;
                                     case Enums.eType.SpecialO:
+                                        var subtypeId = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].SubTypeID;
+                                        var specEnh = DatabaseAPI.GetSpecialEnhByIndex(subtypeId);
                                         if (!LongExport)
                                         {
-                                            var str4 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].SubTypeID switch
-                                            {
-                                                Enums.eSubtype.DSync => "DS:",
-                                                Enums.eSubtype.Hamidon => "HO:",
-                                                Enums.eSubtype.Hydra => "HY:",
-                                                Enums.eSubtype.Titan => "TN:",
-                                                _ => "X:",
-                                            };
-                                            iText += formatColor(str4 + DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.HO);
+                                            //Default is X:
+                                            iText += formatColor($"{specEnh.ShortName}:{DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName}", ExportConfig.Element.HO);
                                             break;
                                         }
 
-                                        var str6 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].SubTypeID switch
-                                        {
-                                            Enums.eSubtype.DSync => "DSync:",
-                                            Enums.eSubtype.Hamidon => "HamiO:",
-                                            Enums.eSubtype.Hydra => "Hydra:",
-                                            Enums.eSubtype.Titan => "Titan:",
-                                            _ => "Special:",
-                                        };
-                                        iText += formatColor(str6 + DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.HO);
+                                        //Default is Special:
+
+                                        iText = formatColor($"{specEnh.Name}:{DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name}", ExportConfig.Element.HO);
                                         break;
                                     case Enums.eType.SetO:
                                         if (flag1)

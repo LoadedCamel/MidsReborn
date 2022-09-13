@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbControls;
+using MRBResourceLib;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -33,7 +34,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
             Load += frmGCMEditor_Load;
             InitializeComponent();
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             _myParent = iParent;
             _bFrm = new frmBusy();
         }
@@ -103,7 +104,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnAddMod_Click(object sender, EventArgs e)
         {
 	        var newGCM = string.Empty;
-	        InputBoxResult result = InputBox.Show("Enter the modifier you wish to add.", "Add Modifier", "Enter the modifier here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+	        InputBoxResult result = InputBox.Show("Enter the modifier you wish to add.", "Add Modifier", false, "Enter the modifier here", InputBox.InputBoxIcon.Info, inputBox_Validating);
 	        if (result.OK) { newGCM = result.Text; }
             DatabaseAPI.Database.EffectIds.Add(newGCM);
             lvModifiers.Items.Add(newGCM);
@@ -129,14 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (fileImportDialog.ShowDialog() == DialogResult.OK)
             {
 	            var jsonText = File.ReadAllText(fileImportDialog.FileName);
-	            var settings = new JsonSerializerSettings
-	            {
-		            TypeNameHandling = TypeNameHandling.Auto,
-		            Converters = {
-			            new AbstractConverter<Database, IDatabase>()
-		            }
-                };
-                effects = JsonConvert.DeserializeObject<List<string>>(jsonText, settings);
+                effects = JsonConvert.DeserializeObject<List<string>>(jsonText, Serializer.SerializerSettings);
             }
             DatabaseAPI.Database.EffectIds = effects;
 			PopulateInfo();
@@ -154,7 +148,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			BusyMsg("Saving EffectIds...");
-			DatabaseAPI.SaveEffectIdsDatabase();
+			DatabaseAPI.SaveEffectIdsDatabase(MidsContext.Config.SavePath);
 			BusyHide();
 			DialogResult = DialogResult.OK;
 			Hide();
@@ -172,17 +166,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 			e.Cancel = true;
 			e.Message = "Required";
 		}
-    }
-
-    public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
-    {
-	    public override Boolean CanConvert(Type objectType)
-		    => objectType == typeof(TAbstract);
-
-	    public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
-		    => jser.Deserialize<TReal>(reader);
-
-	    public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
-		    => jser.Serialize(writer, value);
     }
 }

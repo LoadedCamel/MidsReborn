@@ -2,9 +2,10 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms
 {
@@ -22,20 +23,57 @@ namespace Mids_Reborn.Forms
             _myParent = iParent;
         }
 
-        private void frmTeam_OnLoad(object sender, EventArgs e)
+        private void frmTeam_OnLoad(object? sender, EventArgs e)
         {
-            if (MidsContext.Config.TeamMembers != null && MidsContext.Config.TeamMembers.Count > 0)
+            switch (DatabaseAPI.DatabaseName)
+            {
+                case "Homecoming":
+                    label9.Text = @"Sentinel";
+                    label9.Visible = true;
+                    udSentGuard.Visible = true;
+                    udSentGuard.Enabled = true;
+                    break;
+                case "Rebirth":
+                    label9.Text = @"Guardian";
+                    label9.Visible = true;
+                    udSentGuard.Visible = true;
+                    udSentGuard.Enabled = true;
+                    break;
+                default:
+                    label9.Visible = false;
+                    udSentGuard.Visible = false;
+                    udSentGuard.Enabled = false;
+                    break;
+            }
+            if (MidsContext.Config != null && MidsContext.Config.TeamMembers.Count > 0)
             {
                 foreach (var mVp in MidsContext.Config.TeamMembers)
                 {
                     TotalMembers += mVp.Value;
                 }
+
                 var udControls = tableLayoutPanel1.Controls.OfType<EnhancedUpDown>();
                 foreach (var udControl in udControls)
                 {
                     var name = udControl.Name;
-                    string archetype;
-                    if (name != "udWidow" && name != "udSoldier")
+                    var archetype = string.Empty;
+                    archetype = name switch
+                    {
+                        "udWidow" or "udSoldier" => name.Replace("ud", "Arachnos "),
+                        "SentGuard" => DatabaseAPI.DatabaseName switch
+                        {
+                            "Homecoming" => name.Replace("udSentGuard", "Sentinel"),
+                            "Rebirth" => name.Replace("udSentGuard", "Guardian"),
+                            _ => archetype
+                        },
+                        _ => name.Replace("ud", "")
+                    };
+                    if (MidsContext.Config.TeamMembers.ContainsKey(archetype))
+                    {
+                        udControl.Value = MidsContext.Config.TeamMembers[archetype];
+                    }
+
+                    /*if (name != "udWidow" && name != "udSoldier")
                     {
                         archetype = name.Replace("ud", "");
                         if (MidsContext.Config.TeamMembers.ContainsKey(archetype))
@@ -50,7 +88,7 @@ namespace Mids_Reborn.Forms
                         {
                             udControl.Value = MidsContext.Config.TeamMembers[archetype];
                         }
-                    }
+                    }*/
                 }
             }
             else
@@ -62,9 +100,7 @@ namespace Mids_Reborn.Forms
 
         private void btnSave_Paint(object sender, PaintEventArgs e)
         {
-            if (_myParent?.Drawing == null)
-                return;
-            var iStr = "Save & Close";
+            const string iStr = "Save & Close";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
             var size = MidsContext.Character.IsHero()
@@ -89,24 +125,22 @@ namespace Mids_Reborn.Forms
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height2 = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
+            var bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            clsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config?.SaveConfig(Serializer.GetSerializer());
             DialogResult = DialogResult.OK;
             Hide();
         }
 
         private void btnCancel_Paint(object sender, PaintEventArgs e)
         {
-            if (_myParent?.Drawing == null)
-                return;
-            var iStr = "Cancel";
+            const string iStr = "Cancel";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
             var size = MidsContext.Character.IsHero()
@@ -131,9 +165,9 @@ namespace Mids_Reborn.Forms
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height2 = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
+            var bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            clsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -170,11 +204,11 @@ namespace Mids_Reborn.Forms
         private static void UpdateMembers(string name, int value)
         {
             string archetype;
-            var dictTm = MidsContext.Config.TeamMembers;
+            var dictTm = MidsContext.Config?.TeamMembers;
             if (name != "udWidow" && name != "udSoldier")
             {
                 archetype = name.Replace("ud", "");
-                if (dictTm.ContainsKey(archetype))
+                if (dictTm != null && dictTm.ContainsKey(archetype))
                 {
                     if (value != 0)
                     {
@@ -189,14 +223,14 @@ namespace Mids_Reborn.Forms
                 {
                     if (value != 0)
                     {
-                        dictTm.Add(archetype, value);
+                        dictTm?.Add(archetype, value);
                     }
                 }
             }
             else
             {
                 archetype = name.Replace("ud", "Arachnos ");
-                if (dictTm.ContainsKey(archetype))
+                if (dictTm != null && dictTm.ContainsKey(archetype))
                 {
                     if (value != 0)
                     {
@@ -211,7 +245,7 @@ namespace Mids_Reborn.Forms
                 {
                     if (value != 0)
                     {
-                        dictTm.Add(archetype, value);
+                        dictTm?.Add(archetype, value);
                     }
                 }
 
@@ -221,17 +255,17 @@ namespace Mids_Reborn.Forms
 
     public class EnhancedUpDown : NumericUpDown
     {
-        public event EventHandler UpButtonClicked;
-        public event EventHandler DownButtonClicked;
+        public event EventHandler? UpButtonClicked;
+        public event EventHandler? DownButtonClicked;
 
         public override void UpButton()
         {
-            UpButtonClicked?.Invoke(this, new EventArgs());
+            UpButtonClicked?.Invoke(this, EventArgs.Empty);
         }
 
         public override void DownButton()
         {
-            DownButtonClicked?.Invoke(this, new EventArgs());
+            DownButtonClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

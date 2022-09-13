@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbBase.Base.Display;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -37,13 +37,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pnlClassList.MouseMove += pnlClassList_MouseMove;
             pnlClassList.Paint += pnlClassList_Paint;
             pnlClassList.MouseDown += pnlClassList_MouseDown;
-            //var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
             btnImage.Image = Resources.enhData;
             typeSet.Image = Resources.enhData;
             typeIO.Image = Resources.enhData;
             typeRegular.Image = Resources.enhData;
             typeHO.Image = Resources.enhData;
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
             if (newStaticIndex > 0)
@@ -79,8 +78,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             var enh = myEnh;
-            //var sEffectArray = (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-
+  
             var effects = enh.Effect.ToList();
             effects.Add(new Enums.sEffect
             {
@@ -88,7 +86,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Enhance = new Enums.sTwinID { ID = -1, SubID = -1 },
                 Multiplier = 1f,
                 Schedule = Enums.eSchedule.A,
-                FX = (IEffect)frmPowerEffect.myFX.Clone()
+                FX = (IEffect)frmPowerEffect.MyFx.Clone()
             });
             effects[effects.Count - 1].FX.isEnhancementEffect = true;
             var sEffects = effects.ToArray();
@@ -206,7 +204,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;
@@ -254,18 +252,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            ImagePicker.InitialDirectory = I9Gfx.GetEnhancementsPath();
+            ImagePicker.InitialDirectory = I9Gfx.GetDbEnhancementsPath();
             ImagePicker.FileName = myEnh.Image;
-            if (ImagePicker.ShowDialog() != DialogResult.OK)
-                return;
-            var str = FileIO.StripPath(ImagePicker.FileName);
-            if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
+            if (ImagePicker.ShowDialog(this) != DialogResult.OK) return;
+
+            var imageFile = FileIO.StripPath(ImagePicker.FileName);
+            if (!File.Exists(Path.Combine(I9Gfx.GetDbEnhancementsPath(), imageFile)) && !File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), imageFile)))
             {
-                MessageBox.Show("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($@"You must select an image from either the {I9Gfx.GetEnhancementsPath()} or the {I9Gfx.GetDbEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the appropriate folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                myEnh.Image = str;
+                myEnh.Image = imageFile;
                 DisplayIcon();
                 SetTypeIcons();
             }
@@ -371,19 +369,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = sender as ComboBox;
-            if (cb?.SelectedIndex != -1)
+            if (sender is ComboBox cb && cb.SelectedIndex != -1)
             {
-                var selectedItem = cb?.SelectedItem.ToString();
+                var selectedItem = cb.SelectedText;
                 if (selectedItem != "None")
                 {
-                    var subType = (Enums.eSubtype)Enum.Parse(typeof(Enums.eSubtype), selectedItem);
+                    var subType = DatabaseAPI.GetSpecialEnhByName(selectedItem).Index;
                     myEnh.SubTypeID = subType;
                 }
             }
             else
             {
-                myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
+                myEnh.SubTypeID = cbSubType.SelectedIndex;
             }
         }
 
@@ -471,9 +468,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
-                    var type = Enum.GetName(typeof(Enums.eSubtype), myEnh.SubTypeID);
-                    //Debug.WriteLine(type);
-                    cbSubType.SelectedItem = type;
+                    cbSubType.SelectedIndex = myEnh.SubTypeID;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;
                     cbRecipe.SelectedIndex = 0;
@@ -573,12 +568,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (!string.IsNullOrWhiteSpace(myEnh.Image))
             {
-                using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
+                var img = myEnh.Image;
+                var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
+                using var extendedBitmap1 = new ExtendedBitmap(path);
                 using var extendedBitmap2 = new ExtendedBitmap(30, 30);
-                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                    I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(myEnh.TypeID)), GraphicsUnit.Pixel);
-                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect,
-                    extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(myEnh.TypeID)), GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 btnImage.Text = myEnh.Image;
             }
@@ -592,7 +587,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     Enums.eType.SetO => typeSet.Image,
                     _ => btnImage.Image
                 };
-                btnImage.Text = "Select Image";
+                btnImage.Text = @"Select Image";
             }
         }
 
@@ -613,7 +608,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 SetTypeIcons();
                 if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image))
                 {
-                    using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image);
+                    var img = DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image;
+                    var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
+                    using var extendedBitmap1 = new ExtendedBitmap(path);
                     using var extendedBitmap2 = new ExtendedBitmap(30, 30);
                     extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                     extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
@@ -723,7 +720,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     effect[index].Enhance.SubID = -1;
                     effect[index].Multiplier = 1f;
                     effect[index].Schedule = Enums.eSchedule.A;
-                    effect[index].FX = (IEffect)frmPowerEffect.myFX.Clone();
+                    effect[index].FX = (IEffect)frmPowerEffect.MyFx.Clone();
                 }
             }
 
@@ -761,8 +758,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 IEnhancement enh = myEnh;
-                //Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-                //enh.Effect = sEffectArray;
 
                 var effects = enh.Effect.ToList();
                 effects.Add(new Enums.sEffect
@@ -774,13 +769,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 });
                 enh.Effect = effects.ToArray();
 
-                /*Enums.sEffect[] effect = myEnh.Effect;
-                int index = myEnh.Effect.Length - 1;
-                effect[index].Mode = Enums.eEffMode.Enhancement;
-                effect[index].Enhance.ID = (int)integer;
-                effect[index].Enhance.SubID = tSub;
-                effect[index].Multiplier = 1f;
-                effect[index].Schedule = Enhancement.GetSchedule(integer, tSub);*/
                 FillEffectList();
                 ListSelectedEffects();
                 lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
@@ -860,12 +848,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillSubTypeList()
         {
-            //var names = Enum.GetNames(Enums.eSubtype.None.GetType());
-            var names = Enum.GetNames(typeof(Enums.eSubtype)).ToList();
+            var specEnhancements = DatabaseAPI.Database.SpecialEnhancements.Select(specEnh => specEnh.Name.Replace(" Origin", string.Empty)).ToList();
             cbSubType.BeginUpdate();
-            //cbSubType.Items.Clear();
-            cbSubType.DataSource = names;
-            //cbSubType.Items.AddRange(names);
+            cbSubType.Items.Clear();
+            cbSubType.Items.AddRange(specEnhancements.ToArray<object>());
             cbSubType.EndUpdate();
         }
 
@@ -1179,10 +1165,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void SetTypeIcons()
         {
+            var img = myEnh.Image;
+            var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
             using var extendedBitmap1 = new ExtendedBitmap(30, 30);
-            using var extendedBitmap2 = string.IsNullOrWhiteSpace(myEnh.Image)
+            using var extendedBitmap2 = string.IsNullOrWhiteSpace(img)
                 ? new ExtendedBitmap(30, 30)
-                : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
+                : new ExtendedBitmap(path);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);

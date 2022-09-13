@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Master_Classes;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn
 {
@@ -129,7 +129,7 @@ namespace Mids_Reborn
 
         private static SetPair FindPower(string iName, int nAT)
         {
-            var sets = new IPowerset[2];
+            var sets = new IPowerset?[2];
             if (MidsContext.Character != null)
             {
                 sets[0] = MidsContext.Character.Powersets[0];
@@ -436,7 +436,7 @@ namespace Mids_Reborn
 
         private static SetPair ScanSetArray(
             string iName,
-            IPowerset[] sets)
+            IPowerset?[] sets)
         {
             for (var index = 0; index <= sets.Length - 1; ++index)
             {

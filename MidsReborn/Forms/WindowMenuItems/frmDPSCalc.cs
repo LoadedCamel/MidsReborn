@@ -3,10 +3,11 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Display;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -65,7 +66,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             InitializeComponent();
             Name = nameof(frmDPSCalc);
             //var componentResourceManager = new ComponentResourceManager(typeof(frmDPSCalc));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
             bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
             GlobalPowerList = new PowerList[0];

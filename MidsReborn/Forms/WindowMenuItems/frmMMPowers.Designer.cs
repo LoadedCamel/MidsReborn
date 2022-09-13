@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using mrbControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {

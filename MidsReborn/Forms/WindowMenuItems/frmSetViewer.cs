@@ -4,11 +4,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using mrbBase;
-using mrbBase.Base.Display;
-using mrbBase.Base.Extensions;
-using mrbBase.Base.Master_Classes;
-using mrbControls;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -470,7 +471,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Load += frmSetViewer_Load;
             InitializeComponent();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetViewer);
             myParent = iParent;
             BarsFX = new Dictionary<string, FXIdentifierKey>();

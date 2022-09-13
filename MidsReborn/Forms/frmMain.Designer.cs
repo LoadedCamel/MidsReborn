@@ -2,8 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Mids_Reborn.Controls;
 using Mids_Reborn.Forms.Controls;
-using mrbControls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -70,6 +71,7 @@ namespace Mids_Reborn.Forms
             this.tsFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -85,8 +87,10 @@ namespace Mids_Reborn.Forms
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsExportDiscord = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.tsUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
@@ -146,8 +150,7 @@ namespace Mids_Reborn.Forms
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsHCMRBForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
@@ -172,26 +175,31 @@ namespace Mids_Reborn.Forms
             this.tsHelperShort2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelperLong2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.AccoladesWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.IncarnateWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TemporaryPowersWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DonateToolStripMenuItem = new ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
-            this.lblHero = new System.Windows.Forms.Label();
-            this.heroVillain = new ImageButton();
-            this.petsButton = new ImageButton();
-            this.tempPowersButton = new ImageButton();
-            this.accoladeButton = new ImageButton();
-            this.incarnateButton = new ImageButton();
-            this.prestigeButton = new ImageButton();
-            this.ibPvX = new ImageButton();
-            this.ibRecipe = new ImageButton();
-            this.ibPopup = new ImageButton();
+            this.lblCharacter = new System.Windows.Forms.Label();
+            this.ibModeEx = new ImageButtonEx();
+            this.ibDynMode = new ImageButtonEx();
+            this.ibAlignmentEx = new ImageButtonEx();
+            this.ibSlotInfoEx = new ImageButtonEx();
+            this.ibAccoladesEx = new ImageButtonEx();
+            this.ibPetsEx = new ImageButtonEx();
+            this.ibTeamEx = new ImageButtonEx();
+            this.ibPopupEx = new ImageButtonEx();
+            this.ibPvXEx = new ImageButtonEx();
+            this.ibRecipeEx = new ImageButtonEx();
+            this.ibSetsEx = new ImageButtonEx();
+            this.ibSlotLevelsEx = new ImageButtonEx();
+            this.ibTotalsEx = new ImageButtonEx();
+            this.ibPrestigePowersEx = new ImageButtonEx();
+            this.ibIncarnatePowersEx = new ImageButtonEx();
+            this.ibTempPowersEx = new ImageButtonEx();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
-            this.pbDynMode = new System.Windows.Forms.PictureBox();
-            this.pnlGFX = new mrbControls.pnlGFX();
+            this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
             this.lblOrigin = new GFXLabel();
@@ -205,16 +213,11 @@ namespace Mids_Reborn.Forms
             this.llAncillary = new ListLabelV3();
             this.i9Picker = new I9Picker();
             this.I9Popup = new ctlPopUp();
-            this.ibTotals = new ImageButton();
-            this.ibSlotLevels = new ImageButton();
-            this.ibTeam = new ImageButton();
-            this.sbMode = new SwitchButton();
-            this.ibSets = new ImageButton();
-            this.ibAccolade = new ImageButton();
             this.poolsPanel = new Panel();
+            this.enhCheckMode = new EnhCheckMode(this);
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).BeginInit();
             this.pnlGFXFlow.SuspendLayout();
             this.SuspendLayout();
@@ -329,7 +332,7 @@ namespace Mids_Reborn.Forms
             this.cbPool0.Location = new System.Drawing.Point(0, 21); // 328, 182
             this.cbPool0.MaxDropDownItems = 15;
             this.cbPool0.Name = "cbPool0";
-            this.cbPool0.Size = new System.Drawing.Size(136, 22);
+            this.cbPool0.Size = new System.Drawing.Size(145, 22);
             this.cbPool0.TabIndex = 15;
             this.cbPool0.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool0_DrawItem);
             this.cbPool0.SelectionChangeCommitted += new System.EventHandler(this.cbPool0_SelectedIndexChanged);
@@ -357,7 +360,7 @@ namespace Mids_Reborn.Forms
             this.cbPool1.Location = new System.Drawing.Point(0, 129); // 328, 290
             this.cbPool1.MaxDropDownItems = 15;
             this.cbPool1.Name = "cbPool1";
-            this.cbPool1.Size = new System.Drawing.Size(136, 22);
+            this.cbPool1.Size = new System.Drawing.Size(145, 22);
             this.cbPool1.TabIndex = 18;
             this.cbPool1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool1_DrawItem);
             this.cbPool1.SelectionChangeCommitted += new System.EventHandler(this.cbPool1_SelectedIndexChanged);
@@ -385,7 +388,7 @@ namespace Mids_Reborn.Forms
             this.cbPool2.Location = new System.Drawing.Point(0, 237); // 328, 398
             this.cbPool2.MaxDropDownItems = 15;
             this.cbPool2.Name = "cbPool2";
-            this.cbPool2.Size = new System.Drawing.Size(136, 22);
+            this.cbPool2.Size = new System.Drawing.Size(145, 22);
             this.cbPool2.TabIndex = 21;
             this.cbPool2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool2_DrawItem);
             this.cbPool2.SelectionChangeCommitted += new System.EventHandler(this.cbPool2_SelectedIndexChanged);
@@ -413,7 +416,7 @@ namespace Mids_Reborn.Forms
             this.cbPool3.Location = new System.Drawing.Point(0, 345); // 328, 506
             this.cbPool3.MaxDropDownItems = 15;
             this.cbPool3.Name = "cbPool3";
-            this.cbPool3.Size = new System.Drawing.Size(136, 22);
+            this.cbPool3.Size = new System.Drawing.Size(145, 22);
             this.cbPool3.TabIndex = 24;
             this.cbPool3.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool3_DrawItem);
             this.cbPool3.SelectionChangeCommitted += new System.EventHandler(this.cbPool3_SelectedIndexChanged);
@@ -440,7 +443,7 @@ namespace Mids_Reborn.Forms
             this.cbAncillary.ItemHeight = 16;
             this.cbAncillary.Location = new System.Drawing.Point(0, 453); // 328, 614
             this.cbAncillary.Name = "cbAncillary";
-            this.cbAncillary.Size = new System.Drawing.Size(136, 22);
+            this.cbAncillary.Size = new System.Drawing.Size(145, 22);
             this.cbAncillary.TabIndex = 27;
             this.cbAncillary.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbAncillary_DrawItem);
             this.cbAncillary.SelectionChangeCommitted += new System.EventHandler(this.cbAncillery_SelectedIndexChanged);
@@ -592,10 +595,12 @@ namespace Mids_Reborn.Forms
             this.FileToolStripMenuItem,
             this.ImportExportToolStripMenuItem,
             this.OptionsToolStripMenuItem,
+            this.ShareToolStripMenuItem,
             this.CharacterToolStripMenuItem,
             this.ViewToolStripMenuItem,
+            this.WindowToolStripMenuItem,
             this.HelpToolStripMenuItem1,
-            this.WindowToolStripMenuItem});
+            this.DonateToolStripMenuItem});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
@@ -639,6 +644,13 @@ namespace Mids_Reborn.Forms
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(this.tsFileOpen_Click);
+            // 
+            // tsBuildRcv
+            // 
+            this.tsBuildRcv.Name = "tsBuildRcv";
+            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Text = "Build recovery...";
+            this.tsBuildRcv.Click += new System.EventHandler(this.tsBuildRcv_Click);
             // 
             // tsFileSave
             // 
@@ -685,14 +697,13 @@ namespace Mids_Reborn.Forms
             // 
             this.ImportExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsImport,
+            this.tsBuildRcv,
             this.ToolStripSeparator12,
             this.tsExport,
             this.tsExportLong,
             this.tsExportDataLink,
             this.ToolStripSeparator25,
-            this.tsGenFreebies,
-            this.ToolStripSeparator27,
-            this.tsExportDiscord});
+            this.tsGenFreebies});
             this.ImportExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ImportExportToolStripMenuItem.Name = "ImportExportToolStripMenuItem";
             this.ImportExportToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
@@ -749,26 +760,31 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator27.Name = "ToolStripSeparator27";
             this.ToolStripSeparator27.Size = new System.Drawing.Size(237, 6);
             // 
-            // tsExportDiscord
-            //
-            this.tsExportDiscord.Name = "tsExportDiscord";
-            this.tsExportDiscord.Size = new System.Drawing.Size(240, 22);
-            this.tsExportDiscord.Text = "Export to Discord";
-            this.tsExportDiscord.Click += new System.EventHandler(this.tsExportDiscord_Click);
-            // 
             // OptionsToolStripMenuItem
             // 
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsChangeDb,
+            this.ToolStripSeparator29,
             this.tsConfig,
-            this.ToolStripSeparator14,
-            this.tsUpdateCheck,
             this.ToolStripSeparator5,
             this.AdvancedToolStripMenuItem1});
             this.OptionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
             this.OptionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.OptionsToolStripMenuItem.Text = "&Options";
+            // 
+            // tsChangeDb
+            // 
+            this.tsChangeDb.Name = "tsChangeDb";
+            this.tsChangeDb.Size = new System.Drawing.Size(199, 22);
+            this.tsChangeDb.Text = "&Change Database";
+            this.tsChangeDb.Click += new System.EventHandler(this.tsChangeDb_Click);
+            //
+            // ToolStripSeparator29
+            //
+            this.ToolStripSeparator29.Name = "ToolStripSeparator29";
+            this.ToolStripSeparator29.Size = new System.Drawing.Size(242, 6);
             // 
             // tsConfig
             // 
@@ -786,7 +802,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsUpdateCheck.Name = "tsUpdateCheck";
             this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
-            this.tsUpdateCheck.Text = "Check for &Updates Now";
+            this.tsUpdateCheck.Text = "Check for &Updates";
             this.tsUpdateCheck.Click += new System.EventHandler(this.tsUpdateCheck_Click);
             // 
             // ToolStripSeparator5
@@ -809,7 +825,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsAdvDBEdit.Name = "tsAdvDBEdit";
             this.tsAdvDBEdit.Size = new System.Drawing.Size(165, 22);
-            this.tsAdvDBEdit.Text = "&Database Editor...";
+            this.tsAdvDBEdit.Text = "&Database Menu";
             this.tsAdvDBEdit.Click += new System.EventHandler(this.tsAdvDBEdit_Click);
             // 
             // ToolStripSeparator15
@@ -1208,25 +1224,38 @@ namespace Mids_Reborn.Forms
             this.tlsDPA.Size = new System.Drawing.Size(282, 22);
             this.tlsDPA.Text = "Show Damage Per Animation (Level 50)";
             this.tlsDPA.Click += new System.EventHandler(this.tlsDPA_Click);
+            //
+            // ShareToolStripMenuItem1
+            //
+            this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsShareDiscord
+            });
+            this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
+            this.ShareToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
+            this.ShareToolStripMenuItem.Text = "&Share Build";
+
+            // 
+            // tsShareDiscord
+            //
+            this.tsShareDiscord.Name = "tsShareDiscord";
+            this.tsShareDiscord.Size = new System.Drawing.Size(240, 22);
+            this.tsShareDiscord.Text = "Via Discord (RebornBot)";
+            this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             // 
             // HelpToolStripMenuItem1
             // 
-            this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            //this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
-            this.tsPatchNotes,
+            this.tsUpdateCheck,
             this.ToolStripSeparator10,
-            this.tsBugCrytilis,
-            this.tsHCMRBForum,
-            this.ToolStripSeparator23,
-            this.tsKoFi,
-            this.tsPatreon,
-            this.ToolStripSeparator24,
-            this.tsGitHubCrytilis});
+            this.tsSupport});
             this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
             this.HelpToolStripMenuItem1.Size = new System.Drawing.Size(102, 20);
-            this.HelpToolStripMenuItem1.Text = "&Help && Support";
+            this.HelpToolStripMenuItem1.Text = "Help";
             // 
             // tsHelp
             // 
@@ -1237,7 +1266,7 @@ namespace Mids_Reborn.Forms
             //
             this.tsPatchNotes.Name = "tsPatchNotes";
             this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
-            this.tsPatchNotes.Text = "&View Patch Notes";
+            this.tsPatchNotes.Text = "Read Patch Notes";
             this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
@@ -1247,28 +1276,32 @@ namespace Mids_Reborn.Forms
             // 
             // tsBugCrytilis
             // 
-            this.tsBugCrytilis.Name = "tsBugCrytilis";
-            this.tsBugCrytilis.Size = new System.Drawing.Size(266, 22);
-            this.tsBugCrytilis.Text = "F&ile Issue/Suggestion Report";
-            this.tsBugCrytilis.Click += new System.EventHandler(this.tsBugReportCrytilis_Click);
-            // 
-            // tsHCMRBForum
-            // 
-            this.tsHCMRBForum.Name = "tsHCMRBForum";
-            this.tsHCMRBForum.Size = new System.Drawing.Size(266, 22);
-            this.tsHCMRBForum.Text = "Official Homecoming Forum Thread";
-            this.tsHCMRBForum.Click += new System.EventHandler(this.tsForumLink);
+            this.tsSupport.Name = "tsSupport";
+            this.tsSupport.Size = new System.Drawing.Size(266, 22);
+            this.tsSupport.Text = "Support (Discord)";
+            this.tsSupport.Click += new System.EventHandler(this.tsSupport_Click);
             // 
             // ToolStripSeparator23
             // 
             this.ToolStripSeparator23.Name = "ToolStripSeparator23";
             this.ToolStripSeparator23.Size = new System.Drawing.Size(263, 6);
+            //
+            // DonateToolStripMenuItem
+            //
+            this.DonateToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.tsKoFi,
+                this.tsPatreon});
+            this.DonateToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.DonateToolStripMenuItem.Name = "DonateToolStripMenuItem";
+            this.DonateToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
+            this.DonateToolStripMenuItem.Text = "Donate?";
             // 
             // tsKoFi
             // 
             this.tsKoFi.Name = "tsKoFi";
             this.tsKoFi.Size = new System.Drawing.Size(266, 22);
-            this.tsKoFi.Text = "Support MRB via Ko-Fi";
+            this.tsKoFi.Text = "Donate via Ko-Fi";
             this.tsKoFi.Click += new System.EventHandler(this.tsKoFi_Click);
             // 
             // ToolStripSeparator24
@@ -1280,7 +1313,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsPatreon.Name = "tsPatreon";
             this.tsPatreon.Size = new System.Drawing.Size(266, 22);
-            this.tsPatreon.Text = "Support MRB via Patreon";
+            this.tsPatreon.Text = "Donate via Patreon";
             this.tsPatreon.Click += new System.EventHandler(this.tsPatreon_Click);
             // 
             // tsGitHubCrytilis
@@ -1304,15 +1337,11 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator19,
             this.tsSetFind,
             this.ToolStripSeparator21,
-            this.InGameRespecHelperToolStripMenuItem,
-            this.ToolStripMenuItem4,
-            this.AccoladesWindowToolStripMenuItem,
-            this.IncarnateWindowToolStripMenuItem,
-            this.TemporaryPowersWindowToolStripMenuItem});
+            this.InGameRespecHelperToolStripMenuItem});
             this.WindowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             this.WindowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
-            this.WindowToolStripMenuItem.Text = "&Window";
+            this.WindowToolStripMenuItem.Text = "&Windows";
             // 
             // tsViewSets
             // 
@@ -1442,40 +1471,19 @@ namespace Mids_Reborn.Forms
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
             this.ToolStripMenuItem4.Size = new System.Drawing.Size(229, 6);
             // 
-            // AccoladesWindowToolStripMenuItem
-            // 
-            this.AccoladesWindowToolStripMenuItem.Name = "AccoladesWindowToolStripMenuItem";
-            this.AccoladesWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.AccoladesWindowToolStripMenuItem.Text = "&Accolades Window";
-            this.AccoladesWindowToolStripMenuItem.Click += new System.EventHandler(this.AccoladesWindowToolStripMenuItem_Click);
-            // 
-            // IncarnateWindowToolStripMenuItem
-            // 
-            this.IncarnateWindowToolStripMenuItem.Name = "IncarnateWindowToolStripMenuItem";
-            this.IncarnateWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.IncarnateWindowToolStripMenuItem.Text = "&Incarnate Window";
-            this.IncarnateWindowToolStripMenuItem.Click += new System.EventHandler(this.IncarnateWindowToolStripMenuItem_Click);
-            // 
-            // TemporaryPowersWindowToolStripMenuItem
-            // 
-            this.TemporaryPowersWindowToolStripMenuItem.Name = "TemporaryPowersWindowToolStripMenuItem";
-            this.TemporaryPowersWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.TemporaryPowersWindowToolStripMenuItem.Text = "T&emporary Powers Window";
-            this.TemporaryPowersWindowToolStripMenuItem.Click += new System.EventHandler(this.TemporaryPowersWindowToolStripMenuItem_Click);
-            // 
             // topPanel
             // 
-            this.topPanel.Controls.Add(this.lblHero);
-            this.topPanel.Controls.Add(this.ibTeam);
-            this.topPanel.Controls.Add(this.heroVillain);
-            this.topPanel.Controls.Add(this.petsButton);
-            this.topPanel.Controls.Add(this.tempPowersButton);
-            this.topPanel.Controls.Add(this.accoladeButton);
-            this.topPanel.Controls.Add(this.incarnateButton);
-            this.topPanel.Controls.Add(this.prestigeButton);
-            this.topPanel.Controls.Add(this.ibPvX);
-            this.topPanel.Controls.Add(this.ibRecipe);
-            this.topPanel.Controls.Add(this.ibPopup);
+            this.topPanel.Controls.Add(this.lblCharacter);
+            this.topPanel.Controls.Add(this.ibTeamEx);
+            this.topPanel.Controls.Add(this.ibAlignmentEx);
+            this.topPanel.Controls.Add(this.ibPetsEx);
+            this.topPanel.Controls.Add(this.ibTempPowersEx);
+            this.topPanel.Controls.Add(this.ibAccoladesEx);
+            this.topPanel.Controls.Add(this.ibIncarnatePowersEx);
+            this.topPanel.Controls.Add(this.ibPrestigePowersEx);
+            this.topPanel.Controls.Add(this.ibPvXEx);
+            this.topPanel.Controls.Add(this.ibRecipeEx);
+            this.topPanel.Controls.Add(this.ibPopupEx);
             this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.topPanel.Location = new System.Drawing.Point(0, 24);
             this.topPanel.Name = "topPanel";
@@ -1484,173 +1492,277 @@ namespace Mids_Reborn.Forms
             // 
             // lblHero
             // 
-            this.lblHero.AutoSize = true;
-            this.lblHero.BackColor = System.Drawing.Color.Transparent;
-            this.lblHero.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.lblHero.ForeColor = System.Drawing.Color.White;
-            this.lblHero.Location = new System.Drawing.Point(3, 3);
-            this.lblHero.Name = "lblHero";
-            this.lblHero.Size = new System.Drawing.Size(310, 15);
-            this.lblHero.TabIndex = 43;
-            this.lblHero.Text = "Name: Level 0 Origin Archetype (Primary / Secondary)";
+            this.lblCharacter.AutoSize = true;
+            this.lblCharacter.BackColor = System.Drawing.Color.Transparent;
+            this.lblCharacter.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblCharacter.ForeColor = System.Drawing.Color.White;
+            this.lblCharacter.Location = new System.Drawing.Point(3, 3);
+            this.lblCharacter.Name = "lblCharacter";
+            this.lblCharacter.Size = new System.Drawing.Size(310, 15);
+            this.lblCharacter.TabIndex = 43;
+            this.lblCharacter.Text = "Name: Level 0 Origin Archetype (Primary / Secondary)";
             // 
-            // heroVillain
+            // ibAlignmentEx
             // 
-            this.heroVillain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.heroVillain.Checked = false;
-            this.heroVillain.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.heroVillain.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.heroVillain.Location = new System.Drawing.Point(713, 3);
-            this.heroVillain.Name = "heroVillain";
-            this.heroVillain.Size = new System.Drawing.Size(105, 22);
-            this.heroVillain.TabIndex = 116;
-            this.heroVillain.TextOff = "Hero";
-            this.heroVillain.TextOn = "Villain";
-            this.heroVillain.Toggle = true;
-            this.heroVillain.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.heroVillain_ButtonClicked);
+            this.ibAlignmentEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibAlignmentEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibAlignmentEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAlignmentEx.CurrentText = "ibAlignmentEx";
+            this.ibAlignmentEx.Images.Background = Resources.HeroButton;
+            this.ibAlignmentEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibAlignmentEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibAlignmentEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibAlignmentEx.Location = new System.Drawing.Point(713, 3);
+            this.ibAlignmentEx.Lock = false;
+            this.ibAlignmentEx.Name = "ibAlignmentEx";
+            this.ibAlignmentEx.Size = new System.Drawing.Size(105, 22);
+            this.ibAlignmentEx.TabIndex = 116;
+            this.ibAlignmentEx.Text = "ibAlignmentEx";
+            this.ibAlignmentEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibAlignmentEx.TextOutline.Width = 3;
+            this.ibAlignmentEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibAlignmentEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibAlignmentEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibAlignmentEx.ToggleText.ToggledOff = "Hero";
+            this.ibAlignmentEx.ToggleText.ToggledOn = "Villain";
+            this.ibAlignmentEx.UseAlt = false;
+            this.ibAlignmentEx.Click += new EventHandler(this.ibAlignmentEx_OnClick);
             // 
-            // petsButton
+            // ibPetsEx
             // 
-            this.petsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.petsButton.Checked = false;
-            this.petsButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.petsButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.petsButton.Location = new System.Drawing.Point(602, 29);
-            this.petsButton.Name = "petsButton";
-            this.petsButton.Size = new System.Drawing.Size(105, 22);
-            this.petsButton.TabIndex = 117;
-            this.petsButton.TextOff = "Pet Powers";
-            this.petsButton.TextOn = "Pet Powers";
-            this.petsButton.Toggle = true;
-            this.petsButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.petsButton_ButtonClicked);
+            this.ibPetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibPetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPetsEx.CurrentText = "ibPetsEx";
+            this.ibPetsEx.Images.Background = Resources.HeroButton;
+            this.ibPetsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPetsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPetsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPetsEx.Location = new System.Drawing.Point(602, 29);
+            this.ibPetsEx.Lock = false;
+            this.ibPetsEx.Name = "ibPetsEx";
+            this.ibPetsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPetsEx.TabIndex = 116;
+            this.ibPetsEx.Text = "Pet Powers";
+            this.ibPetsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPetsEx.TextOutline.Width = 3;
+            this.ibPetsEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPetsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPetsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPetsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibPetsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibPetsEx.UseAlt = false;
+            this.ibPetsEx.Click += new EventHandler(this.ibPetsEx_OnClick);
             // 
-            // tempPowersButton
+            // ibTempPowersEx
             // 
-            this.tempPowersButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tempPowersButton.Checked = false;
-            this.tempPowersButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.tempPowersButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.tempPowersButton.Location = new System.Drawing.Point(1046, 29);
-            this.tempPowersButton.Name = "tempPowersButton";
-            this.tempPowersButton.Size = new System.Drawing.Size(105, 22);
-            this.tempPowersButton.TabIndex = 115;
-            this.tempPowersButton.TextOff = "Temp Powers (Off)";
-            this.tempPowersButton.TextOn = "Temp Powers (On)";
-            this.tempPowersButton.Toggle = true;
-            this.tempPowersButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.tempPowersButton_ButtonClicked);
-            this.tempPowersButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempPowersButton_MouseDown);
+            this.ibTempPowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTempPowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTempPowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTempPowersEx.Images.Background = Resources.HeroButton;
+            this.ibTempPowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTempPowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTempPowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTempPowersEx.Location = new System.Drawing.Point(1046, 29);
+            this.ibTempPowersEx.Lock = false;
+            this.ibTempPowersEx.Name = "ibTempPowersEx";
+            this.ibTempPowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTempPowersEx.TabIndex = 116;
+            this.ibTempPowersEx.Text = "Temp Powers";
+            this.ibTempPowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTempPowersEx.TextOutline.Width = 3;
+            this.ibTempPowersEx.ThreeState = false;
+            this.ibTempPowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTempPowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTempPowersEx.ToggleText.ToggledOff = "Temp Powers: Off";
+            this.ibTempPowersEx.ToggleText.ToggledOn = "Temp Powers: On";
+            this.ibTempPowersEx.UseAlt = false;
+            this.ibTempPowersEx.Click += new EventHandler(ibTempPowersEx_OnClick);
             // 
-            // accoladeButton
+            // ibAccoladesEx
             // 
-            this.accoladeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.accoladeButton.Checked = false;
-            this.accoladeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.accoladeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.accoladeButton.Location = new System.Drawing.Point(824, 29);
-            this.accoladeButton.Name = "accoladeButton";
-            this.accoladeButton.Size = new System.Drawing.Size(105, 22);
-            this.accoladeButton.TabIndex = 114;
-            this.accoladeButton.TextOff = "Accolades";
-            this.accoladeButton.TextOn = "Accolades";
-            this.accoladeButton.Toggle = true;
-            this.accoladeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.accoladeButton_ButtonClicked);
+            this.ibAccoladesEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibAccoladesEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibAccoladesEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAccoladesEx.CurrentText = "ibAccoladesEx";
+            this.ibAccoladesEx.Images.Background = Resources.HeroButton;
+            this.ibAccoladesEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibAccoladesEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibAccoladesEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibAccoladesEx.Location = new System.Drawing.Point(824, 29);
+            this.ibAccoladesEx.Lock = false;
+            this.ibAccoladesEx.Name = "ibAccoladesEx";
+            this.ibAccoladesEx.Size = new System.Drawing.Size(105, 22);
+            this.ibAccoladesEx.TabIndex = 116;
+            this.ibAccoladesEx.Text = "Accolades";
+            this.ibAccoladesEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibAccoladesEx.TextOutline.Width = 3;
+            this.ibAccoladesEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibAccoladesEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibAccoladesEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibAccoladesEx.ToggleText.ToggledOff = "Accolades: Off";
+            this.ibAccoladesEx.ToggleText.ToggledOn = "Accolades: On";
+            this.ibAccoladesEx.UseAlt = false;
+            this.ibAccoladesEx.Click += new EventHandler(this.ibAccoladesEx_OnClick);
             // 
-            // incarnateButton
+            // ibIncarnatePowersEx
             // 
-            this.incarnateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.incarnateButton.Checked = false;
-            this.incarnateButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.incarnateButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.incarnateButton.Location = new System.Drawing.Point(935, 29);
-            this.incarnateButton.Name = "incarnateButton";
-            this.incarnateButton.Size = new System.Drawing.Size(105, 22);
-            this.incarnateButton.TabIndex = 113;
-            this.incarnateButton.TextOff = "Incarnates";
-            this.incarnateButton.TextOn = "Incarnates";
-            this.incarnateButton.Toggle = true;
-            this.incarnateButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.incarnateButton_ButtonClicked);
+            this.ibIncarnatePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibIncarnatePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibIncarnatePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibIncarnatePowersEx.Images.Background = Resources.HeroButton;
+            this.ibIncarnatePowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibIncarnatePowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibIncarnatePowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibIncarnatePowersEx.Location = new System.Drawing.Point(935, 29);
+            this.ibIncarnatePowersEx.Lock = false;
+            this.ibIncarnatePowersEx.Name = "ibIncarnatePowersEx";
+            this.ibIncarnatePowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibIncarnatePowersEx.TabIndex = 116;
+            this.ibIncarnatePowersEx.Text = "Incarnate Powers";
+            this.ibIncarnatePowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibIncarnatePowersEx.TextOutline.Width = 3;
+            this.ibIncarnatePowersEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibIncarnatePowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibIncarnatePowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibIncarnatePowersEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibIncarnatePowersEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibIncarnatePowersEx.UseAlt = false;
+            this.ibIncarnatePowersEx.Click += new EventHandler(this.ibIncarnatesEx_OnClick);
             // 
-            // prestigeButton
+            // ibPrestigePowersEx
             // 
-            this.prestigeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.prestigeButton.Checked = false;
-            this.prestigeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.prestigeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.prestigeButton.Location = new System.Drawing.Point(713, 29);
-            this.prestigeButton.Name = "prestigeButton";
-            this.prestigeButton.Size = new System.Drawing.Size(105, 22);
-            this.prestigeButton.TabIndex = 111;
-            this.prestigeButton.TextOff = "Prestige Powers";
-            this.prestigeButton.TextOn = "Prestige Powers";
-            this.prestigeButton.Toggle = true;
-            this.prestigeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.prestige_ButtonClicked);
+            this.ibPrestigePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPrestigePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibPrestigePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPrestigePowersEx.Images.Background = Resources.HeroButton;
+            this.ibPrestigePowersEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPrestigePowersEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPrestigePowersEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPrestigePowersEx.Location = new System.Drawing.Point(713, 29);
+            this.ibPrestigePowersEx.Lock = false;
+            this.ibPrestigePowersEx.Name = "ibPrestigePowersEx";
+            this.ibPrestigePowersEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPrestigePowersEx.TabIndex = 116;
+            this.ibPrestigePowersEx.Text = "Prestige Powers";
+            this.ibPrestigePowersEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPrestigePowersEx.TextOutline.Width = 3;
+            this.ibPrestigePowersEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPrestigePowersEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPrestigePowersEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPrestigePowersEx.ToggleText.ToggledOff = "ToggledOff State";
+            this.ibPrestigePowersEx.ToggleText.ToggledOn = "ToggledOn State";
+            this.ibPrestigePowersEx.UseAlt = false;
+            this.ibPrestigePowersEx.Click += new EventHandler(this.ibPrestigePowersEx_OnClick);
             // 
-            // ibPvX
+            // ibPvXEx
             // 
-            this.ibPvX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibPvX.Checked = false;
-            this.ibPvX.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPvX.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibPvX.Location = new System.Drawing.Point(824, 3);
-            this.ibPvX.Name = "ibPvX";
-            this.ibPvX.Size = new System.Drawing.Size(105, 22);
-            this.ibPvX.TabIndex = 111;
-            this.ibPvX.TextOff = "Mode: PvE";
-            this.ibPvX.TextOn = "Mode: PvP";
-            this.ibPvX.Toggle = true;
-            this.ibPvX.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPvX_ButtonClicked);
+            this.ibPvXEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPvXEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibPvXEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPvXEx.Images.Background = Resources.HeroButton;
+            this.ibPvXEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPvXEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPvXEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPvXEx.Location = new System.Drawing.Point(824, 3);
+            this.ibPvXEx.Lock = false;
+            this.ibPvXEx.Name = "ibPvXEx";
+            this.ibPvXEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPvXEx.TabIndex = 116;
+            this.ibPvXEx.Text = "ibPvXEx";
+            this.ibPvXEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPvXEx.TextOutline.Width = 3;
+            this.ibPvXEx.ThreeState = false;
+            this.ibPvXEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPvXEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPvXEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPvXEx.ToggleText.ToggledOff = "PvE";
+            this.ibPvXEx.ToggleText.ToggledOn = "PvP";
+            this.ibPvXEx.UseAlt = false;
+            this.ibPvXEx.Click += new EventHandler(this.ibPvXEx_OnClick);
             // 
-            // ibRecipe
+            // ibRecipeEx
             // 
-            this.ibRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibRecipe.Checked = false;
-            this.ibRecipe.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibRecipe.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibRecipe.Location = new System.Drawing.Point(935, 3);
-            this.ibRecipe.Name = "ibRecipe";
-            this.ibRecipe.Size = new System.Drawing.Size(105, 22);
-            this.ibRecipe.TabIndex = 105;
-            this.ibRecipe.TextOff = "Recipes: Off";
-            this.ibRecipe.TextOn = "Recipes: On";
-            this.ibRecipe.Toggle = true;
-            this.ibRecipe.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibRecipe_ButtonClicked);
+            this.ibRecipeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibRecipeEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibRecipeEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibRecipeEx.Images.Background = Resources.HeroButton;
+            this.ibRecipeEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibRecipeEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibRecipeEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibRecipeEx.Location = new System.Drawing.Point(935, 3);
+            this.ibRecipeEx.Lock = false;
+            this.ibRecipeEx.Name = "ibRecipeEx";
+            this.ibRecipeEx.Size = new System.Drawing.Size(105, 22);
+            this.ibRecipeEx.TabIndex = 116;
+            this.ibRecipeEx.Text = "ibRecipeEx";
+            this.ibRecipeEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibRecipeEx.TextOutline.Width = 3;
+            this.ibRecipeEx.ThreeState = false;
+            this.ibRecipeEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibRecipeEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibRecipeEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibRecipeEx.ToggleText.ToggledOff = "Recipes: Off";
+            this.ibRecipeEx.ToggleText.ToggledOn = "Recipes: On";
+            this.ibRecipeEx.UseAlt = false;
+            this.ibRecipeEx.Click += new EventHandler(this.ibRecipeEx_OnClick);
             // 
-            // ibPopup
+            // ibPopupEx
             // 
-            this.ibPopup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibPopup.Checked = false;
-            this.ibPopup.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibPopup.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibPopup.Location = new System.Drawing.Point(1046, 3);
-            this.ibPopup.Name = "ibPopup";
-            this.ibPopup.Size = new System.Drawing.Size(105, 22);
-            this.ibPopup.TabIndex = 104;
-            this.ibPopup.TextOff = "Pop-Up: Off";
-            this.ibPopup.TextOn = "Pop-Up: On";
-            this.ibPopup.Toggle = true;
-            this.ibPopup.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPopup_ButtonClicked);
-            // 
-            // tsBuildRcv
-            // 
-            this.tsBuildRcv.Name = "tsBuildRcv";
-            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
-            this.tsBuildRcv.Text = "Attempt Build Recovery...";
-            //this.tsBuildRcv.Click += new System.EventHandler(this.tsBuildRcv_Click);
+            this.ibPopupEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibPopupEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibPopupEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPopupEx.Images.Background = Resources.HeroButton;
+            this.ibPopupEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibPopupEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibPopupEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibPopupEx.Location = new System.Drawing.Point(1046, 3);
+            this.ibPopupEx.Lock = false;
+            this.ibPopupEx.Name = "ibPopupEx";
+            this.ibPopupEx.Size = new System.Drawing.Size(105, 22);
+            this.ibPopupEx.TabIndex = 116;
+            this.ibPopupEx.Text = "ibPopupEx";
+            this.ibPopupEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibPopupEx.TextOutline.Width = 3;
+            this.ibPopupEx.ThreeState = false;
+            this.ibPopupEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibPopupEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibPopupEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibPopupEx.ToggleText.ToggledOff = "Popup: Off";
+            this.ibPopupEx.ToggleText.ToggledOn = "Popup: On";
+            this.ibPopupEx.UseAlt = false;
+            this.ibPopupEx.Click += new EventHandler(this.ibPopupEx_OnClick);
             // 
             // ToolStripSeparator26
             // 
             this.ToolStripSeparator26.Name = "ToolStripSeparator26";
             this.ToolStripSeparator26.Size = new System.Drawing.Size(255, 6);
             // 
-            // pbDynMode
+            // ibDynMode
             // 
-            this.pbDynMode.Location = new System.Drawing.Point(355, 80);
-            this.pbDynMode.Name = "pbDynMode";
-            this.pbDynMode.Size = new System.Drawing.Size(105, 22);
-            this.pbDynMode.TabIndex = 92;
-            this.pbDynMode.TabStop = false;
-            this.pbDynMode.Click += new System.EventHandler(this.pbDynMode_Click);
-            this.pbDynMode.Paint += new System.Windows.Forms.PaintEventHandler(this.pbDynMode_Paint);
+            this.ibDynMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibDynMode.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibDynMode.ForeColor = Color.White;
+            this.ibDynMode.Images.Background = Resources.HeroButton;
+            this.ibDynMode.Images.Hover = Resources.HeroButtonHover;
+            this.ibDynMode.ImagesAlt.Background = Resources.VillainButton;
+            this.ibDynMode.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibDynMode.Location = new System.Drawing.Point(355, 80);
+            this.ibDynMode.Name = "ibDynMode";
+            this.ibDynMode.Size = new System.Drawing.Size(105, 22);
+            this.ibDynMode.TabIndex = 122;
+            this.ibDynMode.Text = "ibDynMode1";
+            this.ibDynMode.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibDynMode.TextOutline.Width = 3;
+            this.ibDynMode.ThreeState = false;
+            this.ibDynMode.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibDynMode.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibDynMode.ToggleText.Indeterminate = "Power / Slot";
+            this.ibDynMode.ToggleText.ToggledOff = "Power";
+            this.ibDynMode.ToggleText.ToggledOn = "Slot";
+            this.ibDynMode.UseAlt = false;
+            this.ibDynMode.Click += new EventHandler(ibDynMode_Click);
             // 
             // pnlGFX
             // 
@@ -1682,102 +1794,6 @@ namespace Mids_Reborn.Forms
             this.pnlGFXFlow.MouseEnter += new System.EventHandler(this.pnlGFXFlow_MouseEnter);
             this.pnlGFXFlow.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGFXFlow_Scroll);
             // 
-            // llAncillary
-            // 
-            this.llAncillary.Expandable = true;
-            this.llAncillary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.llAncillary.HighVis = true;
-            this.llAncillary.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llAncillary.Location = new System.Drawing.Point(0, 477); // 328, 638
-            this.llAncillary.MaxHeight = 500;
-            this.llAncillary.Name = "llAncillary";
-            this.llAncillary.PaddingX = 2;
-            this.llAncillary.PaddingY = 2;
-            this.llAncillary.Scrollable = true;
-            this.llAncillary.ScrollBarColor = System.Drawing.Color.Red;
-            this.llAncillary.ScrollBarWidth = 11;
-            this.llAncillary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llAncillary.Size = new System.Drawing.Size(138, 69);
-            this.llAncillary.SizeNormal = new System.Drawing.Size(138, 69);
-            this.llAncillary.SuspendRedraw = false;
-            this.llAncillary.TabIndex = 110;
-            this.llAncillary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
-            this.llAncillary.ItemClick += new ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
-            this.llAncillary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            // 
-            // llPool0
-            // 
-            this.llPool0.Expandable = true;
-            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.llPool0.HighVis = true;
-            this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool0.Location = new System.Drawing.Point(0, 45); // 328, 206
-            this.llPool0.MaxHeight = 500;
-            this.llPool0.Name = "llPool0";
-            this.llPool0.PaddingX = 2;
-            this.llPool0.PaddingY = 2;
-            this.llPool0.Scrollable = true;
-            this.llPool0.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool0.ScrollBarWidth = 11;
-            this.llPool0.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool0.Size = new System.Drawing.Size(138, 69);
-            this.llPool0.SizeNormal = new System.Drawing.Size(138, 69);
-            this.llPool0.SuspendRedraw = false;
-            this.llPool0.TabIndex = 34;
-            this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
-            this.llPool0.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
-            //this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool0.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            // 
-            // llPool1
-            // 
-            this.llPool1.Expandable = true;
-            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.llPool1.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool1.HighVis = true;
-            this.llPool1.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool1.Location = new System.Drawing.Point(0, 153); // 328, 314
-            this.llPool1.MaxHeight = 500;
-            this.llPool1.Name = "llPool1";
-            this.llPool1.PaddingX = 2;
-            this.llPool1.PaddingY = 2;
-            this.llPool1.Scrollable = true;
-            this.llPool1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool1.ScrollBarWidth = 11;
-            this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool1.Size = new System.Drawing.Size(138, 69);
-            this.llPool1.SizeNormal = new System.Drawing.Size(138, 69);
-            this.llPool1.SuspendRedraw = false;
-            this.llPool1.TabIndex = 35;
-            this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
-            this.llPool1.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
-            //this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool1.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            // 
-            // llSecondary
-            // 
-            this.llSecondary.Expandable = true;
-            this.llSecondary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.llSecondary.HighVis = true;
-            this.llSecondary.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llSecondary.Location = new System.Drawing.Point(168, 206);
-            this.llSecondary.MaxHeight = 600;
-            this.llSecondary.Name = "llSecondary";
-            this.llSecondary.PaddingX = 2;
-            this.llSecondary.PaddingY = 2;
-            this.llSecondary.Scrollable = true;
-            this.llSecondary.ScrollBarColor = System.Drawing.Color.Red;
-            this.llSecondary.ScrollBarWidth = 11;
-            this.llSecondary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llSecondary.Size = new System.Drawing.Size(144, 160);
-            this.llSecondary.SizeNormal = new System.Drawing.Size(144, 160);
-            this.llSecondary.SuspendRedraw = false;
-            this.llSecondary.TabIndex = 108;
-            this.llSecondary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llSecondary_ItemHover);
-            this.llSecondary.ItemClick += new ListLabelV3.ItemClickEventHandler(llSecondary_ItemClick);
-            this.llSecondary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llSecondary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
-            // 
             // llPrimary
             // 
             this.llPrimary.Expandable = true;
@@ -1793,8 +1809,8 @@ namespace Mids_Reborn.Forms
             this.llPrimary.ScrollBarColor = System.Drawing.Color.Red;
             this.llPrimary.ScrollBarWidth = 11;
             this.llPrimary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llPrimary.Size = new System.Drawing.Size(144, 160);
-            this.llPrimary.SizeNormal = new System.Drawing.Size(144, 160);
+            this.llPrimary.Size = new System.Drawing.Size(145, 160);
+            this.llPrimary.SizeNormal = new System.Drawing.Size(145, 160);
             this.llPrimary.SuspendRedraw = false;
             this.llPrimary.TabIndex = 107;
             this.llPrimary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPrimary_ItemHover);
@@ -1802,30 +1818,78 @@ namespace Mids_Reborn.Forms
             this.llPrimary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             this.llPrimary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
-            // llPool3
+            // llSecondary
             // 
-            this.llPool3.Expandable = true;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool3.HighVis = true;
-            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool3.Location = new System.Drawing.Point(0, 369); // 328, 530
-            this.llPool3.MaxHeight = 500;
-            this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 2;
-            this.llPool3.PaddingY = 2;
-            this.llPool3.Scrollable = true;
-            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool3.ScrollBarWidth = 11;
-            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool3.Size = new System.Drawing.Size(138, 69);
-            this.llPool3.SizeNormal = new System.Drawing.Size(138, 69);
-            this.llPool3.SuspendRedraw = false;
-            this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
-            //this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llSecondary.Expandable = true;
+            this.llSecondary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llSecondary.HighVis = true;
+            this.llSecondary.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llSecondary.Location = new System.Drawing.Point(170, 206);
+            this.llSecondary.MaxHeight = 600;
+            this.llSecondary.Name = "llSecondary";
+            this.llSecondary.PaddingX = 2;
+            this.llSecondary.PaddingY = 2;
+            this.llSecondary.Scrollable = true;
+            this.llSecondary.ScrollBarColor = System.Drawing.Color.Red;
+            this.llSecondary.ScrollBarWidth = 11;
+            this.llSecondary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
+            this.llSecondary.Size = new System.Drawing.Size(145, 160);
+            this.llSecondary.SizeNormal = new System.Drawing.Size(145, 160);
+            this.llSecondary.SuspendRedraw = false;
+            this.llSecondary.TabIndex = 108;
+            this.llSecondary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llSecondary_ItemHover);
+            this.llSecondary.ItemClick += new ListLabelV3.ItemClickEventHandler(llSecondary_ItemClick);
+            this.llSecondary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llSecondary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            // 
+            // llPool0
+            // 
+            this.llPool0.Expandable = true;
+            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool0.HighVis = true;
+            this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool0.Location = new System.Drawing.Point(0, 47); // 328, 206
+            this.llPool0.MaxHeight = 500;
+            this.llPool0.Name = "llPool0";
+            this.llPool0.PaddingX = 2;
+            this.llPool0.PaddingY = 2;
+            this.llPool0.Scrollable = true;
+            this.llPool0.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool0.ScrollBarWidth = 11;
+            this.llPool0.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool0.Size = new System.Drawing.Size(145, 69);
+            this.llPool0.SizeNormal = new System.Drawing.Size(145, 69);
+            this.llPool0.SuspendRedraw = false;
+            this.llPool0.TabIndex = 34;
+            this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
+            this.llPool0.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
+            //this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool0.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool1
+            // 
+            this.llPool1.Expandable = true;
+            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool1.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool1.HighVis = true;
+            this.llPool1.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool1.Location = new System.Drawing.Point(0, 152); // 328, 314
+            this.llPool1.MaxHeight = 500;
+            this.llPool1.Name = "llPool1";
+            this.llPool1.PaddingX = 2;
+            this.llPool1.PaddingY = 2;
+            this.llPool1.Scrollable = true;
+            this.llPool1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool1.ScrollBarWidth = 11;
+            this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool1.Size = new System.Drawing.Size(145, 69);
+            this.llPool1.SizeNormal = new System.Drawing.Size(145, 69);
+            this.llPool1.SuspendRedraw = false;
+            this.llPool1.TabIndex = 35;
+            this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
+            this.llPool1.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
+            //this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool1.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool2
             // 
@@ -1834,7 +1898,7 @@ namespace Mids_Reborn.Forms
             this.llPool2.ForeColor = System.Drawing.Color.Yellow;
             this.llPool2.HighVis = true;
             this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool2.Location = new System.Drawing.Point(0, 261); // 328, 422
+            this.llPool2.Location = new System.Drawing.Point(0, 266); // 328, 422
             this.llPool2.MaxHeight = 500;
             this.llPool2.Name = "llPool2";
             this.llPool2.PaddingX = 2;
@@ -1843,14 +1907,62 @@ namespace Mids_Reborn.Forms
             this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool2.ScrollBarWidth = 11;
             this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool2.Size = new System.Drawing.Size(138, 69);
-            this.llPool2.SizeNormal = new System.Drawing.Size(138, 69);
+            this.llPool2.Size = new System.Drawing.Size(145, 69);
+            this.llPool2.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
             this.llPool2.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
             this.llPool2.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool2_ItemClick);
             //this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool2.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool3
+            // 
+            this.llPool3.Expandable = true;
+            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool3.HighVis = true;
+            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool3.Location = new System.Drawing.Point(0, 374); // 328, 530
+            this.llPool3.MaxHeight = 500;
+            this.llPool3.Name = "llPool3";
+            this.llPool3.PaddingX = 2;
+            this.llPool3.PaddingY = 2;
+            this.llPool3.Scrollable = true;
+            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool3.ScrollBarWidth = 11;
+            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool3.Size = new System.Drawing.Size(145, 69);
+            this.llPool3.SizeNormal = new System.Drawing.Size(145, 69);
+            this.llPool3.SuspendRedraw = false;
+            this.llPool3.TabIndex = 37;
+            this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
+            //this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool3.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llAncillary
+            // 
+            this.llAncillary.Expandable = true;
+            this.llAncillary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llAncillary.HighVis = true;
+            this.llAncillary.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llAncillary.Location = new System.Drawing.Point(0, 477); // 328, 638
+            this.llAncillary.MaxHeight = 500;
+            this.llAncillary.Name = "llAncillary";
+            this.llAncillary.PaddingX = 2;
+            this.llAncillary.PaddingY = 2;
+            this.llAncillary.Scrollable = true;
+            this.llAncillary.ScrollBarColor = System.Drawing.Color.Red;
+            this.llAncillary.ScrollBarWidth = 11;
+            this.llAncillary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
+            this.llAncillary.Size = new System.Drawing.Size(145, 69);
+            this.llAncillary.SizeNormal = new System.Drawing.Size(145, 69);
+            this.llAncillary.SuspendRedraw = false;
+            this.llAncillary.TabIndex = 110;
+            this.llAncillary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
+            this.llAncillary.ItemClick += new ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
+            this.llAncillary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblName
             // 
@@ -1920,88 +2032,155 @@ namespace Mids_Reborn.Forms
             this.I9Popup.Visible = false;
             this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);
             // 
-            // ibTotals
+            // ibTotalsEx
             // 
-            this.ibTotals.Checked = false;
-            this.ibTotals.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTotals.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTotals.Location = new System.Drawing.Point(355, 109);
-            this.ibTotals.Name = "ibTotals";
-            this.ibTotals.Size = new System.Drawing.Size(105, 22);
-            this.ibTotals.TabIndex = 99;
-            this.ibTotals.TextOff = "View Totals";
-            this.ibTotals.TextOn = "Alt Text";
-            this.ibTotals.Toggle = false;
-            this.ibTotals.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTotals_ButtonClicked);
+            this.ibTotalsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTotalsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTotalsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTotalsEx.Images.Background = Resources.HeroButton;
+            this.ibTotalsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTotalsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTotalsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTotalsEx.Location = new System.Drawing.Point(355, 109);
+            this.ibTotalsEx.Lock = false;
+            this.ibTotalsEx.Name = "ibTotalsEx";
+            this.ibTotalsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTotalsEx.TabIndex = 116;
+            this.ibTotalsEx.Text = "View Totals";
+            this.ibTotalsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTotalsEx.TextOutline.Width = 3;
+            this.ibTotalsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTotalsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTotalsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibTotalsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibTotalsEx.UseAlt = false;
+            this.ibTotalsEx.Click += new EventHandler(this.ibTotalsEx_OnClick);
             // 
-            // ibSlotLevels
+            // ibSlotLevelsEx
             // 
-            this.ibSlotLevels.Checked = false;
-            this.ibSlotLevels.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSlotLevels.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibSlotLevels.Location = new System.Drawing.Point(244, 133);
-            this.ibSlotLevels.Name = "ibSlotLevels";
-            this.ibSlotLevels.Size = new System.Drawing.Size(105, 22);
-            this.ibSlotLevels.TabIndex = 101;
-            this.ibSlotLevels.TextOff = "Slot Levels: Off";
-            this.ibSlotLevels.TextOn = "Slot Levels: On";
-            this.ibSlotLevels.Toggle = true;
-            this.ibSlotLevels.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSlotLevels_ButtonClicked);
+            this.ibSlotLevelsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSlotLevelsEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibSlotLevelsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotLevelsEx.Images.Background = Resources.HeroButton;
+            this.ibSlotLevelsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSlotLevelsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSlotLevelsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSlotLevelsEx.Location = new System.Drawing.Point(244, 133);
+            this.ibSlotLevelsEx.Lock = false;
+            this.ibSlotLevelsEx.Name = "ibSlotLevelsEx";
+            this.ibSlotLevelsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSlotLevelsEx.TabIndex = 116;
+            this.ibSlotLevelsEx.Text = "ibSlotLevelsEx";
+            this.ibSlotLevelsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSlotLevelsEx.TextOutline.Width = 3;
+            this.ibSlotLevelsEx.ThreeState = false;
+            this.ibSlotLevelsEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibSlotLevelsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSlotLevelsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSlotLevelsEx.ToggleText.ToggledOff = "Slot Levels: Off";
+            this.ibSlotLevelsEx.ToggleText.ToggledOn = "Slot Levels: On";
+            this.ibSlotLevelsEx.UseAlt = false;
+            this.ibSlotLevelsEx.Click += new EventHandler(this.ibSlotLevelsEx_OnClick);
             // 
-            // ibTeam
+            // ibTeamEx
             // 
-            this.ibTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibTeam.Checked = false;
-            this.ibTeam.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibTeam.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTeam.Location = new System.Drawing.Point(602, 3);
-            this.ibTeam.Name = "ibTeam";
-            this.ibTeam.Size = new System.Drawing.Size(105, 22);
-            this.ibTeam.TabIndex = 100;
-            this.ibTeam.TextOff = "Team Members";
-            this.ibTeam.TextOn = "Alt Text";
-            this.ibTeam.Toggle = false;
-            this.ibTeam.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
+            this.ibTeamEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTeamEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibTeamEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTeamEx.Images.Background = Resources.HeroButton;
+            this.ibTeamEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibTeamEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibTeamEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibTeamEx.Location = new System.Drawing.Point(602, 3);
+            this.ibTeamEx.Lock = false;
+            this.ibTeamEx.Name = "ibTeamEx";
+            this.ibTeamEx.Size = new System.Drawing.Size(105, 22);
+            this.ibTeamEx.TabIndex = 116;
+            this.ibTeamEx.Text = "Team Members";
+            this.ibTeamEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibTeamEx.TextOutline.Width = 3;
+            this.ibTeamEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibTeamEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibTeamEx.ToggleText.ToggledOff = "Toggle Off State";
+            this.ibTeamEx.ToggleText.ToggledOn = "Toggle On State";
+            this.ibTeamEx.UseAlt = false;
+            this.ibTeamEx.Click += new EventHandler(this.ibTeamEx_OnClick);
             // 
-            // ibMode
+            // ibModeEx
             // 
-            this.sbMode.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbMode.Location = new System.Drawing.Point(244, 80);
-            this.sbMode.Name = "sbMode";
-            this.sbMode.Size = new System.Drawing.Size(105, 22);
-            this.sbMode.TabIndex = 122;
-            this.sbMode.ForeColor = Color.White;
-            this.sbMode.Outline = new SwitchButton.SwitchButtonOutline { Color = Color.Black, Width = 3, Enabled = true };
-            this.sbMode.SwitchedState = mrbControls.SwitchButton.SwitchState.None;
-            this.sbMode.SwitchText = new SwitchButton.SwitchButtonStateText { StateA = "Level-Up", StateB = "Normal", StateC = "Respec" };
-            this.sbMode.Click += new EventHandler(this.sbMode_ButtonClicked);
+            this.ibModeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibModeEx.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibModeEx.ForeColor = Color.White;
+            this.ibModeEx.Images.Background = Resources.HeroButton;
+            this.ibModeEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibModeEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibModeEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibModeEx.Location = new System.Drawing.Point(244, 80);
+            this.ibModeEx.Name = "ibModeEx";
+            this.ibModeEx.Size = new System.Drawing.Size(105, 22);
+            this.ibModeEx.TabIndex = 122;
+            this.ibModeEx.Text = "ibModeEx1";
+            this.ibModeEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibModeEx.TextOutline.Width = 3;
+            this.ibModeEx.ThreeState = true;
+            this.ibModeEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibModeEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibModeEx.ToggleText.Indeterminate = "Respec";
+            this.ibModeEx.ToggleText.ToggledOff = "Level-Up";
+            this.ibModeEx.ToggleText.ToggledOn = "Normal";
+            this.ibModeEx.UseAlt = false;
+            this.ibModeEx.Click += new EventHandler(ibModeEx_OnClick);
             // 
-            // ibSets
+            // ibSetsEx
             // 
-            this.ibSets.Checked = false;
-            this.ibSets.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSets.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibSets.Location = new System.Drawing.Point(244, 109);
-            this.ibSets.Name = "ibSets";
-            this.ibSets.Size = new System.Drawing.Size(105, 22);
-            this.ibSets.TabIndex = 98;
-            this.ibSets.TextOff = "View Active Sets";
-            this.ibSets.TextOn = "Alt Text";
-            this.ibSets.Toggle = false;
-            this.ibSets.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSets_ButtonClicked);
+            this.ibSetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            this.ibSetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSetsEx.Images.Background = Resources.HeroButton;
+            this.ibSetsEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSetsEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSetsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSetsEx.Location = new System.Drawing.Point(244, 109);
+            this.ibSetsEx.Lock = false;
+            this.ibSetsEx.Name = "ibSetsEx";
+            this.ibSetsEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSetsEx.TabIndex = 116;
+            this.ibSetsEx.Text = "View Active Sets";
+            this.ibSetsEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSetsEx.TextOutline.Width = 3;
+            this.ibSetsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSetsEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSetsEx.ToggleText.ToggledOff = "Toggled Off State";
+            this.ibSetsEx.ToggleText.ToggledOn = "Toggled On State";
+            this.ibSetsEx.UseAlt = false;
+            this.ibSetsEx.Click += new EventHandler(this.ibSetsEx_OnClick);
             // 
-            // ibAccolade
+            // ibSlotInfoEx
             // 
-            this.ibAccolade.Checked = false;
-            this.ibAccolade.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibAccolade.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibAccolade.Location = new System.Drawing.Point(355, 133);
-            this.ibAccolade.Name = "ibAccolade";
-            this.ibAccolade.Size = new System.Drawing.Size(105, 22);
-            this.ibAccolade.TabIndex = 106;
-            this.ibAccolade.TextOff = "67 Slots to go";
-            this.ibAccolade.TextOn = "0 Slots placed";
-            this.ibAccolade.Toggle = true;
+            this.ibSlotInfoEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibSlotInfoEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
+            this.ibSlotInfoEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotInfoEx.CurrentText = "ibSlotInfoEx";
+            this.ibSlotInfoEx.Images.Background = Resources.HeroButton;
+            this.ibSlotInfoEx.Images.Hover = Resources.HeroButtonHover;
+            this.ibSlotInfoEx.ImagesAlt.Background = Resources.VillainButton;
+            this.ibSlotInfoEx.ImagesAlt.Hover = Resources.VillainButtonHover;
+            this.ibSlotInfoEx.Location = new System.Drawing.Point(355, 133);
+            this.ibSlotInfoEx.Lock = false;
+            this.ibSlotInfoEx.Name = "ibSlotInfoEx";
+            this.ibSlotInfoEx.Size = new System.Drawing.Size(105, 22);
+            this.ibSlotInfoEx.TabIndex = 116;
+            this.ibSlotInfoEx.Text = "ibSlotInfoEx";
+            this.ibSlotInfoEx.TextOutline.Color = System.Drawing.Color.Black;
+            this.ibSlotInfoEx.TextOutline.Width = 3;
+            this.ibSlotInfoEx.ThreeState = false;
+            this.ibSlotInfoEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
+            this.ibSlotInfoEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.ibSlotInfoEx.ToggleText.Indeterminate = "Indeterminate State";
+            this.ibSlotInfoEx.ToggleText.ToggledOff = "X Slots to go";
+            this.ibSlotInfoEx.ToggleText.ToggledOn = "X Slots placed";
+            this.ibSlotInfoEx.UseAlt = false;
             // 
             // poolsPanel
             //
@@ -2038,6 +2217,13 @@ namespace Mids_Reborn.Forms
             this.poolsPanel.Controls.Add(this.llPool2);
             this.poolsPanel.Controls.Add(this.llPool3);
             this.poolsPanel.Controls.Add(this.llAncillary);
+            //
+            // enhCheckMode
+            //
+            this.enhCheckMode.Location = new Point(5, poolsPanel.Bottom + 2);
+            this.enhCheckMode.Name = "enhCheckMode";
+            this.enhCheckMode.Size = new Size(445, 35);
+            this.enhCheckMode.Visible = false;
             // 
             // frmMain
             // 
@@ -2049,11 +2235,11 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.i9Picker);
             this.Controls.Add(this.I9Popup);
             this.Controls.Add(this.lblLockedSecondary);
-            this.Controls.Add(this.ibTotals);
-            this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.sbMode);
-            this.Controls.Add(this.ibSets);
-            this.Controls.Add(this.pbDynMode);
+            this.Controls.Add(this.ibTotalsEx);
+            this.Controls.Add(this.ibSlotLevelsEx);
+            this.Controls.Add(this.ibModeEx);
+            this.Controls.Add(this.ibSetsEx);
+            this.Controls.Add(this.ibDynMode);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.MenuBar);
             this.Controls.Add(this.lblName);
@@ -2066,12 +2252,13 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.cbPrimary);
             this.Controls.Add(this.cbOrigin);
             this.Controls.Add(this.cbAT);
-            this.Controls.Add(this.ibAccolade);
+            this.Controls.Add(this.ibSlotInfoEx);
             this.Controls.Add(this.lblPrimary);
             this.Controls.Add(this.pnlGFXFlow);
             this.Controls.Add(this.llPrimary);
             this.Controls.Add(this.llSecondary);
             this.Controls.Add(this.poolsPanel);
+            this.Controls.Add(this.enhCheckMode);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
@@ -2085,7 +2272,7 @@ namespace Mids_Reborn.Forms
             this.MenuBar.PerformLayout();
             this.topPanel.ResumeLayout(false);
             this.topPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).EndInit();
             this.pnlGFXFlow.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -2099,9 +2286,10 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsAdvDBEdit;
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
-        ToolStripMenuItem tsBugCrytilis;
+        ToolStripMenuItem tsSupport;
         ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsClearAllEnh;
+        ToolStripMenuItem tsChangeDb;
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
         ToolStripMenuItem tsPatreon;
@@ -2124,7 +2312,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsGenFreebies;
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
-        ToolStripMenuItem tsExportDiscord;
+        ToolStripMenuItem tsShareDiscord;
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
@@ -2148,7 +2336,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsDPSCalc;
         ToolStripMenuItem tsRemoveAllSlots;
         ToolStripMenuItem tsSetFind;
-        ToolStripMenuItem tsHCMRBForum;
         ToolStripMenuItem tsGitHubCrytilis;
         ToolStripMenuItem tsUpdateCheck;
         ToolStripMenuItem tsView2Col;
@@ -2168,9 +2355,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;
         ToolStripMenuItem tsViewTotals;
-        public ImageButton accoladeButton;
-        public ImageButton petsButton;
-        ToolStripMenuItem AccoladesWindowToolStripMenuItem;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
         ComboBox cbAncillary;
@@ -2186,27 +2370,12 @@ namespace Mids_Reborn.Forms
         DataView dvAnchored;
         ToolStripMenuItem FileToolStripMenuItem;
         ToolStripMenuItem HelpToolStripMenuItem1;
-        ImageButton heroVillain;
-        I9Picker i9Picker;
-        ctlPopUp I9Popup;
-        ImageButton ibAccolade;
-        ImageButton ibTeam;
-        SwitchButton sbMode;
-        ImageButton ibPopup;
-        ImageButton ibPvX;
-        ImageButton ibRecipe;
-        ImageButton ibSets;
-        ImageButton ibSlotLevels;
-        ImageButton ibTotals;
-        public ImageButton prestigeButton;
         ToolStripMenuItem ImportExportToolStripMenuItem;
-        public ImageButton incarnateButton;
-        ToolStripMenuItem IncarnateWindowToolStripMenuItem;
         ToolStripMenuItem InGameRespecHelperToolStripMenuItem;
         GFXLabel lblAT;
         Label lblATLocked;
         Label lblEpic;
-        Label lblHero;
+        Label lblCharacter;
         Label lblLocked0;
         Label lblLocked1;
         Label lblLocked2;
@@ -2230,15 +2399,11 @@ namespace Mids_Reborn.Forms
         ListLabelV3 llSecondary;
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
-        PictureBox pbDynMode;
         public pnlGFX pnlGFX;
         public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
-        ToolStripMenuItem TemporaryPowersWindowToolStripMenuItem;
-        public ImageButton tempPowersButton;
         ToolStripMenuItem tlsDPA;
-        Timer tmrGfx;
         ToolStripMenuItem ToolStripMenuItem1;
         ToolStripMenuItem ToolStripMenuItem2;
         ToolStripMenuItem ToggleCheckModeToolStripMenuItem;
@@ -2267,10 +2432,36 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator7;
         ToolStripSeparator ToolStripSeparator8;
         ToolStripSeparator ToolStripSeparator9;
-        ToolTip tTip;
-        TextBox txtName;
         ToolStripMenuItem ViewToolStripMenuItem;
         ToolStripMenuItem WindowToolStripMenuItem;
+        ToolStripSeparator ToolStripSeparator29;
+        ToolStripMenuItem ShareToolStripMenuItem;
+        ToolStripMenuItem DonateToolStripMenuItem;
+        Timer tmrGfx;
         Panel poolsPanel;
+        ToolTip tTip;
+        TextBox txtName;
+        I9Picker i9Picker;
+        ctlPopUp I9Popup;
+        EnhCheckMode enhCheckMode;
+        ImageButtonEx ibModeEx;
+        ImageButtonEx ibDynMode;
+        ImageButtonEx ibAlignmentEx;
+        ImageButtonEx ibSlotInfoEx;
+        public ImageButtonEx ibAccoladesEx;
+        public ImageButtonEx ibPetsEx;
+        ImageButtonEx ibTeamEx;
+        ImageButtonEx ibPopupEx;
+        ImageButtonEx ibPvXEx;
+        ImageButtonEx ibRecipeEx;
+        ImageButtonEx ibSetsEx;
+        ImageButtonEx ibSlotLevelsEx;
+        ImageButtonEx ibTotalsEx;
+        public ImageButtonEx ibPrestigePowersEx;
+        public ImageButtonEx ibIncarnatePowersEx;
+        public ImageButtonEx ibTempPowersEx;
+
+
+
     }
 }

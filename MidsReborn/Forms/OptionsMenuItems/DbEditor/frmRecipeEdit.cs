@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.WindowMenuItems;
-using mrbBase;
-using mrbBase.Base.Extensions;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -79,7 +81,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _noUpdate = true;
             InitializeComponent();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeEdit));
-            Icon = Resources.reborn;
+            Icon = Resources.MRB_Icon_Concept;
             _tempRecipes = (Recipe[])DatabaseAPI.Database.Recipes.Clone();
             _tempEnhancements = (IEnhancement[])DatabaseAPI.Database.Enhancements.Clone();
             FillList();
@@ -316,8 +318,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.AssignRecipeSalvageIDs();
             DatabaseAPI.AssignRecipeIDs();
             var serializer = Serializer.GetSerializer();
-            DatabaseAPI.SaveRecipes(serializer);
-            DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.SaveRecipes(serializer, MidsContext.Config.SavePath);
+            DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
             Close();
         }
 

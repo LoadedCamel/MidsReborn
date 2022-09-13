@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using mrbControls;
+using Mids_Reborn.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
 {
@@ -44,19 +45,18 @@ namespace Mids_Reborn.Forms
             this.chkSortByLevel = new System.Windows.Forms.CheckBox();
             this.lblHeader = new System.Windows.Forms.Label();
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.RecipeInfo = new mrbControls.ctlPopUp();
+            this.RecipeInfo = new ctlPopUp();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.chkRecipe = new System.Windows.Forms.CheckBox();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.ibMiniList = new mrbControls.ImageButton();
-            this.ibClipboard = new mrbControls.ImageButton();
-            this.ibTopmost = new mrbControls.ImageButton();
-            this.ibClose = new mrbControls.ImageButton();
-            this.ibEnhCheckMode = new mrbControls.ImageButton();
+            this.ibMiniList = new ImageButton();
+            this.ibClipboard = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.ibClose = new ImageButton();
+            this.ibEnhCheckMode = new ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
@@ -64,13 +64,13 @@ namespace Mids_Reborn.Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
-            this.ctlPopUp1 = new mrbControls.ctlPopUp();
+            this.ctlPopUp1 = new ctlPopUp();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblRewardMerits = new System.Windows.Forms.Label();
-            this.imageButton1 = new mrbControls.ImageButton();
+            this.imageButton1 = new ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
@@ -176,24 +176,16 @@ namespace Mids_Reborn.Forms
             // 
             // Panel1
             // 
-            this.Panel1.Controls.Add(this.VScrollBar1);
+            this.Panel1.AutoScroll = true;
             this.Panel1.Controls.Add(this.RecipeInfo);
             this.Panel1.Location = new System.Drawing.Point(0, 38);
             this.Panel1.Name = "Panel1";
             this.Panel1.Size = new System.Drawing.Size(698, 175);
             this.Panel1.TabIndex = 11;
             // 
-            // VScrollBar1
-            // 
-            this.VScrollBar1.Location = new System.Drawing.Point(679, 0);
-            this.VScrollBar1.Maximum = 20;
-            this.VScrollBar1.Name = "VScrollBar1";
-            this.VScrollBar1.Size = new System.Drawing.Size(17, 175);
-            this.VScrollBar1.TabIndex = 3;
-            // 
             // RecipeInfo
             // 
-            this.RecipeInfo.BXHeight = 2048;
+            this.RecipeInfo.BXHeight = 4096;
             this.RecipeInfo.ColumnPosition = 0.5F;
             this.RecipeInfo.ColumnRight = false;
             this.RecipeInfo.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
@@ -203,7 +195,7 @@ namespace Mids_Reborn.Forms
             this.RecipeInfo.Name = "RecipeInfo";
             this.RecipeInfo.ScrollY = 0F;
             this.RecipeInfo.SectionPadding = 8;
-            this.RecipeInfo.Size = new System.Drawing.Size(692, 175);
+            this.RecipeInfo.Size = new System.Drawing.Size(653, 178);
             this.RecipeInfo.TabIndex = 2;
             // 
             // Panel2
@@ -230,7 +222,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Mids_Reborn.Resources.AncientScroll;
+            this.pictureBox1.Image = Resources.AncientScroll;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
@@ -241,7 +233,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::Mids_Reborn.Resources.EnhancementCatalyst;
+            this.pictureBox2.Image = Resources.EnhancementCatalyst;
             this.pictureBox2.Location = new System.Drawing.Point(222, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(32, 32);
@@ -252,7 +244,7 @@ namespace Mids_Reborn.Forms
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::Mids_Reborn.Resources.EnhancementBooster;
+            this.pictureBox3.Image = Resources.EnhancementBooster;
             this.pictureBox3.Location = new System.Drawing.Point(370, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(32, 32);
@@ -267,6 +259,7 @@ namespace Mids_Reborn.Forms
             this.ibMiniList.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibMiniList.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibMiniList.Location = new System.Drawing.Point(123, 470);
+            this.ibMiniList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibMiniList.Name = "ibMiniList";
             this.ibMiniList.Size = new System.Drawing.Size(105, 22);
             this.ibMiniList.TabIndex = 14;
@@ -280,6 +273,7 @@ namespace Mids_Reborn.Forms
             this.ibClipboard.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClipboard.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClipboard.Location = new System.Drawing.Point(12, 470);
+            this.ibClipboard.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibClipboard.Name = "ibClipboard";
             this.ibClipboard.Size = new System.Drawing.Size(105, 22);
             this.ibClipboard.TabIndex = 13;
@@ -293,6 +287,7 @@ namespace Mids_Reborn.Forms
             this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibTopmost.Location = new System.Drawing.Point(383, 470);
+            this.ibTopmost.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibTopmost.Name = "ibTopmost";
             this.ibTopmost.Size = new System.Drawing.Size(105, 22);
             this.ibTopmost.TabIndex = 7;
@@ -306,6 +301,7 @@ namespace Mids_Reborn.Forms
             this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(605, 470);
+            this.ibClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibClose.Name = "ibClose";
             this.ibClose.Size = new System.Drawing.Size(105, 22);
             this.ibClose.TabIndex = 6;
@@ -319,6 +315,7 @@ namespace Mids_Reborn.Forms
             this.ibEnhCheckMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibEnhCheckMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibEnhCheckMode.Location = new System.Drawing.Point(494, 470);
+            this.ibEnhCheckMode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ibEnhCheckMode.Name = "ibEnhCheckMode";
             this.ibEnhCheckMode.Size = new System.Drawing.Size(105, 22);
             this.ibEnhCheckMode.TabIndex = 16;
@@ -413,7 +410,7 @@ namespace Mids_Reborn.Forms
             this.ctlPopUp1.Name = "ctlPopUp1";
             this.ctlPopUp1.ScrollY = 0F;
             this.ctlPopUp1.SectionPadding = 8;
-            this.ctlPopUp1.Size = new System.Drawing.Size(692, 175);
+            this.ctlPopUp1.Size = new System.Drawing.Size(692, 178);
             this.ctlPopUp1.TabIndex = 2;
             // 
             // pictureBox4
@@ -474,6 +471,7 @@ namespace Mids_Reborn.Forms
             this.imageButton1.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.imageButton1.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.imageButton1.Location = new System.Drawing.Point(374, 470);
+            this.imageButton1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.imageButton1.Name = "imageButton1";
             this.imageButton1.Size = new System.Drawing.Size(105, 22);
             this.imageButton1.TabIndex = 19;
@@ -535,7 +533,6 @@ namespace Mids_Reborn.Forms
         Panel Panel2;
         PictureBox pbRecipe;
         ToolTip ToolTip1;
-        VScrollBar VScrollBar1;
         private ImageButton ibEnhCheckMode;
         private Panel pSalvageSummary;
         private PictureBox pictureBox1;

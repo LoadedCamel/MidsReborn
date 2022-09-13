@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.Automation;
-using mrbBase;
-using mrbBase.Base.Data_Classes;
-using mrbControls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.UIv2.v2Controls
 {
