@@ -54,8 +54,8 @@ namespace Mids_Reborn.Core
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-        public string AppChangeLog { get; set; }
-        public string DbChangeLog { get; set; }
+        public string? AppChangeLog { get; set; }
+        public string? DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
 
 
@@ -84,14 +84,16 @@ namespace Mids_Reborn.Core
         public FontSettings RtFont { get; } = new();
         public Dictionary<string, int> TeamMembers { get; }
 
-        public string WindowState { get; set; }
+        public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
 
         public bool ApplicationRegistered { get; set; }
         public bool Authorized { get; set; }
         public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }
-        public float BaseAcc { get; set; } = 0.75f;
+
+        public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
+
         public bool DoNotUpdateFileAssociation { get; set; }
         public int ExempHigh { get; set; } = 50;
         public int TeamSize { get; set; } = 1;
@@ -166,11 +168,11 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public string DataPath { get; set; }
+        public string? DataPath { get; set; }
 
-        private string _savePath = Files.FDefaultPath;
+        private string? _savePath = Files.FDefaultPath;
 
-        public string SavePath
+        public string? SavePath
         {
             get => _savePath;
             set
@@ -192,9 +194,6 @@ namespace Mids_Reborn.Core
 
         public bool FirstRun { get; set; }
 
-
-
-
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
         public bool ShowSelfBuffsAny { get; set; }
@@ -209,6 +208,22 @@ namespace Mids_Reborn.Core
                 return configData;
             }
         }
+
+        internal readonly List<KeyValuePair<string, float>> RelativeScales = new()
+        {
+            new KeyValuePair<string, float>("Enemy Relative Level: -4", 0.95f),
+            new KeyValuePair<string, float>("Enemy Relative Level: -3", 0.9f),
+            new KeyValuePair<string, float>("Enemy Relative Level: -2", 0.85f),
+            new KeyValuePair<string, float>("Enemy Relative Level: -1", 0.8f),
+            new KeyValuePair<string, float>("Enemy Relative Level: Default", 0.75f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +1", 0.65f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +2", 0.56f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +3", 0.48f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +4", 0.39f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +5", 0.3f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +6", 0.2f),
+            new KeyValuePair<string, float>("Enemy Relative Level: +7", 0.08f)
+        };
 
         public void ResetBuildsPath()
         {
@@ -232,7 +247,7 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            _current.InitializeComponent();
+            _current?.InitializeComponent();
         }
 
         private void InitializeComponent()

@@ -44,7 +44,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             try
             {
-                Process.Start(iUri);
+                Process.Start(new ProcessStartInfo
+                {
+                    UseShellExecute = true,
+                    FileName = iUri
+                });
             }
             catch (Win32Exception ex)
             {

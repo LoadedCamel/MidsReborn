@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Mids_Reborn.Controls;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -382,7 +383,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnImportJson);
             this.Controls.Add(this.listBoxTables);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Resources.MRB_Icon_Concept;
             this.Name = "frmEditAttribMod";
             this.Text = "AttribMod Editor";
             this.Load += new System.EventHandler(this.frmEditAttribMod_Load);

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -302,7 +303,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             this.Controls.Add(this.Label20);
             this.Controls.Add(this.Label19);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Resources.MRB_Icon_Concept;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmExportColor";

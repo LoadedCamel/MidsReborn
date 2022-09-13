@@ -75,14 +75,14 @@ namespace Mids_Reborn.Forms
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.ImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFilePrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.ImportExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsExportLong = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
@@ -146,7 +146,7 @@ namespace Mids_Reborn.Forms
             this.tsViewActualDamage_New = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewDPS_New = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsDPA = new System.Windows.Forms.ToolStripMenuItem();
-            this.HelpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,7 +155,7 @@ namespace Mids_Reborn.Forms
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatreon = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsGitHubCrytilis = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSets = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewGraphs = new System.Windows.Forms.ToolStripMenuItem();
@@ -179,6 +179,7 @@ namespace Mids_Reborn.Forms
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DonateToolStripMenuItem = new ToolStripMenuItem();
+            this.ToolStripSeparator22 = new ToolStripSeparator();
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblCharacter = new System.Windows.Forms.Label();
             this.ibModeEx = new ImageButtonEx();
@@ -199,6 +200,7 @@ namespace Mids_Reborn.Forms
             this.ibTempPowersEx = new ImageButtonEx();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripSeparator30 = new ToolStripSeparator();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
@@ -215,6 +217,7 @@ namespace Mids_Reborn.Forms
             this.I9Popup = new ctlPopUp();
             this.poolsPanel = new Panel();
             this.enhCheckMode = new EnhCheckMode(this);
+            this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -593,19 +596,30 @@ namespace Mids_Reborn.Forms
             this.MenuBar.BackColor = System.Drawing.SystemColors.Control;
             this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileToolStripMenuItem,
-            this.ImportExportToolStripMenuItem,
             this.OptionsToolStripMenuItem,
             this.ShareToolStripMenuItem,
             this.CharacterToolStripMenuItem,
             this.ViewToolStripMenuItem,
             this.WindowToolStripMenuItem,
-            this.HelpToolStripMenuItem1,
+            this.HelpToolStripMenuItem,
+            this.EnemyRelativeToolStripComboBox,
             this.DonateToolStripMenuItem});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
             this.MenuBar.TabIndex = 84;
             this.MenuBar.Text = "MenuStrip1";
+            //
+            // DynamicToHitToolStripComboBox
+            //
+            this.EnemyRelativeToolStripComboBox.FlatStyle = FlatStyle.Flat;
+            this.EnemyRelativeToolStripComboBox.ComboBox.BackColor = SystemColors.Control;
+            this.EnemyRelativeToolStripComboBox.Name = "EnemyRelativeToolStripComboBox";
+            this.EnemyRelativeToolStripComboBox.Size = new Size(185, 22);
+            this.EnemyRelativeToolStripComboBox.Text = "Enemy Relative Level";
+            this.EnemyRelativeToolStripComboBox.Margin = new Padding(70, 0, 0,0);
+            this.EnemyRelativeToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.EnemyRelativeToolStripComboBox.ComboBox.SelectionChangeCommitted += new EventHandler(this.EnemyRelativeLevel_Changed);
             // 
             // FileToolStripMenuItem
             // 
@@ -615,6 +629,9 @@ namespace Mids_Reborn.Forms
             this.tsFileOpen,
             this.tsFileSave,
             this.tsFileSaveAs,
+            this.ToolStripSeparator22,
+            this.ImportToolStripMenuItem,
+            this.ExportToolStripMenuItem,
             this.ToolStripSeparator8,
             this.tsFilePrint,
             this.ToolStripSeparator9,
@@ -649,7 +666,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsBuildRcv.Name = "tsBuildRcv";
             this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
-            this.tsBuildRcv.Text = "Build recovery...";
+            this.tsBuildRcv.Text = "Attempt Build recovery...";
             this.tsBuildRcv.Click += new System.EventHandler(this.tsBuildRcv_Click);
             // 
             // tsFileSave
@@ -671,6 +688,27 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator8.Name = "ToolStripSeparator8";
             this.ToolStripSeparator8.Size = new System.Drawing.Size(176, 6);
+            //
+            // ImportToolStripMenuItem
+            //
+            this.ImportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsImport});
+            this.ImportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem";
+            this.ImportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.ImportToolStripMenuItem.Text = "Import...";
+            //
+            // ExportToolStripMenuItem
+            //
+            this.ExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsExport,
+            this.tsExportDataLink,
+            this.ToolStripSeparator25,
+            this.tsGenFreebies});
+            this.ExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem";
+            this.ExportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.ExportToolStripMenuItem.Text = "Export...";
             // 
             // tsFilePrint
             // 
@@ -693,28 +731,12 @@ namespace Mids_Reborn.Forms
             this.tsFileQuit.Text = "&Quit";
             this.tsFileQuit.Click += new System.EventHandler(this.tsFileQuit_Click);
             // 
-            // ImportExportToolStripMenuItem
-            // 
-            this.ImportExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsImport,
-            this.tsBuildRcv,
-            this.ToolStripSeparator12,
-            this.tsExport,
-            this.tsExportLong,
-            this.tsExportDataLink,
-            this.ToolStripSeparator25,
-            this.tsGenFreebies});
-            this.ImportExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ImportExportToolStripMenuItem.Name = "ImportExportToolStripMenuItem";
-            this.ImportExportToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
-            this.ImportExportToolStripMenuItem.Text = "&Import / Export";
-            // 
             // tsImport
             // 
             this.tsImport.Name = "tsImport";
             this.tsImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.tsImport.Size = new System.Drawing.Size(240, 22);
-            this.tsImport.Text = "&Import from Forum Post";
+            this.tsImport.Text = "From Forum Post";
             this.tsImport.Click += new System.EventHandler(this.tsImport_Click);
             // 
             // ToolStripSeparator12
@@ -726,15 +748,8 @@ namespace Mids_Reborn.Forms
             // 
             this.tsExport.Name = "tsExport";
             this.tsExport.Size = new System.Drawing.Size(240, 22);
-            this.tsExport.Text = "&Short Forum Export...";
-            this.tsExport.Click += new System.EventHandler(this.tsExport_Click);
-            // 
-            // tsExportLong
-            // 
-            this.tsExportLong.Name = "tsExportLong";
-            this.tsExportLong.Size = new System.Drawing.Size(240, 22);
-            this.tsExportLong.Text = "&Long Forum Export...";
-            this.tsExportLong.Click += new System.EventHandler(this.tsExportLong_Click);
+            this.tsExport.Text = "Forum Export...";
+            this.tsExport.Click += new System.EventHandler(this.ForumExport_Click);
             // 
             // tsExportDataLink
             // 
@@ -1235,7 +1250,11 @@ namespace Mids_Reborn.Forms
             this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
             this.ShareToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
             this.ShareToolStripMenuItem.Text = "&Share Build";
-
+            //
+            // ToolStripSeparator30
+            //
+            this.ToolStripSeparator30.Name = "ToolStripSeparator30";
+            this.ToolStripSeparator30.Size = new System.Drawing.Size(242, 6);
             // 
             // tsShareDiscord
             //
@@ -1243,19 +1262,21 @@ namespace Mids_Reborn.Forms
             this.tsShareDiscord.Size = new System.Drawing.Size(240, 22);
             this.tsShareDiscord.Text = "Via Discord (RebornBot)";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
+            //
             // 
-            // HelpToolStripMenuItem1
-            // 
-            //this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            // HelpToolStripMenuItem
+            this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
             this.tsUpdateCheck,
             this.ToolStripSeparator10,
+            this.tsBuildRcv,
+            this.ToolStripSeparator30,
+            this.tsGitHub,
             this.tsSupport});
-            this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
-            this.HelpToolStripMenuItem1.Size = new System.Drawing.Size(102, 20);
-            this.HelpToolStripMenuItem1.Text = "Help";
+            this.HelpToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
+            this.HelpToolStripMenuItem.Text = "Help";
             // 
             // tsHelp
             // 
@@ -1274,7 +1295,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator10.Name = "ToolStripSeparator10";
             this.ToolStripSeparator10.Size = new System.Drawing.Size(263, 6);
             // 
-            // tsBugCrytilis
+            // tsSupport
             // 
             this.tsSupport.Name = "tsSupport";
             this.tsSupport.Size = new System.Drawing.Size(266, 22);
@@ -1316,12 +1337,12 @@ namespace Mids_Reborn.Forms
             this.tsPatreon.Text = "Donate via Patreon";
             this.tsPatreon.Click += new System.EventHandler(this.tsPatreon_Click);
             // 
-            // tsGitHubCrytilis
+            // tsGitHub
             // 
-            this.tsGitHubCrytilis.Name = "tsGitHubCrytilis";
-            this.tsGitHubCrytilis.Size = new System.Drawing.Size(266, 22);
-            this.tsGitHubCrytilis.Text = "MRB &GitHub";
-            this.tsGitHubCrytilis.Click += new System.EventHandler(this.tsCrytilisLink);
+            this.tsGitHub.Name = "tsGitHub";
+            this.tsGitHub.Size = new System.Drawing.Size(266, 22);
+            this.tsGitHub.Text = "View Our GitHub";
+            this.tsGitHub.Click += new System.EventHandler(this.Github_Link);
             // 
             // WindowToolStripMenuItem
             // 
@@ -2293,7 +2314,6 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
         ToolStripMenuItem tsPatreon;
-        ToolStripMenuItem tsDynamic;
         ToolStripMenuItem tsEnhToDO;
         ToolStripMenuItem tsEnhToEven;
         ToolStripMenuItem tsEnhToMinus1;
@@ -2313,7 +2333,6 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
-        ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;
@@ -2331,12 +2350,11 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsIODefault;
         ToolStripMenuItem tsIOMax;
         ToolStripMenuItem tsIOMin;
-        ToolStripMenuItem tsLevelUp;
         ToolStripMenuItem tsRecipeViewer;
         ToolStripMenuItem tsDPSCalc;
         ToolStripMenuItem tsRemoveAllSlots;
         ToolStripMenuItem tsSetFind;
-        ToolStripMenuItem tsGitHubCrytilis;
+        ToolStripMenuItem tsGitHub;
         ToolStripMenuItem tsUpdateCheck;
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
@@ -2357,6 +2375,8 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewTotals;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
+        private ToolStripMenuItem ExportToolStripMenuItem;
+        private ToolStripMenuItem ImportToolStripMenuItem;
         ComboBox cbAncillary;
         ComboBox cbAT;
         ComboBox cbOrigin;
@@ -2369,8 +2389,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem CharacterToolStripMenuItem;
         DataView dvAnchored;
         ToolStripMenuItem FileToolStripMenuItem;
-        ToolStripMenuItem HelpToolStripMenuItem1;
-        ToolStripMenuItem ImportExportToolStripMenuItem;
+        ToolStripMenuItem HelpToolStripMenuItem;
         ToolStripMenuItem InGameRespecHelperToolStripMenuItem;
         GFXLabel lblAT;
         Label lblATLocked;
@@ -2435,8 +2454,10 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem ViewToolStripMenuItem;
         ToolStripMenuItem WindowToolStripMenuItem;
         ToolStripSeparator ToolStripSeparator29;
+        private ToolStripSeparator ToolStripSeparator30;
         ToolStripMenuItem ShareToolStripMenuItem;
         ToolStripMenuItem DonateToolStripMenuItem;
+        public ToolStripComboBox EnemyRelativeToolStripComboBox;
         Timer tmrGfx;
         Panel poolsPanel;
         ToolTip tTip;
@@ -2460,8 +2481,5 @@ namespace Mids_Reborn.Forms
         public ImageButtonEx ibPrestigePowersEx;
         public ImageButtonEx ibIncarnatePowersEx;
         public ImageButtonEx ibTempPowersEx;
-
-
-
     }
 }

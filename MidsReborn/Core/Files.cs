@@ -36,14 +36,14 @@ namespace Mids_Reborn.Core
 
         public static string FileData = string.Empty;
         private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
-        public static string FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
+        public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
-        private static string FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
+        private static string? FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
 
         public static string BaseDataPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder);
 
-        public static string SelectDataFileLoad(string iDataFile, string iPath = "")
+        public static string SelectDataFileLoad(string iDataFile, string? iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
             if (Debugger.IsAttached)
@@ -55,7 +55,7 @@ namespace Mids_Reborn.Core
             return filePath;
         }
 
-        public static string SelectDataFileSave(string iDataFile, string iPath = "")
+        public static string SelectDataFileSave(string iDataFile, string? iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
             if (!Debugger.IsAttached) return filePath;

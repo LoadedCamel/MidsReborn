@@ -320,7 +320,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                                                           Enums.eMez.Taunt)))
                 {
                     iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (DatabaseAPI.ServerData.BaseToHit * (double) power1.Accuracy * 100.0)) + "%",
+                        Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 

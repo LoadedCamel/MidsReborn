@@ -38,7 +38,7 @@ namespace Mids_Reborn.Core
             ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
         }
 
-        public bool Load(string iPath)
+        public bool Load(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
             
@@ -119,7 +119,7 @@ namespace Mids_Reborn.Core
             return false;
         }
 
-        public void Store(ISerialize serializer, string iPath = "")
+        public void Store(ISerialize serializer, string? iPath = "")
         {
             string path;
             if (string.IsNullOrWhiteSpace(iPath))

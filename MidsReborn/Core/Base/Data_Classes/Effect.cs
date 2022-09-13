@@ -883,6 +883,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false)
         {
+            if (MidsContext.Config is null) return string.Empty;
             var sBuild = string.Empty;
             var sSubEffect = string.Empty;
             var sSubSubEffect = string.Empty;
@@ -1476,7 +1477,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
                     sBuild = sSubEffect switch
                     {
-                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * DatabaseAPI.ServerData.BaseToHit * 100f):0.##}%)",
+                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * MidsContext.Config.ScalingToHit * 100f):0.##}%)",
                         "ActivateInterval" => $"{sEffect}({sSubEffect}) to {AtrModActivatePeriod} second(s)",
                         "Arc" => $"{sEffect}({sSubEffect}) to {AtrModArc} degrees",
                         "CastTime" => $"{sEffect}({sSubEffect}) to {AtrModCastTime} second(s)",

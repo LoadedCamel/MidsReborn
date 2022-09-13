@@ -663,7 +663,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
-                var num2 = DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy;
+                var num2 = MidsContext.Config.ScalingToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
                 if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & flag2)
@@ -675,16 +675,16 @@ namespace Mids_Reborn.Forms.Controls
                 if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) &
                     (Math.Abs(num2 - accuracy2) > float.Epsilon))
                 {
-                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)DatabaseAPI.ServerData.BaseToHit):##0.00000}x{str}";
+                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)MidsContext.Config.ScalingToHit):##0.00000}x{str}";
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100, enhancedPower.Accuracy * 100, suffix2, tip2));
+                        MidsContext.Config.ScalingToHit * pBase.Accuracy * 100, enhancedPower.Accuracy * 100, suffix2, tip2));
                 }
                 else
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100,
-                        DatabaseAPI.ServerData.BaseToHit * pBase.Accuracy * 100, suffix2, tip2));
+                        MidsContext.Config.ScalingToHit * pBase.Accuracy * 100,
+                        MidsContext.Config.ScalingToHit * pBase.Accuracy * 100, suffix2, tip2));
                 }
             }
             else

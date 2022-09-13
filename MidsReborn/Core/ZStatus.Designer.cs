@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using MRBResourceLib;
 
 namespace Mids_Reborn.Core
 {
@@ -65,7 +66,7 @@ namespace Mids_Reborn.Core
             this.Font = new System.Drawing.Font("Arial", 8.25f);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle= System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = (System.Drawing.Icon)componentResourceManager.GetObject("$this.Icon");
+            this.Icon = Resources.MRB_Icon_Concept;
             this.Name = nameof(ZStatus);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Status";
