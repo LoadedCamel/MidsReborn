@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
@@ -30,8 +29,6 @@ using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
-using Syncfusion.Styles;
-using Syncfusion.Windows.Forms.Tools;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;

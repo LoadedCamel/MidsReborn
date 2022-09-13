@@ -1,4 +1,6 @@
 ﻿
+using MRBResourceLib;
+
 namespace Mids_Reborn.Forms
 {
     partial class frmProgress
@@ -60,7 +62,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Resources.MRB_Icon_Concept;
             this.Name = "frmProgress";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmProgress";
