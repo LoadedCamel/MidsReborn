@@ -1214,7 +1214,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             var selectedIndex = lstSelected.SelectedIndex;
             if (myEnh.Effect[selectedIndex].Mode == Enums.eEffMode.Enhancement && rbModOther.Checked)
-                myEnh.Effect[selectedIndex].Multiplier = Convert.ToSingle(txtModOther.Text);
+            {
+                var ret = float.TryParse(txtModOther.Text, out var val);
+                if (ret)
+                {
+                    myEnh.Effect[selectedIndex].Multiplier = val;
+                }
+            }
         }
 
         private void txtNameFull_TextChanged(object sender, EventArgs e)
