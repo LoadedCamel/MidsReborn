@@ -79,7 +79,7 @@ namespace Mids_Reborn.Core.Utils
 
         private string HashFile => Path.Combine(PatchPath, HashFileName);
         
-        private IEnumerable<FileData> CompileList(string path, EPatchType patchType)
+        private IEnumerable<FileData> CompileList(string? path, EPatchType patchType)
         {
             var files = new List<string>();
             List<FileHash>? hashes = null;
@@ -135,7 +135,7 @@ namespace Mids_Reborn.Core.Utils
             return fileQueue;
         }
 
-        public bool CreatePatchFile(string path, EPatchType patchType)
+        public bool CreatePatchFile(string? path, EPatchType patchType)
         {
             var boolReturn = false;
             var compressedData = CompressData(path, patchType);
@@ -147,7 +147,7 @@ namespace Mids_Reborn.Core.Utils
             return boolReturn;
         }
 
-        private byte[]? CompressData(string path, EPatchType patchType)
+        private byte[]? CompressData(string? path, EPatchType patchType)
         {
             byte[]? outData;
             MemoryStream patchStream;
@@ -197,7 +197,7 @@ namespace Mids_Reborn.Core.Utils
             return outData;
         }
 
-        private void DeletePriorPatch(string path)
+        private void DeletePriorPatch(string? path)
         {
             var filesToRemove = Directory.GetFiles(PatchPath, "*.mru").ToList();
             if (!filesToRemove.Any()) return;

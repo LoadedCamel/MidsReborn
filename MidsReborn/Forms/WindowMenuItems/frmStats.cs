@@ -138,7 +138,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                     return baseAccuracy * 100;
                                 }
 
-                                return DatabaseAPI.ServerData.BaseToHit * baseAccuracy * 100;
+                                return MidsContext.Config.ScalingToHit * baseAccuracy * 100;
                             },
 
                             (b, e) =>
@@ -152,7 +152,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                                 if (Math.Abs(e.Accuracy - baseAccuracy) < float.Epsilon)
                                 {
-                                    enhAccuracy *= DatabaseAPI.ServerData.BaseToHit;
+                                    enhAccuracy *= MidsContext.Config.ScalingToHit;
                                 }
 
                                 return enhAccuracy * 100;
@@ -639,7 +639,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
 
                     BaseArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    BaseArray[index].Accuracy *= DatabaseAPI.ServerData.BaseToHit;
+                    BaseArray[index].Accuracy *= MidsContext.Config.ScalingToHit;
                 }
 
                 MainModule.MidsController.Toon.FlipAllSlots();
@@ -663,7 +663,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
 
                     EnhArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    EnhArray[index].Accuracy *= DatabaseAPI.ServerData.BaseToHit;
+                    EnhArray[index].Accuracy *= MidsContext.Config.ScalingToHit;
                 }
 
                 MainModule.MidsController.Toon.FlipAllSlots();

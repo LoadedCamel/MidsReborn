@@ -10,7 +10,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
     public partial class DatabaseSelector : Form
     {
         private List<DatabaseItems> DatabaseData { get; set; } = new();
-        public string SelectedDatabase;
+        public string? SelectedDatabase;
 
         public DatabaseSelector()
         {

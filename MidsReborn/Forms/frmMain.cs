@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
@@ -29,6 +30,8 @@ using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
+using Syncfusion.Styles;
+using Syncfusion.Windows.Forms.Tools;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -68,6 +71,7 @@ namespace Mids_Reborn.Forms
         private string[] CommandArgs { get; }
         private string ProcessedCommand { get; set; }
         private bool ProcessedFromCommand { get; set; }
+
         public frmMain(string[] args)
         {
             CommandArgs = args;
@@ -127,7 +131,6 @@ namespace Mids_Reborn.Forms
                 DisplayApi.FrmMain = this;
             }
             InitializeComponent();
-
             MainInstance = this;
             if (MidsContext.Config is { CheckForUpdates: true }) clsXMLUpdate.CheckUpdate(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
@@ -237,6 +240,7 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Load(object? sender, EventArgs e)
         {
+            if (MidsContext.Config == null) return;
             loading = true;
             try
             {
@@ -340,6 +344,20 @@ namespace Mids_Reborn.Forms
                         MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
                         break;
                 }
+
+                var comboData = MidsContext.Config.RelativeScales;
+                if (EnemyRelativeToolStripComboBox.ComboBox != null)
+                {
+                    EnemyRelativeToolStripComboBox.ComboBox.DataSource = null;
+                    EnemyRelativeToolStripComboBox.ComboBox.DisplayMember = "Key";
+                    EnemyRelativeToolStripComboBox.ComboBox.ValueMember = "Value";
+                    EnemyRelativeToolStripComboBox.ComboBox.DataSource = comboData;
+
+                    var scalingToHitItem = comboData.FirstOrDefault(x => x.Value == MidsContext.Config.ScalingToHit);
+                    var selectedIndex = comboData.IndexOf(scalingToHitItem);
+                    EnemyRelativeToolStripComboBox.SelectedIndex = selectedIndex;
+                }
+
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
@@ -3353,27 +3371,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        /*private void pbDynMode_Click(object sender, EventArgs e)
+        private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null)
-            {
-                return;
-            }
-
-            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
-            {
-                return;
-            }
-
-            MidsContext.Config.BuildOption = MidsContext.Config.BuildOption switch
-            {
-                Enums.dmItem.Power => Enums.dmItem.Slot,
-                _ => Enums.dmItem.Power
-            };
-
-            UpdateDmBuffer();
-            pbDynMode.Refresh();
-        }*/
+            MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
+        }
 
         private void ibDynMode_Click(object? sender, EventArgs e)
         {

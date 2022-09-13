@@ -16,7 +16,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
         private bool ReadNotes { get; set; }
         public string Type { get; set; }
         public string Version { get; set; }
-        private string ChangeLog { get; set; }
+        private string? ChangeLog { get; set; }
         public PatchNotes(frmMain parent, bool notes)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
@@ -28,7 +28,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         
 
-        private int GetStartingLine(string src)
+        private int GetStartingLine(string? src)
         {
             using var client = new WebClient();
             var stream = client.OpenRead(src);

@@ -60,7 +60,7 @@ namespace Mids_Reborn
             {
                 using var dbSelector = new DatabaseSelector();
                 var result = dbSelector.ShowDialog();
-                string dbSelected;
+                string? dbSelected;
                 if (result == DialogResult.OK)
                 {
                     dbSelected = dbSelector.SelectedDatabase;
@@ -77,7 +77,7 @@ namespace Mids_Reborn
                 LoadData(ref iFrm, MidsContext.Config.DataPath);
             }
 
-            public static void LoadData(ref frmInitializing iFrm, string path)
+            public static void LoadData(ref frmInitializing iFrm, string? path)
             {
                 IsAppInitialized = true;
                 iFrm?.SetMessage("Initializing Data...");
@@ -152,7 +152,7 @@ namespace Mids_Reborn
                 GC.Collect();
             }
 
-            private static async Task LoadGraphics(string path)
+            private static async Task LoadGraphics(string? path)
             {
                 await I9Gfx.Initialize(path);
                 await I9Gfx.LoadImages();

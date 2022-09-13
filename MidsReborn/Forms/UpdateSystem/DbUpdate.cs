@@ -11,7 +11,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
     {
         private static bool Mandatory { get; set; }
         private static Version Version { get; set; }
-        public static string ChangeLog { get; set; }
+        public static string? ChangeLog { get; set; }
 
         public static bool IsAvailable
         {
