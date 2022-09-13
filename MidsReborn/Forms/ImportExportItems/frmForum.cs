@@ -23,13 +23,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             Paint += frmForum_Paint;
             InitializeComponent();
             Name = nameof(frmForum);
-            pbTitle.Image = Resources.pbTitle_Image;
             Icon = Resources.MRB_Icon_Concept;
         }
-
-        internal ImageButton IBCancel { get; private set; }
-
-        internal ImageButton IBExport { get; private set; }
 
         private void csList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -67,7 +62,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void frmForum_Load(object sender, EventArgs e)
         {
-            pbTitle.Left = (int) Math.Round((Width - pbTitle.Width) / 2.0);
             if (MidsContext.Config.Export.ColorSchemes.Length < 1)
             {
                 MidsContext.Config.Export.ColorSchemes = new ExportConfig.ColorScheme[1];
@@ -172,16 +166,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private void lstCodes_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblCodeInf.Text = MidsContext.Config.Export.FormatCode[lstCodes.SelectedIndex].Notes;
-        }
-
-        private void pbTitle_MouseDown(object sender, MouseEventArgs e)
-        {
-            mouse_offset = new Point(-pbTitle.Left + -e.X, -pbTitle.Top + -e.Y);
-        }
-
-        private void pbTitle_MouseMove(object sender, MouseEventArgs e)
-        {
-            frmForum_MouseMove(RuntimeHelpers.GetObjectValue(sender), e);
         }
 
         private void SetTips()

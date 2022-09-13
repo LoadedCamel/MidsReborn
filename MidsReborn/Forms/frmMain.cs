@@ -5967,11 +5967,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
             OnGradePick(Enums.eEnhGrade.TrainingO);
         }
 
-        private void tsExport_Click(object sender, EventArgs e)
+        private void ForumExport_Click(object? sender, EventArgs e)
         {
+            if (MidsContext.Config == null || MidsContext.Character == null || drawing == null) return;
             FloatTop(false);
-            MidsContext.Config.LongExport = false;
-            using var frmForum1 = new frmForum
+            var exportResult = MessageBox.Show(@"Do you wish to export the full build?", @"Export Type (Short/Long)", MessageBoxButtons.YesNoCancel);
+            switch (exportResult)
+            {
+                case DialogResult.Yes:
+                    MidsContext.Config.LongExport = true;
+                    break;
+                case DialogResult.No:
+                    MidsContext.Config.LongExport = false;
+                    break;
+                case DialogResult.Cancel:
+                    return;
+            }
+
+            using var forumExport = new frmForum
             {
                 BackColor = BackColor,
                 IBCancel =
@@ -5987,8 +6000,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 }
             };
-            frmForum1.ShowDialog(this);
+            forumExport.ShowDialog(this);
             FloatTop(true);
+            if (MidsContext.Config.LongExport) MidsContext.Config.LongExport = false;
         }
 
         private void tsExportDataLink_Click(object sender, EventArgs e)
@@ -6009,31 +6023,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 MessageBox.Show($"{ex.Message}\r\n\r\n{ex.StackTrace}", @"Debug Error", MessageBoxButtons.OK);
             }
-        }
-
-        private void tsExportLong_Click(object sender, EventArgs e)
-        {
-            FloatTop(false);
-            MidsContext.Config.LongExport = true;
-            using var frmForum1 = new frmForum
-            {
-                BackColor = BackColor,
-                IBCancel =
-                {
-                    IA = drawing.pImageAttributes,
-                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
-                },
-                IBExport =
-                {
-                    IA = drawing.pImageAttributes,
-                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
-                }
-            };
-            frmForum1.ShowDialog(this);
-            FloatTop(true);
-            MidsContext.Config.LongExport = false;
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)
@@ -6269,7 +6258,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             clsXMLUpdate.GoToForums();
         }
 
-        private void tsCrytilisLink(object sender, EventArgs e)
+        private void Github_Link(object? sender, EventArgs e)
         {
             clsXMLUpdate.GoToGitHub();
         }
