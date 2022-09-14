@@ -318,6 +318,17 @@ namespace Mids_Reborn
                 : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
             ).ToList());
         }
+
+        public static void FinalizePowersetsList(ref UniqueList<string> listPowersets, List<PowerEntry> listPowers)
+        {
+            listPowersets.FromList(
+                listPowers
+                    .Where(e => e.Power != null)
+                    .Select(e => e.Power.GetPowerSet()?.FullName)
+                    .Where(e => !string.IsNullOrWhiteSpace(e) && e != "Inherent.Inherent" && e != "Inherent.Fitness")
+                    .Distinct()
+                    .ToList()!);
+        }
     }
 
     /***********************

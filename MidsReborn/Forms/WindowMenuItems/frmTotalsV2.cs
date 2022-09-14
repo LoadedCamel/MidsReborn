@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
@@ -512,6 +511,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
             }
 
+            graphDef.Size = graphDef.Size with {Height = Math.Max(graphDef.Size.Height, graphDef.ContentHeight + 3)};
             graphDef.Draw();
 
             graphRes.Clear();
@@ -533,6 +533,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
 
+            graphRes.Size = graphRes.Size with {Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + 3)};
             graphRes.Draw();
 
             graphHP.Clear();
@@ -570,6 +571,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
                     : ""));
 
+            graphHP.Size = graphHP.Size with {Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + 3)};
             graphHP.Draw();
             
             graphEnd.Clear();
@@ -599,21 +601,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 displayStats.EnduranceMaxEnd,
                 $"{displayStats.EnduranceMaxEnd:##0.##} Maximum Endurance (base: {maxEndBase:##0.##})");
 
+            graphEnd.Size = graphEnd.Size with {Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + 3)};
             graphEnd.Draw();
-
-            ///////////////////////////////
-
-            /*SetLvsBulk(
-                _lvList,
-                "Movement",
-                new[]
-                {
-                    displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false),
-                    displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
-                    displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
-                    displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
-                }
-            );*/
 
             graphMovement.Clear();
             var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
