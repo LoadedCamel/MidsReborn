@@ -26,6 +26,8 @@ namespace Mids_Reborn.Controls
             Both
         }
 
+        public int ContentHeight => CalcContentHeight();
+
         private IContainer Components;
         private bool DualName;
         private List<GraphItem> Items;
@@ -709,6 +711,56 @@ namespace Mids_Reborn.Controls
             }
 
             BackgroundImage = s.Snapshot().ToBitmap();
+        }
+
+        private int CalcContentHeight()
+        {
+            var contentHeight = 0;
+            var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
+            var fontSize = FontSizeOverride > 0 ? FontSizeOverride : FontSize;
+            var rulerYoffsetTop = 0;
+            var rulerYoffsetBottom = 0;
+            const int rulerHeight = 15;
+            if (PDrawRuler)
+            {
+                switch (PRulerPosition)
+                {
+                    case RulerPosition.Both:
+                        rulerYoffsetTop = rulerHeight;
+                        rulerYoffsetBottom = rulerHeight;
+                        break;
+
+                    case RulerPosition.Bottom:
+                        rulerYoffsetBottom = rulerHeight;
+                        break;
+
+                    default:
+                        rulerYoffsetTop = rulerHeight;
+                        break;
+                }
+
+                drawArea = new SKRect(drawArea.Left, drawArea.Top + rulerYoffsetTop, drawArea.Right,
+                    drawArea.Bottom - rulerYoffsetBottom);
+            }
+
+            const float nameXPadding = 3;
+            for (var i = 0; i < Items.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(Items[i].Name) & string.IsNullOrWhiteSpace(Items[i].Name2))
+                {
+                    continue;
+                }
+
+                var ny = YPadding + i * (PItemHeight + YPadding);
+                var textRect = new SKRect(nameXPadding,
+                    drawArea.Top + ny - YPadding / 2f - (BaseLineOffset(Items[i].Name) ? fontSize / 4f : 0),
+                    Math.Max(Name2XPadding, NameWidth) - Name2XPadding,
+                    drawArea.Top + ny + PItemHeight + YPadding / 2f);
+
+                contentHeight = (int) Math.Ceiling(textRect.Bottom);
+            }
+
+            return contentHeight;
         }
 
         /// <summary>
