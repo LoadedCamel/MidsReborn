@@ -7020,7 +7020,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ImportBase.PadPowerPools(ref listPowersets);
             ImportBase.FilterVEATPools(ref listPowersets);
             ImportBase.FixUndetectedPowersets(ref listPowersets);
-            ImportBase.FinalizePowersetsList(ref listPowersets);
+            ImportBase.FinalizePowersetsList(ref listPowersets, listPowers);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
