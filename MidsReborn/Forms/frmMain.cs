@@ -101,6 +101,7 @@ namespace Mids_Reborn.Forms
                 MouseWheel += frmMain_MouseWheel;
                 TitleUpdated += OnTitleUpdate;
                 Move += frmMain_Move;
+                Shown += OnShown;
                 NoUpdate = false;
                 EnhancingSlot = -1;
                 EnhancingPower = -1;
@@ -160,6 +161,88 @@ namespace Mids_Reborn.Forms
             dvAnchored.TabChanged += dvAnchored_TabChanged;
 
             Icon = Resources.MRB_Icon_Concept;
+        }
+
+        private void OnShown(object? sender, EventArgs e)
+        {
+            var comLoad = false;
+            if (MidsContext.Config != null)
+            {
+                var prevLastFileNameCfg = MidsContext.Config.LastFileName;
+                var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
+                if (CommandArgs.Length > 0)
+                {
+                    switch (CommandArgs[0])
+                    {
+                        case "-master":
+                            MidsContext.Config.MasterMode = true;
+                            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
+                            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
+                            SetTitleBar();
+                            ProcessedCommand = CommandArgs[0];
+                            ProcessedFromCommand = true;
+
+                            break;
+                        case "-load":
+                            var nArgs = CommandArgs.Skip(1);
+                            var file = string.Join(" ", nArgs);
+                            MidsContext.Config.DisableLoadLastFileOnStart = false;
+                            DoOpen(file);
+                            ProcessedFromCommand = true;
+
+                            break;
+                        case var fileLoad when CommandArgs[0].Contains(".mxd") && !CommandArgs[0].Contains("mrb://"):
+                            ProcessedFromCommand = false;
+                            break;
+                        default:
+                            if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
+                            {
+                                MidsContext.Config.DisableLoadLastFileOnStart = false;
+                                Task.Run(() => ProcessUriCommands(uri));
+                                ProcessedFromCommand = true;
+                            }
+                            else
+                            {
+                                MidsContext.Config.DisableLoadLastFileOnStart = false;
+                                comLoad = true;
+                                ProcessedCommand = CommandArgs[0];
+                                ProcessedFromCommand = false;
+                            }
+
+                            break;
+                    }
+                }
+
+                var toonLoaded = false;
+                if (!MidsContext.Config.DisableLoadLastFileOnStart && !ProcessedFromCommand)
+                {
+                    toonLoaded = DoOpen(MidsContext.Config.LastFileName);
+                }
+
+                if (!toonLoaded)
+                {
+                    NewToon();
+                    PowerModified(true);
+                }
+
+                switch (ProcessedFromCommand)
+                {
+                    case false when !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded:
+                        PowerModified(true);
+                        break;
+                    // Build loaded from a file set as argument from the command line: done
+                    // Restore config variables to their original values.
+                    case true:
+                        MidsContext.Config.LastFileName = prevLastFileNameCfg;
+                        MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
+                        break;
+                }
+            }
+
+            if (comLoad)
+            {
+                command_Load(ProcessedCommand);
+            }
         }
 
         public bool petWindowFlag { get; set; }
@@ -222,16 +305,17 @@ namespace Mids_Reborn.Forms
 
         private static void RegisterUriScheme()
         {
+            if (MidsContext.Config == null) return;
             // Modify to only perform on 1st run - need to account for removal as well. Perhaps move to the installer?
             const string friendlyName = "Mids Reborn Protocol";
-            var applicationLocation = Assembly.GetExecutingAssembly().Location;
+            var appLoc = Application.ExecutablePath;
             using var key = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{UriScheme}");
             key?.SetValue("", $"URL:{friendlyName}");
             key?.SetValue("URL Protocol", "");
             using var defaultIcon = key?.CreateSubKey("DefaultIcon");
-            defaultIcon?.SetValue("", applicationLocation + ",1");
+            defaultIcon?.SetValue("", appLoc + ",1");
             using var commandKey = key?.CreateSubKey(@"shell\open\command");
-            commandKey?.SetValue("", $"\"{applicationLocation}\" \"%1\"");
+            commandKey?.SetValue("", $"\"{appLoc}\" \"%1\"");
             MidsContext.Config.ApplicationRegistered = true;
         }
 
@@ -276,71 +360,8 @@ namespace Mids_Reborn.Forms
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
-                var comLoad = false;
-                var prevLastFileNameCfg = MidsContext.Config.LastFileName;
-                var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
-                if (CommandArgs.Length > 0)
-                {
-                    switch (CommandArgs[0])
-                    {
-                        case "-master":
-                            MidsContext.Config.MasterMode = true;
-                            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
-                            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
-                            SetTitleBar();
-                            ProcessedCommand = CommandArgs[0];
-                            ProcessedFromCommand = true;
-                            break;
-                        case "-load":
-                            var nArgs = CommandArgs.Skip(1);
-                            var file = string.Join(" ", nArgs);
-                            MidsContext.Config.DisableLoadLastFileOnStart = false;
-                            DoOpen(file);
-                            ProcessedFromCommand = true;
-
-                            break;
-                        default:
-                            if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
-                            {
-                                MidsContext.Config.DisableLoadLastFileOnStart = false;
-                                Task.Run(() => ProcessUriCommands(uri));
-                                ProcessedFromCommand = true;
-                            }
-                            else
-                            {
-                                MidsContext.Config.DisableLoadLastFileOnStart = false;
-                                comLoad = true;
-                                ProcessedCommand = CommandArgs[0];
-                                ProcessedFromCommand = true;
-                            }
-                            break;
-                    }
-                }
-
-                var toonLoaded = false;
-                if (!MidsContext.Config.DisableLoadLastFileOnStart && !ProcessedFromCommand)
-                {
-                    toonLoaded = DoOpen(MidsContext.Config.LastFileName);
-                }
-
-                if (!toonLoaded)
-                {
-                    NewToon();
-                    PowerModified(true);
-                }
-
-                switch (ProcessedFromCommand)
-                {
-                    case false when !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded:
-                        PowerModified(true);
-                        break;
-                    // Build loaded from a file set as argument from the command line: done
-                    // Restore config variables to their original values.
-                    case true:
-                        MidsContext.Config.LastFileName = prevLastFileNameCfg;
-                        MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
-                        break;
-                }
+                NewToon();
+                PowerModified(true);
 
                 var comboData = MidsContext.Config.RelativeScales;
                 if (EnemyRelativeToolStripComboBox.ComboBox != null)
@@ -472,10 +493,6 @@ namespace Mids_Reborn.Forms
                 _frmInitializing?.Hide();
                 _frmInitializing?.Close();
                 Refresh();
-                if (comLoad)
-                {
-                    command_Load(ProcessedCommand);
-                }
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
