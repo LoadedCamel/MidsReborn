@@ -2946,10 +2946,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[3] == null)
                 return;
-            var ExtraString =
+            var extraString =
                 "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
             ShowPopup(MidsContext.Character.Powersets[3].nID, MidsContext.Character.Archetype.Idx, cbPool0.Bounds,
-                ExtraString);
+                extraString);
         }
 
         private void lblLocked0_Paint(object sender, PaintEventArgs e)
@@ -3388,7 +3388,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
         {
+            if (MidsContext.Config == null) return;
+            if (EnemyRelativeToolStripComboBox.ComboBox == null) return;
             MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
+            RefreshInfo();
         }
 
         private void ibDynMode_Click(object? sender, EventArgs e)
@@ -3555,8 +3558,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pnlGFX_MouseMove(object sender, MouseEventArgs e)
         {
-            if ((e.Button == MouseButtons.Left) & pnlGFX.AllowDrop &&
-                Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
+            if ((e.Button == MouseButtons.Left) & pnlGFX.AllowDrop && Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
             {
                 if (dragStartSlot == 0)
                 {
