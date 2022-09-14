@@ -93,6 +93,7 @@ namespace Mids_Reborn.Forms
                 {
                     RegisterUriScheme();
                 }
+                
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
