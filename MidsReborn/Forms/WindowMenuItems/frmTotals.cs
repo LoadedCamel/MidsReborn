@@ -744,9 +744,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 var iTip11 = Math.Abs(totals.Mez[(int) e]) < float.Epsilon
                     ? $"You have no protection from {names3[(int) e]} effects.\r\n{str9}"
-                    : $"You have mag {totals.Mez[(int) e]:##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
+                    : $"You have mag {Math.Abs(totals.Mez[(int) e]):##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
 
-                graphSProt.AddItem($"{names2[(int) e]}|{totals.Mez[(int) e]:##0.##}", totals.Mez[(int) e], 0, iTip11);
+                graphSProt.AddItem($"{names2[(int) e]}|{Math.Abs(totals.Mez[(int) e]):##0.##}", Math.Abs(totals.Mez[(int) e]), 0, iTip11);
                 var mezResPercent = 100 / (1 + totals.MezRes[(int) e] / 100);
                 var str11 = "";
                 if (e != Enums.eMez.Knockback & e != Enums.eMez.Knockup & e != Enums.eMez.Repel & e != Enums.eMez.Teleport)
