@@ -1190,6 +1190,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibClose.ToggleText.ToggledOff = "ToggledOff State";
             this.ibClose.ToggleText.ToggledOn = "ToggledOn State";
             this.ibClose.UseAlt = false;
+            this.ibClose.Click += new System.EventHandler(this.IbCloseClick);
             // 
             // ibTopMost
             // 
@@ -1213,6 +1214,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibTopMost.ToggleText.ToggledOff = "ToggledOff State";
             this.ibTopMost.ToggleText.ToggledOn = "ToggledOn State";
             this.ibTopMost.UseAlt = false;
+            this.ibTopMost.Click += new System.EventHandler(this.IbTopMostClick);
             // 
             // frmTotalsV2
             // 
