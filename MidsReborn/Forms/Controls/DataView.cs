@@ -1414,7 +1414,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 var targetGraph = numArray1[dType] == 0 ? gDef1 : gDef2;
                 //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.##}%", displayStats.Defense(dType), 0, iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.#}%", displayStats.Defense(dType), 0, iTip);
             }
 
             var maxValue1 = Math.Max(gDef1.GetMaxValue(), gDef2.GetMaxValue());
@@ -1454,7 +1454,7 @@ namespace Mids_Reborn.Forms.Controls
                     : $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({atResCap})";
 
                 var targetGraph = numArray2[dType] == 0 ? gRes1 : gRes2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.##}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.#}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
             }
 
             var maxValue2 = Math.Max(gRes1.GetMaxValue(), gRes2.GetMaxValue());
@@ -1483,12 +1483,12 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
-            total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.##}% ({displayStats.EnduranceRecoveryNumeric:0.##}/s)", false, false, false, iTip2));
-            total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{displayStats.HealthRegenPercent(false):0.##}%", false, false, false, iTip3));
-            total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
-            total_Misc.AddItem(new PairedList.ItemPair("+ToHit:", $"{displayStats.BuffToHit:0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
-            total_Misc.AddItem(new PairedList.ItemPair("+EndRdx:", $"{displayStats.BuffEndRdx:0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new PairedList.ItemPair("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.##}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.#}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
+            total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{displayStats.HealthRegenPercent(false):0.#}%", false, false, false, iTip3));
+            total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{displayStats.EnduranceUsage:0.#}/s", false, false, false, iTip1));
+            total_Misc.AddItem(new PairedList.ItemPair("+ToHit:", $"{displayStats.BuffToHit:0.#}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
+            total_Misc.AddItem(new PairedList.ItemPair("+EndRdx:", $"{displayStats.BuffEndRdx:0.#}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            total_Misc.AddItem(new PairedList.ItemPair("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
             total_Misc.Draw();
         }
 
