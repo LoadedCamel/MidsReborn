@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,15 +14,15 @@ namespace MRBUpdater
 {
     public partial class Update : Form
     {
-        private BackgroundWorker UpdateWorker;
-        private PatchDecompressor PatchDecompressor;
-        private List<PatchDecompressor.FileData> DecompressedData;
+        private BackgroundWorker? UpdateWorker;
+        private PatchDecompressor? PatchDecompressor;
+        private List<PatchDecompressor.FileData>? DecompressedData;
         private string UpdatePath { get; set; }
         private string VersionText { get; set; }
         private int ParentPid { get; set; }
         private string ExtractPath { get; set; }
-        private static Uri UpdateFile { get; set; }
-        private static string PackedUpdate { get; set; }
+        private static Uri? UpdateFile { get; set; }
+        private static string? PackedUpdate { get; set; }
 
         public Update(IReadOnlyList<string> args)
         {
@@ -35,12 +36,12 @@ namespace MRBUpdater
             InitializeComponent();
         }
 
-        private void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object? sender, EventArgs e)
         {
             CenterToScreen();
         }
 
-        private void OnShown(object sender, EventArgs e)
+        private void OnShown(object? sender, EventArgs e)
         {
             Updater_DownloadUpdate();
         }
@@ -71,7 +72,7 @@ namespace MRBUpdater
             Thread.Sleep(50);
         }
 
-        private async void Updater_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private async void Updater_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
         {
             if (e.Error != null)
             {
@@ -101,45 +102,46 @@ namespace MRBUpdater
             UpdateWorker.RunWorkerAsync();
         }
 
-        private void UpdateWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void UpdateWorker_DoWork(object? sender, DoWorkEventArgs e)
         {
             Process.GetProcessById(ParentPid).Kill();
             Process.GetProcessById(ParentPid).WaitForExit();
             if (DecompressedData == null)
             {
                 lblStatus.Text = @"Install Error: Aborting";
-                MessageBox.Show("Decompressed Data is NULL");
+                MessageBox.Show(@"Decompressed Data is NULL");
             }
             else
             {
                 //PatchDecompressor.CleanOldEntries(ExtractPath);
+                if (PatchDecompressor == null) return;
                 PatchDecompressor.ProgressUpdate += PatchDecompressor_OnProgressUpdate;
                 PatchDecompressor.ErrorUpdate += PatchDecompressor_OnErrorUpdate;
                 PatchDecompressor.RecompileFileEntries(ExtractPath, DecompressedData);
             }
         }
 
-        private void PatchDecompressor_OnErrorUpdate(object sender, ErrorEventArgs e)
+        private void PatchDecompressor_OnErrorUpdate(object? sender, ErrorEventArgs e)
         {
             lblStatus.Text = @"Decompression Error: Aborting";
             MessageBox.Show($"{e.GetException().Message}\r\r\n{e.GetException().StackTrace}");
-            UpdateWorker.CancelAsync();
+            UpdateWorker?.CancelAsync();
         }
 
-        private void PatchDecompressor_OnProgressUpdate(object sender, ProgressEventArgs e)
+        private void PatchDecompressor_OnProgressUpdate(object? sender, ProgressEventArgs e)
         {
             lblFileName.Text = e.Name;
             ctlProgressBar1.Value = e.PercentComplete;
-            UpdateWorker.ReportProgress(e.PercentComplete);
+            UpdateWorker?.ReportProgress(e.PercentComplete);
         }
 
-        private void UpdateWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void UpdateWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             ctlProgressBar1.Value = 99;
             lblStatus.Text = @"Update Complete!";
             lblFileName.Text = string.Empty;
             Application.DoEvents();
-            File.Delete(PackedUpdate);
+            if (PackedUpdate != null) File.Delete(PackedUpdate);
             Thread.Sleep(1000);
             lblStatus.Text = @"Restarting...";
             Application.DoEvents();

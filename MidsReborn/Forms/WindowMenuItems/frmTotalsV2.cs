@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -253,73 +254,34 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             ibTopMost.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
-            MinimumSize = new Size(561, 771);
-            Size = new Size(561, 771);
+            MinimumSize = new Size(567, 771);
+            Size = new Size(567, 771);
             CenterToParent();
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            tabControl1.ItemSize = new Size(0, 1);
-            
-            // Tab control border is 3 px thick, move it a little off to hide it
-            // Change the size fixed values so they are the same as in frmTotalsV2_Resize()
-            tabControl1.Location = new Point(-4, 19);
-            tabControl1.Size = new Size(Size.Width + 9, Size.Height - 67);
-
             ctlTotalsTabStrip1.ClearItems();
-            for (var i = 0; i < tabControl1.TabPages.Count; i++)
+            var headersText = new List<string>
             {
-                ctlTotalsTabStrip1.AddItem(tabControl1.TabPages[i].Text);
+                "Core Stats",
+                "Misc Buffs",
+                "Status Protection",
+                "Debuff Resistances"
+            };
+
+            foreach (var h in headersText)
+            {
+                ctlTotalsTabStrip1.AddItem(h);
             }
 
             ctlTotalsTabStrip1.Redraw();
 
-            panel1.Size = new Size(561, 697);
-            panel2.Location = new Point(0, 684);
-            panel2.Size = Size with {Width = panel1.Width};
+            //panel1.Size = new Size(561, 697);
+            //panel2.Location = new Point(0, 684);
+            //panel2.Size = Size with {Width = panel1.Width};
             // graph width: 526
 
-            var cList = new List<Control>
-            {
-                label1,
-                label2,
-                label3,
-                label4,
-                label5,
-                label6,
-                label7,
-                label8,
-                label9,
-                label10,
-                label11,
+            panelTab1.Location = new Point(0, ctlTotalsTabStrip1.Height);
+            panelTab1.Visible = true;
 
-                graphDef,
-                graphRes,
-                graphHP,
-                graphEnd,
-                graphMovement,
-                graphPerception,
-                graphHaste,
-                graphToHit,
-                graphAccuracy,
-                graphDamage,
-                graphEndRdx,
-                graphThreat,
-                graphStatusProt,
-                graphStatusRes,
-                graphDebuffRes,
-                graphElusivity,
-
-                radioButton1,
-                radioButton2,
-                radioButton3,
-                radioButton4
-            };
-
-            foreach (var c in cList)
-            {
-                c.Location = c.Location with {Y = c.Location.Y - 16};
-            }
-
-            Refresh();
+            //Refresh();
             SetTitle(this);
             SetUnitRadioButtons();
             UpdateData();
@@ -356,39 +318,53 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmTotalsV2_Resize(object sender, EventArgs e)
         {
-            const int tabControlWidthPad = -9;
-            const int tabControlHeightPad = 67;
-            const int graphControlWidthPad = 33;
+            const int graphControlWidthPad = 41;
             const int pbCloseLocationXPad = 148;
+            const int centerPanelYPad = 53;
 
-            panel1.Size = new Size(Size.Width, Size.Height - 74);
+            if (panelTab1.Visible)
+            {
+                Debug.WriteLine($"h1: {panelTab1.Size}");
+                panelTab1.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+                Debug.WriteLine($"h2: {panelTab1.Size}");
+            }
 
-            panel2.Size = new Size(panel1.Width, 44);
-            panel2.Location = new Point(0, Size.Height - panel2.Height - 43);
-            
-            tabControl1.Size = new Size(Size.Width - tabControlWidthPad, Size.Height - tabControlHeightPad);
+            if (panelTab2.Visible)
+            {
+                panelTab2.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+            }
 
-            graphDef.Width = Size.Width - graphControlWidthPad;
-            graphRes.Width = Size.Width - graphControlWidthPad;
-            graphHP.Width = Size.Width - graphControlWidthPad;
-            graphEnd.Width = Size.Width - graphControlWidthPad;
+            if (panelTab3.Visible)
+            {
+                panelTab3.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+            }
 
-            graphMovement.Width = Size.Width - graphControlWidthPad;
-            graphPerception.Width = Size.Width - graphControlWidthPad;
-            graphHaste.Width = Size.Width - graphControlWidthPad;
-            graphToHit.Width = Size.Width - graphControlWidthPad;
-            graphAccuracy.Width = Size.Width - graphControlWidthPad;
-            graphDamage.Width = Size.Width - graphControlWidthPad;
-            graphEndRdx.Width = Size.Width - graphControlWidthPad;
-            graphThreat.Width = Size.Width - graphControlWidthPad;
+            if (panelTab4.Visible)
+            {
+                panelTab4.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+            }
 
-            graphStatusProt.Width = Size.Width - graphControlWidthPad;
-            graphStatusRes.Width = Size.Width - graphControlWidthPad;
+            graphDef.Width = Width - graphControlWidthPad;
+            graphRes.Width = Width - graphControlWidthPad;
+            graphHP.Width = Width - graphControlWidthPad;
+            graphEnd.Width = Width - graphControlWidthPad;
 
-            graphDebuffRes.Width = Size.Width - graphControlWidthPad;
-            graphElusivity.Width = Size.Width - graphControlWidthPad;
+            graphMovement.Width = Width - graphControlWidthPad;
+            graphPerception.Width = Width - graphControlWidthPad;
+            graphHaste.Width = Width - graphControlWidthPad;
+            graphToHit.Width = Width - graphControlWidthPad;
+            graphAccuracy.Width = Width - graphControlWidthPad;
+            graphDamage.Width = Width - graphControlWidthPad;
+            graphEndRdx.Width = Width - graphControlWidthPad;
+            graphThreat.Width = Width - graphControlWidthPad;
 
-            ibClose.Location = ibClose.Location with { X = Size.Width - pbCloseLocationXPad };
+            graphStatusProt.Width = Width - graphControlWidthPad;
+            graphStatusRes.Width = Width - graphControlWidthPad;
+
+            graphDebuffRes.Width = Width - graphControlWidthPad;
+            graphElusivity.Width = Width - graphControlWidthPad;
+
+            ibClose.Location = ibClose.Location with { X = Width - pbCloseLocationXPad };
 
             // Prevent duplicate headers display (tiling) when stretching window horizontally
             ctlTotalsTabStrip1.Redraw();
@@ -402,6 +378,58 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void frmTotalsV2_Move(object sender, EventArgs e)
         {
             StoreLocation();
+        }
+
+        private void ctlTotalsTabStrip1_TabClick(int index)
+        {
+            const int centerPanelYPad = 53;
+            var panelYpos = ctlTotalsTabStrip1.Height;
+            switch (index)
+            {
+                case 0 when !panelTab1.Visible:
+                    panelTab2.Visible = false;
+                    panelTab3.Visible = false;
+                    panelTab4.Visible = false;
+
+                    panelTab1.Location = new Point(0, panelYpos);
+                    panelTab1.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+                    panelTab1.Visible = true;
+
+                    break;
+
+                case 1 when !panelTab2.Visible:
+                    panelTab1.Visible = false;
+                    panelTab3.Visible = false;
+                    panelTab4.Visible = false;
+
+                    panelTab2.Location = new Point(0, panelYpos);
+                    panelTab2.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+                    panelTab2.Visible = true;
+
+                    break;
+
+                case 2 when !panelTab3.Visible:
+                    panelTab1.Visible = false;
+                    panelTab2.Visible = false;
+                    panelTab4.Visible = false;
+
+                    panelTab3.Location = new Point(0, panelYpos);
+                    panelTab3.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+                    panelTab3.Visible = true;
+
+                    break;
+
+                case 3 when !panelTab4.Visible:
+                    panelTab1.Visible = false;
+                    panelTab2.Visible = false;
+                    panelTab3.Visible = false;
+
+                    panelTab4.Location = new Point(0, panelYpos);
+                    panelTab4.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
+                    panelTab4.Visible = true;
+
+                    break;
+            }
         }
 
         #region ImageButtonEx buttons handlers
@@ -461,6 +489,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //pbTopMost.Refresh();
             //var uncappedStats = MidsContext.Character.Totals;
             //var cappedStats = MidsContext.Character.TotalsCapped;
+            const int graphBottomMargin = 8;
             var displayStats = MidsContext.Character.DisplayStats;
             var atName = MidsContext.Character.Archetype.DisplayName;
 
@@ -511,7 +540,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
             }
 
-            graphDef.Size = graphDef.Size with {Height = Math.Max(graphDef.Size.Height, graphDef.ContentHeight + 3)};
+            graphDef.Size = graphDef.Size with {Height = Math.Max(graphDef.Size.Height, graphDef.ContentHeight + graphBottomMargin)};
             graphDef.Draw();
 
             graphRes.Clear();
@@ -533,7 +562,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
 
-            graphRes.Size = graphRes.Size with {Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + 3)};
+            graphRes.Size = graphRes.Size with {Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + graphBottomMargin)};
             graphRes.Draw();
 
             graphHP.Clear();
@@ -571,7 +600,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
                     : ""));
 
-            graphHP.Size = graphHP.Size with {Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + 3)};
+            graphHP.Size = graphHP.Size with {Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + graphBottomMargin)};
             graphHP.Draw();
             
             graphEnd.Clear();
@@ -601,7 +630,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 displayStats.EnduranceMaxEnd,
                 $"{displayStats.EnduranceMaxEnd:##0.##} Maximum Endurance (base: {maxEndBase:##0.##})");
 
-            graphEnd.Size = graphEnd.Size with {Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + 3)};
+            graphEnd.Size = graphEnd.Size with {Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + graphBottomMargin)};
             graphEnd.Draw();
 
             graphMovement.Clear();
@@ -676,6 +705,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? $"\r\nBase: {flySpeedBase:##0.##} {movementUnitSpeed}"
                     : ""));
 
+            graphMovement.Size = graphMovement.Size with { Height = Math.Max(graphMovement.Size.Height, graphMovement.ContentHeight + graphBottomMargin)};
             graphMovement.Draw();
 
             ///////////////////////////////
@@ -701,6 +731,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 GenericDataTooltip3(displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat), displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat), displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat), "Perception", "", movementUnitDistance)
                 );
 
+            graphPerception.Size = graphPerception.Size with { Height = Math.Max(graphPerception.Size.Height, graphPerception.ContentHeight + graphBottomMargin)};
             graphPerception.Draw();
 
             ///////////////////////////////
@@ -777,7 +808,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}% Status resistance to {m}");
             }
 
+            graphStatusProt.Size = graphStatusProt.Size with { Height = Math.Max(graphStatusProt.Size.Height, graphStatusProt.ContentHeight + graphBottomMargin)};
             graphStatusProt.Draw();
+
+            graphStatusRes.Size = graphStatusRes.Size with { Height = Math.Max(graphStatusRes.Size.Height, graphStatusRes.ContentHeight + graphBottomMargin)};
             graphStatusRes.Draw();
 
             ///////////////////////////////
@@ -802,6 +836,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 );
             }
 
+            graphDebuffRes.Size = graphDebuffRes.Size with { Height = Math.Max(graphDebuffRes.Size.Height, graphDebuffRes.ContentHeight + graphBottomMargin)};
             graphDebuffRes.Draw();
 
             graphElusivity.Clear();
@@ -820,12 +855,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     $"{elValue:##0.##} Elusivity ({damageVectorsNames[i]})");
             }
 
+            graphElusivity.Size = graphElusivity.Size with { Height = Math.Max(graphElusivity.Size.Height, graphElusivity.ContentHeight + graphBottomMargin) };
             graphElusivity.Draw();
-        }
-
-        private void ctlTotalsTabStrip1_TabClick(int index)
-        {
-            tabControl1.SelectedIndex = index;
         }
     }
 }

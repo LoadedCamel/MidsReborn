@@ -13,7 +13,6 @@ namespace MRBUpdater
     {
         public delegate void ProgressEventHandler(object sender, ProgressEventArgs e);
         public event ProgressEventHandler? ProgressUpdate;
-        //public event EventHandler<ProgressEventArgs> ProgressUpdate;
         public event EventHandler<ErrorEventArgs>? ErrorUpdate;
 
         public struct FileData
@@ -33,8 +32,9 @@ namespace MRBUpdater
             }
         }
 
-        public void RecompileFileEntries(string patchPath, List<FileData> decompressedData)
+        public void RecompileFileEntries(string patchPath, List<FileData>? decompressedData)
         {
+            if (decompressedData == null) return;
             for (var index = 0; index <= decompressedData.Count; index++)
             {
                 var patchedFile = decompressedData[index];
@@ -55,13 +55,14 @@ namespace MRBUpdater
         }
 
 
-        public List<FileData>? DecompressData(string patchFile)
+        public static List<FileData>? DecompressData(string? patchFile)
         {
             FileStream fileStream;
             MemoryStream decompressed;
             InflaterInputStream inflaterStream;
             BinaryReader reader;
             var patchFiles = new List<FileData>();
+            if (patchFile == null) throw new ArgumentNullException(patchFile);
             try
             {
                 fileStream = new FileStream(patchFile, FileMode.Open, FileAccess.Read);

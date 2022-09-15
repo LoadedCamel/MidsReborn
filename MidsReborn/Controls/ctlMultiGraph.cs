@@ -744,6 +744,11 @@ namespace Mids_Reborn.Controls
             }
 
             const float nameXPadding = 3;
+            if (Items.Count == 0)
+            {
+                return 0;
+            }
+
             for (var i = 0; i < Items.Count; i++)
             {
                 if (string.IsNullOrWhiteSpace(Items[i].Name) & string.IsNullOrWhiteSpace(Items[i].Name2))
@@ -757,7 +762,11 @@ namespace Mids_Reborn.Controls
                     Math.Max(Name2XPadding, NameWidth) - Name2XPadding,
                     drawArea.Top + ny + PItemHeight + YPadding / 2f);
 
-                contentHeight = (int) Math.Ceiling(textRect.Bottom);
+                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
+                var barWidth = (int)Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
+                var barRect = new SKRect(drawArea.Left, drawArea.Top + ny, drawArea.Left + barWidth, drawArea.Top + ny + PItemHeight);
+
+                contentHeight = (int)Math.Ceiling(Math.Max(barRect.Bottom, textRect.Bottom));
             }
 
             return contentHeight;

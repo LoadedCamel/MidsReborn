@@ -84,25 +84,16 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public static void Update(string path, string updateVersion, string extractionPath)
         {
-            try
+            var startInfo = new ProcessStartInfo
             {
-                var startInfo = new ProcessStartInfo
-                {
-                    UseShellExecute = true,
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    WorkingDirectory = Application.StartupPath,
-                    FileName = @"MRBUpdater.exe",
-                    Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id} {extractionPath}"
-                };
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Normal,
+                WorkingDirectory = Application.StartupPath,
+                FileName = @"MRBUpdater.exe",
+                Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id} {extractionPath}"
+            };
 
-                Process.Start(startInfo);
-
-
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
+            Process.Start(startInfo);
         }
 
         public enum UpdateType
