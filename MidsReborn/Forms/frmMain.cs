@@ -5860,14 +5860,19 @@ The default position/state will be used upon next launch.", @"Window State Warni
             // }
         }
 
-        private void tsKoFi_Click(object sender, EventArgs e)
+        private void tsKoFi_Click(object? sender, EventArgs e)
         {
             clsXMLUpdate.KoFi();
         }
 
-        private void tsPatreon_Click(object sender, EventArgs e)
+        private void tsPatreon_Click(object? sender, EventArgs e)
         {
             clsXMLUpdate.Patreon();
+        }
+
+        private void tsCoinbase_Click(object? sender, EventArgs e)
+        {
+            clsXMLUpdate.CoinBase();
         }
 
         private void tsSupport_Click(object sender, EventArgs e)

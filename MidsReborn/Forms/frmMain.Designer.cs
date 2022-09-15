@@ -155,6 +155,7 @@ namespace Mids_Reborn.Forms
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatreon = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsCoinbase = new ToolStripMenuItem();
             this.tsGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSets = new System.Windows.Forms.ToolStripMenuItem();
@@ -1312,7 +1313,8 @@ namespace Mids_Reborn.Forms
             this.DonateToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.tsKoFi,
-                this.tsPatreon});
+                this.tsPatreon,
+                this.tsCoinbase});
             this.DonateToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DonateToolStripMenuItem.Name = "DonateToolStripMenuItem";
             this.DonateToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
@@ -1336,6 +1338,13 @@ namespace Mids_Reborn.Forms
             this.tsPatreon.Size = new System.Drawing.Size(266, 22);
             this.tsPatreon.Text = "Donate via Patreon";
             this.tsPatreon.Click += new System.EventHandler(this.tsPatreon_Click);
+            // 
+            // tsCoinbase
+            // 
+            this.tsPatreon.Name = "tsCoinbase";
+            this.tsPatreon.Size = new System.Drawing.Size(266, 22);
+            this.tsPatreon.Text = "Donate Crypto via Coinbase";
+            this.tsPatreon.Click += new System.EventHandler(this.tsCoinbase_Click);
             // 
             // tsGitHub
             // 
@@ -2314,6 +2323,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
         ToolStripMenuItem tsPatreon;
+        ToolStripMenuItem tsCoinbase;
         ToolStripMenuItem tsEnhToDO;
         ToolStripMenuItem tsEnhToEven;
         ToolStripMenuItem tsEnhToMinus1;

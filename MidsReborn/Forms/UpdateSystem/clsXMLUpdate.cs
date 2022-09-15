@@ -35,6 +35,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
             LaunchBrowser("https://github.com/LoadedCamel/MidsReborn");
         }
 
+        public static void CoinBase()
+        {
+            LaunchBrowser("https://commerce.coinbase.com/checkout/804803e4-9b18-4f18-9f6b-413856dda262");
+        }
+
         public static void GoToForums()
         {
             LaunchBrowser("https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/");
