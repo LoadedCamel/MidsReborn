@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
@@ -31,6 +32,7 @@ namespace Mids_Reborn.Core.Utils
 
         private const string PatchFolderName = @"Patches";
         private const string HashFileName = @"FileHash.json";
+        public bool Generating { get; private set; }
 
         private string TopLevelFolder
         {
@@ -84,13 +86,21 @@ namespace Mids_Reborn.Core.Utils
             var files = new List<string>();
             List<FileHash>? hashes = null;
             var fileQueue = new List<FileData>();
+            var exclusionList = new List<string>();
+            exclusionList = patchType switch
+            {
+                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode" },
+                EPatchType.Database => new List<string> { "Patches" },
+                _ => exclusionList
+            };
+
             files = patchType switch
             {
                 EPatchType.Application => Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
-                    .Where(x => !x.Contains("Patches") && !x.Contains("Data"))
+                    .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
                 EPatchType.Database => Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
-                    .Where(x => !x.Contains("Patches"))
+                    .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
                 _ => files
             };
@@ -104,7 +114,9 @@ namespace Mids_Reborn.Core.Utils
             {
                 var fileInfo = new FileInfo(file);
                 var name = fileInfo.Name;
-                var directory = fileInfo.DirectoryName?.Replace(TopLevelFolder, string.Empty);
+                var directory = fileInfo.DirectoryName?
+                    .Replace(TopLevelFolder, string.Empty)
+                    .Replace(TopLevelFolder.Remove(TopLevelFolder.Length - 1, 1), string.Empty);
                 var data = File.ReadAllBytes(file);
                 if (directory == null) continue;
                 var newFile = new FileHash(directory, fileInfo.Name, FileHash.ComputeHash(file));
@@ -135,16 +147,26 @@ namespace Mids_Reborn.Core.Utils
             return fileQueue;
         }
 
-        public bool CreatePatchFile(string? path, EPatchType patchType)
+        public async Task<bool> CreatePatchFile(string? path, EPatchType patchType)
         {
-            var boolReturn = false;
+            var completionSource = new TaskCompletionSource<bool>();
+            Generating = true;
             var compressedData = CompressData(path, patchType);
-            if (compressedData == null) return boolReturn;
-            DeletePriorPatch(path);
-            var generated = GenerateFile(compressedData);
-            boolReturn = generated;
-            
-            return boolReturn;
+            if (compressedData == null) 
+            {
+                completionSource.TrySetResult(false);
+            }
+            else
+            {
+                DeletePriorPatch(path);
+                var generated = GenerateFile(compressedData);
+                completionSource.TrySetResult(generated);
+                Generating = false;
+                return await completionSource.Task;
+            }
+
+            Generating = false;
+            return await completionSource.Task;
         }
 
         private byte[]? CompressData(string? path, EPatchType patchType)

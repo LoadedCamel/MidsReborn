@@ -171,6 +171,7 @@ namespace Mids_Reborn.Forms
             {
                 var prevLastFileNameCfg = MidsContext.Config.LastFileName;
                 var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
+                var toonLoaded = false;
                 if (CommandArgs.Length > 0)
                 {
                     switch (CommandArgs[0])
@@ -194,6 +195,7 @@ namespace Mids_Reborn.Forms
                             break;
                         case var fileLoad when CommandArgs[0].Contains(".mxd") && !CommandArgs[0].Contains("mrb://"):
                             ProcessedFromCommand = false;
+                            MidsContext.Config.LastFileName = fileLoad;
                             break;
                         default:
                             if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
@@ -214,7 +216,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                var toonLoaded = false;
                 if (!MidsContext.Config.DisableLoadLastFileOnStart && !ProcessedFromCommand)
                 {
                     toonLoaded = DoOpen(MidsContext.Config.LastFileName);
@@ -405,29 +406,6 @@ namespace Mids_Reborn.Forms
                 {
                     Location = new Point((Screen.PrimaryScreen.Bounds.Width - Width) / 2, (Screen.PrimaryScreen.Bounds.Height - Height) / 2);
                     Size = new Size(1342, 1001);
-                    /*Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - Height) / 2);
-                    if ((Screen.PrimaryScreen.WorkingArea.Width > MidsContext.Config.Bounds.Width) & (MidsContext.Config.Bounds.Width >= MinimumSize.Width))
-                    {
-                        var hasMaxSize = MaximumSize.Width > 0 ? 1 : 0;
-                        var hasValidLastSize = MaximumSize.Width - MidsContext.Config.Bounds.Width < 32 ? 1 : 0;
-                        var hasValidBoth = hasMaxSize & hasValidLastSize;
-                        var needsWidthReduction = Screen.PrimaryScreen.WorkingArea.Width > MaximumSize.Width ? 1 : 0;
-                        width1 = (hasValidBoth & needsWidthReduction) != 0 ? MaximumSize.Width : MidsContext.Config.Bounds.Width;
-                    }
-                    else if (Screen.PrimaryScreen.WorkingArea.Width <= MidsContext.Config.Bounds.Width)
-                    {
-                        width1 = Screen.PrimaryScreen.WorkingArea.Width - (Size.Width - ClientSize.Width);
-                    }
-
-                    if (Screen.PrimaryScreen.WorkingArea.Height > MidsContext.Config.Bounds.Height && MidsContext.Config.Bounds.Height >= MinimumSize.Height)
-                    {
-                        height1 = MidsContext.Config.Bounds.Height;
-                    }
-                    else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.Bounds.Height)
-                    {
-                        height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
-                    }
-                    Size = new Size(width1, height1);*/
                 }
                 else
                 {
@@ -456,8 +434,6 @@ namespace Mids_Reborn.Forms
                 tsViewSelected();
                 tsIODefault.Text = $"Default ({MidsContext.Config.I9.DefaultIOLevel + 1})";
                 SetDamageMenuCheckMarks();
-                //Procat: Removed during performance optimization.
-                //ReArrange(true);
                 GetBestDamageValues();
                 dvAnchored.SetFontData();
                 DlgSave.InitialDirectory = MidsContext.Config.BuildsPath;

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -191,7 +192,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Initialized = true;
         }
 
-        private void frmDBEdit_Load(object sender, EventArgs e)
+        private void frmDBEdit_Load(object? sender, EventArgs e)
         {
             Text = $@"{DatabaseAPI.DatabaseName} Database Menu";
             DisplayInfo();
@@ -310,38 +311,41 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             await MainModule.MidsController.ChangeDatabase(_frmBusy);
         }
 
-        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        private static void inputBox_Validating(object? sender, InputBoxValidatingArgs e)
         {
             if (e.Text.Trim().Length != 0) return;
             e.Cancel = true;
             e.Message = "Required";
         }
 
-        private void btnServerDataEdit_Click(object sender, EventArgs e)
+        private void btnServerDataEdit_Click(object? sender, EventArgs e)
         {
             using var iFrmServerData = new frmServerData();
             iFrmServerData.ShowDialog(this);
         }
 
-        private async void btnGeneratePatch_Click(object sender, EventArgs e)
+        private async void btnGeneratePatch_Click(object? sender, EventArgs e)
         {
             PatchCompressor compressor;
             bool patchGenerated;
-            var pgQuery = !MidsContext.Config.IsLcAdmin ? new PatchGenQuery("Do You Wish To Generate A Database Patch Now?") : new PatchGenQuery("Select The Patch Type To Generate Below", true, "Database", "None");
+            var pgQuery = MidsContext.Config is { IsLcAdmin: false } ? new PatchGenQuery("Do You Wish To Generate A Database Patch Now?") : new PatchGenQuery("Select The Patch Type To Generate Below", true, "Database", "None");
 
             var result = pgQuery.ShowDialog(this);
-            
+
+            using var patchFrm = new PatchMessenger();
             switch (result)
             {
                 case GenResult.Application:
                     compressor = PatchCompressor.AppPatchCompressor;
-                    patchGenerated = compressor.CreatePatchFile(AppContext.BaseDirectory, PatchCompressor.EPatchType.Application);
-                    
+                    patchFrm.Show(this);
+                    patchFrm.Text = @"Generating patch...";
+                    patchGenerated = await compressor.CreatePatchFile(AppContext.BaseDirectory, PatchCompressor.EPatchType.Application);
                     break;
                 case GenResult.Database:
                     compressor = PatchCompressor.DbPatchCompressor;
-                    patchGenerated =compressor.CreatePatchFile(MidsContext.Config.DataPath, PatchCompressor.EPatchType.Database);
-                    
+                    patchFrm.Show(this);
+                    patchFrm.Text = @"Generating patch...";
+                    patchGenerated = await compressor.CreatePatchFile(MidsContext.Config?.DataPath, PatchCompressor.EPatchType.Database);
                     break;
                 case GenResult.Cancel:
                     return;
@@ -351,14 +355,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (patchGenerated)
             {
-                MessageBox.Show(@"Patch generation complete", @"Patch Generation Status", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                patchFrm.Text = @"Patch generation complete.";
+                await Task.Delay(2000);
+                patchFrm.Completed();
             }
             else
             {
-                MessageBox.Show(
-                    @"Patch generation failed due to an unknown error, please relaunch the application and try again.",
-                    @"Patch Generation Status", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                patchFrm.Text = @"Patch generation failed due to an unknown error, please relaunch the application and try again.";
+                await Task.Delay(2000);
+                patchFrm.Completed();
             }
         }
     }
