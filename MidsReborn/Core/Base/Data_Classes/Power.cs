@@ -3149,7 +3149,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Dictionary(index of EntCreate effect => KeyValuePair(KeyValuePair(entityPowerset[0].nId, entityPowerset[0].Powers.Length), Dictionary(entityPowerset[0].Powers[n].FullName, entityPowerset[0].Powers[n].Effects.Length)))
             var powerSummons = Effects
                 .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                .Where(e => AbsorbSummonEffects & AbsorbSummonAttributes & e.Value.EffectType == Enums.eEffectType.EntCreate)
+                .Where(e => AbsorbSummonEffects & AbsorbSummonAttributes & e.Value.EffectType == Enums.eEffectType.EntCreate & e.Value.nSummon > -1)
                 .ToDictionary(e => e.Key, e => new KeyValuePair<KeyValuePair<int, int>, Dictionary<string, int>>(
                     new KeyValuePair<int, int>(DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0],
                         DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers.Length),
