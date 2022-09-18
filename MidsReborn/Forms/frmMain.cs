@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -1843,34 +1842,34 @@ namespace Mids_Reborn.Forms
                 if (llPrimary.DesiredHeight < height)
                 {
                     size = llPrimary.SizeNormal;
-                    llPrimary.SizeNormal = new Size(size.Width, llPrimary.DesiredHeight);
+                    llPrimary.SizeNormal = size with {Height = llPrimary.DesiredHeight};
                 }
                 else
                 {
                     if (height < 70)
                         height = 70;
-                    size = new Size(llPrimary.SizeNormal.Width, height);
+                    size = llPrimary.SizeNormal with {Height = height};
                     llPrimary.SizeNormal = size;
                 }
 
                 if (llSecondary.DesiredHeight < height)
                 {
-                    size = new Size(llSecondary.SizeNormal.Width, llSecondary.DesiredHeight);
+                    size = llSecondary.SizeNormal with {Height = llSecondary.DesiredHeight};
                     llSecondary.SizeNormal = size;
                 }
                 else
                 {
                     if (height < 70)
                         height = 70;
-                    size = new Size(llSecondary.SizeNormal.Width, height);
+                    size = llSecondary.SizeNormal with {Height = height};
                     llSecondary.SizeNormal = size;
                 }
             }
             else
             {
-                var size = new Size(llPrimary.SizeNormal.Width, llPrimary.DesiredHeight);
+                var size = llPrimary.SizeNormal with {Height = llPrimary.DesiredHeight};
                 llPrimary.SizeNormal = size;
-                size = new Size(llSecondary.SizeNormal.Width, llSecondary.DesiredHeight);
+                size = llSecondary.SizeNormal with {Height = llSecondary.DesiredHeight};
                 llSecondary.SizeNormal = size;
             }
         }
@@ -6684,11 +6683,36 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FixPrimarySecondaryHeight();
             foreach (var llControl in Controls.OfType<ListLabelV3>().Concat(poolsPanel.Controls.OfType<ListLabelV3>()))
             {
+                var loc = llControl.Location;
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
                 llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
                 foreach (var e in llControl.Items)
                 {
                     e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+                }
+
+                // For some reason llControl will be moved when changing font style/size if not using default font size.
+                llControl.Location = new Point(loc.X, loc.Y);
+                
+                switch (llControl.Name)
+                {
+                    // Readjust primary/secondary lists so they don't overlap
+                    case "llPrimary":
+                        llControl.Width = cbPrimary.Width;
+                        break;
+
+                    case "llSecondary":
+                        llControl.Width = cbSecondary.Width;
+                        break;
+
+                    // Prevent horizontal scrollbar in pools panel
+                    case "llPool0":
+                    case "llPool1":
+                    case "llPool2":
+                    case "llPool3":
+                    case "llAncillary":
+                        llControl.Width = cbPool0.Width;
+                        break;
                 }
             }
 
