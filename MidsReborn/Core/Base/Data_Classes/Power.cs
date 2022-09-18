@@ -3146,17 +3146,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         /// <remarks>Powers from entities are added in sequence. So if first power has 3 effects, and the EntCreate is #6, effects #7, #8 and #9 will belong to this first power.</remarks>
         public Dictionary<int, string> GetEffectsInSummons()
         {
-            // Dictionary(index of EntCreate effect => KeyValuePair(KeyValuePair(entityPowerset[0].nId, entityPowerset[0].Powers.Length), Dictionary(entityPowerset[0].Powers[n].FullName, entityPowerset[0].Powers[n].Effects.Length)))
-            var powerSummons = Effects
+            var powerSummons = new Dictionary<int, KeyValuePair<KeyValuePair<int, int>, Dictionary<string, int>>>();
+            
+            // May crash if done in a single pass
+            var powerSummonsEffects = Effects
                 .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                .Where(e => AbsorbSummonEffects & AbsorbSummonAttributes & e.Value.EffectType == Enums.eEffectType.EntCreate & e.Value.nSummon > -1)
-                .ToDictionary(e => e.Key, e => new KeyValuePair<KeyValuePair<int, int>, Dictionary<string, int>>(
-                    new KeyValuePair<int, int>(DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0],
-                        DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers.Length),
-                    DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers
-                        .Where(p => p != null)
-                        .ToDictionary(p => p.FullName, p => p.Effects.Length)));
+                .Where(e => AbsorbSummonEffects & AbsorbSummonAttributes &
+                            e.Value.EffectType == Enums.eEffectType.EntCreate & e.Value.nSummon > -1 &
+                            e.Value.nSummon < DatabaseAPI.Database.Entities.Length)
+                .ToList();
 
+            powerSummonsEffects = powerSummonsEffects
+                .Where(e => DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset().Count > 0)
+                .ToList();
+
+            // Dictionary(index of EntCreate effect => KeyValuePair(KeyValuePair(entityPowerset[0].nId, entityPowerset[0].Powers.Length), Dictionary(entityPowerset[0].Powers[n].FullName, entityPowerset[0].Powers[n].Effects.Length)))
+            powerSummons = powerSummonsEffects
+                .ToDictionary(e => e.Key, e =>
+                    new KeyValuePair<KeyValuePair<int, int>, Dictionary<string, int>>(
+                        new KeyValuePair<int, int>(
+                            DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0],
+                            DatabaseAPI.Database
+                                .Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]]
+                                .Powers.Length),
+                        DatabaseAPI.Database
+                            .Powersets[DatabaseAPI.Database.Entities[e.Value.nSummon].GetNPowerset()[0]].Powers
+                            .Where(p => p != null)
+                            .ToDictionary(p => p.FullName, p => p.Effects.Length)));
+            
             var effectsInSummons = new Dictionary<int, string>();
             var k = 0;
             foreach (var ps in powerSummons)
