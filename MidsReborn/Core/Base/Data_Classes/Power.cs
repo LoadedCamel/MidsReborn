@@ -2404,9 +2404,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return shortFxArray2;
         }
 
-        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower? iPower, bool shortForm)
+        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower? iPower, bool shortForm, bool fromPopup = true)
         {
-            var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
+            var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true, false, fromPopup);
             var newValue = string.Empty;
             if (!iPower.Effects[iSfx.Index[0]].isDamage())
             {

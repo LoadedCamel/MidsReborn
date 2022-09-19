@@ -1116,7 +1116,7 @@ namespace Mids_Reborn.Forms.Controls
 
             if (index < PairedListArray.Length)
             {
-                var num2 = index + EffectsElusivity(labelArray[index], PairedListArray[index]);
+                index += EffectsElusivity(labelArray[index], PairedListArray[index]);
             }
 
             if (fx_lblHead1.Text != string.Empty)
@@ -1583,6 +1583,16 @@ namespace Mids_Reborn.Forms.Controls
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
+        private string GetToWhoShort(IEffect fx)
+        {
+            return fx.ToWho switch
+            {
+                Enums.eToWho.Target => " (Tgt)",
+                Enums.eToWho.Self => " (Self)",
+                _ => ""
+            };
+        }
+
         private int EffectsBuffDebuff(Control iLabel, PairedList iList)
         {
             var baseSumToHit = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
@@ -1652,25 +1662,25 @@ namespace Mids_Reborn.Forms.Controls
             }
             else
             {
-                string iTip;
                 if (iLabel.Text != string.Empty)
                 {
-                    iLabel.Text += @" / Misc ";
+                    iLabel.Text += @" / ";
                 }
 
-                iLabel.Text += @"Effects";
+                iLabel.Text += @"Misc. Effects";
                 if (baseSumToHit.Present)
                 {
+                    var toWho = GetToWhoShort(pBase.Effects[baseSumToHit.Index[0]]);
                     if (pBase.Effects[baseSumToHit.Index[0]].SpecialCase != Enums.eSpecialCase.None)
                     {
-                        iList.AddItem(FastItem("ToHit", baseSumToHit, enhSumToHit, "%", false, false,
+                        iList.AddItem(FastItem($"ToHit{toWho}", baseSumToHit, enhSumToHit, "%", false, false,
                             pBase.Effects[baseSumToHit.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false,
                             baseSumToHit, pEnh));
                     }
                     else
                     {
-                        iList.AddItem(FastItem("ToHit", baseSumToHit, enhSumToHit, "%", false, false,
-                            pBase.Effects[baseSumToHit.Index[0]].ValidateConditional("active", "Combo"), false,
+                        iList.AddItem(FastItem($"ToHit{toWho}", baseSumToHit, enhSumToHit, "%", false, false,
+                            pBase.Effects[baseSumToHit.Index[0]].ValidateConditional("Active", "Combo"), false,
                             baseSumToHit, pEnh));
                     }
                 }
@@ -1701,17 +1711,18 @@ namespace Mids_Reborn.Forms.Controls
                     }
                     else
                     {
+                        var toWho = GetToWhoShort(pEnh.Effects[shortFxArray[index1].Index[0]]);
                         if (pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.None && pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.Defiance)
                         {
-                            iList.AddItem(new PairedList.ItemPair("DamageBuff:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            iList.AddItem(new PairedList.ItemPair($"DamageBuff{toWho}:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                         }
                         else if (pEnh.Effects[shortFxArray[index1].Index[0]].ActiveConditionals.Count > 0)
                         {
-                            iList.AddItem(new PairedList.ItemPair("DamageBuff:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("Active", "Combo"), Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            iList.AddItem(new PairedList.ItemPair($"DamageBuff{toWho}:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("Active", "Combo"), Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                         }
                         else
                         {
-                            iList.AddItem(new PairedList.ItemPair("DamageBuff:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            iList.AddItem(new PairedList.ItemPair($"DamageBuff{toWho}:", $"{Utilities.FixDP(shortFxArray[index1].Value[0])}%", false, false, false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                         }
                     }
 
@@ -1738,7 +1749,8 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumStealth.Present && enhSumStealth.Index is {Length: > 0})
                 {
-                    iList.AddItem(new PairedList.ItemPair("Stealth",
+                    var toWho = GetToWhoShort(pEnh.Effects[enhSumStealth.Index[0]]);
+                    iList.AddItem(new PairedList.ItemPair($"Stealth{toWho}",
                         $"{baseSumStealth.Sum}ft", false, false, false,
                         pEnh.Effects[enhSumStealth.Index[0]].BuildEffectString(false, "Stealth Radius")));
                 }
@@ -1791,11 +1803,12 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumResEffect.Present && baseSumResEffect.Index is {Length: > 0})
                 {
+                    var toWho = GetToWhoShort(pBase.Effects[baseSumResEffect.Index[0]]);
                     if (!baseSumResEffect.Multiple)
                     {
                         if (baseSumResEffect.Present)
                         {
-                            iList.AddItem(FastItem($"Res({Enums.GetEffectNameShort(pBase.Effects[baseSumResEffect.Index[0]].ETModifies)})", baseSumResEffect, enhSumResEffect, "%", baseSumResEffect, pEnh));
+                            iList.AddItem(FastItem($"Res({Enums.GetEffectNameShort(pBase.Effects[baseSumResEffect.Index[0]].ETModifies)}){toWho}", baseSumResEffect, enhSumResEffect, "%", baseSumResEffect, pEnh));
                         }
 
                         if (sFXCheck(baseSumResEffect))
@@ -1805,7 +1818,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                     else
                     {
-                        iList.AddItem(new PairedList.ItemPair("Res(Multi):", $"{baseSumResEffect.Value[0]}%", false, false, false, baseSumResEffect));
+                        iList.AddItem(new PairedList.ItemPair($"Res(Multi){toWho}:", $"{baseSumResEffect.Value[0]}%", false, false, false, baseSumResEffect));
                         if (sFXCheck(baseSumResEffect))
                         {
                             iList.SetUnique();
@@ -2760,21 +2773,19 @@ namespace Mids_Reborn.Forms.Controls
 
         private int EffectsDrh()
         {
-            var index = 1;
-            if (pBase.HasDefEffects())
+            var hasDefEffects = pBase.HasDefEffects();
+            var hasResEffects = pBase.HasResEffects();
+            if (hasDefEffects)
             {
                 EffectsDef();
-                ++index;
             }
 
-            if (!pBase.HasResEffects())
+            if (hasResEffects)
             {
-                return index;
+                EffectsRes(hasDefEffects ? 2 : 1);
             }
 
-            EffectsRes(index);
-
-            return ++index;
+            return (hasDefEffects ? 1 : 0) + (hasResEffects ? 1 : 0);
         }
 
         private void EffectsRes(int listToUse)
@@ -2954,7 +2965,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, string tip)
         {
-            return FastItem(title, s1, s2, suffix, false, false, false, false, tip);
+            return FastItem(title, s1, s2, suffix, false, false, false, false, tip.Trim());
         }
         
         private static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
@@ -2983,7 +2994,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = true;
                 }
 
-                iItem = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
+                iItem = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
             }
 
             return iItem;
@@ -2999,7 +3010,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             else if (Math.Abs(s1.Sum) < float.Epsilon)
             {
-                itemPair = new PairedList.ItemPair(title + ":", string.Empty, false);
+                itemPair = new PairedList.ItemPair($"{title}:", string.Empty, false);
             }
             else
             {
@@ -3014,8 +3025,8 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = true;
                 }
 
-                var tip = GenerateTipFromEffect(basePower, tag);
-                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
+                var tip = GenerateTipFromEffect(basePower, tag).Trim();
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
             }
 
             return itemPair;
@@ -3046,7 +3057,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = true;
                 }
 
-                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
             }
 
             return itemPair;
@@ -3100,7 +3111,7 @@ namespace Mids_Reborn.Forms.Controls
                     iAlternate = true;
                 }
 
-                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip);
+                itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
             }
 
             return itemPair;
