@@ -1059,7 +1059,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
             }
-
+            
             if (index < PairedListArray.Length)
             {
                 num1 = EffectsStatus(labelArray[index], PairedListArray[index]);
@@ -1904,6 +1904,7 @@ namespace Mids_Reborn.Forms.Controls
                             {
                                 if (!pEnh.Effects[baseSumEnhancement.Index[iIndex]].ValidateConditional(pEnh.FullName))
                                 {
+                                    ++iIndex;
                                     continue;
                                 }
 
