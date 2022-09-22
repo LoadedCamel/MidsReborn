@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -1901,6 +1900,7 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             var iIndex = 0;
                             var num3 = -1;
+                            var multipleVariableFx = false;
                             while (iIndex < baseSumEnhancement.Index.Length)
                             {
                                 if (!pEnh.Effects[baseSumEnhancement.Index[iIndex]].ValidateConditional())
@@ -1934,9 +1934,10 @@ namespace Mids_Reborn.Forms.Controls
                                     {
                                         num3 = (int)Math.Round(enhSumEnhancement.Value[0]);
                                     }
-                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)enhSumEnhancement.Value[iIndex]) > float.Epsilon))
+                                    else if (num3 > 0 & Math.Abs(num3 - enhSumEnhancement.Value[iIndex]) > float.Epsilon)
                                     {
                                         num3 = -2;
+                                        multipleVariableFx = true;
                                     }
 
                                     ++iIndex;
@@ -1945,15 +1946,34 @@ namespace Mids_Reborn.Forms.Controls
 
                             if (baseSumEnhancement.Present)
                             {
-                                var iValue = "Varies";
-                                if (num3 > 0)
+                                var iValue = $"Varies";
+                                if (!multipleVariableFx)
                                 {
                                     iValue = $"{num3}%";
                                 }
 
                                 if (enhSumEnhancement.Multiple)
                                 {
-                                    iList.AddItem(new PairedList.ItemPair($"+Multiple:", iValue, false, false, false, enhSumEnhancement));
+                                    var tip = "";
+                                    foreach (var fx in pEnh.Effects)
+                                    {
+                                        if (fx.EffectType != Enums.eEffectType.Enhancement)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (fx.ActiveConditionals is {Count: > 0})
+                                        {
+                                            if (!fx.ValidateConditional())
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        tip += $"{(tip != "" ? "\r\n" : "")}{fx.BuildEffectString(false, "", false, false, false, true)}";
+                                    }
+                                    
+                                    iList.AddItem(new PairedList.ItemPair("+Multiple:", iValue, false, false, false, tip.Trim()));
                                 }
                                 else
                                 {
@@ -2616,7 +2636,6 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 n++;
-                Debug.WriteLine($"{sourcePower.FullName}: {n} mez effects");
             }
 
             effectsCount += n;
