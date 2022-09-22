@@ -1216,29 +1216,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")))
+                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")))
                 {
                     applies = true;
                 }
 
 
-                //write in where active conditionals true clause doesnt coincide with defiance
+                //write in where active conditionals true clause doesn't coincide with defiance
 
                 if (Effects[index].Buffable & !buffable)
                 {
                     applies = true;
                 }
 
-                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")) & isDefiance)
+                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")) & isDefiance)
                 {
                     applies = true;
                 }
 
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
-                        if (Effects[index].BuffedMag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination") && MidsContext.Character.Domination)
+                        if (Effects[index].BuffedMag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("Active", "Domination") && MidsContext.Character.Domination)
                         {
                             applies = true;
                         }
@@ -1280,12 +1280,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         applies = true;
                     }
                 }*/
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Domination") ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("Active", "Domination") ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
                 {
                     applies = false;
                 }
 
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Assassination") ? 1 : !MidsContext.Character.Assassination ? 1 : 0)) != 0)
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("Active", "Assassination") ? 1 : !MidsContext.Character.Assassination ? 1 : 0)) != 0)
                 {
                     applies = false;
                 }
@@ -1338,7 +1338,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 eEffectType = Effects[index].EffectType;
                 mag = Effects[index].BuffedMag;
                 buffable = Effects[index].Buffable;
-                if (Effects[index].SpecialCase == Enums.eSpecialCase.Defiance || Effects[index].ValidateConditional("active", "Defiance"))
+                if (Effects[index].SpecialCase == Enums.eSpecialCase.Defiance || Effects[index].ValidateConditional("Active", "Defiance"))
                 {
                     isDefiance = true;
                 }
@@ -1515,7 +1515,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Effects[iIndex].ActiveConditionals is { Count: > 0 })
                 {
-                    if (!Effects[iIndex].ValidateConditional(FullName))
+                    if (!Effects[iIndex].ValidateConditional())
                     {
                         continue;
                     }
@@ -1576,7 +1576,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Effects[i].ActiveConditionals is {Count: > 0})
                 {
-                    if (!Effects[i].ValidateConditional(FullName))
+                    if (!Effects[i].ValidateConditional())
                     {
                         continue;
                     }
@@ -1619,7 +1619,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Effects[iIndex].ActiveConditionals is { Count: > 0 })
                 {
-                    if (!Effects[iIndex].ValidateConditional(FullName))
+                    if (!Effects[iIndex].ValidateConditional())
                     {
                         continue;
                     }

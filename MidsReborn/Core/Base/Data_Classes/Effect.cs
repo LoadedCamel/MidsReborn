@@ -2107,6 +2107,125 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             return false;
         }
+
+        public bool ValidateConditional(bool retVal)
+        {
+            var getCondition = new Regex("(:.*)");
+            var getConditionItem = new Regex("(.*:)");
+            foreach (var cVp in ActiveConditionals)
+            {
+                var condition = getCondition.Replace(cVp.Key, "");
+                var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
+                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var cVal = cVp.Value.Split(' ');
+                switch (condition)
+                {
+                    case "Active":
+                        if (conditionPower != null)
+                        {
+                            bool? boolVal = Convert.ToBoolean(cVp.Value);
+                            if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
+                            {
+                                cVp.Validated = true;
+                            }
+                            else
+                            {
+                                cVp.Validated = false;
+                            }
+                        }
+
+                        break;
+                    case "Taken":
+                        if (conditionPower != null)
+                        {
+                            cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
+                                .Equals(Convert.ToBoolean(cVp.Value));
+                        }
+
+                        break;
+                    case "Stacks":
+                        if (conditionPower != null)
+                        {
+                            switch (cVal[0])
+                            {
+                                case "=":
+
+                                    cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+
+                                    break;
+                                case ">":
+                                    cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+
+                                    break;
+                                case "<":
+                                    cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case "Team":
+                        switch (cVal[0])
+                        {
+                            case "=":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
+                                    .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case ">":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] >
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case "<":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] <
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+            }
+
+            var validCount = ActiveConditionals.Count(b => b.Validated);
+            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
+            if (ActiveConditionals.Count > 0)
+            {
+                Validated = validCount == ActiveConditionals.Count;
+                if (Validated)
+                {
+                    return true;
+                }
+            }
+
+            return retVal;
+        }
+
         public void UpdateAttrib()
         {
             switch (PowerAttribs)
@@ -2160,8 +2279,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     power.RangeSecondary = conditionsMet ? AtrModSecondaryRange : AtrOrigSecondaryRange;
                     break;
             }
-
         }
+
         public bool CanInclude()
         {
             if (MidsContext.Character == null | ActiveConditionals == null | (ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))

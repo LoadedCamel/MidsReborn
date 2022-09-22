@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -1668,7 +1669,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 iLabel.Text += @"Misc. Effects";
-                if (baseSumToHit.Present && pBase.Effects[baseSumToHit.Index[0]].ValidateConditional(pBase.FullName, true))
+                if (baseSumToHit.Present && pBase.Effects[baseSumToHit.Index[0]].ValidateConditional(true))
                 {
                     var toWho = GetToWhoShort(pBase.Effects[baseSumToHit.Index[0]]);
                     if (pBase.Effects[baseSumToHit.Index[0]].SpecialCase != Enums.eSpecialCase.None)
@@ -1700,7 +1701,7 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
-                    if (!pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional(pEnh.FullName))
+                    if (!pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional())
                     {
                         continue;
                     }
@@ -1754,7 +1755,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumStealth.Present && enhSumStealth.Index is {Length: > 0})
                 {
-                    if (pEnh.Effects[enhSumStealth.Index[0]].ValidateConditional(pEnh.FullName, true))
+                    if (pEnh.Effects[enhSumStealth.Index[0]].ValidateConditional(true))
                     {
                         var toWho = GetToWhoShort(pEnh.Effects[enhSumStealth.Index[0]]);
                         iList.AddItem(new PairedList.ItemPair($"Stealth{toWho}",
@@ -1780,7 +1781,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseDropToggles.Present && baseDropToggles.Index is {Length: > 0})
                 {
-                    if (pBase.Effects[baseDropToggles.Index[0]].ValidateConditional(pBase.FullName, true))
+                    if (pBase.Effects[baseDropToggles.Index[0]].ValidateConditional(true))
                     {
                         iList.AddItem(FastItem("TogDrop", baseDropToggles, enhDropToggles, "%", false, false,
                             pBase.Effects[baseDropToggles.Index[0]].Probability < 1, false, baseDropToggles, pEnh));
@@ -1814,7 +1815,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumResEffect.Present && baseSumResEffect.Index is {Length: > 0})
                 {
-                    if (pBase.Effects[baseSumResEffect.Index[0]].ValidateConditional(pBase.FullName, true))
+                    if (pBase.Effects[baseSumResEffect.Index[0]].ValidateConditional(true))
                     {
                         var toWho = GetToWhoShort(pBase.Effects[baseSumResEffect.Index[0]]);
                         if (!baseSumResEffect.Multiple)
@@ -1856,7 +1857,7 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             for (var index = 0; index < baseSumEnhancement.Index.Length; index++)
                             {
-                                if (!pBase.Effects[baseSumEnhancement.Index[index]].ValidateConditional(pBase.FullName, true))
+                                if (!pBase.Effects[baseSumEnhancement.Index[index]].ValidateConditional(true))
                                 {
                                     continue;
                                 }
@@ -1902,7 +1903,7 @@ namespace Mids_Reborn.Forms.Controls
                             var num3 = -1;
                             while (iIndex < baseSumEnhancement.Index.Length)
                             {
-                                if (!pEnh.Effects[baseSumEnhancement.Index[iIndex]].ValidateConditional(pEnh.FullName))
+                                if (!pEnh.Effects[baseSumEnhancement.Index[iIndex]].ValidateConditional())
                                 {
                                     ++iIndex;
                                     continue;
@@ -1971,7 +1972,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                     else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0 && enhSumEnhancement.Value != null)
                     {
-                        if (pEnh.Effects[enhSumEnhancement.Index[0]].ValidateConditional(pEnh.FullName, true))
+                        if (pEnh.Effects[enhSumEnhancement.Index[0]].ValidateConditional(true))
                         {
                             // Hasten +Recharge will fall here
                             //iList.AddItem(new PairedList.ItemPair($"+{str2}:", $"{enhSumEnhancement.Value[0]}%", false, false, false, enhSumEnhancement));
@@ -2003,7 +2004,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (!pBase.Effects[idEffect].ValidateConditional(pBase.FullName))
+                if (!pBase.Effects[idEffect].ValidateConditional())
                 {
                     continue;
                 }
@@ -2050,7 +2051,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
+                if (!pBase.Effects[index].ValidateConditional())
                 {
                     continue;
                 }
@@ -2172,7 +2173,7 @@ namespace Mids_Reborn.Forms.Controls
                     (pBase.Effects[iIndex].Probability > 0.0) &
                     ((pBase.Effects[iIndex].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None))
                 {
-                    if (!pBase.Effects[iIndex].ValidateConditional(pBase.FullName))
+                    if (!pBase.Effects[iIndex].ValidateConditional())
                     {
                         continue;
                     }
@@ -2274,7 +2275,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
+                if (!pBase.Effects[index].ValidateConditional())
                 {
                     continue;
                 }
@@ -2351,7 +2352,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 for (var index = 0; index < sFxEnhancementBase.Index.Length; index++)
                 {
-                    if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
+                    if (!pBase.Effects[index].ValidateConditional())
                     {
                         continue;
                     }
@@ -2532,6 +2533,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             var names = Enum.GetNames(typeof(Enums.eMezShort));
             var enhancedPower = specialEffects ? sourcePower : pEnh;
+            var n = 0;
 
             for (var tagId = startIndex; tagId < sourcePower.Effects.Length; tagId++)
             {
@@ -2544,7 +2546,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
                 {
-                    if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                    if (!sourcePower.Effects[tagId].ValidateConditional())
                     {
                         continue;
                     }
@@ -2613,8 +2615,11 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                effectsCount++;
+                n++;
+                Debug.WriteLine($"{sourcePower.FullName}: {n} mez effects");
             }
+
+            effectsCount += n;
         }
 
         /// <summary>
@@ -2647,7 +2652,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
                 {
-                    if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                    if (!sourcePower.Effects[tagId].ValidateConditional())
                     {
                         continue;
                     }
@@ -2747,7 +2752,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (pBase.Effects[index].ActiveConditionals is {Count: > 0})
                 {
-                    if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
+                    if (!pBase.Effects[index].ValidateConditional())
                     {
                         continue;
                     }

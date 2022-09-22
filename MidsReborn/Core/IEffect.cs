@@ -177,6 +177,7 @@ namespace Mids_Reborn.Core
 
         void UpdateAttrib();
         bool ValidateConditional();
+        bool ValidateConditional(bool rettype);
         bool ValidateConditional(string powername);
         bool ValidateConditional(string powername, bool rettype);
         bool ValidateConditional(string ctype = "", string powername = "");
