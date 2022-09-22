@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -1311,9 +1310,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     applies = true;
                 }
 
-                if ((eEffectType == Enums.eEffectType.Mez) & (mag < 0.0) &
+                if ((eEffectType == Enums.eEffectType.Mez) & (mag < 0) &
                     ((Effects[index].EffectType == Enums.eEffectType.Resistance) |
-                     (Effects[index].EffectType == Enums.eEffectType.Regeneration)) & (Effects[index].BuffedMag > 0.0))
+                     (Effects[index].EffectType == Enums.eEffectType.Regeneration)) & (Effects[index].BuffedMag > 0))
                 {
                     applies = true;
                 }
@@ -1360,20 +1359,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var numArray = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
             var flag = false;
             var ePvX = !MidsContext.Config.Inc.DisablePvE ? Enums.ePvX.PvE : Enums.ePvX.PvP;
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            foreach (var fx in Effects)
             {
-                if (!((Effects[index].EffectType == Enums.eEffectType.Defense) & (Effects[index].Probability > 0.0) &
-                      Effects[index].CanInclude()) ||
-                    !((buffDebuff == 0) | ((buffDebuff < 0) & (Effects[index].BuffedMag < 0.0)) |
-                      ((buffDebuff > 0) & (Effects[index].BuffedMag > 0.0))) ||
-                    (Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None ||
-                    !((Effects[index].PvMode == ePvX) | (Effects[index].PvMode == Enums.ePvX.Any)))
+                if (!(fx.EffectType == Enums.eEffectType.Defense & fx.Probability > 0 &
+                      fx.CanInclude()) ||
+                    !(buffDebuff == 0 | buffDebuff < 0 & fx.BuffedMag < 0 |
+                      buffDebuff > 0 & fx.BuffedMag > 0.0) ||
+                    (fx.Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None ||
+                    !(fx.PvMode == ePvX | fx.PvMode == Enums.ePvX.Any))
                 {
                     continue;
                 }
 
-                numArray[(int) Effects[index].DamageType] += Effects[index].BuffedMag;
-                if (Effects[index].DamageType != Enums.eDamage.None)
+                numArray[(int) fx.DamageType] += fx.BuffedMag;
+                if (fx.DamageType != Enums.eDamage.None)
                 {
                     flag = true;
                 }
@@ -1384,11 +1383,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return numArray;
             }
 
+            var num = numArray[0];
+            for (var index = 0; index < numArray.Length; index++)
             {
-                var num = numArray[0];
-                for (var index = 0; index <= numArray.Length - 1; ++index)
-                    numArray[index] = num;
+                numArray[index] = num;
             }
+
             return numArray;
         }
 
@@ -1396,18 +1396,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var resists = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
             var hasDamage = false;
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            foreach (var fx in Effects)
             {
-                if (!((Effects[index].EffectType == Enums.eEffectType.Resistance) & (Effects[index].Probability > 0.0) &
-                      Effects[index].CanInclude()) ||
-                    !(((Effects[index].PvMode != Enums.ePvX.PvP) & pvE) |
-                      ((Effects[index].PvMode != Enums.ePvX.PvE) & !pvE)))
+                if (!(fx.EffectType == Enums.eEffectType.Resistance & fx.Probability > 0 &
+                      fx.CanInclude()) ||
+                    !(fx.PvMode != Enums.ePvX.PvP & pvE |
+                      fx.PvMode != Enums.ePvX.PvE & !pvE))
                 {
                     continue;
                 }
 
-                resists[(int) Effects[index].DamageType] += Effects[index].BuffedMag;
-                if (Effects[index].DamageType != Enums.eDamage.None)
+                resists[(int) fx.DamageType] += fx.BuffedMag;
+                if (fx.DamageType != Enums.eDamage.None)
                 {
                     hasDamage = true;
                 }
@@ -1418,63 +1418,36 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return resists;
             }
 
+            var num = resists[0];
+            for (var index = 0; index < resists.Length; index++)
             {
-                var num = resists[0];
-                for (var index = 0; index <= resists.Length - 1; ++index)
-                    resists[index] = num;
+                resists[index] = num;
             }
+
             return resists;
         }
 
         public bool HasDefEffects()
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-                if ((Effects[index].EffectType == Enums.eEffectType.Defense) & (Effects[index].Probability > 0.0) &
-                    ((Effects[index].Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None) &
-                    (((Effects[index].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
-                     ((Effects[index].PvMode != Enums.ePvX.PvE) & MidsContext.Config.Inc.DisablePvE)))
-                {
-                    return true;
-                }
-
-            return false;
+            return Effects.Any(t => t.EffectType == Enums.eEffectType.Defense & t.Probability > 0 & (t.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None & (t.PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE | t.PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE));
         }
 
         public bool HasResEffects()
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                if ((Effects[index].EffectType == Enums.eEffectType.Resistance) & (Effects[index].Probability > 0.0) &
-                    ((Effects[index].Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None) &
-                    (((Effects[index].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
-                     ((Effects[index].PvMode != Enums.ePvX.PvE) & MidsContext.Config.Inc.DisablePvE)))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Effects.Any(t => t.EffectType == Enums.eEffectType.Resistance & t.Probability > 0 & (t.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None & (t.PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE | t.PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE));
         }
 
         public bool HasAttribModEffects()
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                if (Effects[index].EffectType == Enums.eEffectType.ModifyAttrib)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Effects.Any(t => t.EffectType == Enums.eEffectType.ModifyAttrib);
         }
 
         public Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0)
         {
             var shortFx = new Enums.ShortFX();
-            for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
+            for (var iIndex = 0; iIndex < Effects.Length; iIndex++)
             {
-                if (!Effects[iIndex].PvXInclude() || !(Effects[iIndex].Probability > 0.0) ||
+                if (!Effects[iIndex].PvXInclude() || !(Effects[iIndex].Probability > 0) ||
                     (Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude()) ||
                     Effects[iIndex].EffectType != Enums.eEffectType.Enhancement &&
                     Effects[iIndex].EffectType != Enums.eEffectType.DamageBuff ||
@@ -1530,14 +1503,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     flag = false;
                 }
 
-                if (!flag || !(Effects[iIndex].Probability > 0.0) ||
+                if (!flag || !(Effects[iIndex].Probability > 0) ||
                     maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
-                    !(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude() ||
+                    !(Effects[iIndex].DelayedTime <= 5) && !includeDelayed || !Effects[iIndex].CanInclude() ||
                     !Effects[iIndex].PvXInclude())
                 {
                     continue;
+                }
+
+                if (Effects[iIndex].ActiveConditionals is { Count: > 0 })
+                {
+                    if (!Effects[iIndex].ValidateConditional(FullName))
+                    {
+                        continue;
+                    }
                 }
 
                 var mag = Effects[iIndex].BuffedMag;
@@ -1593,6 +1574,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
+                if (Effects[i].ActiveConditionals is {Count: > 0})
+                {
+                    if (!Effects[i].ValidateConditional(FullName))
+                    {
+                        continue;
+                    }
+                }
+
                 /*if (fx.ActiveConditionals.Count > 0)
                 {
                     if (!fx.ValidateConditional())
@@ -1621,11 +1610,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.ShortFX GetDamageMagSum(Enums.eEffectType iEffect, Enums.eDamage iSub, bool includeDelayed = false)
         {
             var shortFx = new Enums.ShortFX();
-            for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
+            for (var iIndex = 0; iIndex < Effects.Length; iIndex++)
             {
-                if (!Effects[iIndex].CanInclude() || !((Effects[iIndex].EffectType == iEffect) & (Effects[iIndex].EffectClass != Enums.eEffectClass.Ignored)) || !Effects[iIndex].PvXInclude() || !(((Effects[iIndex].DelayedTime <= 5.0) | includeDelayed) & (Effects[iIndex].DamageType == iSub)))
+                if (!Effects[iIndex].CanInclude() || !((Effects[iIndex].EffectType == iEffect) & (Effects[iIndex].EffectClass != Enums.eEffectClass.Ignored)) || !Effects[iIndex].PvXInclude() || !(((Effects[iIndex].DelayedTime <= 5) | includeDelayed) & (Effects[iIndex].DamageType == iSub)))
                 {
                     continue;
+                }
+
+                if (Effects[iIndex].ActiveConditionals is { Count: > 0 })
+                {
+                    if (!Effects[iIndex].ValidateConditional(FullName))
+                    {
+                        continue;
+                    }
                 }
 
                 var mag = Effects[iIndex].BuffedMag;
@@ -1643,9 +1640,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified, bool allowDelay = false)
         {
             var shortFx = new Enums.ShortFX();
-            for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
+            for (var iIndex = 0; iIndex < Effects.Length; iIndex++)
             {
-                if (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() || !(Effects[iIndex].DelayedTime <= 5.0) && !allowDelay || iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All && iTarget != Effects[iIndex].ToWho)
+                if (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() || !(Effects[iIndex].DelayedTime <= 5) && !allowDelay || iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All && iTarget != Effects[iIndex].ToWho)
                 {
                     continue;
                 }
@@ -1662,7 +1659,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
                 else if (Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
-                    shortFx.Add(iIndex, (float) (mag / (double) MidsContext.Archetype.Hitpoints * 100.0));
+                    shortFx.Add(iIndex, (float) (mag / (double) MidsContext.Archetype.Hitpoints * 100));
                 }
                 else
                 {
@@ -1677,80 +1674,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool AffectsTarget(Enums.eEffectType iEffect)
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Target)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Effects.Any(t => t.EffectType == iEffect && t.ToWho == Enums.eToWho.Target);
         }
 
         public bool AffectsSelf(Enums.eEffectType iEffect)
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Self)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Effects.Any(t => t.EffectType == iEffect && t.ToWho == Enums.eToWho.Self);
         }
 
         public bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None)
         {
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                if (!((Effects[index].EffectType == iEffect) & (Effects[index].BuffedMag > 0.0)) || (Effects[index].EffectType == Enums.eEffectType.Damage) & (Effects[index].DamageType == Enums.eDamage.Special))
-                {
-                    continue;
-                }
-
-                if (iMez == Enums.eMez.None || Effects[index].MezType == iMez)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Effects.Where(t => t.EffectType == iEffect & t.BuffedMag > 0 && !(t.EffectType == Enums.eEffectType.Damage & t.DamageType == Enums.eDamage.Special)).Any(t => iMez == Enums.eMez.None || t.MezType == iMez);
         }
 
         public bool IgnoreEnhancement(Enums.eEnhance iEffect)
         {
-            if (IgnoreEnh.Length == 0)
-            {
-                return true;
-            }
-
-            for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
-            {
-                if (IgnoreEnh[index] == iEffect)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return IgnoreEnh.Length == 0 || IgnoreEnh.All(t => t != iEffect);
         }
 
         public bool IgnoreBuff(Enums.eEnhance iEffect)
         {
-            if (Ignore_Buff.Length == 0)
-            {
-                return true;
-            }
-
-            for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
-                if (Ignore_Buff[index] == iEffect)
-                {
-                    return false;
-                }
-
-            return true;
+            return Ignore_Buff.Length == 0 || Ignore_Buff.All(t => t != iEffect);
         }
 
         public int CompareTo(object obj)

@@ -1059,7 +1059,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
             }
-            
+
             if (index < PairedListArray.Length)
             {
                 num1 = EffectsStatus(labelArray[index], PairedListArray[index]);
@@ -1668,7 +1668,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 iLabel.Text += @"Misc. Effects";
-                if (baseSumToHit.Present && pBase.Effects[baseSumToHit.Index[0]].ValidateConditional(pBase.FullName))
+                if (baseSumToHit.Present && pBase.Effects[baseSumToHit.Index[0]].ValidateConditional(pBase.FullName, true))
                 {
                     var toWho = GetToWhoShort(pBase.Effects[baseSumToHit.Index[0]]);
                     if (pBase.Effects[baseSumToHit.Index[0]].SpecialCase != Enums.eSpecialCase.None)
@@ -1754,7 +1754,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumStealth.Present && enhSumStealth.Index is {Length: > 0})
                 {
-                    if (pEnh.Effects[enhSumStealth.Index[0]].ValidateConditional(pEnh.FullName))
+                    if (pEnh.Effects[enhSumStealth.Index[0]].ValidateConditional(pEnh.FullName, true))
                     {
                         var toWho = GetToWhoShort(pEnh.Effects[enhSumStealth.Index[0]]);
                         iList.AddItem(new PairedList.ItemPair($"Stealth{toWho}",
@@ -1780,7 +1780,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseDropToggles.Present && baseDropToggles.Index is {Length: > 0})
                 {
-                    if (pBase.Effects[baseDropToggles.Index[0]].ValidateConditional(pBase.FullName))
+                    if (pBase.Effects[baseDropToggles.Index[0]].ValidateConditional(pBase.FullName, true))
                     {
                         iList.AddItem(FastItem("TogDrop", baseDropToggles, enhDropToggles, "%", false, false,
                             pBase.Effects[baseDropToggles.Index[0]].Probability < 1, false, baseDropToggles, pEnh));
@@ -1814,7 +1814,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumResEffect.Present && baseSumResEffect.Index is {Length: > 0})
                 {
-                    if (pBase.Effects[baseSumResEffect.Index[0]].ValidateConditional(pBase.FullName))
+                    if (pBase.Effects[baseSumResEffect.Index[0]].ValidateConditional(pBase.FullName, true))
                     {
                         var toWho = GetToWhoShort(pBase.Effects[baseSumResEffect.Index[0]]);
                         if (!baseSumResEffect.Multiple)
@@ -1856,7 +1856,7 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             for (var index = 0; index < baseSumEnhancement.Index.Length; index++)
                             {
-                                if (!pBase.Effects[baseSumEnhancement.Index[index]].ValidateConditional(pBase.FullName))
+                                if (!pBase.Effects[baseSumEnhancement.Index[index]].ValidateConditional(pBase.FullName, true))
                                 {
                                     continue;
                                 }
@@ -1971,7 +1971,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                     else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0 && enhSumEnhancement.Value != null)
                     {
-                        if (pEnh.Effects[enhSumEnhancement.Index[0]].ValidateConditional(pEnh.FullName))
+                        if (pEnh.Effects[enhSumEnhancement.Index[0]].ValidateConditional(pEnh.FullName, true))
                         {
                             // Hasten +Recharge will fall here
                             //iList.AddItem(new PairedList.ItemPair($"+{str2}:", $"{enhSumEnhancement.Value[0]}%", false, false, false, enhSumEnhancement));
@@ -1998,7 +1998,7 @@ namespace Mids_Reborn.Forms.Controls
             for (var idEffect = 0; idEffect < pBase.Effects.Length; idEffect++)
             {
                 if (!((pBase.Effects[idEffect].EffectType == Enums.eEffectType.Elusivity) &
-                      (pBase.Effects[idEffect].Probability > 0.0)))
+                      (pBase.Effects[idEffect].Probability > 0)))
                 {
                     continue;
                 }
@@ -2301,154 +2301,180 @@ namespace Mids_Reborn.Forms.Controls
 
         private int EffectsMovement(Label iLabel, PairedList iList)
         {
-            var shortFx1 = new Enums.ShortFX();
-            var shortFx2 = new Enums.ShortFX();
-            var s2_1 = new Enums.ShortFX();
-            var shortFx3 = new Enums.ShortFX();
-            var s2_2 = new Enums.ShortFX();
-            var shortFx4 = new Enums.ShortFX();
-            var s2_3 = new Enums.ShortFX();
-            var shortFx5 = new Enums.ShortFX();
-            var s2_4 = new Enums.ShortFX();
-            var shortFx6 = new Enums.ShortFX();
-            var shortFx7 = new Enums.ShortFX();
-            var shortFx8 = new Enums.ShortFX();
-            var shortFx9 = new Enums.ShortFX();
-            var shortFx10 = new Enums.ShortFX();
-            shortFx2.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying));
-            s2_1.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying));
-            shortFx1.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly));
-            shortFx3.Assign(pBase.GetEffectMagSum(Enums.eEffectType.JumpHeight));
-            s2_2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.JumpHeight));
-            shortFx4.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedJumping));
-            s2_3.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedJumping));
-            shortFx5.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedRunning));
-            s2_4.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedRunning));
-            shortFx6.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Enhancement));
-            shortFx8.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false, true));
-            shortFx9.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedJumping, false, false, false, true));
-            shortFx10.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedRunning, false, false, false, true));
-            shortFx2.Multiply();
-            s2_1.Multiply();
-            shortFx3.Multiply();
-            s2_2.Multiply();
-            shortFx4.Multiply();
-            s2_3.Multiply();
-            shortFx5.Multiply();
-            s2_4.Multiply();
-            if (shortFx6.Present)
+            var sFxFlyBase = new Enums.ShortFX();
+            var sFxSpeedFlyingBase = new Enums.ShortFX();
+            var sFxSpeedFlyingEnh = new Enums.ShortFX();
+            var sFxJumpHeightBase = new Enums.ShortFX();
+            var sFxJumpHeightEnh = new Enums.ShortFX();
+            var sFxSpeedJumpingBase = new Enums.ShortFX();
+            var sFxSpeedJumpingEnh = new Enums.ShortFX();
+            var sFxSpeedRunningBase = new Enums.ShortFX();
+            var sFxSpeedRunningEnh = new Enums.ShortFX();
+            var sFxEnhancementBase = new Enums.ShortFX();
+            var sFxJump = new Enums.ShortFX();
+            var sFxSpeedFlyingMaxBase1 = new Enums.ShortFX();
+            var sFxSpeedJumpingMaxBase1 = new Enums.ShortFX();
+            var sFxSpeedRunningMaxBase1 = new Enums.ShortFX();
+            var sFxSpeedFlyingMaxBase2 = new Enums.ShortFX();
+            var sFxSpeedJumpingMaxBase2 = new Enums.ShortFX();
+            var sFxSpeedRunningMaxBase2 = new Enums.ShortFX();
+
+            sFxSpeedFlyingBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying));
+            sFxSpeedFlyingEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying));
+            sFxFlyBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Fly));
+            sFxJumpHeightBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.JumpHeight));
+            sFxJumpHeightEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.JumpHeight));
+            sFxSpeedJumpingBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedJumping));
+            sFxSpeedJumpingEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedJumping));
+            sFxSpeedRunningBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedRunning));
+            sFxSpeedRunningEnh.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedRunning));
+            sFxEnhancementBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Enhancement));
+            sFxSpeedFlyingMaxBase1.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false, true));
+            sFxSpeedJumpingMaxBase1.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedJumping, false, false, false, true));
+            sFxSpeedRunningMaxBase1.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedRunning, false, false, false, true));
+            sFxSpeedFlyingMaxBase2.Assign(pBase.GetEffectMagSum(Enums.eEffectType.MaxFlySpeed));
+            sFxSpeedJumpingMaxBase2.Assign(pBase.GetEffectMagSum(Enums.eEffectType.MaxJumpSpeed));
+            sFxSpeedRunningMaxBase2.Assign(pBase.GetEffectMagSum(Enums.eEffectType.MaxRunSpeed));
+            sFxSpeedFlyingBase.Multiply();
+            sFxSpeedFlyingEnh.Multiply();
+            sFxJumpHeightBase.Multiply();
+            sFxJumpHeightEnh.Multiply();
+            sFxSpeedJumpingBase.Multiply();
+            sFxSpeedJumpingEnh.Multiply();
+            sFxSpeedRunningBase.Multiply();
+            sFxSpeedRunningEnh.Multiply();
+            sFxSpeedFlyingMaxBase2.Multiply();
+            sFxSpeedJumpingMaxBase2.Multiply();
+            sFxSpeedRunningMaxBase2.Multiply();
+
+            if (sFxEnhancementBase.Present)
             {
-                for (var index = 0; index < shortFx6.Index.Length; index++)
+                for (var index = 0; index < sFxEnhancementBase.Index.Length; index++)
                 {
                     if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
                     {
                         continue;
                     }
 
-                    if (pBase.Effects[shortFx6.Index[index]].Special.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
+                    if (pBase.Effects[sFxEnhancementBase.Index[index]].Special.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
                     {
-                        shortFx7.Add(shortFx6.Index[index], pBase.Effects[shortFx6.Index[index]].BuffedMag);
+                        sFxJump.Add(sFxEnhancementBase.Index[index], pBase.Effects[sFxEnhancementBase.Index[index]].BuffedMag);
                     }
                 }
             }
 
             iList.ValueWidth = 55;
             int num1;
-            if (!(shortFx7.Present | shortFx1.Present | shortFx2.Present | shortFx3.Present | shortFx4.Present |
-                  shortFx5.Present))
+            if (!(sFxJump.Present | sFxFlyBase.Present | sFxSpeedFlyingBase.Present | sFxJumpHeightBase.Present | sFxSpeedJumpingBase.Present |
+                  sFxSpeedRunningBase.Present | sFxSpeedFlyingMaxBase2.Present | sFxSpeedJumpingMaxBase2.Present | sFxSpeedRunningMaxBase2.Present))
             {
-                num1 = 0;
-            }
-            else
-            {
-                var flag = (shortFx2.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedFlying)) |
-                           (shortFx3.Present & pBase.AffectsTarget(Enums.eEffectType.JumpHeight)) |
-                           (shortFx4.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedJumping)) |
-                           (shortFx5.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedRunning));
-                if (iList.ItemCount == 0)
-                {
-                    iLabel.Text = flag ? "Movement (Target)" : "Movement (Self)";
-                }
-
-                if (shortFx1.Present)
-                {
-                    iList.AddItem(FastItem("Fly", shortFx1, shortFx1, string.Empty, shortFx1, pEnh));
-                }
-
-                if (sFXCheck(shortFx1))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx2.Present)
-                {
-                    iList.AddItem(FastItem("FlySpd", shortFx2, s2_1, "%", shortFx2, pEnh));
-                }
-
-                if (sFXCheck(shortFx2))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx3.Present)
-                {
-                    iList.AddItem(FastItem("JmpHeight", shortFx3, s2_2, "%", shortFx3, pEnh));
-                }
-
-                if (sFXCheck(shortFx3))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx4.Present)
-                {
-                    iList.AddItem(FastItem("JmpSpd", shortFx4, s2_3, "%", shortFx4, pEnh));
-                }
-
-                if (sFXCheck(shortFx4))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx7.Present)
-                {
-                    iList.AddItem(FastItem("+JmpHeight", shortFx7, shortFx7, "%", shortFx7, pEnh));
-                }
-
-                if (sFXCheck(shortFx7))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx5.Present)
-                {
-                    iList.AddItem(FastItem("RunSpd", shortFx5, s2_4, "%", shortFx5, pEnh));
-                }
-
-                if (sFXCheck(shortFx5))
-                {
-                    iList.SetUnique();
-                }
-
-                if (shortFx10.Present)
-                {
-                    iList.AddItem(FastItem("MaxRun", shortFx10, shortFx10, string.Empty, shortFx10, pEnh));
-                }
-
-                if (shortFx9.Present)
-                {
-                    iList.AddItem(FastItem("MaxJmp", shortFx9, shortFx9, string.Empty, shortFx9, pEnh));
-                }
-
-                if (shortFx8.Present)
-                {
-                    iList.AddItem(FastItem("MaxFly", shortFx8, shortFx8, string.Empty, shortFx8, pEnh));
-                }
-
-                num1 = 1;
+                return 0;
             }
 
-            return num1;
+            var flag = (sFxSpeedFlyingBase.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedFlying)) |
+                       (sFxJumpHeightBase.Present & pBase.AffectsTarget(Enums.eEffectType.JumpHeight)) |
+                       (sFxSpeedJumpingBase.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedJumping)) |
+                       (sFxSpeedRunningBase.Present & pBase.AffectsTarget(Enums.eEffectType.SpeedRunning)) |
+                       (sFxSpeedFlyingMaxBase2.Present & pBase.AffectsTarget(Enums.eEffectType.MaxFlySpeed)) |
+                       (sFxSpeedJumpingMaxBase2.Present & pBase.AffectsTarget(Enums.eEffectType.MaxJumpSpeed)) |
+                       (sFxSpeedRunningMaxBase2.Present & pBase.AffectsTarget(Enums.eEffectType.MaxRunSpeed));
+
+            if (iList.ItemCount == 0)
+            {
+                iLabel.Text = flag ? "Movement (Target)" : "Movement (Self)";
+            }
+
+            if (sFxFlyBase.Present)
+            {
+                iList.AddItem(FastItem("Fly", sFxFlyBase, sFxFlyBase, string.Empty, sFxFlyBase, pEnh));
+            }
+
+            if (sFXCheck(sFxFlyBase))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxSpeedFlyingBase.Present)
+            {
+                iList.AddItem(FastItem("FlySpd", sFxSpeedFlyingBase, sFxSpeedFlyingEnh, "%", sFxSpeedFlyingBase, pEnh));
+            }
+
+            if (sFXCheck(sFxSpeedFlyingBase))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxJumpHeightBase.Present)
+            {
+                iList.AddItem(FastItem("JmpHeight", sFxJumpHeightBase, sFxJumpHeightEnh, "%", sFxJumpHeightBase, pEnh));
+            }
+
+            if (sFXCheck(sFxJumpHeightBase))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxSpeedJumpingBase.Present)
+            {
+                iList.AddItem(FastItem("JmpSpd", sFxSpeedJumpingBase, sFxSpeedJumpingEnh, "%", sFxSpeedJumpingBase, pEnh));
+            }
+
+            if (sFXCheck(sFxSpeedJumpingBase))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxJump.Present)
+            {
+                iList.AddItem(FastItem("+JmpHeight", sFxJump, sFxJump, "%", sFxJump, pEnh));
+            }
+
+            if (sFXCheck(sFxJump))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxSpeedRunningBase.Present)
+            {
+                iList.AddItem(FastItem("RunSpd", sFxSpeedRunningBase, sFxSpeedRunningEnh, "%", sFxSpeedRunningBase, pEnh));
+            }
+
+            if (sFXCheck(sFxSpeedRunningBase))
+            {
+                iList.SetUnique();
+            }
+
+            if (sFxSpeedRunningMaxBase1.Present)
+            {
+                iList.AddItem(FastItem("MaxRun", sFxSpeedRunningMaxBase1, sFxSpeedRunningMaxBase1, string.Empty, sFxSpeedRunningMaxBase1, pEnh));
+            }
+
+            if (sFxSpeedJumpingMaxBase1.Present)
+            {
+                iList.AddItem(FastItem("MaxJmp", sFxSpeedJumpingMaxBase1, sFxSpeedJumpingMaxBase1, string.Empty, sFxSpeedJumpingMaxBase1, pEnh));
+            }
+
+            if (sFxSpeedFlyingMaxBase1.Present)
+            {
+                iList.AddItem(FastItem("MaxFly", sFxSpeedFlyingMaxBase1, sFxSpeedFlyingMaxBase1, string.Empty, sFxSpeedFlyingMaxBase1, pEnh));
+            }
+
+            if (sFxSpeedRunningMaxBase2.Present)
+            {
+                iList.AddItem(FastItem("MaxRun", sFxSpeedRunningMaxBase2, sFxSpeedRunningMaxBase2, "%", sFxSpeedRunningMaxBase2, pEnh));
+            }
+
+            if (sFxSpeedJumpingMaxBase2.Present)
+            {
+                iList.AddItem(FastItem("MaxJmp", sFxSpeedJumpingMaxBase2, sFxSpeedJumpingMaxBase2, "%", sFxSpeedJumpingMaxBase2, pEnh));
+            }
+
+            if (sFxSpeedFlyingMaxBase2.Present)
+            {
+                iList.AddItem(FastItem("MaxFly", sFxSpeedFlyingMaxBase2, sFxSpeedFlyingMaxBase2, "%", sFxSpeedFlyingMaxBase2, pEnh));
+            }
+
+            return 1;
         }
 
         // Move the extra effects from the longest array (pBase) to the shortest (pEnh),
@@ -2516,9 +2542,12 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
                 {
-                    continue;
+                    if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                    {
+                        continue;
+                    }
                 }
 
                 var str = !(sourcePower.Effects[tagId].Duration < 2 | sourcePower.PowerType == Enums.ePowerType.Auto_)
@@ -2616,9 +2645,12 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
                 {
-                    continue;
+                    if (!sourcePower.Effects[tagId].ValidateConditional(sourcePower.FullName))
+                    {
+                        continue;
+                    }
                 }
 
                 var str = enhancedPower.Effects[tagId].Duration >= 15
@@ -2646,12 +2678,12 @@ namespace Mids_Reborn.Forms.Controls
 
         private int EffectsStatus(Label iLabel, PairedList iList)
         {
-            if (pEnh.Effects.Length < pBase.Effects.Length)
+            /*if (pEnh.Effects.Length < pBase.Effects.Length)
             {
                 var swappedFX = SwapExtraEffects(pBase.Effects, pEnh.Effects);
                 pBase.Effects = (IEffect[]) swappedFX[0].Clone();
                 pEnh.Effects = (IEffect[]) swappedFX[1].Clone();
-            }
+            }*/
 
             var sFxBaseMezResist = new Enums.ShortFX();
             var sFxEnhMezResist = new Enums.ShortFX();
@@ -2711,6 +2743,14 @@ namespace Mids_Reborn.Forms.Controls
                 if (pBase.AbsorbSummonEffects & pBase.AbsorbSummonAttributes)
                 {
                     continue;
+                }
+
+                if (pBase.Effects[index].ActiveConditionals is {Count: > 0})
+                {
+                    if (!pBase.Effects[index].ValidateConditional(pBase.FullName))
+                    {
+                        continue;
+                    }
                 }
 
                 var iValue = pEnh.Effects[index].SummonedEntityName;
