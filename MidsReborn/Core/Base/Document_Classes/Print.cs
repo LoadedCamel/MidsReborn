@@ -722,7 +722,6 @@ namespace Mids_Reborn.Core.Base.Document_Classes
         }
 
         private void PrintProfileShort(Rectangle bounds, PrintPageEventArgs args)
-
         {
             _printingProfile = false;
             var solidBrush = new SolidBrush(Color.Black);
@@ -743,6 +742,12 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, false, args);
+
+            if (_completedPrintTasks.ContainsKey(PageType.ProfileShort))
+            {
+                _completedPrintTasks[PageType.ProfileShort] = true;
+            }
+
             if (!MidsContext.Character.Archetype.Epic)
             {
                 return;
@@ -752,11 +757,6 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             args.Graphics.DrawString(s3, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, true, args);
-
-            if (_completedPrintTasks.ContainsKey(PageType.ProfileShort))
-            {
-                _completedPrintTasks[PageType.ProfileShort] = true;
-            }
         }
 
         private static void BuildPowerListShort(
