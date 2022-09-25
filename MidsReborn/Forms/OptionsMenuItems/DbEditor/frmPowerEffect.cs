@@ -739,19 +739,42 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvSubSub_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading || lvSubSub.SelectedIndices.Count < 1)
+            {
                 return;
-            var fx = MyFx;
-            if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Mez))
+            }
+
+            switch (MyFx.EffectType)
+            {
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies == Enums.eEffectType.Mez:
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies == Enums.eEffectType.MezResist:
+                case Enums.eEffectType.ResEffect when MyFx.ETModifies == Enums.eEffectType.Mez:
+                    MyFx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
+
+                    break;
+
+                //case Enums.eEffectType.Enhancement when MyFx.ETModifies is Enums.eEffectType.Damage or Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies is Enums.eEffectType.Damage or Enums.eEffectType.Defense or Enums.eEffectType.Resistance:
+                    MyFx.DamageType = (Enums.eDamage)lvSubSub.SelectedIndices[0];
+
+                    break;
+
+                case Enums.eEffectType.PowerRedirect:
+                    txtOverride.Text = lvSubSub.SelectedItems[0].Text;
+
+                    break;
+            }
+
+            /*if (fx.EffectType == Enums.eEffectType.Enhancement & fx.ETModifies == Enums.eEffectType.Mez)
             {
                 fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
             }
 
-            if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Damage) | (fx.ETModifies == Enums.eEffectType.Defense))
+            if (fx.EffectType == Enums.eEffectType.Enhancement & fx.ETModifies == Enums.eEffectType.Damage | fx.ETModifies == Enums.eEffectType.Defense)
             {
                 fx.DamageType = (Enums.eDamage)lvSubSub.SelectedIndices[0];
             }
 
-            if ((fx.EffectType == Enums.eEffectType.ResEffect) & (fx.ETModifies == Enums.eEffectType.Mez))
+            if (fx.EffectType == Enums.eEffectType.ResEffect & fx.ETModifies == Enums.eEffectType.Mez)
             {
                 fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
             }
@@ -759,8 +782,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (fx.EffectType == Enums.eEffectType.PowerRedirect)
             {
                 txtOverride.Text = lvSubSub.SelectedItems[0].Text;
-            }
-
+            }*/
+            
             UpdateFxText();
         }
 
@@ -1332,39 +1355,57 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var index1 = 0;
             lvSubSub.BeginUpdate();
             lvSubSub.Items.Clear();
+            
             var strArray = Array.Empty<string>();
-            if (((MyFx.EffectType == Enums.eEffectType.Enhancement) | (MyFx.EffectType == Enums.eEffectType.ResEffect)) & (MyFx.ETModifies == Enums.eEffectType.Mez))
+            switch (MyFx.EffectType)
             {
-                lvSubSub.Columns[0].Text = "Mez Type";
-                lvSubSub.Columns[0].Width = -2;
-                strArray = Enum.GetNames(MyFx.MezType.GetType());
-                index1 = (int)MyFx.MezType;
-            }
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies == Enums.eEffectType.Mez:
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies == Enums.eEffectType.MezResist:
+                case Enums.eEffectType.ResEffect when MyFx.ETModifies == Enums.eEffectType.Mez:
+                    lvSubSub.Columns[0].Text = @"Mez Type";
+                    lvSubSub.Columns[0].Width = -2;
+                    strArray = Enum.GetNames(typeof(Enums.eMez));
+                    index1 = (int)MyFx.MezType;
 
-            if (MyFx.EffectType == Enums.eEffectType.Enhancement && (MyFx.ETModifies == Enums.eEffectType.Defense) | (MyFx.ETModifies == Enums.eEffectType.Damage))
-            {
-                lvSubSub.Columns[0].Text = @"Damage Type";
-                lvSubSub.Columns[0].Width = -2;
-                strArray = Enum.GetNames(MyFx.DamageType.GetType());
-                index1 = (int)MyFx.DamageType;
-            }
+                    break;
 
-            if (MyFx.EffectType == Enums.eEffectType.PowerRedirect)
-            {
-                strArray = DatabaseAPI.Database.Power.ToList().Where(x => x.GroupName == lvSubAttribute.SelectedItems[0].Text).Select(p => p.FullName).ToArray();
-                lvSubSub.Columns[0].Text = @"Power";
-                lvSubSub.Columns[0].Width = -2;
+                //case Enums.eEffectType.Enhancement when MyFx.ETModifies is Enums.eEffectType.Damage or Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
+                case Enums.eEffectType.Enhancement when MyFx.ETModifies is Enums.eEffectType.Damage or Enums.eEffectType.Defense or Enums.eEffectType.Resistance:
+                    lvSubSub.Columns[0].Text = @"Damage Type";
+                    lvSubSub.Columns[0].Width = -2;
+                    strArray = Enum.GetNames(typeof(Enums.eDamage));
+                    index1 = (int)MyFx.DamageType;
+
+                    break;
+
+                case Enums.eEffectType.PowerRedirect:
+                    strArray = DatabaseAPI.Database.Power
+                        .ToList()
+                        .Where(x => x.GroupName == lvSubAttribute.SelectedItems[0].Text).Select(p => p.FullName)
+                        .ToArray();
+                    lvSubSub.Columns[0].Text = @"Power";
+                    lvSubSub.Columns[0].Width = -2;
+
+                    break;
+
+                /*case Enums.eEffectType.ResEffect:
+                    lvSubSub.Columns[0].Text = @"Effect type";
+                    lvSubSub.Columns[0].Width = -2;
+                    strArray = Enum.GetNames(typeof(Enums.eEffectType));
+                    index1 = 0;
+
+                    break;*/
             }
 
             if (strArray.Length > 0)
             {
-                var num = strArray.Length - 1;
-                for (var index2 = 0; index2 <= num; ++index2)
+                foreach (var s in strArray)
                 {
-                    var lvSubItem = new ListViewItem(strArray[index2])
+                    var lvSubItem = new ListViewItem(s)
                     {
-                        ToolTipText = strArray[index2]
+                        ToolTipText = s
                     };
+
                     lvSubSub.Items.Add(lvSubItem);
                 }
 

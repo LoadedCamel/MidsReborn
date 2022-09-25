@@ -933,8 +933,12 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
             
-            var baseDamage = pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
-            if (pBase.NIDSubPower.Length > 0 & baseDamage == 0)
+            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1));
+            var enhancedDamage = pEnh.PowerIndex == -1
+                ? baseDamage
+                : Math.Abs(enhancedPower.FXGetDamageValue());
+
+            if (pBase.NIDSubPower.Length > 0 & baseDamage == 0 && enhancedDamage == 0)
             {
                 lblDmg.Text = string.Empty;
                 Info_Damage.nBaseVal = 0f;
@@ -946,9 +950,6 @@ namespace Mids_Reborn.Forms.Controls
             else
             {
                 lblDmg.Text = $@"{str1}:";
-                var enhancedDamage = pEnh.PowerIndex == -1
-                    ? baseDamage
-                    : enhancedPower.FXGetDamageValue();
                 //Info_Damage.nBaseVal = damageValue1;
                 //Info_Damage.nMaxEnhVal = baseDamage * (1f + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
                 //Info_Damage.nEnhVal = damageValue2;
