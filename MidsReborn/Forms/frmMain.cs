@@ -2749,6 +2749,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsViewSlotLevels_Click(this, EventArgs.Empty);
         }
 
+        private void ibSlotInfoEx_Onclick(object? sender, EventArgs e)
+        {
+            if (MidsContext.Config != null)
+            {
+                MidsContext.Config.ShowSlotsLeft = ibSlotInfoEx.ToggleState == ImageButtonEx.States.ToggledOff;
+            }
+        }
+
         private void ibTotalsEx_OnClick(object? sender, EventArgs e)
         {
             FloatTotals(true, MidsContext.Config is { UseOldTotalsWindow: true });
@@ -3953,7 +3961,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 {
                     case 0:
                         ibSlotInfoEx.ToggleText.ToggledOff = @"No slots left";
-                        ibSlotInfoEx.ToggleState = ImageButtonEx.States.ToggledOff;
                         break;
                     case < 0:
                         ibSlotInfoEx.ToggleText.ToggledOff = slotCounts[0] switch
@@ -3961,7 +3968,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             < 2 => $"{Math.Abs(slotCounts[0])} slot over",
                             > 1 => $"{Math.Abs(slotCounts[0])} slots over"
                         };
-                        ibSlotInfoEx.ToggleState = ImageButtonEx.States.ToggledOff;
                         MessageBox.Show($"This build exceeds the slot limit.\r\nPlease remove {Math.Abs(slotCounts[0])} slots from the build.", @"Invalid Slotting", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     default:
@@ -3970,7 +3976,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             < 2 => $"{slotCounts[0]} slot to go",
                             > 1 => $"{slotCounts[0]} slots to go"
                         };
-                        ibSlotInfoEx.ToggleState = ImageButtonEx.States.ToggledOff;
                         break;
                 }
 
@@ -3980,7 +3985,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     < 2 => $"{slotCounts[1]} slot placed",
                     > 1 => $"{slotCounts[1]} slots placed"
                 };
-                ibSlotInfoEx.ToggleState = ImageButtonEx.States.ToggledOn;
             }
 
             if (MidsContext.Character != null && (index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
@@ -6601,6 +6605,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 true => ImageButtonEx.States.ToggledOn,
                 false => ImageButtonEx.States.ToggledOff
+            };
+
+            Debug.WriteLine($"ShowSlotsLeft: {MidsContext.Config.ShowSlotsLeft}");
+            ibSlotInfoEx.ToggleState = MidsContext.Config.ShowSlotsLeft switch
+            {
+                true => ImageButtonEx.States.ToggledOff,
+                false => ImageButtonEx.States.ToggledOn
             };
 
             var cbOrigin = new ComboBoxT<string>(this.cbOrigin);

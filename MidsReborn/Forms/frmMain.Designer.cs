@@ -2211,6 +2211,7 @@ namespace Mids_Reborn.Forms
             this.ibSlotInfoEx.ToggleText.ToggledOff = "X Slots to go";
             this.ibSlotInfoEx.ToggleText.ToggledOn = "X Slots placed";
             this.ibSlotInfoEx.UseAlt = false;
+            this.ibSlotInfoEx.Click += new EventHandler(this.ibSlotInfoEx_Onclick);
             // 
             // poolsPanel
             //

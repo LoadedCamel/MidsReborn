@@ -115,6 +115,7 @@ namespace Mids_Reborn.Core
         public Enums.eDDGraph DataGraphType { get; set; } = Enums.eDDGraph.Both;
         public Enums.GraphStyle StatGraphStyle { get; set; } = Enums.GraphStyle.Stacked;
         public Enums.CompOverride[] CompOverride { get; set; }
+        public bool ShowSlotsLeft { get; set; }
 
         public bool DisableDesaturateInherent { get; set; }
         public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
