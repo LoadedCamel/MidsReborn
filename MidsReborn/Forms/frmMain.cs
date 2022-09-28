@@ -6607,7 +6607,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 false => ImageButtonEx.States.ToggledOff
             };
 
-            Debug.WriteLine($"ShowSlotsLeft: {MidsContext.Config.ShowSlotsLeft}");
             ibSlotInfoEx.ToggleState = MidsContext.Config.ShowSlotsLeft switch
             {
                 true => ImageButtonEx.States.ToggledOff,
