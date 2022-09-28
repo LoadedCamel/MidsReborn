@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using Microsoft.Win32;
 using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.Core.Base.Master_Classes
@@ -10,11 +8,11 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 4;
-        private const int AppBuildVersion = 6;
-        private const int AppRevisionVersion = 8;
+        private const int AppBuildVersion = 7;
+        private const int AppRevisionVersion = 1;
 
-        public const string AssemblyVersion = "3.4.6";
-        public const string AssemblyFileVersion = "3.4.6.8";
+        public const string AssemblyVersion = "3.4.7";
+        public const string AssemblyFileVersion = "3.4.7.1";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
