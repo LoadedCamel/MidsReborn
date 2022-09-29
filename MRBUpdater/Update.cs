@@ -24,13 +24,13 @@ namespace MRBUpdater
         private static Uri? UpdateFile { get; set; }
         private static string? PackedUpdate { get; set; }
 
-        public Update(IReadOnlyList<string> args)
+        public Update(string[] args)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             UpdatePath = args[0];
             VersionText = args[1];
             ParentPid = int.Parse(args[2]);
-            ExtractPath = args[3];
+            ExtractPath = string.Join(' ', args[3..]);
             Load += OnLoad;
             Shown += OnShown;
             InitializeComponent();
