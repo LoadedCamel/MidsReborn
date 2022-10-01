@@ -48,12 +48,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmPrestige);
             _myParent = iParent;
-            Parent = _myParent;
             _myPowers = iPowers;
             FormClosing += FrmPrestige_FormClosing;
         }
 
-        private void FrmPrestige_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmPrestige_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
