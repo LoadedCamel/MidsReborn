@@ -1564,11 +1564,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var sFinal = string.Empty;
             if (AttribType == Enums.eAttribType.Expression && editorDisplay)
             {
-                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\r\n{sProbExp}";
+                sFinal = $"{sEnh}{sBuild}{(sConditional != "" ? sExtra2 : sExtra)}{sBuff}{sVariable}{sStack}{sSuppress}";
+                sFinal = $"{sFinal.Replace("--", "-").Trim()}\r\n{sMagExp}\r\n{sProbExp}";
             }
             else
             {
-                sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
+                sFinal = $"{sEnh}{sBuild}{(sConditional != "" ? sExtra2 : sExtra)}{sBuff}{sVariable}{sStack}{sSuppress}";
+                sFinal = sFinal.Replace("--", "-").Trim();
             }
 
             sFinal = Regex.Replace(sFinal, @"^\-0(\%?)[^\.]", e => $"0{e.Groups[1].Value} "); // +Recharge with mag == 0

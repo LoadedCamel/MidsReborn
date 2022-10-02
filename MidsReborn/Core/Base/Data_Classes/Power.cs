@@ -1884,14 +1884,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var num1 = -1;
             var length = Effects.Length;
             var array = new int[0];
-            var num2 = 0.0f;
+            var num2 = 0f;
             if (source.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
             {
                 foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID].Powers)
                 {
                     foreach (var effect in power.Effects)
                     {
-                        if ((effect.EffectType == Enums.eEffectType.SilentKill) & (effect.ToWho == Enums.eToWho.Self) & (effect.DelayedTime > 0.0))
+                        if (effect.EffectType == Enums.eEffectType.SilentKill & effect.ToWho == Enums.eToWho.Self & effect.DelayedTime > 0)
                         {
                             num2 = effect.DelayedTime;
                         }
@@ -1899,8 +1899,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (((num2 > 0.0 ? 1 : 0) &
-                 (nDuration < 0.01 ? 1 : nDuration > num2 ? 1 : 0)) != 0)
+            if (((num2 > 0 ? 1 : 0) & (nDuration < 0.01 ? 1 : nDuration > num2 ? 1 : 0)) != 0)
             {
                 nDuration = num2;
             }
@@ -1909,7 +1908,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 for (var index = 0; index <= source.Effects.Length - 1; ++index)
                 {
-                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster) & (source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
+                    if (!isGrantPower & source.EntitiesAffected == Enums.eEntity.Caster & source.Effects[index].EffectType != Enums.eEffectType.EntCreate)
                     {
                         continue;
                     }
@@ -1935,7 +1934,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         effect.SetTicks(nDuration, source.ActivatePeriod);
                     }
 
-                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -1944,8 +1943,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
                     }
 
-                    
-                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -1955,17 +1953,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     effect.Absorbed_Duration = nDuration;
-                    if ((source.RechargeTime > 0.0) & (source.PowerType == Enums.ePowerType.Click))
+                    if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
                     {
                         effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                     }
 
-                    if (nDelay > 0.0)
+                    if (nDelay > 0)
                     {
                         effect.DelayedTime = nDelay;
                     }
 
-                    if ((effect.Absorbed_Duration > 0.0) & (num2 > 0.0))
+                    if (effect.Absorbed_Duration > 0 & num2 > 0)
                     {
                         effect.nDuration = effect.Absorbed_Duration;
                     }
@@ -2015,17 +2013,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 effect.Absorbed_Duration = nDuration;
-                if ((source.RechargeTime > 0.0) & (source.PowerType == Enums.ePowerType.Click))
+                if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
                 {
                     effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                 }
 
-                if (nDelay > 0.0)
+                if (nDelay > 0)
                 {
                     effect.DelayedTime = nDelay;
                 }
 
-                if ((effect.Absorbed_Duration > 0.0) & (num2 > 0.0))
+                if (effect.Absorbed_Duration > 0 & num2 > 0)
                 {
                     effect.nDuration = effect.Absorbed_Duration;
                 }
@@ -3169,32 +3167,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return "";
             }
 
-            if (Math.Abs(subPower.Range - Range) > float.Epsilon)
+            if (Math.Abs(subPower.Range - Range) > float.Epsilon && subPower.Range > float.Epsilon)
             {
                 extraAttribs.Add($"Range: {subPower.Range:###0.##}ft");
             }
 
-            if (Math.Abs(subPower.RangeSecondary - RangeSecondary) > float.Epsilon)
+            if (Math.Abs(subPower.RangeSecondary - RangeSecondary) > float.Epsilon && subPower.RangeSecondary > float.Epsilon)
             {
                 extraAttribs.Add($"Secondary Range: {subPower.RangeSecondary:###0.##}ft");
             }
 
-            if (Math.Abs(subPower.Radius - Radius) > float.Epsilon)
+            if (Math.Abs(subPower.Radius - Radius) > float.Epsilon && subPower.Radius > float.Epsilon)
             {
                 extraAttribs.Add($"Radius: {subPower.Radius:###0.##}ft");
             }
 
-            if (subPower.Arc != Arc)
+            if (subPower.Arc != Arc && subPower.Arc > float.Epsilon)
             {
                 extraAttribs.Add($"Arc: {subPower.Arc:###0.##}deg");
             }
 
-            if (subPower.MaxTargets != MaxTargets)
+            if (subPower.MaxTargets != MaxTargets && subPower.MaxTargets > 0)
             {
                 extraAttribs.Add($"Max Targets: {subPower.MaxTargets}");
             }
 
-            return $", {string.Join(", ", extraAttribs)}";
+            return extraAttribs.Count <= 0
+                ? ""
+                : $", {string.Join(", ", extraAttribs)}";
         }
 
         public override string ToString()

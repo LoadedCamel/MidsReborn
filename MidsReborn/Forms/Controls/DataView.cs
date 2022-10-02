@@ -1044,16 +1044,16 @@ namespace Mids_Reborn.Forms.Controls
 
             var index = EffectsDrh();
             var num1 = 0;
-            var flag1 = false;
-            var flag2 = false;
+            var hasStatusFx = false;
+            var hasHealFx = false;
             if (index < PairedListArray.Length)
             {
                 PairedListArray[index].Clear();
                 num1 = EffectsHeal(labelArray[index], PairedListArray[index]);
                 if (num1 > 0)
                 {
-                    flag2 = true;
-                    ++index;
+                    hasHealFx = true;
+                    index++;
                     if (index < PairedListArray.Length)
                     {
                         PairedListArray[index].Clear();
@@ -1066,12 +1066,12 @@ namespace Mids_Reborn.Forms.Controls
                 num1 = EffectsStatus(labelArray[index], PairedListArray[index]);
                 if (num1 > 0)
                 {
-                    flag1 = true;
+                    hasStatusFx = true;
                 }
 
                 if (num1 > 2 | num1 > 0 & index == 0)
                 {
-                    ++index;
+                    index++;
                     if (index < PairedListArray.Length)
                     {
                         PairedListArray[index].Clear();
@@ -1079,7 +1079,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            if (!flag1 & flag2 & num1 < 3)
+            if (!hasStatusFx & hasHealFx & num1 < 3)
             {
                 --index;
             }
@@ -1088,7 +1088,7 @@ namespace Mids_Reborn.Forms.Controls
                 EffectsBuffDebuff(labelArray[index], PairedListArray[index]) > 0 &
                 PairedListArray[index].ItemCount > 2 & index + 1 < PairedListArray.Length)
             {
-                ++index;
+                index++;
                 if (index < PairedListArray.Length)
                 {
                     PairedListArray[index].Clear();
@@ -4152,7 +4152,9 @@ namespace Mids_Reborn.Forms.Controls
             }*/
 
             pBase?.ProcessExecutes();
+            pBase?.AbsorbPetEffects();
             pEnh?.ProcessExecutes();
+            //pEnh?.AbsorbPetEffects(); // Done already during calculations (see clsToonX.GenerateBuffedPowerArray())
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();
