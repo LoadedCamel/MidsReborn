@@ -49,12 +49,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Load += frmMMPowers_Load;
             _locked = false;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmMMPowers));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmMMPowers);
             _myParent = iParent;
             Parent = _myParent;
-            PetPowers = PetPowersList;
             FormClosing += FrmMMPowers_FormClosing;
             Panel1.GotFocus += Panel1OnGotFocus;
         }
