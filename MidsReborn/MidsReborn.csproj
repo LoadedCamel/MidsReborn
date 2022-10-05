@@ -324,7 +324,7 @@
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <PropertyGroup>
-    <Nullable>enable</Nullable>
+    <Nullable>annotations</Nullable>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

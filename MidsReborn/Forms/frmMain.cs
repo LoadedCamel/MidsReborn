@@ -613,7 +613,7 @@ namespace Mids_Reborn.Forms
                 var power = MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.IsHero()
                     ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
                     : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                var iPowers = new List<IPower?>();
+                var iPowers = new List<IPower>();
                 if (power != null)
                 {
                     var num = power.NIDSubPower.Length - 1;
@@ -1788,7 +1788,7 @@ namespace Mids_Reborn.Forms
             if (hIDPower <= -1 || MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length <= 0)
                 return false;
 
-            var iPowers = new List<IPower?>();
+            var iPowers = new List<IPower>();
             var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
@@ -5639,7 +5639,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 // Inherent.Inherent.MxD_Temps
                 var power = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
-                var iPowers = new List<IPower?>();
+                var iPowers = new List<IPower>();
                 if (power != null)
                 {
                     var num = power.NIDSubPower.Length - 1;

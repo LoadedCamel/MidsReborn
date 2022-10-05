@@ -20,7 +20,7 @@ namespace Mids_Reborn.Core
 
         DateTime Date { get; set; }
 
-        IPower?[] Power { get; set; }
+        IPower[] Power { get; set; }
 
         Enums.VersionData PowerVersion { get; set; }
 

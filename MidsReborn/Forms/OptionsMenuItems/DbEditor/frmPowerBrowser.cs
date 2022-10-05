@@ -300,7 +300,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerAdd_Click(object sender, EventArgs e)
         {
-            IPower? iPower = new Power();
+            IPower iPower = new Power();
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
@@ -339,7 +339,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 var database = DatabaseAPI.Database;
-                var powerList = new List<IPower?>(DatabaseAPI.Database.Power);
+                var powerList = new List<IPower>(DatabaseAPI.Database.Power);
                 var newPower = powerList.First(x => x.FullName == database.Power[index].FullName).Clone();
                 newPower.StaticIndex = powerList.Last().StaticIndex++;
                 newPower.FullName += "_Clone";
@@ -375,7 +375,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            var powerArray = new IPower?[DatabaseAPI.Database.Power.Length - 1 + 1];
+            var powerArray = new IPower[DatabaseAPI.Database.Power.Length - 1 + 1];
             var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (num1 < 0)
             {
@@ -393,7 +393,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index1;
                 }
 
-                DatabaseAPI.Database.Power = new IPower?[DatabaseAPI.Database.Power.Length - 2 + 1];
+                DatabaseAPI.Database.Power = new IPower[DatabaseAPI.Database.Power.Length - 2 + 1];
                 var num4 = DatabaseAPI.Database.Power.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
                     DatabaseAPI.Database.Power[index2] = new Power(powerArray[index2]);
@@ -427,7 +427,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");
@@ -455,7 +455,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     return;
                 }
 
-                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                 {
@@ -505,7 +505,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
+                IPower template = new Power(DatabaseAPI.Database.Power[index1]);
                 DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
                 DatabaseAPI.Database.Power[index2] = new Power(template);
                 BusyMsg("Re-Indexing...");

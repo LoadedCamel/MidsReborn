@@ -204,7 +204,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;

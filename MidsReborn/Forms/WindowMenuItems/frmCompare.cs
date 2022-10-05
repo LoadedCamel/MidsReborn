@@ -15,7 +15,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private readonly string[] DisplayValueStrings;
         private readonly frmMain myParent;
-        private readonly IPower?[][] Powers;
+        private readonly IPower[][] Powers;
         private readonly string[][] Tips;
         private readonly float[][] Values;
         private ImageButton btnClose;
@@ -51,7 +51,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Resize += frmCompare_Resize;
             Move += frmCompare_Move;
             FormClosed += frmCompare_FormClosed;
-            Powers = new IPower?[2][];
+            Powers = new IPower[2][];
             Values = new float[2][];
             Tips = new string[2][];
             GraphMax = 1f;
@@ -394,7 +394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             do
             {
                 numArray[Index] = getSetIndex(Index);
-                Powers[Index] = new IPower?[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
+                Powers[Index] = new IPower[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
                 Values[Index] = new float[Powers[Index].Length + 1];
                 Tips[Index] = new string[Powers[Index].Length + 1];
                 var nIDClass = Index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;
@@ -457,7 +457,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             return ePowerSetType;
         }
 
-        private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower? iPower)
+        private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower iPower)
         {
             var str1 = "";
             string str2;

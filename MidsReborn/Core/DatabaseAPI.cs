@@ -572,7 +572,7 @@ namespace Mids_Reborn.Core
         }
 
 
-        public static IPower? GetPowerByFullName(string name)
+        public static IPower GetPowerByFullName(string name)
         {
             if (string.IsNullOrEmpty(name))
                 return null;
@@ -946,9 +946,9 @@ namespace Mids_Reborn.Core
             return ret;
         }*/
 
-        public static List<IPower?> SlottablePowersSetType(int enhSetType)
+        public static List<IPower> SlottablePowersSetType(int enhSetType)
         {
-            var retList = new List<IPower?>();
+            var retList = new List<IPower>();
             foreach (var power in Database.Power)
             {
                 var powerset = power.GetPowerSet();
@@ -1571,7 +1571,7 @@ namespace Mids_Reborn.Core
                     return false;
                 }
 
-                Database.Power = new IPower?[reader.ReadInt32() + 1];
+                Database.Power = new IPower[reader.ReadInt32() + 1];
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
                     Database.Power[index] = new Power(reader);
@@ -2799,7 +2799,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void MatchRequirementId(IPower? power)
+        private static void MatchRequirementId(IPower power)
 
         {
             if (power.Requires.ClassName.Length > 0)

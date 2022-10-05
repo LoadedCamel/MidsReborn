@@ -58,7 +58,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableStart = 0;
         }
 
-        public Power(IPower? template)
+        public Power(IPower template)
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
@@ -1879,7 +1879,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return flag;
         }
 
-        public int[] AbsorbEffects(IPower? source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
+        public int[] AbsorbEffects(IPower source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
             var num1 = -1;
             var length = Effects.Length;
@@ -2293,7 +2293,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                  Math.Abs(Effects[iID1].BuffedMag - Effects[iID2].BuffedMag) >= 0.01 && Effects[iID1].ToWho != Effects[iID2].ToWho);
         }
 
-        public static Enums.ShortFX[] SplitFX(ref Enums.ShortFX iSfx, ref IPower? iPower)
+        public static Enums.ShortFX[] SplitFX(ref Enums.ShortFX iSfx, ref IPower iPower)
         {
             var shortFxArray1 = new Enums.ShortFX[0];
             Enums.ShortFX[] shortFxArray2;
@@ -2346,7 +2346,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return shortFxArray2;
         }
 
-        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower? iPower, bool shortForm, bool fromPopup = true)
+        public static string SplitFXGroupTip(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm, bool fromPopup = true)
         {
             var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true, false, fromPopup);
             var newValue = string.Empty;
@@ -2682,7 +2682,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public List<IEffect>? ProcessExecutesInner(IPower? power = null, int rLevel = 0)
+        public List<IEffect>? ProcessExecutesInner(IPower power = null, int rLevel = 0)
         {
             // Max recursion level
             if (rLevel > 5)

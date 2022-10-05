@@ -12,7 +12,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     {
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
-        private IPower? power;
+        private IPower power;
 
         public double Rand => new Random().NextDouble();
 
@@ -81,7 +81,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AtrModSecondaryRange = -1;
         }
 
-        public Effect(IPower? power) : this()
+        public Effect(IPower power) : this()
         {
             this.power = power;
         }
@@ -509,12 +509,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string Special { get; set; }
 
-        public IPower? GetPower()
+        public IPower GetPower()
         {
             return power;
         }
 
-        public void SetPower(IPower? power)
+        public void SetPower(IPower power)
         {
             this.power = power;
         }

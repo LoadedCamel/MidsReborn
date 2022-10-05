@@ -33,7 +33,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         
         private readonly frmMain myParent;
 
-        private IPower?[] BaseArray;
+        private IPower[] BaseArray;
         private bool BaseOverride;
         private ImageButton btnClose;
 
@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private ImageButton chkOnTop;
 
-        private IPower?[] EnhArray;
+        private IPower[] EnhArray;
         private ctlMultiGraph Graph;
         private float GraphMax;
         private Label lblKey1;
@@ -499,8 +499,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             BaseArray = Array.Empty<IPower?>();
             EnhArray = Array.Empty<IPower?>();
-            var basePowersList = new List<IPower?>();
-            var enhPowersList = new List<IPower?>();
+            var basePowersList = new List<IPower>();
+            var enhPowersList = new List<IPower>();
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             if (cbSet.SelectedIndex <= -1)
             {

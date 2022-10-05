@@ -27,13 +27,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private ExtendedBitmap bxSet;
         private ExtendedBitmap bxSetList;
         private bool cancelClose;
-        public IPower? myPower;
+        public IPower myPower;
         private bool ReqChanging;
         private bool Updating;
         private bool EditMode;
         private int OrigStaticIndex;
 
-        public frmEditPower(IPower? iPower, bool editMode = false)
+        public frmEditPower(IPower iPower, bool editMode = false)
         {
             Load += frmEditPower_Load;
             enhPadding = 6;

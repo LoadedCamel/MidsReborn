@@ -62,8 +62,8 @@ namespace Mids_Reborn.Forms.Controls
         private bool Lock;
         private Point mouse_offset;
         public bool MoveDisable;
-        private IPower? pBase;
-        private IPower? pEnh;
+        private IPower pBase;
+        private IPower pEnh;
         private int pLastScaleVal;
         private Rectangle ScreenBounds;
         public Rectangle SnapLocation;
@@ -406,7 +406,7 @@ namespace Mids_Reborn.Forms.Controls
                         if (MidsContext.Character.CurrentBuild.Powers[index1] == null) continue;
                         if (!MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
                             continue;
-                        IPower? power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
+                        IPower power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
                         power1.AbsorbPetEffects();
                         power1.ApplyGrantPowerEffects();
                         foreach (var effect in power1.Effects)
@@ -4113,7 +4113,7 @@ namespace Mids_Reborn.Forms.Controls
             return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
         }
 
-        public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
+        public void SetData(IPower basePower, IPower enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
         {
             if (basePower == null)
             {

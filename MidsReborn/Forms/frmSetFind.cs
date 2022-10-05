@@ -746,7 +746,7 @@ namespace Mids_Reborn.Forms
             FillMatchingPowers(sIdx);
         }
 
-        private bool IsPeacebringerInherent(IPower? power)
+        private bool IsPeacebringerInherent(IPower power)
         {
             return power.GetPowerSet().SetName == "Inherent" &
                    (power.PowerName == "Energy_Flight" |
@@ -756,7 +756,7 @@ namespace Mids_Reborn.Forms
                     power.PowerName.StartsWith("White_Dwarf"));
         }
 
-        private bool IsWarshadeInherent(IPower? power)
+        private bool IsWarshadeInherent(IPower power)
         {
             return power.GetPowerSet().SetName == "Inherent" &
                    (power.PowerName == "Shadow_Recall" |

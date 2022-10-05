@@ -8,7 +8,7 @@ namespace Mids_Reborn.Core
 {
     public class PowerEntry : ICloneable
     {
-        public PowerEntry(IPower? power)
+        public PowerEntry(IPower power)
         {
             StatInclude = false;
             Level = -1;
@@ -33,7 +33,7 @@ namespace Mids_Reborn.Core
             InherentSlotsUsed = 0;
         }
 
-        public PowerEntry(int iLevel = -1, IPower? power = null, bool chosen = false)
+        public PowerEntry(int iLevel = -1, IPower power = null, bool chosen = false)
         {
             StatInclude = false;
             Level = iLevel;
@@ -137,7 +137,7 @@ namespace Mids_Reborn.Core
             ? Chosen ? Enums.ePowerState.Empty : Enums.ePowerState.Disabled
             : Enums.ePowerState.Used;
 
-        public IPower? Power => NIDPower >= 0 && NIDPower <= DatabaseAPI.Database.Power.Length - 1
+        public IPower Power => NIDPower >= 0 && NIDPower <= DatabaseAPI.Database.Power.Length - 1
             ? DatabaseAPI.Database.Power[NIDPower]
             : null;
 

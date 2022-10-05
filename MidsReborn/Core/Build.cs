@@ -20,7 +20,7 @@ namespace Mids_Reborn.Core
         public readonly List<PowerEntry?>? Powers;
         public readonly List<I9SetData> SetBonus;
 
-        private IPower? _setBonusVirtualPower;
+        private IPower _setBonusVirtualPower;
 
         public string compareStringSlottedEnh;
 
@@ -46,11 +46,11 @@ namespace Mids_Reborn.Core
 
         private string setName { get; set; }
 
-        public IPower? SetBonusVirtualPower
+        public IPower SetBonusVirtualPower
         {
             get
             {
-                IPower? power;
+                IPower power;
                 if ((power = _setBonusVirtualPower) == null)
                     power = _setBonusVirtualPower = GetSetBonusVirtualPower();
                 return power;
@@ -108,7 +108,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public PowerEntry AddPower(IPower? power, int specialLevel = -1)
+        public PowerEntry AddPower(IPower power, int specialLevel = -1)
         {
             var powerEntry = GetPowerEntry(power);
             if (powerEntry == null)
@@ -121,7 +121,7 @@ namespace Mids_Reborn.Core
             return powerEntry;
         }
 
-        public void RemovePower(IPower? powerToRemove)
+        public void RemovePower(IPower powerToRemove)
         {
             foreach (var power in Powers)
             {
@@ -132,7 +132,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private PowerEntry? GetPowerEntry(IPower? power)
+        private PowerEntry? GetPowerEntry(IPower power)
         {
             foreach (var power1 in Powers.Where(p => p != null))
                 if (power1.Power != null && power1.Power.PowerIndex == power.PowerIndex)
@@ -885,7 +885,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
+        public bool MeetsRequirement(IPower power, int nLevel, int skipIdx = -1)
         {
             if (nLevel < 0)
                 return false;
@@ -961,7 +961,7 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public bool PowerUsed(IPower? power)
+        public bool PowerUsed(IPower power)
         {
             return FindInToonHistory(power.PowerIndex) > -1;
         }
@@ -1231,9 +1231,9 @@ namespace Mids_Reborn.Core
             _setBonusVirtualPower = null;
         }
 
-        private IPower? GetSetBonusVirtualPower()
+        private IPower GetSetBonusVirtualPower()
         {
-            IPower? power1 = new Power();
+            IPower power1 = new Power();
             if (MidsContext.Config.I9.IgnoreSetBonusFX)
             {
                 return power1;

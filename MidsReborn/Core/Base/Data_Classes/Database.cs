@@ -21,7 +21,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public DateTime Date { get; set; }
 
-        public IPower?[] Power { get; set; }
+        public IPower[] Power { get; set; }
 
         public Enums.VersionData PowerVersion { get; set; } = new Enums.VersionData();
 
