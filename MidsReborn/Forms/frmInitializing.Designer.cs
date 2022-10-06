@@ -47,7 +47,7 @@ namespace Mids_Reborn.Forms
             this.Label1.Location = new System.Drawing.Point(0, 0);
             this.Label1.Margin = new System.Windows.Forms.Padding(55, 0, 55, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(936, 51);
+            this.Label1.Size = new System.Drawing.Size(879, 51);
             this.Label1.TabIndex = 2;
             this.Label1.Text = "Reading data files, please wait.";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -59,7 +59,7 @@ namespace Mids_Reborn.Forms
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = global::MRBResourceLib.Resources.MRB_Splash_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(936, 479);
+            this.ClientSize = new System.Drawing.Size(850, 435);
             this.Controls.Add(this.Label1);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(55, 18, 55, 18);

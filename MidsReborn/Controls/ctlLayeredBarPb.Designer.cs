@@ -55,7 +55,7 @@ namespace Mids_Reborn.Controls
             // 
             // ctlLayeredBarPb
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BorderStyle = BorderStyle.None;
             this.Controls.Add(this.canvas);

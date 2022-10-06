@@ -52,7 +52,7 @@ namespace Mids_Reborn.Forms.JsonImport
             // 
             // frmJsonImportMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(141, 46);
             this.Controls.Add(this.button1);
