@@ -2315,7 +2315,7 @@ namespace Mids_Reborn
                 }
 
                 var empty = string.Empty;
-                if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabelV3.LLItemState.Invalid || empty == "")
+                if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabelV3.LlItemState.Invalid || empty == "")
                 {
                     return popupData;
                 }
@@ -2698,10 +2698,10 @@ namespace Mids_Reborn
             return section;
         }
 
-        public ListLabelV3.LLItemState PowerState(int nIDPower, ref string message)
+        public ListLabelV3.LlItemState PowerState(int nIDPower, ref string message)
         {
             if (nIDPower < 0)
-                return ListLabelV3.LLItemState.Disabled;
+                return ListLabelV3.LlItemState.Disabled;
             var power = DatabaseAPI.Database.Power[nIDPower];
             var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
             var flag1 = inToonHistory > -1;
@@ -2727,7 +2727,7 @@ namespace Mids_Reborn
             {
                 message = "You cannot take the " + Powersets[0].DisplayName + " and " + Powersets[1].DisplayName +
                           " sets together.";
-                return ListLabelV3.LLItemState.Heading;
+                return ListLabelV3.LlItemState.Heading;
             }
 
             if (flag1)
@@ -2776,7 +2776,7 @@ namespace Mids_Reborn
                 message = "This power has been placed in a way that is not possible in-game. One of the " +
                           Convert.ToString(numArray.Length) + " level 1 powers from your " +
                           Enum.GetName(powersetType.GetType(), powersetType) + " set must be taken at level 1.";
-                return ListLabelV3.LLItemState.Invalid;
+                return ListLabelV3.LlItemState.Invalid;
                 label_23:
                 if (!flag2)
                 {
@@ -2806,17 +2806,17 @@ namespace Mids_Reborn
                             "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
                     }
 
-                    return ListLabelV3.LLItemState.Invalid;
+                    return ListLabelV3.LlItemState.Invalid;
                 }
 
                 if (num1 <= power.Level - 1)
-                    return ListLabelV3.LLItemState.SelectedDisabled;
-                return num1 <= power.Level - 1 ? ListLabelV3.LLItemState.Enabled : ListLabelV3.LLItemState.Selected;
+                    return ListLabelV3.LlItemState.SelectedDisabled;
+                return num1 <= power.Level - 1 ? ListLabelV3.LlItemState.Enabled : ListLabelV3.LlItemState.Selected;
             }
 
             if (flag2 && num1 >= power.Level - 1)
-                return ListLabelV3.LLItemState.Enabled;
-            return ListLabelV3.LLItemState.Disabled;
+                return ListLabelV3.LlItemState.Enabled;
+            return ListLabelV3.LlItemState.Disabled;
         }
 
         private bool ReadInternalData(StreamReader iStream)
@@ -3159,7 +3159,7 @@ namespace Mids_Reborn
             if (CurrentBuild.FindInToonHistory(nIDPower) > -1)
                 return false;
             var message = "";
-            return PowerState(nIDPower, ref message) == ListLabelV3.LLItemState.Enabled;
+            return PowerState(nIDPower, ref message) == ListLabelV3.LlItemState.Enabled;
         }
     }
 }

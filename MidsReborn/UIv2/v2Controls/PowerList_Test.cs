@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -17,19 +18,19 @@ namespace Mids_Reborn.UIv2.v2Controls
     {
         #region SubControl Declarations
 
-        private readonly OutlinedLabel _outlinedLabel = new OutlinedLabel();
-        private readonly TypeDropDown _typeDropDown = new TypeDropDown();
-        private readonly Panel _separatorPanel = new Panel();
-        private readonly ListPanel _listPanel = new ListPanel();
+        private readonly OutlinedLabel _outlinedLabel = new();
+        private readonly TypeDropDown _typeDropDown = new();
+        private readonly Panel _separatorPanel = new();
+        private readonly ListPanel _listPanel = new();
 
         #endregion
 
         #region Events
 
-        private new event EventHandler<string> TextChanged;
-        private event EventHandler<TypeDropDown.DropDownType> TypeChanged;
-        public static event EventHandler<int> OutlineWidthChanged;
-        public static event EventHandler<Color> OutlineColorChanged;
+        private new event EventHandler<string>? TextChanged;
+        private event EventHandler<TypeDropDown.DropDownType>? TypeChanged;
+        public static event EventHandler<int>? OutlineWidthChanged;
+        public static event EventHandler<Color>? OutlineColorChanged;
 
         #endregion
 
@@ -92,7 +93,7 @@ namespace Mids_Reborn.UIv2.v2Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public new Font Font { get; set; } = new Font("Arial", 9.25f);
+        public new Font Font { get; set; } = new("Arial", 9.25f);
 
         [Description("The color of the text used for the control label.")]
         [Category("Appearance")]
@@ -110,7 +111,7 @@ namespace Mids_Reborn.UIv2.v2Controls
         [SettingsBindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [NotifyParentProperty(true)]
-        public PowerListOutline Outline { get; set; } = new PowerListOutline{Color = Color.Black, Width = 2, Enabled = false};
+        public PowerListOutline Outline { get; set; } = new() {Color = Color.Black, Width = 2, Enabled = false};
 
         [Description("The text to be displayed as the control label.")]
         [Category("Appearance")]
@@ -335,9 +336,9 @@ namespace Mids_Reborn.UIv2.v2Controls
                 switch (DropType)
                 {
                     case DropDownType.Archetype:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Archetypes";
-                        //var archetype = (Archetype) Items[e.Index];
-                        //comboImage = archetype.Image(Directory.GetFiles(imagesFolder).ToList());
+                        var atImages = I9Gfx.LoadArchetypes().Result;
+                        var selectedAt = Items[e.Index].ToString();
+                        Debug.WriteLine(selectedAt);
                         break;
                     case DropDownType.Origin:
                         imagesFolder = $"{Application.StartupPath}\\Images\\Origins";
@@ -370,6 +371,7 @@ namespace Mids_Reborn.UIv2.v2Controls
                         break;
                 }
 
+                if (e.Font == null) return;
                 if (comboImage != null)
                 {
                     e.Graphics.DrawImage(comboImage, e.Bounds.Left, e.Bounds.Top);
@@ -393,7 +395,7 @@ namespace Mids_Reborn.UIv2.v2Controls
         public Color SelectionColor { get; set; }
         public Color SelectionBackColor { get; set; } = Color.DarkOrange;
         public override Color ForeColor { get; set; }
-        private List<Color> Colors { get; set; } = new List<Color> { Color.Gold, Color.DodgerBlue, Color.LightGray, Color.DarkBlue, Color.Red };
+        private List<Color>? Colors { get; set; } = new() { Color.Gold, Color.DodgerBlue, Color.LightGray, Color.DarkBlue, Color.Red };
 
         [Flags]
         public enum ItemState
@@ -424,31 +426,27 @@ namespace Mids_Reborn.UIv2.v2Controls
             var g = e.Graphics;
             var rec = ClientRectangle;
 
-            IntPtr hdc = g.GetHdc();
+            var hdc = g.GetHdc();
             DrawThemeParentBackground(Handle, hdc, ref rec);
             g.ReleaseHdc(hdc);
 
-            using Region reg = new Region(e.ClipRectangle);
-            if (Items.Count > 0)
+            using var reg = new Region(e.ClipRectangle);
+            if (Items.Count <= 0) return;
+            for (var i = 0; i < Items.Count; i++)
             {
-                for (int i = 0; i < Items.Count; i++)
+                rec = GetItemRectangle(i);
+
+                if (!e.ClipRectangle.IntersectsWith(rec)) continue;
+                if (SelectionMode == SelectionMode.One && SelectedIndex == i || SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i) || SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i))
                 {
-                    rec = GetItemRectangle(i);
-
-                    if (e.ClipRectangle.IntersectsWith(rec))
-                    {
-                        if (SelectionMode == SelectionMode.One && SelectedIndex == i || SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i) || SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i))
-                        {
-                            OnDrawListItem(new ListPanelDrawItemEventArgs(g, Font, rec, i, ItemState.Selected, Colors[1], BackColor));
-                        }
-                        else
-                        {
-                            OnDrawListItem(new ListPanelDrawItemEventArgs(g, Font, rec, i, ItemState.Enabled, Colors[0], BackColor));
-                        }
-
-                        reg.Complement(rec);
-                    }
+                    OnDrawListItem(new ListPanelDrawItemEventArgs(g, Font, rec, i, ItemState.Selected, Colors[1], BackColor));
                 }
+                else
+                {
+                    OnDrawListItem(new ListPanelDrawItemEventArgs(g, Font, rec, i, ItemState.Enabled, Colors[0], BackColor));
+                }
+
+                reg.Complement(rec);
             }
         }
 
@@ -470,19 +468,19 @@ namespace Mids_Reborn.UIv2.v2Controls
             switch (e.State)
             {
                 case ItemState.Enabled:
-                    textColor = Colors[0];
+                    if (Colors != null) textColor = Colors[0];
                     break;
                 case ItemState.Selected:
-                    textColor = Colors[1];
+                    if (Colors != null) textColor = Colors[1];
                     break;
                 case ItemState.Disabled:
-                    textColor = Colors[2];
+                    if (Colors != null) textColor = Colors[2];
                     break;
                 case ItemState.SelectedDisabled:
-                    textColor = Colors[3];
+                    if (Colors != null) textColor = Colors[3];
                     break;
                 case ItemState.Invalid:
-                    textColor = Colors[4];
+                    if (Colors != null) textColor = Colors[4];
                     break;
             }
 
@@ -531,7 +529,7 @@ namespace Mids_Reborn.UIv2.v2Controls
         protected override void WndProc(ref Message m)
         {
             if (m.Msg != WM_KILLFOCUS &&
-                (m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL))
+                m.Msg is WM_HSCROLL or WM_VSCROLL)
                 Invalidate();
             base.WndProc(ref m);
         }

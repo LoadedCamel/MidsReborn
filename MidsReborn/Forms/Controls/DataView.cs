@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -14,6 +15,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Syncfusion.Windows.Forms.Grid;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -878,7 +880,7 @@ namespace Mids_Reborn.Forms.Controls
                                     _ => ""
                                 };
 
-                                rankedEffect.AlternateColour = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag - pBase.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
+                                rankedEffect.AlternateColor = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag - pBase.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
                                 rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType), Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
 
@@ -2759,8 +2761,7 @@ namespace Mids_Reborn.Forms.Controls
             var flag = iList.ItemCount == 0;
             for (var index = 0; index < pBase.Effects.Length; index++)
             {
-                if (!((pBase.Effects[index].EffectType == Enums.eEffectType.EntCreate) &
-                      (pBase.Effects[index].Probability > 0)))
+                if (!((pBase.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (pBase.Effects[index].Probability > 0)))
                 {
                     continue;
                 }
@@ -2800,7 +2801,7 @@ namespace Mids_Reborn.Forms.Controls
                     iValue = "(suppressed)";
                 }
 
-                var iItem = new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
+                var iItem = new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip, DatabaseAPI.Database.Entities[pEnh.Effects[index].nSummon]);
                 iList.AddItem(iItem);
                 if (pBase.Effects[index].isEnhancementEffect)
                 {
@@ -2812,7 +2813,7 @@ namespace Mids_Reborn.Forms.Controls
 
             if (num1 > 0 && flag)
             {
-                iLabel.Text = "Summoned Entities";
+                iLabel.Text = @"Summoned Entities";
             }
 
             return num1;
@@ -3697,15 +3698,15 @@ namespace Mids_Reborn.Forms.Controls
             return -1;
         }
 
-        private void PairedList_Hover(object sender, int index, Enums.ShortFX tag2, string tooltip)
+        private void PairedList_Hover(object sender, Enums.ShortFX tag, string tooltip)
         {
             var empty1 = string.Empty;
             var str1 = string.Empty;
-            if (tag2.Present)
+            if (tag.Present)
             {
                 var empty2 = string.Empty;
                 IPower power = new Power(pEnh);
-                foreach (var t in tag2.Index)
+                foreach (var t in tag.Index)
                 {
                     if (t == -1 || power.Effects[t].EffectType == Enums.eEffectType.None)
                     {
@@ -3732,7 +3733,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                foreach (var t in tag2.Index)
+                foreach (var t in tag.Index)
                 {
                     if (power.Effects[t].EffectType == Enums.eEffectType.None)
                     {
@@ -4565,6 +4566,26 @@ namespace Mids_Reborn.Forms.Controls
             Location = point2;
             var moved = Moved;
             moved?.Invoke();
+        }
+
+        private void Fx_ListItemClick(PairedList.ItemPair? item, MouseEventArgs e)
+        {
+            if (item == null) return;
+            if (e.Button != MouseButtons.Left || e.Clicks != 1) return;
+            var powers = string.Empty;
+            var sets = item.EntTag.PowersetFullName.ToList();
+            Debug.WriteLine($"You clicked the {item.Name} effect that has a value of {item.Value} which is the following entity; {string.Join("", item.EntTag.UID).Trim()}\r\nThis entity has the following powersets and powers;\r\n");
+            foreach (var ps in sets)
+            {
+                Debug.WriteLine($"{ps}\r\n------");
+                var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
+                var returnedPowers =
+                    powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
+                if (returnedPowers != null)
+                {
+                    Debug.WriteLine($"{string.Join("\r\n", returnedPowers)}\r\n");
+                }
+            }
         }
     }
 }

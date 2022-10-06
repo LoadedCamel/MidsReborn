@@ -108,7 +108,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.AcceptButton = this.okayButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(316, 169);

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
@@ -12,21 +13,22 @@ namespace Mids_Reborn.Controls
 {
     public partial class PairedList : UserControl
     {
-        public delegate void ItemClickEventHandler(int index, MouseButtons button);
-        public delegate void ItemHoverEventHandler(object sender, int index, Enums.ShortFX tagId, string tooltip = "");
-        public delegate void ItemOutEventHandler(object sender);
-        public event ItemClickEventHandler ItemClick;
-        public event ItemHoverEventHandler ItemHover;
-        public event ItemOutEventHandler ItemOut;
-        private int _linePadding;
-        private ExtendedBitmap _bxBuffer;
+        public delegate void ItemClickEventHandler(ItemPair? item, MouseEventArgs e);
+        public delegate void ItemHoverEventHandler(object? sender, Enums.ShortFX tagId, string tooltip = "");
+        public delegate void ItemOutEventHandler(object? sender);
+
+        public event ItemClickEventHandler? ItemClick;
+        public event ItemHoverEventHandler? ItemHover;
+        public event ItemOutEventHandler? ItemOut;
+
+        private ExtendedBitmap? _bxBuffer;
         private int _currentHighlight;
         private bool _highlightable;
         private int _lineHeight;
         private int _myColumns;
         private bool _myForceBold;
-        private Graphics _myGfx;
-        private List<ItemPair> _myItems;
+        private Graphics? _myGfx;
+        private List<ItemPair>? _myItems;
         private int _myValueWidth;
         public Color ValueColorD;
 
@@ -37,7 +39,8 @@ namespace Mids_Reborn.Controls
         public Color ItemColorAlt { get; set; }
         public Color ItemColorSpecial { get; set; }
         public Color ItemColorSpecCase { get; set; }
-        public int ItemCount => _myItems.Count;
+        public int ItemCount => _myItems?.Count ?? 0;
+
         public bool ForceBold
         {
             get => _myForceBold;
@@ -78,23 +81,19 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        public int LinePadding
-        {
-            get => _linePadding;
-            set => _linePadding = value;
-        }
+        public int LinePadding { get; set; }
 
         public PairedList()
         {
             FontChanged += ctlPairedList_FontChanged;
             Load += ctlPairedList_Load;
             Paint += ctlPairedList_Paint;
-            MouseDown += Listlabel_MouseDown;
-            MouseMove += Listlabel_MouseMove;
-            MouseLeave += Listlabel_MouseLeave;
+            MouseDown += ListLabel_MouseDown;
+            MouseMove += ListLabel_MouseMove;
+            MouseLeave += ListLabel_MouseLeave;
             BackColorChanged += ctlPairedList_BackColorChanged;
             ValueColorD = Color.Aqua;
-            _linePadding = 2;
+            LinePadding = 2;
             _myForceBold = false;
             InitializeComponent();
         }
@@ -118,12 +117,12 @@ namespace Mids_Reborn.Controls
         }
         public void SetUnique()
         {
-            if (_myItems.Count > 0) _myItems[checked(_myItems.Count - 1)].UniqueColour = true;
+            if (_myItems is { Count: > 0 }) _myItems[^1].UniqueColor = true;
         }
 
         public bool IsSpecialColor()
         {
-            return _myItems[_myItems.Count - 1].VerySpecialColour;
+            return _myItems != null && _myItems[^1].VerySpecialColor;
         }
         private void ctlPairedList_FontChanged(object sender, EventArgs e)
         {
@@ -144,6 +143,7 @@ namespace Mids_Reborn.Controls
                 if (_bxBuffer == null)
                     return;
 
+                if (_myGfx == null) return;
                 _myGfx.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 _myGfx.CompositingMode = CompositingMode.SourceOver;
                 _myGfx.CompositingQuality = CompositingQuality.HighQuality;
@@ -180,7 +180,7 @@ namespace Mids_Reborn.Controls
                 _bxBuffer.Graphics.FillRectangle(brush, rect);
                 if (_myItems == null) _myGfx.DrawImageUnscaled(_bxBuffer.Bitmap, 0, 0);
 
-                if (_myItems != null && _myItems.Count < 1) _myGfx.DrawImageUnscaled(_bxBuffer.Bitmap, 0, 0);
+                if (_myItems is { Count: < 1 }) _myGfx.DrawImageUnscaled(_bxBuffer.Bitmap, 0, 0);
 
                 var num4 = 0;
                 var num5 = 0;
@@ -189,7 +189,7 @@ namespace Mids_Reborn.Controls
                     for (var i = 0; i < _myItems.Count; i++)
                     {
                         //Names
-                        var text = _myItems[i].Name;
+                        var text = _myItems[i]?.Name;
                         if (!string.IsNullOrWhiteSpace(text))
                         {
                             if (!text.EndsWith(":"))
@@ -204,7 +204,7 @@ namespace Mids_Reborn.Controls
                         var scaleWidth = (int)Math.Round(columnWidth * (_myValueWidth / 125f));
                         var controlWidth = columnWidth - scaleWidth;
 
-                        var location = new PointF(columnWidth * num5, rectangleF.Height * num4 + checked(_linePadding * num4));
+                        var location = new PointF(columnWidth * num5, rectangleF.Height * num4 + checked(LinePadding * num4));
                         rectangleF.Location = location;
                         rectangleF.Width = stringM.Width;
                         stringFormat.Alignment = StringAlignment.Far;
@@ -227,7 +227,8 @@ namespace Mids_Reborn.Controls
                         //Values
                         var value = _myItems[i].Value;
                         var stringM2 = _bxBuffer.Graphics.MeasureString(value, font2);
-                        var location2 = new PointF(location.X * num5 + stringM.Width, rectangleF.Height * num4 + checked(_linePadding * num4));
+                        var location2 = new PointF(location.X * num5 + stringM.Width, rectangleF.Height * num4 + checked(LinePadding * num4));
+                        _myItems[i].SetBounds(new RectangleF(location.X, location.Y, rectangleF.Width + stringM2.Width, rectangleF.Height));
                         rectangleF.Location = location2;
                         rectangleF.Width = stringM2.Width;
                         stringFormat.Alignment = StringAlignment.Near;
@@ -238,15 +239,15 @@ namespace Mids_Reborn.Controls
                             _bxBuffer.Graphics.FillRectangle(brush, rectangleF);
                             brush = new SolidBrush(HighlightTextColor);
                         }
-                        else if (_myItems[i].UniqueColour)
+                        else if (_myItems[i].UniqueColor)
                         {
                             brush = new SolidBrush(ValueColorD);
                         }
-                        else if (_myItems[i].AlternateColour)
+                        else if (_myItems[i].AlternateColor)
                         {
                             brush = new SolidBrush(ItemColorAlt);
                         }
-                        else if (_myItems[i].ProbColour)
+                        else if (_myItems[i].ProbColor)
                         {
                             brush = new SolidBrush(ItemColorSpecial);
                         }
@@ -255,7 +256,7 @@ namespace Mids_Reborn.Controls
                             brush = new SolidBrush(ItemColor);
                         }
 
-                        
+
                         _bxBuffer.Graphics.DrawString(value, font2, brush, rectangleF, stringFormat);
                         num5++;
                         if (num5 < _myColumns)
@@ -268,11 +269,87 @@ namespace Mids_Reborn.Controls
                 _myGfx.DrawImageUnscaled(_bxBuffer.Bitmap, 0, 0);
             }
         }
+        
+        private void ListLabel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_myItems == null) return;
+            foreach (var item in _myItems.Where(item => e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom))
+            {
+                ItemClick?.Invoke(item, e);
+                break;
+            }
+        }
+
+        private void ListLabel_MouseMove(object sender, MouseEventArgs e)
+        {
+            var num = 0;
+            var num2 = 0;
+            var num3 = -1;
+            Rectangle rectangle = default;
+            rectangle.X = 0;
+            rectangle.Y = 0;
+            rectangle.Height = _lineHeight;
+            checked
+            {
+                rectangle.Width = (int)Math.Round(Width / (double)_myColumns);
+                if (_myItems != null)
+                    for (var i = 0; i < _myItems.Count; i++)
+                    {
+                        rectangle.X = rectangle.Width * num2;
+                        rectangle.Y = (rectangle.Height + LinePadding) * num;
+                        if ((e.Y >= rectangle.Y) & (e.Y <= rectangle.Height + rectangle.Y) && (e.X >= rectangle.X) & (e.X <= rectangle.Width + rectangle.X))
+                        {
+                            num3 = i;
+                            break;
+                        }
+
+                        num2++;
+                        if (num2 < _myColumns)
+                        {
+                            continue;
+                        }
+
+                        num2 = 0;
+                        num++;
+                    }
+
+                if (_currentHighlight == num3)
+                {
+                    return;
+                }
+
+                _currentHighlight = num3;
+                if (_highlightable)
+                {
+                    Draw();
+                }
+
+                if (num3 <= -1)
+                {
+                    ItemOut?.Invoke(this);
+
+                    return;
+                }
+
+
+                var specialTip = _myItems?[num3].SpecialTip;
+                if (specialTip != null)
+                    ItemHover?.Invoke(this, _myItems[num3].TagId, specialTip);
+            }
+        }
+
+        private void ListLabel_MouseLeave(object sender, EventArgs e)
+        {
+            _currentHighlight = -1;
+            if (_highlightable) Draw();
+
+            myTip.SetToolTip(this, "");
+        }
 
         private void ctlPairedList_Paint(object sender, PaintEventArgs e)
         {
-            if (_bxBuffer != null)
-                _myGfx.DrawImage(_bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
+            if (_bxBuffer == null) return;
+            _myGfx?.DrawImage(_bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
         }
 
         protected override void OnFontChanged(EventArgs e)
@@ -294,128 +371,33 @@ namespace Mids_Reborn.Controls
         private void SetLineHeight()
         {
             var font = new Font(Font, Font.Style);
-            _lineHeight = checked((int)Math.Round(font.GetHeight() + _linePadding));
+            _lineHeight = checked((int)Math.Round(font.GetHeight() + LinePadding));
         }
 
         public void AddItem(ItemPair iItem)
         {
             try
             {
-                _myItems.Add(new ItemPair(iItem));
+                _myItems?.Add(new ItemPair(iItem));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Debug.WriteLine("PairedList.AddItem(): Illegal item add call");
             }
         }
 
-        public void Clear(bool Redraw = false)
+        public ItemPair? GetItemAt(int index)
         {
-            _myItems.Clear();
-            if (Redraw) Draw();
+            if (_myItems == null) return null;
+            if (!_myItems.Any()) return null;
+            if (index < 0 || index >= _myItems.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            return _myItems[index];
         }
 
-        private void Listlabel_MouseDown(object sender, MouseEventArgs e)
+        public void Clear(bool redraw = false)
         {
-            var num = 0;
-            var num2 = 0;
-            var num3 = -1;
-            Rectangle rectangle = default;
-            rectangle.X = 0;
-            rectangle.Y = 0;
-            rectangle.Height = _lineHeight;
-            checked
-            {
-                rectangle.Width = (int)Math.Round(Width / (double)_myColumns);
-                var num4 = 0;
-                var num5 = _myItems.Count - 1;
-                for (var i = num4; i <= num5; i++)
-                {
-                    rectangle.X = rectangle.Width * num2;
-                    rectangle.Y = (rectangle.Height + _linePadding) * num;
-                    if ((e.Y >= rectangle.Y) & (e.Y <= rectangle.Height + rectangle.Y) &&
-                        (e.X >= rectangle.X) & (e.X <= rectangle.Width + rectangle.X))
-                    {
-                        num3 = i;
-                        break;
-                    }
-
-                    num2++;
-                    if (num2 < _myColumns)
-                        continue;
-                    num2 = 0;
-                    num++;
-                }
-
-                if (num3 <= -1)
-                    return;
-                var itemClickEvent = ItemClick;
-                itemClickEvent?.Invoke(num3, e.Button);
-            }
-        }
-
-        private void Listlabel_MouseMove(object sender, MouseEventArgs e)
-        {
-            var num = 0;
-            var num2 = 0;
-            var num3 = -1;
-            Rectangle rectangle = default;
-            rectangle.X = 0;
-            rectangle.Y = 0;
-            rectangle.Height = _lineHeight;
-            checked
-            {
-                rectangle.Width = (int)Math.Round(Width / (double)_myColumns);
-                for (var i = 0; i < _myItems.Count; i++)
-                {
-                    rectangle.X = rectangle.Width * num2;
-                    rectangle.Y = (rectangle.Height + _linePadding) * num;
-                    if ((e.Y >= rectangle.Y) & (e.Y <= rectangle.Height + rectangle.Y) &&
-                        (e.X >= rectangle.X) & (e.X <= rectangle.Width + rectangle.X))
-                    {
-                        num3 = i;
-                        break;
-                    }
-
-                    num2++;
-                    if (num2 < _myColumns)
-                    {
-                        continue;
-                    }
-
-                    num2 = 0;
-                    num++;
-                }
-
-                if (_currentHighlight == num3)
-                {
-                    return;
-                }
-
-                _currentHighlight = num3;
-                if (_highlightable)
-                {
-                    Draw();
-                }
-
-                if (num3 <= -1)
-                {
-                    ItemOut?.Invoke(this);
-
-                    return;
-                }
-
-                
-                ItemHover?.Invoke(this, num3, _myItems[num3].TagID, _myItems[num3].SpecialTip);
-            }
-        }
-
-        private void Listlabel_MouseLeave(object sender, EventArgs e)
-        {
-            _currentHighlight = -1;
-            if (_highlightable) Draw();
-
-            myTip.SetToolTip(this, "");
+            _myItems?.Clear();
+            if (redraw) Draw();
         }
 
         public void SetTip(string iTip)
@@ -429,57 +411,87 @@ namespace Mids_Reborn.Controls
         }
         public class ItemPair
         {
-            public bool AlternateColour { get; set; }
-            public bool ProbColour { get; set; }
-            public string SpecialTip { get; set; }
-            public bool VerySpecialColour { get; set; }
-            public string Name { get; set; }
-            public Enums.ShortFX TagID { get; set; }
-            public bool UniqueColour { get; set; }
-            public string Value { get; set; }
+            public bool AlternateColor { get; set; }
+            public bool ProbColor { get; set; }
+            public string? SpecialTip { get; set; }
+            public bool VerySpecialColor { get; set; }
+            public string? Name { get; set; }
+            public Enums.ShortFX TagId { get; set; }
+            public bool UniqueColor { get; set; }
+            public string? Value { get; set; }
+            public SummonedEntity EntTag { get; set; }
+            internal RectangleF Bounds { get; private set; }
 
-            public ItemPair() {}
+            internal void SetBounds(RectangleF rect)
+            {
+                Bounds = rect;
+            }
 
             public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability, bool iSpecialCase, string iTip)
             {
                 Name = iName;
                 Value = iValue;
-                AlternateColour = iAlternate;
-                ProbColour = iProbability;
-                VerySpecialColour = iSpecialCase;
-                TagID.Add(-1, 0f);
+                AlternateColor = iAlternate;
+                ProbColor = iProbability;
+                VerySpecialColor = iSpecialCase;
+                TagId.Add(-1, 0f);
                 SpecialTip = iTip;
+                
             }
 
-            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability = false, bool iSpecialCase = false, int iTagID = -1)
+            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability, bool iSpecialCase, string iTip, SummonedEntity entTag)
             {
                 Name = iName;
                 Value = iValue;
-                AlternateColour = iAlternate;
-                ProbColour = iProbability;
-                VerySpecialColour = iSpecialCase;
-                TagID.Add(iTagID, 0f);
+                AlternateColor = iAlternate;
+                ProbColor = iProbability;
+                VerySpecialColor = iSpecialCase;
+                TagId.Add(-1, 0f);
+                SpecialTip = iTip;
+                EntTag = entTag;
             }
 
-            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability, bool iSpecialCase, Enums.ShortFX iTagID)
+            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability = false, bool iSpecialCase = false, int iTagId = -1)
             {
                 Name = iName;
                 Value = iValue;
-                AlternateColour = iAlternate;
-                ProbColour = iProbability;
-                VerySpecialColour = iSpecialCase;
-                TagID.Assign(iTagID);
+                AlternateColor = iAlternate;
+                ProbColor = iProbability;
+                VerySpecialColor = iSpecialCase;
+                TagId.Add(iTagId, 0f);
+            }
+
+            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability, bool iSpecialCase, Enums.ShortFX iTagId)
+            {
+                Name = iName;
+                Value = iValue;
+                AlternateColor = iAlternate;
+                ProbColor = iProbability;
+                VerySpecialColor = iSpecialCase;
+                TagId.Assign(iTagId);
+            }
+
+            public ItemPair(string iName, string iValue, bool iAlternate, bool iProbability, bool iSpecialCase, Enums.ShortFX iTagId, string iTip)
+            {
+                Name = iName;
+                Value = iValue;
+                AlternateColor = iAlternate;
+                ProbColor = iProbability;
+                VerySpecialColor = iSpecialCase;
+                TagId.Assign(iTagId);
+                SpecialTip = iTip;
             }
 
             public ItemPair(ItemPair iItem)
             {
                 Name = iItem.Name;
                 Value = iItem.Value;
-                AlternateColour = iItem.AlternateColour;
-                ProbColour = iItem.ProbColour;
-                VerySpecialColour = iItem.VerySpecialColour;
-                TagID.Assign(iItem.TagID);
+                AlternateColor = iItem.AlternateColor;
+                ProbColor = iItem.ProbColor;
+                VerySpecialColor = iItem.VerySpecialColor;
+                TagId.Assign(iItem.TagId);
                 SpecialTip = iItem.SpecialTip;
+                EntTag = iItem.EntTag;
             }
         }
     }

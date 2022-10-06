@@ -33,7 +33,7 @@
             // ctlTotalsTabStrip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Name = "ctlTotalsTabStrip";
             this.Size = new System.Drawing.Size(532, 24);
             this.Load += new System.EventHandler(this.ctlTotalsTabStrip_Load);

@@ -135,6 +135,16 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
+        public static async Task<List<string>> LoadButtons()
+        {
+            var cSource = new TaskCompletionSource<List<string>>();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            var buttonImages = Images.Where(x => x.FileName.Contains("pSlot")).ToList();
+            var retList = buttonImages.Select(buttonImage => buttonImage.Path).ToList();
+            cSource.TrySetResult(retList);
+            return await cSource.Task;
+        }
+
         public static async Task<List<string>> LoadArchetypes()
         {
             var cSource = new TaskCompletionSource<List<string>>();

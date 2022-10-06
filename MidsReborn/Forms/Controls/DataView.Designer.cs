@@ -386,6 +386,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List1.ValueWidth = 60;
             this.fx_List1.ItemHover += new PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             this.fx_List1.ItemOut += new PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
+            this.fx_List1.ItemClick += Fx_ListItemClick;
             // 
             // pnlTotal
             // 

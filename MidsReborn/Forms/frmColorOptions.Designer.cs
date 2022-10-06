@@ -665,7 +665,7 @@ namespace Mids_Reborn.Forms
             // frmColorOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(493, 507);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.ctlColorList1);

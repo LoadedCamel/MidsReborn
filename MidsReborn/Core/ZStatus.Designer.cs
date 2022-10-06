@@ -57,7 +57,7 @@ namespace Mids_Reborn.Core
             this.lblTitle.Text = "Please Wait...";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6f, 14f);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.ClientSize = new System.Drawing.Size(488, 72);
             this.Controls.Add((System.Windows.Forms.Control)this.lblStatus2);

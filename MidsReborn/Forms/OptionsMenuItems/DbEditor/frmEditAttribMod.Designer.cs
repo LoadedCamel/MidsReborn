@@ -354,7 +354,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // frmEditAttribMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(928, 450);
             this.Controls.Add(this.btnExportJson);
             this.Controls.Add(this.pbGraph);

@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
+using Microsoft.Web.WebView2.Core;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -34,6 +39,80 @@ namespace Mids_Reborn.UIv2
             InitializeComponent();
             _panelWidth = 350;
             PanelHidden = true;
+        }
+
+        private async void Panel1OnPaint(object? sender, PaintEventArgs e)
+        {
+            // Clear the canvas
+            e.Graphics.Clear(Color.Transparent);
+
+            // Set graphics options
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            e.Graphics.CompositingMode = CompositingMode.SourceCopy;
+            e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+            var buttonImages = await I9Gfx.LoadButtons();
+            var emptyPower = Image.FromFile(buttonImages[1]);
+            var columns = 3;
+            var rows = 8;
+
+            var numPowers = 24;
+
+            var rect = panel1.ClientRectangle;
+            var columnWidth = rect.Width / columns;
+            var rowHeight = rect.Height / rows;
+
+            var itemLocations = new List<Point>();
+            var itemRectangles = new List<Rectangle>();
+            for (var cIndex = 0; cIndex < columns; cIndex++)
+            {
+                for (var rIndex = 0; rIndex < rows; rIndex++)
+                {
+                    var tLocation = new Point(columnWidth * cIndex, rowHeight * rIndex);
+                    var tRect = new Rectangle(tLocation.X, tLocation.Y, columnWidth, rowHeight);
+                    itemLocations.Add(tLocation);
+                    itemRectangles.Add(tRect);
+                }
+            }
+
+            
+            for (var pIndex = 0; pIndex < numPowers; pIndex++)
+            {
+                var imageStream = ScaledImage(emptyPower, itemRectangles[pIndex].Size);
+                var scaledImage = Image.FromStream(ScaledImage(emptyPower, itemRectangles[pIndex].Size));
+                e.Graphics.DrawImage(scaledImage, itemLocations[pIndex]);
+            }
+        }
+
+        private static Stream ScaledImage(Image srcImage, Size canvas)
+        {
+            var stream = new MemoryStream();
+            var destImage = new Bitmap(canvas.Width, canvas.Height);
+            var graphics = Graphics.FromImage(destImage);
+            graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            graphics.CompositingMode = CompositingMode.SourceCopy;
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+            var ratioX = canvas.Width / (double) srcImage.Width;
+            var ratioY = canvas.Height / (double) srcImage.Height;
+            var ratio = ratioX < ratioY ? ratioX : ratioY;
+
+            var width = Convert.ToInt32(srcImage.Width * ratio);
+            var height = Convert.ToInt32(srcImage.Height * ratio);
+
+            graphics.Clear(Color.Transparent);
+            graphics.DrawImage(srcImage, 0, 0, width, height);
+            var codecInfo = ImageCodecInfo.GetImageEncoders();
+            var encParams = new EncoderParameters(1);
+            encParams.Param[0] = new EncoderParameter(Encoder.Quality, 100L);
+            destImage.Save(stream, codecInfo[1], encParams);
+            return stream;
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -91,6 +170,7 @@ namespace Mids_Reborn.UIv2
             }
             Loading = false;
             cbAT.SelectedItem = cbAT.Items[0];
+            panel1.Paint += Panel1OnPaint;
         }
 
         private void ButtonMouse_Enter(object sender, EventArgs e)
@@ -513,5 +593,7 @@ namespace Mids_Reborn.UIv2
         private void cbOrigin_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+
+
     }
 }

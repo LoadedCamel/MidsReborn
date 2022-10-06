@@ -1,6 +1,6 @@
 ﻿namespace Mids_Reborn.Controls
 {
-    partial class EditableLabel
+    partial class PairedListEx
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,9 +29,20 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            this.myTip = new System.Windows.Forms.ToolTip(this.components);
+            this.SuspendLayout();
+
+            // 
+            // PairedList
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Name = "PairedListEx";
+            this.ResumeLayout(false);
         }
 
         #endregion
+
+        private System.Windows.Forms.ToolTip myTip;
     }
 }
