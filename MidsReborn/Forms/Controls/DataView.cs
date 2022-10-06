@@ -4572,7 +4572,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             if (item == null) return;
             if (e.Button != MouseButtons.Left || e.Clicks != 1) return;
-            var powers = string.Empty;
+            if (item.EntTag == null) return;
             var sets = item.EntTag.PowersetFullName.ToList();
             Debug.WriteLine($"You clicked the {item.Name} effect that has a value of {item.Value} which is the following entity; {string.Join("", item.EntTag.UID).Trim()}\r\nThis entity has the following powersets and powers;\r\n");
             foreach (var ps in sets)

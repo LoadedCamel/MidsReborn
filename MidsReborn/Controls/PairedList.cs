@@ -419,7 +419,7 @@ namespace Mids_Reborn.Controls
             public Enums.ShortFX TagId { get; set; }
             public bool UniqueColor { get; set; }
             public string? Value { get; set; }
-            public SummonedEntity EntTag { get; set; }
+            public SummonedEntity? EntTag { get; set; }
             internal RectangleF Bounds { get; private set; }
 
             internal void SetBounds(RectangleF rect)

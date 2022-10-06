@@ -59,7 +59,7 @@ namespace Mids_Reborn.Forms
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = global::MRBResourceLib.Resources.MRB_Splash_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(850, 435);
+            this.ClientSize = new System.Drawing.Size(936, 479);
             this.Controls.Add(this.Label1);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(55, 18, 55, 18);
