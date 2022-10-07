@@ -15,7 +15,6 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Syncfusion.Windows.Forms.Grid;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -36,18 +35,13 @@ namespace Mids_Reborn.Forms.Controls
         }*/
 
         public delegate void FloatChangeEventHandler();
-
         public delegate void MovedEventHandler();
-
         public delegate void SizeChangeEventHandler(Size newSize, bool isCompact);
-
         public delegate void SlotFlipEventHandler(int PowerIndex);
-
         public delegate void SlotUpdateEventHandler();
-
         public delegate void TabChangedEventHandler(int Index);
-
         public delegate void Unlock_ClickEventHandler();
+        public delegate void EntityDetailsEventandler(string entityUid, HashSet<string> powers);
 
         private const int SnapDistance = 10;
 
@@ -71,6 +65,7 @@ namespace Mids_Reborn.Forms.Controls
         public Rectangle SnapLocation;
         public int TabPage;
         private bool VillainColor;
+        public bool[]? TabsMask;
 
         public DataView()
         {
@@ -142,18 +137,13 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         public event FloatChangeEventHandler FloatChange;
-
         public event MovedEventHandler Moved;
-
         public event SizeChangeEventHandler SizeChange;
-
         public event SlotFlipEventHandler SlotFlip;
-
         public event SlotUpdateEventHandler SlotUpdate;
-
         public event TabChangedEventHandler TabChanged;
-
         public event Unlock_ClickEventHandler Unlock_Click;
+        public event EntityDetailsEventandler EntityDetails;
 
         private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
@@ -308,6 +298,8 @@ namespace Mids_Reborn.Forms.Controls
             total_lblMisc.Location = new Point(4, 227 + useToxicDefOffSet);
             total_Misc.Location = new Point(4, 243 + useToxicDefOffSet);
             lblTotal.Location = new Point(3, 323 + useToxicDefOffSet);
+
+            TabsMask ??= new bool[] {true, true, true, true};
 
             Clear();
         }
@@ -1568,9 +1560,8 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
 
-            var num = Pages.Length - 1;
             RectangleF layoutRectangle;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < Pages.Length; index++)
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
                 layoutRectangle = new RectangleF(rect.X, rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
@@ -3830,22 +3821,32 @@ namespace Mids_Reborn.Forms.Controls
         private void pnlTabs_MouseDown(object sender, MouseEventArgs e)
         {
             var clipRect = new Rectangle(0, 0, 70, pnlTabs.Height);
-            var Index = 0;
-            while (!((e.X >= clipRect.X) & (e.X <= clipRect.Width + clipRect.X)))
+            var index = 0;
+            while (!(e.X >= clipRect.X & e.X <= clipRect.Width + clipRect.X))
             {
                 clipRect.X += clipRect.Width;
-                ++Index;
-                if (Index > 3)
+                ++index;
+                if (index > 3)
+                {
                     return;
+                }
             }
 
-            if (Index != TabPage)
+            if (TabsMask != null && TabsMask.Length > index)
+            {
+                if (!TabsMask[index])
+                {
+                    return;
+                }
+            }
+
+            if (index != TabPage)
             {
                 var tabChanged = TabChanged;
-                tabChanged?.Invoke(Index);
+                tabChanged?.Invoke(index);
             }
 
-            TabPage = Index;
+            TabPage = index;
             pnlTabs_Paint(this, new PaintEventArgs(pnlTabs.CreateGraphics(), clipRect));
         }
 
@@ -4570,22 +4571,39 @@ namespace Mids_Reborn.Forms.Controls
 
         private void Fx_ListItemClick(PairedList.ItemPair? item, MouseEventArgs e)
         {
-            if (item == null) return;
-            if (e.Button != MouseButtons.Left || e.Clicks != 1) return;
-            if (item.EntTag == null) return;
+            if (item == null)
+            {
+                return;
+            }
+
+            if (e.Button != MouseButtons.Left || e.Clicks != 1)
+            {
+                return;
+            }
+
+            if (item.EntTag == null)
+            {
+                return;
+            }
+
             var sets = item.EntTag.PowersetFullName.ToList();
+            var powers = new HashSet<string>();
             Debug.WriteLine($"You clicked the {item.Name} effect that has a value of {item.Value} which is the following entity; {string.Join("", item.EntTag.UID).Trim()}\r\nThis entity has the following powersets and powers;\r\n");
             foreach (var ps in sets)
             {
                 Debug.WriteLine($"{ps}\r\n------");
                 var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
-                var returnedPowers =
-                    powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
-                if (returnedPowers != null)
+                var returnedPowers = powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
+                if (returnedPowers == null)
                 {
-                    Debug.WriteLine($"{string.Join("\r\n", returnedPowers)}\r\n");
+                    continue;
                 }
+
+                Debug.WriteLine($"{string.Join("\r\n", returnedPowers)}\r\n");
+                powers.UnionWith(returnedPowers);
             }
+                
+            EntityDetails?.Invoke(item.EntTag.UID, powers);
         }
     }
 }

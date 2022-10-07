@@ -316,6 +316,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List3.ValueWidth = 55;
             this.fx_List3.ItemHover += new PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             this.fx_List3.ItemOut += new PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
+            this.fx_List3.ItemClick += Fx_ListItemClick;
             // 
             // fx_lblHead2
             // 
@@ -362,6 +363,7 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List2.ValueWidth = 55;
             this.fx_List2.ItemHover += new PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             this.fx_List2.ItemOut += new PairedList.ItemOutEventHandler(this.PairedList_ItemOut);
+            this.fx_List2.ItemClick += Fx_ListItemClick;
             // 
             // fx_List1
             // 
