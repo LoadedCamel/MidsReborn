@@ -7,7 +7,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 {
     public sealed class Database : IDatabase
     {
-        public static Database Instance { get; } = new Database();
+        public static Database Instance { get; } = new();
 
         public string UpdateManifest { get; set; }
 
@@ -23,19 +23,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public IPower[] Power { get; set; }
 
-        public Enums.VersionData PowerVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData PowerVersion { get; set; } = new();
 
-        public Enums.VersionData PowerEffectVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData PowerEffectVersion { get; set; } = new();
 
-        public Enums.VersionData PowerLevelVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData PowerLevelVersion { get; set; } = new();
 
         public IPowerset?[] Powersets { get; set; }
 
-        public Enums.VersionData PowersetVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData PowersetVersion { get; set; } = new();
 
-        public Archetype?[] Classes { get; set; }
+        public Archetype[]? Classes { get; set; }
 
-        public Enums.VersionData ArchetypeVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData ArchetypeVersion { get; set; } = new();
 
         public IEnhancement[] Enhancements { get; set; }
 
@@ -63,7 +63,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public object I9 { get; set; }
 
-        public Enums.VersionData IOAssignmentVersion { get; set; } = new Enums.VersionData();
+        public Enums.VersionData IOAssignmentVersion { get; set; } = new();
 
         public SummonedEntity[] Entities { get; set; } = new SummonedEntity[0];
 

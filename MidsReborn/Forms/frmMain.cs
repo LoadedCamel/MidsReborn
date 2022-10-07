@@ -3519,15 +3519,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ControlPaint.DrawReversibleFrame(dragRect, Color.White, FrameStyle.Thick);
         }
 
+        // This event handler method has been removed from being called, the method is being left in the event it needs to be re-enabled.
         private void pnlGFX_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // Lock double click usage when enhancement check mode is active
             // Disable the ability to double click an enhancement slot to remove it
             if (MidsContext.EnhCheckMode) return;
+            if (e.Button != MouseButtons.Left && e.Clicks != 2) return;
             if (!(!LastClickPlacedSlot && dragStartSlot >= 0)) return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
             var powerEntryArray = DeepCopyPowerList();
-            RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(false);
             DoRedraw();
@@ -3540,8 +3541,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void pnlGFX_MouseDown(object sender, MouseEventArgs e)
         {
             if (MidsContext.EnhCheckMode) return;
-            if (e.Button != MouseButtons.Left)
-                return;
+            if (e.Button != MouseButtons.Left) return;
             pnlGFX.AllowDrop = true;
             dragStartX = e.X;
             dragStartY = e.Y;
@@ -3760,11 +3760,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                             else
                             {
-                                var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                                if (MainModule.MidsController.Toon != null)
                                 {
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                                    if (MainModule.MidsController.Toon.CurrentBuild != null)
+                                    {
+                                        var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                                        if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                                        {
+                                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                                        }
+                                    }
                                 }
                             }
 
@@ -3788,7 +3794,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
                     else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Alt))
                     {
-                        MainModule.MidsController.Toon.BuildPower(
+                        MainModule.MidsController.Toon?.BuildPower(
                             MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPowerset,
                             MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower);
                         PowerModified(true);
@@ -3796,12 +3802,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
                     else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Shift) & (slotID > -1))
                     {
-                        if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+                        if (MidsContext.Config is { BuildMode: Enums.dmModes.LevelUp })
                         {
-                            MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
+                            if (MainModule.MidsController.Toon != null)
+                            {
+                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
+                            }
+
                             MidsContext.Character.ResetLevel();
                         }
-                        MainModule.MidsController.Toon.BuildSlot(hIDPower, slotID);
+                        MainModule.MidsController.Toon?.BuildSlot(hIDPower, slotID);
                         PowerModified(true);
                         LastClickPlacedSlot = false;
                     }
@@ -3809,23 +3819,29 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                         {
-                            if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
+                            if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
-                                    MainModule.MidsController.Toon.RequestedLevel =
-                                        MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                    if (MainModule.MidsController.Toon != null)
+                                    {
+                                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                    }
+
                                     UpdatePowerLists();
                                     DoRedraw();
                                     return;
                                 }
                             }
-                            else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                            else if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
-                                    MainModule.MidsController.Toon.RequestedLevel =
-                                        MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                    if (MainModule.MidsController.Toon != null)
+                                    {
+                                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                    }
+
                                     UpdatePowerLists();
                                     DoRedraw();
                                     return;
@@ -3833,14 +3849,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                             else
                             {
-                                if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
+                                if (MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
                                 {
                                     // adding a slot by itself doesn't really change the build substantially without an enh going into it
                                     // var powerEntryArray = DeepCopyPowerList();
                                     // RearrangeAllSlotsInBuild(powerEntryArray, true);
                                     // ShallowCopyPowerList(powerEntryArray);
-                                    // PowerModified(false);
-                                    // DoRedraw();
+                                    PowerModified(false);
+                                    DoRedraw();
                                     PowerModified(false);
                                     LastClickPlacedSlot = true;
                                     //MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);
@@ -3851,8 +3867,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                         }
 
-                        if ((e.Button == MouseButtons.Middle) & (slotID > -1) &
-                            !MidsContext.Config.DisableRepeatOnMiddleClick)
+                        if (MidsContext.Config != null && (e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
@@ -3867,13 +3882,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
-                            var enhancements = MainModule.MidsController.Toon.GetEnhancements(hIDPower);
+                            var enhancements = MainModule.MidsController.Toon?.GetEnhancements(hIDPower);
                             PickerHID = hIDPower;
                             if (!flag)
-                                I9Picker.SetData(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower,
-                                    ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
-                                    ref drawing, enhancements);
-                            else
+                            {
+                                if (enhancements != null)
+                                    I9Picker.SetData(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower,
+                                        ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID]
+                                            .Enhancement,
+                                        ref drawing, enhancements);
+                            }
+                            else if (enhancements != null)
                                 I9Picker.SetData(-1,
                                     ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
                                     ref drawing, enhancements);

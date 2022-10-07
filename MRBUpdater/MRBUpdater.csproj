@@ -9,9 +9,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>true</Optimize>
+    <NoWarn>1701;1702;CA1416;SYSLIB0014</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>true</Optimize>
+    <NoWarn>1701;1702;CA1416;SYSLIB0014</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
@@ -20,6 +22,12 @@
     <StartupObject>MRBUpdater.Program</StartupObject>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA1416;SYSLIB0014</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NoWarn>1701;1702;CA1416;SYSLIB0014</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="MRBUpdater.csproj.old" />

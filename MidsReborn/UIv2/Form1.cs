@@ -321,7 +321,7 @@ namespace Mids_Reborn.UIv2
         {
             if (cbPrimary.SelectedIndex < 0)
                 return;
-            IPowerset selectedPri;
+            IPowerset? selectedPri;
             var primaryList = new BindingList<IPower>();
             var selectedPowerset = (Powerset) cbPrimary.Items[cbPrimary.SelectedIndex];
             switch (selectedPowerset.DisplayName)
@@ -398,7 +398,7 @@ namespace Mids_Reborn.UIv2
         {
             if (cbSecondary.SelectedIndex < 0)
                 return;
-            IPowerset selectedSec;
+            IPowerset? selectedSec;
             var secondaryList = new BindingList<IPower>();
             var selectedPowerset = (Powerset) cbSecondary.Items[cbSecondary.SelectedIndex];
             switch (selectedPowerset.DisplayName)

@@ -397,10 +397,8 @@ namespace Mids_Reborn.Core
         private static void AddZipFileEntry(string fileName, byte[] fileContent, ZipArchive archive)
         {
             var entry = archive.CreateEntry(fileName);
-            using (var stream = entry.Open())
-            {
-                stream.Write(fileContent, 0, fileContent.Length);
-            }
+            using var stream = entry.Open();
+            stream.Write(fileContent, 0, fileContent.Length);
         }
 
         public static string[] UidMutexAll()
@@ -415,11 +413,15 @@ namespace Mids_Reborn.Core
         {
             //Returns the index of the named set belonging to a named archetype (IE. Invulnerability, Tanker, or Invulnerability, Scrapper)
             var strArray = iName.Split('.');
-            if (strArray.Length < 2)
-                return null;
+            switch (strArray.Length)
+            {
+                case < 2:
+                    return null;
+                case > 2:
+                    iName = $"{strArray[0]}.{strArray[1]}";
+                    break;
+            }
 
-            if (strArray.Length > 2)
-                iName = $"{strArray[0]}.{strArray[1]}";
             var key = strArray[0];
             if (!Database.PowersetGroups.ContainsKey(key))
                 return null;
@@ -429,21 +431,22 @@ namespace Mids_Reborn.Core
 
         public static IPowerset? GetPowersetByName(string iName, string iArchetype)
         {
-            var idx = GetArchetypeByName(iArchetype).Idx;
+            var idx = GetArchetypeByName(iArchetype)?.Idx;
+            if (idx == null) return null;
             foreach (var powerset1 in Database.Powersets)
             {
-                if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
-                    !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                if (powerset1 != null && (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
+                                          !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase)))
                 {
                     continue;
                 }
 
-                if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (powerset1 != null && powerset1.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     return powerset1;
                 }
 
-                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                if (powerset1 != null && powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
                 {
                     return powerset1;
                 }
@@ -454,28 +457,29 @@ namespace Mids_Reborn.Core
 
         public static IPowerset? GetPowersetByName(string iName, string iArchetype, bool restrictGroups)
         {
-            var idx = GetArchetypeByName(iArchetype).Idx;
+            var idx = GetArchetypeByName(iArchetype)?.Idx;
+            if (idx == null) return null;
             foreach (var powerset1 in Database.Powersets)
             {
-                if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
-                    !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                if (idx != powerset1?.nArchetype && powerset1?.nArchetype != -1 ||
+                    !string.Equals(iName, powerset1?.DisplayName, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                if (restrictGroups & powerset1.SetType != Enums.ePowerSetType.Primary &
-                    powerset1.SetType != Enums.ePowerSetType.Secondary & powerset1.SetType != Enums.ePowerSetType.Pool &
-                    powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (restrictGroups & powerset1?.SetType != Enums.ePowerSetType.Primary &
+                    powerset1?.SetType != Enums.ePowerSetType.Secondary & powerset1?.SetType != Enums.ePowerSetType.Pool &
+                    powerset1?.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     continue;
                 }
 
-                if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (powerset1?.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     return powerset1;
                 }
 
-                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
                 {
                     return powerset1;
                 }
@@ -497,22 +501,22 @@ namespace Mids_Reborn.Core
         }
 
         //Pine
-        public static IPowerset GetPowersetByName(string iName, Enums.ePowerSetType iSet)
+        public static IPowerset? GetPowersetByName(string iName, Enums.ePowerSetType iSet)
         {
             //Returns the index of the named set of a given type
             //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
             // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(powerset =>
-                iSet == powerset.SetType && string.Equals(iName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase));
+                iSet == powerset?.SetType && string.Equals(iName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static IPowerset GetPowersetByID(string iName, Enums.ePowerSetType iSet)
+        public static IPowerset? GetPowersetByID(string iName, Enums.ePowerSetType iSet)
         {
             //Returns a powerset by its SetName property, not the DisplayName property.
             //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
             // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(ps =>
-                iSet == ps.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
+                iSet == ps?.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IPowerset? GetInherentPowerset()
@@ -523,18 +527,18 @@ namespace Mids_Reborn.Core
         public static Archetype? GetArchetypeByName(string iArchetype)
         {
             return Database.Classes.FirstOrDefault(cls =>
-                string.Equals(iArchetype, cls.DisplayName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(iArchetype, cls?.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static Archetype GetArchetypeByClassName(string iArchetype)
+        public static Archetype? GetArchetypeByClassName(string iArchetype)
         {
             return Database.Classes.FirstOrDefault(cls =>
-                string.Equals(iArchetype, cls.ClassName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(iArchetype, cls?.ClassName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int GetOriginByName(Archetype? archetype, string iOrigin)
         {
-            for (var index = 0; index < archetype.Origin.Length; ++index)
+            for (var index = 0; index < archetype?.Origin.Length; ++index)
                 if (string.Equals(iOrigin, archetype.Origin[index], StringComparison.OrdinalIgnoreCase))
                     return index;
             return 0;
@@ -542,7 +546,7 @@ namespace Mids_Reborn.Core
 
         public static int GetPowerIndexByDisplayName(string iName, int iArchetype)
         {
-            var pw = Database.Power.DefaultIfEmpty(null).FirstOrDefault(p => p.DisplayName == iName && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+            var pw = Database.Power.DefaultIfEmpty(null).FirstOrDefault(p => p != null && p.DisplayName == iName && p.GetPowerSet()?.nArchetype == iArchetype | p.GetPowerSet()?.nArchetype == -1);
             if (pw == null)
             {
                 return -1;
@@ -968,7 +972,7 @@ namespace Mids_Reborn.Core
             return retList;
         }
 
-        public static List<IPowerset> GetEpicPowersets(Archetype atClass)
+        public static List<IPowerset?> GetEpicPowersets(Archetype atClass)
         {
             if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
             {

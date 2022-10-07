@@ -351,11 +351,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvEnh.Select();
         }
 
-        private void ImageUpdate()
+        private async void ImageUpdate()
         {
             if (NoReload.Checked)
                 return;
-            I9Gfx.LoadEnhancements();
+            await I9Gfx.LoadEnhancements();
             FillImageList();
         }
 

@@ -1697,9 +1697,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Ignore_Buff.Length == 0 || Ignore_Buff.All(t => t != iEffect);
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            if (!(obj is Power power))
+            if (obj is not Power power)
             {
                 throw new ArgumentException("Comparison failed - Passed object was not an Archetype Class!");
             }
