@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using Forms.WindowMenuItems;
 using Microsoft.Win32;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -67,6 +68,7 @@ namespace Mids_Reborn.Forms
         private string[] CommandArgs { get; }
         private string ProcessedCommand { get; set; }
         private bool ProcessedFromCommand { get; set; }
+        private frmEntityDetails frmEntityDetails { get; set; }
 
         public frmMain(string[] args)
         {
@@ -159,6 +161,7 @@ namespace Mids_Reborn.Forms
             dvAnchored.SlotFlip += DataView_SlotFlip;
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
+            dvAnchored.EntityDetails += dvAnchored_EntityDetails;
 
             Icon = Resources.MRB_Icon_Concept;
         }
@@ -532,6 +535,11 @@ namespace Mids_Reborn.Forms
                     Enums.Alignment.Villain => true,
                     _ => ibEx.UseAlt
                 };
+            }
+
+            if (frmEntityDetails is {Visible: true})
+            {
+                frmEntityDetails.UpdateColorTheme(e);
             }
         }
 
@@ -1781,6 +1789,19 @@ namespace Mids_Reborn.Forms
             if (dvLastPower <= -1)
                 return;
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
+        }
+
+        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers)
+        {
+            if (frmEntityDetails is not {Visible: true})
+            {
+                frmEntityDetails = new frmEntityDetails(entityUid, powers);
+                frmEntityDetails.Show();
+            }
+            else if (frmEntityDetails.Visible)
+            {
+                frmEntityDetails.UpdateData(entityUid, powers);
+            }
         }
 
         private bool EditAccoladesOrTemps(int hIDPower)

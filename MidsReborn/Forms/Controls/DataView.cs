@@ -1565,6 +1565,11 @@ namespace Mids_Reborn.Forms.Controls
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
                 layoutRectangle = new RectangleF(rect.X, rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
+                if (TabsMask != null && !TabsMask[index])
+                {
+                    continue;
+                }
+
                 extendedBitmap.Graphics.DrawRectangle(pen, rect);
                 extendedBitmap.Graphics.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
             }
@@ -4456,6 +4461,12 @@ namespace Mids_Reborn.Forms.Controls
                 ResetSize();
         }
 
+        public void SetGraphType(Enums.eDDGraph graphType, Enums.eDDStyle graphStyle)
+        {
+            Info_Damage.GraphType = graphType;
+            Info_Damage.Style = graphStyle;
+        }
+
         private bool SplitFX_AddToList(ref Enums.ShortFX BaseSFX, ref Enums.ShortFX EnhSFX, ref PairedList iList, string SpecialTitle = "")
         {
             bool flag;
@@ -4588,10 +4599,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var sets = item.EntTag.PowersetFullName.ToList();
             var powers = new HashSet<string>();
-            Debug.WriteLine($"You clicked the {item.Name} effect that has a value of {item.Value} which is the following entity; {string.Join("", item.EntTag.UID).Trim()}\r\nThis entity has the following powersets and powers;\r\n");
             foreach (var ps in sets)
             {
-                Debug.WriteLine($"{ps}\r\n------");
                 var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
                 var returnedPowers = powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
                 if (returnedPowers == null)
@@ -4599,10 +4608,9 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                Debug.WriteLine($"{string.Join("\r\n", returnedPowers)}\r\n");
                 powers.UnionWith(returnedPowers);
             }
-                
+
             EntityDetails?.Invoke(item.EntTag.UID, powers);
         }
     }
