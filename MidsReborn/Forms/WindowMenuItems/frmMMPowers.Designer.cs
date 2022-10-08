@@ -187,6 +187,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(450, 450);
             this.Controls.Add((System.Windows.Forms.Control)this.cbSelPetPower);
             this.Controls.Add((System.Windows.Forms.Control)this.cbSelPets);

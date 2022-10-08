@@ -1222,7 +1222,7 @@
             // 
             // frmPowerEffect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1623, 698);
             this.Controls.Add(this.tpPowerAttribs);
