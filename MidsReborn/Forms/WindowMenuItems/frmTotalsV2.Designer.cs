@@ -91,10 +91,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.panel2.Controls.Add(this.ibClose);
             this.panel2.Controls.Add(this.ibTopMost);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 685);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4);
+            this.panel2.Location = new System.Drawing.Point(0, 686);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(2283, 44);
+            this.panel2.Size = new System.Drawing.Size(2267, 44);
             this.panel2.TabIndex = 2;
             // 
             // ibClose
@@ -285,7 +284,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.ItemHeight = 13;
             this.graphRes.Lines = true;
             this.graphRes.Location = new System.Drawing.Point(12, 288);
-            this.graphRes.Margin = new System.Windows.Forms.Padding(4);
             this.graphRes.MarkerValue = 0F;
             this.graphRes.Max = 100F;
             this.graphRes.MaxItems = 8;
@@ -334,7 +332,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.ItemHeight = 13;
             this.graphDef.Lines = true;
             this.graphDef.Location = new System.Drawing.Point(12, 32);
-            this.graphDef.Margin = new System.Windows.Forms.Padding(4);
             this.graphDef.MarkerValue = 0F;
             this.graphDef.Max = 100F;
             this.graphDef.MaxItems = 11;
@@ -362,7 +359,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.Gainsboro;
             this.label1.Location = new System.Drawing.Point(16, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 20);
             this.label1.TabIndex = 117;
@@ -438,7 +434,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label7.ForeColor = System.Drawing.Color.Gainsboro;
             this.label7.Location = new System.Drawing.Point(16, 349);
-            this.label7.Margin = new System.Windows.Forms.Padding(3);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(45, 20);
             this.label7.TabIndex = 127;
@@ -452,7 +447,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label6.ForeColor = System.Drawing.Color.Gainsboro;
             this.label6.Location = new System.Drawing.Point(16, 200);
-            this.label6.Margin = new System.Windows.Forms.Padding(3);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 20);
             this.label6.TabIndex = 126;
@@ -466,7 +460,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.ForeColor = System.Drawing.Color.Gainsboro;
             this.label5.Location = new System.Drawing.Point(16, 6);
-            this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(89, 20);
             this.label5.TabIndex = 125;
@@ -921,7 +914,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label9.ForeColor = System.Drawing.Color.Gainsboro;
             this.label9.Location = new System.Drawing.Point(16, 300);
-            this.label9.Margin = new System.Windows.Forms.Padding(3);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(135, 20);
             this.label9.TabIndex = 117;
@@ -935,7 +927,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label8.ForeColor = System.Drawing.Color.Gainsboro;
             this.label8.Location = new System.Drawing.Point(16, 6);
-            this.label8.Margin = new System.Windows.Forms.Padding(3);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(134, 20);
             this.label8.TabIndex = 116;
@@ -1057,7 +1048,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label11.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label11.ForeColor = System.Drawing.Color.Gainsboro;
             this.label11.Location = new System.Drawing.Point(16, 288);
-            this.label11.Margin = new System.Windows.Forms.Padding(3);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 20);
             this.label11.TabIndex = 118;
@@ -1071,7 +1061,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label10.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label10.ForeColor = System.Drawing.Color.Gainsboro;
             this.label10.Location = new System.Drawing.Point(16, 6);
-            this.label10.Margin = new System.Windows.Forms.Padding(3);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(140, 20);
             this.label10.TabIndex = 117;
@@ -1179,8 +1168,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.panel1.Controls.Add(this.ctlTotalsTabStrip1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2283, 24);
+            this.panel1.Size = new System.Drawing.Size(2267, 24);
             this.panel1.TabIndex = 105;
             // 
             // ctlTotalsTabStrip1
@@ -1194,18 +1184,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ctlTotalsTabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.ctlTotalsTabStrip1.ItemPadding = 18;
             this.ctlTotalsTabStrip1.Location = new System.Drawing.Point(0, 0);
+            this.ctlTotalsTabStrip1.Margin = new System.Windows.Forms.Padding(41, 18, 41, 18);
             this.ctlTotalsTabStrip1.Name = "ctlTotalsTabStrip1";
             this.ctlTotalsTabStrip1.OutlineText = true;
-            this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(2283, 24);
+            this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(2267, 24);
             this.ctlTotalsTabStrip1.TabIndex = 106;
             this.ctlTotalsTabStrip1.TabClick += new Mids_Reborn.Controls.ctlTotalsTabStrip.TabClickEventHandler(this.ctlTotalsTabStrip1_TabClick);
             // 
             // frmTotalsV2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(2283, 729);
+            this.ClientSize = new System.Drawing.Size(2267, 730);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelTab4);
             this.Controls.Add(this.panelTab3);
@@ -1216,7 +1207,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(55, 24, 55, 24);
             this.Name = "frmTotalsV2";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
