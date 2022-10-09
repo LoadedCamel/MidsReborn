@@ -383,6 +383,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnImportJson);
             this.Controls.Add(this.listBoxTables);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
             this.Icon = Resources.MRB_Icon_Concept;
             this.Name = "frmEditAttribMod";
             this.Text = "AttribMod Editor";
