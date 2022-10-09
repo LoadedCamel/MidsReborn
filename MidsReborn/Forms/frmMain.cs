@@ -1791,11 +1791,11 @@ namespace Mids_Reborn.Forms
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
         }
 
-        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers)
+        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx)
         {
             if (frmEntityDetails is not {Visible: true})
             {
-                frmEntityDetails = new frmEntityDetails(entityUid, powers);
+                frmEntityDetails = new frmEntityDetails(entityUid, powers, basePowerHistoryIdx);
                 frmEntityDetails.Show();
             }
             else if (frmEntityDetails.Visible)

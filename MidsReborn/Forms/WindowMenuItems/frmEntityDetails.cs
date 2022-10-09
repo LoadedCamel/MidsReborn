@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
+using Mids_Reborn;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -15,24 +17,29 @@ namespace Forms.WindowMenuItems
     {
         private string EntityUid;
         private List<string> Powers;
+        private int BasePowerHistoryIdx;
+        private List<IPower> MathPower;
+        private List<IPower> BuffedPower;
 
         private SummonedEntity? EntityData;
         private List<IPower> PowersData;
         private ListLabelV3 powersList;
         private int HoveredItemIndex = -1;
         private bool dvLocked;
-        private IPower? dvPower;
+        private IPower? dvPowerBase;
+        private IPower? dvPowerEnh;
 
         /// <summary>
         /// Initialize entity data
         /// </summary>
         /// <param name="entityUid">Entity UID</param>
         /// <param name="powers">Entity's powers, as a HashSet</param>
-        public frmEntityDetails(string entityUid, HashSet<string> powers)
+        public frmEntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx)
         {
             InitializeComponent();
             EntityUid = entityUid;
             Powers = powers.ToList();
+            BasePowerHistoryIdx = basePowerHistoryIdx;
         }
 
         /// <summary>
@@ -40,11 +47,12 @@ namespace Forms.WindowMenuItems
         /// </summary>
         /// <param name="entityUid">Entity UID</param>
         /// <param name="powers">Entity's powers, as a List</param>
-        public frmEntityDetails(string entityUid, List<string> powers)
+        public frmEntityDetails(string entityUid, List<string> powers, int basePowerHistoryIdx)
         {
             InitializeComponent();
             EntityUid = entityUid;
             Powers = powers;
+            BasePowerHistoryIdx = basePowerHistoryIdx;
         }
 
         
@@ -86,6 +94,7 @@ namespace Forms.WindowMenuItems
                     break;
             }
 
+            // Hide Totals and Enhance tabs
             dataView1.TabsMask = new[] {true, true, false, false};
             dataView1.BackColor = BackColor;
             dataView1.Refresh();
@@ -100,6 +109,10 @@ namespace Forms.WindowMenuItems
                 .Select(DatabaseAPI.GetPowerByFullName)
                 .ToList();
 
+            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(PowersData, BasePowerHistoryIdx);
+            MathPower = buffedPowers.Key;
+            BuffedPower = buffedPowers.Value;
+
             lblEntityName.Text = EntityData == null
                 ? "Entity Details"
                 : $"Entity: {EntityData.DisplayName}";
@@ -107,7 +120,8 @@ namespace Forms.WindowMenuItems
             powersList = new ListLabelV3
             {
                 Location = dataView1.Location with {X = dataView1.Location.X + dataView1.Size.Width + 10},
-                Size = new Size(180, btnTopMost.Location.Y - dataView1.Location.Y - 10),
+                Size = new Size(180, dataView1.Size.Height - 70),
+                SizeNormal = new Size(180, dataView1.Size.Height - 70),
                 BackColor = Color.Black,
                 Expandable = false,
                 ActualLineHeight = 18,
@@ -115,7 +129,6 @@ namespace Forms.WindowMenuItems
                 Scrollable = false,
             };
 
-            powersList.SizeNormal = powersList.Size;
             powersList.ItemHover += powersList_ItemHover;
             powersList.MouseDown += powersList_MouseDown;
             Controls.Add(powersList);
@@ -126,10 +139,13 @@ namespace Forms.WindowMenuItems
             powersList.SuspendRedraw = false;
 
             ListPowers();
+            powersList.Size = new Size(180, Math.Min(dataView1.Size.Height - 70, Math.Max(120, powersList.DesiredHeight)));
+            powersList.SizeNormal = new Size(180, Math.Min(dataView1.Size.Height - 70, Math.Max(120, powersList.DesiredHeight)));
+
             dataView1.SetFontData();
             dataView1.DrawVillain = MidsContext.Character.IsVillain;
             dataView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
-            dataView1.SetData(PowersData[0], PowersData[0]);
+            dataView1.SetData(PowersData[0], BuffedPower[0]);
         }
 
         /// <summary>
@@ -185,19 +201,19 @@ namespace Forms.WindowMenuItems
                 if (PowersData[i] == null)
                 {
                     var nameChunks = Powers[i].Split('.');
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(nameChunks.Length < 1 ? "N/A" : nameChunks[^1], ListLabelV3.LlItemState.Disabled, -1, -1, -1, "", ListLabelV3.LlFontFlags.Italic));
+                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(nameChunks.Length < 1 ? "N/A" : nameChunks[^1], ListLabelV3.LlItemState.Disabled, -1, -1, i, "", ListLabelV3.LlFontFlags.Italic));
                 }
                 else if (PowersData[i].DisplayName == "Resistance")
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Enabled, -1, PowersData[i].StaticIndex));
+                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Enabled, -1, PowersData[i].StaticIndex, i));
                 }
                 else if (new Regex(@"^Self[\s\-_]Destruct", RegexOptions.IgnoreCase).IsMatch(PowersData[i].DisplayName))
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Invalid, -1, PowersData[i].StaticIndex, -1, "", ListLabelV3.LlFontFlags.Italic));
+                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Invalid, -1, PowersData[i].StaticIndex, i, "", ListLabelV3.LlFontFlags.Italic));
                 }
                 else
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Selected, -1, PowersData[i].StaticIndex));
+                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Selected, -1, PowersData[i].StaticIndex, i));
                 }
             }
 
@@ -227,13 +243,14 @@ namespace Forms.WindowMenuItems
                 return;
             }
 
-            dvPower = power.Clone();
+            dvPowerBase = power.Clone();
+            dvPowerEnh = (item.NIdPower < 0 ? power : BuffedPower[item.NIdPower]).Clone();
             if (dvLocked)
             {
                 return;
             }
 
-            dataView1.SetData(dvPower, dvPower);
+            dataView1.SetData(dvPowerBase, dvPowerEnh);
         }
 
         private void powersList_MouseDown(object sender, MouseEventArgs e)
@@ -244,7 +261,7 @@ namespace Forms.WindowMenuItems
             }
 
             dvLocked = true;
-            dataView1.SetData(dvPower, dvPower, false, true);
+            dataView1.SetData(dvPowerBase, dvPowerEnh, false, true);
         }
 
         private void dataView1_Unlock_Click()
@@ -281,6 +298,10 @@ namespace Forms.WindowMenuItems
                 .ToList();
 
             Text = EntityData != null ? $"Entity Details: {EntityData.DisplayName}" : "Entity Details";
+
+            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(PowersData, BasePowerHistoryIdx);
+            MathPower = buffedPowers.Key;
+            BuffedPower = buffedPowers.Value;
 
             ListPowers();
             if (TopMost) BringToFront();

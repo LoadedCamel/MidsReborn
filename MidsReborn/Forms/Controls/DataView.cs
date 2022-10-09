@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -41,7 +40,7 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void SlotUpdateEventHandler();
         public delegate void TabChangedEventHandler(int Index);
         public delegate void Unlock_ClickEventHandler();
-        public delegate void EntityDetailsEventandler(string entityUid, HashSet<string> powers);
+        public delegate void EntityDetailsEventandler(string entityUid, HashSet<string> powers, int basePowerHistoryIdx);
 
         private const int SnapDistance = 10;
 
@@ -4611,7 +4610,7 @@ namespace Mids_Reborn.Forms.Controls
                 powers.UnionWith(returnedPowers);
             }
 
-            EntityDetails?.Invoke(item.EntTag.UID, powers);
+            EntityDetails?.Invoke(item.EntTag.UID, powers, HistoryIDX);
         }
     }
 }

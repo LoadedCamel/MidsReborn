@@ -1819,6 +1819,34 @@ namespace Mids_Reborn
             GBD_Totals();
         }
 
+        /// <summary>
+        /// Generate MathPower, BuffedPower for the listed powers.
+        /// These are going to be assimilated into build power # basePowerHistoryIdx in order to apply buff calculations
+        /// This is typically used for pet powers that normally do not receive buffs from build.
+        /// </summary>
+        /// <param name="powers">List of powers to process</param>
+        /// <param name="basePowerHistoryIdx">Index in build history of the power to attach to</param>
+        /// <returns>KeyValuePair(keys=MathPower, values=BuffedPower</returns>
+        public KeyValuePair<List<IPower>, List<IPower>> GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx)
+        {
+            var mathPowers = new List<IPower>();
+            var buffedPowers = new List<IPower>();
+
+            var pePower = CurrentBuild.Powers[basePowerHistoryIdx].NIDPower;
+            foreach (var p in powers)
+            {
+                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e.StaticIndex == p.StaticIndex);
+                GenerateBuffedPowerArray();
+
+                mathPowers.Add(_mathPower[basePowerHistoryIdx].Clone());
+                buffedPowers.Add(_buffedPower[basePowerHistoryIdx].Clone());
+            }
+
+            CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = pePower;
+
+            return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);
+        }
+
         private void GenerateModifyEffectsArray()
         {
             for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)

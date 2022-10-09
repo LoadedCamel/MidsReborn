@@ -32,7 +32,6 @@
             this.btnTopMost = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.lblEntityName = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // dataView1
@@ -41,7 +40,7 @@
             this.dataView1.DrawVillain = false;
             this.dataView1.Floating = false;
             this.dataView1.Font = new System.Drawing.Font("Arial", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.dataView1.Location = new System.Drawing.Point(16, 77);
+            this.dataView1.Location = new System.Drawing.Point(16, 51);
             this.dataView1.Name = "dataView1";
             this.dataView1.Size = new System.Drawing.Size(303, 464);
             this.dataView1.TabIndex = 0;
@@ -57,7 +56,7 @@
             this.btnTopMost.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnTopMost.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnTopMost.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnTopMost.Location = new System.Drawing.Point(369, 475);
+            this.btnTopMost.Location = new System.Drawing.Point(369, 397);
             this.btnTopMost.Lock = false;
             this.btnTopMost.Name = "btnTopMost";
             this.btnTopMost.Size = new System.Drawing.Size(126, 30);
@@ -81,7 +80,7 @@
             this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(369, 511);
+            this.btnClose.Location = new System.Drawing.Point(369, 433);
             this.btnClose.Lock = false;
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(126, 30);
@@ -107,24 +106,12 @@
             this.lblEntityName.TabIndex = 4;
             this.lblEntityName.Text = "Entity Name";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.label1.ForeColor = System.Drawing.Color.Silver;
-            this.label1.Location = new System.Drawing.Point(43, 48);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(145, 15);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Showing base values only.";
-            // 
             // frmEntityDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(546, 561);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(546, 478);
             this.Controls.Add(this.lblEntityName);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnTopMost);
@@ -132,7 +119,9 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(41, 18, 41, 18);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(562, 517);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(562, 517);
             this.Name = "frmEntityDetails";
             this.ShowIcon = false;
             this.Text = "Entity Details";
@@ -149,6 +138,5 @@
         private Mids_Reborn.Forms.Controls.ImageButtonEx btnTopMost;
         private Mids_Reborn.Forms.Controls.ImageButtonEx btnClose;
         private System.Windows.Forms.Label lblEntityName;
-        private System.Windows.Forms.Label label1;
     }
 }
