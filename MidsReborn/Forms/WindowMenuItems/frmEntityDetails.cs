@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -16,8 +17,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private string _entityUid;
         private List<string> _powers;
         private readonly int _basePowerHistoryIdx;
-        private List<IPower>? _mathPower;
-        private List<IPower>? _buffedPower;
+        private List<IPower?> _mathPower;
+        private List<IPower?> _buffedPower;
 
         private SummonedEntity? _entityData;
         private List<IPower?>? _powersData;
@@ -131,9 +132,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .Select(DatabaseAPI.GetPowerByFullName)
                 .ToList();
 
-            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
-            _mathPower = buffedPowers.Key;
-            _buffedPower = buffedPowers.Value;
+            var buffedPowers = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
+            if (buffedPowers == null)
+            {
+                _mathPower = _powersData.Clone();
+                _buffedPower = _powersData.Clone();
+            }
+            else
+            {
+                _mathPower = buffedPowers.Value.Key;
+                _buffedPower = buffedPowers.Value.Value;
+            }
 
             lblEntityName.Text = _entityData == null
                 ? "Entity Details"
@@ -324,9 +333,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
-            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
-            _mathPower = buffedPowers.Key;
-            _buffedPower = buffedPowers.Value;
+            var buffedPowers = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
+            if (buffedPowers == null)
+            {
+                _mathPower = _powersData.Clone();
+                _buffedPower = _powersData.Clone();
+            }
+            else
+            {
+                _mathPower = buffedPowers.Value.Key;
+                _buffedPower = buffedPowers.Value.Value;
+            }
 
             ListPowers();
             if (TopMost) BringToFront();

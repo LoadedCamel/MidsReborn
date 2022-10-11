@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1828,22 +1827,29 @@ namespace Mids_Reborn
         /// <param name="powers">List of powers to process</param>
         /// <param name="basePowerHistoryIdx">Index in build history of the power to attach to</param>
         /// <returns>KeyValuePair(keys=MathPower, values=BuffedPower</returns>
-        public KeyValuePair<List<IPower>, List<IPower>> GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx)
+        public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx)
         {
+            if (basePowerHistoryIdx < 0)
+            {
+                return null;
+            }
+
             var mathPowers = new List<IPower>();
             var buffedPowers = new List<IPower>();
-
-            var pePower = CurrentBuild.Powers[basePowerHistoryIdx].NIDPower;
-            foreach (var p in powers)
+            powers.Add(CurrentBuild.Powers[basePowerHistoryIdx].Power.Clone()); // Restore original attached power
+            for (var i = 0; i < powers.Count; i++)
             {
-                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e.StaticIndex == p.StaticIndex);
+                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e.StaticIndex == powers[i].StaticIndex);
                 GenerateBuffedPowerArray();
+
+                if (i >= powers.Count - 1)
+                {
+                    continue;
+                }
 
                 mathPowers.Add(_mathPower[basePowerHistoryIdx].Clone());
                 buffedPowers.Add(_buffedPower[basePowerHistoryIdx].Clone());
             }
-
-            CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = pePower;
 
             return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);
         }
