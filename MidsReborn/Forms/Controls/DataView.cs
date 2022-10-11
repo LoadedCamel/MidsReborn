@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -40,7 +41,7 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void SlotUpdateEventHandler();
         public delegate void TabChangedEventHandler(int Index);
         public delegate void Unlock_ClickEventHandler();
-        public delegate void EntityDetailsEventandler(string entityUid, HashSet<string> powers, int basePowerHistoryIdx);
+        public delegate void EntityDetailsEventHandler(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo);
 
         private const int SnapDistance = 10;
 
@@ -57,14 +58,16 @@ namespace Mids_Reborn.Forms.Controls
         private bool Lock;
         private Point mouse_offset;
         public bool MoveDisable;
-        private IPower pBase;
-        private IPower pEnh;
+        private IPower? pBase;
+        private IPower? pEnh;
         private int pLastScaleVal;
         private Rectangle ScreenBounds;
         public Rectangle SnapLocation;
         public int TabPage;
         private bool VillainColor;
         public bool[]? TabsMask;
+
+        public PetInfo PetInfo;
 
         public DataView()
         {
@@ -83,6 +86,7 @@ namespace Mids_Reborn.Forms.Controls
             BackColorChanged += DataView_BackColorChanged;
             Load += DataView_Load;
             Name = nameof(DataView);
+            PetInfo = new PetInfo();
             InitializeComponent();
         }
 
@@ -142,7 +146,7 @@ namespace Mids_Reborn.Forms.Controls
         public event SlotUpdateEventHandler SlotUpdate;
         public event TabChangedEventHandler TabChanged;
         public event Unlock_ClickEventHandler Unlock_Click;
-        public event EntityDetailsEventandler EntityDetails;
+        public event EntityDetailsEventHandler EntityDetails;
 
         private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
@@ -205,7 +209,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private static string CapString(string iString, int capLength)
         {
-            return iString.Length >= capLength ? iString.Substring(0, capLength) : iString;
+            return iString.Length >= capLength ? iString[..capLength] : iString;
         }
 
         public void Clear()
@@ -4119,7 +4123,7 @@ namespace Mids_Reborn.Forms.Controls
             return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
         }
 
-        public void SetData(IPower basePower, IPower enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
+        public void SetData(IPower? basePower, IPower enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
         {
             if (basePower == null)
             {
@@ -4597,6 +4601,15 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var sets = item.EntTag.PowersetFullName.ToList();
+            var petPowers = new List<IPower>();
+            foreach (var powersFound in sets.Select(powerSet => DatabaseAPI.GetPowersetByName(powerSet)?.Powers.ToList()).Where(powersFound => powersFound != null))
+            {
+                petPowers.AddRange(powersFound);
+            }
+
+            PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
+
+
             var powers = new HashSet<string>();
             foreach (var ps in sets)
             {
@@ -4610,7 +4623,7 @@ namespace Mids_Reborn.Forms.Controls
                 powers.UnionWith(returnedPowers);
             }
 
-            EntityDetails?.Invoke(item.EntTag.UID, powers, HistoryIDX);
+            EntityDetails?.Invoke(item.EntTag.UID, powers, HistoryIDX, PetInfo);
         }
     }
 }

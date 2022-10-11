@@ -69,7 +69,7 @@ namespace Mids_Reborn.Core
         string LongName { get; }
 
         //IPower Power { get; set; }
-        IPower GetPower();
+        IPower? GetPower();
         void SetPower(IPower power);
 
         int CheckAndFixIOLevel(int level);

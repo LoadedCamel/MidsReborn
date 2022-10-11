@@ -1,6 +1,6 @@
-﻿namespace Forms.WindowMenuItems
+﻿namespace Mids_Reborn.Forms.WindowMenuItems
 {
-    partial class frmEntityDetails
+    partial class FrmEntityDetails
     {
         /// <summary>
         /// Required designer variable.
@@ -28,24 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataView1 = new Mids_Reborn.Forms.Controls.DataView();
             this.btnTopMost = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.lblEntityName = new System.Windows.Forms.Label();
+            this.petView1 = new Mids_Reborn.Forms.Controls.PetView();
             this.SuspendLayout();
-            // 
-            // dataView1
-            // 
-            this.dataView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.dataView1.DrawVillain = false;
-            this.dataView1.Floating = false;
-            this.dataView1.Font = new System.Drawing.Font("Arial", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.dataView1.Location = new System.Drawing.Point(16, 51);
-            this.dataView1.Name = "dataView1";
-            this.dataView1.Size = new System.Drawing.Size(303, 464);
-            this.dataView1.TabIndex = 0;
-            this.dataView1.VisibleSize = Mids_Reborn.Core.Enums.eVisibleSize.Full;
-            this.dataView1.Unlock_Click += new Mids_Reborn.Forms.Controls.DataView.Unlock_ClickEventHandler(this.dataView1_Unlock_Click);
             // 
             // btnTopMost
             // 
@@ -56,7 +43,7 @@
             this.btnTopMost.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnTopMost.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnTopMost.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnTopMost.Location = new System.Drawing.Point(369, 397);
+            this.btnTopMost.Location = new System.Drawing.Point(568, 468);
             this.btnTopMost.Lock = false;
             this.btnTopMost.Name = "btnTopMost";
             this.btnTopMost.Size = new System.Drawing.Size(126, 30);
@@ -80,7 +67,7 @@
             this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(369, 433);
+            this.btnClose.Location = new System.Drawing.Point(568, 504);
             this.btnClose.Lock = false;
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(126, 30);
@@ -98,7 +85,7 @@
             // lblEntityName
             // 
             this.lblEntityName.AutoSize = true;
-            this.lblEntityName.Font = new System.Drawing.Font("Segoe UI Variable Display", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblEntityName.Font = new System.Drawing.Font("Segoe UI Variable Display", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.lblEntityName.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblEntityName.Location = new System.Drawing.Point(16, 9);
             this.lblEntityName.Name = "lblEntityName";
@@ -106,23 +93,32 @@
             this.lblEntityName.TabIndex = 4;
             this.lblEntityName.Text = "Entity Name";
             // 
-            // frmEntityDetails
+            // petView1
+            // 
+            this.petView1.BackColor = System.Drawing.Color.Black;
+            this.petView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.petView1.ForeColor = System.Drawing.Color.Black;
+            this.petView1.Location = new System.Drawing.Point(16, 38);
+            this.petView1.Name = "petView1";
+            this.petView1.Size = new System.Drawing.Size(410, 460);
+            this.petView1.TabIndex = 5;
+            // 
+            // FrmEntityDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(546, 478);
+            this.ClientSize = new System.Drawing.Size(746, 546);
+            this.Controls.Add(this.petView1);
             this.Controls.Add(this.lblEntityName);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnTopMost);
-            this.Controls.Add(this.dataView1);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(41, 18, 41, 18);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(562, 517);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(562, 517);
-            this.Name = "frmEntityDetails";
+            this.Name = "FrmEntityDetails";
             this.ShowIcon = false;
             this.Text = "Entity Details";
             this.TopMost = true;
@@ -133,10 +129,9 @@
         }
 
         #endregion
-
-        private Mids_Reborn.Forms.Controls.DataView dataView1;
         private Mids_Reborn.Forms.Controls.ImageButtonEx btnTopMost;
         private Mids_Reborn.Forms.Controls.ImageButtonEx btnClose;
         private System.Windows.Forms.Label lblEntityName;
+        private Controls.PetView petView1;
     }
 }

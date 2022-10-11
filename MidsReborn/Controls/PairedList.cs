@@ -156,7 +156,7 @@ namespace Mids_Reborn.Controls
                 _bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 _bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-                var rect = new Rectangle(0, 0, Width, Height);
+                var rect = ClientRectangle with { X = 0, Y = 0 };
 
                 var rectangleF = new RectangleF(0, 0, 0, 0);
                 var stringFormat = new StringFormat();
@@ -204,7 +204,7 @@ namespace Mids_Reborn.Controls
                         var scaleWidth = (int)Math.Round(columnWidth * (_myValueWidth / 125f));
                         var controlWidth = columnWidth - scaleWidth;
 
-                        var location = new PointF(columnWidth * num5, rectangleF.Height * num4 + checked(LinePadding * num4));
+                        var location = new PointF(columnWidth * num5 + Margin.Left, rectangleF.Height * num4 + checked(LinePadding * num4));
                         rectangleF.Location = location;
                         rectangleF.Width = stringM.Width;
                         stringFormat.Alignment = StringAlignment.Far;
@@ -227,7 +227,7 @@ namespace Mids_Reborn.Controls
                         //Values
                         var value = _myItems[i].Value;
                         var stringM2 = _bxBuffer.Graphics.MeasureString(value, font2);
-                        var location2 = new PointF(location.X * num5 + stringM.Width, rectangleF.Height * num4 + checked(LinePadding * num4));
+                        var location2 = new PointF(location.X * num5 + stringM.Width + Margin.Left, rectangleF.Height * num4 + checked(LinePadding * num4));
                         _myItems[i].SetBounds(new RectangleF(location.X, location.Y, rectangleF.Width + stringM2.Width, rectangleF.Height));
                         rectangleF.Location = location2;
                         rectangleF.Width = stringM2.Width;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -20,7 +21,7 @@ namespace Mids_Reborn
     {
         private const double BuildFormatChange1 = 1.29999995231628;
         private const double BuildFormatChange2 = 1.39999997615814;
-        private IPower[] _buffedPower = Array.Empty<IPower>();
+        private IPower?[] _buffedPower = Array.Empty<IPower>();
         private IPower[] _mathPower = Array.Empty<IPower>();
         private Enums.BuffsX _selfBuffs;
         private Enums.BuffsX _selfEnhance;
@@ -1949,7 +1950,10 @@ namespace Mids_Reborn
 
         public IPower GetEnhancedPower(int iPower)
         {
-            return !((iPower < 0) | (_buffedPower.Length - 1 < iPower)) ? _buffedPower[iPower] : null;
+            if (!((iPower < 0) | (_buffedPower.Length - 1 < iPower)))
+                return _buffedPower[iPower];
+            else
+                return null;
         }
 
         public int[] GetEnhancements(int iPowerSlot)

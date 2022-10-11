@@ -130,12 +130,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var num = _myPetPowers.Count - 1;
             for (var index = 0; index <= num; ++index)
             {
-                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[index])
-                    ? !((_myPetPowers[index].PowerType != Enums.ePowerType.Click) | _myPetPowers[index].ClickBuff)
-                        ? !_myPetPowers[index].SubIsAltColor ? ListLabelV3.LlItemState.Disabled :
-                        ListLabelV3.LlItemState.Invalid
-                        : ListLabelV3.LlItemState.Enabled
-                    : ListLabelV3.LlItemState.Selected;
+                ListLabelV3.LlItemState iState;
+                if (!MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[index]))
+                    if (!((_myPetPowers[index].PowerType != Enums.ePowerType.Click) | _myPetPowers[index].ClickBuff))
+                        if (!_myPetPowers[index].SubIsAltColor)
+                            iState = ListLabelV3.LlItemState.Disabled;
+                        else
+                            iState = ListLabelV3.LlItemState.Invalid;
+                    else
+                        iState = ListLabelV3.LlItemState.Enabled;
+                else
+                    iState = ListLabelV3.LlItemState.Selected;
                 var iItem = !MidsContext.Config.RtFont.PairedBold
                     ? new ListLabelV3.ListLabelItemV3(_myPetPowers[index].DisplayName, iState)
                     : new ListLabelV3.ListLabelItemV3(_myPetPowers[index].DisplayName, iState, -1, -1, -1, "",

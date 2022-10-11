@@ -8,6 +8,7 @@ namespace Mids_Reborn.Core
 {
     public interface IPower : IComparable
     {
+        bool HasEntity { get; }
         bool HasProcSlotted { get; set; }
         string FullSetName { get; }
 

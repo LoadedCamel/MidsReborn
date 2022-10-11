@@ -554,6 +554,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool HasProcSlotted { get; set; }
 
+        public bool HasEntity
+        {
+            get
+            {
+                return Effects.Any(effect => effect.nSummon > -1);
+            }
+        }
+
         public string FullSetName
         {
             get

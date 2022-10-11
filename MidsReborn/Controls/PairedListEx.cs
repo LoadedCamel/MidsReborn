@@ -193,6 +193,8 @@ namespace Mids_Reborn.Controls
             AddItem(new Item("1234567890:", "12345678901234567890", true));
             AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", false));
             AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", true));
+            AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", false, true));
+            AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", false, false, true));
         }
 
         public void AddItem(Item iItem)
@@ -255,7 +257,7 @@ namespace Mids_Reborn.Controls
 
             if (Items.Any())
             {
-                for (var index = 0; index < Items.Count; index++)
+                for (var index = 0; index < Items.Count -1; index++)
                 {
                     var itemColor = ItemColor;
                     Color valueColor;
@@ -274,13 +276,13 @@ namespace Mids_Reborn.Controls
                     //var itemMeasured = TextRenderer.MeasureText($"{itemName} {itemValue}", Font);
                     var nameLocation = itemLocations[index];
                     var valueLocation = nameLocation;
-                    valueLocation.X += nameMeasured.Width + 2;
+                    valueLocation.X += nameMeasured.Width + 4;
 
-                    var itemBounds = new Rectangle(itemLocations[index],
-                        nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width });
+                    var itemBounds = new Rectangle(itemLocations[index], nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width + 4 });
 
                     Items[index].SetBounds(itemBounds);
                     e.Graphics.FillRectangle(backBrush, itemBounds);
+                    
                     if (UseHighlighting)
                     {
                         if (Items[index].IsHighlightable)
@@ -294,33 +296,49 @@ namespace Mids_Reborn.Controls
                         else
                         {
                             e.Graphics.FillRectangle(backBrush, itemBounds);
+                            if (Items[index].UseAlternateColor)
+                            {
+                                valueColor = ValueAlternateColor;
+                            }
+                            else if (Items[index].UseSpecialColor)
+                            {
+                                valueColor = ValueSpecialColor;
+                            }
+                            else if (Items[index].UseUniqueColor)
+                            {
+                                valueColor = ValueConditionColor;
+                            }
+                            else
+                            {
+                                itemColor = ItemColor;
+                                valueColor = ValueColor;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Items[index].UseAlternateColor)
+                        {
+                            valueColor = ValueAlternateColor;
+                        }
+                        else if (Items[index].UseSpecialColor)
+                        {
+                            valueColor = ValueSpecialColor;
+                        }
+                        else if (Items[index].UseUniqueColor)
+                        {
+                            valueColor = ValueConditionColor;
+                        }
+                        else
+                        {
                             itemColor = ItemColor;
                             valueColor = ValueColor;
                         }
                     }
-                    if (Items[index].UseAlternateColor)
-                    {
-                        valueColor = ValueAlternateColor;
-                    }
-                    else if (Items[index].UseSpecialColor)
-                    {
-                        valueColor = ValueSpecialColor;
-                    }
-                    else if (Items[index].UseUniqueColor)
-                    {
-                        valueColor = ValueConditionColor;
-                    }
-                    else
-                    {
-                        itemColor = ItemColor;
-                        valueColor = ValueColor;
-                    }
 
 
-                    TextRenderer.DrawText(e.Graphics, itemName, Font, nameLocation, itemColor,
-                        TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                    TextRenderer.DrawText(e.Graphics, itemValue, Font, valueLocation, valueColor,
-                        TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                    TextRenderer.DrawText(e.Graphics, itemName, Font, nameLocation, itemColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                    TextRenderer.DrawText(e.Graphics, itemValue, Font, valueLocation, valueColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 }
             }
         }
@@ -336,6 +354,7 @@ namespace Mids_Reborn.Controls
             public bool UseUniqueColor { get; set; }
             public Rectangle Bounds { get; private set; }
             public bool IsHighlightable { get; set; }
+            public SummonedEntity? EntTag { get; set; }
 
             public void SetBounds(Rectangle rect)
             {
@@ -357,6 +376,18 @@ namespace Mids_Reborn.Controls
                 UseAlternateColor = useAlternate;
                 UseSpecialColor = useSpecial;
                 UseUniqueColor = useUnique;
+            }
+
+            public Item(string name, string value, bool useAlternate, bool useSpecial, bool useUnique, string tip, SummonedEntity entTag)
+            {
+                Name = name;
+                Value = value;
+                TagId.Add(-1, 0f);
+                ToolTip = tip;
+                UseAlternateColor = useAlternate;
+                UseSpecialColor = useSpecial;
+                UseUniqueColor = useUnique;
+                EntTag = entTag;
             }
 
             public Item(string name, string value, bool useAlternate = false, bool useSpecial = false, bool useUnique = false, int idValue = -1)

@@ -576,7 +576,7 @@ namespace Mids_Reborn.Core
         }
 
 
-        public static IPower GetPowerByFullName(string name)
+        public static IPower? GetPowerByFullName(string name)
         {
             if (string.IsNullOrEmpty(name))
                 return null;

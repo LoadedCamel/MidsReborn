@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Forms.WindowMenuItems;
 using Microsoft.Win32;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -68,7 +67,7 @@ namespace Mids_Reborn.Forms
         private string[] CommandArgs { get; }
         private string ProcessedCommand { get; set; }
         private bool ProcessedFromCommand { get; set; }
-        private frmEntityDetails frmEntityDetails { get; set; }
+        private FrmEntityDetails frmEntityDetails { get; set; }
 
         public frmMain(string[] args)
         {
@@ -1791,12 +1790,12 @@ namespace Mids_Reborn.Forms
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
         }
 
-        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx)
+        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
         {
             if (frmEntityDetails is not {Visible: true})
             {
-                frmEntityDetails = new frmEntityDetails(entityUid, powers, basePowerHistoryIdx);
-                frmEntityDetails.Show();
+                frmEntityDetails = new FrmEntityDetails(entityUid, powers, basePowerHistoryIdx, petInfo);
+                frmEntityDetails.Show(this);
             }
             else if (frmEntityDetails.Visible)
             {
@@ -2650,6 +2649,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     PowerModified(true);
                 if (EnhancingPower > -1)
                     RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
+                if (!dvAnchored.PetInfo.HasEmptyBasePower)
+                    dvAnchored.PetInfo.ExecuteUpdate();
             }
             else
             {
@@ -3814,6 +3815,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         MainModule.MidsController.Toon?.BuildSlot(hIDPower, slotID);
                         PowerModified(true);
                         LastClickPlacedSlot = false;
+                        if (!dvAnchored.PetInfo.HasEmptyBasePower)
+                            dvAnchored.PetInfo.ExecuteUpdate();
                     }
                     else
                     {

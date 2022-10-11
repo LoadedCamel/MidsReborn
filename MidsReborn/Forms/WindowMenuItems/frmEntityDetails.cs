@@ -4,42 +4,59 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FastDeepCloner;
-using Mids_Reborn;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
-namespace Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
-    public partial class frmEntityDetails : Form
+    public partial class FrmEntityDetails : Form
     {
-        private string EntityUid;
-        private List<string> Powers;
-        private int BasePowerHistoryIdx;
-        private List<IPower> MathPower;
-        private List<IPower> BuffedPower;
+        private string _entityUid;
+        private List<string> _powers;
+        private readonly int _basePowerHistoryIdx;
+        private List<IPower>? _mathPower;
+        private List<IPower>? _buffedPower;
 
-        private SummonedEntity? EntityData;
-        private List<IPower> PowersData;
-        private ListLabelV3 powersList;
-        private int HoveredItemIndex = -1;
-        private bool dvLocked;
-        private IPower? dvPowerBase;
-        private IPower? dvPowerEnh;
+        private SummonedEntity? _entityData;
+        private List<IPower?>? _powersData;
+        private ListLabelV3? _powersList;
+        private int _hoveredItemIndex = -1;
+
+        private bool DvLocked
+        {
+            get => petView1.Lock;
+            set => petView1.Lock = value;
+        }
+        private IPower? _dvPowerBase;
+        private IPower? _dvPowerEnh;
+        private readonly PetInfo _petInfo;
 
         /// <summary>
         /// Initialize entity data
         /// </summary>
         /// <param name="entityUid">Entity UID</param>
         /// <param name="powers">Entity's powers, as a HashSet</param>
-        public frmEntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx)
+        /// <param name="basePowerHistoryIdx">PowerEntry index</param>
+        /// <param name="petInfo">PetInfo instance</param>
+        public FrmEntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
         {
+            _entityUid = entityUid;
+            _powers = powers.ToList();
+            _basePowerHistoryIdx = basePowerHistoryIdx;
+            _petInfo = petInfo;
+            _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
-            EntityUid = entityUid;
-            Powers = powers.ToList();
-            BasePowerHistoryIdx = basePowerHistoryIdx;
+        }
+
+        private void PetInfoOnPowersUpdated(object? sender, EventArgs e)
+        {
+            var petPower = _petInfo.GetPetPower();
+            _dvPowerBase = petPower?.BasePower;
+            _dvPowerEnh = petPower?.BuffedPower;
+            if (DvLocked) return;
+            if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
 
         /// <summary>
@@ -47,21 +64,25 @@ namespace Forms.WindowMenuItems
         /// </summary>
         /// <param name="entityUid">Entity UID</param>
         /// <param name="powers">Entity's powers, as a List</param>
-        public frmEntityDetails(string entityUid, List<string> powers, int basePowerHistoryIdx)
+        /// <param name="basePowerHistoryIdx">PowerEntry index</param>
+        /// <param name="petInfo">PetInfo instance</param> 
+        public FrmEntityDetails(string entityUid, List<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
         {
+            _entityUid = entityUid;
+            _powers = powers;
+            _basePowerHistoryIdx = basePowerHistoryIdx;
+            _petInfo = petInfo;
+            _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
-            EntityUid = entityUid;
-            Powers = powers;
-            BasePowerHistoryIdx = basePowerHistoryIdx;
         }
 
         
-        private void btnClose_Click(object sender, System.EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnTopMost_Click(object sender, System.EventArgs e)
+        private void btnTopMost_Click(object sender, EventArgs e)
         {
             switch (btnTopMost.ToggleState)
             {
@@ -79,8 +100,9 @@ namespace Forms.WindowMenuItems
             }
         }
 
-        private void frmEntityDetails_Load(object sender, System.EventArgs e)
+        private void frmEntityDetails_Load(object sender, EventArgs e)
         {
+            CenterToParent();
             switch (TopMost)
             {
                 case true:
@@ -95,57 +117,59 @@ namespace Forms.WindowMenuItems
             }
 
             // Hide Totals and Enhance tabs
-            dataView1.TabsMask = new[] {true, true, false, false};
-            dataView1.BackColor = BackColor;
-            dataView1.Refresh();
+            //petView1.TabsMask = new[] {true, true, false, false};
+            //petView1.BackColor = BackColor;
+            //petView1.Refresh();
             
-            Text = EntityData != null ? $"Entity Details: {EntityData.DisplayName}" : "Entity Details";
+            Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
             
-            EntityData = DatabaseAPI.Database.Entities
+            _entityData = DatabaseAPI.Database.Entities
                 .DefaultIfEmpty(null)
-                .FirstOrDefault(en => en?.UID == EntityUid);
+                .FirstOrDefault(en => en?.UID == _entityUid);
             
-            PowersData = Powers
+            _powersData = _powers
                 .Select(DatabaseAPI.GetPowerByFullName)
                 .ToList();
 
-            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(PowersData, BasePowerHistoryIdx);
-            MathPower = buffedPowers.Key;
-            BuffedPower = buffedPowers.Value;
+            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
+            _mathPower = buffedPowers.Key;
+            _buffedPower = buffedPowers.Value;
 
-            lblEntityName.Text = EntityData == null
+            lblEntityName.Text = _entityData == null
                 ? "Entity Details"
-                : $"Entity: {EntityData.DisplayName}";
+                : $"Entity: {_entityData.DisplayName}";
 
-            powersList = new ListLabelV3
+            _powersList = new ListLabelV3
             {
-                Location = dataView1.Location with {X = dataView1.Location.X + dataView1.Size.Width + 10},
-                Size = new Size(180, dataView1.Size.Height - 70),
-                SizeNormal = new Size(180, dataView1.Size.Height - 70),
+                Location = petView1.Location with {X = petView1.Location.X + petView1.Size.Width + 10},
+                HighVis = true,
+                Size = new Size(180, petView1.Size.Height - 70),
+                SizeNormal = new Size(180, petView1.Size.Height - 70),
                 BackColor = Color.Black,
+                ForeColor = Color.AliceBlue,
                 Expandable = false,
                 ActualLineHeight = 18,
                 HoverColor = Color.DimGray,
                 Scrollable = false,
             };
 
-            powersList.ItemHover += powersList_ItemHover;
-            powersList.MouseDown += powersList_MouseDown;
-            Controls.Add(powersList);
+            _powersList.ItemHover += powersList_ItemHover;
+            _powersList.MouseDown += powersList_MouseDown;
+            Controls.Add(_powersList);
 
-            powersList.SuspendRedraw = true;
+            _powersList.SuspendRedraw = true;
             SetPowersFont();
             SetPowerColors();
-            powersList.SuspendRedraw = false;
+            _powersList.SuspendRedraw = false;
 
             ListPowers();
-            powersList.Size = new Size(180, Math.Min(dataView1.Size.Height - 70, Math.Max(120, powersList.DesiredHeight)));
-            powersList.SizeNormal = new Size(180, Math.Min(dataView1.Size.Height - 70, Math.Max(120, powersList.DesiredHeight)));
+            _powersList.Size = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
+            _powersList.SizeNormal = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
 
-            dataView1.SetFontData();
-            dataView1.DrawVillain = MidsContext.Character.IsVillain;
-            dataView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
-            dataView1.SetData(PowersData[0], BuffedPower[0]);
+            //petView1.SetFontData();
+            //petView1.DrawVillain = MidsContext.Character.IsVillain;
+            petView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
+            petView1.SetData(_powersData[0], _buffedPower[0]);
         }
 
         /// <summary>
@@ -153,15 +177,15 @@ namespace Forms.WindowMenuItems
         /// </summary>
         private void SetPowersFont()
         {
-            var loc = powersList.Location;
+            var loc = _powersList.Location;
             var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
-            powersList.Font = new Font(powersList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
-            foreach (var it in powersList.Items)
+            _powersList.Font = new Font(_powersList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
+            foreach (var it in _powersList.Items)
             {
                 it.Bold = MidsContext.Config.RtFont.PowersSelectBold;
             }
 
-            powersList.Location = new Point(loc.X, loc.Y);
+            _powersList.Location = new Point(loc.X, loc.Y);
         }
 
         /// <summary>
@@ -169,22 +193,22 @@ namespace Forms.WindowMenuItems
         /// </summary>
         private void SetPowerColors()
         {
-            powersList.UpdateTextColors(ListLabelV3.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            powersList.UpdateTextColors(ListLabelV3.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            powersList.UpdateTextColors(ListLabelV3.LlItemState.Invalid, Color.Red);
-            powersList.ScrollBarColor = MidsContext.Character.IsHero()
+            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Invalid, Color.Red);
+            _powersList.ScrollBarColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            powersList.ScrollButtonColor = MidsContext.Character.IsHero()
+            _powersList.ScrollButtonColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            powersList.UpdateTextColors(ListLabelV3.LlItemState.Selected, MidsContext.Character.IsHero()
+            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Selected, MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            powersList.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled, MidsContext.Character.IsHero()
+            _powersList.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled, MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            powersList.HoverColor = MidsContext.Character.IsHero()
+            _powersList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
         }
@@ -194,30 +218,30 @@ namespace Forms.WindowMenuItems
         /// </summary>
         private void ListPowers()
         {
-            powersList.SuspendRedraw = true;
-            powersList.ClearItems();
-            for (var i = 0; i < PowersData.Count; i++)
+            _powersList.SuspendRedraw = true;
+            _powersList.ClearItems();
+            for (var i = 0; i < _powersData.Count; i++)
             {
-                if (PowersData[i] == null)
+                if (_powersData[i] == null)
                 {
-                    var nameChunks = Powers[i].Split('.');
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(nameChunks.Length < 1 ? "N/A" : nameChunks[^1], ListLabelV3.LlItemState.Disabled, -1, -1, i, "", ListLabelV3.LlFontFlags.Italic));
+                    var nameChunks = _powers[i].Split('.');
+                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(nameChunks.Length < 1 ? "N/A" : nameChunks[^1], ListLabelV3.LlItemState.Disabled, -1, -1, i, "", ListLabelV3.LlFontFlags.Italic));
                 }
-                else if (PowersData[i].DisplayName == "Resistance")
+                else if (_powersData[i].DisplayName == "Resistance")
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Enabled, -1, PowersData[i].StaticIndex, i));
+                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Enabled, -1, _powersData[i].StaticIndex, i));
                 }
-                else if (new Regex(@"^Self[\s\-_]Destruct", RegexOptions.IgnoreCase).IsMatch(PowersData[i].DisplayName))
+                else if (new Regex(@"^Self[\s\-_]Destruct", RegexOptions.IgnoreCase).IsMatch(_powersData[i].DisplayName))
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Invalid, -1, PowersData[i].StaticIndex, i, "", ListLabelV3.LlFontFlags.Italic));
+                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Invalid, -1, _powersData[i].StaticIndex, i, "", ListLabelV3.LlFontFlags.Italic));
                 }
                 else
                 {
-                    powersList.AddItem(new ListLabelV3.ListLabelItemV3(PowersData[i].DisplayName, ListLabelV3.LlItemState.Selected, -1, PowersData[i].StaticIndex, i));
+                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Selected, -1, _powersData[i].StaticIndex, i));
                 }
             }
 
-            powersList.SuspendRedraw = false;
+            _powersList.SuspendRedraw = false;
         }
 
         private void powersList_ItemHover(ListLabelV3.ListLabelItemV3 item)
@@ -227,12 +251,12 @@ namespace Forms.WindowMenuItems
                 return;
             }
 
-            if (item.IdxPower == HoveredItemIndex)
+            if (item.IdxPower == _hoveredItemIndex)
             {
                 return;
             }
 
-            HoveredItemIndex = item.IdxPower;
+            _hoveredItemIndex = item.IdxPower;
 
             var power = DatabaseAPI.Database.Power
                 .DefaultIfEmpty(null)
@@ -243,14 +267,20 @@ namespace Forms.WindowMenuItems
                 return;
             }
 
-            dvPowerBase = power.Clone();
-            dvPowerEnh = (item.NIdPower < 0 ? power : BuffedPower[item.NIdPower]).Clone();
-            if (dvLocked)
+            var petPower = _petInfo.GetPetPower(power);
+            _dvPowerBase = petPower?.BasePower;
+            _dvPowerEnh = petPower?.BuffedPower;
+            
+
+            // dvPowerBase = power.Clone();
+            // dvPowerEnh = (item.NIdPower < 0 ? power : BuffedPower[item.NIdPower]).Clone();
+
+            if (DvLocked)
             {
                 return;
             }
-
-            dataView1.SetData(dvPowerBase, dvPowerEnh);
+            
+            petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
 
         private void powersList_MouseDown(object sender, MouseEventArgs e)
@@ -260,13 +290,8 @@ namespace Forms.WindowMenuItems
                 return;
             }
 
-            dvLocked = true;
-            dataView1.SetData(dvPowerBase, dvPowerEnh, false, true);
-        }
-
-        private void dataView1_Unlock_Click()
-        {
-            dvLocked = false;
+            DvLocked = true;
+            petView1.SetData(_dvPowerBase, _dvPowerEnh, false, DvLocked);
         }
 
         /// <summary>
@@ -286,22 +311,22 @@ namespace Forms.WindowMenuItems
         /// <param name="powers">Entity's powers, as a List</param>
         public void UpdateData(string entityUid, List<string> powers)
         {
-            EntityUid = entityUid;
-            Powers = powers;
+            _entityUid = entityUid;
+            _powers = powers;
 
-            EntityData = DatabaseAPI.Database.Entities
+            _entityData = DatabaseAPI.Database.Entities
                 .DefaultIfEmpty(null)
-                .FirstOrDefault(en => en?.UID == EntityUid);
+                .FirstOrDefault(en => en?.UID == _entityUid);
 
-            PowersData = Powers
+            _powersData = _powers
                 .Select(DatabaseAPI.GetPowerByFullName)
                 .ToList();
 
-            Text = EntityData != null ? $"Entity Details: {EntityData.DisplayName}" : "Entity Details";
+            Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
-            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(PowersData, BasePowerHistoryIdx);
-            MathPower = buffedPowers.Key;
-            BuffedPower = buffedPowers.Value;
+            var buffedPowers = MainModule.MidsController.Toon.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
+            _mathPower = buffedPowers.Key;
+            _buffedPower = buffedPowers.Value;
 
             ListPowers();
             if (TopMost) BringToFront();
@@ -317,13 +342,13 @@ namespace Forms.WindowMenuItems
             btnTopMost.UseAlt = charVillain;
             btnClose.UseAlt = charVillain;
 
-            powersList.SuspendRedraw = true;
+            _powersList.SuspendRedraw = true;
             SetPowersFont();
             SetPowerColors();
-            powersList.SuspendRedraw = false;
+            _powersList.SuspendRedraw = false;
 
-            dataView1.SetFontData();
-            dataView1.DrawVillain = charVillain;
+            //petView1.SetFontData();
+            //petView1.DrawVillain = charVillain;
         }
     }
 }

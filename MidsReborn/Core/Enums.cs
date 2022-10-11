@@ -1731,7 +1731,7 @@ namespace Mids_Reborn.Core
 
         public struct ShortFX
         {
-            public int[] Index;
+            public int[]? Index;
             public float[] Value;
             public float Sum;
 
