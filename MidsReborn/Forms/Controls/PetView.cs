@@ -21,33 +21,28 @@ namespace Mids_Reborn.Forms.Controls
         public event SlotUpdateEventHandler? SlotUpdate;
         public event UnlockClickEventHandler? UnlockClick;
 
+        private event EventHandler? ViewColorChanged;
+
         private IPower? _basePower;
         private IPower? _enhancedPower;
         private int _entryIndex;
         private int _lastScaleVal;
         private int _scaleVal;
-        private bool _UseAlt;
+        private bool _useAlt;
         public bool Lock;
         private PetInfo? _petInfo;
 
+        private readonly Color _mainHeroColor = Color.FromArgb(12, 56, 100);
+        private readonly Color _mainVillainColor = Color.FromArgb(12, 56, 100);
+        private readonly Color _dimmedHeroColor = Color.FromArgb(12, 56, 100);
+        private readonly Color _dimmedVillainColor = Color.FromArgb(12, 56, 100);
         public bool UseAlt
         {
-            get => _UseAlt;
+            get => _useAlt;
             set
             {
-                var mainHeroColor = Color.FromArgb(12, 56, 100);
-                var mainVillainColor = Color.FromArgb(100, 12, 20);
-                var dimmedHeroColor = Color.FromArgb(7, 33, 59);
-                var dimmedVillainColor = Color.FromArgb(59, 7, 12);
-
-                _UseAlt = value;
-                BackColor = _UseAlt ? mainVillainColor : mainHeroColor;
-                panelSeparator1.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
-                panelSeparator2.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
-                panelSeparator3.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
-                panelSeparator4.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
-                panelSeparator5.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
-                panelSeparator6.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                _useAlt = value;
+                ViewColorChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -57,7 +52,20 @@ namespace Mids_Reborn.Forms.Controls
             _entryIndex = -1;
             _petInfo = new PetInfo();
             Load += OnLoad;
+            ViewColorChanged += OnViewColorChanged;
             InitializeComponent();
+        }
+
+        private void OnViewColorChanged(object? sender, EventArgs e)
+        {
+            BackColor = _useAlt ? _mainVillainColor : _mainHeroColor;
+            panelSeparator1.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            panelSeparator2.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            panelSeparator3.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            panelSeparator4.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            panelSeparator5.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            panelSeparator6.BackColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
+            Invalidate();
         }
 
         private void OnLoad(object? sender, EventArgs e)

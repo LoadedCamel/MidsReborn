@@ -342,12 +342,12 @@ namespace Mids_Reborn.Forms.Controls
         private System.Windows.Forms.PictureBox lockIcon;
         private System.Windows.Forms.PictureBox unlockIcon;
         private System.Windows.Forms.ToolTip infoTip;
-        private System.Windows.Forms.Panel panelSeparator1;
-        private System.Windows.Forms.Panel panelSeparator2;
-        private System.Windows.Forms.Panel panelSeparator3;
-        private System.Windows.Forms.Panel panelSeparator4;
-        private System.Windows.Forms.Panel panelSeparator5;
-        private System.Windows.Forms.Panel panelSeparator6;
+        internal System.Windows.Forms.Panel panelSeparator1;
+        internal System.Windows.Forms.Panel panelSeparator2;
+        internal System.Windows.Forms.Panel panelSeparator3;
+        internal System.Windows.Forms.Panel panelSeparator4;
+        internal System.Windows.Forms.Panel panelSeparator5;
+        internal System.Windows.Forms.Panel panelSeparator6;
         private System.Windows.Forms.Panel containerPanel;
         private PairedListEx info_DataList;
     }
