@@ -1794,7 +1794,7 @@ namespace Mids_Reborn.Forms
         {
             if (frmEntityDetails is not {Visible: true})
             {
-                frmEntityDetails = new FrmEntityDetails(entityUid, powers, basePowerHistoryIdx, petInfo);
+                frmEntityDetails = new FrmEntityDetails(entityUid, powers, petInfo);
                 frmEntityDetails.Show(this);
             }
             else if (frmEntityDetails.Visible)

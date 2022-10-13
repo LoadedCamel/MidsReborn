@@ -37,13 +37,14 @@
             // btnTopMost
             // 
             this.btnTopMost.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnTopMost.CurrentText = "Top Most";
+            this.btnTopMost.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.btnTopMost.CurrentText = "ToggledOn State";
             this.btnTopMost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btnTopMost.Images.Background = global::MRBResourceLib.Resources.HeroButton;
             this.btnTopMost.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnTopMost.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnTopMost.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnTopMost.Location = new System.Drawing.Point(568, 468);
+            this.btnTopMost.Location = new System.Drawing.Point(525, 488);
             this.btnTopMost.Lock = false;
             this.btnTopMost.Name = "btnTopMost";
             this.btnTopMost.Size = new System.Drawing.Size(126, 30);
@@ -51,7 +52,7 @@
             this.btnTopMost.Text = "Top Most";
             this.btnTopMost.TextOutline.Color = System.Drawing.Color.Black;
             this.btnTopMost.TextOutline.Width = 2;
-            this.btnTopMost.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.btnTopMost.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOn;
             this.btnTopMost.ToggleText.Indeterminate = "Indeterminate State";
             this.btnTopMost.ToggleText.ToggledOff = "To Top Most";
             this.btnTopMost.ToggleText.ToggledOn = "Top Most";
@@ -67,7 +68,7 @@
             this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(568, 504);
+            this.btnClose.Location = new System.Drawing.Point(525, 524);
             this.btnClose.Lock = false;
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(126, 30);
@@ -95,20 +96,20 @@
             // 
             // petView1
             // 
-            this.petView1.BackColor = System.Drawing.Color.Black;
-            this.petView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.petView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(100)))));
             this.petView1.ForeColor = System.Drawing.Color.Black;
-            this.petView1.Location = new System.Drawing.Point(16, 38);
+            this.petView1.Location = new System.Drawing.Point(16, 40);
             this.petView1.Name = "petView1";
-            this.petView1.Size = new System.Drawing.Size(410, 460);
+            this.petView1.Size = new System.Drawing.Size(442, 519);
             this.petView1.TabIndex = 5;
+            this.petView1.UseAlt = false;
             // 
             // FrmEntityDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(746, 546);
+            this.ClientSize = new System.Drawing.Size(712, 570);
             this.Controls.Add(this.petView1);
             this.Controls.Add(this.lblEntityName);
             this.Controls.Add(this.btnClose);

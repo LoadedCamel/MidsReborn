@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Documents;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.Controls;
-using static Mids_Reborn.Core.CSV;
 
 namespace Mids_Reborn.Core
 {

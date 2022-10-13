@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -16,10 +15,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private string _entityUid;
         private List<string> _powers;
-        private readonly int _basePowerHistoryIdx;
-        private List<IPower?> _mathPower;
-        private List<IPower?> _buffedPower;
-
         private SummonedEntity? _entityData;
         private List<IPower?>? _powersData;
         private ListLabelV3? _powersList;
@@ -39,13 +34,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         /// <param name="entityUid">Entity UID</param>
         /// <param name="powers">Entity's powers, as a HashSet</param>
-        /// <param name="basePowerHistoryIdx">PowerEntry index</param>
         /// <param name="petInfo">PetInfo instance</param>
-        public FrmEntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
+        public FrmEntityDetails(string entityUid, HashSet<string> powers, PetInfo petInfo)
         {
             _entityUid = entityUid;
             _powers = powers.ToList();
-            _basePowerHistoryIdx = basePowerHistoryIdx;
+            _petInfo = petInfo;
+            _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initialize entity data
+        /// </summary>
+        /// <param name="entityUid">Entity UID</param>
+        /// <param name="powers">Entity's powers, as a List</param>
+        /// <param name="petInfo">PetInfo instance</param> 
+        public FrmEntityDetails(string entityUid, List<string> powers, PetInfo petInfo)
+        {
+            _entityUid = entityUid;
+            _powers = powers;
             _petInfo = petInfo;
             _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
@@ -60,24 +68,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
 
-        /// <summary>
-        /// Initialize entity data
-        /// </summary>
-        /// <param name="entityUid">Entity UID</param>
-        /// <param name="powers">Entity's powers, as a List</param>
-        /// <param name="basePowerHistoryIdx">PowerEntry index</param>
-        /// <param name="petInfo">PetInfo instance</param> 
-        public FrmEntityDetails(string entityUid, List<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
-        {
-            _entityUid = entityUid;
-            _powers = powers;
-            _basePowerHistoryIdx = basePowerHistoryIdx;
-            _petInfo = petInfo;
-            _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
-            InitializeComponent();
-        }
-
-        
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
@@ -132,18 +122,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .Select(DatabaseAPI.GetPowerByFullName)
                 .ToList();
 
-            var buffedPowers = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
-            if (buffedPowers == null)
-            {
-                _mathPower = _powersData.Clone();
-                _buffedPower = _powersData.Clone();
-            }
-            else
-            {
-                _mathPower = buffedPowers.Value.Key;
-                _buffedPower = buffedPowers.Value.Value;
-            }
-
             lblEntityName.Text = _entityData == null
                 ? "Entity Details"
                 : $"Entity: {_entityData.DisplayName}";
@@ -175,10 +153,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             _powersList.Size = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
             _powersList.SizeNormal = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
 
-            //petView1.SetFontData();
-            //petView1.DrawVillain = MidsContext.Character.IsVillain;
             petView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
-            petView1.SetData(_powersData[0], _buffedPower[0]);
+            petView1.UseAlt = MidsContext.Character.IsVillain;
+            _petInfo.ExecuteUpdate();
         }
 
         /// <summary>
@@ -279,10 +256,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var petPower = _petInfo.GetPetPower(power);
             _dvPowerBase = petPower?.BasePower;
             _dvPowerEnh = petPower?.BuffedPower;
-            
-
-            // dvPowerBase = power.Clone();
-            // dvPowerEnh = (item.NIdPower < 0 ? power : BuffedPower[item.NIdPower]).Clone();
 
             if (DvLocked)
             {
@@ -333,17 +306,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
-            var buffedPowers = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powersData, _basePowerHistoryIdx);
-            if (buffedPowers == null)
-            {
-                _mathPower = _powersData.Clone();
-                _buffedPower = _powersData.Clone();
-            }
-            else
-            {
-                _mathPower = buffedPowers.Value.Key;
-                _buffedPower = buffedPowers.Value.Value;
-            }
+           _petInfo.ExecuteUpdate();
 
             ListPowers();
             if (TopMost) BringToFront();
@@ -363,9 +326,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetPowersFont();
             SetPowerColors();
             _powersList.SuspendRedraw = false;
-
-            //petView1.SetFontData();
-            //petView1.DrawVillain = charVillain;
+            petView1.UseAlt = charVillain;
         }
     }
 }

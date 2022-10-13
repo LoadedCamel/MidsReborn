@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -302,7 +301,7 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.Location = new Point(4, 243 + useToxicDefOffSet);
             lblTotal.Location = new Point(3, 323 + useToxicDefOffSet);
 
-            TabsMask ??= new bool[] {true, true, true, true};
+            TabsMask ??= new[] {true, true, true, true};
 
             Clear();
         }
@@ -2794,10 +2793,15 @@ namespace Mids_Reborn.Forms.Controls
                     iValue = iValue.Replace("Villain_Pets_", string.Empty);
                 }
 
-                var iTip = pEnh.Effects[index].BuildEffectString();
+                var iTip = pEnh.Effects[index].BuildEffectString().Trim();
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
                     iValue = "(suppressed)";
+                }
+
+                if (!string.IsNullOrEmpty(iTip))
+                {
+                    iTip += "\r\n\r\nClick to show details about this entity.";
                 }
 
                 var iItem = new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip, DatabaseAPI.Database.Entities[pEnh.Effects[index].nSummon]);

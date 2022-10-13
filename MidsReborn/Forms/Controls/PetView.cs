@@ -7,10 +7,10 @@ using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using FastDeepCloner;
-using System.Net.Sockets;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -26,8 +26,30 @@ namespace Mids_Reborn.Forms.Controls
         private int _entryIndex;
         private int _lastScaleVal;
         private int _scaleVal;
+        private bool _UseAlt;
         public bool Lock;
         private PetInfo? _petInfo;
+
+        public bool UseAlt
+        {
+            get => _UseAlt;
+            set
+            {
+                var mainHeroColor = Color.FromArgb(12, 56, 100);
+                var mainVillainColor = Color.FromArgb(100, 12, 20);
+                var dimmedHeroColor = Color.FromArgb(7, 33, 59);
+                var dimmedVillainColor = Color.FromArgb(59, 7, 12);
+
+                _UseAlt = value;
+                BackColor = _UseAlt ? mainVillainColor : mainHeroColor;
+                panelSeparator1.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                panelSeparator2.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                panelSeparator3.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                panelSeparator4.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                panelSeparator5.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+                panelSeparator6.BackColor = _UseAlt ? dimmedVillainColor : dimmedHeroColor;
+            }
+        }
 
         public PetView()
         {
@@ -526,7 +548,6 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         private static bool IsMezEffect(string iStr)
-
         {
             var names = Enum.GetNames(Enums.eMez.None.GetType());
             var num = names.Length - 1;
@@ -1481,7 +1502,6 @@ namespace Mids_Reborn.Forms.Controls
             var slotUpdate = SlotUpdate;
             slotUpdate?.Invoke();
         }
-
 
         private void SetDamageTip()
         {
