@@ -98,7 +98,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Debug.WriteLine(exception);
                 throw;
             }
         }
