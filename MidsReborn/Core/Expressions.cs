@@ -35,6 +35,7 @@ namespace Mids_Reborn.Core
             "power.base>areafactor",
             "power.base>rechargetime",
             "power.base>endcost",
+            "power.base>range",
             "effect>scale",
             "@StdResult",
             "ifPvE",
@@ -54,6 +55,10 @@ namespace Mids_Reborn.Core
             "powerVectorsContains(",
             "eq(",
             "ne(",
+            "gt(",
+            "gte(",
+            "lt(",
+            "lte(",
             "minmax(",
         };
 
@@ -67,6 +72,7 @@ namespace Mids_Reborn.Core
                 { "power.base>areafactor", $"{sourceFx.GetPower().AoEModifier}" },
                 { "power.base>rechargetime", $"{sourceFx.GetPower().BaseRechargeTime}" },
                 { "power.base>endcost", $"{sourceFx.GetPower().EndCost}" },
+                { "power.base>range", $"{sourceFx.GetPower().Range}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", $"{sourceFx.Scale}" },
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
@@ -75,9 +81,9 @@ namespace Mids_Reborn.Core
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}"},
+                { "base.kToHit", $"{(MidsContext.Config == null ? 0 : MidsContext.Config.ScalingToHit)}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{MidsContext.Character.Archetype.Hitpoints}"}
+                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"}
             };
         }
 
@@ -192,6 +198,10 @@ namespace Mids_Reborn.Core
             // Numeric functions
             mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
             mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
+            mathEngine.AddFunction("gt", (a, b) => a > b ? 1 : 0);
+            mathEngine.AddFunction("gte", (a, b) => a >= b ? 1 : 0);
+            mathEngine.AddFunction("lt", (a, b) => a < b ? 1 : 0);
+            mathEngine.AddFunction("lte", (a, b) => a <= b ? 1 : 0);
             mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b > c ? b : c, Math.Max(b > c ? c : b, a)));
 
             try
