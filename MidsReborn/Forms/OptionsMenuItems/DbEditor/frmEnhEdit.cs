@@ -91,9 +91,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnClone_Click(object sender, EventArgs e)
         {
             if (lvEnh.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var oldEnhancement = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text)];
-            using var frmEnhData = new frmEnhData(ref oldEnhancement, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length].StaticIndex + 1);
+            var maxStaticIndex = DatabaseAPI.Database.Enhancements.Max(e => e.StaticIndex);
+            using var frmEnhData = new frmEnhData(ref oldEnhancement, maxStaticIndex + 1);
             frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
             {
