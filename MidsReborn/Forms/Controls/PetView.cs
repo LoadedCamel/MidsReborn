@@ -1813,7 +1813,8 @@ namespace Mids_Reborn.Forms.Controls
 
             if (!string.IsNullOrWhiteSpace(str1))
             {
-                infoTip.SetToolTip((Control) sender, str1);
+                //infoTip.SetToolTip((Control) sender, str1);
+                infoTip.Show(str1, (Control)sender);
             }
             else
             {

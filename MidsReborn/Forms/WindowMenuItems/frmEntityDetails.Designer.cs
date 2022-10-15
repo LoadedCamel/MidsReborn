@@ -32,6 +32,7 @@
             this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.lblEntityName = new System.Windows.Forms.Label();
             this.petView1 = new Mids_Reborn.Forms.Controls.PetView();
+            this.powersCombo1 = new Mids_Reborn.Forms.Controls.PowersCombo();
             this.SuspendLayout();
             // 
             // btnTopMost
@@ -44,7 +45,7 @@
             this.btnTopMost.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnTopMost.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnTopMost.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnTopMost.Location = new System.Drawing.Point(525, 488);
+            this.btnTopMost.Location = new System.Drawing.Point(196, 573);
             this.btnTopMost.Lock = false;
             this.btnTopMost.Name = "btnTopMost";
             this.btnTopMost.Size = new System.Drawing.Size(126, 30);
@@ -68,7 +69,7 @@
             this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
             this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
             this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(525, 524);
+            this.btnClose.Location = new System.Drawing.Point(328, 573);
             this.btnClose.Lock = false;
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(126, 30);
@@ -88,7 +89,7 @@
             this.lblEntityName.AutoSize = true;
             this.lblEntityName.Font = new System.Drawing.Font("Segoe UI Variable Display", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.lblEntityName.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblEntityName.Location = new System.Drawing.Point(16, 9);
+            this.lblEntityName.Location = new System.Drawing.Point(12, 9);
             this.lblEntityName.Name = "lblEntityName";
             this.lblEntityName.Size = new System.Drawing.Size(121, 26);
             this.lblEntityName.TabIndex = 4;
@@ -98,27 +99,44 @@
             // 
             this.petView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(100)))));
             this.petView1.ForeColor = System.Drawing.Color.Black;
-            this.petView1.Location = new System.Drawing.Point(16, 40);
+            this.petView1.Location = new System.Drawing.Point(12, 48);
             this.petView1.Name = "petView1";
             this.petView1.Size = new System.Drawing.Size(442, 519);
             this.petView1.TabIndex = 5;
             this.petView1.UseAlt = false;
+            // 
+            // powersCombo1
+            // 
+            this.powersCombo1.BackColor = System.Drawing.Color.Black;
+            this.powersCombo1.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.powersCombo1.BorderWidth = 1;
+            this.powersCombo1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.powersCombo1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.powersCombo1.HighlightColor = System.Drawing.Color.Goldenrod;
+            this.powersCombo1.HighlightTextColor = System.Drawing.Color.Black;
+            this.powersCombo1.Location = new System.Drawing.Point(281, 8);
+            this.powersCombo1.MinimumSize = new System.Drawing.Size(171, 34);
+            this.powersCombo1.Name = "powersCombo1";
+            this.powersCombo1.Padding = new System.Windows.Forms.Padding(1);
+            this.powersCombo1.Size = new System.Drawing.Size(171, 34);
+            this.powersCombo1.TabIndex = 6;
             // 
             // FrmEntityDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(712, 570);
+            this.ClientSize = new System.Drawing.Size(466, 614);
+            this.Controls.Add(this.powersCombo1);
             this.Controls.Add(this.petView1);
             this.Controls.Add(this.lblEntityName);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnTopMost);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(41, 18, 41, 18);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(562, 517);
             this.Name = "FrmEntityDetails";
             this.ShowIcon = false;
             this.Text = "Entity Details";
@@ -134,5 +152,6 @@
         private Mids_Reborn.Forms.Controls.ImageButtonEx btnClose;
         private System.Windows.Forms.Label lblEntityName;
         private Controls.PetView petView1;
+        private Controls.PowersCombo powersCombo1;
     }
 }

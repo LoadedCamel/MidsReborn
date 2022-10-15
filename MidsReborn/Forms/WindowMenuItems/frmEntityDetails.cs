@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
@@ -17,8 +16,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private List<string> _powers;
         private SummonedEntity? _entityData;
         private List<IPower?>? _powersData;
-        private ListLabelV3? _powersList;
-        private int _hoveredItemIndex = -1;
 
         private bool DvLocked
         {
@@ -37,11 +34,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// <param name="petInfo">PetInfo instance</param>
         public FrmEntityDetails(string entityUid, HashSet<string> powers, PetInfo petInfo)
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor | ControlStyles.ResizeRedraw, true);
             _entityUid = entityUid;
             _powers = powers.ToList();
             _petInfo = petInfo;
             _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
+            powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
+            powersCombo1.MouseDown += PowersCombo1OnMouseDown;
         }
 
         /// <summary>
@@ -52,11 +52,40 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// <param name="petInfo">PetInfo instance</param> 
         public FrmEntityDetails(string entityUid, List<string> powers, PetInfo petInfo)
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor | ControlStyles.ResizeRedraw, true);
             _entityUid = entityUid;
             _powers = powers;
             _petInfo = petInfo;
             _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
+            powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
+        }
+
+        protected override CreateParams CreateParams 
+        {            
+            get {
+                var cp =  base.CreateParams;
+                cp.ExStyle |= 0x00000020;
+                return cp;
+            }
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            using var pen = new Pen(Color.Silver, 1);
+            var strokeOffset = Convert.ToInt32(Math.Ceiling(pen.Width));
+            var cornerRadius = 10;
+            var bounds = Rectangle.Inflate(e.ClipRectangle, -strokeOffset, -strokeOffset);
+            pen.EndCap = pen.StartCap = LineCap.Round;
+            using var path = new GraphicsPath();
+            path.AddArc(bounds.X, bounds.Y, cornerRadius, cornerRadius, 180, 90);
+            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y, cornerRadius, cornerRadius, 270, 90);
+            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 0, 90);
+            path.AddArc(bounds.X, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 90, 90);
+            path.CloseAllFigures();
+
+            e.Graphics.FillPath(new SolidBrush(Color.FromArgb(75, BackColor)), path);
+            e.Graphics.DrawPath(pen, path);
         }
 
         private void PetInfoOnPowersUpdated(object? sender, EventArgs e)
@@ -93,7 +122,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmEntityDetails_Load(object sender, EventArgs e)
         {
-            CenterToParent();
+            btnTopMost.Visible = false;
+            var owner = (frmMain)Owner;
+            Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
             switch (TopMost)
             {
                 case true:
@@ -119,140 +150,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .FirstOrDefault(en => en?.UID == _entityUid);
             
             _powersData = _powers
-                .Select(DatabaseAPI.GetPowerByFullName)
+                .Select(DatabaseAPI.GetPowerByFullName).Where(p => !p.DisplayName.Contains("Granter"))
                 .ToList();
 
             lblEntityName.Text = _entityData == null
                 ? "Entity Details"
                 : $"Entity: {_entityData.DisplayName}";
 
-            _powersList = new ListLabelV3
-            {
-                Location = petView1.Location with {X = petView1.Location.X + petView1.Size.Width + 10},
-                HighVis = true,
-                Size = new Size(180, petView1.Size.Height - 70),
-                SizeNormal = new Size(180, petView1.Size.Height - 70),
-                BackColor = Color.Black,
-                ForeColor = Color.AliceBlue,
-                Expandable = false,
-                ActualLineHeight = 18,
-                HoverColor = Color.DimGray,
-                Scrollable = false,
-            };
-
-            _powersList.ItemHover += powersList_ItemHover;
-            _powersList.MouseDown += powersList_MouseDown;
-            Controls.Add(_powersList);
-
-            _powersList.SuspendRedraw = true;
-            SetPowersFont();
-            SetPowerColors();
-            _powersList.SuspendRedraw = false;
-
-            ListPowers();
-            _powersList.Size = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
-            _powersList.SizeNormal = new Size(180, Math.Min(petView1.Size.Height - 70, Math.Max(120, _powersList.DesiredHeight)));
+            powersCombo1.DisplayMember = "DisplayName";
+            powersCombo1.ValueMember = null;
+            powersCombo1.DataSource = _powersData;
+            powersCombo1.SelectedIndex = 0;
 
             petView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
             petView1.UseAlt = MidsContext.Character.IsVillain;
             _petInfo.ExecuteUpdate();
         }
 
-        /// <summary>
-        /// Set ListLabel font
-        /// </summary>
-        private void SetPowersFont()
+        private void PowersCombo1OnSelectedPowersIndexChanged(object? sender, EventArgs e)
         {
-            var loc = _powersList.Location;
-            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
-            _powersList.Font = new Font(_powersList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
-            foreach (var it in _powersList.Items)
-            {
-                it.Bold = MidsContext.Config.RtFont.PowersSelectBold;
-            }
-
-            _powersList.Location = new Point(loc.X, loc.Y);
-        }
-
-        /// <summary>
-        /// Set ListLabel color theme
-        /// </summary>
-        private void SetPowerColors()
-        {
-            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Invalid, Color.Red);
-            _powersList.ScrollBarColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            _powersList.ScrollButtonColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            _powersList.UpdateTextColors(ListLabelV3.LlItemState.Selected, MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            _powersList.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled, MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            _powersList.HoverColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-        }
-
-        /// <summary>
-        /// Populate ListLabel powers
-        /// </summary>
-        private void ListPowers()
-        {
-            _powersList.SuspendRedraw = true;
-            _powersList.ClearItems();
-            for (var i = 0; i < _powersData.Count; i++)
-            {
-                if (_powersData[i] == null)
-                {
-                    var nameChunks = _powers[i].Split('.');
-                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(nameChunks.Length < 1 ? "N/A" : nameChunks[^1], ListLabelV3.LlItemState.Disabled, -1, -1, i, "", ListLabelV3.LlFontFlags.Italic));
-                }
-                else if (_powersData[i].DisplayName == "Resistance")
-                {
-                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Enabled, -1, _powersData[i].StaticIndex, i));
-                }
-                else if (new Regex(@"^Self[\s\-_]Destruct", RegexOptions.IgnoreCase).IsMatch(_powersData[i].DisplayName))
-                {
-                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Invalid, -1, _powersData[i].StaticIndex, i, "", ListLabelV3.LlFontFlags.Italic));
-                }
-                else
-                {
-                    _powersList.AddItem(new ListLabelV3.ListLabelItemV3(_powersData[i].DisplayName, ListLabelV3.LlItemState.Selected, -1, _powersData[i].StaticIndex, i));
-                }
-            }
-
-            _powersList.SuspendRedraw = false;
-        }
-
-        private void powersList_ItemHover(ListLabelV3.ListLabelItemV3 item)
-        {
-            if (item.IdxPower < 0)
-            {
-                return;
-            }
-
-            if (item.IdxPower == _hoveredItemIndex)
-            {
-                return;
-            }
-
-            _hoveredItemIndex = item.IdxPower;
-
-            var power = DatabaseAPI.Database.Power
-                .DefaultIfEmpty(null)
-                .FirstOrDefault(e => e != null && e.StaticIndex == item.IdxPower);
-
-            if (power == null)
-            {
-                return;
-            }
-
+            var power = (IPower)powersCombo1.Items[powersCombo1.SelectedIndex];
             var petPower = _petInfo.GetPetPower(power);
             _dvPowerBase = petPower?.BasePower;
             _dvPowerEnh = petPower?.BuffedPower;
@@ -261,19 +178,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 return;
             }
-            
-            petView1.SetData(_dvPowerBase, _dvPowerEnh);
+
+            if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
 
-        private void powersList_MouseDown(object sender, MouseEventArgs e)
+        private void PowersCombo1OnMouseDown(object? sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right)
             {
                 return;
             }
 
-            DvLocked = true;
-            petView1.SetData(_dvPowerBase, _dvPowerEnh, false, DvLocked);
+            DvLocked = DvLocked switch
+            {
+                true => false,
+                false => true
+            };
+            if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh, false, DvLocked);
         }
 
         /// <summary>
@@ -308,7 +229,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
            _petInfo.ExecuteUpdate();
 
-            ListPowers();
+            //ListPowers();
             if (TopMost) BringToFront();
         }
 
@@ -321,11 +242,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var charVillain = cAlignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
             btnTopMost.UseAlt = charVillain;
             btnClose.UseAlt = charVillain;
-
-            _powersList.SuspendRedraw = true;
-            SetPowersFont();
-            SetPowerColors();
-            _powersList.SuspendRedraw = false;
             petView1.UseAlt = charVillain;
         }
     }
