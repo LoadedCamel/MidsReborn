@@ -605,7 +605,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var enhancedPower = pEnh.PowerIndex == -1 ? pBase : pEnh;
 
-            info_Title.Text = !noLevel & (pBase.Level > 0)
+            info_Title.Text = !noLevel & pBase.Level > 0
                 ? $"[{pBase.Level}] {pBase.DisplayName}"
                 : pBase.DisplayName;
 
@@ -625,13 +625,13 @@ namespace Mids_Reborn.Forms.Controls
             var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
-                if ((enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + (double)enhancedPower.CastTime + enhancedPower.InterruptTime > 0))
+                if (enhancedPower.ToggleCost > 0 & enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime > 0)
                 {
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if ((enhancedPower.ToggleCost > 0) &
-                    (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
+                if (enhancedPower.ToggleCost > 0 &
+                    MidsContext.Config?.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(pEnh == null);
                     if (damageValue > 0)
@@ -655,23 +655,22 @@ namespace Mids_Reborn.Forms.Controls
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = pBase.Effects.Any(t => t.RequiresToHitCheck);
 
-            if ((pBase.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 | ((pBase.Range > 20) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
+            if (pBase.EntitiesAutoHit == Enums.eEntity.None | flag2 | flag1 | pBase.Range > 20 & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
                 var num2 = MidsContext.Config.ScalingToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
-                if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & flag2)
+                if (pBase.EntitiesAutoHit != Enums.eEntity.None & flag2)
                 {
                     str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
                     suffix2 += "*";
                 }
 
-                if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) &
-                    (Math.Abs(num2 - accuracy2) > float.Epsilon))
+                if (Math.Abs(accuracy1 - accuracy2) > float.Epsilon & Math.Abs(num2 - accuracy2) > float.Epsilon)
                 {
-                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - (double)MidsContext.Config.ScalingToHit):##0.00000}x{str}";
+                    var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - MidsContext.Config.ScalingToHit):##0.00000}x{str}";
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         MidsContext.Config.ScalingToHit * pBase.Accuracy * 100, enhancedPower.Accuracy * 100, suffix2, tip2));
                 }
@@ -694,8 +693,8 @@ namespace Mids_Reborn.Forms.Controls
             var durationEffectId = pBase.GetDurationEffectID();
             if (durationEffectId > -1)
             {
-                if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate) &
-                    (pBase.Effects[durationEffectId].Duration >= 9999))
+                if (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate &
+                    pBase.Effects[durationEffectId].Duration >= 9999)
                 {
                     s1 = 0f;
                     s2 = 0f;
@@ -754,7 +753,7 @@ namespace Mids_Reborn.Forms.Controls
                 // if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
                 //     continue;
 
-                if (!((pBase.Effects[rankedEffects[id]].Probability > 0) & ((MidsContext.Config.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None) & pBase.Effects[rankedEffects[id]].CanInclude()))
+                if (!(pBase.Effects[rankedEffects[id]].Probability > 0 & (MidsContext.Config?.Suppression & pBase.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None & pBase.Effects[rankedEffects[id]].CanInclude()))
                 {
                     continue;
                 }
@@ -875,14 +874,14 @@ namespace Mids_Reborn.Forms.Controls
                                 };
 
                                 rankedEffect.AlternateColor = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag - pBase.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType), Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType), Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
 
                                 break;
 
                             /*default:
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pBase.Effects[rankedEffects[id]].EffectType),
-                                    Enums.GetEffectNameShort(pBase.Effects[rankedEffects[id]].EffectType));
+                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType),
+                                    Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
                                 rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
                                 
                                 break;*/
