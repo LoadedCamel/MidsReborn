@@ -1280,8 +1280,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (Ticks > 1)
             {
-                sMag = EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
-                    ? $"{sMag} x {Ticks}"
+                sMag = EffectType == Enums.eEffectType.Mez // & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
+                    ? $"{sMag} x {Ticks}{(nDuration > 0 ? $" over {nDuration} seconds" : "")}"
                     : $"{Ticks} x {sMag}";
             }
 

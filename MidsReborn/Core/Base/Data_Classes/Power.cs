@@ -969,231 +969,368 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return $"{dmgString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
         }
 
+        public int[] GetRankedEffects(bool newMode)
+        {
+            var weightedEffects = Effects
+                .Select((e, i) => new KeyValuePair<KeyValuePair<IEffect, int>, int>(new KeyValuePair<IEffect, int>(e, i), 0))
+                .ToList();
+
+            for (var i = 0; i < weightedEffects.Count; i++)
+            {
+                if (MidsContext.Config == null ||
+                    (MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
+                    MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvE ||
+                    !MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvP)
+                {
+                    weightedEffects[i] = new KeyValuePair<KeyValuePair<IEffect, int>, int>(
+                        new KeyValuePair<IEffect, int>(weightedEffects[i].Key.Key, weightedEffects[i].Key.Value),
+                        int.MinValue);
+                    continue;
+                }
+
+                var weight = (int) weightedEffects[i].Key.Key.EffectClass + 1;
+                if (Math.Abs(weightedEffects[i].Key.Key.Probability - 1) < 0.01)
+                {
+                    weight += 10;
+                }
+
+                if (HasAbsorbedEffects & weightedEffects[i].Key.Key.EffectType != Enums.eEffectType.EntCreate)
+                {
+                    weight += 50;
+                }
+
+                if (weightedEffects[i].Key.Key.DelayedTime > 1)
+                {
+                    weight -= 100;
+                }
+
+                if (weightedEffects[i].Key.Key.DelayedTime > 0 & weightedEffects[i].Key.Key.DelayedTime <= 1)
+                {
+                    weight -= 25;
+                }
+
+                if (weightedEffects[i].Key.Key.InherentSpecial)
+                {
+                    weight -= 100;
+                }
+
+                if (weightedEffects[i].Key.Key.InherentSpecial2)
+                {
+                    weight -= 100;
+                }
+
+                if (weightedEffects[i].Key.Key.ToWho == Enums.eToWho.Self & (weightedEffects[i].Key.Key.BuffedMag > 0 | weightedEffects[i].Key.Key.EffectType == Enums.eEffectType.Mez))
+                {
+                    weight += 10;
+                }
+
+                if (weightedEffects[i].Key.Key.ToWho == Enums.eToWho.Target & weightedEffects[i].Key.Key.BuffedMag < 0)
+                {
+                    weight += 10;
+                }
+
+                if (weightedEffects[i].Key.Key.ToWho == Enums.eToWho.Target & weightedEffects[i].Key.Key.BuffedMag > 0 & weightedEffects[i].Key.Key.Absorbed_Effect)
+                {
+                    weight += 10;
+                }
+
+                if (weightedEffects[i].Key.Key.ToWho == Enums.eToWho.Self & weightedEffects[i].Key.Key.BuffedMag > 0 & weightedEffects[i].Key.Key.Absorbed_Effect)
+                {
+                    weight += 10;
+                }
+
+                if (weightedEffects[i].Key.Key.isEnhancementEffect)
+                {
+                    weight -= 30;
+                }
+
+                if (weightedEffects[i].Key.Key.VariableModified)
+                {
+                    weight += 30;
+                }
+
+                weight += weightedEffects[i].Key.Key.EffectType switch
+                {
+                    Enums.eEffectType.None => -1000,
+                    Enums.eEffectType.Damage => -500,
+                    Enums.eEffectType.DamageBuff => 10,
+                    Enums.eEffectType.Defense => 25,
+                    Enums.eEffectType.Endurance => 15,
+                    Enums.eEffectType.Enhancement => weightedEffects[i].Key.Key.ETModifies switch
+                    {
+                        Enums.eEffectType.SpeedFlying => 5,
+                        Enums.eEffectType.SpeedJumping => 5,
+                        Enums.eEffectType.SpeedRunning => 5,
+                        Enums.eEffectType.JumpHeight => -5,
+                        _ => 9
+                    },
+                    Enums.eEffectType.Fly => 3,
+                    Enums.eEffectType.SpeedFlying => 5,
+                    Enums.eEffectType.GrantPower => -20,
+                    Enums.eEffectType.Heal => 15,
+                    Enums.eEffectType.HitPoints => 10,
+                    Enums.eEffectType.JumpHeight => 5,
+                    Enums.eEffectType.SpeedJumping => 5,
+                    Enums.eEffectType.Mez when !weightedEffects[i].Key.Key.Buffable => -1,
+                    Enums.eEffectType.Mez when weightedEffects[i].Key.Key.MezType is Enums.eMez.OnlyAffectsSelf or Enums.eMez.Untouchable => -9,
+                    Enums.eEffectType.Mez when weightedEffects[i].Key.Key.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup => Convert.ToInt32(8f * weightedEffects[i].Key.Key.Probability),
+                    Enums.eEffectType.Mez => Convert.ToInt32(9f * weightedEffects[i].Key.Key.Probability),
+                    Enums.eEffectType.MezResist => 5,
+                    Enums.eEffectType.MovementControl => 3,
+                    Enums.eEffectType.MovementFriction => 3,
+                    Enums.eEffectType.Recovery => 10,
+                    Enums.eEffectType.Resistance => 20,
+                    Enums.eEffectType.RevokePower => -20,
+                    Enums.eEffectType.SpeedRunning => 5,
+                    Enums.eEffectType.SetMode => -500,
+                    Enums.eEffectType.StealthRadius => 7,
+                    Enums.eEffectType.StealthRadiusPlayer => 6,
+                    Enums.eEffectType.EntCreate when HasAbsorbedEffects => -500,
+                    Enums.eEffectType.ToHit => 10,
+                    Enums.eEffectType.Translucency => -20,
+                    Enums.eEffectType.GlobalChanceMod => 1,
+                    Enums.eEffectType.DesignerStatus => int.MinValue,
+                    Enums.eEffectType.Null => int.MinValue,
+                    Enums.eEffectType.NullBool => int.MinValue,
+                    _ => 9
+                };
+
+                weightedEffects[i] = new KeyValuePair<KeyValuePair<IEffect, int>, int>(
+                    new KeyValuePair<IEffect, int>(weightedEffects[i].Key.Key, weightedEffects[i].Key.Value), weight);
+            }
+
+            weightedEffects = weightedEffects.OrderByDescending(e => e.Key.Value).ToList();
+
+            return weightedEffects.Select(e => e.Key.Value).ToArray();
+        }
+
         public int[] GetRankedEffects()
         {
-            var numArray1 = new int[Effects.Length];
+            var effectsWeights = new int[Effects.Length];
             for (var index1 = 0; index1 < Effects.Length; index1++)
             {
-                if (MidsContext.Config != null && (MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvP) | MidsContext.Config.Inc.DisablePvE & (Effects[index1].PvMode != Enums.ePvX.PvE)))
+                if (MidsContext.Config != null && (MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
                 {
-                    numArray1[index1] = (int) (Effects[index1].EffectClass + 1);
+                    effectsWeights[index1] = (int) (Effects[index1].EffectClass + 1);
                     if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
                     {
-                        numArray1[index1] += 10;
+                        effectsWeights[index1] += 10;
                     }
 
-                    if (HasAbsorbedEffects & (Effects[index1].EffectType != Enums.eEffectType.EntCreate))
+                    if (HasAbsorbedEffects & Effects[index1].EffectType != Enums.eEffectType.EntCreate)
                     {
-                        numArray1[index1] += 50;
+                        effectsWeights[index1] += 50;
                     }
 
                     if (Effects[index1].DelayedTime > 1)
                     {
-                        numArray1[index1] -= 100;
+                        effectsWeights[index1] -= 100;
                     }
 
-                    if ((Effects[index1].DelayedTime > 0) & (Effects[index1].DelayedTime <= 1))
+                    if (Effects[index1].DelayedTime > 0 & Effects[index1].DelayedTime <= 1)
                     {
-                        numArray1[index1] -= 25;
+                        effectsWeights[index1] -= 25;
                     }
 
                     if (Effects[index1].InherentSpecial)
                     {
-                        numArray1[index1] -= 100;
+                        effectsWeights[index1] -= 100;
                     }
 
                     if (Effects[index1].InherentSpecial2)
                     {
-                        numArray1[index1] -= 100;
+                        effectsWeights[index1] -= 100;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].BuffedMag > 0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
+                    if (Effects[index1].ToWho == Enums.eToWho.Self & (Effects[index1].BuffedMag > 0 | Effects[index1].EffectType == Enums.eEffectType.Mez))
                     {
-                        numArray1[index1] += 10;
+                        effectsWeights[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag < 0))
+                    if (Effects[index1].ToWho == Enums.eToWho.Target & Effects[index1].BuffedMag < 0)
                     {
-                        numArray1[index1] += 10;
+                        effectsWeights[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].BuffedMag > 0) & Effects[index1].Absorbed_Effect)
+                    if (Effects[index1].ToWho == Enums.eToWho.Target & Effects[index1].BuffedMag > 0 & Effects[index1].Absorbed_Effect)
                     {
-                        numArray1[index1] += 10;
+                        effectsWeights[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & (Effects[index1].BuffedMag > 0) & Effects[index1].Absorbed_Effect)
+                    if (Effects[index1].ToWho == Enums.eToWho.Self & Effects[index1].BuffedMag > 0 & Effects[index1].Absorbed_Effect)
                     {
-                        numArray1[index1] += 10;
+                        effectsWeights[index1] += 10;
                     }
 
                     if (Effects[index1].isEnhancementEffect)
                     {
-                        numArray1[index1] -= 30;
+                        effectsWeights[index1] -= 30;
                     }
 
                     if (Effects[index1].VariableModified)
                     {
-                        numArray1[index1] += 30;
+                        effectsWeights[index1] += 30;
                     }
 
                     switch (Effects[index1].EffectType)
                     {
                         case Enums.eEffectType.None:
-                            numArray1[index1] -= 1000;
+                            effectsWeights[index1] -= 1000;
                             continue;
                         case Enums.eEffectType.Damage:
-                            numArray1[index1] -= 500;
+                            effectsWeights[index1] -= 500;
                             continue;
                         case Enums.eEffectType.DamageBuff:
-                            numArray1[index1] += 10;
+                            effectsWeights[index1] += 10;
                             continue;
                         case Enums.eEffectType.Defense:
-                            numArray1[index1] += 25;
+                            effectsWeights[index1] += 25;
                             continue;
                         case Enums.eEffectType.Endurance:
-                            numArray1[index1] += 15;
+                            effectsWeights[index1] += 15;
                             continue;
                         case Enums.eEffectType.Enhancement:
                             switch (Effects[index1].ETModifies)
                             {
                                 case Enums.eEffectType.SpeedFlying:
-                                    numArray1[index1] += 5;
+                                    effectsWeights[index1] += 5;
                                     continue;
                                 case Enums.eEffectType.JumpHeight:
-                                    numArray1[index1] -= 5;
+                                    effectsWeights[index1] -= 5;
                                     continue;
                                 case Enums.eEffectType.SpeedJumping:
-                                    numArray1[index1] += 5;
+                                    effectsWeights[index1] += 5;
                                     continue;
                                 case Enums.eEffectType.SpeedRunning:
-                                    numArray1[index1] += 5;
+                                    effectsWeights[index1] += 5;
                                     continue;
                                 default:
-                                    numArray1[index1] += 9;
+                                    effectsWeights[index1] += 9;
                                     continue;
                             }
                         case Enums.eEffectType.Fly:
-                            numArray1[index1] += 3;
+                            effectsWeights[index1] += 3;
                             continue;
                         case Enums.eEffectType.SpeedFlying:
-                            numArray1[index1] += 5;
+                            effectsWeights[index1] += 5;
                             continue;
                         case Enums.eEffectType.GrantPower:
-                            numArray1[index1] -= 20;
+                            effectsWeights[index1] -= 20;
                             continue;
                         case Enums.eEffectType.Heal:
-                            numArray1[index1] += 15;
+                            effectsWeights[index1] += 15;
                             continue;
                         case Enums.eEffectType.HitPoints:
-                            numArray1[index1] += 10;
+                            effectsWeights[index1] += 10;
                             continue;
                         case Enums.eEffectType.JumpHeight:
-                            numArray1[index1] += 5;
+                            effectsWeights[index1] += 5;
                             continue;
                         case Enums.eEffectType.SpeedJumping:
-                            numArray1[index1] += 5;
+                            effectsWeights[index1] += 5;
                             continue;
                         case Enums.eEffectType.Mez:
                             if (!Effects[index1].Buffable)
                             {
-                                numArray1[index1] -= 1;
+                                effectsWeights[index1] -= 1;
                             }
 
-                            if ((Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf) | (Effects[index1].MezType == Enums.eMez.Untouchable))
+                            if (Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf | Effects[index1].MezType == Enums.eMez.Untouchable)
                             {
-                                numArray1[index1] -= 9;
+                                effectsWeights[index1] -= 9;
                                 continue;
                             }
 
-                            if ((Effects[index1].MezType == Enums.eMez.Knockback) |
-                                (Effects[index1].MezType == Enums.eMez.Knockup))
+                            if (Effects[index1].MezType == Enums.eMez.Knockback |
+                                Effects[index1].MezType == Enums.eMez.Knockup)
                             {
-                                numArray1[index1] += Convert.ToInt32(8f * Effects[index1].Probability);
+                                effectsWeights[index1] += Convert.ToInt32(8f * Effects[index1].Probability);
                                 continue;
                             }
 
-                            numArray1[index1] += Convert.ToInt32(9f * Effects[index1].Probability);
+                            effectsWeights[index1] += Convert.ToInt32(9f * Effects[index1].Probability);
                             continue;
                         case Enums.eEffectType.MezResist:
-                            numArray1[index1] += 5;
+                            effectsWeights[index1] += 5;
                             continue;
                         case Enums.eEffectType.MovementControl:
-                            numArray1[index1] += 3;
+                            effectsWeights[index1] += 3;
                             continue;
                         case Enums.eEffectType.MovementFriction:
-                            numArray1[index1] += 3;
+                            effectsWeights[index1] += 3;
                             continue;
                         case Enums.eEffectType.Recovery:
-                            numArray1[index1] += 10;
+                            effectsWeights[index1] += 10;
                             continue;
                         case Enums.eEffectType.Regeneration:
-                            numArray1[index1] += 10;
+                            effectsWeights[index1] += 10;
                             continue;
                         case Enums.eEffectType.Resistance:
-                            numArray1[index1] += 20;
+                            effectsWeights[index1] += 20;
                             continue;
                         case Enums.eEffectType.RevokePower:
-                            numArray1[index1] -= 20;
+                            effectsWeights[index1] -= 20;
                             continue;
                         case Enums.eEffectType.SpeedRunning:
-                            numArray1[index1] += 5;
+                            effectsWeights[index1] += 5;
                             continue;
                         case Enums.eEffectType.SetMode:
-                            numArray1[index1] = -500;
+                            effectsWeights[index1] = -500;
                             continue;
                         case Enums.eEffectType.StealthRadius:
-                            numArray1[index1] += 7;
+                            effectsWeights[index1] += 7;
                             continue;
                         case Enums.eEffectType.StealthRadiusPlayer:
-                            numArray1[index1] += 6;
+                            effectsWeights[index1] += 6;
                             continue;
                         case Enums.eEffectType.EntCreate:
                             if (HasAbsorbedEffects)
                             {
-                                numArray1[index1] -= 500;
+                                effectsWeights[index1] -= 500;
                             }
                             continue;
                         case Enums.eEffectType.ToHit:
-                            numArray1[index1] += 10;
+                            effectsWeights[index1] += 10;
                             continue;
                         case Enums.eEffectType.Translucency:
-                            numArray1[index1] += -20;
+                            effectsWeights[index1] += -20;
                             continue;
                         case Enums.eEffectType.GlobalChanceMod:
-                            ++numArray1[index1];
+                            ++effectsWeights[index1];
                             continue;
                         case Enums.eEffectType.DesignerStatus:
                         case Enums.eEffectType.Null:
                         case Enums.eEffectType.NullBool:
-                            numArray1[index1] += int.MinValue;
+                            effectsWeights[index1] += int.MinValue;
                             continue;
                         default:
-                            numArray1[index1] += 9;
+                            effectsWeights[index1] += 9;
                             continue;
                     }
                 }
 
-                numArray1[index1] = int.MinValue;
+                effectsWeights[index1] = int.MinValue;
             }
 
             var iID1 = -1;
             var num1 = -1;
             var num2 = 0;
             var num3 = 0;
-            for (var iID2 = 0; iID2 < numArray1.Length; iID2++)
-                if (numArray1[iID2] > num2)
+            for (var iID2 = 0; iID2 < effectsWeights.Length; iID2++)
+            {
+                if (effectsWeights[iID2] > num2)
                 {
                     num1 = iID1;
                     num3 = num2;
                     iID1 = iID2;
-                    num2 = numArray1[iID2];
+                    num2 = effectsWeights[iID2];
                 }
-                else if ((numArray1[iID2] > num3) & GreOverride(iID1, iID2))
+                else if (effectsWeights[iID2] > num3 & GreOverride(iID1, iID2))
                 {
                     num1 = iID2;
-                    num3 = numArray1[iID2];
+                    num3 = effectsWeights[iID2];
                 }
+            }
 
             return new[] {iID1, num1};
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Mids_Reborn.Core;
@@ -240,7 +239,11 @@ namespace Mids_Reborn.Controls
             e.Graphics.FillRectangle(backBrush, ClientRectangle);
 
             // Perform drawing
-            if (Items == null) return;
+            if (Items == null)
+            {
+                return;
+            }
+
             var rect = ClientRectangle;
             var columnWidth = rect.Width / Columns;
             var rowHeight = rect.Height / Rows;
@@ -255,68 +258,46 @@ namespace Mids_Reborn.Controls
                 }
             }
 
-            if (Items.Any())
+            if (!Items.Any()) return;
+
+            for (var index = 0; index < Math.Min(Items.Count, itemLocations.Count); index++)
             {
-                for (var index = 0; index < Items.Count -1; index++)
+                var itemColor = ItemColor;
+                Color valueColor;
+                var itemName = Items[index].Name?.Trim();
+                if (string.IsNullOrWhiteSpace(itemName)) continue;
+                if (!itemName.EndsWith(":"))
                 {
-                    var itemColor = ItemColor;
-                    Color valueColor;
-                    var itemName = Items[index].Name?.Trim();
-                    if (string.IsNullOrWhiteSpace(itemName)) continue;
-                    if (!itemName.EndsWith(":"))
+                    itemName += ":";
+                }
+
+                var itemValue = Items[index].Value?.Trim();
+                var nameMeasured = TextRenderer.MeasureText(itemName, Font, new Size(itemLocations[index]),
+                    TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                var valueMeasured = TextRenderer.MeasureText(itemValue, Font, new Size(itemLocations[index]),
+                    TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                //var itemMeasured = TextRenderer.MeasureText($"{itemName} {itemValue}", Font);
+                var nameLocation = itemLocations[index];
+                var valueLocation = nameLocation;
+                valueLocation.X += nameMeasured.Width + 4;
+
+                var itemBounds = new Rectangle(itemLocations[index], nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width + 4 });
+                Items[index].SetBounds(itemBounds);
+                e.Graphics.FillRectangle(backBrush, itemBounds);
+
+                if (UseHighlighting)
+                {
+                    if (Items[index].IsHighlightable)
                     {
-                        itemName += ":";
-                    }
+                        var highlightBrush = new SolidBrush(HighlightColor);
+                        e.Graphics.FillRectangle(highlightBrush, itemBounds);
+                        itemColor = HighlightTextColor;
+                        valueColor = HighlightTextColor;
 
-                    var itemValue = Items[index].Value?.Trim();
-                    var nameMeasured = TextRenderer.MeasureText(itemName, Font, new Size(itemLocations[index]),
-                        TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                    var valueMeasured = TextRenderer.MeasureText(itemValue, Font, new Size(itemLocations[index]),
-                        TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                    //var itemMeasured = TextRenderer.MeasureText($"{itemName} {itemValue}", Font);
-                    var nameLocation = itemLocations[index];
-                    var valueLocation = nameLocation;
-                    valueLocation.X += nameMeasured.Width + 4;
-
-                    var itemBounds = new Rectangle(itemLocations[index], nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width + 4 });
-
-                    Items[index].SetBounds(itemBounds);
-                    e.Graphics.FillRectangle(backBrush, itemBounds);
-                    
-                    if (UseHighlighting)
-                    {
-                        if (Items[index].IsHighlightable)
-                        {
-                            var highlightBrush = new SolidBrush(HighlightColor);
-                            e.Graphics.FillRectangle(highlightBrush, itemBounds);
-                            itemColor = HighlightTextColor;
-                            valueColor = HighlightTextColor;
-
-                        }
-                        else
-                        {
-                            e.Graphics.FillRectangle(backBrush, itemBounds);
-                            if (Items[index].UseAlternateColor)
-                            {
-                                valueColor = ValueAlternateColor;
-                            }
-                            else if (Items[index].UseSpecialColor)
-                            {
-                                valueColor = ValueSpecialColor;
-                            }
-                            else if (Items[index].UseUniqueColor)
-                            {
-                                valueColor = ValueConditionColor;
-                            }
-                            else
-                            {
-                                itemColor = ItemColor;
-                                valueColor = ValueColor;
-                            }
-                        }
                     }
                     else
                     {
+                        e.Graphics.FillRectangle(backBrush, itemBounds);
                         if (Items[index].UseAlternateColor)
                         {
                             valueColor = ValueAlternateColor;
@@ -335,11 +316,30 @@ namespace Mids_Reborn.Controls
                             valueColor = ValueColor;
                         }
                     }
-
-
-                    TextRenderer.DrawText(e.Graphics, itemName, Font, nameLocation, itemColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                    TextRenderer.DrawText(e.Graphics, itemValue, Font, valueLocation, valueColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 }
+                else
+                {
+                    if (Items[index].UseAlternateColor)
+                    {
+                        valueColor = ValueAlternateColor;
+                    }
+                    else if (Items[index].UseSpecialColor)
+                    {
+                        valueColor = ValueSpecialColor;
+                    }
+                    else if (Items[index].UseUniqueColor)
+                    {
+                        valueColor = ValueConditionColor;
+                    }
+                    else
+                    {
+                        itemColor = ItemColor;
+                        valueColor = ValueColor;
+                    }
+                }
+
+                TextRenderer.DrawText(e.Graphics, itemName, Font, nameLocation, itemColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                TextRenderer.DrawText(e.Graphics, itemValue, Font, valueLocation, valueColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
             }
         }
 

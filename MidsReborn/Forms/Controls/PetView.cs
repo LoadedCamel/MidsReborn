@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -94,7 +93,6 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             Lock = !Lock;
-            Debug.WriteLine($"Lock is: {Lock}");
             UnlockClick?.Invoke();
         }
 
@@ -107,7 +105,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var enhancedPower = _enhancedPower != null && _enhancedPower.PowerIndex == -1 ? _basePower : _enhancedPower;
 
-            info_Title.Text = !noLevel & (_basePower.Level > 0)
+            info_Title.Text = !noLevel & _basePower.Level > 0
                 ? $"[{_basePower.Level}] {_basePower.DisplayName}"
                 : _basePower.DisplayName;
 
@@ -128,13 +126,13 @@ namespace Mids_Reborn.Forms.Controls
             var tip1 = string.Empty;
             if (_basePower.PowerType == Enums.ePowerType.Click)
             {
-                if (enhancedPower != null && (enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + (double)enhancedPower.CastTime + enhancedPower.InterruptTime > 0))
+                if (enhancedPower != null && enhancedPower.ToggleCost > 0 & enhancedPower.RechargeTime + (double)enhancedPower.CastTime + enhancedPower.InterruptTime > 0)
                 {
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if (enhancedPower != null && MidsContext.Config != null && (enhancedPower.ToggleCost > 0) &
-                    (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
+                if (enhancedPower != null && MidsContext.Config != null && enhancedPower.ToggleCost > 0 &
+                    MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(_enhancedPower == null);
                     if (damageValue > 0)
@@ -149,11 +147,6 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            /*foreach (var effect in _basePower.Effects)
-            {
-                effect.UpdateAttrib();
-                SetDamageTip();
-            }*/
             if (enhancedPower != null)
             {
                 info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), _basePower.ToggleCost,
@@ -162,22 +155,22 @@ namespace Mids_Reborn.Forms.Controls
                             DatabaseAPI.Database.Power[_basePower.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
                 var flag2 = _basePower.Effects.Any(t => t.RequiresToHitCheck);
 
-                if ((_basePower.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 | ((_basePower.Range > 20) &
-                        _basePower.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
+                if (_basePower.EntitiesAutoHit == Enums.eEntity.None | flag2 | flag1 | _basePower.Range > 20 &
+                    _basePower.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
                 {
                     var accuracy1 = _basePower.Accuracy;
                     var accuracy2 = enhancedPower.Accuracy;
                     var num2 = MidsContext.Config.ScalingToHit * _basePower.Accuracy;
                     var str = string.Empty;
                     var suffix2 = "%";
-                    if ((_basePower.EntitiesAutoHit != Enums.eEntity.None) & flag2)
+                    if (_basePower.EntitiesAutoHit != Enums.eEntity.None & flag2)
                     {
                         str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
                         suffix2 += "*";
                     }
 
-                    if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) &
-                        (Math.Abs(num2 - accuracy2) > float.Epsilon))
+                    if (Math.Abs(accuracy1 - accuracy2) > float.Epsilon &
+                        Math.Abs(num2 - accuracy2) > float.Epsilon)
                     {
                         var tip2 =
                             $"Accuracy multiplier without other buffs (Real Numbers style): {_basePower.Accuracy + (enhancedPower.Accuracy - (double)MidsContext.Config.ScalingToHit):##0.00000}x{str}";
@@ -207,8 +200,8 @@ namespace Mids_Reborn.Forms.Controls
                 var durationEffectId = _basePower.GetDurationEffectID();
                 if (durationEffectId > -1)
                 {
-                    if ((_basePower.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate) &
-                        (_basePower.Effects[durationEffectId].Duration >= 9999))
+                    if (_basePower.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate &
+                        _basePower.Effects[durationEffectId].Duration >= 9999)
                     {
                         s1 = 0f;
                         s2 = 0f;
@@ -239,8 +232,7 @@ namespace Mids_Reborn.Forms.Controls
                 if (durationEffectId > -1 &&
                     _basePower.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
                     _basePower.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
-                    !((_basePower.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
-                       _basePower.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
+                    !(_basePower.Effects[durationEffectId].MezType is Enums.eMez.Knockback or Enums.eMez.Knockup &
                       _basePower.Effects[durationEffectId].Mag < 0))
                 {
                     info_DataList.AddItem(new PairedListEx.Item("Effect:",
@@ -256,7 +248,7 @@ namespace Mids_Reborn.Forms.Controls
                         _basePower.Effects[durationEffectId].Probability < 1));
                 }
 
-                var rankedEffects = _basePower.GetRankedEffects();
+                var rankedEffects = _basePower.GetRankedEffects(true);
                 var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
                 for (var id = 0; id < rankedEffects.Length; id++)
                 {
@@ -265,18 +257,18 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
-                    if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
+                    /*if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
                     {
                         continue;
-                    }
+                    }*/
 
                     var rankedEffect = GetRankedEffect(rankedEffects, id);
                     // if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
                     //     continue;
 
-                    if (!((_basePower.Effects[rankedEffects[id]].Probability > 0) &
-                          ((MidsContext.Config.Suppression & _basePower.Effects[rankedEffects[id]].Suppression) ==
-                           Enums.eSuppress.None) & _basePower.Effects[rankedEffects[id]].CanInclude()))
+                    if (!(_basePower.Effects[rankedEffects[id]].Probability > 0 &
+                          (MidsContext.Config.Suppression & _basePower.Effects[rankedEffects[id]].Suppression) ==
+                          Enums.eSuppress.None & _basePower.Effects[rankedEffects[id]].CanInclude()))
                     {
                         continue;
                     }
@@ -472,8 +464,7 @@ namespace Mids_Reborn.Forms.Controls
                     str1 += " (% only)";
                 }
 
-                var baseDamage =
-                    Math.Abs(_basePower.FXGetDamageValue(_basePower.PowerIndex > -1 & _enhancedPower.PowerIndex > -1));
+                var baseDamage = Math.Abs(_basePower.FXGetDamageValue(_basePower.PowerIndex > -1 & _enhancedPower.PowerIndex > -1));
                 var enhancedDamage = _enhancedPower.PowerIndex == -1
                     ? baseDamage
                     : Math.Abs(enhancedPower.FXGetDamageValue());
@@ -503,9 +494,9 @@ namespace Mids_Reborn.Forms.Controls
 
                     info_Damage.nBaseVal = Math.Max(0, baseDamage * dmgMultiplier); // Negative damage ? (see Toxins)
                     info_Damage.nEnhVal = Math.Max(0, enhancedDamage * dmgMultiplier);
-                    info_Damage.nMaxEnhVal =
-                        Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)),
-                            enhancedDamage * dmgMultiplier);
+                    info_Damage.nMaxEnhVal = Math.Max(
+                        baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)),
+                        enhancedDamage * dmgMultiplier);
                     info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier); // Maximum graph value
                     info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
                         ? $"{enhancedPower.FXGetDamageString(_enhancedPower.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
