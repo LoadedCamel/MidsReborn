@@ -21,12 +21,15 @@ namespace Mids_Reborn.Controls
         private int _rows = 5;
         private Color _valueColor = Color.Azure;
         private Color _itemColor = Color.Silver;
+        private int HighlightedItem = -1;
 
         public delegate void ItemClickEventHandler(object? sender, int index, MouseButtons button);
-        public delegate void ItemHoverEventHandler(object? sender, Enums.ShortFX tagId, string tooltip = "");
+        public delegate void ItemHoverEventHandler(object? sender, int index, Enums.ShortFX tagId, string tooltip = "");
+        public delegate void ItemOutEventHandler(object? sender);
 
         public event ItemClickEventHandler? ItemClick;
         public event ItemHoverEventHandler? ItemHover;
+        public event ItemOutEventHandler? ItemOut;
 
         public int Columns
         {
@@ -133,7 +136,25 @@ namespace Mids_Reborn.Controls
             MouseMove += OnMouseMove;
             MouseLeave += OnMouseLeave;
             Resize += OnResize;
+            ItemHover += OnItemHover;
+            ItemOut += OnItemOut;
             InitializeComponent();
+        }
+
+        private void OnItemHover(object? sender, int index, Enums.ShortFX tagId, string tooltip = "")
+        {
+            if (index != HighlightedItem)
+            {
+                myTip.SetToolTip(this, tooltip);
+            }
+
+            HighlightedItem = index;
+        }
+
+        private void OnItemOut(object? sender)
+        {
+            myTip.SetToolTip(this, "");
+            HighlightedItem = -1;
         }
 
         private void OnForeColorChanged(object? sender, EventArgs e)
@@ -154,32 +175,58 @@ namespace Mids_Reborn.Controls
         private void OnMouseLeave(object? sender, EventArgs e)
         {
             myTip.SetToolTip(this, "");
-            if (UseHighlighting) Items?.ForEach(i => i.IsHighlightable = false);
+            HighlightedItem = -1;
+            if (UseHighlighting)
+            {
+                Items?.ForEach(i => i.IsHighlightable = false);
+            }
+
             Invalidate();
         }
 
         private void OnMouseMove(object? sender, MouseEventArgs e)
         {
-            if (Items == null) return;
-            foreach (var item in Items)
+            if (Items == null)
             {
-                if (e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom)
+                return;
+            }
+
+            var hoveredItem = false;
+            for (var i = 0; i < Items.Count; i++)
+            {
+                var item = Items[i];
+                if (e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top &&
+                    e.Y <= item.Bounds.Bottom)
                 {
-                    if (UseHighlighting) item.IsHighlightable = true;
-                    if (item.ToolTip != null)
+                    if (UseHighlighting)
                     {
-                        ItemHover?.Invoke(this, item.TagId, item.ToolTip);
+                        item.IsHighlightable = true;
                     }
+
+                    if (item.ToolTip == null)
+                    {
+                        continue;
+                    }
+
+                    ItemHover?.Invoke(this, i, item.TagId, item.ToolTip);
+                    hoveredItem = true;
                 }
                 else
                 {
                     item.IsHighlightable = false;
                 }
-                if (UseHighlighting) Invalidate();
+            }
+
+            if (!hoveredItem)
+            {
+                ItemOut?.Invoke(this);
+            }
+
+            if (UseHighlighting)
+            {
+                Invalidate();
             }
         }
-
-        
 
         private void OnLoad(object? sender, EventArgs e)
         {

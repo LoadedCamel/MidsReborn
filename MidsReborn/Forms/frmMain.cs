@@ -5042,8 +5042,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             info_Totals();
             if (dvLastPower <= -1)
+            {
                 return;
+            }
+
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
+            if (frmEntityDetails is not {Visible: true})
+            {
+                return;
+            }
+
+            frmEntityDetails.UpdateData();
         }
 
         private void RefreshTabs(int iPower, I9Slot iEnh, int iLevel = -1)

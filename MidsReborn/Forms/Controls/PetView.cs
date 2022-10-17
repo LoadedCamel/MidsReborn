@@ -273,6 +273,13 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
+                    if (MidsContext.Config != null &&
+                        (MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE ||
+                        !MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP))
+                    {
+                        continue;
+                    }
+
                     if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.RevokePower &&
                         _basePower.Effects[rankedEffects[id]].nSummon <= -1 &&
                         string.IsNullOrWhiteSpace(_basePower.Effects[rankedEffects[id]].Summon))
@@ -428,6 +435,8 @@ namespace Mids_Reborn.Forms.Controls
                             rankedEffect.Name = ShortStr(
                                 Enums.GetMezName((Enums.eMezShort)_basePower.Effects[rankedEffects[id]].MezType),
                                 Enums.GetMezNameShort((Enums.eMezShort)_basePower.Effects[rankedEffects[id]].MezType));
+                            rankedEffect.ToolTip = _enhancedPower.Effects[rankedEffects[id]]
+                                .BuildEffectString(false, "", false, false, false, true);
                         }
                     }
 

@@ -31,7 +31,12 @@
             components = new System.ComponentModel.Container();
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
-
+            //
+            // myTip
+            //
+            this.myTip.AutoPopDelay = 15000;
+            this.myTip.InitialDelay = 350;
+            this.myTip.ReshowDelay = 100;
             // 
             // PairedList
             // 
