@@ -201,7 +201,7 @@ namespace Mids_Reborn.Core
 
         public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
 
-        public Point EntityDetailsLocation { get; set; }
+        public Point? EntityDetailsLocation { get; set; }
 
         internal static ConfigData? Current
         {

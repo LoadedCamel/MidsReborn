@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -13,13 +12,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class FrmEntityDetails : Form
     {
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTCLIENT = 0x1;
+        private const int HTCAPTION = 0x2;
+        private const int WM_NCLBUTTONDBLCLK = 0x00A3;
 
         private string _entityUid;
         private List<string> _powers;
@@ -44,6 +40,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         public FrmEntityDetails(string entityUid, HashSet<string> powers, PetInfo petInfo)
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor | ControlStyles.ResizeRedraw, true);
+            Closed += OnClosed;
             _entityUid = entityUid;
             _powers = powers.ToList();
             _petInfo = petInfo;
@@ -51,13 +48,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             InitializeComponent();
             powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
             powersCombo1.MouseDown += PowersCombo1OnMouseDown;
-            MouseDown += OnMouseDown;
-            if (MidsContext.Config != null && MidsContext.Config.EntityDetailsLocation != null)
-            {
-                Location = MidsContext.Config.EntityDetailsLocation;
-            }
-
-            Move += OnMove;
         }
 
         /// <summary>
@@ -69,19 +59,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         public FrmEntityDetails(string entityUid, List<string> powers, PetInfo petInfo)
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor | ControlStyles.ResizeRedraw, true);
+            Closed += OnClosed;
             _entityUid = entityUid;
             _powers = powers;
             _petInfo = petInfo;
             _petInfo.PowersUpdated += PetInfoOnPowersUpdated;
             InitializeComponent();
             powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
-            MouseDown += OnMouseDown;
-            if (MidsContext.Config != null && MidsContext.Config.EntityDetailsLocation != null)
-            {
-                Location = MidsContext.Config.EntityDetailsLocation;
-            }
-
-            Move += OnMove;
         }
 
         protected override CreateParams CreateParams 
@@ -91,6 +75,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 cp.ExStyle |= 0x00000020;
                 return cp;
             }
+        }
+
+        // This is all you need to allow the window to be movable
+        protected override void WndProc(ref Message message)
+        {
+            if (message.Msg == WM_NCLBUTTONDBLCLK)
+            {
+                message.Result = IntPtr.Zero;
+                return;
+            }
+
+            base.WndProc(ref message);
+
+            if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
+                message.Result = (IntPtr)HTCAPTION;
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -111,6 +110,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             e.Graphics.DrawPath(pen, path);
         }
 
+        private void OnClosed(object? sender, EventArgs e)
+        {
+            if (MidsContext.Config == null) return;
+            MidsContext.Config.EntityDetailsLocation = Location;
+        }
+
         private void PetInfoOnPowersUpdated(object? sender, EventArgs e)
         {
             var petPower = _petInfo.GetPetPower();
@@ -118,28 +123,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             _dvPowerEnh = petPower?.BuffedPower;
             if (DvLocked) return;
             if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
-        }
-
-        // Hold left button click on window background to move it
-        private void OnMouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            ReleaseCapture();
-            SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-        }
-
-        private void OnMove(object sender, EventArgs e)
-        {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.EntityDetailsLocation = new Point(Math.Max(0, Location.X), Math.Max(0, Location.Y));
-            }
-
-            Invalidate(); // Avoid graphic artifacts to appear when moved partially out of screen
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -169,7 +152,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             btnTopMost.Visible = false;
             var owner = (frmMain)Owner;
-            Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
+
+            if (MidsContext.Config == null || MidsContext.Config.EntityDetailsLocation == null)
+            {
+                Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
+            }
+            else
+            {
+                Location = (Point)MidsContext.Config.EntityDetailsLocation;
+            }
+
             switch (TopMost)
             {
                 case true:
