@@ -7,6 +7,7 @@ using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -35,15 +36,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private IPower[] BaseArray;
         private bool BaseOverride;
-        private ImageButton btnClose;
 
         private ComboBox cbSet;
 
         private ComboBox cbStyle;
 
         private ComboBox cbValues;
-
-        private ImageButton chkOnTop;
 
         private IPower[] EnhArray;
         private ctlMultiGraph Graph;
@@ -72,15 +70,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             BaseOverride = false;
             Loaded = false;
             InitializeComponent();
-            btnClose.ButtonClicked += btnClose_Click;
-            chkOnTop.ButtonClicked += chkOnTop_CheckedChanged;
+            btnClose.Click += btnClose_Click;
+            chkOnTop.Click += chkOnTop_Click;
             Name = nameof(frmStats);
             //var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
             Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
         }
 
-        private void btnClose_Click()
+        private void btnClose_Click(object? sender, EventArgs e)
         {
             Close();
         }
@@ -108,9 +106,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             DisplayGraph();
         }
 
-        private void chkOnTop_CheckedChanged()
+        private void chkOnTop_Click(object? sender, EventArgs e)
         {
-            TopMost = chkOnTop.Checked;
+            TopMost = chkOnTop.ToggleState switch
+            {
+                ImageButtonEx.States.ToggledOn => true,
+                _ => false
+            };
         }
 
         private void DisplayGraph()
@@ -501,7 +503,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             EnhArray = Array.Empty<IPower?>();
             var basePowersList = new List<IPower>();
             var enhPowersList = new List<IPower>();
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
+            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
             if (cbSet.SelectedIndex <= -1)
             {
                 return;
@@ -1210,19 +1212,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             StatDisplayed = (DisplayMode) cbValues.SelectedIndex;
             BackColor = myParent.BackColor;
-            btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             Graph.BackColor = BackColor;
             if (NewData)
+            {
                 NewSets();
+            }
+
             SetGraphType();
             GetPowerArray();
             DisplayGraph();
