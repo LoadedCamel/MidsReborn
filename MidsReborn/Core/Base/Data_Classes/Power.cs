@@ -584,11 +584,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             get
             {
                 var ps = GetPowerSet();
-                return Enhancements.Length > 0 && (ps.SetType == Enums.ePowerSetType.Primary ||
-                                                   ps.SetType == Enums.ePowerSetType.Secondary ||
-                                                   ps.SetType == Enums.ePowerSetType.Ancillary ||
-                                                   ps.SetType == Enums.ePowerSetType.Inherent ||
-                                                   ps.SetType == Enums.ePowerSetType.Pool);
+                return Enhancements.Length > 0 && ps is {SetType: Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Ancillary or Enums.ePowerSetType.Inherent or Enums.ePowerSetType.Pool};
             }
         }
 

@@ -65,14 +65,16 @@ namespace Mids_Reborn.Core
 
         private static Dictionary<string, string> CommandsDict(IEffect sourceFx)
         {
+            var fxPower = sourceFx.GetPower();
+
             return new Dictionary<string, string>
             {
-                { "power.base>activateperiod", $"{sourceFx.GetPower().ActivatePeriod}"},
-                { "power.base>activatetime", $"{sourceFx.GetPower().CastTime}" },
-                { "power.base>areafactor", $"{sourceFx.GetPower().AoEModifier}" },
-                { "power.base>rechargetime", $"{sourceFx.GetPower().BaseRechargeTime}" },
-                { "power.base>endcost", $"{sourceFx.GetPower().EndCost}" },
-                { "power.base>range", $"{sourceFx.GetPower().Range}" },
+                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}"},
+                { "power.base>activatetime", $"{(fxPower == null ? "0" : fxPower.CastTime)}" },
+                { "power.base>areafactor", $"{(fxPower == null ? "0" : fxPower.AoEModifier)}" },
+                { "power.base>rechargetime", $"{(fxPower == null ? "0" : fxPower.BaseRechargeTime)}" },
+                { "power.base>endcost", $"{(fxPower == null ? "0" : fxPower.EndCost)}" },
+                { "power.base>range", $"{(fxPower == null ? "0" : fxPower.Range)}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", $"{sourceFx.Scale}" },
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
@@ -89,15 +91,17 @@ namespace Mids_Reborn.Core
 
         private static Dictionary<Regex, MatchEvaluator> FunctionsDict(IEffect sourceFx, ICollection<string> pickedPowerNames)
         {
+            var fxPower = sourceFx.GetPower();
+
             return new Dictionary<Regex, MatchEvaluator>
             {
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), e => GetVariableValue(e.Groups[1].Value) },
                 { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
-                { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
-                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
-                { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => sourceFx.GetPower().FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
+                { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
+                { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
+                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) }
             };
         }
