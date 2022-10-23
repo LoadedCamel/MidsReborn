@@ -525,7 +525,13 @@ namespace Mids_Reborn.Core
                 var power = DatabaseAPI.Database.Power[idx];
                 var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
 
-                result = effectList.Count > 1 ? string.Join("\n", effectList) : effectList.ToString();
+                result = effectList.Count switch
+                {
+                    > 1 => string.Join("\n", effectList),
+                    1 => effectList[0],
+                    _ => ""
+                };
+
             }
 
             return result;

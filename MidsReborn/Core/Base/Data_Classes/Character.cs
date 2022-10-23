@@ -966,7 +966,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f);
                 if (iLevel > -1)
                 {
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                    popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
                 }
 
                 var index2 = popupData1.Add();
@@ -983,7 +983,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention: " + enhancement.Name, PopUp.Colors.Title, 1.25f);
+                        popupData1.Sections[index1].Add($"Invention: {enhancement.Name}", PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.SpecialO:
                         popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
@@ -1001,7 +1001,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             };
                         }
 
-                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
+                        popupData1.Sections[index1].Add($"{DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName}: {enhancement.Name}", iColor, 1.25f);
                         break;
                 }
 
@@ -1011,22 +1011,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention);
+                        popupData1.Sections[index1].Add($"Invention Level: {iSlot.IOLevel + 1}{iSlot.GetRelativeString(false)} - {iSlot.GetEnhancementString()}", PopUp.Colors.Invention);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(255, 255, 0));
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.Yellow);
                         break;
                     case Enums.eType.SetO:
                         if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
                         {
-                            popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention);
+                            popupData1.Sections[index1].Add($"Invention Level: {iSlot.IOLevel + 1}{iSlot.GetRelativeString(false)}", PopUp.Colors.Invention);
                         }
                         break;
                 }
 
                 if (iLevel > -1)
                 {
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                    popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
                 }
 
                 if (enhancement.Unique)
@@ -1063,22 +1063,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
 
                         var index4 = popupData1.Add();
-                        //Debug.WriteLine(iSlot.GetEnhancementStringLong());
                         var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
                         for (var index3 = 0; index3 < strArray3.Length; index3++)
                         {
-                            string[] strArray2;
-                            if (!enhancement.HasPowerEffect)
-                            {
-                                strArray2 = BreakByBracket(strArray3[index3]);
-                            }
-                            else
-                            {
-                                strArray2 = new[] { strArray3[index3], string.Empty };
-                            }
+                            var strArray2 = !enhancement.HasPowerEffect
+                                ? BreakByBracket(strArray3[index3])
+                                : new[] { strArray3[index3], string.Empty };
 
-                            var strArray4 = strArray2;
-                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+
+                            popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
                         }
 
                         break;
