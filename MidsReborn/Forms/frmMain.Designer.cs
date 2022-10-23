@@ -230,9 +230,9 @@ namespace Mids_Reborn.Forms
             // 
             this.txtName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtName.ForeColor = System.Drawing.Color.Black;
-            this.txtName.Location = new System.Drawing.Point(96, 82);
+            this.txtName.Location = new System.Drawing.Point(94, 82);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(142, 20);
+            this.txtName.Size = new System.Drawing.Size(144, 20);
             this.txtName.TabIndex = 1;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
@@ -1996,10 +1996,10 @@ namespace Mids_Reborn.Forms
             // 
             // lblName
             // 
-            this.lblName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.InitialText = "Name:";
-            this.lblName.Location = new System.Drawing.Point(4, 82);
+            this.lblName.Location = new System.Drawing.Point(2, 82);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(92, 21);
             this.lblName.TabIndex = 44;
@@ -2007,7 +2007,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblOrigin
             // 
-            this.lblOrigin.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOrigin.InitialText = "Origin:";
             this.lblOrigin.Location = new System.Drawing.Point(2, 133);
             this.lblOrigin.Name = "lblOrigin";
@@ -2017,7 +2017,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblAT
             // 
-            this.lblAT.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAT.InitialText = "Archetype:";
             this.lblAT.Location = new System.Drawing.Point(2, 109);
             this.lblAT.Name = "lblAT";
