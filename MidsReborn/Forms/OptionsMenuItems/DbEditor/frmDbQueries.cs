@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Jace.Operations;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Extensions;
@@ -49,7 +50,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FirstAvailableIndex,
             HighestAvailableIndex,
             AllAvailableIndices,
-            ListStaticIndices
+            ListStaticIndices,
+            OrphanEntities
         }
 
         private List<string[]> LvItems;
@@ -231,5 +233,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) => e.Item = new ListViewItem(LvItems[e.ItemIndex]);
+
+        private void btnOrphanEntities_Click(object sender, EventArgs e)
+        {
+            CurrentQueryType = QueryType.OrphanEntities;
+            var itemsList = DatabaseAPI.Database.Power.Select(e => new KeyValuePair<IPower, List<IEffect>>(e,
+                e.Effects.Where(e => e.EffectType == Enums.eEffectType.EntCreate & e.nSummon < 0 & !string.IsNullOrEmpty(e.Summon)).ToList()));
+
+            LvItems = itemsList.SelectMany(e => e.Value, (k, v) => new[] {$"{k.Key.StaticIndex}", v.Summon, k.Key.FullName}).ToList();
+            listView1.VirtualListSize = LvItems.Count;
+        }
     }
 }
