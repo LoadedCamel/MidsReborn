@@ -2803,14 +2803,17 @@ namespace Mids_Reborn.Forms.Controls
                     iTip += "\r\n\r\nClick to show details about this entity.";
                 }
 
-                var iItem = new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip, DatabaseAPI.Database.Entities[pEnh.Effects[index].nSummon]);
+                var iItem = pEnh.Effects[index].nSummon < 0
+                    ? new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1, false, iTip)
+                    : new PairedList.ItemPair("Summon:", iValue, false, pBase.Effects[index].Probability < 1, false, iTip, DatabaseAPI.Database.Entities[pEnh.Effects[index].nSummon]);
+
                 iList.AddItem(iItem);
                 if (pBase.Effects[index].isEnhancementEffect)
                 {
                     iList.SetUnique();
                 }
 
-                ++num1;
+                num1++;
             }
 
             if (num1 > 0 && flag)
