@@ -846,22 +846,42 @@ namespace Mids_Reborn
         private bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
         {
             if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)
+            {
                 return false;
+            }
 
-            for (var index1 = 0; index1 <= CurrentBuild.Powers[iIndex].SlotCount - 1; ++index1)
+            for (var index1 = 0; index1 < CurrentBuild.Powers[iIndex].SlotCount; index1++)
             {
                 if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
+                {
                     continue;
-                var hasPower = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect.Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower || CurrentBuild.Powers[iIndex].ProcInclude)
-                    continue;
+                }
+
                 var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
                 var enh = DatabaseAPI.Database.Enhancements[enhIndex];
                 var power1 = enh?.GetPower();
-                if (power1 == null) return false;
+
+                var hasPower = enh.Effect.Any(e => e.Mode == Enums.eEffMode.FX);
+                if (!hasPower)
+                {
+                    continue;
+                }
+
+                // Procs are actually disabled when turned on...
+                // Keep 'always-on' specials active
+                if (CurrentBuild.Powers[iIndex].ProcInclude & enh.IsProc)
+                {
+                    continue;
+                }
+
+                if (power1 == null)
+                {
+                    return false;
+                }
+
                 if (enh.IsProc)
                 {
-                    for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
+                    for (var index2 = 0; index2 < power1.Effects.Length; index2++)
                     {
                         var effect = power1.Effects[index2];
                         var toAdd = (IEffect)effect.Clone();
@@ -880,7 +900,7 @@ namespace Mids_Reborn
                 }
                 else
                 {
-                    for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
+                    for (var index2 = 0; index2 < power1.Effects.Length; index2++)
                     {
                         var effect = power1.Effects[index2];
                         var toAdd = (IEffect)effect.Clone();
