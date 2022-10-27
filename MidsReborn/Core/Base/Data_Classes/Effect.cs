@@ -1562,7 +1562,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             sFinal = sFinal
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
-                .Replace("(, ", "("); // Some Boosts effect with PPM chance and Cancel on Miss
+                .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
+                .Replace("chance )", "chance)")
+                .Replace("SelfFor ", "Self for ") // Some knockback/knockup forms
+                .Replace("TargetFor ", "Target for ");
 
             return sFinal;
         }
