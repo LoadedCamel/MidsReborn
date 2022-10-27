@@ -809,7 +809,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXDelay.Text = MyFx.DelayedTime.ToString(CultureInfo.InvariantCulture);
+            txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.0##}";
             UpdateFxText();
         }
 
@@ -830,7 +830,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXDuration.Text = $"{MyFx.nDuration:##0.0##}";
+            txtFXDuration.Text = $@"{MyFx.nDuration:##0.0##}";
             UpdateFxText();
         }
 
@@ -851,7 +851,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXMag.Text = MyFx.nMagnitude.ToString(CultureInfo.InvariantCulture);
+            txtFXMag.Text = $@"{MyFx.nMagnitude:####0.0##}";
             UpdateFxText();
         }
 
@@ -892,7 +892,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXProb.Text = MyFx.BaseProbability.ToString(CultureInfo.InvariantCulture);
+            txtFXProb.Text = $@"{MyFx.BaseProbability:####0.0##}";
             UpdateFxText();
         }
 
@@ -900,7 +900,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXScale.Text = $"{MyFx.Scale:####0.0##}";
+            txtFXScale.Text = $@"{MyFx.Scale:####0.0##}";
             UpdateFxText();
         }
 
@@ -924,7 +924,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtFXTicks.Text = Convert.ToString(MyFx.Ticks);
+            txtFXTicks.Text = $@"{MyFx.Ticks:####0}";
             UpdateFxText();
         }
 
@@ -951,7 +951,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_loading)
                 return;
-            txtPPM.Text = MyFx.ProcsPerMinute.ToString(CultureInfo.InvariantCulture);
+            txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.0##}";
         }
 
         private void txtPPM_TextChanged(object sender, EventArgs e)
