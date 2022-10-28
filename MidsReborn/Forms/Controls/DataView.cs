@@ -1865,8 +1865,20 @@ namespace Mids_Reborn.Forms.Controls
                         }
                         else
                         {
-                            iList.AddItem(new PairedList.ItemPair($"Res(Multi){toWho}:",
-                                $"{baseSumResEffect.Value[0]}%", false, false, false, baseSumResEffect));
+                            var baseFx = pBase.Effects[baseSumResEffect.Index[0]];
+                            var similarFxList = pBase.Effects
+                                .Where(e => (e.PvMode == Enums.ePvX.Any |
+                                             e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                             e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
+                                            e.EffectType == baseFx.EffectType &
+                                            e.ToWho == baseFx.ToWho)
+                                .ToList();
+                            var tip = string.Join("\r\n",similarFxList.Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+                            var minFx = similarFxList
+                                .OrderBy(e => e.BuffedMag)
+                                .First();
+
+                            iList.AddItem(new PairedList.ItemPair($"Res(Multi){toWho}:", $"{(minFx.DisplayPercentage ? $"{minFx.BuffedMag * 100:####0.##}%" : $"{minFx.BuffedMag:####0.##}")}", false, false, false, tip));
                             if (sFXCheck(baseSumResEffect))
                             {
                                 iList.SetUnique();
@@ -1979,12 +1991,8 @@ namespace Mids_Reborn.Forms.Controls
 
                             if (baseSumEnhancement.Present)
                             {
-                                var iValue = $"Varies";
-                                if (!multipleVariableFx)
-                                {
-                                    iValue = $"{num3}%";
-                                }
-
+                                var iValue = multipleVariableFx ? "Varies" : $"{num3}%";
+                                var similarFxList = new List<IEffect>();
                                 if (enhSumEnhancement.Multiple)
                                 {
                                     var tip = "";
@@ -2004,9 +2012,24 @@ namespace Mids_Reborn.Forms.Controls
                                         }
 
                                         tip += $"{(tip != "" ? "\r\n" : "")}{fx.BuildEffectString(false, "", false, false, false, true)}";
+                                        similarFxList.Add(fx);
                                     }
-                                    
-                                    iList.AddItem(new PairedList.ItemPair("+Multiple:", iValue, false, false, false, tip.Trim()));
+
+                                    var minFx = similarFxList
+                                        .OrderBy(e => e.BuffedMag)
+                                        .First();
+
+                                    iValue = similarFxList
+                                        .Select(e => e.BuffedMag)
+                                        .Any(e => Math.Abs(e - minFx.BuffedMag) > float.Epsilon)
+                                        ? "Varies"
+                                        : $"{(minFx.DisplayPercentage ? $"{minFx.BuffedMag * 100:####0.##}" : $"{minFx.BuffedMag}")}";
+
+                                    var multipleFxSign = similarFxList
+                                        .Select(e => e.BuffedMag)
+                                        .Any(e => e > 0);
+
+                                    iList.AddItem(new PairedList.ItemPair($"{(multipleFxSign ? "+" : "-")}Multiple:", iValue, false, false, false, tip.Trim()));
                                 }
                                 else
                                 {
