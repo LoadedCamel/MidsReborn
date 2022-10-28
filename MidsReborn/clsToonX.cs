@@ -516,7 +516,7 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                if (enhancementPass & (iEffect != Enums.eEffectType.DamageBuff))
+                if (enhancementPass & iEffect != Enums.eEffectType.DamageBuff)
                 {
                     shortFx.Assign(tPwr.GetEnhancementMagSum(iEffect, -1));
                 }
@@ -558,7 +558,6 @@ namespace Mids_Reborn
                         continue;
                     }
 
-                    var pIdx = tPwr.PowerIndex;
                     if (!enhancementPass)
                     {
                         switch (effect.EffectType)
@@ -575,7 +574,7 @@ namespace Mids_Reborn
                         }
                     }
 
-                    if (((tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.DamageBuff) | (tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.Enhancement)) & enhancementPass)
+                    if ((tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.DamageBuff | tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.Enhancement) & enhancementPass)
                     {
                         switch (effect.ETModifies)
                         {
@@ -592,14 +591,14 @@ namespace Mids_Reborn
                             {
                                 if (iEffect == Enums.eEffectType.DamageBuff)
                                 {
-                                    if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance") | (effect.SpecialCase == Enums.eSpecialCase.Defiance)))
+                                    if (!(effect.isEnhancementEffect & effect.EffectClass == Enums.eEffectClass.Tertiary | effect.ValidateConditional("Active", "Defiance") | effect.SpecialCase == Enums.eSpecialCase.Defiance))
                                     {
                                         nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                                     }
                                 }
-                                else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
+                                else if (!(effect.ETModifies == Enums.eEffectType.Accuracy & enhancementPass))
                                 {
-                                    if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) | (effect.ETModifies == Enums.eEffectType.SpeedFlying) | (effect.ETModifies == Enums.eEffectType.SpeedJumping) | (effect.ETModifies == Enums.eEffectType.JumpHeight))
+                                    if (effect.ETModifies == Enums.eEffectType.SpeedRunning | effect.ETModifies == Enums.eEffectType.SpeedFlying | effect.ETModifies == Enums.eEffectType.SpeedJumping | effect.ETModifies == Enums.eEffectType.JumpHeight)
                                     {
                                         if (effect.buffMode != Enums.eBuffMode.Debuff)
                                         {
@@ -620,15 +619,15 @@ namespace Mids_Reborn
                             }
                         }
                     }
-                    else if ((effect.EffectType == Enums.eEffectType.Endurance) & (effect.Aspect == Enums.eAspect.Max))
+                    else if (effect.EffectType == Enums.eEffectType.Endurance & effect.Aspect == Enums.eAspect.Max)
                     {
                         nBuffs.MaxEnd += shortFx.Value[shortFxIdx];
                     }
-                    else if ((effect.ETModifies == Enums.eEffectType.Mez) & !enhancementPass)
+                    else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.Mez & !enhancementPass)
                     {
                         nBuffs.Mez[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                     }
-                    else if ((effect.ETModifies == Enums.eEffectType.MezResist) & !enhancementPass)
+                    else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.MezResist & !enhancementPass)
                     {
                         nBuffs.MezRes[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                     }
@@ -644,27 +643,27 @@ namespace Mids_Reborn
                     {
                         nBuffs.Elusivity[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                     }
-                    else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
+                    else if (!(effect.ETModifies == Enums.eEffectType.Accuracy & enhancementPass))
                     {
-                        if ((effect.ETModifies == Enums.eEffectType.Accuracy) & !enhancementPass)
+                        if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.Accuracy & !enhancementPass)
                         {
                             nBuffs.Effect[(int)Enums.eStatType.BuffAcc] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) & (effect.Aspect == Enums.eAspect.Max))
+                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedRunning & effect.Aspect == Enums.eAspect.Max)
                         {
                             nBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedFlying) & (effect.Aspect == Enums.eAspect.Max))
+                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedFlying & effect.Aspect == Enums.eAspect.Max)
                         {
                             nBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedJumping) & (effect.Aspect == Enums.eAspect.Max))
+                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedJumping & effect.Aspect == Enums.eAspect.Max)
                         {
                             nBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((iEffect == Enums.eEffectType.ToHit) & !enhancementPass)
+                        else if (iEffect == Enums.eEffectType.ToHit & !enhancementPass)
                         {
-                            if (!(effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)))
+                            if (!(effect.isEnhancementEffect & effect.EffectClass == Enums.eEffectClass.Tertiary))
                             {
                                 nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                             }
@@ -674,7 +673,7 @@ namespace Mids_Reborn
                             // Zed: force absorb to be flat value.
                             // E.g. Bio Armor Parasitic Aura and Ablative Carapace use percentages.
                             // Particle shielding does not.
-                            if ((index1 == (int)Enums.eStatType.Absorb) & effect.DisplayPercentage)
+                            if (index1 == (int)Enums.eStatType.Absorb & effect.DisplayPercentage)
                             {
                                 shortFx.Value[shortFxIdx] *= MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
                             }
@@ -1815,10 +1814,13 @@ namespace Mids_Reborn
 
             GenerateModifyEffectsArray();
             GenerateBuffData(ref _selfEnhance, true);
-            for (var hIDX = 0; hIDX <= _mathPower.Length - 1; ++hIDX)
+            for (var hIDX = 0; hIDX < _mathPower.Length; hIDX++)
             {
                 if (_mathPower[hIDX] == null)
+                {
                     continue;
+                }
+
                 GBPA_Pass1_EnhancePreED(ref _mathPower[hIDX], hIDX);
                 GBPA_Pass2_ApplyED(ref _mathPower[hIDX]);
                 GBPA_Pass3_EnhancePostED(ref _mathPower[hIDX], hIDX);
@@ -1828,13 +1830,15 @@ namespace Mids_Reborn
             }
 
             GenerateBuffData(ref _selfBuffs, false);
-            for (var index = 0; index <= _mathPower.Length - 1; ++index)
+
+            for (var index = 0; index < _mathPower.Length; index++)
             {
                 if (_mathPower[index] != null)
                 {
                     GBPA_Pass6_MultiplyPostBuff(ref _mathPower[index], ref _buffedPower[index]);
                 }
             }
+
             ApplyGlobalEnhancements();
             GBD_Totals();
         }
