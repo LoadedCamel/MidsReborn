@@ -780,13 +780,14 @@ namespace Mids_Reborn.Forms.Controls
                             case Enums.eEffectType.Recovery:
                             case Enums.eEffectType.Endurance:
                                 rankedEffect.Name = $"{pEnh.Effects[rankedEffects[id]].EffectType}";
-                                var fxTarget = enhancedPower.Effects[rankedEffects[id]].ToWho switch
+                                var fxTarget = pEnh.Effects[rankedEffects[id]].ToWho switch
                                 {
                                     Enums.eToWho.Self => "(Self)",
                                     Enums.eToWho.Target => "(Tgt)",
                                     _ => ""
                                 };
-                                rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
+                                
+                                rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
                                 break;
                                 
                             case Enums.eEffectType.EntCreate when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
@@ -928,7 +929,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 // Ignore fully absorbed entities
-                if (pBase.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.EntCreate)
+                if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.EntCreate)
                 {
                     if (pBase.AbsorbSummonEffects & pBase.AbsorbSummonAttributes)
                     {
@@ -937,7 +938,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 info_DataList.AddItem(rankedEffect);
-                if (pBase.Effects[rankedEffects[id]].isEnhancementEffect)
+                if (pEnh.Effects[rankedEffects[id]].isEnhancementEffect)
                 {
                     info_DataList.SetUnique();
                 }
