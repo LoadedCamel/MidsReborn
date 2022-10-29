@@ -371,12 +371,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (sender is ComboBox cb && cb.SelectedIndex != -1)
             {
-                var selectedItem = cb.SelectedText;
-                if (selectedItem != "None")
-                {
-                    var subType = DatabaseAPI.GetSpecialEnhByName(selectedItem).Index;
-                    myEnh.SubTypeID = subType;
-                }
+                myEnh.SubTypeID = cb.SelectedIndex;
             }
             else
             {

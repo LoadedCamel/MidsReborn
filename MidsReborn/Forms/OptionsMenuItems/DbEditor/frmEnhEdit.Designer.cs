@@ -87,7 +87,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader3
             // 
             this.ColumnHeader3.Text = "Type";
-            this.ColumnHeader3.Width = 65;
+            this.ColumnHeader3.Width = 101;
             // 
             // columnHeader6
             // 
@@ -102,7 +102,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader1
             // 
             this.ColumnHeader1.Text = "Classes";
-            this.ColumnHeader1.Width = 135;
+            this.ColumnHeader1.Width = 99;
             // 
             // ColumnHeader5
             // 

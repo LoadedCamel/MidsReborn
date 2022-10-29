@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     {
         private frmBusy _bFrm;
         private frmMain _frmMain;
+        private List<string> SpecialEnhTypes;
 
         public frmEnhEdit()
         {
@@ -24,6 +26,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Name = nameof(frmEnhEdit);
             Icon = Resources.MRB_Icon_Concept;
+            SpecialEnhTypes = DatabaseAPI.Database.SpecialEnhancements.Select(specEnh => specEnh.Name.Replace(" Origin", string.Empty)).ToList();
         }
 
         private void AddListItem(int index)
@@ -32,7 +35,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var item = new[]
             {
                 $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}",
-                Enum.GetName(typeof(Enums.eType), enhancement.TypeID),
+                enhancement.TypeID == Enums.eType.SpecialO && SpecialEnhTypes[enhancement.SubTypeID] != "None"
+                    ? $"Special/{SpecialEnhTypes[enhancement.SubTypeID]}"
+                    : Enum.GetName(typeof(Enums.eType), enhancement.TypeID),
                 $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}",
                 $"{enhancement.Effect.Length}",
                 string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName)),
@@ -274,8 +279,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ImageUpdate();
             lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
-            var num = DatabaseAPI.Database.Enhancements.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
             {
                 /*if (string.IsNullOrEmpty(txtFilter.Text) || DatabaseAPI.Database.Enhancements[index].Name
                     .ToUpper(CultureInfo.InvariantCulture)
