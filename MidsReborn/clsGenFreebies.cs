@@ -13,9 +13,8 @@ namespace Mids_Reborn
         private const int EnhancementsTrayCapacity = 70;
         private const string BoostCmd = "boost";
         private const string CmdSeparator = "$$";
-        private const bool AutoAttune = false;
-        public static string MenuName { get; set; } = "MRBTest";
         public const string MenuExt = "mnu";
+        public static string MenuName { get; set; } = "MRBTest";
 
         private static List<List<string>> GenerateBoostChunks()
         {
@@ -23,7 +22,12 @@ namespace Mids_Reborn
             var l = 0;
             var commandChunks = new List<List<string>>();
 
-            foreach (var p in MidsContext.Character.CurrentBuild.Powers.Where(p => p.State != Enums.ePowerState.Empty))
+            if (MidsContext.Character.CurrentBuild == null)
+            {
+                return commandChunks;
+            }
+
+            foreach (var p in MidsContext.Character.CurrentBuild.Powers?.Where(p => p != null && p.State != Enums.ePowerState.Empty))
             {
                 for (var j = 0; j < p.Slots.Length; j++)
                 {
@@ -36,15 +40,20 @@ namespace Mids_Reborn
 
                     var enhData = DatabaseAPI.Database.Enhancements[p.Slots[j].Enhancement.Enh];
                     var enhUid = enhData.UID.Replace("Shrapnel_", "Artillery_");
-                    var setLevelMax = enhData.nIDSet > -1
-                        ? DatabaseAPI.Database.EnhancementSets[enhData.nIDSet].LevelMax
-                        : 49;
-                    var enhBoostLevel = enhData.LevelMax + 1;
-                    if (enhData.nIDSet > -1 & AutoAttune & setLevelMax < 49)
+                    var enhBoostLevel = p.Slots[j].Enhancement.Grade switch
                     {
-                        enhUid = enhData.UID.Replace("Crafted_", "Attuned_");
-                        enhBoostLevel = 1;
-                    }
+                        Enums.eEnhGrade.None => p.Slots[j].Enhancement.IOLevel + 1,
+                        _ => 50 + p.Slots[j].Enhancement.RelativeLevel switch
+                        {
+                            Enums.eEnhRelative.MinusThree => -3,
+                            Enums.eEnhRelative.MinusTwo => -2,
+                            Enums.eEnhRelative.MinusOne => -1,
+                            Enums.eEnhRelative.PlusOne => 1,
+                            Enums.eEnhRelative.PlusTwo => 2,
+                            Enums.eEnhRelative.PlusThree => 3,
+                            _ => 0
+                        }
+                    };
 
                     commandChunks[l].Add($"{BoostCmd} {enhUid} {enhUid} {enhBoostLevel}");
 
