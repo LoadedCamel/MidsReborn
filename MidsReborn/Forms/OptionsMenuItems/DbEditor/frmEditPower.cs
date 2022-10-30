@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -18,7 +17,6 @@ using Mids_Reborn.Core.Import;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -342,10 +340,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 if (!myPower.VariableOverride)
                 {
-                    if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
+                    /*if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
                     {
                         myPower.VariableMax = myPower.MaxTargets;
-                    }
+                    }*/
                 }
                 else
                 {
@@ -671,6 +669,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ret = float.TryParse(udScaleMax.Text, out var scaleMax);
             if (!ret) return;
 
+            // Sync variables after a change
+            scaleStart = myPower.VariableStart;
+            scaleMin = myPower.VariableMin;
+            scaleMax = myPower.VariableMax;
+
             if (scaleMin >= scaleMax & chkScale.Checked)
             {
                 udScaleMin.BackColor = Color.Coral;
@@ -686,7 +689,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 udScaleMax.ForeColor = SystemColors.WindowText;
             }
 
-            if (chkScale.Checked && scaleStart > scaleMin && scaleStart <= scaleMax)
+            if (chkScale.Checked && scaleStart < scaleMin | scaleStart > scaleMax)
             {
                 udScaleStart.BackColor = Color.Coral;
                 udScaleStart.ForeColor = Color.Black;
