@@ -181,15 +181,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.rbPrPowerB = new System.Windows.Forms.RadioButton();
             this.rbPrPowerA = new System.Windows.Forms.RadioButton();
             this.lvPrPower = new System.Windows.Forms.ListView();
-            this.ColumnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader9 = new System.Windows.Forms.ColumnHeader();
             this.lvPrSet = new System.Windows.Forms.ListView();
-            this.ColumnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader10 = new System.Windows.Forms.ColumnHeader();
             this.lvPrGroup = new System.Windows.Forms.ListView();
-            this.ColumnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader11 = new System.Windows.Forms.ColumnHeader();
             this.lvPrListing = new System.Windows.Forms.ListView();
-            this.ColumnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader6 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader7 = new System.Windows.Forms.ColumnHeader();
+            this.ColumnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.GroupBox10 = new System.Windows.Forms.GroupBox();
             this.clbClassExclude = new System.Windows.Forms.CheckedListBox();
             this.GroupBox8 = new System.Windows.Forms.GroupBox();
@@ -209,18 +209,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnSPAdd = new System.Windows.Forms.Button();
             this.btnSPRemove = new System.Windows.Forms.Button();
             this.lvSPSelected = new System.Windows.Forms.ListView();
-            this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.lvSPPower = new System.Windows.Forms.ListView();
-            this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.lvSPSet = new System.Windows.Forms.ListView();
-            this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.lvSPGroup = new System.Windows.Forms.ListView();
-            this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
-            this.btnCSVImport = new System.Windows.Forms.Button();
+            this.btnJsonExport = new System.Windows.Forms.Button();
+            this.btnJsonImport = new System.Windows.Forms.Button();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -854,9 +855,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpBasic.Controls.Add(this.cbPowerType);
             this.tpBasic.Controls.Add(this.Label5);
             this.tpBasic.Controls.Add(this.Label4);
-            this.tpBasic.Location = new System.Drawing.Point(4, 23);
+            this.tpBasic.Location = new System.Drawing.Point(4, 25);
             this.tpBasic.Name = "tpBasic";
-            this.tpBasic.Size = new System.Drawing.Size(832, 353);
+            this.tpBasic.Size = new System.Drawing.Size(832, 351);
             this.tpBasic.TabIndex = 0;
             this.tpBasic.Text = "Power Attributes";
             this.tpBasic.UseVisualStyleBackColor = true;
@@ -1528,9 +1529,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.tpEffects.Controls.Add(this.lvFX);
             this.tpEffects.Controls.Add(this.pnlFX);
-            this.tpEffects.Location = new System.Drawing.Point(4, 23);
+            this.tpEffects.Location = new System.Drawing.Point(4, 25);
             this.tpEffects.Name = "tpEffects";
-            this.tpEffects.Size = new System.Drawing.Size(832, 353);
+            this.tpEffects.Size = new System.Drawing.Size(832, 351);
             this.tpEffects.TabIndex = 1;
             this.tpEffects.Text = "Effects";
             this.tpEffects.UseVisualStyleBackColor = true;
@@ -1643,9 +1644,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpEnh.Controls.Add(this.chkPRFrontLoad);
             this.tpEnh.Controls.Add(this.pbEnhancementList);
             this.tpEnh.Controls.Add(this.lblEnhName);
-            this.tpEnh.Location = new System.Drawing.Point(4, 23);
+            this.tpEnh.Location = new System.Drawing.Point(4, 25);
             this.tpEnh.Name = "tpEnh";
-            this.tpEnh.Size = new System.Drawing.Size(832, 353);
+            this.tpEnh.Size = new System.Drawing.Size(832, 351);
             this.tpEnh.TabIndex = 9;
             this.tpEnh.Text = "Enhancements";
             this.tpEnh.UseVisualStyleBackColor = true;
@@ -1712,7 +1713,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnhName
             // 
-            this.lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEnhName.Location = new System.Drawing.Point(21, 68);
             this.lblEnhName.Name = "lblEnhName";
             this.lblEnhName.Size = new System.Drawing.Size(316, 16);
@@ -1724,9 +1725,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSets.Controls.Add(this.lblInvSet);
             this.tpSets.Controls.Add(this.pbInvSetList);
             this.tpSets.Controls.Add(this.pbInvSetUsed);
-            this.tpSets.Location = new System.Drawing.Point(4, 23);
+            this.tpSets.Location = new System.Drawing.Point(4, 25);
             this.tpSets.Name = "tpSets";
-            this.tpSets.Size = new System.Drawing.Size(832, 353);
+            this.tpSets.Size = new System.Drawing.Size(832, 351);
             this.tpSets.TabIndex = 5;
             this.tpSets.Text = "Invention Set Types";
             this.tpSets.UseVisualStyleBackColor = true;
@@ -1742,7 +1743,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblInvSet
             // 
-            this.lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblInvSet.Location = new System.Drawing.Point(24, 68);
             this.lblInvSet.Name = "lblInvSet";
             this.lblInvSet.Size = new System.Drawing.Size(316, 16);
@@ -1777,9 +1778,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpPreReq.Controls.Add(this.GroupBox11);
             this.tpPreReq.Controls.Add(this.GroupBox10);
             this.tpPreReq.Controls.Add(this.GroupBox8);
-            this.tpPreReq.Location = new System.Drawing.Point(4, 23);
+            this.tpPreReq.Location = new System.Drawing.Point(4, 25);
             this.tpPreReq.Name = "tpPreReq";
-            this.tpPreReq.Size = new System.Drawing.Size(832, 353);
+            this.tpPreReq.Size = new System.Drawing.Size(832, 351);
             this.tpPreReq.TabIndex = 4;
             this.tpPreReq.Text = "Requirements";
             this.tpPreReq.UseVisualStyleBackColor = true;
@@ -1898,7 +1899,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader9});
             this.lvPrPower.FullRowSelect = true;
             this.lvPrPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPrPower.HideSelection = false;
             this.lvPrPower.Location = new System.Drawing.Point(290, 108);
             this.lvPrPower.MultiSelect = false;
             this.lvPrPower.Name = "lvPrPower";
@@ -1919,7 +1919,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader10});
             this.lvPrSet.FullRowSelect = true;
             this.lvPrSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPrSet.HideSelection = false;
             this.lvPrSet.Location = new System.Drawing.Point(148, 108);
             this.lvPrSet.MultiSelect = false;
             this.lvPrSet.Name = "lvPrSet";
@@ -1940,7 +1939,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader11});
             this.lvPrGroup.FullRowSelect = true;
             this.lvPrGroup.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPrGroup.HideSelection = false;
             this.lvPrGroup.Location = new System.Drawing.Point(6, 108);
             this.lvPrGroup.MultiSelect = false;
             this.lvPrGroup.Name = "lvPrGroup";
@@ -1963,7 +1961,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader8});
             this.lvPrListing.FullRowSelect = true;
             this.lvPrListing.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPrListing.HideSelection = false;
             this.lvPrListing.Location = new System.Drawing.Point(6, 19);
             this.lvPrListing.MultiSelect = false;
             this.lvPrListing.Name = "lvPrListing";
@@ -2031,10 +2028,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSpecialEnh.Controls.Add(this.Label30);
             this.tpSpecialEnh.Controls.Add(this.lvDisablePass4);
             this.tpSpecialEnh.Controls.Add(this.lvDisablePass1);
-            this.tpSpecialEnh.Location = new System.Drawing.Point(4, 23);
+            this.tpSpecialEnh.Location = new System.Drawing.Point(4, 25);
             this.tpSpecialEnh.Name = "tpSpecialEnh";
             this.tpSpecialEnh.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSpecialEnh.Size = new System.Drawing.Size(832, 353);
+            this.tpSpecialEnh.Size = new System.Drawing.Size(832, 351);
             this.tpSpecialEnh.TabIndex = 7;
             this.tpSpecialEnh.Text = "Enhancement Disabling";
             this.tpSpecialEnh.UseVisualStyleBackColor = true;
@@ -2080,9 +2077,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.Controls.Add(this.GroupBox2);
             this.tpMutex.Controls.Add(this.chkMutexAuto);
             this.tpMutex.Controls.Add(this.chkMutexSkip);
-            this.tpMutex.Location = new System.Drawing.Point(4, 23);
+            this.tpMutex.Location = new System.Drawing.Point(4, 25);
             this.tpMutex.Name = "tpMutex";
-            this.tpMutex.Size = new System.Drawing.Size(832, 353);
+            this.tpMutex.Size = new System.Drawing.Size(832, 351);
             this.tpMutex.TabIndex = 8;
             this.tpMutex.Text = "Mutal Exclusivity";
             this.tpMutex.UseVisualStyleBackColor = true;
@@ -2144,9 +2141,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpSubPower.Controls.Add(this.lvSPPower);
             this.tpSubPower.Controls.Add(this.lvSPSet);
             this.tpSubPower.Controls.Add(this.lvSPGroup);
-            this.tpSubPower.Location = new System.Drawing.Point(4, 23);
+            this.tpSubPower.Location = new System.Drawing.Point(4, 25);
             this.tpSubPower.Name = "tpSubPower";
-            this.tpSubPower.Size = new System.Drawing.Size(832, 353);
+            this.tpSubPower.Size = new System.Drawing.Size(832, 351);
             this.tpSubPower.TabIndex = 10;
             this.tpSubPower.Text = "Sub-Powers";
             this.tpSubPower.UseVisualStyleBackColor = true;
@@ -2177,7 +2174,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader4});
             this.lvSPSelected.FullRowSelect = true;
             this.lvSPSelected.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSPSelected.HideSelection = false;
             this.lvSPSelected.Location = new System.Drawing.Point(491, 16);
             this.lvSPSelected.MultiSelect = false;
             this.lvSPSelected.Name = "lvSPSelected";
@@ -2197,7 +2193,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader1});
             this.lvSPPower.FullRowSelect = true;
             this.lvSPPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSPPower.HideSelection = false;
             this.lvSPPower.Location = new System.Drawing.Point(295, 16);
             this.lvSPPower.MultiSelect = false;
             this.lvSPPower.Name = "lvSPPower";
@@ -2217,7 +2212,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader2});
             this.lvSPSet.FullRowSelect = true;
             this.lvSPSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSPSet.HideSelection = false;
             this.lvSPSet.Location = new System.Drawing.Point(153, 16);
             this.lvSPSet.MultiSelect = false;
             this.lvSPSet.Name = "lvSPSet";
@@ -2238,7 +2232,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader3});
             this.lvSPGroup.FullRowSelect = true;
             this.lvSPGroup.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSPGroup.HideSelection = false;
             this.lvSPGroup.Location = new System.Drawing.Point(11, 16);
             this.lvSPGroup.MultiSelect = false;
             this.lvSPGroup.Name = "lvSPGroup";
@@ -2293,15 +2286,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFullCopy.UseVisualStyleBackColor = true;
             this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopy_Click);
             // 
-            // btnCSVImport
+            // btnJsonExport
             // 
-            this.btnCSVImport.Location = new System.Drawing.Point(8, 394);
-            this.btnCSVImport.Name = "btnCSVImport";
-            this.btnCSVImport.Size = new System.Drawing.Size(151, 36);
-            this.btnCSVImport.TabIndex = 7;
-            this.btnCSVImport.Text = "Import CSV String";
-            this.btnCSVImport.UseVisualStyleBackColor = true;
-            this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
+            this.btnJsonExport.Location = new System.Drawing.Point(8, 394);
+            this.btnJsonExport.Name = "btnJsonExport";
+            this.btnJsonExport.Size = new System.Drawing.Size(130, 36);
+            this.btnJsonExport.TabIndex = 7;
+            this.btnJsonExport.Text = "Export to JSON";
+            this.btnJsonExport.UseVisualStyleBackColor = true;
+            this.btnJsonExport.Click += new System.EventHandler(this.btnJsonExport_Click);
+            // 
+            // btnJsonImport
+            // 
+            this.btnJsonImport.Location = new System.Drawing.Point(146, 394);
+            this.btnJsonImport.Name = "btnJsonImport";
+            this.btnJsonImport.Size = new System.Drawing.Size(130, 36);
+            this.btnJsonImport.TabIndex = 8;
+            this.btnJsonImport.Text = "Import from JSON";
+            this.btnJsonImport.UseVisualStyleBackColor = true;
+            this.btnJsonImport.Click += new System.EventHandler(this.btnJsonImport_Click);
             // 
             // frmEditPower
             // 
@@ -2309,13 +2312,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(870, 441);
-            this.Controls.Add(this.btnCSVImport);
+            this.Controls.Add(this.btnJsonImport);
+            this.Controls.Add(this.btnJsonExport);
             this.Controls.Add(this.btnFullCopy);
             this.Controls.Add(this.btnFullPaste);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.tcPower);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -2365,7 +2369,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         TextBox txtVisualLocation;
         ComboBox cbNameGroup;
         Button btnCancel;
-        Button btnCSVImport;
+        Button btnJsonExport;
         Button btnFullCopy;
         Button btnFullPaste;
         Button btnFXAdd;
@@ -2552,5 +2556,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private NumericUpDown udScaleStart;
         private Label label19;
         private CheckBox cbCoDFormat;
+        private Button btnJsonImport;
     }
 }

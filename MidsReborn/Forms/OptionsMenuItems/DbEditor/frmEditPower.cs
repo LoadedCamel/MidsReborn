@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using FastDeepCloner;
+using Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -14,6 +18,7 @@ using Mids_Reborn.Core.Import;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -64,7 +69,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (new PowerData(str.Replace("\t", ",")).IsValid)
             {
                 MessageBox.Show("Import successful.");
-                refresh_PowerData();
+                RefreshPowerData();
             }
             else
             {
@@ -99,7 +104,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             myPower = powerData;
             SetFullName();
-            refresh_PowerData();
+            RefreshPowerData();
         }
 
         private void btnFXAdd_Click(object sender, EventArgs e)
@@ -1440,7 +1445,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DrawSetList();
             Req_GroupList();
             FillTab_SubPowers();
-            refresh_PowerData();
+            RefreshPowerData();
             CheckScaleValues();
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
@@ -1987,7 +1992,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pbEnhancementList.CreateGraphics().DrawImageUnscaled(bxEnhPicker.Bitmap, 0, 0);
         }
 
-        private void refresh_PowerData()
+        private void RefreshPowerData()
         {
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.FullName})";
             lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture);
@@ -2744,6 +2749,122 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
             RefreshFXData(lvFX.SelectedIndices.Count <= 0 ? 0 : lvFX.SelectedIndices[0]);
+        }
+
+        private void btnJsonExport_Click(object sender, EventArgs e)
+        {
+            var dlgSave = new SaveFileDialog
+            {
+                CheckPathExists = true,
+                DefaultExt = "json",
+                FileName = $"{(string.IsNullOrWhiteSpace(myPower.DisplayName) ? "power" : myPower.DisplayName)}-{myPower.StaticIndex}.json",
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1
+            };
+
+            if (dlgSave.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var targetFile = dlgSave.FileName;
+            var objStr = JsonConvert.SerializeObject(myPower, Formatting.Indented);
+            File.WriteAllText(targetFile, objStr);
+        }
+
+        private void btnJsonImport_Click(object sender, EventArgs e)
+        {
+            var dlgJsonOpen = new frmJsonImportOptions();
+            if (dlgJsonOpen.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var jsonStr = File.ReadAllText(dlgJsonOpen.FileName);
+
+            try
+            {
+                JsonConverter[] converters =
+                {
+                    new PowerConverter<IEffect, Effect>(),
+                    new PowerConverter<IEnhancement, Enhancement>()
+                };
+
+                var obj = JsonConvert.DeserializeObject<Power>(jsonStr, new JsonSerializerSettings {Converters = converters});
+                if (obj == null)
+                {
+                    MessageBox.Show("Could not deserialize JSON to object.");
+
+                    return;
+                }
+
+                var displayName = myPower.DisplayName;
+                var groupName = myPower.GroupName;
+                var setName = myPower.SetName;
+                var internalName = myPower.PowerName;
+                var staticIndex = myPower.StaticIndex;
+                myPower = obj.Clone();
+                if (!dlgJsonOpen.OverrideStaticIndex)
+                {
+                    myPower.StaticIndex = staticIndex;
+                }
+
+                if (!dlgJsonOpen.OverrideBasicData & !string.IsNullOrWhiteSpace(groupName) &
+                    !string.IsNullOrWhiteSpace(setName) & !string.IsNullOrWhiteSpace(internalName))
+                {
+                    myPower.DisplayName = displayName;
+                    myPower.GroupName = groupName;
+                    myPower.SetName = setName;
+                    myPower.PowerName = internalName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not deserialize JSON to object.\r\n{ex.GetType()}: {ex.Message}");
+                
+                return;
+            }
+
+            Updating = true;
+            RedrawEnhPicker();
+            FillComboBoxes();
+            FillComboInherent();
+            DrawSetList();
+            Req_GroupList();
+            FillTab_SubPowers();
+            RefreshPowerData();
+            CheckScaleValues();
+            Updating = false;
+
+            if (chkSubInclude.CheckState == CheckState.Checked)
+            {
+                cbInherentType.Enabled = true;
+            }
+
+            if (cbInherentType.SelectedIndex > 0)
+            {
+                txtVisualLocation.ReadOnly = true;
+            }
+        }
+    }
+
+    public class PowerConverter<TFromType, TToType> : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(TFromType);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return serializer.Deserialize<TToType>(reader);
+        }
+
+        public override bool CanWrite => false;
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }
