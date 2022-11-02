@@ -40,8 +40,6 @@ namespace Mids_Reborn.Forms.Controls
             this.info_TxtLarge = new System.Windows.Forms.RichTextBox();
             this.info_TxtSmall = new System.Windows.Forms.RichTextBox();
             this.info_Title = new Mids_Reborn.Controls.GFXLabel();
-            this.lockIcon = new System.Windows.Forms.PictureBox();
-            this.unlockIcon = new System.Windows.Forms.PictureBox();
             this.infoTip = new System.Windows.Forms.ToolTip(this.components);
             this.info_DataList = new Mids_Reborn.Controls.PairedListEx();
             this.panelSeparator1 = new System.Windows.Forms.Panel();
@@ -51,9 +49,7 @@ namespace Mids_Reborn.Forms.Controls
             this.panelSeparator5 = new System.Windows.Forms.Panel();
             this.panelSeparator6 = new System.Windows.Forms.Panel();
             this.containerPanel = new System.Windows.Forms.Panel();
-
-            ((System.ComponentModel.ISupportInitialize)(this.lockIcon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.unlockIcon)).BeginInit();
+            this.containerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // info_Damage
@@ -69,7 +65,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_Damage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.info_Damage.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.info_Damage.GraphType = Mids_Reborn.Core.Enums.eDDGraph.Both;
-            this.info_Damage.Location = new System.Drawing.Point(0, 384);
+            this.info_Damage.Location = new System.Drawing.Point(0, 402);
             this.info_Damage.Name = "info_Damage";
             this.info_Damage.nBaseVal = 100F;
             this.info_Damage.nEnhVal = 150F;
@@ -89,7 +85,7 @@ namespace Mids_Reborn.Forms.Controls
             this.lblDmg.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblDmg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDmg.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblDmg.Location = new System.Drawing.Point(0, 358);
+            this.lblDmg.Location = new System.Drawing.Point(0, 373);
             this.lblDmg.Name = "lblDmg";
             this.lblDmg.Size = new System.Drawing.Size(436, 26);
             this.lblDmg.TabIndex = 22;
@@ -106,10 +102,10 @@ namespace Mids_Reborn.Forms.Controls
             this.powerScaler.BorderColor = System.Drawing.Color.Black;
             this.powerScaler.Clickable = true;
             this.powerScaler.ColorAbsorbed = System.Drawing.Color.Gainsboro;
-            this.powerScaler.ColorBase = System.Drawing.Color.FromArgb(64, 255, 64);
+            this.powerScaler.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
             this.powerScaler.ColorEnh = System.Drawing.Color.Yellow;
-            this.powerScaler.ColorFadeEnd = System.Drawing.Color.FromArgb(0, 192, 0);
-            this.powerScaler.ColorFadeStart = System.Drawing.Color.FromArgb(0, 10, 0);
+            this.powerScaler.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.powerScaler.ColorFadeStart = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(10)))), ((int)(((byte)(0)))));
             this.powerScaler.ColorHighlight = System.Drawing.Color.Gray;
             this.powerScaler.ColorLines = System.Drawing.Color.Black;
             this.powerScaler.ColorMarkerInner = System.Drawing.Color.Red;
@@ -127,7 +123,7 @@ namespace Mids_Reborn.Forms.Controls
             this.powerScaler.ItemFontSizeOverride = 0F;
             this.powerScaler.ItemHeight = 12;
             this.powerScaler.Lines = true;
-            this.powerScaler.Location = new System.Drawing.Point(0, 183);
+            this.powerScaler.Location = new System.Drawing.Point(0, 192);
             this.powerScaler.MarkerValue = 0F;
             this.powerScaler.Max = 100F;
             this.powerScaler.MaxItems = 1;
@@ -155,7 +151,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_TxtLarge.Dock = System.Windows.Forms.DockStyle.Top;
             this.info_TxtLarge.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.info_TxtLarge.ForeColor = System.Drawing.Color.Black;
-            this.info_TxtLarge.Location = new System.Drawing.Point(0, 82);
+            this.info_TxtLarge.Location = new System.Drawing.Point(0, 88);
             this.info_TxtLarge.Name = "info_TxtLarge";
             this.info_TxtLarge.ReadOnly = true;
             this.info_TxtLarge.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -170,7 +166,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_TxtSmall.Dock = System.Windows.Forms.DockStyle.Top;
             this.info_TxtSmall.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.info_TxtSmall.ForeColor = System.Drawing.Color.Black;
-            this.info_TxtSmall.Location = new System.Drawing.Point(0, 39);
+            this.info_TxtSmall.Location = new System.Drawing.Point(0, 42);
             this.info_TxtSmall.Name = "info_TxtSmall";
             this.info_TxtSmall.ReadOnly = true;
             this.info_TxtSmall.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -191,32 +187,6 @@ namespace Mids_Reborn.Forms.Controls
             this.info_Title.TabIndex = 75;
             this.info_Title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lockIcon
-            // 
-            this.lockIcon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lockIcon.BackColor = System.Drawing.Color.Black;
-            this.lockIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("lockIcon.BackgroundImage")));
-            this.lockIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.lockIcon.Location = new System.Drawing.Point(401, 4);
-            this.lockIcon.Name = "lockIcon";
-            this.lockIcon.Size = new System.Drawing.Size(30, 32);
-            this.lockIcon.TabIndex = 77;
-            this.lockIcon.TabStop = false;
-            this.lockIcon.Click += new System.EventHandler(this.Lock_Click);
-            // 
-            // unlockIcon
-            // 
-            this.unlockIcon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.unlockIcon.BackColor = System.Drawing.Color.Black;
-            this.unlockIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("unlockIcon.BackgroundImage")));
-            this.unlockIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.unlockIcon.Location = new System.Drawing.Point(401, 4);
-            this.unlockIcon.Name = "unlockIcon";
-            this.unlockIcon.Size = new System.Drawing.Size(30, 32);
-            this.unlockIcon.TabIndex = 78;
-            this.unlockIcon.TabStop = false;
-            this.unlockIcon.Click += new System.EventHandler(this.Lock_Click);
-            // 
             // info_DataList
             // 
             this.info_DataList.AutoScroll = true;
@@ -226,7 +196,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_DataList.HighlightColor = System.Drawing.Color.CornflowerBlue;
             this.info_DataList.HighlightTextColor = System.Drawing.Color.Black;
             this.info_DataList.ItemColor = System.Drawing.Color.Silver;
-            this.info_DataList.Location = new System.Drawing.Point(0, 203);
+            this.info_DataList.Location = new System.Drawing.Point(0, 215);
             this.info_DataList.Name = "info_DataList";
             this.info_DataList.Rows = 5;
             this.info_DataList.Size = new System.Drawing.Size(436, 155);
@@ -236,81 +206,76 @@ namespace Mids_Reborn.Forms.Controls
             this.info_DataList.ValueColor = System.Drawing.Color.Azure;
             this.info_DataList.ValueConditionColor = System.Drawing.Color.Firebrick;
             this.info_DataList.ValueSpecialColor = System.Drawing.Color.SlateBlue;
-            //
+            // 
             // panelSeparator1
-            //
-            this.panelSeparator1.Name = "panelSeparator1";
+            // 
+            this.panelSeparator1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator1.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator1.Location = new System.Drawing.Point(0, 39);
+            this.panelSeparator1.Name = "panelSeparator1";
             this.panelSeparator1.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator1.TabStop = false;
-            //
+            this.panelSeparator1.TabIndex = 83;
+            // 
             // panelSeparator2
-            //
-            this.panelSeparator2.Name = "panelSeparator2";
+            // 
+            this.panelSeparator2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator2.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator2.Location = new System.Drawing.Point(0, 85);
+            this.panelSeparator2.Name = "panelSeparator2";
             this.panelSeparator2.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator2.TabStop = false;
-            //
+            this.panelSeparator2.TabIndex = 82;
+            // 
             // panelSeparator3
-            //
-            this.panelSeparator3.Name = "panelSeparator3";
+            // 
+            this.panelSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator3.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator3.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator3.Location = new System.Drawing.Point(0, 189);
+            this.panelSeparator3.Name = "panelSeparator3";
             this.panelSeparator3.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator3.TabStop = false;
-            //
+            this.panelSeparator3.TabIndex = 81;
+            // 
             // panelSeparator4
-            //
-            this.panelSeparator4.Name = "panelSeparator4";
+            // 
+            this.panelSeparator4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator4.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator4.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator4.Location = new System.Drawing.Point(0, 212);
+            this.panelSeparator4.Name = "panelSeparator4";
             this.panelSeparator4.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator4.TabStop = false;
-            //
+            this.panelSeparator4.TabIndex = 80;
+            // 
             // panelSeparator5
-            //
-            this.panelSeparator5.Name = "panelSeparator5";
+            // 
+            this.panelSeparator5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator5.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator5.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator5.Location = new System.Drawing.Point(0, 370);
+            this.panelSeparator5.Name = "panelSeparator5";
             this.panelSeparator5.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator5.TabStop = false;
-            //
+            this.panelSeparator5.TabIndex = 23;
+            // 
             // panelSeparator6
-            //
-            this.panelSeparator6.Name = "panelSeparator6";
+            // 
+            this.panelSeparator6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
             this.panelSeparator6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSeparator6.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator6.BackColor = System.Drawing.Color.FromArgb(7, 33, 59);
+            this.panelSeparator6.Location = new System.Drawing.Point(0, 399);
+            this.panelSeparator6.Name = "panelSeparator6";
             this.panelSeparator6.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator6.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.panelSeparator6.TabStop = false;
-            //
+            this.panelSeparator6.TabIndex = 22;
+            // 
             // containerPanel
-            //
-            this.containerPanel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.containerPanel.BackColor = Color.Black;
-            this.containerPanel.Size = new Size(436, 513);
-            this.containerPanel.Location = new Point(3, 3);
+            // 
+            this.containerPanel.BackColor = System.Drawing.Color.Black;
             this.containerPanel.Controls.Add(this.info_Damage);
             this.containerPanel.Controls.Add(this.panelSeparator6);
             this.containerPanel.Controls.Add(this.lblDmg);
             this.containerPanel.Controls.Add(this.panelSeparator5);
             this.containerPanel.Controls.Add(this.info_DataList);
             this.containerPanel.Controls.Add(this.panelSeparator4);
-            this.containerPanel.Controls.Add(this.lockIcon);
-            this.containerPanel.Controls.Add(this.unlockIcon);
             this.containerPanel.Controls.Add(this.powerScaler);
             this.containerPanel.Controls.Add(this.panelSeparator3);
             this.containerPanel.Controls.Add(this.info_TxtLarge);
@@ -318,18 +283,22 @@ namespace Mids_Reborn.Forms.Controls
             this.containerPanel.Controls.Add(this.info_TxtSmall);
             this.containerPanel.Controls.Add(this.panelSeparator1);
             this.containerPanel.Controls.Add(this.info_Title);
+            this.containerPanel.Location = new System.Drawing.Point(3, 3);
+            this.containerPanel.Name = "containerPanel";
+            this.containerPanel.Size = new System.Drawing.Size(436, 513);
+            this.containerPanel.TabIndex = 0;
             // 
             // PetView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(12, 56, 100);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(100)))));
+            this.Controls.Add(this.containerPanel);
             this.Name = "PetView";
             this.Size = new System.Drawing.Size(442, 519);
-            this.Controls.Add(containerPanel);
-            ((System.ComponentModel.ISupportInitialize)(this.lockIcon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.unlockIcon)).EndInit();
+            this.containerPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -339,8 +308,6 @@ namespace Mids_Reborn.Forms.Controls
         internal System.Windows.Forms.RichTextBox info_TxtLarge;
         private System.Windows.Forms.RichTextBox info_TxtSmall;
         private Mids_Reborn.Controls.GFXLabel info_Title;
-        private System.Windows.Forms.PictureBox lockIcon;
-        private System.Windows.Forms.PictureBox unlockIcon;
         private System.Windows.Forms.ToolTip infoTip;
         internal System.Windows.Forms.Panel panelSeparator1;
         internal System.Windows.Forms.Panel panelSeparator2;

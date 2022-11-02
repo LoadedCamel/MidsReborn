@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -200,6 +201,7 @@ namespace Mids_Reborn.Core.Utils
                 {
                     writer.Write(file.Data.Length);
                     writer.Write(file.FileName);
+                    Debug.WriteLine($"Adding {file.FileName} to patch");
                     writer.Write(file.Path);
                     writer.Write(file.Data);
                 }

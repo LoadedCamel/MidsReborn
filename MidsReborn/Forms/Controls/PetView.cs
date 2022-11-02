@@ -70,30 +70,11 @@ namespace Mids_Reborn.Forms.Controls
         private void OnLoad(object? sender, EventArgs e)
         {
             Lock = false;
-            lockIcon.Visible = false;
         }
 
         private static string CapString(string iString, int capLength)
         {
             return iString.Length >= capLength ? iString[..capLength] : iString;
-        }
-
-        private void Lock_Click(object sender, EventArgs e)
-        {
-            switch (Lock)
-            {
-                case false:
-                    lockIcon.Visible = true;
-                    unlockIcon.Visible = false;
-                    break;
-                case true:
-                    lockIcon.Visible = false;
-                    unlockIcon.Visible = true;
-                    break;
-            }
-
-            Lock = !Lock;
-            UnlockClick?.Invoke();
         }
 
         private void DisplayInfo(bool noLevel = false, int iEnhLvl = -1)
@@ -1606,17 +1587,6 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             Lock = locked;
-            switch (locked)
-            {
-                case false:
-                    lockIcon.Visible = false;
-                    unlockIcon.Visible = true;
-                    break;
-                case true:
-                    lockIcon.Visible = true;
-                    unlockIcon.Visible = false;
-                    break;
-            }
 
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);

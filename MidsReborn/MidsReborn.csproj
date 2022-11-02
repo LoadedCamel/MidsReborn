@@ -318,9 +318,13 @@
     <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
+    <Content Remove="Images\Unknown.png" />
+    <Content Remove="Images\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Images\Unknown.png" />
+    <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <PropertyGroup>
