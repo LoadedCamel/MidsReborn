@@ -701,7 +701,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var loadedPowerSets = await I9Gfx.LoadPowerSets();
             foreach (var powerSet in iSets)
             {
-                var imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
+                var imagePath = loadedPowerSets.FirstOrDefault(x => x != null && x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
                 if (string.IsNullOrEmpty(imagePath))
                 {
                     imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains("Unknown"));
