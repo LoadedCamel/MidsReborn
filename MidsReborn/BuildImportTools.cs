@@ -352,6 +352,8 @@ namespace Mids_Reborn
             {
                 "pool.flight.afterburner" => "Pool.Flight.Evasive_Maneuvers",
                 "peacebringer_defensive.luminous_aura.quantum_acceleration" => "Peacebringer_Defensive.Luminous_Aura.Quantum_Maneuvers",
+                "dominator_control.illusion_control.invisibility" => "Dominator_Control.Illusion_Control.Superior_Invisibility",
+                "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
                 _ => fullName
             };
         }
