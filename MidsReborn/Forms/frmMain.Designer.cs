@@ -151,6 +151,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSupport = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
@@ -202,6 +203,7 @@ namespace Mids_Reborn.Forms
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator30 = new ToolStripSeparator();
+            this.ToolStripSeparator31 = new ToolStripSeparator();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
@@ -1256,6 +1258,11 @@ namespace Mids_Reborn.Forms
             //
             this.ToolStripSeparator30.Name = "ToolStripSeparator30";
             this.ToolStripSeparator30.Size = new System.Drawing.Size(242, 6);
+            //
+            // ToolStripSeparator31
+            //
+            this.ToolStripSeparator31.Name = "ToolStripSeparator31";
+            this.ToolStripSeparator31.Size = new System.Drawing.Size(242, 6);
             // 
             // tsShareDiscord
             //
@@ -1264,8 +1271,8 @@ namespace Mids_Reborn.Forms
             this.tsShareDiscord.Text = "Via Discord (RebornBot)";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             //
-            // 
             // HelpToolStripMenuItem
+            //
             this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
             this.tsUpdateCheck,
@@ -1273,7 +1280,9 @@ namespace Mids_Reborn.Forms
             this.tsBuildRcv,
             this.ToolStripSeparator30,
             this.tsGitHub,
-            this.tsSupport});
+            this.tsSupport,
+            this.ToolStripSeparator31,
+            this.tsAbout});
             this.HelpToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
             this.HelpToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
@@ -1302,6 +1311,13 @@ namespace Mids_Reborn.Forms
             this.tsSupport.Size = new System.Drawing.Size(266, 22);
             this.tsSupport.Text = "Support (Discord)";
             this.tsSupport.Click += new System.EventHandler(this.tsSupport_Click);
+            // 
+            // tsAbout
+            // 
+            this.tsAbout.Name = "tsAbout";
+            this.tsAbout.Size = new System.Drawing.Size(266, 22);
+            this.tsAbout.Text = "About...";
+            this.tsAbout.Click += new System.EventHandler(this.tsAbout_Click);
             // 
             // ToolStripSeparator23
             // 
@@ -2314,6 +2330,7 @@ namespace Mids_Reborn.Forms
         #endregion
 
         private Panel topPanel;
+        ToolStripMenuItem tsAbout;
         ToolStripMenuItem tsAdvDBEdit;
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
@@ -2466,6 +2483,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem WindowToolStripMenuItem;
         ToolStripSeparator ToolStripSeparator29;
         private ToolStripSeparator ToolStripSeparator30;
+        private ToolStripSeparator ToolStripSeparator31;
         ToolStripMenuItem ShareToolStripMenuItem;
         ToolStripMenuItem DonateToolStripMenuItem;
         public ToolStripComboBox EnemyRelativeToolStripComboBox;

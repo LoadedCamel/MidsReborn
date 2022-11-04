@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using Forms.WindowMenuItems;
 using Microsoft.Win32;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -5933,6 +5934,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void tsSupport_Click(object sender, EventArgs e)
         {
             clsXMLUpdate.SupportServer();
+        }
+
+        private void tsAbout_Click(object sender, EventArgs e)
+        {
+            using var frmAbout = new frmAbout();
+            frmAbout.ShowDialog();
         }
 
         private void OnRelativeClick(Enums.eEnhRelative newVal)
