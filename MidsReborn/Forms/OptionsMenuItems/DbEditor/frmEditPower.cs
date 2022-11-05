@@ -2022,7 +2022,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var num = power.Effects.Length;
             for (var index = 0; index < num; index++)
             {
-                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true).Replace("\r\n", " - "));
+                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true, false, true).Replace("\r\n", " - "));
             }
 
             lvFX.EndUpdate();

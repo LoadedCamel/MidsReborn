@@ -300,33 +300,38 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
-                if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
+                
+                // Sometimes BaseProbability sticks at 0.75 when PPM is > 0,
+                // preventing PPM calculation
+                if (ProcsPerMinute > 0 && power != null)
                 {
-                    var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
-                    var procsPerMinute = ProcsPerMinute;
-                    var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    float rechargeVal;
-                    if (Math.Abs(power.RechargeTime) < float.Epsilon)
-                    {
-                        rechargeVal = 0;
-                    }
-                    else
-                    {
-                        rechargeVal = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
-                    }
+                    //var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
+                    var areaFactor = power.EffectArea == Enums.eEffectArea.None
+                        ? 1
+                        : (float) (1 + 0.15 * power.Radius - 0.011 * power.Radius * (360 - power.Arc) / 30);
+                    //var procsPerMinute = ProcsPerMinute;
+                    //var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
+                    /*var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
+                        ? 0
+                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);*/
 
                     if (power.PowerType == Enums.ePowerType.Click)
                     {
-                        probability = Math.Min(
+                        // PPM * ((Base Recharge Time + Time To Activate) / (60 * Area Factor))
+                        probability = ProcsPerMinute * ((power.BaseRechargeTime + power.CastTimeReal) / (60 * areaFactor));
+
+                        /*probability = Math.Min(
                             Math.Max(procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                                (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);*/
                     }
                     else
                     {
-                        probability = Math.Min(Math.Max(procsPerMinute * 10 / (60f * areaFactor), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                        // PPM * ((Activate Period) / (60 * Area Factor)) 
+                        probability = ProcsPerMinute * (power.ActivatePeriod / (60 * areaFactor));
+                        
+                        /*probability = Math.Min(Math.Max(procsPerMinute * 10 / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);*/
                     }
                 }
-
 
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
                 {
@@ -978,7 +983,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (ProcsPerMinute > 0)
                         {
-                            sChance = fromPopup
+                            sChance = fromPopup | editorDisplay
                                 ? $"{ProcsPerMinute} PPM"
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
@@ -1013,7 +1018,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (ProcsPerMinute > 0)
                         {
-                            sChance = fromPopup
+                            sChance = fromPopup | editorDisplay
                                 ? $"{ProcsPerMinute} PPM"
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }

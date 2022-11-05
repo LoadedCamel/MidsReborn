@@ -1316,7 +1316,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                lblEffectDescription.Text = MyFx.BuildEffectString(Simple: false, string.Empty, noMag: false, Grouped: false, useBaseProbability: false, fromPopup: false, editorDisplay: true);
+                lblEffectDescription.Text = MyFx.BuildEffectString(false, string.Empty, false, false, false, false, true);
             }
         }
 
