@@ -305,32 +305,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 // preventing PPM calculation
                 if (ProcsPerMinute > 0 && power != null)
                 {
-                    //var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
-                    var areaFactor = power.EffectArea == Enums.eEffectArea.None
-                        ? 1
-                        : (float) (1 + 0.15 * power.Radius - 0.011 * power.Radius * (360 - power.Arc) / 30);
-                    //var procsPerMinute = ProcsPerMinute;
-                    //var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    /*var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
+                    var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
+
+                    var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
+                    var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
                         ? 0
-                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);*/
+                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
 
-                    if (power.PowerType == Enums.ePowerType.Click)
-                    {
-                        // PPM * ((Base Recharge Time + Time To Activate) / (60 * Area Factor))
-                        probability = ProcsPerMinute * ((power.BaseRechargeTime + power.CastTimeReal) / (60 * areaFactor));
-
-                        /*probability = Math.Min(
-                            Math.Max(procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor),
-                                (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);*/
-                    }
-                    else
-                    {
-                        // PPM * ((Activate Period) / (60 * Area Factor)) 
-                        probability = ProcsPerMinute * (power.ActivatePeriod / (60 * areaFactor));
-                        
-                        /*probability = Math.Min(Math.Max(procsPerMinute * 10 / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);*/
-                    }
+                    probability = Math.Min(power.PowerType == Enums.ePowerType.Click
+                        ? Math.Max(ProcsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute))
+                        : Math.Max(ProcsPerMinute * 10 / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);
                 }
 
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
