@@ -1052,6 +1052,11 @@ namespace Mids_Reborn.Core
 
             for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
             {
+                if (Powers[powerIdx] == null)
+                {
+                    continue;
+                }
+
                 var power = Powers[powerIdx];
                 for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
@@ -1357,7 +1362,7 @@ namespace Mids_Reborn.Core
                     var powerEntryList = new List<PowerEntry?>();
                     var mutexAuto = false;
                     var index1 = -1;
-                    for (var index2 = 0; index2 <= DatabaseAPI.Database.MutexList.Length - 1; ++index2)
+                    for (var index2 = 0; index2 < DatabaseAPI.Database.MutexList.Length; index2++)
                     {
                         if (!string.Equals(DatabaseAPI.Database.MutexList[index2], "KHELDIAN_GROUP",
                             StringComparison.OrdinalIgnoreCase))
