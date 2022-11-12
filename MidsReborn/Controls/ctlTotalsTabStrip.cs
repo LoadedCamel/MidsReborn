@@ -122,6 +122,13 @@ namespace Mids_Reborn.Controls
 
         private void Draw()
         {
+            // Parent is minimized,
+            // any draw operation will fail
+            if (Width == 0 || Height == 0)
+            {
+                return;
+            }
+
             using var s = SKSurface.Create(new SKImageInfo(Width, Height));
             const float fontSize = 15;
 

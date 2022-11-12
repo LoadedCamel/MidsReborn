@@ -147,6 +147,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Check if power taken in pool
             for (i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
+                if (MidsContext.Character.CurrentBuild.Powers[i] == null)
+                {
+                    continue;
+                }
+
                 if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset == MidsContext.Character.Powersets[idx].nID)
                 {
                     return idx;
