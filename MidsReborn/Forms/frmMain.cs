@@ -1278,7 +1278,7 @@ namespace Mids_Reborn.Forms
 
         private static PowerEntry?[] DeepCopyPowerList()
         {
-            return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x.Clone()).ToArray();
+            return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x?.Clone()).ToArray();
         }
 
         private Rectangle Dilate(Rectangle irect, int iAdd)
@@ -4910,76 +4910,104 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             var index1 = 0;
             var numArray1 = new int[tp.Length];
-            var num1 = tp.Length - 1;
-            for (var index2 = 0; index2 <= num1; ++index2)
+            for (var index2 = 0; index2 < tp.Length; index2++)
             {
-                if (tp[index2].NIDPower == -1 || !DatabaseAPI.Database.Power[tp[index2].NIDPower].AllowFrontLoading)
+                if (tp[index2] == null || tp[index2].NIDPower == -1 || !DatabaseAPI.Database.Power[tp[index2].NIDPower].AllowFrontLoading)
+                {
                     continue;
+                }
+
                 numArray1[index1] = index2;
-                ++index1;
+                index1++;
             }
 
             var index3 = index1;
-            var num2 = tp.Length - 1;
-            for (var index2 = 0; index2 <= num2; ++index2)
+            for (var index2 = 0; index2 < tp.Length; index2++)
             {
+                if (tp[index2] == null)
+                {
+                    continue;
+                }
+                
                 if (((tp[index2].NIDPower == -1 ? 0 :
                          !DatabaseAPI.Database.Power[tp[index2].NIDPower].AllowFrontLoading ? 1 : 0) |
                      (tp[index2].NIDPower == -1 ? 1 : 0)) == 0)
+                {
                     continue;
+                }
+
                 var flag = true;
-                var num3 = index2 - 1;
-                for (var index4 = index1; index4 <= num3; ++index4)
+                for (var index4 = index1; index4 < index2; index4++)
                 {
                     if (tp[index2].Level >= tp[numArray1[index4]].Level)
+                    {
                         continue;
-                    var num4 = index4;
-                    for (var index5 = index3 - 1; index5 >= num4; index5 += -1)
+                    }
+
+                    for (var index5 = index3 - 1; index5 >= index4; index5 += -1)
+                    {
                         numArray1[index5 + 1] = numArray1[index5];
+                    }
+
                     numArray1[index4] = index2;
-                    ++index3;
+                    index3++;
                     flag = false;
                     break;
                 }
 
                 if (!flag)
+                {
                     continue;
+                }
+
                 numArray1[index3] = index2;
-                ++index3;
+                index3++;
             }
 
             var slotLevels = GetSlotLevels();
             var flag1 = false;
             var index6 = 0;
-            var num5 = tp.Length - 1;
-            for (var index2 = 0; index2 <= num5; ++index2)
+            for (var index2 = 0; index2 < tp.Length; index2++)
             {
-                var num3 = tp[numArray1[index2]].SlotCount - 1;
-                for (var index4 = 1; index4 <= num3; ++index4)
+                for (var index4 = 1; index4 < tp[numArray1[index2]].SlotCount; index4++)
                 {
                     if (index6 == slotLevels.Length)
+                    {
                         flag1 = true;
+                    }
+
                     tp[numArray1[index2]].Slots[index4].Level = 50;
                     if (flag1)
+                    {
                         continue;
+                    }
+
                     if (tp[numArray1[index2]].NIDPower == -1 ||
                         !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading)
+                    {
                         while (slotLevels[index6] <= tp[numArray1[index2]].Level)
                         {
-                            ++index6;
+                            index6++;
                             if (index6 != slotLevels.Length)
+                            {
                                 continue;
+                            }
+
                             flag1 = true;
                             break;
                         }
+                    }
 
                     tp[numArray1[index2]].Slots[index4].Level = slotLevels[index6] - 1;
-                    ++index6;
+                    index6++;
                 }
             }
 
             if (!(flag1 & notifyUser))
+            {
                 return;
+            }
+
             MessageBox.Show(
                 @"The current arrangement of powers and their slots is impossible in-game. Invalid slots have been darkened and marked as level 51.",
                 null, MessageBoxButtons.OK);
