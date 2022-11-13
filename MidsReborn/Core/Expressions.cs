@@ -53,6 +53,7 @@ namespace Mids_Reborn.Core
             "powerIs(",
             "powerIsNot(",
             "powerVectorsContains(",
+            "source.owner>arch(",
             "eq(",
             "ne(",
             "gt(",
@@ -102,7 +103,8 @@ namespace Mids_Reborn.Core
                 { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
                 { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
-                { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) }
+                { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
+                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0"}
             };
         }
 
