@@ -51,7 +51,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             HighestAvailableIndex,
             AllAvailableIndices,
             ListStaticIndices,
-            OrphanEntities
+            OrphanEntities,
+            FindDuplicateIndices
         }
 
         private List<string[]> LvItems;
@@ -241,6 +242,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 e.Effects.Where(e => e.EffectType == Enums.eEffectType.EntCreate & e.nSummon < 0 & !string.IsNullOrEmpty(e.Summon)).ToList()));
 
             LvItems = itemsList.SelectMany(e => e.Value, (k, v) => new[] {$"{k.Key.StaticIndex}", v.Summon, k.Key.FullName}).ToList();
+            listView1.VirtualListSize = LvItems.Count;
+        }
+
+        private void btnDuplicateIndices_Click(object sender, EventArgs e)
+        {
+            CurrentQueryType = QueryType.FindDuplicateIndices;
+            var indexList = DatabaseAPI.Database.Power
+                .Select(e => e.StaticIndex)
+                .GroupBy(e => e)
+                .Where(e => e.Count() > 1)
+                .Select(e => e.Key)
+                .ToList();
+
+            var itemsList = DatabaseAPI.Database.Power
+                .Where(e => indexList.Contains(e.StaticIndex))
+                .OrderBy(e => e.StaticIndex)
+                .ToList();
+
+            LvItems = itemsList.Count > 0
+                ? itemsList.Select(e => new[] {$"{e.StaticIndex}", e.DisplayName, e.FullName}).ToList()
+                : new List<string[]> {new[] {"", "Nothing found", ""}};
             listView1.VirtualListSize = LvItems.Count;
         }
     }

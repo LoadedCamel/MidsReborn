@@ -45,6 +45,7 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.btnListIndices = new System.Windows.Forms.Button();
             this.btnOrphanEntities = new System.Windows.Forms.Button();
+            this.btnDuplicateIndices = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -205,11 +206,22 @@
             this.btnOrphanEntities.UseVisualStyleBackColor = true;
             this.btnOrphanEntities.Click += new System.EventHandler(this.btnOrphanEntities_Click);
             // 
+            // btnDuplicateIndices
+            // 
+            this.btnDuplicateIndices.Location = new System.Drawing.Point(35, 144);
+            this.btnDuplicateIndices.Name = "btnDuplicateIndices";
+            this.btnDuplicateIndices.Size = new System.Drawing.Size(162, 28);
+            this.btnDuplicateIndices.TabIndex = 14;
+            this.btnDuplicateIndices.Text = "Find duplicate indices";
+            this.btnDuplicateIndices.UseVisualStyleBackColor = true;
+            this.btnDuplicateIndices.Click += new System.EventHandler(this.btnDuplicateIndices_Click);
+            // 
             // frmDbQueries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(631, 422);
+            this.Controls.Add(this.btnDuplicateIndices);
             this.Controls.Add(this.btnOrphanEntities);
             this.Controls.Add(this.btnListIndices);
             this.Controls.Add(this.btnClose);
@@ -252,5 +264,6 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnListIndices;
         private System.Windows.Forms.Button btnOrphanEntities;
+        private System.Windows.Forms.Button btnDuplicateIndices;
     }
 }
