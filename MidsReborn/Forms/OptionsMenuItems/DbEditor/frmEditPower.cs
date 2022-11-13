@@ -1529,6 +1529,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!t) return;
             
             myPower.StaticIndex = pIndex;
+            lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
