@@ -155,19 +155,19 @@ namespace Forms.WindowMenuItems
             return $"{DatabaseAPI.Database.Version.Major}.{DatabaseAPI.Database.Version.Minor}.{DatabaseAPI.Database.Version.Build}{(DatabaseAPI.Database.Version.Revision <= 0 ? "" : $" rev {DatabaseAPI.Database.Version.Revision}")}";
         }
 
-        private void btnCopy_Click(object sender, System.EventArgs e)
+        private void btnCopy_Click(object sender, EventArgs e)
         {
             var appStr = $"{MidsContext.AppName} {GetAppVersionString()}";
             appStr += $"\r\n\r\nDatabase: {GetDatabaseName()}";
             appStr += $"\r\nDatabase Issue: {GetDatabaseIssuePageVol()}";
             appStr += $"\r\nDatabase Version: {GetDatabaseVersionString()}";
-            appStr += $"\r\n\r\nRunning under .NET {Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName} / {RuntimeInformation.FrameworkDescription}";
+            appStr += $"\r\n\r\nRunning under {Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName} / {RuntimeInformation.FrameworkDescription}";
 
             Clipboard.ContainsText();
             Clipboard.SetText(appStr);
         }
 
-        private void btnClose_Click(object sender, System.EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
