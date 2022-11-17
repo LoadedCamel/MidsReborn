@@ -1733,9 +1733,12 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
-                    if (!pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional())
+                    if (pEnh.Effects[shortFxArray[index1].Index[0]].ActiveConditionals.Count > 0)
                     {
-                        continue;
+                        if (!pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional())
+                        {
+                            continue;
+                        }
                     }
 
                     var isDefiance = shortFxArray[index1].Index.All(sFx =>
