@@ -823,6 +823,69 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return totalDamage;
         }
 
+        public string GetDamageTip()
+        {
+            var tip = string.Empty;
+            var num1 = -1;
+            var num2 = -1;
+            var num3 = 0;
+
+            if (Effects.Length <= 0)
+            {
+                return "";
+            }
+
+            foreach (var effect in Effects)
+            {
+                if (effect.EffectType != Enums.eEffectType.Damage)
+                {
+                    continue;
+                }
+
+                if (effect.CanInclude() & effect.PvXInclude() & Math.Abs(effect.BuffedMag) >= 0.0001)
+                {
+                    if (tip != string.Empty)
+                    {
+                        tip += "\r\n";
+                    }
+
+                    var str = effect.BuildEffectString(false, "", false, false, false, false, false, true);
+                    if (effect.isEnhancementEffect & PowerType == Enums.ePowerType.Toggle)
+                    {
+                        num1++;
+                        str += " (Special, only every 10s)";
+                    }
+                    else if (PowerType == Enums.ePowerType.Toggle)
+                    {
+                        num2++;
+                    }
+
+                    tip += str;
+                }
+                else
+                {
+                    num3++;
+                }
+            }
+
+            if (num3 > 0)
+            {
+                if (tip != string.Empty)
+                {
+                    tip += "\r\n";
+                }
+
+                tip += "\r\nThis power deals different damage in PvP and PvE modes.";
+            }
+
+            if (!(PowerType == Enums.ePowerType.Toggle & num1 == -1 & num2 == -1) && PowerType == Enums.ePowerType.Toggle & num2 > -1 && !string.IsNullOrEmpty(tip))
+            {
+                tip = $"Applied every {ActivatePeriod} s:\r\n{tip}";
+            }
+
+            return tip;
+        }
+
         public string FXGetDamageString(bool absorb = false)
         {
             var names = Enum.GetNames(typeof(Enums.eDamage));
@@ -853,7 +916,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
-                var effectMag = effect.BuffedMag;
+                var effectMag = Math.Abs(effect.BuffedMag);
 
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
@@ -863,6 +926,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
                     effectMag = (float)(effectMag * power.ActivatePeriod / 10d);
+                }
+
+                if (Math.Abs(effectMag) < 0.0001)
+                {
+                    continue;
                 }
 
                 switch (MidsContext.Config.DamageMath.ReturnValue)
@@ -893,8 +961,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
 
                         break;
-                        //case ConfigData.EDamageReturn.Numeric:
-                        //    break;
                 }
 
                 if (effect.Ticks != 0)
@@ -922,18 +988,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (totalDamage <= 0)
+            if (Math.Abs(totalDamage) < 0.0001)
             {
-                return dmgString;
+                return "0";
             }
 
             for (var index = 0; index < numArray1.Length; index++)
             {
-                if (!((numArray1[index] > 0) | (numArray2[index, 0] > 0)))
+                if (!(numArray1[index] > 0 | numArray2[index, 0] > 0))
                 {
                     continue;
                 }
-
+                
                 if (!string.IsNullOrEmpty(dmgString))
                 {
                     dmgString += ", ";

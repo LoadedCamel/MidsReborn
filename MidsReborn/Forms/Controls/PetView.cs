@@ -1494,59 +1494,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void SetDamageTip()
         {
-            var iTip = string.Empty;
-            var num1 = -1;
-            var num2 = -1;
-            var num3 = 0;
-
-            if (_enhancedPower == null || _enhancedPower.Effects.Length <= 0)
-            {
-                info_Damage.SetTip("");
-
-                return;
-            }
-
-            var num4 = _enhancedPower.Effects.Length - 1;
-            for (var index = 0; index <= num4; ++index)
-            {
-                var effect = _enhancedPower.Effects[index];
-                if (effect.EffectType != Enums.eEffectType.Damage)
-                    continue;
-                if (effect.CanInclude() & _enhancedPower.Effects[index].PvXInclude())
-                {
-                    if (iTip != string.Empty)
-                        iTip += "\r\n";
-                    var str = _enhancedPower.Effects[index].BuildEffectString(false, "", false, false, false, false, false, true);
-                    if (_enhancedPower.Effects[index].isEnhancementEffect & (_enhancedPower.PowerType == Enums.ePowerType.Toggle))
-                    {
-                        ++num1;
-                        str += " (Special only every 10s)";
-                    }
-                    else if (_enhancedPower.PowerType == Enums.ePowerType.Toggle)
-                    {
-                        ++num2;
-                    }
-
-                    iTip += str;
-                }
-                else
-                {
-                    ++num3;
-                }
-            }
-
-            if (num3 > 0)
-            {
-                if (iTip != string.Empty)
-                    iTip += "\r\n";
-                iTip += "\r\nThis power deals different damage in PvP and PvE modes.";
-            }
-
-            if (!((_basePower.PowerType == Enums.ePowerType.Toggle) & (num1 == -1) & (num2 == -1)) && (_basePower.PowerType == Enums.ePowerType.Toggle) & (num2 > -1) && !string.IsNullOrEmpty(iTip))
-            {
-                iTip = "Applied every " + Convert.ToString(_basePower.ActivatePeriod, CultureInfo.InvariantCulture) + "s:\r\n" + iTip;
-            }
-
+            var iTip = _enhancedPower == null ? "" : _enhancedPower.GetDamageTip();
             info_Damage.SetTip(iTip);
         }
 

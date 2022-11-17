@@ -969,10 +969,10 @@ namespace Mids_Reborn.Forms.Controls
             if (pBase.NIDSubPower.Length > 0 & baseDamage == 0 && enhancedDamage == 0)
             {
                 lblDmg.Text = string.Empty;
-                Info_Damage.nBaseVal = 0f;
-                Info_Damage.nEnhVal = 0f;
-                Info_Damage.nMaxEnhVal = 0f;
-                Info_Damage.nHighEnh = 0f;
+                Info_Damage.nBaseVal = 0;
+                Info_Damage.nEnhVal = 0;
+                Info_Damage.nMaxEnhVal = 0;
+                Info_Damage.nHighEnh = 0;
                 Info_Damage.Text = string.Empty;
             }
             else
@@ -4118,59 +4118,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void SetDamageTip()
         {
-            var iTip = string.Empty;
-            var num1 = -1;
-            var num2 = -1;
-            var num3 = 0;
-
-            if (pEnh == null || pEnh.Effects.Length <= 0)
-            {
-                Info_Damage.SetTip("");
-
-                return;
-            }
-
-            var num4 = pEnh.Effects.Length - 1;
-            for (var index = 0; index <= num4; ++index)
-            {
-                var effect = pEnh.Effects[index];
-                if (effect.EffectType != Enums.eEffectType.Damage)
-                    continue;
-                if (effect.CanInclude() & pEnh.Effects[index].PvXInclude())
-                {
-                    if (iTip != string.Empty)
-                        iTip += "\r\n";
-                    var str = pEnh.Effects[index].BuildEffectString(false, "", false, false, false, false, false, true);
-                    if (pEnh.Effects[index].isEnhancementEffect & (pEnh.PowerType == Enums.ePowerType.Toggle))
-                    {
-                        ++num1;
-                        str += " (Special only every 10s)";
-                    }
-                    else if (pEnh.PowerType == Enums.ePowerType.Toggle)
-                    {
-                        ++num2;
-                    }
-
-                    iTip += str;
-                }
-                else
-                {
-                    ++num3;
-                }
-            }
-
-            if (num3 > 0)
-            {
-                if (iTip != string.Empty)
-                    iTip += "\r\n";
-                iTip += "\r\nThis power deals different damage in PvP and PvE modes.";
-            }
-
-            if (!((pBase.PowerType == Enums.ePowerType.Toggle) & (num1 == -1) & (num2 == -1)) && (pBase.PowerType == Enums.ePowerType.Toggle) & (num2 > -1) && !string.IsNullOrEmpty(iTip))
-            {
-                iTip = "Applied every " + Convert.ToString(pBase.ActivatePeriod, CultureInfo.InvariantCulture) + "s:\r\n" + iTip;
-            }
-
+            var iTip = pEnh == null ? "" : pEnh.GetDamageTip();
             Info_Damage.SetTip(iTip);
         }
 

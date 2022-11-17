@@ -43,7 +43,7 @@ namespace Mids_Reborn.Controls
         {
             BackColorChanged += ctlDamageDisplay_BackColorChanged;
             Load += ctlDamageDisplay_Load;
-            Paint += ctlDamageDisplayt_Paint;
+            Paint += ctlDamageDisplay_Paint;
             pStyle = (Enums.eDDStyle) 3;
             pText = 0;
             pGraph = (Enums.eDDGraph) 2;
@@ -284,7 +284,7 @@ namespace Mids_Reborn.Controls
             Draw();
         }
 
-        private void ctlDamageDisplayt_Paint(object sender, PaintEventArgs e)
+        private void ctlDamageDisplay_Paint(object sender, PaintEventArgs e)
         {
             if (bxBuffer != null)
                 myGFX.DrawImage(bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
@@ -460,10 +460,9 @@ namespace Mids_Reborn.Controls
             var height = Font.GetHeight(myGFX) + 10;
             bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             layoutRectangle.X = checked(bounds.X + phPadding);
-            if (pStyle == Enums.eDDStyle.TextUnderGraph)
-                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f + 2f + 2f;
-            else
-                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f - 1f - 10f;
+            layoutRectangle.Y = pStyle == Enums.eDDStyle.TextUnderGraph
+                ? bounds.Y + (bounds.Height - height) / 2f + 2f + 2f
+                : bounds.Y + (bounds.Height - height) / 2f - 1f - 10f;
 
             layoutRectangle.Width = checked(bounds.Width - phPadding * 2);
             layoutRectangle.Height = bounds.Height;
@@ -498,7 +497,12 @@ namespace Mids_Reborn.Controls
                 2 => font.GetHeight(myGFX) / 2 - 3,
                 _ => font.GetHeight(myGFX) - 3
             };
-            if (linesFilled > 3) font = smlFont;
+
+            if (linesFilled > 3)
+            {
+                font = smlFont;
+            }
+
             bxBuffer.Graphics.DrawString(pString, font, brush, layoutRectangle, stringFormat);
         }
 

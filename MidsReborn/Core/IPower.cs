@@ -213,6 +213,8 @@ namespace Mids_Reborn.Core
         
         float FXGetDamageValue(bool absorb = false);
 
+        string GetDamageTip();
+
         string FXGetDamageString(bool absorb = false);
 
         int[] GetRankedEffects();
