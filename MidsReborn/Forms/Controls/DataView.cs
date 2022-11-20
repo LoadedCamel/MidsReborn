@@ -744,7 +744,8 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
+                if (pEnh.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Null
+                    or Enums.eEffectType.NullBool or Enums.eEffectType.ModifyAttrib)
                 {
                     continue;
                 }
