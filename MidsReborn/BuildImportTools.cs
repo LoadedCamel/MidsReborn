@@ -43,6 +43,15 @@ namespace Mids_Reborn
             [2556] = 1524
         };
 
+        protected string ReplaceFirstOccurrence(string source, string find, string replace)
+        {
+            var place = source.IndexOf(find, StringComparison.Ordinal);
+            
+            return place < 0
+                ? source
+                : source.Remove(place, find.Length).Insert(place, replace);
+        }
+
         protected void SetCharacterInfo()
         {
             // Warning: DatabaseAPI.GetArchetypeByName looks up archetype info by display name, not by internal name.
@@ -487,6 +496,185 @@ namespace Mids_Reborn
 
             return listPowers;
         }
+
+        /***********************
+        ** Import from forum post (text, long version)
+        ** Example build: https://forums.homecomingservers.com/topic/2915-enen-the-murder-bunny/?do=findComment&comment=465906
+        */
+
+        public List<PowerEntry>? ParseForumPost()
+        {
+            var oldEnhDict = new Dictionary<string, string>
+            {
+                {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
+            };
+
+            var p = new RawPowerData { Valid = false };
+            var listPowers = new List<PowerEntry>();
+            PowerSets = new UniqueList<string>();
+
+            var r1 = new Regex(@"^Level ([0-9]+)\: ([A-Za-z\:\-\' ]+)"); // Powers
+            var r2 = new Regex(@"\((A|[0-9]+)\) ([A-Za-z0-9\%\+\-\:\'\/\(\)\, ]+)"); // Slots/enhancements
+            var rCharInfo = new Regex(@"^(.+)\: Level ([0-9]+) ([A-Za-z]+) ([A-Za-z ]+)"); // Character info
+            var rpMain = new Regex(@"^(Primary|Secondary) Power Set\: ([A-Za-z\:\-\' ]+)"); // Main powersets
+            var rpPool = new Regex(@"^Power Pool\: ([A-Za-z\:\-\' ]+)"); // Pool powersets
+            var rpEpic = new Regex(@"(Ancillary|Epic) Pool\: ([A-Za-z\:\-\' ]+)"); // Epic powersets
+
+            var lines = BuildString.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
+            var headerFound = false;
+            foreach (var lineText in lines)
+            {
+                if (rCharInfo.IsMatch(lineText))
+                {
+                    var m = rCharInfo.Match(lineText);
+                    CharacterInfo.Name = m.Groups[1].Value;
+                    CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
+                    CharacterInfo.Origin = m.Groups[3].Value;
+                    CharacterInfo.Archetype = m.Groups[4].Value;
+
+                    SetCharacterInfo();
+                    headerFound = true;
+                }
+
+                if (!headerFound)
+                {
+                    continue;
+                }
+
+                var archetypeData = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
+
+                var m1 = r1.Match(lineText);
+                var m2 = r2.Match(lineText);
+                var mpMain = rpMain.Match(lineText);
+                var mpPool = rpPool.Match(lineText);
+                var mpEpic = rpEpic.Match(lineText);
+
+                if (mpMain.Success)
+                {
+                    var ps = DatabaseAPI.Database.Powersets.DefaultIfEmpty(null).FirstOrDefault(e =>
+                        e != null &&
+                        e.DisplayName == mpMain.Groups[2].Value & e.GetArchetypes().Contains(archetypeData.ClassName) &&
+                        e.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary);
+                    if (ps != null)
+                    {
+                        PowerSets.Add(ps.FullName);
+                    }
+                }
+
+                if (mpPool.Success)
+                {
+                    var ps = DatabaseAPI.Database.Powersets.DefaultIfEmpty(null).FirstOrDefault(e => e != null && e.DisplayName == mpPool.Groups[1].Value && e.SetType == Enums.ePowerSetType.Pool);
+                    if (ps != null)
+                    {
+                        PowerSets.Add(ps.FullName);
+                    }
+                }
+
+                if (mpEpic.Success)
+                {
+                    var ps = DatabaseAPI.Database.Powersets.DefaultIfEmpty(null).FirstOrDefault(e => e != null && e.DisplayName == mpEpic.Groups[2].Value && e.SetType == Enums.ePowerSetType.Ancillary && e.GetArchetypes().Contains(archetypeData.ClassName));
+                    if (ps != null)
+                    {
+                        PowerSets.Add(ps.FullName);
+                    }
+                }
+
+                if (m1.Success)
+                {
+                    if (p.Valid)
+                    {
+                        AddPowerToBuildSheet(p, ref listPowers);
+                    }
+
+                    var powerName = m1.Groups[2].Value.Trim();
+                    p.Level = Convert.ToInt32(m1.Groups[1].Value);
+                    p.pData = DatabaseAPI.Database.Power
+                        .DefaultIfEmpty(null)
+                        .FirstOrDefault(e => e.GetPowerSet() != null &&
+                                             ((e.GetPowerSet().GetArchetypes().Contains(archetypeData.ClassName) & PowerSets.Contains(e.GetPowerSet().FullName)) |
+                                              e.GetPowerSet().SetType is Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary or Enums.ePowerSetType.Inherent) &
+                                             e.DisplayName == powerName);
+
+                    p.FullName = p.pData == null ? "" : p.pData.FullName;
+                    p.Powerset = p.pData?.GetPowerSet();
+
+                    p.Valid = CheckValid(p.pData);
+                    p.Slots = new List<RawEnhData>();
+                    if (p.Valid && CheckValid(p.Powerset))
+                    {
+                        PowerSets.Add(p.Powerset.FullName);
+                    }
+                }
+                
+                if (m2.Success)
+                {
+                    var rawEnhName = ReplaceFirstOccurrence(m2.Groups[2].Value.Trim(), " - ", ": ");
+                    if (oldEnhDict.ContainsKey(rawEnhName))
+                    {
+                        rawEnhName = oldEnhDict[rawEnhName];
+                    }
+
+                    var enh = DatabaseAPI.Database.Enhancements
+                        .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                        .FirstOrDefault(e => e.LongName == rawEnhName);
+
+                    if (enh == null || enh.StaticIndex < 0)
+                    {
+                        var re = new Regex(@"^([A-Za-z ]+) (IO|SO|DO|TO)");
+                        if (!re.IsMatch(rawEnhName))
+                        {
+                            enh = null;
+                        }
+                        else
+                        {
+                            var mEnh = re.Match(rawEnhName);
+                            enh = DatabaseAPI.Database.Enhancements
+                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                .FirstOrDefault(e => e.Name == mEnh.Groups[1].Value.Trim() &&
+                                                     (mEnh.Groups[2].Value == "IO"
+                                                         ? e.TypeID == Enums.eType.InventO
+                                                         : e.TypeID is Enums.eType.Normal or Enums.eType.SpecialO));
+                        }
+                    }
+
+                    if (enh == null || enh.StaticIndex < 0)
+                    {
+                        // Not found set enhancements where boosts order differs from current DB
+                        var chunks = Regex.Split(rawEnhName, @"\: |\/");
+                        enh = DatabaseAPI.Database.Enhancements
+                            .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                            .FirstOrDefault(e => chunks.All(e.LongName.Contains));
+                    }
+
+                    var e = enh == null || enh.StaticIndex < 0
+                        ? new RawEnhData
+                        {
+                            InternalName = "Empty",
+                            Level = 0,
+                            Boosters = 0,
+                            HasCatalyst = false,
+                            eData = -1
+                        }
+                        : new RawEnhData
+                        {
+                            InternalName = enh.UID,
+                            Level = m2.Groups[1].Value == "A" ? 0 : Convert.ToInt32(m2.Groups[1].Value),
+                            Boosters = 0,
+                            HasCatalyst = false,
+                            eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
+                        };
+
+                    p.Slots.Add(e);
+                }
+            }
+
+            if (p.Valid)
+            {
+                AddPowerToBuildSheet(p, ref listPowers);
+            }
+
+            return listPowers;
+        }
     }
 
     /***********************
@@ -494,7 +682,7 @@ namespace Mids_Reborn
     ** (Build recovery mode)
     */
 
-    public class PlainTextParser : ImportBase
+        public class PlainTextParser : ImportBase
     {
         private readonly BuilderApp BuilderApp;
 

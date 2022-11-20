@@ -1160,77 +1160,6 @@ namespace Mids_Reborn.Forms
                 DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int)iSetID], powersetIndexes);
         }
 
-        private void command_ForumImport()
-        {
-            if (MainModule.MidsController.Toon.Locked & FileModified)
-            {
-                FloatTop(false);
-                var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                FloatTop(true);
-                if (msgBoxResult == DialogResult.No)
-                    return;
-            }
-
-            FloatTop(false);
-            FileModified = false;
-            var loaded = false;
-            if (MessageBox.Show(@"Copy the build data on the forum to the clipboard. When that's done, click on OK.", @"Standing By", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
-                return;
-            var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
-            NewToon();
-            try
-            {
-                if (str is { Length: < 1 })
-                {
-                    MessageBox.Show(@"No data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    if (str != null && (str.Contains("MxDz") || str.Contains("MxDu")))
-                    {
-                        Stream? mStream = new MemoryStream(new ASCIIEncoding().GetBytes(str));
-                        loaded = MainModule.MidsController.Toon.Load("", ref mStream);
-                    }
-                    else if (str != null && (str.Contains("Character Profile:") || str.Contains("build.txt")))
-                    {
-                        GameImport(str);
-                        loaded = true;
-                    }
-
-                    if (!loaded)
-                        loaded = MainModule.MidsController.Toon.StringToInternalData(str);
-                    if (loaded)
-                    {
-                        drawing.Highlight = -1;
-                        NewDraw();
-                        myDataView.Clear();
-                        PowerModified(true);
-                        UpdateControls(true);
-                        SetFormHeight();
-                    }
-                    else
-                    {
-                        NewToon();
-                        myDataView.Clear();
-                        PowerModified(true);
-                    }
-
-                    GetBestDamageValues();
-                    if (drawing != null)
-                        DoRedraw();
-                    UpdateColors();
-                    FloatTop(true);
-                    SetTitleBar();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                FloatTop(true);
-            }
-        }
-
-
         private void command_New()
         {
             if (MainModule.MidsController.Toon.Locked & FileModified)
@@ -1612,15 +1541,11 @@ namespace Mids_Reborn.Forms
 
         public void DoRedraw()
         {
-            //var t = new Stopwatch();
-            //t.Start();
             if (drawing == null) return;
             NoResizeEvent = true;
             pnlGFX.Width = pnlGFXFlow.Width - 26;
             NoResizeEvent = false;
             drawing.FullRedraw();
-            //t.Stop();
-            //Debug.WriteLine($"DoRedraw: {t.ElapsedMilliseconds} ms");
         }
 
         private void DoResize(bool forceResize = false)
@@ -5362,7 +5287,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             I9Popup.Location = new Point(x, y);
         }
 
-        private void SetTitleBar(bool hero = true)
+        private void SetTitleBar(bool hero = true, bool ignoreBuildSource = false)
         {
             if (MainModule.MidsController.Toon != null)
             {
@@ -5370,7 +5295,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             var str1 = string.Empty;
-            if (MainModule.MidsController.Toon != null)
+            if (MainModule.MidsController.Toon != null & !ignoreBuildSource)
             {
                 if (LastFileName != string.Empty)
                 {
@@ -6281,7 +6206,92 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsImport_Click(object sender, EventArgs e)
         {
-            command_ForumImport();
+            if (MainModule.MidsController.Toon.Locked & FileModified)
+            {
+                FloatTop(false);
+                var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                FloatTop(true);
+                if (msgBoxResult == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            FloatTop(false);
+            FileModified = false;
+            var loaded = false;
+            if (MessageBox.Show(@"Copy the build data on the forum to the clipboard. When that's done, click on OK.", @"Standing By", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
+            {
+                return;
+            }
+
+            var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
+            Debug.WriteLine($"Forum import string: {str.Length} char.");
+            NewToon();
+            try
+            {
+                if (str is { Length: < 1 })
+                {
+                    MessageBox.Show(@"No data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    if (str == null || string.IsNullOrWhiteSpace(str))
+                    {
+                        loaded = false;
+                    }
+                    else if (str.Contains("MxDz") || str.Contains("MxDu"))
+                    {
+                        Stream? mStream = new MemoryStream(new ASCIIEncoding().GetBytes(str));
+                        loaded = MainModule.MidsController.Toon.Load("", ref mStream);
+                    }
+                    else if (str.Contains("Character Profile:") || str.Contains("build.txt"))
+                    {
+                        GameImport(str);
+                        loaded = true;
+                    }
+                    else if (str.Contains("Hero Profile:") || str.Contains("Villain Profile:"))
+                    {
+                        ForumImport(str);
+                        loaded = true;
+                    }
+
+                    if (!loaded)
+                    {
+                        loaded = MainModule.MidsController.Toon.StringToInternalData(str);
+                    }
+
+                    if (loaded)
+                    {
+                        drawing.Highlight = -1;
+                        NewDraw();
+                        myDataView.Clear();
+                        PowerModified(true);
+                        UpdateControls(true, true);
+                    }
+                    else
+                    {
+                        NewToon();
+                        myDataView.Clear();
+                        PowerModified(true);
+                    }
+
+                    GetBestDamageValues();
+                    if (drawing != null)
+                    {
+                        DoRedraw();
+                    }
+
+                    UpdateColors();
+                    FloatTop(true);
+                    SetTitleBar(MidsContext.Character.IsHero(), true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                FloatTop(true);
+            }
         }
 
         private void tsIODefault_Click(object sender, EventArgs e)
@@ -6663,7 +6673,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             poolsPanel.Height = Math.Max(32, Size.Height - poolsPanel.Location.Y - 39); // 16 + 22 + 1
         }
 
-        private void UpdateControls(bool ForceComplete = false)
+        private void UpdateControls(bool ForceComplete = false, bool skipResize = false)
         {
             if (loading) return;
             NoUpdate = true;
@@ -6778,6 +6788,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llPrimary.PaddingY = 2;
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
+
             foreach (var llControl in Controls.OfType<ListLabelV3>().Concat(poolsPanel.Controls.OfType<ListLabelV3>()))
             {
                 var loc = llControl.Location;
@@ -6830,7 +6841,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 //pbDynMode.Refresh();
             }
 
-            DoResize();
+            if (!skipResize)
+            {
+                DoResize();
+            }
+
             NoUpdate = false;
         }
 
@@ -7115,6 +7130,23 @@ The default position/state will be used upon next launch.", @"Window State Warni
             catch (Exception e)
             {
                 MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+        }
+
+        private void ForumImport(string buildString)
+        {
+            try
+            {
+                var importHandle = new ImportFromBuildsave(buildString);
+                var listPowers = importHandle.ParseForumPost();
+
+                if (listPowers == null) return;
+
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.StackTrace}\r\n\r\n{e.Message}");
             }
         }
 
