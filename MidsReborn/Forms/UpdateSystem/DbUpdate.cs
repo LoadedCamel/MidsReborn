@@ -22,14 +22,16 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     XmlResolver = null,
                     DtdProcessing = DtdProcessing.Ignore
                 };
+                
                 using var xmlReader = XmlReader.Create(DatabaseAPI.ServerData.ManifestUri, settings);
-                while (xmlReader.Read())
+                try
                 {
-                    try
+                    while (xmlReader.Read())
                     {
                         switch (xmlReader.Name)
                         {
                             case "version":
+                            case "db-version": // Rebirth
                             {
                                 Version = Version.Parse(xmlReader.ReadElementContentAsString());
                                 break;
@@ -47,11 +49,17 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             }
                         }
                     }
-                    catch (XmlException)
-                    {
-                        MessageBox.Show(@"An error occurred while attempting to read from the manifest.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show($"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}\r\n\r\n{ex.Message}", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                if (Version == null)
+                {
+                    MessageBox.Show($"Cannot fetch available DB version from manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
 
                 return CompareVersions(Version, DatabaseAPI.Database.Version);
