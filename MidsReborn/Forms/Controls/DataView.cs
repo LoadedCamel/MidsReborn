@@ -1039,14 +1039,9 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            if (!noLevel & (pBase.Level > 0))
-            {
-                fx_Title.Text = $"[{pBase.Level}] {pBase.DisplayName}";
-            }
-            else
-            {
-                fx_Title.Text = pBase.DisplayName;
-            }
+            fx_Title.Text = !noLevel & (pBase.Level > 0)
+                ? $"[{pBase.Level}] {pBase.DisplayName}"
+                : pBase.DisplayName;
 
             if (iEnhLvl > -1)
             {
@@ -2632,9 +2627,10 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                var str = !(sourcePower.Effects[tagId].Duration < 2 | sourcePower.PowerType == Enums.ePowerType.Auto_)
-                    ? $" - {sourcePower.Effects[tagId].Duration:#0.#}s"
+                var mezDuration = !(enhancedPower.Effects[tagId].Duration < 2 | enhancedPower.PowerType == Enums.ePowerType.Auto_)
+                    ? $" - {enhancedPower.Effects[tagId].Duration:#0.#}s"
                     : "";
+
                 if (sourcePower.Effects[tagId].BuffedMag > 0)
                 {
                     var iAlternate2 = iAlternate ?? Math.Abs(sourcePower.Effects[tagId].Duration - enhancedPower.Effects[tagId].Duration) > float.Epsilon |
@@ -2642,7 +2638,7 @@ namespace Mids_Reborn.Forms.Controls
                         Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
                     var iValue = (sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
                         ? "0"
-                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{str}";
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{mezDuration}";
                     if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     {
                         iValue = "0";
@@ -2681,7 +2677,7 @@ namespace Mids_Reborn.Forms.Controls
                         Math.Abs(enhancedPower.Effects[tagId].BuffedMag - sourcePower.Effects[tagId].BuffedMag) > float.Epsilon;
                     var iValue = (enhancedPower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None
                         ? "0"
-                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{str}";
+                        : $"Mag {Utilities.FixDP(enhancedPower.Effects[tagId].BuffedMag):####0.##}{mezDuration}";
 
                     var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
                     var iItem = new PairedList.ItemPair(
@@ -2737,10 +2733,10 @@ namespace Mids_Reborn.Forms.Controls
                     }
                 }
 
-                var str = enhancedPower.Effects[tagId].Duration >= 15
+                var mezDuration = enhancedPower.Effects[tagId].Duration >= 15
                     ? $" - {Utilities.FixDP(enhancedPower.Effects[tagId].Duration)}s"
                     : "";
-                var iValue = $"{sourcePower.Effects[tagId].MagPercent:####0.##}%{str}";
+                var iValue = $"{sourcePower.Effects[tagId].MagPercent:####0.##}%{mezDuration}";
                 if ((sourcePower.Effects[tagId].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                 {
                     iValue = "0%";
