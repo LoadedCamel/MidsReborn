@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
@@ -14,6 +15,7 @@ namespace MRBUpdater
         public delegate void ProgressEventHandler(object sender, ProgressEventArgs e);
         public event ProgressEventHandler? ProgressUpdate;
         public event EventHandler<ErrorEventArgs>? ErrorUpdate;
+        public event EventHandler<bool>? Completed;
 
         public struct FileData
         {
@@ -22,20 +24,10 @@ namespace MRBUpdater
             public string Path { get; set; }
         }
 
-        public static void CleanOldEntries(string extractPath)
-        {
-            if (!extractPath.Contains("Data")) return;
-            var files = Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories).ToList();
-            foreach (var file in files)
-            {
-                File.Delete(file);
-            }
-        }
-
-        public void RecompileFileEntries(string patchPath, List<FileData>? decompressedData)
+        public async Task RecompileFileEntries(string patchPath, List<FileData>? decompressedData)
         {
             if (decompressedData == null) return;
-            for (var index = 0; index <= decompressedData.Count; index++)
+            for (var index = 0; index < decompressedData.Count; index++)
             {
                 var patchedFile = decompressedData[index];
                 var fileInfo = new FileInfo(Path.Combine(patchPath, patchedFile.Path, patchedFile.FileName));
@@ -43,9 +35,10 @@ namespace MRBUpdater
                 {
                     if (!Directory.Exists(patchPath)) Directory.CreateDirectory(patchPath);
                     fileInfo.Directory?.Create();
-                    File.WriteAllBytes(fileInfo.FullName, patchedFile.Data);
-                    Thread.Sleep(50);
+                    await File.WriteAllBytesAsync(fileInfo.FullName, patchedFile.Data);
+                    await Task.Delay(50);
                     ProgressUpdate?.Invoke(this, new ProgressEventArgs(patchedFile.FileName, index, decompressedData.Count));
+                    Completed?.Invoke(this, index == decompressedData.Count);
                 }
                 catch (Exception ex)
                 {

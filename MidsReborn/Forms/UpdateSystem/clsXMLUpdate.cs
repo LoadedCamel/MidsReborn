@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -59,53 +62,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 MessageBox.Show($@"There was an error when starting the systems default web browser. {ex.Message}", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-        }
-
-        public static void CheckUpdate(frmMain parent)
-        {
-            if (AppUpdate.IsAvailable)
-            {
-                AppUpdate.InitiateQuery(parent);
-                return;
-            }
-            if (!string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri))
-            {
-                if (DbUpdate.IsAvailable)
-                {
-                    DbUpdate.InitiateQuery(parent);
-                    return;
-                }
-            }
-            
-            MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-        }
-
-        public static bool CompareVersions(Version serverVersion, Version localVersion)
-        {
-            var comparisonResult = serverVersion.CompareTo(localVersion);
-            return comparisonResult > 0;
-        }
-
-        public static void Update(string path, string updateVersion, string extractionPath)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                UseShellExecute = true,
-                WindowStyle = ProcessWindowStyle.Normal,
-                WorkingDirectory = Application.StartupPath,
-                FileName = @"MRBUpdater.exe",
-                Arguments = $"{path} {updateVersion} {Process.GetCurrentProcess().Id} {extractionPath}"
-            };
-
-            Process.Start(startInfo);
-        }
-
-        public enum UpdateType
-        {
-            None,
-            App,
-            Database
         }
     }
 }
