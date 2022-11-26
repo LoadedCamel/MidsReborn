@@ -735,7 +735,7 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].Probability < 1));
             }
 
-            var rankedEffects = pEnh.GetRankedEffects();
+            var rankedEffects = pEnh.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             for (var id = 0; id < rankedEffects.Length; id++)
             {
@@ -768,6 +768,11 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.GrantPower &&
                     pEnh.Effects[rankedEffects[id]].nSummon <= -1)
+                {
+                    continue;
+                }
+
+                if (pEnh.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed)
                 {
                     continue;
                 }
