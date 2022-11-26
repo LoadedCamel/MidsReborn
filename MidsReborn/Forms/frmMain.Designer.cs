@@ -1292,13 +1292,6 @@ namespace Mids_Reborn.Forms
             // 
             this.tsHelp.Name = "tsHelp";
             this.tsHelp.Size = new System.Drawing.Size(266, 22);
-            //
-            // tsPatchNotes
-            //
-            this.tsPatchNotes.Name = "tsPatchNotes";
-            this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
-            this.tsPatchNotes.Text = "Read Patch Notes";
-            this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
             // 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -36,6 +36,12 @@ namespace Mids_Reborn.Core.Utils
             }
 
             return controls;
+        }
+
+        public static bool CompareVersions(Version serverVersion, Version localVersion)
+        {
+            var comparisonResult = serverVersion.CompareTo(localVersion);
+            return comparisonResult > 0;
         }
     }
 }

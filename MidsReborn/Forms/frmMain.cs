@@ -132,7 +132,7 @@ namespace Mids_Reborn.Forms
             }
             InitializeComponent();
             MainInstance = this;
-            if (MidsContext.Config is { CheckForUpdates: true }) clsXMLUpdate.CheckUpdate(this);
+            if (MidsContext.Config is { CheckForUpdates: true }) UpdateUtils.CheckForUpdates(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
@@ -6362,40 +6362,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             clsXMLUpdate.GoToGitHub();
         }
 
-        private void tsPatchNotes_Click(object sender, EventArgs e)
-        {
-            PatchNotes patchNotes;
-            var patchResult = new PatchQuery(this);
-            patchResult.ShowDialog();
-            switch (patchResult.DialogResult)
-            {
-                case DialogResult.Yes:
-                {
-                    patchNotes = new PatchNotes(this, false)
-                    {
-                        Type = clsXMLUpdate.UpdateType.App.ToString(),
-                        Version = MidsContext.AppFileVersion.ToString()
-                    };
-                    patchNotes.ShowDialog();
-                    break;
-                }
-                case DialogResult.No:
-                    patchNotes = new PatchNotes(this, false)
-                    {
-                        Type = clsXMLUpdate.UpdateType.Database.ToString(),
-                        Version = DatabaseAPI.Database.Version.ToString()
-                    };
-                    patchNotes.ShowDialog();
-                    break;
-                case DialogResult.Cancel:
-                    patchResult.Close();
-                    break;
-            }
-        }
-
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            clsXMLUpdate.CheckUpdate(this);
+            //clsXMLUpdate.CheckUpdate(this);
+            UpdateUtils.CheckForUpdates(this);
         }
 
         private void tsViewSelected()
