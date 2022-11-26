@@ -77,6 +77,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lvEnh.TabIndex = 0;
             this.lvEnh.UseCompatibleStateImageBehavior = false;
             this.lvEnh.View = System.Windows.Forms.View.Details;
+            this.lvEnh.VirtualMode = true;
+            this.lvEnh.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lvEnh_RetrieveVirtualItem);
             this.lvEnh.DoubleClick += new System.EventHandler(this.lvEnh_DoubleClick);
             // 
             // ColumnHeader2

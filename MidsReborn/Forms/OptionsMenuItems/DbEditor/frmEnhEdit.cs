@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -19,6 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private frmBusy _bFrm;
         private frmMain _frmMain;
         private List<string> SpecialEnhTypes;
+        private List<string[]> LvItems;
 
         public frmEnhEdit()
         {
@@ -31,41 +33,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void AddListItem(int index)
         {
-            var enhancement = DatabaseAPI.Database.Enhancements[index];
-            var item = new[]
-            {
-                $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}",
-                enhancement.TypeID == Enums.eType.SpecialO && SpecialEnhTypes[enhancement.SubTypeID] != "None"
-                    ? $"Special/{SpecialEnhTypes[enhancement.SubTypeID]}"
-                    : Enum.GetName(typeof(Enums.eType), enhancement.TypeID),
-                $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}",
-                $"{enhancement.Effect.Length}",
-                string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName)),
-                "",
-                enhancement.UID,
-                enhancement.LongName
-            };
-
-            if (enhancement.nIDSet > -1)
-            {
-                item[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                item[0] = $"{item[5]}: {item[0]}";
-            }
-
+            var item = GetEnhancementData(index);
             var lvi = new ListViewItem(item, index)
             {
                 ToolTipText = item[0]
             };
             
             lvEnh.Items.Add(lvi);
-            lvEnh.Items[lvEnh.Items.Count - 1].Selected = true;
-            lvEnh.Items[lvEnh.Items.Count - 1].EnsureVisible();
+            lvEnh.Items[^1].Selected = true;
+            lvEnh.Items[^1].EnsureVisible();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             IEnhancement iEnh = new Enhancement();
-            using var frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
+            using var frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[^1].StaticIndex + 1);
             frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
             {
@@ -178,20 +160,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var selectedIndex = lvEnh.SelectedIndices[0];
             if (selectedIndex >= lvEnh.Items.Count - 1)
             {
                 return;
             }
 
-            IEnhancement[] enhancementArray =
-            {
-                new Enhancement(DatabaseAPI.Database.Enhancements[enhIndex]),
-                new Enhancement(DatabaseAPI.Database.Enhancements[enhIndex + 1])
-            };
-
-            DatabaseAPI.Database.Enhancements[enhIndex + 1] = new Enhancement(enhancementArray[0]);
-            DatabaseAPI.Database.Enhancements[enhIndex] = new Enhancement(enhancementArray[1]);
+            var enhList = DatabaseAPI.Database.Enhancements.ToList();
+            enhList.Reverse(enhIndex, 2);
+            DatabaseAPI.Database.Enhancements = enhList.ToArray();
             DisplayList();
             lvEnh.Items[selectedIndex + 1].Selected = true;
             lvEnh.Items[selectedIndex + 1].EnsureVisible();
@@ -204,7 +181,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            //Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
             var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             //var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
@@ -257,18 +233,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnUp_Click(object sender, EventArgs e)
         {
             if (lvEnh.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
             var selectedIndex = lvEnh.SelectedIndices[0];
             if (selectedIndex < 1)
-                return;
-            IEnhancement[] enhancementArray =
             {
-                new Enhancement(DatabaseAPI.Database.Enhancements[enhIndex]),
-                new Enhancement(DatabaseAPI.Database.Enhancements[enhIndex - 1])
-            };
-            DatabaseAPI.Database.Enhancements[enhIndex - 1] = new Enhancement(enhancementArray[0]);
-            DatabaseAPI.Database.Enhancements[enhIndex] = new Enhancement(enhancementArray[1]);
+                return;
+            }
+
+            var enhList = DatabaseAPI.Database.Enhancements.ToList();
+            enhList.Reverse(enhIndex - 1, 2);
+            DatabaseAPI.Database.Enhancements = enhList.ToArray();
             DisplayList();
             lvEnh.Items[selectedIndex - 1].Selected = true;
             lvEnh.Items[selectedIndex - 1].EnsureVisible();
@@ -277,30 +255,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void DisplayList()
         {
             ImageUpdate();
-            lvEnh.BeginUpdate();
+            /*lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
             for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
             {
-                /*if (string.IsNullOrEmpty(txtFilter.Text) || DatabaseAPI.Database.Enhancements[index].Name
-                    .ToUpper(CultureInfo.InvariantCulture)
-                    .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
-                {
-                    AddListItem(index);
-                    continue;
-                }
-
-                if (DatabaseAPI.Database.Enhancements[index].nIDSet <= -1) continue;
-
-                if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[index].nIDSet]
-                    .DisplayName.ToUpper(CultureInfo.InvariantCulture)
-                    .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
-                    AddListItem(index);
-                */
-                if (string.IsNullOrEmpty(txtFilter.Text) ||
-                    DatabaseAPI.Database.Enhancements[index].nIDSet >= 0 &
-                    DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[index].nIDSet]
-                        .DisplayName.ToUpper(CultureInfo.InvariantCulture)
-                        .Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
+                if (string.IsNullOrWhiteSpace(txtFilter.Text) || DatabaseAPI.Database.Enhancements[index].LongName.ToLowerInvariant().Contains(txtFilter.Text.ToLowerInvariant()))
                 {
                     AddListItem(index);
                 }
@@ -312,7 +271,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lvEnh.Items[0].EnsureVisible();
             }
 
-            lvEnh.EndUpdate();
+            lvEnh.EndUpdate();*/
+
+            LvItems = new List<string[]>();
+            for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
+            {
+                if (!string.IsNullOrWhiteSpace(txtFilter.Text) &&
+                    !DatabaseAPI.Database.Enhancements[index].LongName.ToLowerInvariant().Contains(txtFilter.Text.ToLowerInvariant()))
+                {
+                    continue;
+                }
+
+                LvItems.Add(GetEnhancementData(index));
+            }
+
+            lvEnh.VirtualListSize = LvItems.Count;
         }
 
         private void FillImageList()
@@ -323,16 +296,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var height1 = imageSize1.Height;
             using var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilEnh.Images.Clear();
-            var num = DatabaseAPI.Database.Enhancements.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            foreach (var enh in DatabaseAPI.Database.Enhancements)
             {
-                var enhancement = DatabaseAPI.Database.Enhancements[index];
-                if (enhancement.ImageIdx > -1)
+                if (!string.IsNullOrWhiteSpace(txtFilter.Text) &&
+                    !enh.LongName.ToLowerInvariant().Contains(txtFilter.Text.ToLowerInvariant()))
+                {
+                    continue;
+                }
+
+                if (enh.ImageIdx > -1)
                 {
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancement(ref graphics, DatabaseAPI.Database.Enhancements[index].ImageIdx,
-                        I9Gfx.ToGfxGrade(enhancement.TypeID));
+                    I9Gfx.DrawEnhancement(ref graphics, enh.ImageIdx, I9Gfx.ToGfxGrade(enh.TypeID));
                     ilEnh.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
@@ -362,7 +338,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private async void ImageUpdate()
         {
             if (NoReload.Checked)
+            {
                 return;
+            }
+
             await I9Gfx.LoadEnhancements();
             FillImageList();
         }
@@ -377,40 +356,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ImageUpdate();
         }
 
-        private void UpdateListItem(int Index)
+        private string[] GetEnhancementData(int index)
         {
-            var strArray1 = new string[7];
-            var enhancement = DatabaseAPI.Database.Enhancements[Index];
-            strArray1[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
-            strArray1[1] = Enum.GetName(typeof(Enums.eType), enhancement.TypeID);
-            strArray1[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
-            strArray1[3] = $"{enhancement.Effect.Length}";
-            strArray1[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
-            strArray1[6] = enhancement.UID;
+            var item = new string[7];
+            var enhancement = DatabaseAPI.Database.Enhancements[index];
+            item[0] = $"{enhancement.Name} ({enhancement.ShortName}) - {enhancement.StaticIndex}";
+            item[1] = Enum.GetName(typeof(Enums.eType), enhancement.TypeID);
+            item[2] = $"{enhancement.LevelMin + 1}-{enhancement.LevelMax + 1}";
+            item[3] = $"{enhancement.Effect.Length}";
+            item[4] = string.Join(", ", enhancement.ClassID.Select(c => DatabaseAPI.Database.EnhancementClasses[c].ShortName));
+            item[6] = enhancement.UID;
 
             if (enhancement.nIDSet > -1)
             {
-                strArray1[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
-                strArray1[0] = $"{strArray1[5]}: {strArray1[0]}";
+                item[5] = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
+                item[0] = $"{item[5]}: {item[0]}";
             }
             else
             {
-                strArray1[5] = "";
+                item[5] = "";
             }
 
-            var num4 = strArray1.Length - 1;
-            for (var index = 0; index <= num4; ++index)
-                lvEnh.Items[Index].SubItems[index].Text = strArray1[index];
-            lvEnh.Items[Index].ImageIndex = Index;
-            lvEnh.Items[Index].EnsureVisible();
-            lvEnh.Refresh();
+            return item;
+
         }
+
+        private void UpdateListItem(int index) => LvItems[index] = GetEnhancementData(index);
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
             DisplayList();
             btnUp.Enabled = string.IsNullOrEmpty(txtFilter.Text);
             btnDown.Enabled = string.IsNullOrEmpty(txtFilter.Text);
+        }
+
+        private void lvEnh_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            e.Item = new ListViewItem(LvItems[e.ItemIndex], e.ItemIndex);
         }
     }
 }
