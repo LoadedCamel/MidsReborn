@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -82,7 +80,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var oldEnhancement = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text)];
+            var oldEnhancement = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(LvItems[lvEnh.SelectedIndices[0]][6])];
             var maxStaticIndex = DatabaseAPI.Database.Enhancements.Max(e => e.StaticIndex);
             using var frmEnhData = new frmEnhData(ref oldEnhancement, maxStaticIndex + 1);
             frmEnhData.ShowDialog();
@@ -101,13 +99,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvEnh.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete enhancement: {lvEnh.SelectedItems[0].Text}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (lvEnh.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete enhancement: {LvItems[lvEnh.SelectedIndices[0]][0]}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
             var enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length];
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(LvItems[lvEnh.SelectedIndices[0]][6]);
             var index1 = 0;
             var enh = DatabaseAPI.Database.Enhancements[selectedIndex];
             if (enh.nIDSet > -1)
@@ -159,7 +157,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(LvItems[lvEnh.SelectedIndices[0]][6]);
             var selectedIndex = lvEnh.SelectedIndices[0];
             if (selectedIndex >= lvEnh.Items.Count - 1)
             {
@@ -181,8 +179,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
-            //var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(LvItems[lvEnh.SelectedIndices[0]][6]);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
             frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
@@ -237,7 +234,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var enhIndex = DatabaseAPI.GetEnhancementByUIDName(LvItems[lvEnh.SelectedIndices[0]][6]);
             var selectedIndex = lvEnh.SelectedIndices[0];
             if (selectedIndex < 1)
             {
@@ -378,7 +375,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             return item;
-
         }
 
         private void UpdateListItem(int index) => LvItems[index] = GetEnhancementData(index);
