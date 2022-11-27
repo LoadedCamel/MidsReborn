@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Extensions;
@@ -19,6 +20,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private frmMain _frmMain;
         private List<string> SpecialEnhTypes;
         private List<string[]> LvItems;
+        private ListViewExt.LvKeyboardNavHandler LvKbHandler;
 
         public frmEnhEdit()
         {
@@ -27,6 +29,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Name = nameof(frmEnhEdit);
             Icon = Resources.MRB_Icon_Concept;
             SpecialEnhTypes = DatabaseAPI.Database.SpecialEnhancements.Select(specEnh => specEnh.Name.Replace(" Origin", string.Empty)).ToList();
+            LvKbHandler = lvEnh.AssignKeyboardNavHandler();
         }
 
         private void AddListItem(int index)
@@ -389,6 +392,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvEnh_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
             e.Item = new ListViewItem(LvItems[e.ItemIndex], e.ItemIndex);
+        }
+
+        private void lvEnh_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            LvKbHandler.ProcessInput(e.KeyChar.ToString(), LvItems, 0);
         }
     }
 }
