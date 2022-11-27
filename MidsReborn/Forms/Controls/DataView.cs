@@ -603,6 +603,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
+            var defianceFound = false;
             var enhancedPower = pEnh.PowerIndex == -1 ? pBase : pEnh;
 
             info_Title.Text = !noLevel & pBase.Level > 0
@@ -783,6 +784,9 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         switch (pEnh.Effects[rankedEffects[id]].EffectType)
                         {
+                            case Enums.eEffectType.Damage:
+                                continue;
+
                             case Enums.eEffectType.Recovery:
                             case Enums.eEffectType.Endurance:
                                 rankedEffect.Name = $"{pEnh.Effects[rankedEffects[id]].EffectType}";
@@ -858,6 +862,15 @@ namespace Mids_Reborn.Forms.Controls
                                 rankedEffect.SpecialTip = isDefiance
                                     ? pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                                     : pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[rankedEffects[id]].EffectType);
+
+                                if (isDefiance & defianceFound)
+                                {
+                                    continue;
+                                }
+                                else if (isDefiance)
+                                {
+                                    defianceFound = true;
+                                }
                                 break;
 
                             case Enums.eEffectType.Resistance:
