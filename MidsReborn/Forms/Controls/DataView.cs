@@ -738,6 +738,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var rankedEffects = pEnh.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
+            var effectsTooltipsList = new List<string>();
             for (var id = 0; id < rankedEffects.Length; id++)
             {
                 if (rankedEffects[id] <= -1)
@@ -867,10 +868,17 @@ namespace Mids_Reborn.Forms.Controls
                                 {
                                     continue;
                                 }
-                                else if (isDefiance)
+
+                                if (isDefiance)
                                 {
                                     defianceFound = true;
                                 }
+
+                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
+                                {
+                                    continue;
+                                }
+
                                 break;
 
                             case Enums.eEffectType.Resistance:
@@ -881,6 +889,16 @@ namespace Mids_Reborn.Forms.Controls
 
                                 rankedEffect.SpecialTip = pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[rankedEffects[id]].EffectType);
 
+                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
+                                {
+                                    continue;
+                                }
+
+                                break;
+
+                            case Enums.eEffectType.PerceptionRadius:
+                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}")} ({Statistics.BasePerception * pEnh.Effects[rankedEffects[id]].BuffedMag}ft)";
+                                
                                 break;
 
                             //case Enums.eEffectType.ToHit:
@@ -945,6 +963,8 @@ namespace Mids_Reborn.Forms.Controls
                             Enums.GetMezName((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType),
                             Enums.GetMezNameShort((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType));
                     }
+
+                    effectsTooltipsList.Add(rankedEffect.SpecialTip);
                 }
 
                 // Ignore fully absorbed entities
