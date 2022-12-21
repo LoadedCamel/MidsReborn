@@ -897,7 +897,8 @@ namespace Mids_Reborn.Forms.Controls
                                 break;
 
                             case Enums.eEffectType.PerceptionRadius:
-                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}")} ({Statistics.BasePerception * pEnh.Effects[rankedEffects[id]].BuffedMag}ft)";
+                                rankedEffect.Name = $"Pceptn({pEnh.Effects[rankedEffects[id]].ToWho})";
+                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}")} ({Statistics.BasePerception * pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}ft)";
                                 
                                 break;
 
@@ -1814,7 +1815,16 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumPerception.Present)
                 {
-                    iList.AddItem(FastItem("Percept", baseSumPerception, enhSumPerception, "%", baseSumPerception, pEnh));
+                    var toWho = GetToWhoShort(pEnh.Effects[enhSumPerception.Index[0]]);
+                    var tip = string.Join("\r\n", pEnh.Effects
+                            .Where(e => e.EffectType == Enums.eEffectType.PerceptionRadius)
+                            .Where(e => e.ActiveConditionals.Count <= 0 || e.ValidateConditional())
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)))
+                        .Trim();
+                    var perceptionDistance = Statistics.BasePerception * enhSumPerception.Sum / 100;
+                    iList.AddItem(new PairedList.ItemPair($"Pceptn({toWho})",
+                        $"{(pEnh.Effects[enhSumPerception.Index[0]].DisplayPercentage ? $"{enhSumPerception.Sum:###0.##}% ({perceptionDistance:###0.##}ft)" : $"{perceptionDistance:###0.##}ft")}",
+                        Math.Abs(enhSumPerception.Sum - baseSumPerception.Sum) > 0, false, false, tip));
                 }
 
                 if (sFXCheck(baseSumPerception))
