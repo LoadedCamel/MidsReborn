@@ -786,6 +786,9 @@ namespace Mids_Reborn.Forms.Controls
                         switch (pEnh.Effects[rankedEffects[id]].EffectType)
                         {
                             case Enums.eEffectType.Damage:
+                            case Enums.eEffectType.SetMode:
+                            case Enums.eEffectType.Null:
+                            case Enums.eEffectType.NullBool:
                                 continue;
 
                             case Enums.eEffectType.Recovery:
