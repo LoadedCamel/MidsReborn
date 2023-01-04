@@ -617,7 +617,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             enhNameDisp.Text = "Enhancement Values";
-            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
