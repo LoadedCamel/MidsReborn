@@ -882,6 +882,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvPower.EnableDoubleBuffer();
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             btnDbQueries.Visible = MidsContext.Config.MasterMode;
+            Text = $"Power Database Browser [{DatabaseAPI.DatabaseName} DB]";
 
             try
             {
