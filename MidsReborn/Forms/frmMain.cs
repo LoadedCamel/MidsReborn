@@ -136,6 +136,10 @@ namespace Mids_Reborn.Forms
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
+            ShareToolStripMenuItem.Visible = false;
+            ShareToolStripMenuItem.Enabled = false;
+            tsShareDiscord.Visible = false;
+            tsShareDiscord.Enabled = false;
             tmrGfx.Tick += tmrGfx_Tick;
             //adding events
             if (Debugger.IsAttached && this.IsInDesignMode() && Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))

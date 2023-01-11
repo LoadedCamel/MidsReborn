@@ -90,17 +90,17 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
             _mrbAuth = await _dataStore.Retrieve<Models.MbAuthModel>();
             var mTokenExpiry = DateTimeOffset.Parse(_mrbAuth.RefreshTokenExpiration).UtcDateTime;
-            if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
-            {
-                _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);
-                if (!string.IsNullOrWhiteSpace(_mrbAuth.Message))
-                {
-                    SetTabPage(2);
-                    return;
-                }
-                await _dataStore.Repsert(_mrbAuth);
-                return;
-            }
+            // if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
+            // {
+            //     _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);
+            //     if (!string.IsNullOrWhiteSpace(_mrbAuth.Message))
+            //     {
+            //         SetTabPage(2);
+            //         return;
+            //     }
+            //     await _dataStore.Repsert(_mrbAuth);
+            //     return;
+            // }
 
             if (DateTime.UtcNow >= mTokenExpiry)
             {
@@ -185,7 +185,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         */
 
         // Page 1
-        private async void registerButton_Click(object sender, EventArgs e)
+        /*private async void registerButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(pg2_passBox.Text))
             {
@@ -244,7 +244,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             await _dataStore.Repsert(_mrbAuth);
             if (MidsContext.Config != null) MidsContext.Config.Registered = true;
             SetTabPage(3);
-        }
+        }*/
 
         private async void forgotPasswordButton_Click(object sender, EventArgs e)
         {

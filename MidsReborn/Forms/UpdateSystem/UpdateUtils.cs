@@ -58,7 +58,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 _updates.Add(new UpdateObject(UpdateTypes.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", _dbUpdate.Version.ToString(), $"{Files.BaseDataPath}"));
             }
 
-            if (_updates.Count <= 0) return;
+            if (_updates.Count <= 0)
+            {
+                MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             CreateTempFile();
             InitiateQuery(parent, _updates);
         }
@@ -73,7 +77,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Unable to create TEMP file or set its attributes: " + e.Message);
+                MessageBox.Show(@"Error while creating the temporary update file: " + e.Message);
             }
         }
 

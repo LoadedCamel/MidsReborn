@@ -33,22 +33,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
         private void InitializeComponent()
         {
             this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pg2_showPass = new FontAwesome.Sharp.IconButton();
-            this.existingAccountButton = new System.Windows.Forms.Button();
-            this.registerButton = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.pg2_passBox = new System.Windows.Forms.TextBox();
-            this.pg2_userBox = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.pg3_showPass = new FontAwesome.Sharp.IconButton();
-            this.forgotPasswordButton = new System.Windows.Forms.Button();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.pg3_passBox = new System.Windows.Forms.TextBox();
-            this.pg3_userBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.shareButton = new FontAwesome.Sharp.IconButton();
             this.refreshButton = new FontAwesome.Sharp.IconButton();
             this.channelCombo = new System.Windows.Forms.ComboBox();
@@ -71,21 +55,15 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.formPages1 = new Mids_Reborn.Forms.Controls.FormPages();
             this.page1 = new Mids_Reborn.Forms.Controls.Page();
             this.page2 = new Mids_Reborn.Forms.Controls.Page();
-            this.page3 = new Mids_Reborn.Forms.Controls.Page();
-            this.page4 = new Mids_Reborn.Forms.Controls.Page();
             this.statusPanel = new System.Windows.Forms.Panel();
             this.statusText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.formPages1.SuspendLayout();
             this.page1.SuspendLayout();
             this.page2.SuspendLayout();
-            this.page3.SuspendLayout();
-            this.page4.SuspendLayout();
             this.statusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,191 +80,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
         "i=https%3A%2F%2Fmidsreborn.com%2F&response_type=code&scope=identify%20email", System.UriKind.Absolute);
             this.webView21.TabIndex = 0;
             this.webView21.ZoomFactor = 1D;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(47)))), ((int)(((byte)(51)))));
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.pg2_showPass);
-            this.panel2.Controls.Add(this.existingAccountButton);
-            this.panel2.Controls.Add(this.registerButton);
-            this.panel2.Controls.Add(this.label7);
-            this.panel2.Controls.Add(this.pg2_passBox);
-            this.panel2.Controls.Add(this.pg2_userBox);
-            this.panel2.Controls.Add(this.label8);
-            this.panel2.Location = new System.Drawing.Point(454, 228);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(472, 263);
-            this.panel2.TabIndex = 4;
-            // 
-            // pg2_showPass
-            // 
-            this.pg2_showPass.FlatAppearance.BorderSize = 0;
-            this.pg2_showPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pg2_showPass.IconChar = FontAwesome.Sharp.IconChar.Eye;
-            this.pg2_showPass.IconColor = System.Drawing.SystemColors.ControlLightLight;
-            this.pg2_showPass.IconFont = FontAwesome.Sharp.IconFont.Regular;
-            this.pg2_showPass.IconSize = 32;
-            this.pg2_showPass.Location = new System.Drawing.Point(383, 122);
-            this.pg2_showPass.Name = "pg2_showPass";
-            this.pg2_showPass.Size = new System.Drawing.Size(27, 20);
-            this.pg2_showPass.TabIndex = 6;
-            this.pg2_showPass.UseVisualStyleBackColor = false;
-            // 
-            // existingAccountButton
-            // 
-            this.existingAccountButton.FlatAppearance.BorderSize = 0;
-            this.existingAccountButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.existingAccountButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.existingAccountButton.Location = new System.Drawing.Point(144, 209);
-            this.existingAccountButton.Name = "existingAccountButton";
-            this.existingAccountButton.Size = new System.Drawing.Size(201, 30);
-            this.existingAccountButton.TabIndex = 5;
-            this.existingAccountButton.Text = "I Already Have An Account";
-            this.existingAccountButton.UseVisualStyleBackColor = true;
-            this.existingAccountButton.Click += new System.EventHandler(this.existingAccountButton_Click);
-            // 
-            // registerButton
-            // 
-            this.registerButton.FlatAppearance.BorderSize = 0;
-            this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.registerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.registerButton.Location = new System.Drawing.Point(185, 168);
-            this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(109, 35);
-            this.registerButton.TabIndex = 4;
-            this.registerButton.Text = "Register";
-            this.registerButton.UseVisualStyleBackColor = true;
-            this.registerButton.Click += new System.EventHandler(this.registerButton_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(83, 76);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(96, 20);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "Username:";
-            // 
-            // pg2_passBox
-            // 
-            this.pg2_passBox.Location = new System.Drawing.Point(185, 122);
-            this.pg2_passBox.MaxLength = 32;
-            this.pg2_passBox.Name = "pg2_passBox";
-            this.pg2_passBox.Size = new System.Drawing.Size(192, 23);
-            this.pg2_passBox.TabIndex = 3;
-            this.pg2_passBox.UseSystemPasswordChar = true;
-            // 
-            // pg2_userBox
-            // 
-            this.pg2_userBox.Location = new System.Drawing.Point(185, 78);
-            this.pg2_userBox.Name = "pg2_userBox";
-            this.pg2_userBox.ReadOnly = true;
-            this.pg2_userBox.Size = new System.Drawing.Size(192, 23);
-            this.pg2_userBox.TabIndex = 1;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(88, 122);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(91, 20);
-            this.label8.TabIndex = 2;
-            this.label8.Text = "Password:";
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(47)))), ((int)(((byte)(51)))));
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.pg3_showPass);
-            this.panel3.Controls.Add(this.forgotPasswordButton);
-            this.panel3.Controls.Add(this.loginButton);
-            this.panel3.Controls.Add(this.label9);
-            this.panel3.Controls.Add(this.pg3_passBox);
-            this.panel3.Controls.Add(this.pg3_userBox);
-            this.panel3.Controls.Add(this.label10);
-            this.panel3.Location = new System.Drawing.Point(516, 196);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(472, 263);
-            this.panel3.TabIndex = 5;
-            // 
-            // pg3_showPass
-            // 
-            this.pg3_showPass.FlatAppearance.BorderSize = 0;
-            this.pg3_showPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pg3_showPass.IconChar = FontAwesome.Sharp.IconChar.Eye;
-            this.pg3_showPass.IconColor = System.Drawing.SystemColors.ControlLightLight;
-            this.pg3_showPass.IconFont = FontAwesome.Sharp.IconFont.Regular;
-            this.pg3_showPass.IconSize = 32;
-            this.pg3_showPass.Location = new System.Drawing.Point(383, 123);
-            this.pg3_showPass.Name = "pg3_showPass";
-            this.pg3_showPass.Size = new System.Drawing.Size(27, 20);
-            this.pg3_showPass.TabIndex = 7;
-            this.pg3_showPass.UseVisualStyleBackColor = false;
-            // 
-            // forgotPasswordButton
-            // 
-            this.forgotPasswordButton.FlatAppearance.BorderSize = 0;
-            this.forgotPasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.forgotPasswordButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.forgotPasswordButton.Location = new System.Drawing.Point(144, 209);
-            this.forgotPasswordButton.Name = "forgotPasswordButton";
-            this.forgotPasswordButton.Size = new System.Drawing.Size(201, 30);
-            this.forgotPasswordButton.TabIndex = 5;
-            this.forgotPasswordButton.Text = "Forgot Password";
-            this.forgotPasswordButton.UseVisualStyleBackColor = true;
-            this.forgotPasswordButton.Click += new System.EventHandler(this.forgotPasswordButton_Click);
-            // 
-            // loginButton
-            // 
-            this.loginButton.FlatAppearance.BorderSize = 0;
-            this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.loginButton.Location = new System.Drawing.Point(185, 168);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(109, 35);
-            this.loginButton.TabIndex = 4;
-            this.loginButton.Text = "Login";
-            this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(83, 76);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(96, 20);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Username:";
-            // 
-            // pg3_passBox
-            // 
-            this.pg3_passBox.Location = new System.Drawing.Point(185, 122);
-            this.pg3_passBox.MaxLength = 32;
-            this.pg3_passBox.Name = "pg3_passBox";
-            this.pg3_passBox.Size = new System.Drawing.Size(192, 23);
-            this.pg3_passBox.TabIndex = 3;
-            this.pg3_passBox.UseSystemPasswordChar = true;
-            // 
-            // pg3_userBox
-            // 
-            this.pg3_userBox.Location = new System.Drawing.Point(185, 78);
-            this.pg3_userBox.Name = "pg3_userBox";
-            this.pg3_userBox.Size = new System.Drawing.Size(192, 23);
-            this.pg3_userBox.TabIndex = 1;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(88, 122);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(91, 20);
-            this.label10.TabIndex = 2;
-            this.label10.Text = "Password:";
             // 
             // shareButton
             // 
@@ -586,16 +379,12 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.formPages1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.formPages1.Controls.Add(this.page1);
             this.formPages1.Controls.Add(this.page2);
-            this.formPages1.Controls.Add(this.page3);
-            this.formPages1.Controls.Add(this.page4);
             this.formPages1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.formPages1.Location = new System.Drawing.Point(0, 0);
             this.formPages1.Name = "formPages1";
             this.formPages1.Pages.Add(this.page1);
             this.formPages1.Pages.Add(this.page2);
-            this.formPages1.Pages.Add(this.page3);
-            this.formPages1.Pages.Add(this.page4);
-            this.formPages1.SelectedPage = 4;
+            this.formPages1.SelectedPage = 2;
             this.formPages1.Size = new System.Drawing.Size(788, 682);
             this.formPages1.TabIndex = 3;
             // 
@@ -616,45 +405,21 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.page2.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.page2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.page2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.page2.Controls.Add(this.panel2);
+            this.page2.Controls.Add(this.tableLayoutPanel1);
+            this.page2.Controls.Add(this.panel1);
+            this.page2.Controls.Add(this.richTextBox1);
+            this.page2.Controls.Add(this.label1);
+            this.page2.Controls.Add(this.label6);
+            this.page2.Controls.Add(this.label2);
+            this.page2.Controls.Add(this.serverCombo);
+            this.page2.Controls.Add(this.channelCombo);
+            this.page2.Controls.Add(this.refreshButton);
+            this.page2.Controls.Add(this.shareButton);
             this.page2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.page2.Location = new System.Drawing.Point(0, 0);
             this.page2.Name = "page2";
             this.page2.Size = new System.Drawing.Size(788, 682);
-            this.page2.TabIndex = 1;
-            // 
-            // page3
-            // 
-            this.page3.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.page3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.page3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.page3.Controls.Add(this.panel3);
-            this.page3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.page3.Location = new System.Drawing.Point(0, 0);
-            this.page3.Name = "page3";
-            this.page3.Size = new System.Drawing.Size(788, 682);
-            this.page3.TabIndex = 2;
-            // 
-            // page4
-            // 
-            this.page4.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.page4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.page4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.page4.Controls.Add(this.tableLayoutPanel1);
-            this.page4.Controls.Add(this.panel1);
-            this.page4.Controls.Add(this.richTextBox1);
-            this.page4.Controls.Add(this.label1);
-            this.page4.Controls.Add(this.label6);
-            this.page4.Controls.Add(this.label2);
-            this.page4.Controls.Add(this.serverCombo);
-            this.page4.Controls.Add(this.channelCombo);
-            this.page4.Controls.Add(this.refreshButton);
-            this.page4.Controls.Add(this.shareButton);
-            this.page4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.page4.Location = new System.Drawing.Point(0, 0);
-            this.page4.Name = "page4";
-            this.page4.Size = new System.Drawing.Size(788, 682);
-            this.page4.TabIndex = 3;
+            this.page2.TabIndex = 3;
             // 
             // statusPanel
             // 
@@ -694,10 +459,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Share To Discord";
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).EndInit();
@@ -706,9 +467,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.formPages1.ResumeLayout(false);
             this.page1.ResumeLayout(false);
             this.page2.ResumeLayout(false);
-            this.page3.ResumeLayout(false);
-            this.page4.ResumeLayout(false);
-            this.page4.PerformLayout();
+            this.page2.PerformLayout();
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -735,29 +494,11 @@ namespace Mids_Reborn.Forms.DiscordSharing
         private System.Windows.Forms.ComboBox serverCombo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button existingAccountButton;
-        private System.Windows.Forms.Button registerButton;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox pg2_passBox;
-        private System.Windows.Forms.TextBox pg2_userBox;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button forgotPasswordButton;
-        private System.Windows.Forms.Button loginButton;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox pg3_passBox;
-        private System.Windows.Forms.TextBox pg3_userBox;
-        private System.Windows.Forms.Label label10;
-        private FontAwesome.Sharp.IconButton pg2_showPass;
-        private FontAwesome.Sharp.IconButton pg3_showPass;
         private FontAwesome.Sharp.IconButton refreshButton;
         private FontAwesome.Sharp.IconButton shareButton;
         private Controls.FormPages formPages1;
         private Page page1;
         private Page page2;
-        private Page page3;
-        private Page page4;
         private System.Windows.Forms.Panel statusPanel;
         private System.Windows.Forms.Label statusText;
     }

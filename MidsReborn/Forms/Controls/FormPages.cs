@@ -10,7 +10,7 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class FormPages : UserControl
     {
-        public event EventHandler<int>? SelectedPageChanged;
+        public event EventHandler<int> SelectedPageChanged;
         private int _pageIndex;
 
         [Editor("System.ComponentModel.Design.CollectionEditor, System.Design", typeof(UITypeEditor))]
@@ -41,23 +41,10 @@ namespace Mids_Reborn.Forms.Controls
         public FormPages()
         {
             InitializeComponent();
-            SizeChanged += OnSizeChanged;
             BorderStyle = BorderStyle.FixedSingle;
             Pages = new ObservableCollection<Page>();
             Pages.CollectionChanged += PagesOnCollectionChanged;
             SelectedPageChanged += OnSelectedPageChanged;
-        }
-
-        private void OnSizeChanged(object? sender, EventArgs e)
-        {
-            foreach (var control in Controls)
-            {
-                if (control is Page page)
-                {
-                    page.Size = Size;
-                }
-            }
-            Invalidate();
         }
 
         private void OnSelectedPageChanged(object sender, int pageIndex)
