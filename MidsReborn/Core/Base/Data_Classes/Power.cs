@@ -1050,6 +1050,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
+                // Filter out effects with ToWho == None
+                if (weightedEffects[i].Key.Key.ToWho is not Enums.eToWho.Target or Enums.eToWho.Self)
+                {
+                    continue;
+                }
+
                 var weight = (int) weightedEffects[i].Key.Key.EffectClass + 1;
                 if (Math.Abs(weightedEffects[i].Key.Key.Probability - 1) < 0.01)
                 {

@@ -1161,7 +1161,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var mag = Math.Abs(Parse(this, ExpressionType.Magnitude, out _));
+                    //var mag = Math.Abs(Parse(this, ExpressionType.Magnitude, out _));
+                    var mag = BuffedMag * (DisplayPercentage ? 100 : 1);
                     var absAllowed = new List<Enums.eEffectType>
                     {
                         Enums.eEffectType.Damage,
@@ -1174,11 +1175,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")} Variable";
+                            sMag = $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")} Variable";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1), 2)}{(DisplayPercentage ? "%" : "")} Variable";
+                            sMag = $"{mag:####0.##}{(DisplayPercentage ? "%" : "")} Variable";
                         }
 
                         sMagExp = $"Mag Expression: {Expressions.Magnitude.Replace("modifier>current", ModifierTable)}";
@@ -1187,11 +1188,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
                         {
-                            sMag = $"{decimal.Round((decimal)Math.Abs(Parse(this, ExpressionType.Magnitude, out _) * (DisplayPercentage ? 100 : 1)), 2)}{(DisplayPercentage ? "%" : "")}";
+                            sMag = $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")}";
                         }
                         else
                         {
-                            sMag = $"{decimal.Round((decimal)Parse(this, ExpressionType.Magnitude, out _), 2) * (DisplayPercentage ? 100 : 1)}{(DisplayPercentage ? "%" : "")}";
+                            sMag = $"{mag:####0.#}{(DisplayPercentage ? "%" : "")}";
                         }
                     }
                 }

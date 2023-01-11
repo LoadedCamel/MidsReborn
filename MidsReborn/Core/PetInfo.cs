@@ -88,7 +88,7 @@ namespace Mids_Reborn.Core
         {
             if (_basePower is not { HasEntity: true }) return;
             Name = _basePower.DisplayName;
-            Description = _basePower.DescLong;
+            Description = _basePower.DescLong.Replace("\0", "");
         }
 
         private void GeneratePetPowerData()

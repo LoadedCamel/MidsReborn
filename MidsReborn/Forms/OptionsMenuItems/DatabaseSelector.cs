@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -29,19 +30,36 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         {
             CenterToScreen();
             var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder));
+            var index = 0;
+            var currentDbIndex = -1;
             foreach (var database in databases)
             {
                 var databaseData = new DirectoryInfo(database);
-                DatabaseData.Add(new DatabaseItems { Name = databaseData.Name, Path = databaseData.FullName });
+                if (databaseData.Name == DatabaseAPI.DatabaseName)
+                {
+                    currentDbIndex = index;
+                    DatabaseData.Add(new DatabaseItems { Name = $"{databaseData.Name} [current]", Path = databaseData.FullName });
+                }
+                else
+                {
+                    DatabaseData.Add(new DatabaseItems { Name = databaseData.Name, Path = databaseData.FullName });
+                }
+
+                index++;
             }
 
             dbDropdown.DataSource = DatabaseData;
             dbDropdown.DisplayMember = "Name";
             dbDropdown.ValueMember = "Path";
+            if (currentDbIndex > -1)
+            {
+                dbDropdown.SelectedIndex = currentDbIndex;
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine(dbDropdown.SelectedValue.ToString());
             DialogResult = DialogResult.Cancel;
             Close();
         }

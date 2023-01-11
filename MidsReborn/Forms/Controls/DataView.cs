@@ -617,7 +617,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             enhNameDisp.Text = "Enhancement Values";
-            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
@@ -738,6 +738,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var rankedEffects = pEnh.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
+            var effectsTooltipsList = new List<string>();
+            var rankedEffectTypes = new List<KeyValuePair<Enums.eEffectType, Enums.eMez>>();
             for (var id = 0; id < rankedEffects.Length; id++)
             {
                 if (rankedEffects[id] <= -1)
@@ -778,6 +780,14 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
+                if (pEnh.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE |
+                    pEnh.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE)
+                {
+                    continue;
+                }
+
+                var displayedGenericEffect = false;
+                var ignoredEffect = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag) < float.Epsilon;
                 if (pEnh.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
                 {
                     if (pEnh.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
@@ -785,6 +795,12 @@ namespace Mids_Reborn.Forms.Controls
                         switch (pEnh.Effects[rankedEffects[id]].EffectType)
                         {
                             case Enums.eEffectType.Damage:
+                            case Enums.eEffectType.SetMode:
+                            case Enums.eEffectType.Null:
+                            case Enums.eEffectType.NullBool:
+                            case Enums.eEffectType.GlobalChanceMod:
+                                ignoredEffect = true;
+
                                 continue;
 
                             case Enums.eEffectType.Recovery:
@@ -798,6 +814,7 @@ namespace Mids_Reborn.Forms.Controls
                                 };
                                 
                                 rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
+
                                 break;
                                 
                             case Enums.eEffectType.EntCreate when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
@@ -867,10 +884,17 @@ namespace Mids_Reborn.Forms.Controls
                                 {
                                     continue;
                                 }
-                                else if (isDefiance)
+
+                                if (isDefiance)
                                 {
                                     defianceFound = true;
                                 }
+
+                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
+                                {
+                                    continue;
+                                }
+
                                 break;
 
                             case Enums.eEffectType.Resistance:
@@ -881,10 +905,22 @@ namespace Mids_Reborn.Forms.Controls
 
                                 rankedEffect.SpecialTip = pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[rankedEffects[id]].EffectType);
 
+                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
+                                {
+                                    continue;
+                                }
+
+                                break;
+
+                            case Enums.eEffectType.PerceptionRadius:
+                                rankedEffect.Name = $"Pceptn({pEnh.Effects[rankedEffects[id]].ToWho})";
+                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}")} ({Statistics.BasePerception * pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}ft)";
+                                
                                 break;
 
                             //case Enums.eEffectType.ToHit:
                             default:
+                                displayedGenericEffect = !pEnh.Effects[rankedEffects[id]].isEnhancementEffect;
                                 var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
                                 var magSumEnh = pEnh.Effects
                                     .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
@@ -907,6 +943,13 @@ namespace Mids_Reborn.Forms.Controls
                                                 pEnh.Effects[rankedEffects[id]].ETModifies == e.ETModifies)
                                     .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
                                     .Sum();
+
+                                ignoredEffect = Math.Abs(magSumEnh) < float.Epsilon;
+
+                                if (ignoredEffect)
+                                {
+                                    continue;
+                                }
 
                                 rankedEffect.Value = $"{magSumEnh:####0.##}{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? "%" : "")}";
                                 rankedEffect.Value += pEnh.Effects[rankedEffects[id]].ToWho switch
@@ -945,6 +988,8 @@ namespace Mids_Reborn.Forms.Controls
                             Enums.GetMezName((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType),
                             Enums.GetMezNameShort((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType));
                     }
+
+                    effectsTooltipsList.Add(rankedEffect.SpecialTip);
                 }
 
                 // Ignore fully absorbed entities
@@ -954,6 +999,21 @@ namespace Mids_Reborn.Forms.Controls
                     {
                         continue;
                     }
+                }
+
+                if (ignoredEffect)
+                {
+                    continue;
+                }
+
+                if (displayedGenericEffect)
+                {
+                    if (rankedEffectTypes.Contains(new KeyValuePair<Enums.eEffectType, Enums.eMez>(pEnh.Effects[rankedEffects[id]].EffectType, pEnh.Effects[rankedEffects[id]].MezType)))
+                    {
+                        continue;
+                    }
+
+                    rankedEffectTypes.Add(new KeyValuePair<Enums.eEffectType, Enums.eMez>(pEnh.Effects[rankedEffects[id]].EffectType, pEnh.Effects[rankedEffects[id]].MezType));
                 }
 
                 info_DataList.AddItem(rankedEffect);
@@ -1794,7 +1854,16 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (baseSumPerception.Present)
                 {
-                    iList.AddItem(FastItem("Percept", baseSumPerception, enhSumPerception, "%", baseSumPerception, pEnh));
+                    var toWho = GetToWhoShort(pEnh.Effects[enhSumPerception.Index[0]]);
+                    var tip = string.Join("\r\n", pEnh.Effects
+                            .Where(e => e.EffectType == Enums.eEffectType.PerceptionRadius)
+                            .Where(e => e.ActiveConditionals.Count <= 0 || e.ValidateConditional())
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)))
+                        .Trim();
+                    var perceptionDistance = Statistics.BasePerception * enhSumPerception.Sum / 100;
+                    iList.AddItem(new PairedList.ItemPair($"Pceptn({toWho})",
+                        $"{(pEnh.Effects[enhSumPerception.Index[0]].DisplayPercentage ? $"{enhSumPerception.Sum:###0.##}% ({perceptionDistance:###0.##}ft)" : $"{perceptionDistance:###0.##}ft")}",
+                        Math.Abs(enhSumPerception.Sum - baseSumPerception.Sum) > 0, false, false, tip));
                 }
 
                 if (sFXCheck(baseSumPerception))

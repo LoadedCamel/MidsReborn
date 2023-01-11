@@ -100,7 +100,7 @@ namespace Mids_Reborn.Forms.Controls
             //info_TxtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(_basePower.DescShort.Trim()) + RTF.EndRTF();
             //info_TxtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             info_TxtSmall.Text = _basePower.DescShort;
-            info_TxtLarge.Text = _basePower.DescLong;
+            info_TxtLarge.Text = _basePower.DescLong.Trim().Replace("\0", "");
             var suffix1 = _basePower.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
             
             info_DataList.Clear();
