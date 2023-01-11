@@ -39,19 +39,18 @@ namespace Mids_Reborn.Forms.DiscordSharing
             Load += OnLoad;
             Closing += OnClosing;
             InitializeComponent();
-            tabControlAdv1.SelectedIndexChanged += TabControlAdv1OnSelectedIndexChanged;
             serverCombo.SelectedIndexChanged += ServerComboOnSelectedIndexChanged;
             webView21.SourceChanged += WebView21OnSourceChanged;
         }
 
         private void SetTabPage(int page)
         {
-            tabControlAdv1.SelectedIndex = page;
+            //tabControlAdv1.SelectedIndex = page;
         }
 
         private void SetStatusText(string text)
         {
-            statusBarAdvPanel1.Text = text;
+            //statusBarAdvPanel1.Text = text;
         }
 
         private void OnClosing(object? sender, CancelEventArgs e)
@@ -159,7 +158,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
         }
 
-        private async void TabControlAdv1OnSelectedIndexChanged(object? sender, EventArgs e)
+        /*private async void TabControlAdv1OnSelectedIndexChanged(object? sender, EventArgs e)
         {
             switch (tabControlAdv1.SelectedIndex)
             {
@@ -183,6 +182,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                     break;
             }
         }
+        */
 
         // Page 1
         private async void registerButton_Click(object sender, EventArgs e)

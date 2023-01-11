@@ -33,9 +33,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
         private void InitializeComponent()
         {
             this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.tabControlAdv1 = new Syncfusion.Windows.Forms.Tools.TabControlAdv();
-            this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
-            this.tabPageAdv2 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pg2_showPass = new FontAwesome.Sharp.IconButton();
             this.existingAccountButton = new System.Windows.Forms.Button();
@@ -44,7 +41,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.pg2_passBox = new System.Windows.Forms.TextBox();
             this.pg2_userBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.tabPageAdv3 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.panel3 = new System.Windows.Forms.Panel();
             this.pg3_showPass = new FontAwesome.Sharp.IconButton();
             this.forgotPasswordButton = new System.Windows.Forms.Button();
@@ -53,7 +49,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.pg3_passBox = new System.Windows.Forms.TextBox();
             this.pg3_userBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.shareButton = new FontAwesome.Sharp.IconButton();
             this.refreshButton = new FontAwesome.Sharp.IconButton();
             this.channelCombo = new System.Windows.Forms.ComboBox();
@@ -64,91 +59,49 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.ctlAvatar1 = new ctlAvatar();
+            this.ctlAvatar1 = new Mids_Reborn.Controls.ctlAvatar();
             this.lblDiscriminator = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.defenseCheckedList = new CheckedListExt();
-            this.resistCheckedList = new CheckedListExt();
-            this.miscCheckedList = new CheckedListExt();
-            this.statusBarAdvPanel1 = new Syncfusion.Windows.Forms.Tools.StatusBarAdvPanel();
+            this.defenseCheckedList = new Mids_Reborn.Forms.Controls.CheckedListExt();
+            this.resistCheckedList = new Mids_Reborn.Forms.Controls.CheckedListExt();
+            this.miscCheckedList = new Mids_Reborn.Forms.Controls.CheckedListExt();
+            this.formPages1 = new Mids_Reborn.Forms.Controls.FormPages();
+            this.page1 = new Mids_Reborn.Forms.Controls.Page();
+            this.page2 = new Mids_Reborn.Forms.Controls.Page();
+            this.page3 = new Mids_Reborn.Forms.Controls.Page();
+            this.page4 = new Mids_Reborn.Forms.Controls.Page();
+            this.statusPanel = new System.Windows.Forms.Panel();
+            this.statusText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv1)).BeginInit();
-            this.tabControlAdv1.SuspendLayout();
-            this.tabPageAdv1.SuspendLayout();
-            this.tabPageAdv2.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.tabPageAdv3.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.tabPageAdv4.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statusBarAdvPanel1)).BeginInit();
+            this.formPages1.SuspendLayout();
+            this.page1.SuspendLayout();
+            this.page2.SuspendLayout();
+            this.page3.SuspendLayout();
+            this.page4.SuspendLayout();
+            this.statusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // webView21
             // 
+            this.webView21.AllowExternalDrop = true;
             this.webView21.CreationProperties = null;
             this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
             this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView21.Location = new System.Drawing.Point(0, 0);
             this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(782, 590);
+            this.webView21.Size = new System.Drawing.Size(788, 682);
             this.webView21.Source = new System.Uri("https://discord.com/api/oauth2/authorize?client_id=729018208824066171&redirect_ur" +
         "i=https%3A%2F%2Fmidsreborn.com%2F&response_type=code&scope=identify%20email", System.UriKind.Absolute);
             this.webView21.TabIndex = 0;
             this.webView21.ZoomFactor = 1D;
-            // 
-            // tabControlAdv1
-            // 
-            this.tabControlAdv1.ActiveTabColor = System.Drawing.Color.Transparent;
-            this.tabControlAdv1.BeforeTouchSize = new System.Drawing.Size(784, 616);
-            this.tabControlAdv1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv1);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv2);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv3);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv4);
-            this.tabControlAdv1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabControlAdv1.Location = new System.Drawing.Point(0, 0);
-            this.tabControlAdv1.Name = "tabControlAdv1";
-            this.tabControlAdv1.Padding = new System.Drawing.Point(0, 3);
-            this.tabControlAdv1.Size = new System.Drawing.Size(784, 616);
-            this.tabControlAdv1.TabIndex = 1;
-            this.tabControlAdv1.ThemeName = "TabRenderer3D";
-            this.tabControlAdv1.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
-            // 
-            // tabPageAdv1
-            // 
-            this.tabPageAdv1.Controls.Add(this.webView21);
-            this.tabPageAdv1.Image = null;
-            this.tabPageAdv1.ImageSize = new System.Drawing.Size(16, 16);
-            this.tabPageAdv1.Location = new System.Drawing.Point(1, 25);
-            this.tabPageAdv1.Name = "tabPageAdv1";
-            this.tabPageAdv1.ShowCloseButton = true;
-            this.tabPageAdv1.Size = new System.Drawing.Size(782, 590);
-            this.tabPageAdv1.TabForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tabPageAdv1.TabIndex = 1;
-            this.tabPageAdv1.TabVisible = false;
-            this.tabPageAdv1.Text = "Page1";
-            this.tabPageAdv1.ThemesEnabled = false;
-            // 
-            // tabPageAdv2
-            // 
-            this.tabPageAdv2.Controls.Add(this.panel2);
-            this.tabPageAdv2.Image = null;
-            this.tabPageAdv2.ImageSize = new System.Drawing.Size(16, 16);
-            this.tabPageAdv2.Location = new System.Drawing.Point(1, 25);
-            this.tabPageAdv2.Name = "tabPageAdv2";
-            this.tabPageAdv2.ShowCloseButton = true;
-            this.tabPageAdv2.Size = new System.Drawing.Size(782, 590);
-            this.tabPageAdv2.TabForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tabPageAdv2.TabIndex = 3;
-            this.tabPageAdv2.TabVisible = false;
-            this.tabPageAdv2.Text = "Page2";
-            this.tabPageAdv2.ThemesEnabled = false;
             // 
             // panel2
             // 
@@ -161,7 +114,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.panel2.Controls.Add(this.pg2_passBox);
             this.panel2.Controls.Add(this.pg2_userBox);
             this.panel2.Controls.Add(this.label8);
-            this.panel2.Location = new System.Drawing.Point(164, 117);
+            this.panel2.Location = new System.Drawing.Point(454, 228);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(472, 263);
             this.panel2.TabIndex = 4;
@@ -184,7 +137,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.existingAccountButton.FlatAppearance.BorderSize = 0;
             this.existingAccountButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.existingAccountButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.existingAccountButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.existingAccountButton.Location = new System.Drawing.Point(144, 209);
             this.existingAccountButton.Name = "existingAccountButton";
             this.existingAccountButton.Size = new System.Drawing.Size(201, 30);
@@ -197,7 +150,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.registerButton.FlatAppearance.BorderSize = 0;
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.registerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.registerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.registerButton.Location = new System.Drawing.Point(185, 168);
             this.registerButton.Name = "registerButton";
             this.registerButton.Size = new System.Drawing.Size(109, 35);
@@ -209,7 +162,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label7.Location = new System.Drawing.Point(83, 76);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(96, 20);
@@ -221,43 +174,27 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.pg2_passBox.Location = new System.Drawing.Point(185, 122);
             this.pg2_passBox.MaxLength = 32;
             this.pg2_passBox.Name = "pg2_passBox";
-            this.pg2_passBox.Size = new System.Drawing.Size(192, 20);
+            this.pg2_passBox.Size = new System.Drawing.Size(192, 23);
             this.pg2_passBox.TabIndex = 3;
             this.pg2_passBox.UseSystemPasswordChar = true;
             // 
             // pg2_userBox
             // 
-            this.pg2_userBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.pg2_userBox.Location = new System.Drawing.Point(185, 78);
             this.pg2_userBox.Name = "pg2_userBox";
             this.pg2_userBox.ReadOnly = true;
-            this.pg2_userBox.Size = new System.Drawing.Size(192, 20);
+            this.pg2_userBox.Size = new System.Drawing.Size(192, 23);
             this.pg2_userBox.TabIndex = 1;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label8.Location = new System.Drawing.Point(88, 122);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(91, 20);
             this.label8.TabIndex = 2;
             this.label8.Text = "Password:";
-            // 
-            // tabPageAdv3
-            // 
-            this.tabPageAdv3.Controls.Add(this.panel3);
-            this.tabPageAdv3.Image = null;
-            this.tabPageAdv3.ImageSize = new System.Drawing.Size(16, 16);
-            this.tabPageAdv3.Location = new System.Drawing.Point(1, 25);
-            this.tabPageAdv3.Name = "tabPageAdv3";
-            this.tabPageAdv3.ShowCloseButton = true;
-            this.tabPageAdv3.Size = new System.Drawing.Size(782, 590);
-            this.tabPageAdv3.TabForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tabPageAdv3.TabIndex = 4;
-            this.tabPageAdv3.TabVisible = false;
-            this.tabPageAdv3.Text = "Page3";
-            this.tabPageAdv3.ThemesEnabled = false;
             // 
             // panel3
             // 
@@ -270,7 +207,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.panel3.Controls.Add(this.pg3_passBox);
             this.panel3.Controls.Add(this.pg3_userBox);
             this.panel3.Controls.Add(this.label10);
-            this.panel3.Location = new System.Drawing.Point(164, 117);
+            this.panel3.Location = new System.Drawing.Point(516, 196);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(472, 263);
             this.panel3.TabIndex = 5;
@@ -293,7 +230,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.forgotPasswordButton.FlatAppearance.BorderSize = 0;
             this.forgotPasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.forgotPasswordButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.forgotPasswordButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.forgotPasswordButton.Location = new System.Drawing.Point(144, 209);
             this.forgotPasswordButton.Name = "forgotPasswordButton";
             this.forgotPasswordButton.Size = new System.Drawing.Size(201, 30);
@@ -306,7 +243,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.loginButton.FlatAppearance.BorderSize = 0;
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.loginButton.Location = new System.Drawing.Point(185, 168);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(109, 35);
@@ -318,7 +255,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label9.Location = new System.Drawing.Point(83, 76);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(96, 20);
@@ -330,51 +267,26 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.pg3_passBox.Location = new System.Drawing.Point(185, 122);
             this.pg3_passBox.MaxLength = 32;
             this.pg3_passBox.Name = "pg3_passBox";
-            this.pg3_passBox.Size = new System.Drawing.Size(192, 20);
+            this.pg3_passBox.Size = new System.Drawing.Size(192, 23);
             this.pg3_passBox.TabIndex = 3;
             this.pg3_passBox.UseSystemPasswordChar = true;
             // 
             // pg3_userBox
             // 
-            this.pg3_userBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.pg3_userBox.Location = new System.Drawing.Point(185, 78);
             this.pg3_userBox.Name = "pg3_userBox";
-            this.pg3_userBox.Size = new System.Drawing.Size(192, 20);
+            this.pg3_userBox.Size = new System.Drawing.Size(192, 23);
             this.pg3_userBox.TabIndex = 1;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label10.Location = new System.Drawing.Point(88, 122);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 20);
             this.label10.TabIndex = 2;
             this.label10.Text = "Password:";
-            // 
-            // tabPageAdv4
-            // 
-            this.tabPageAdv4.Controls.Add(this.shareButton);
-            this.tabPageAdv4.Controls.Add(this.refreshButton);
-            this.tabPageAdv4.Controls.Add(this.channelCombo);
-            this.tabPageAdv4.Controls.Add(this.serverCombo);
-            this.tabPageAdv4.Controls.Add(this.label2);
-            this.tabPageAdv4.Controls.Add(this.label6);
-            this.tabPageAdv4.Controls.Add(this.label1);
-            this.tabPageAdv4.Controls.Add(this.richTextBox1);
-            this.tabPageAdv4.Controls.Add(this.panel1);
-            this.tabPageAdv4.Controls.Add(this.tableLayoutPanel1);
-            this.tabPageAdv4.Image = null;
-            this.tabPageAdv4.ImageSize = new System.Drawing.Size(16, 16);
-            this.tabPageAdv4.Location = new System.Drawing.Point(1, 25);
-            this.tabPageAdv4.Name = "tabPageAdv4";
-            this.tabPageAdv4.ShowCloseButton = true;
-            this.tabPageAdv4.Size = new System.Drawing.Size(782, 590);
-            this.tabPageAdv4.TabForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tabPageAdv4.TabIndex = 2;
-            this.tabPageAdv4.TabVisible = false;
-            this.tabPageAdv4.Text = "Page4";
-            this.tabPageAdv4.ThemesEnabled = false;
             // 
             // shareButton
             // 
@@ -383,14 +295,14 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.shareButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.shareButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.shareButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.shareButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.shareButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.shareButton.IconChar = FontAwesome.Sharp.IconChar.Discord;
             this.shareButton.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(101)))), ((int)(((byte)(242)))));
             this.shareButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.shareButton.IconSize = 92;
-            this.shareButton.Location = new System.Drawing.Point(604, 501);
+            this.shareButton.Location = new System.Drawing.Point(604, 530);
             this.shareButton.Name = "shareButton";
-            this.shareButton.Size = new System.Drawing.Size(167, 77);
+            this.shareButton.Size = new System.Drawing.Size(167, 84);
             this.shareButton.TabIndex = 31;
             this.shareButton.Text = "Share to Discord";
             this.shareButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -405,12 +317,12 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.refreshButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.refreshButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.refreshButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.refreshButton.ForeColor = System.Drawing.Color.AliceBlue;
             this.refreshButton.IconChar = FontAwesome.Sharp.IconChar.Retweet;
             this.refreshButton.IconColor = System.Drawing.Color.Gainsboro;
             this.refreshButton.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            this.refreshButton.Location = new System.Drawing.Point(53, 211);
+            this.refreshButton.Location = new System.Drawing.Point(44, 233);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(122, 57);
             this.refreshButton.TabIndex = 30;
@@ -428,7 +340,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.channelCombo.FormattingEnabled = true;
             this.channelCombo.Location = new System.Drawing.Point(11, 184);
             this.channelCombo.Name = "channelCombo";
-            this.channelCombo.Size = new System.Drawing.Size(204, 21);
+            this.channelCombo.Size = new System.Drawing.Size(204, 23);
             this.channelCombo.TabIndex = 28;
             // 
             // serverCombo
@@ -437,13 +349,13 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.serverCombo.FormattingEnabled = true;
             this.serverCombo.Location = new System.Drawing.Point(11, 120);
             this.serverCombo.Name = "serverCombo";
-            this.serverCombo.Size = new System.Drawing.Size(204, 21);
+            this.serverCombo.Size = new System.Drawing.Size(204, 23);
             this.serverCombo.TabIndex = 27;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(11, 168);
             this.label2.Name = "label2";
@@ -454,7 +366,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(11, 104);
             this.label6.Name = "label6";
@@ -464,8 +376,8 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(11, 312);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(8, 341);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(760, 23);
             this.label1.TabIndex = 24;
@@ -476,9 +388,9 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(42)))));
             this.richTextBox1.DetectUrls = false;
-            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.richTextBox1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.richTextBox1.Location = new System.Drawing.Point(11, 338);
+            this.richTextBox1.Location = new System.Drawing.Point(11, 367);
             this.richTextBox1.MaxLength = 4096;
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(760, 157);
@@ -491,14 +403,14 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.panel1.Controls.Add(this.lblUsername);
             this.panel1.Controls.Add(this.ctlAvatar1);
             this.panel1.Controls.Add(this.lblDiscriminator);
-            this.panel1.Location = new System.Drawing.Point(11, 13);
+            this.panel1.Location = new System.Drawing.Point(11, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(207, 71);
             this.panel1.TabIndex = 22;
             // 
             // lblUsername
             // 
-            this.lblUsername.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblUsername.ForeColor = System.Drawing.Color.White;
             this.lblUsername.Location = new System.Drawing.Point(76, 16);
             this.lblUsername.Name = "lblUsername";
@@ -509,7 +421,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // ctlAvatar1
             // 
             this.ctlAvatar1.BackColor = System.Drawing.Color.White;
-            this.ctlAvatar1.Image = Resources.defaultAvatar;
+            this.ctlAvatar1.Image = global::MRBResourceLib.Resources.defaultAvatar;
             this.ctlAvatar1.Location = new System.Drawing.Point(6, 3);
             this.ctlAvatar1.Name = "ctlAvatar1";
             this.ctlAvatar1.Size = new System.Drawing.Size(64, 64);
@@ -520,7 +432,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // lblDiscriminator
             // 
             this.lblDiscriminator.AutoSize = true;
-            this.lblDiscriminator.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDiscriminator.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDiscriminator.ForeColor = System.Drawing.Color.White;
             this.lblDiscriminator.Location = new System.Drawing.Point(76, 33);
             this.lblDiscriminator.Name = "lblDiscriminator";
@@ -541,25 +453,25 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.tableLayoutPanel1.Controls.Add(this.defenseCheckedList, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.resistCheckedList, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.miscCheckedList, 2, 1);
-            this.tableLayoutPanel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(224, 16);
+            this.tableLayoutPanel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(224, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.666667F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.33334F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(547, 293);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(547, 335);
             this.tableLayoutPanel1.TabIndex = 21;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(4, 4);
             this.label3.Margin = new System.Windows.Forms.Padding(3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(137, 22);
+            this.label3.Size = new System.Drawing.Size(137, 26);
             this.label3.TabIndex = 0;
             this.label3.Text = "Defense";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -568,12 +480,12 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(148, 4);
             this.label4.Margin = new System.Windows.Forms.Padding(3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(153, 22);
+            this.label4.Size = new System.Drawing.Size(153, 26);
             this.label4.TabIndex = 1;
             this.label4.Text = "Resistance";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -582,12 +494,12 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(308, 4);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(235, 22);
+            this.label5.Size = new System.Drawing.Size(235, 26);
             this.label5.TabIndex = 2;
             this.label5.Text = "Misc";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -598,7 +510,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.defenseCheckedList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.defenseCheckedList.CheckOnClick = true;
             this.defenseCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.defenseCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.defenseCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.defenseCheckedList.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.defenseCheckedList.FormattingEnabled = true;
             this.defenseCheckedList.Items.AddRange(new object[] {
@@ -612,9 +524,9 @@ namespace Mids_Reborn.Forms.DiscordSharing
             "Melee",
             "Ranged",
             "AoE"});
-            this.defenseCheckedList.Location = new System.Drawing.Point(4, 33);
+            this.defenseCheckedList.Location = new System.Drawing.Point(4, 37);
             this.defenseCheckedList.Name = "defenseCheckedList";
-            this.defenseCheckedList.Size = new System.Drawing.Size(137, 256);
+            this.defenseCheckedList.Size = new System.Drawing.Size(137, 294);
             this.defenseCheckedList.TabIndex = 3;
             this.defenseCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -624,7 +536,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.resistCheckedList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.resistCheckedList.CheckOnClick = true;
             this.resistCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.resistCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resistCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.resistCheckedList.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.resistCheckedList.FormattingEnabled = true;
             this.resistCheckedList.Items.AddRange(new object[] {
@@ -636,9 +548,9 @@ namespace Mids_Reborn.Forms.DiscordSharing
             "Negative",
             "Toxic",
             "Psionic"});
-            this.resistCheckedList.Location = new System.Drawing.Point(148, 33);
+            this.resistCheckedList.Location = new System.Drawing.Point(148, 37);
             this.resistCheckedList.Name = "resistCheckedList";
-            this.resistCheckedList.Size = new System.Drawing.Size(153, 256);
+            this.resistCheckedList.Size = new System.Drawing.Size(153, 294);
             this.resistCheckedList.TabIndex = 4;
             this.resistCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -648,7 +560,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             this.miscCheckedList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.miscCheckedList.CheckOnClick = true;
             this.miscCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.miscCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.miscCheckedList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.miscCheckedList.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.miscCheckedList.FormattingEnabled = true;
             this.miscCheckedList.Items.AddRange(new object[] {
@@ -663,57 +575,142 @@ namespace Mids_Reborn.Forms.DiscordSharing
             "Hitpoints (Maximum)",
             "Hitpoints (Regeneration)",
             "ToHit"});
-            this.miscCheckedList.Location = new System.Drawing.Point(308, 33);
+            this.miscCheckedList.Location = new System.Drawing.Point(308, 37);
             this.miscCheckedList.Name = "miscCheckedList";
-            this.miscCheckedList.Size = new System.Drawing.Size(235, 256);
+            this.miscCheckedList.Size = new System.Drawing.Size(235, 294);
             this.miscCheckedList.TabIndex = 5;
             this.miscCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
-            // statusBarAdvPanel1
+            // formPages1
             // 
-            this.statusBarAdvPanel1.BeforeTouchSize = new System.Drawing.Size(784, 28);
-            this.statusBarAdvPanel1.Border3DStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-            this.statusBarAdvPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.statusBarAdvPanel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusBarAdvPanel1.Location = new System.Drawing.Point(0, 615);
-            this.statusBarAdvPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.statusBarAdvPanel1.Name = "statusBarAdvPanel1";
-            this.statusBarAdvPanel1.Size = new System.Drawing.Size(784, 28);
-            this.statusBarAdvPanel1.TabIndex = 2;
-            this.statusBarAdvPanel1.Text = "Please authenticate your Discord account.";
+            this.formPages1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.formPages1.Controls.Add(this.page1);
+            this.formPages1.Controls.Add(this.page2);
+            this.formPages1.Controls.Add(this.page3);
+            this.formPages1.Controls.Add(this.page4);
+            this.formPages1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.formPages1.Location = new System.Drawing.Point(0, 0);
+            this.formPages1.Name = "formPages1";
+            this.formPages1.Pages.Add(this.page1);
+            this.formPages1.Pages.Add(this.page2);
+            this.formPages1.Pages.Add(this.page3);
+            this.formPages1.Pages.Add(this.page4);
+            this.formPages1.SelectedPage = 4;
+            this.formPages1.Size = new System.Drawing.Size(788, 682);
+            this.formPages1.TabIndex = 3;
             // 
-            // OAuthGrant
+            // page1
+            // 
+            this.page1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.page1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.page1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.page1.Controls.Add(this.webView21);
+            this.page1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.page1.Location = new System.Drawing.Point(0, 0);
+            this.page1.Name = "page1";
+            this.page1.Size = new System.Drawing.Size(788, 682);
+            this.page1.TabIndex = 0;
+            // 
+            // page2
+            // 
+            this.page2.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.page2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.page2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.page2.Controls.Add(this.panel2);
+            this.page2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.page2.Location = new System.Drawing.Point(0, 0);
+            this.page2.Name = "page2";
+            this.page2.Size = new System.Drawing.Size(788, 682);
+            this.page2.TabIndex = 1;
+            // 
+            // page3
+            // 
+            this.page3.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.page3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.page3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.page3.Controls.Add(this.panel3);
+            this.page3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.page3.Location = new System.Drawing.Point(0, 0);
+            this.page3.Name = "page3";
+            this.page3.Size = new System.Drawing.Size(788, 682);
+            this.page3.TabIndex = 2;
+            // 
+            // page4
+            // 
+            this.page4.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.page4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.page4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.page4.Controls.Add(this.tableLayoutPanel1);
+            this.page4.Controls.Add(this.panel1);
+            this.page4.Controls.Add(this.richTextBox1);
+            this.page4.Controls.Add(this.label1);
+            this.page4.Controls.Add(this.label6);
+            this.page4.Controls.Add(this.label2);
+            this.page4.Controls.Add(this.serverCombo);
+            this.page4.Controls.Add(this.channelCombo);
+            this.page4.Controls.Add(this.refreshButton);
+            this.page4.Controls.Add(this.shareButton);
+            this.page4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.page4.Location = new System.Drawing.Point(0, 0);
+            this.page4.Name = "page4";
+            this.page4.Size = new System.Drawing.Size(788, 682);
+            this.page4.TabIndex = 3;
+            // 
+            // statusPanel
+            // 
+            this.statusPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.statusPanel.Controls.Add(this.statusText);
+            this.statusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.statusPanel.Location = new System.Drawing.Point(0, 654);
+            this.statusPanel.Name = "statusPanel";
+            this.statusPanel.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.statusPanel.Size = new System.Drawing.Size(788, 28);
+            this.statusPanel.TabIndex = 4;
+            // 
+            // statusText
+            // 
+            this.statusText.AutoSize = true;
+            this.statusText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.statusText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.statusText.Location = new System.Drawing.Point(3, 0);
+            this.statusText.Name = "statusText";
+            this.statusText.Size = new System.Drawing.Size(347, 21);
+            this.statusText.TabIndex = 0;
+            this.statusText.Text = "Login with your Discord account to proceed.";
+            this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // DiscordShare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(42)))));
-            this.ClientSize = new System.Drawing.Size(784, 643);
-            this.Controls.Add(this.statusBarAdvPanel1);
-            this.Controls.Add(this.tabControlAdv1);
+            this.ClientSize = new System.Drawing.Size(788, 682);
+            this.Controls.Add(this.statusPanel);
+            this.Controls.Add(this.formPages1);
             this.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "OAuthGrant";
+            this.Name = "DiscordShare";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Share To Discord";
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv1)).EndInit();
-            this.tabControlAdv1.ResumeLayout(false);
-            this.tabPageAdv1.ResumeLayout(false);
-            this.tabPageAdv2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.tabPageAdv3.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.tabPageAdv4.ResumeLayout(false);
-            this.tabPageAdv4.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statusBarAdvPanel1)).EndInit();
+            this.formPages1.ResumeLayout(false);
+            this.page1.ResumeLayout(false);
+            this.page2.ResumeLayout(false);
+            this.page3.ResumeLayout(false);
+            this.page4.ResumeLayout(false);
+            this.page4.PerformLayout();
+            this.statusPanel.ResumeLayout(false);
+            this.statusPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -721,12 +718,6 @@ namespace Mids_Reborn.Forms.DiscordSharing
         #endregion
 
         private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
-        private Syncfusion.Windows.Forms.Tools.TabControlAdv tabControlAdv1;
-        private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv1;
-        private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv4;
-        private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv2;
-        private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv3;
-        private Syncfusion.Windows.Forms.Tools.StatusBarAdvPanel statusBarAdvPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -762,5 +753,12 @@ namespace Mids_Reborn.Forms.DiscordSharing
         private FontAwesome.Sharp.IconButton pg3_showPass;
         private FontAwesome.Sharp.IconButton refreshButton;
         private FontAwesome.Sharp.IconButton shareButton;
+        private Controls.FormPages formPages1;
+        private Page page1;
+        private Page page2;
+        private Page page3;
+        private Page page4;
+        private System.Windows.Forms.Panel statusPanel;
+        private System.Windows.Forms.Label statusText;
     }
 }
