@@ -5,10 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 using static MRBUpdater.Utils;
 
 namespace MRBUpdater
@@ -31,7 +30,7 @@ namespace MRBUpdater
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             TempFile = passedArgs[0];
             _installQueue = new Queue<InstallDetails>();
-            _downloadQueue = JsonConvert.DeserializeObject<Queue<UpdateDetails>>(File.ReadAllText(TempFile));
+            _downloadQueue = JsonSerializer.Deserialize<Queue<UpdateDetails>>(File.ReadAllText(TempFile));
             _parentPiD = int.Parse(passedArgs[1]);
             Load += OnLoad;
             Shown += OnShown;
@@ -82,8 +81,9 @@ namespace MRBUpdater
             }
         }
 
-        private void Updater_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private async void Updater_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            await Task.Delay(50);
             if (e.ProgressPercentage > 99)
             {
                 ctlProgressBar1.Value = e.ProgressPercentage - 1;
@@ -92,7 +92,6 @@ namespace MRBUpdater
             {
                 ctlProgressBar1.Value = e.ProgressPercentage;
             }
-            Thread.Sleep(50);
         }
 
         private async void Updater_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
@@ -112,20 +111,24 @@ namespace MRBUpdater
         {
             if (_installQueue.Any())
             {
-                _installDetails = _installQueue.Dequeue();
-                ctlProgressBar1.Value = 0;
-                lblStatus.Text = @"Installing Update(s)...";
-                _patchDecompressor = new PatchDecompressor();
-                _decompressedData = PatchDecompressor.DecompressData(_installDetails.File);
-                if (_decompressedData == null)
+                while (_installQueue.Count > 0)
                 {
-                    lblStatus.Text = @"Installation Aborted: Expected data was null.";
-                    return;
+                    _installDetails = _installQueue.Dequeue();
+                    ctlProgressBar1.Value = 0;
+                    lblStatus.Text = @"Installing Update(s)...";
+                    _patchDecompressor = new PatchDecompressor();
+                    _decompressedData = PatchDecompressor.DecompressData(_installDetails.File);
+                    if (_decompressedData == null)
+                    {
+                        lblStatus.Text = @"Installation Aborted: Expected data was null.";
+                        return;
+                    }
+
+                    _patchDecompressor.ProgressUpdate += PatchDecompressor_OnProgressUpdate;
+                    _patchDecompressor.ErrorUpdate += PatchDecompressor_OnErrorUpdate;
+                    _patchDecompressor.Completed += PatchDecompressor_OnCompleted;
+                    await _patchDecompressor.RecompileFileEntries(_installDetails.ExtractPath, _decompressedData);
                 }
-                _patchDecompressor.ProgressUpdate += PatchDecompressor_OnProgressUpdate;
-                _patchDecompressor.ErrorUpdate += PatchDecompressor_OnErrorUpdate;
-                _patchDecompressor.Completed += PatchDecompressor_OnCompleted;
-                await _patchDecompressor.RecompileFileEntries(_installDetails.ExtractPath, _decompressedData);
             }
 
             await Task.Delay(1500);
@@ -143,6 +146,7 @@ namespace MRBUpdater
         private void PatchDecompressor_OnErrorUpdate(object? sender, ErrorEventArgs e)
         {
             lblStatus.Text = @"Installation Aborted: Decompression Error.";
+            MessageBox.Show(e.GetException().Message);
         }
 
         private async void PatchDecompressor_OnProgressUpdate(object? sender, ProgressEventArgs e)
