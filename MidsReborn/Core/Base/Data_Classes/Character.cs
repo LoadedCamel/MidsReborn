@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -191,7 +192,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Statistics DisplayStats { get; }
 
         public int displayIndex { get; set; }
-        public List<IPower>? inherentPowers { get; set; }
+        public List<InherentDisplayItem> InherentDisplayList { get; set; }
         public int SlotsRemaining
         {
             get
@@ -536,7 +537,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-
         /// <summary>
         /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
         /// </summary>
@@ -574,10 +574,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
-            inherentPowers = new List<IPower>();
+            InherentDisplayList = new List<InherentDisplayItem>();
             PEnhancementsList = new List<string>();
 
             //CheckInherentSlots();
+            if (CurrentBuild?.Powers == null) return;
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null) continue;
@@ -590,6 +591,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     power.Power.HasProcSlotted = false;
                 }
+
                 switch (powName)
                 {
                     default:
@@ -598,14 +600,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             power.Power.Taken = true;
                         }
 
-                        if (!power.StatInclude)
+                        power.Power.Active = power.StatInclude switch
                         {
-                            power.Power.Active = false;
-                        }
-                        else if (power.StatInclude)
-                        {
-                            power.Power.Active = true;
-                        }
+                            false => false,
+                            true => true
+                        };
 
                         break;
                 }
@@ -613,22 +612,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
                     var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
-                    if (pSlotEnh != -1)
+                    if (pSlotEnh == -1) continue;
+                    var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                    if (!PEnhancementsList.Contains(enhancement.UID))
                     {
-                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        if (!PEnhancementsList.Contains(enhancement.UID))
-                        {
-                            PEnhancementsList.Add(enhancement.UID);
-                        }
+                        PEnhancementsList.Add(enhancement.UID);
                     }
                 }
 
-                if (power.Power.HasAttribModEffects())
+                if (!power.Power.HasAttribModEffects()) continue;
+                foreach (var effect in power.Power.Effects)
                 {
-                    foreach (var effect in power.Power.Effects)
-                    {
-                        effect.UpdateAttrib();
-                    }
+                    effect.UpdateAttrib();
                 }
             }
 
@@ -756,90 +751,44 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            foreach (var power in CurrentBuild.Powers)
+
+            var inherentPowersList = CurrentBuild?.Powers
+                .Where(p => p is { Chosen: false } && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
+                .ToList();
+            if (inherentPowersList != null)
             {
-                if (power?.Power == null) continue;
-                switch (power.Power.PowerName.ToUpper())
+                foreach (var inherent in inherentPowersList)
                 {
-                    case "BOXING":
-                        BoxingBuff = true;
-                        NotBoxingBuff = false;
-                        break;
-                    case "KICK":
-                        KickBuff = true;
-                        NotKickBuff = false;
-                        break;
-                    case "CROSS_PUNCH":
-                        CrossPunchBuff = true;
-                        NotCrossPunchBuff = false;
-                        break;
+                    var priority = (int)Enum.Parse(typeof(Enums.eInherentOrder), inherent.InherentType.ToString());
+                    InherentDisplayList.Add(new InherentDisplayItem(priority, inherent));
                 }
 
-                var powName = power.Power.PowerName;
-                //Console.WriteLine($@"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+                InherentDisplayList = new List<InherentDisplayItem>(InherentDisplayList.OrderBy(x => x.Priority));
+            }
 
-                if (!power.Chosen && CurrentBuild.PowerUsed(power.Power))
+            if (CurrentBuild == null) return;
+            {
+                foreach (var power in (CurrentBuild.Powers).Where(power => power?.Power != null))
                 {
-                    inherentPowers.Add(power.Power);
-                    switch (power.Power.InherentType)
+                    switch (power.Power.PowerName.ToUpper())
                     {
-                        case Enums.eGridType.Class:
-                            displayIndex = 0;
-                            power.Power.DisplayLocation = displayIndex;
+                        case "BOXING":
+                            BoxingBuff = true;
+                            NotBoxingBuff = false;
                             break;
-                        case Enums.eGridType.Inherent when powName.Equals("Brawl"):
-                            displayIndex = 1;
-                            power.Power.DisplayLocation = displayIndex;
+                        case "KICK":
+                            KickBuff = true;
+                            NotKickBuff = false;
                             break;
-                        case Enums.eGridType.Inherent when powName.Equals("Sprint"):
-                            displayIndex = 2;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Rest"):
-                            displayIndex = 3;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Swift"):
-                            displayIndex = 4;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Hurdle"):
-                            displayIndex = 5;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Health"):
-                            displayIndex = 6;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Stamina"):
-                            displayIndex = 7;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Step"):
-                            displayIndex = 8;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Recall"):
-                            displayIndex = 9;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Combat_Flight"):
-                            displayIndex = 8;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Energy_Flight"):
-                            displayIndex = 9;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        default:
-                            displayIndex = inherentPowers.Count - 1;
-                            if (displayIndex > 7 && displayIndex < 59)
-                            {
-                                power.Power.DisplayLocation = displayIndex;
-                                ++displayIndex;
-                            }
+                        case "CROSS_PUNCH":
+                            CrossPunchBuff = true;
+                            NotCrossPunchBuff = false;
                             break;
                     }
+
+                    if (CurrentBuild != null && (power.Chosen || !CurrentBuild.PowerUsed(power.Power))) continue;
+                    var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
+                    power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
                 }
             }
         }
@@ -847,7 +796,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void Validate()
         {
             CheckAncillaryPowerSet();
-            CurrentBuild.Validate();
+            CurrentBuild?.Validate();
             RefreshActiveSpecial();
         }
 

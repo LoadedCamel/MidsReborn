@@ -96,7 +96,6 @@ namespace Mids_Reborn.Core
             Accolade,
             Pet,
             Temp
-
         }
         public enum eAlphaOrder
         {
