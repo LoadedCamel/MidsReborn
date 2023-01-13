@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -568,7 +569,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
-            txtVisualLocation.ReadOnly = cbInherentType.SelectedIndex > 0;
             myPower.InherentType = (Enums.eGridType) cbInherentType.SelectedIndex;
         }
 
@@ -1454,11 +1454,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (chkSubInclude.CheckState == CheckState.Checked)
             {
                 cbInherentType.Enabled = true;
-            }
-
-            if (cbInherentType.SelectedIndex > 0)
-            {
-                txtVisualLocation.ReadOnly = true;
             }
 
             /*foreach (var boost in myPower.BoostsAllowed)
@@ -2678,6 +2673,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtVisualLocation_TextChanged(object sender, EventArgs e)
         {
+            Debug.WriteLine($"Updating: {Updating}, cbInherentType: {cbInherentType.SelectedIndex}");
+            
             if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
             var ret = float.TryParse(txtVisualLocation.Text, out var num);
@@ -2843,11 +2840,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (chkSubInclude.CheckState == CheckState.Checked)
             {
                 cbInherentType.Enabled = true;
-            }
-
-            if (cbInherentType.SelectedIndex > 0)
-            {
-                txtVisualLocation.ReadOnly = true;
             }
         }
     }
