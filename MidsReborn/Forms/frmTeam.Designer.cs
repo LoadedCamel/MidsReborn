@@ -65,8 +65,7 @@ namespace Mids_Reborn.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.udAny = new Mids_Reborn.Forms.EnhancedUpDown();
             this.label17 = new System.Windows.Forms.Label();
-            this.tbTotalTeam = new Syncfusion.Windows.Forms.Tools.IntegerTextBox();
-            this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tbTotalTeam = new System.Windows.Forms.TextBox();
             this.btnSave = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.btnCancel = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.tableLayoutPanel1.SuspendLayout();
@@ -86,9 +85,6 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.udController)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udBlaster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udAny)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTotalTeam)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).BeginInit();
-            this.gradientPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -671,37 +667,16 @@ namespace Mids_Reborn.Forms
             // 
             // tbTotalTeam
             // 
-            this.tbTotalTeam.BackGroundColor = System.Drawing.Color.Black;
-            this.tbTotalTeam.BeforeTouchSize = new System.Drawing.Size(19, 23);
-            this.tbTotalTeam.BorderColor = System.Drawing.Color.White;
             this.tbTotalTeam.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbTotalTeam.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tbTotalTeam.IntegerValue = ((long)(0));
             this.tbTotalTeam.Location = new System.Drawing.Point(172, 8);
             this.tbTotalTeam.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tbTotalTeam.Name = "tbTotalTeam";
-            this.tbTotalTeam.PositiveColor = System.Drawing.Color.WhiteSmoke;
             this.tbTotalTeam.ReadOnly = true;
-            this.tbTotalTeam.ReadOnlyBackColor = System.Drawing.Color.Black;
             this.tbTotalTeam.Size = new System.Drawing.Size(19, 23);
             this.tbTotalTeam.TabIndex = 3;
             this.tbTotalTeam.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbTotalTeam.ZeroColor = System.Drawing.Color.White;
-            // 
-            // gradientPanel1
-            // 
-            this.gradientPanel1.BorderColor = System.Drawing.Color.Transparent;
-            this.gradientPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.gradientPanel1.Controls.Add(this.btnSave);
-            this.gradientPanel1.Controls.Add(this.btnCancel);
-            this.gradientPanel1.Controls.Add(this.tbTotalTeam);
-            this.gradientPanel1.Controls.Add(this.tableLayoutPanel1);
-            this.gradientPanel1.Controls.Add(this.label17);
-            this.gradientPanel1.Location = new System.Drawing.Point(-1, -1);
-            this.gradientPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.gradientPanel1.Name = "gradientPanel1";
-            this.gradientPanel1.Size = new System.Drawing.Size(589, 341);
-            this.gradientPanel1.TabIndex = 4;
+            this.tbTotalTeam.Text = "0";
             // 
             // btnSave
             // 
@@ -759,13 +734,17 @@ namespace Mids_Reborn.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(587, 339);
-            this.Controls.Add(this.gradientPanel1);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FrmTeam";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Team Members Selection";
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.tbTotalTeam);
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.label17);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udWidow)).EndInit();
@@ -784,10 +763,6 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.udController)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udBlaster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udAny)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTotalTeam)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).EndInit();
-            this.gradientPanel1.ResumeLayout(false);
-            this.gradientPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -828,8 +803,7 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label17;
-        private Syncfusion.Windows.Forms.Tools.IntegerTextBox tbTotalTeam;
-        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel1;
+        private System.Windows.Forms.TextBox tbTotalTeam;
         private Controls.ImageButtonEx btnSave;
         private Controls.ImageButtonEx btnCancel;
     }
