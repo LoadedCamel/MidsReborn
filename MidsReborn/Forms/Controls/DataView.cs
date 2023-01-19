@@ -147,6 +147,45 @@ namespace Mids_Reborn.Forms.Controls
         public event Unlock_ClickEventHandler Unlock_Click;
         public event EntityDetailsEventHandler EntityDetails;
 
+        private List<int> GetSimilarEffects(IPower power, fxIdentifier fxIdentifier, float mag, Enums.eSpecialCase specialCase = Enums.eSpecialCase.None, bool enhancementEffect = false)
+        {
+            return fxIdentifier.EffectType switch
+            {
+                Enums.eEffectType.Enhancement when fxIdentifier.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ETModifies == fxIdentifier.ETModifies && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
+                    .Select(e => e.Key)
+                    .ToList(),
+
+                Enums.eEffectType.MezResist => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
+                    .Select(e => e.Key)
+                    .ToList(),
+
+                Enums.eEffectType.DamageBuff when specialCase == Enums.eSpecialCase.Defiance => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect)
+                    .Select(e => e.Key)
+                    .ToList(),
+
+                Enums.eEffectType.DamageBuff => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.SpecialCase != Enums.eSpecialCase.Defiance && e.Value.isEnhancementEffect == enhancementEffect)
+                    .Select(e => e.Key)
+                    .ToList(),
+
+                Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => power
+                    .Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
+                    .Select(e => e.Key)
+                    .ToList(),
+
+                _ => new List<int>()
+            };
+        }
+
         private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
             var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
@@ -708,7 +747,6 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             info_DataList.AddItem(FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
-
             info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
@@ -738,8 +776,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var rankedEffects = pEnh.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
-            var effectsTooltipsList = new List<string>();
-            var rankedEffectTypes = new List<KeyValuePair<Enums.eEffectType, Enums.eMez>>();
+            var groupedRankedEffects = new List<GroupedFx>();
+            var ignoredEffects = new List<int>();
             for (var id = 0; id < rankedEffects.Length; id++)
             {
                 if (rankedEffects[id] <= -1)
@@ -747,17 +785,25 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (pEnh.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Null
-                    or Enums.eEffectType.NullBool or Enums.eEffectType.ModifyAttrib)
+                if (ignoredEffects.Contains(rankedEffects[id]))
                 {
                     continue;
                 }
 
-                var rankedEffect = GetRankedEffect(rankedEffects, id);
-                // if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
-                //     continue;
+                if (pEnh.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Null
+                    or Enums.eEffectType.NullBool or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.MaxRunSpeed
+                    or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Damage
+                    or Enums.eEffectType.SetMode or Enums.eEffectType.Null or Enums.eEffectType.NullBool
+                    or Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.ExecutePower)
+                {
+                    continue;
+                }
 
-                if (!(pEnh.Effects[rankedEffects[id]].Probability > 0 & (MidsContext.Config?.Suppression & pEnh.Effects[rankedEffects[id]].Suppression) == Enums.eSuppress.None & pEnh.Effects[rankedEffects[id]].CanInclude()))
+                //var rankedEffect = GetRankedEffect(rankedEffects, id);
+
+                if (!(pEnh.Effects[rankedEffects[id]].Probability > 0 &
+                      (MidsContext.Config?.Suppression & pEnh.Effects[rankedEffects[id]].Suppression) ==
+                      Enums.eSuppress.None & pEnh.Effects[rankedEffects[id]].CanInclude()))
                 {
                     continue;
                 }
@@ -775,249 +821,243 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (pEnh.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed)
-                {
-                    continue;
-                }
-
                 if (pEnh.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE |
                     pEnh.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE)
                 {
                     continue;
                 }
 
-                var displayedGenericEffect = false;
-                var ignoredEffect = Math.Abs(pEnh.Effects[rankedEffects[id]].BuffedMag) < float.Epsilon;
-                if (pEnh.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
+                var similarFxIds = new List<int>();
+
+                switch (pEnh.Effects[rankedEffects[id]].EffectType)
                 {
-                    if (pEnh.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
-                    {
-                        switch (pEnh.Effects[rankedEffects[id]].EffectType)
+                    case Enums.eEffectType.DamageBuff:
+                        var isDefiance = pEnh.Effects[rankedEffects[id]].SpecialCase == Enums.eSpecialCase.Defiance &&
+                                         pEnh.Effects[rankedEffects[id]].ValidateConditional("Active", "Defiance") |
+                                         MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+
+
+                        similarFxIds = GetSimilarEffects(pEnh,
+                            new fxIdentifier
+                            {
+                                DamageType = Enums.eDamage.None, EffectType = Enums.eEffectType.DamageBuff,
+                                ETModifies = Enums.eEffectType.None, MezType = Enums.eMez.None
+                            }, pEnh.Effects[rankedEffects[id]].BuffedMag,
+                            isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None);
+
+                        ignoredEffects.AddRangeUnique(similarFxIds);
+
+                        groupedRankedEffects.Add(
+                            new GroupedFx(new fxIdentifier
+                                {
+                                    DamageType = Enums.eDamage.None,
+                                    EffectType = Enums.eEffectType.DamageBuff,
+                                    ETModifies = Enums.eEffectType.None,
+                                    MezType = Enums.eMez.None
+                                },
+                                pEnh.Effects[rankedEffects[id]].BuffedMag,
+                                isDefiance ? "Defiance" : $"{pEnh.Effects[rankedEffects[id]].EffectType}",
+                                similarFxIds,
+                                !isDefiance && pEnh.Effects[rankedEffects[id]].isEnhancementEffect,
+                                Enums.eSpecialCase.Defiance));
+
+                        break;
+
+                    case Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Elusivity:
+                    case Enums.eEffectType.MezResist:
+                    case Enums.eEffectType.Enhancement when pEnh.Effects[rankedEffects[id]].ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+                        similarFxIds = GetSimilarEffects(pEnh,
+                            new fxIdentifier
+                            {
+                                EffectType = pEnh.Effects[rankedEffects[id]].EffectType,
+                                ETModifies = pEnh.Effects[rankedEffects[id]].ETModifies,
+                                MezType = Enums.eMez.None,
+                                DamageType = Enums.eDamage.None
+                            },
+                            pEnh.Effects[rankedEffects[id]].BuffedMag,
+                            Enums.eSpecialCase.None,
+                            pEnh.Effects[rankedEffects[id]].isEnhancementEffect);
+                        
+                        ignoredEffects.AddRangeUnique(similarFxIds);
+
+                        groupedRankedEffects.Add(
+                            new GroupedFx(new fxIdentifier
+                                {
+                                    EffectType = pEnh.Effects[rankedEffects[id]].EffectType,
+                                    ETModifies = pEnh.Effects[rankedEffects[id]].ETModifies,
+                                    MezType = Enums.eMez.None,
+                                    DamageType = Enums.eDamage.None
+                                },
+                                pEnh.Effects[rankedEffects[id]].BuffedMag,
+                                pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Enhancement
+                                    ? $"{pEnh.Effects[rankedEffects[id]].EffectType}({pEnh.Effects[rankedEffects[id]].ETModifies})"
+                                    : $"{pEnh.Effects[rankedEffects[id]].EffectType}",
+                                similarFxIds,
+                                pEnh.Effects[rankedEffects[id]].isEnhancementEffect
+                            ));
+
+                        break;
+
+                    default:
+                        groupedRankedEffects.Add(new GroupedFx(pEnh.Effects[rankedEffects[id]], rankedEffects[id]));
+                        break;
+                }
+            }
+
+            foreach (var gre in groupedRankedEffects)
+            {
+                var greIndex = gre.GetRankedEffectIndex(rankedEffects, 0);
+                if (greIndex < 0) continue;
+
+                var rankedEffect = GetRankedEffect(rankedEffects, greIndex);
+                var effectType = gre.EffectType;
+                var effectSource = gre.GetEffectAt(pEnh);
+                //var statName = gre.GetStatName(pEnh);
+                //var tooltip = gre.GetTooltip(pEnh);
+
+                switch (effectType)
+                {
+                    case Enums.eEffectType.Recovery:
+                    case Enums.eEffectType.Endurance:
+                        rankedEffect.Name = $"{effectType}";
+                        var fxTarget = effectSource.ToWho switch
                         {
-                            case Enums.eEffectType.Damage:
-                            case Enums.eEffectType.SetMode:
-                            case Enums.eEffectType.Null:
-                            case Enums.eEffectType.NullBool:
-                            case Enums.eEffectType.GlobalChanceMod:
-                                ignoredEffect = true;
+                            Enums.eToWho.Self => "(Self)",
+                            Enums.eToWho.Target => "(Tgt)",
+                            _ => ""
+                        };
 
-                                continue;
+                        rankedEffect.Value = effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}% {fxTarget}" : $"{effectSource.BuffedMag:###0.##} {fxTarget}";
 
-                            case Enums.eEffectType.Recovery:
-                            case Enums.eEffectType.Endurance:
-                                rankedEffect.Name = $"{pEnh.Effects[rankedEffects[id]].EffectType}";
-                                var fxTarget = pEnh.Effects[rankedEffects[id]].ToWho switch
-                                {
-                                    Enums.eToWho.Self => "(Self)",
-                                    Enums.eToWho.Target => "(Tgt)",
-                                    _ => ""
-                                };
-                                
-                                rankedEffect.Value = pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
+                        break;
 
-                                break;
-                                
-                            case Enums.eEffectType.EntCreate when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
-                            {
-                                rankedEffect.Name = "Summon";
-                                if (pEnh.Effects[rankedEffects[id]].nSummon > -1)
-                                {
-                                    rankedEffect.Value = DatabaseAPI.Database.Entities[pEnh.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                }
-                                else
-                                {
-                                    rankedEffect.Value = pEnh.Effects[rankedEffects[id]].Summon;
-                                    rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
-                                }
+                    case Enums.eEffectType.EntCreate when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
+                        rankedEffect.Name = "Summon";
+                        rankedEffect.Value = effectSource.nSummon > -1
+                            ? DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName
+                            : Regex.Replace(effectSource.Summon, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
 
-                                break;
-                            }
-                            case Enums.eEffectType.GrantPower:
-                            {
-                                rankedEffect.Name = "Grant";
-                                if (pEnh.Effects[rankedEffects[id]].nSummon > -1)
-                                {
-                                    rankedEffect.Value = DatabaseAPI.Database.Power[pEnh.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                }
-
-                                break;
-                            }
-
-                            case Enums.eEffectType.CombatModShift:
-                            {
-                                rankedEffect.Name = "LvlShift";
-                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].Mag > 0 ? "+" : "")}{pEnh.Effects[rankedEffects[id]].Mag:##0.##}";
-
-                                break;
-                            }
-
-                            case Enums.eEffectType.RevokePower:
-                            {
-                                rankedEffect.Name = "Revoke";
-                                if (pEnh.Effects[rankedEffects[id]].nSummon > -1)
-                                {
-                                    rankedEffect.Value = DatabaseAPI.Database
-                                        .Entities[pEnh.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                }
-                                else
-                                {
-                                    rankedEffect.Value = pEnh.Effects[rankedEffects[id]].Summon;
-                                    rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
-                                }
-
-                                break;
-                            }
-
-                            case Enums.eEffectType.DamageBuff:
-                                var isDefiance = pEnh.Effects[rankedEffects[id]].SpecialCase == Enums.eSpecialCase.Defiance &&
-                                                 pEnh.Effects[rankedEffects[id]].ValidateConditional("Active", "Defiance") |
-                                                 MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
-                                rankedEffect.Name = isDefiance
-                                    ? "Defiance"
-                                    : ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType),
-                                        Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
-                                rankedEffect.SpecialTip = isDefiance
-                                    ? pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                                    : pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[rankedEffects[id]].EffectType);
-
-                                if (isDefiance & defianceFound)
-                                {
-                                    continue;
-                                }
-
-                                if (isDefiance)
-                                {
-                                    defianceFound = true;
-                                }
-
-                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
-                                {
-                                    continue;
-                                }
-
-                                break;
-
-                            case Enums.eEffectType.Resistance:
-                            case Enums.eEffectType.Defense:
-                            case Enums.eEffectType.Elusivity:
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType),
-                                    Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
-
-                                rankedEffect.SpecialTip = pEnh.BuildTooltipStringAllVectorsEffects(pEnh.Effects[rankedEffects[id]].EffectType);
-
-                                if (effectsTooltipsList.Contains(rankedEffect.SpecialTip) & rankedEffect.SpecialTip.Contains("All"))
-                                {
-                                    continue;
-                                }
-
-                                break;
-
-                            case Enums.eEffectType.PerceptionRadius:
-                                rankedEffect.Name = $"Pceptn({pEnh.Effects[rankedEffects[id]].ToWho})";
-                                rankedEffect.Value = $"{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? $"{pEnh.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}%" : $"{pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}")} ({Statistics.BasePerception * pEnh.Effects[rankedEffects[id]].BuffedMag:###0.##}ft)";
-                                
-                                break;
-
-                            //case Enums.eEffectType.ToHit:
-                            default:
-                                displayedGenericEffect = !pEnh.Effects[rankedEffects[id]].isEnhancementEffect;
-                                var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
-                                var magSumEnh = pEnh.Effects
-                                    .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                                 !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                                 e.PvMode == Enums.ePvX.Any) &
-                                                pEnh.Effects[rankedEffects[id]].ToWho == e.ToWho &
-                                                pEnh.Effects[rankedEffects[id]].EffectType == e.EffectType &
-                                                pEnh.Effects[rankedEffects[id]].MezType == e.MezType &
-                                                pEnh.Effects[rankedEffects[id]].ETModifies == e.ETModifies)
-                                    .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                                    .Sum();
-
-                                var magSumBase = pBase.Effects
-                                    .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                                 !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                                 e.PvMode == Enums.ePvX.Any) &
-                                                pEnh.Effects[rankedEffects[id]].ToWho == e.ToWho &
-                                                pEnh.Effects[rankedEffects[id]].EffectType == e.EffectType &
-                                                pEnh.Effects[rankedEffects[id]].MezType == e.MezType &
-                                                pEnh.Effects[rankedEffects[id]].ETModifies == e.ETModifies)
-                                    .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                                    .Sum();
-
-                                ignoredEffect = Math.Abs(magSumEnh) < float.Epsilon;
-
-                                if (ignoredEffect)
-                                {
-                                    continue;
-                                }
-
-                                rankedEffect.Value = $"{magSumEnh:####0.##}{(pEnh.Effects[rankedEffects[id]].DisplayPercentage ? "%" : "")}";
-                                rankedEffect.Value += pEnh.Effects[rankedEffects[id]].ToWho switch
-                                {
-                                    Enums.eToWho.Self => " (Self)",
-                                    Enums.eToWho.Target => " (Tgt)",
-                                    _ => ""
-                                };
-
-                                rankedEffect.AlternateColor = Math.Abs(magSumEnh - magSumBase) > float.Epsilon;
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType), Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
-                                rankedEffect.SpecialTip = string.Join("\r\n", pEnh.Effects
-                                    .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                                 !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                                 e.PvMode == Enums.ePvX.Any) &
-                                                Math.Abs(e.BuffedMag) > float.Epsilon &
-                                                pEnh.Effects[rankedEffects[id]].ToWho == e.ToWho &
-                                                pEnh.Effects[rankedEffects[id]].EffectType == e.EffectType &
-                                                pEnh.Effects[rankedEffects[id]].MezType == e.MezType &
-                                                pEnh.Effects[rankedEffects[id]].ETModifies == e.ETModifies)
-                                    .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
-
-                                break;
-
-                            /*default:
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(pEnh.Effects[rankedEffects[id]].EffectType),
-                                    Enums.GetEffectNameShort(pEnh.Effects[rankedEffects[id]].EffectType));
-                                rankedEffect.SpecialTip = pEnh.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
-                                
-                                break;*/
+                        break;
+                    case Enums.eEffectType.GrantPower:
+                        rankedEffect.Name = "Grant";
+                        if (effectSource.nSummon > -1)
+                        {
+                            rankedEffect.Value = DatabaseAPI.Database.Power[effectSource.nSummon].DisplayName;
+                            var mainEffectTip = effectSource.BuildEffectString(false, "", false, false, false, false, false, true);
+                            var subEffectsTip = string.Join("\r\n",
+                                DatabaseAPI.Database.Power[effectSource.nSummon].Effects
+                                    .Where(e => (e.PvMode == Enums.ePvX.Any ||
+                                                e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE ||
+                                                e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) & (e.ActiveConditionals.Count <= 0 || e.ValidateConditional()))
+                                    .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)
+                                            .Replace("\r\n", "\n").Replace("\n", " -- ").Replace("  ", " ")));
+                            rankedEffect.SpecialTip = $"{mainEffectTip}\r\n----------\r\n{subEffectsTip}";
                         }
-                    }
-                    else
-                    {
-                        rankedEffect.Name = ShortStr(
-                            Enums.GetMezName((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType),
-                            Enums.GetMezNameShort((Enums.eMezShort)pEnh.Effects[rankedEffects[id]].MezType));
-                    }
 
-                    effectsTooltipsList.Add(rankedEffect.SpecialTip);
-                }
+                        break;
 
-                // Ignore fully absorbed entities
-                if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.EntCreate)
-                {
-                    if (pBase.AbsorbSummonEffects & pBase.AbsorbSummonAttributes)
-                    {
-                        continue;
-                    }
-                }
+                    case Enums.eEffectType.CombatModShift:
+                        rankedEffect.Name = "LvlShift";
+                        rankedEffect.Value = $"{(effectSource.Mag > 0 ? "+" : "")}{effectSource.Mag:##0.##}";
 
-                if (ignoredEffect)
-                {
-                    continue;
-                }
+                        break;
 
-                if (displayedGenericEffect)
-                {
-                    if (rankedEffectTypes.Contains(new KeyValuePair<Enums.eEffectType, Enums.eMez>(pEnh.Effects[rankedEffects[id]].EffectType, pEnh.Effects[rankedEffects[id]].MezType)))
-                    {
-                        continue;
-                    }
+                    case Enums.eEffectType.RevokePower:
+                        rankedEffect.Name = "Revoke";
+                        if (effectSource.nSummon > -1)
+                        {
+                            rankedEffect.Value = DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName;
+                        }
+                        else
+                        {
+                            rankedEffect.Value = effectSource.Summon;
+                            rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
+                        }
 
-                    rankedEffectTypes.Add(new KeyValuePair<Enums.eEffectType, Enums.eMez>(pEnh.Effects[rankedEffects[id]].EffectType, pEnh.Effects[rankedEffects[id]].MezType));
+                        break;
+
+                    case Enums.eEffectType.DamageBuff:
+                        var isDefiance = effectSource.SpecialCase == Enums.eSpecialCase.Defiance &&
+                                         effectSource.ValidateConditional("Active", "Defiance") |
+                                         MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+                        rankedEffect.Name = isDefiance
+                            ? "Defiance"
+                            : ShortStr(Enums.GetEffectName(effectSource.EffectType),
+                                Enums.GetEffectNameShort(effectSource.EffectType));
+                        rankedEffect.SpecialTip = isDefiance
+                            ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
+                            : pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+
+                        break;
+
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Elusivity:
+                    case Enums.eEffectType.MezResist:
+                    case Enums.eEffectType.Enhancement when effectSource.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+                        rankedEffect.Name = ShortStr(Enums.GetEffectName(effectSource.EffectType), Enums.GetEffectNameShort(effectSource.EffectType));
+                        rankedEffect.SpecialTip = pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+
+                        break;
+
+                    case Enums.eEffectType.PerceptionRadius:
+                        rankedEffect.Name = $"Pceptn({effectSource.ToWho})";
+                        rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}%" : $"{effectSource.BuffedMag:###0.##}")} ({Statistics.BasePerception * effectSource.BuffedMag:###0.##}ft)";
+
+                        break;
+
+                    default:
+                        var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
+                        var magSumEnh = pEnh.Effects
+                            .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
+                                         !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
+                                         e.PvMode == Enums.ePvX.Any) &
+                                        effectSource.ToWho == e.ToWho &
+                                        effectSource.EffectType == e.EffectType &
+                                        effectSource.MezType == e.MezType &
+                                        effectSource.ETModifies == e.ETModifies)
+                            .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
+                            .Sum();
+
+                        var magSumBase = pBase.Effects
+                            .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
+                                         !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
+                                         e.PvMode == Enums.ePvX.Any) &
+                                        effectSource.ToWho == e.ToWho &
+                                        effectSource.EffectType == e.EffectType &
+                                        effectSource.MezType == e.MezType &
+                                        effectSource.ETModifies == e.ETModifies)
+                            .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
+                            .Sum();
+
+                        rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}";
+                        rankedEffect.Value += effectSource.ToWho switch
+                        {
+                            Enums.eToWho.Self => " (Self)",
+                            Enums.eToWho.Target => " (Tgt)",
+                            _ => ""
+                        };
+
+                        rankedEffect.AlternateColor = Math.Abs(magSumEnh - magSumBase) > float.Epsilon;
+                        rankedEffect.Name = ShortStr(Enums.GetEffectName(effectSource.EffectType), Enums.GetEffectNameShort(effectSource.EffectType));
+                        rankedEffect.SpecialTip = string.Join("\r\n", pEnh.Effects
+                            .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
+                                         !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
+                                         e.PvMode == Enums.ePvX.Any) &
+                                        Math.Abs(e.BuffedMag) > float.Epsilon &
+                                        effectSource.ToWho == e.ToWho &
+                                        effectSource.EffectType == e.EffectType &
+                                        effectSource.MezType == e.MezType &
+                                        effectSource.ETModifies == e.ETModifies)
+                            .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+
+                        break;
                 }
 
                 info_DataList.AddItem(rankedEffect);
-                if (pEnh.Effects[rankedEffects[id]].isEnhancementEffect)
+                if (effectSource.isEnhancementEffect)
                 {
                     info_DataList.SetUnique();
                 }
@@ -2527,7 +2567,6 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             iList.ValueWidth = 55;
-            int num1;
             if (!(sFxJump.Present | sFxFlyBase.Present | sFxSpeedFlyingBase.Present | sFxJumpHeightBase.Present | sFxSpeedJumpingBase.Present |
                   sFxSpeedRunningBase.Present | sFxSpeedFlyingMaxBase2.Present | sFxSpeedJumpingMaxBase2.Present | sFxSpeedRunningMaxBase2.Present))
             {

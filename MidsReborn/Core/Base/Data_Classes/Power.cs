@@ -3024,7 +3024,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         /// 6.68% Defense (All but Toxic) to Self for 0.75 seconds (when Buff_Def, in PvP)
         ///   Effect does not stack from same caster
         /// </example>
-        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false)
+        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false, bool activeOnly = true)
         {
             if (string.IsNullOrEmpty(groupName))
             {
@@ -3075,13 +3075,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             };
 
+            var effects = activeOnly
+                ? Effects
+                    .Where(e => e.PvMode == Enums.ePvX.Any | (e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE) | (e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE))
+                    .ToArray()
+                : Effects;
             var effectsList = string.Empty;
             var pvModes = new List<Enums.ePvX> { Enums.ePvX.Any, Enums.ePvX.PvE, Enums.ePvX.PvP };
 
             foreach (var pvMode in pvModes)
             {
                 // Select identifiers from effects
-                var effectIdentifiers2 = Effects
+                var effectIdentifiers2 = effects
                     .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
                     .Select(e => e.GenerateIdentifier())
                     .ToList();
@@ -3102,7 +3107,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 foreach (var effectId in effectIdentifiers)
                 {
                     // Select distinct damage vectors from effects of the specified kind
-                    var effectsVectors = Effects
+                    var effectsVectors = effects
                         .Where(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
                         .Select(e => e.DamageType)
                         .Distinct()
@@ -3112,7 +3117,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var effectsInMode = string.Empty;
                     if (!damageVectors.Except(effectsVectors).Any())
                     {
-                        var effectsInModeBase = Effects
+                        var effectsInModeBase = effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
                             
@@ -3126,7 +3131,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             : string.Join(", ", effectsVectors);
 
                         // Pick all matching effects
-                        var effectsInModeBase = Effects
+                        var effectsInModeBase = effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
                             
