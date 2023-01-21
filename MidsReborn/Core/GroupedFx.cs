@@ -175,6 +175,7 @@ namespace Mids_Reborn.Core
 
             var fxDamageTypes = fx.Select(e => e.DamageType).ToList();
             var fxMezTypes = fx.Select(e => e.MezType).ToList();
+            var fxEffectTypes = fx.Select(e => e.ETModifies).ToList();
             var groupedVector = FxIdentifier.EffectType switch
             {
                 Enums.eEffectType.Defense or Enums.eEffectType.Elusivity => fxDamageTypes.ContainsAll(allDefenses)
@@ -207,6 +208,8 @@ namespace Mids_Reborn.Core
                         ? "Multi"
                         : $"{fxDamageTypes[0]}",
 
+                Enums.eEffectType.ResEffect => fxEffectTypes.Count > 1 ? "Multi" : $"{fxEffectTypes[0]}",
+                
                 _ => ""
             };
 
@@ -220,6 +223,74 @@ namespace Mids_Reborn.Core
         /// <returns>Build effect string from each effect, then concatenate into a single string (one effect per line)</returns>
         public string GetTooltip(IPower power)
         {
+            var vectors = "";
+            
+            if (GetStatName(power).Contains("(All)"))
+            {
+                vectors = "All";
+            }
+            else
+            {
+                var uniqueVectors = new List<string>();
+                var vectorsChunks = power.Effects[IncludedEffects[0]].EffectType switch
+                {
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist => IncludedEffects
+                        .Select(e => power.Effects[e])
+                        .Select(e => $"{e.MezType}") // Cannot use .Cast<string>()
+                        .ToList(),
+
+                    Enums.eEffectType.Enhancement when
+                        power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
+                            or Enums.eEffectType.MezResist => IncludedEffects
+                            .Select(e => power.Effects[e])
+                            .Select(e => $"{e.MezType}")
+                            .ToList(),
+
+                    Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
+                        or Enums.eEffectType.DamageBuff => IncludedEffects
+                            .Select(e => power.Effects[e])
+                            .Select(e => $"{e.DamageType}")
+                            .ToList(),
+
+                    Enums.eEffectType.ResEffect => IncludedEffects
+                        .Select(e => power.Effects[e])
+                        .Select(e => $"{e.ETModifies}")
+                        .ToList(),
+
+                    _ => new List<string>()
+                };
+
+                uniqueVectors.AddRangeUnique(vectorsChunks);
+                vectors = string.Join(", ", uniqueVectors);
+            }
+
+            // Change stat name inside effect string with list of vectors
+            var baseEffectString = power.Effects[IncludedEffects[0]].BuildEffectString(false, "", false, false, false, false, false, true);
+
+            return power.Effects[IncludedEffects[0]].EffectType switch
+            {
+                Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                
+                Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
+                    or Enums.eEffectType.MezResist => baseEffectString.Replace(
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                
+                Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity
+                    or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
+                        $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType})",
+                        $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                
+                Enums.eEffectType.ResEffect => baseEffectString.Replace(
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].ETModifies})",
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                
+                _ => baseEffectString
+            };
+
+            /*
             var fx = power.Effects
                 .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                 .Where(e => IncludedEffects.Contains(e.Key))
@@ -227,6 +298,7 @@ namespace Mids_Reborn.Core
                 .ToList();
 
             return string.Join("\r\n", fx.Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)));
+            */
         }
     }
 }

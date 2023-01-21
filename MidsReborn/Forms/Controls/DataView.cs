@@ -799,6 +799,12 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
+                if (pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.ResEffect &
+                    pEnh.Effects[rankedEffects[id]].ETModifies is Enums.eEffectType.Null or Enums.eEffectType.NullBool)
+                {
+                    continue;
+                }
+
                 //var rankedEffect = GetRankedEffect(rankedEffects, id);
 
                 if (!(pEnh.Effects[rankedEffects[id]].Probability > 0 &
@@ -867,6 +873,7 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Resistance:
                     case Enums.eEffectType.Elusivity:
                     case Enums.eEffectType.MezResist:
+                    case Enums.eEffectType.ResEffect:
                     case Enums.eEffectType.Enhancement when pEnh.Effects[rankedEffects[id]].ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
                         similarFxIds = GetSimilarEffects(pEnh,
                             new fxIdentifier
@@ -931,6 +938,11 @@ namespace Mids_Reborn.Forms.Controls
 
                         rankedEffect.Value = effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}% {fxTarget}" : $"{effectSource.BuffedMag:###0.##} {fxTarget}";
 
+                        if (effectSource.EffectType == Enums.eEffectType.Endurance)
+                        {
+                            rankedEffect.SpecialTip = effectSource.BuildEffectString(false, "", false, false, false, false, false, true);
+                        }
+
                         break;
 
                     case Enums.eEffectType.EntCreate when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
@@ -966,15 +978,9 @@ namespace Mids_Reborn.Forms.Controls
 
                     case Enums.eEffectType.RevokePower:
                         rankedEffect.Name = "Revoke";
-                        if (effectSource.nSummon > -1)
-                        {
-                            rankedEffect.Value = DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName;
-                        }
-                        else
-                        {
-                            rankedEffect.Value = effectSource.Summon;
-                            rankedEffect.Value = Regex.Replace(rankedEffect.Value, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
-                        }
+                        rankedEffect.Value = effectSource.nSummon > -1
+                            ? DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName
+                            : Regex.Replace(effectSource.Summon, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
 
                         break;
 
@@ -988,7 +994,7 @@ namespace Mids_Reborn.Forms.Controls
                                 Enums.GetEffectNameShort(effectSource.EffectType));
                         rankedEffect.SpecialTip = isDefiance
                             ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                            : pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+                            : gre.GetTooltip(pEnh); // pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
 
                         break;
 
@@ -997,8 +1003,9 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Elusivity:
                     case Enums.eEffectType.MezResist:
                     case Enums.eEffectType.Enhancement when effectSource.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
-                        rankedEffect.Name = ShortStr(Enums.GetEffectName(effectSource.EffectType), Enums.GetEffectNameShort(effectSource.EffectType));
-                        rankedEffect.SpecialTip = pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+                        rankedEffect.Name = ShortStr(Enums.GetEffectName(effectSource.EffectType),
+                            Enums.GetEffectNameShort(effectSource.EffectType));
+                        rankedEffect.SpecialTip = gre.GetTooltip(pEnh);
 
                         break;
 
