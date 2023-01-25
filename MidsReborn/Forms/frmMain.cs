@@ -166,7 +166,6 @@ namespace Mids_Reborn.Forms
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
             dvAnchored.EntityDetails += dvAnchored_EntityDetails;
-
             Icon = Resources.MRB_Icon_Concept;
         }
 
@@ -843,10 +842,7 @@ namespace Mids_Reborn.Forms
                 frmTotalsV2.SetTitle(fTotals2);
         }
 
-        private static void cbDrawItem(
-            ComboBoxT<string> target,
-            Enums.ePowerSetType SetType,
-            DrawItemEventArgs e)
+        private static void cbDrawItem(ComboBoxT<string> target, Enums.ePowerSetType SetType, DrawItemEventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
@@ -864,9 +860,13 @@ namespace Mids_Reborn.Forms
                 if ((e.State & DrawItemState.ComboBoxEdit) > DrawItemState.None)
                 {
                     if (e.Graphics.MeasureString(target[e.Index], e.Font).Width <= e.Bounds.Width - 10)
+                    {
                         e.Graphics.DrawImage(I9Gfx.Powersets.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
+                    }
                     else
+                    {
                         destRect.Width = 0.0f;
+                    }
                 }
                 else
                 {
@@ -1556,10 +1556,10 @@ namespace Mids_Reborn.Forms
         {
             if (drawing == null) return;
             var prevDrawingWidth = pnlGFX.Width;
-            var clientWidth = ClientSize.Width - pnlGFXFlow.Left;
-            var clientHeight = ClientSize.Height - pnlGFXFlow.Top;
-            pnlGFXFlow.Width = clientWidth;
-            pnlGFXFlow.Height = clientHeight;
+            // var clientWidth = ClientRectangle.Width - pnlGFXFlow.Left;
+            // var clientHeight = ClientRectangle.Height - pnlGFXFlow.Top;
+            // pnlGFXFlow.Width = clientWidth;
+            // pnlGFXFlow.Height = clientHeight;
             var drawingArea = drawing.GetDrawingArea();
             var drawingWidth = pnlGFXFlow.Width - 30;
             var prevScale = prevDrawingWidth / (double)drawingArea.Width;
@@ -1581,11 +1581,10 @@ namespace Mids_Reborn.Forms
             }
 
             drawing.bxBuffer.Size = pnlGFX.Size;
-            Control pnlGfx = pnlGFX;
-            drawing.ReInit(pnlGfx);
-            pnlGFX = (pnlGFX)pnlGfx;
+            drawing.ReInit(pnlGFX);
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
-            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
+            //drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
+            drawing.SetScaling(pnlGFX.Size);
             ReArrange(false);
             NoResizeEvent = true;
             DoRedraw();
@@ -2342,8 +2341,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
 
+            ResizeGfxPanels();
             UpdateControls();
             DoRedraw();
+        }
+
+        private void ResizeGfxPanels()
+        {
+            pnlGFXFlow.Width = ClientRectangle.Width - pnlGFXFlow.Left;
+            pnlGFX.Width = pnlGFXFlow.Width - 30;
+            // DoResize();
+            // DoRedraw();
         }
 
         internal void DoCalcOptUpdates()
@@ -5052,7 +5060,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Config.Columns = columns;
             drawing.Columns = columns;
             DoResize();
-            SetFormWidth();
+            //SetFormWidth();
             DoRedraw();
             pnlGFXFlow.AutoScroll = false;
             pnlGFXFlow.HorizontalScroll.Enabled = false;

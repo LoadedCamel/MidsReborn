@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -7,65 +7,69 @@ namespace Mids_Reborn.Core.Base.Display
 {
     public class ExtendedBitmap : IDisposable, ICloneable
     {
-        private Bitmap _bits;
+        private Bitmap? _bits;
         private bool _isDisposed;
-
-        private bool _isInitialised;
+        private bool _isInitialized;
         private bool _isNew;
 
-        private Graphics _surface;
-        private Bitmap bitmap;
+        private Graphics? _surface;
+        private PropertyCache? _cache;
 
-        protected PropertyCache Cache;
-
-        private ExtendedBitmap()
-
+        public ExtendedBitmap()
         {
-            Cache = new PropertyCache();
+            _cache = new PropertyCache();
             _isNew = true;
-            _isInitialised = false;
+            _isInitialized = false;
         }
 
         public ExtendedBitmap(Size imageSize)
         {
-            Cache = new PropertyCache
+            _cache = new PropertyCache
             {
                 Size = imageSize
             };
-            Initialise();
+            Initialize();
         }
 
-        public ExtendedBitmap(int x, int y)
+        public ExtendedBitmap(int width, int height)
         {
-            Cache = new PropertyCache
+            _cache = new PropertyCache
             {
-                Size = new Size(x, y)
+                Size = new Size(width, height)
             };
-            Initialise();
+            Initialize();
         }
 
-        public ExtendedBitmap(string fileName)
+        public ExtendedBitmap(string file)
         {
-            Cache = new PropertyCache();
-            Initialise(fileName);
+            _cache = new PropertyCache();
+            Initialize(file);
         }
 
-        public ExtendedBitmap(Bitmap bitmap)
+        public ExtendedBitmap(Bitmap bitmap) => _bits = bitmap;
+
+        public ExtendedBitmap(Image image)
         {
-            this.bitmap = bitmap;
+            _bits = new Bitmap(image);
         }
 
-        public Graphics Graphics
+        public ExtendedBitmap(Stream stream)
+        {
+            _cache = new PropertyCache();
+            Initialize(stream);
+        }
+
+        public Graphics? Graphics
         {
             get
             {
                 Graphics graphics;
-                if (_isInitialised)
+                if (_isInitialized)
                 {
                     _isNew = false;
                     graphics = _surface;
                 }
-                else if (Initialise())
+                else if (Initialize())
                 {
                     _isNew = false;
                     graphics = _surface;
@@ -74,91 +78,100 @@ namespace Mids_Reborn.Core.Base.Display
                 {
                     graphics = null;
                 }
-
                 return graphics;
             }
         }
 
-        public Bitmap Bitmap => !_isInitialised ? Initialise() ? _bits : null : _bits;
-
-        private bool CanInitialise
-
+        private bool CanInitialize
         {
             get
             {
-                bool flag;
                 if (_isDisposed)
                 {
-                    flag = false;
-                }
-                else if ((Cache.Size.Width > 0) & (Cache.Size.Height > 0))
-                {
-                    flag = true;
-                }
-                else if ((Cache.Bounds.Width > 0) & (Cache.Bounds.Height > 0))
-                {
-                    Cache.Size.Width = Cache.Bounds.Width;
-                    Cache.Size.Height = Cache.Bounds.Height;
-                    flag = true;
-                }
-                else
-                {
-                    flag = false;
+                    return false;
                 }
 
-                return flag;
+                if ((_cache!.Size.Width > 0) & (_cache.Size.Height > 0))
+                {
+                    return true;
+                }
+
+                if (!((_cache.Bounds.Width > 0) & (_cache.Bounds.Height > 0))) return false;
+                _cache.Size.Width = _cache.Bounds.Width;
+                _cache.Size.Height = _cache.Bounds.Height;
+                return true;
             }
         }
 
-        public Size Size
-        {
-            get => _isInitialised ? Cache.Size : new Size();
-            set
-            {
-                if (value.Width == Cache.Size.Width && value.Height == Cache.Size.Height)
-                    return;
-                Cache.Size = value;
-                Initialise();
-            }
-        }
+        public Bitmap? Bitmap => !_isInitialized ? Initialize() ? _bits : null : _bits; 
 
         private Region Clip
-
         {
-            get => _isInitialised ? Cache.Clip : new Region();
+            get => (_isInitialized ? _cache!.Clip : new Region())!;
             set
             {
-                if (!_isInitialised)
-                    return;
-                _surface.Clip = value;
-                Cache.Update(ref _surface);
+                if (!_isInitialized) return;
+                if (_surface != null)
+                {
+                    _surface.Clip = value;
+                    _cache?.Update(ref _surface);
+                }
                 _isNew = false;
             }
         }
 
-        public Rectangle ClipRect => _isInitialised ? Cache.ClipRect : new Rectangle();
+        public Rectangle ClipRect => _isInitialized ? _cache!.ClipRect : new Rectangle();
 
-        public object Clone()
+        public Size Size
         {
-            object obj;
-            if (!_isInitialised)
+            get => _isInitialized ? _cache!.Size : new Size();
+            set
             {
-                obj = new ExtendedBitmap();
+                if (value.Width == _cache!.Size.Width && value.Height == _cache.Size.Height) return;
+                _cache.Size = value;
+                Initialize();
             }
-            else
-            {
-                var extendedBitmap = new ExtendedBitmap(Size)
-                {
-                    Cache = Cache
-                };
-                extendedBitmap._surface.DrawImageUnscaled(_bits, new Point(0, 0));
-                extendedBitmap.Clip = Clip;
-                extendedBitmap._isInitialised = _isInitialised;
-                extendedBitmap._isNew = _isNew;
-                obj = extendedBitmap;
-            }
+        }
 
-            return obj;
+        private bool Initialize()
+        {
+            if (!CanInitialize) return false;
+            _surface?.Dispose();
+            _bits?.Dispose();
+            _bits = new Bitmap(_cache!.Size.Width, _cache.Size.Height, _cache.BitDepth);
+            _surface = Graphics.FromImage(_bits);
+            _cache.Update(ref _bits);
+            _surface.Clip = new Region(_cache.Bounds);
+            _cache.Update(ref _surface);
+            _isNew = true;
+            _isInitialized = true;
+            return true;
+        }
+
+        private void Initialize(string file)
+        {
+            _surface?.Dispose();
+            _bits?.Dispose();
+            _bits = new Bitmap(file);
+            _surface = Graphics.FromImage(_bits);
+            _cache?.Update(ref _bits);
+            _surface.Clip = new Region(_cache!.Bounds);
+            _cache.Update(ref _surface);
+            _isNew = true;
+            _isInitialized = true;
+        }
+
+        private void Initialize(Stream stream)
+        {
+            _surface?.Dispose();
+            _bits?.Dispose();
+            _bits = new Bitmap(stream);
+            _surface = Graphics.FromImage(_bits);
+            _cache?.Update(ref _bits);
+            _surface.Clip = new Region(_cache!.Bounds);
+            _cache.Update(ref _surface);
+            _isNew = true;
+            _isInitialized = true;
         }
 
         public void Dispose()
@@ -169,77 +182,48 @@ namespace Mids_Reborn.Core.Base.Display
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _isDisposed)
-                return;
+            if (!disposing || _isDisposed) return;
             _isNew = false;
-            _isInitialised = false;
+            _isInitialized = false;
             _surface?.Dispose();
             _bits?.Dispose();
-            Cache.Clip?.Dispose();
+            _cache?.Clip?.Dispose();
             _isDisposed = true;
         }
 
-        private bool Initialise()
-
+        public object Clone()
         {
-            bool flag;
-            if (!CanInitialise)
+            object obj;
+            if (!_isInitialized)
             {
-                flag = false;
+                obj = new ExtendedBitmap();
             }
             else
             {
-                _surface?.Dispose();
-                _bits?.Dispose();
-                _bits = new Bitmap(Cache.Size.Width, Cache.Size.Height, Cache.BitDepth);
-                _surface = Graphics.FromImage(_bits);
-                Cache.Update(ref _bits);
-                _surface.Clip = new Region(Cache.Bounds);
-                Cache.Update(ref _surface);
-                _isNew = true;
-                _isInitialised = true;
-                flag = true;
-            }
-
-            return flag;
-        }
-
-        private void Initialise(string fileName)
-
-        {
-            _surface?.Dispose();
-            _bits?.Dispose();
-            if (!File.Exists(fileName))
-            {
-                Cache = new PropertyCache
+                var bitmapExt = new ExtendedBitmap(Size)
                 {
-                    Size = new Size(32, 32)
+                    _cache = _cache
                 };
-                Initialise();
-            }
-            else
-            {
-                using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
-                {
-                    _bits = new Bitmap(ms);
-                    _surface = Graphics.FromImage(_bits);
-                }
+                if (_bits == null) return new ExtendedBitmap();
+                bitmapExt._surface?.DrawImageUnscaled(_bits, new Point(0, 0));
+                bitmapExt.Clip = Clip;
+                bitmapExt._isInitialized = _isInitialized;
+                bitmapExt._isNew = _isNew;
+                obj = bitmapExt;
 
-                Cache.Update(ref _bits);
-                _surface.Clip = new Region(Cache.Bounds);
-                Cache.Update(ref _surface);
-                _isNew = true;
-                _isInitialised = true;
             }
+
+            return obj;
+
         }
 
-        protected class PropertyCache
+        private class PropertyCache
         {
             private Point _location;
-            public PixelFormat BitDepth = PixelFormat.Format32bppArgb;
 
+            public PixelFormat BitDepth = PixelFormat.Format32bppArgb;
             public Rectangle Bounds;
-            public Region Clip;
+            public Region? Clip;
             public Rectangle ClipRect;
             public Size Size;
 
@@ -259,20 +243,19 @@ namespace Mids_Reborn.Core.Base.Display
             }
 
             private static Rectangle RectConvert(RectangleF iRect)
-
             {
                 return new Rectangle(
-                    (double) iRect.X <= 2147483648.0
-                        ? (double) iRect.X >= (double) int.MinValue ? Convert.ToInt32(iRect.X) : int.MinValue
+                    iRect.X <= 2147483648.0
+                        ? iRect.X >= (double) int.MinValue ? Convert.ToInt32(iRect.X) : int.MinValue
                         : int.MaxValue,
-                    (double) iRect.Y <= 2147483648.0
-                        ? (double) iRect.Y >= (double) int.MinValue ? Convert.ToInt32(iRect.Y) : int.MinValue
+                    iRect.Y <= 2147483648.0
+                        ? iRect.Y >= (double) int.MinValue ? Convert.ToInt32(iRect.Y) : int.MinValue
                         : int.MaxValue,
-                    (double) iRect.Width <= 2147483648.0
-                        ? (double) iRect.Width >= (double) int.MinValue ? Convert.ToInt32(iRect.Width) : int.MinValue
+                    iRect.Width <= 2147483648.0
+                        ? iRect.Width >= (double) int.MinValue ? Convert.ToInt32(iRect.Width) : int.MinValue
                         : int.MaxValue,
-                    (double) iRect.Height <= 2147483648.0
-                        ? (double) iRect.Height >= (double) int.MinValue ? Convert.ToInt32(iRect.Height) : int.MinValue
+                    iRect.Height <= 2147483648.0
+                        ? iRect.Height >= (double) int.MinValue ? Convert.ToInt32(iRect.Height) : int.MinValue
                         : int.MaxValue);
             }
         }

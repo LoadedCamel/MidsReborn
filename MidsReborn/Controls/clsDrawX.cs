@@ -139,31 +139,26 @@ namespace Mids_Reborn.Controls
             bxPower = new List<ExtendedBitmap>();
             checked
             {
-                var filePath = Path.Combine(AppContext.BaseDirectory, I9Gfx.ImagePath());
-                var directoryInfo = new DirectoryInfo(filePath);
-                foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
+                // var filePath = Path.Combine(AppContext.BaseDirectory, I9Gfx.ImagePath());
+                // var directoryInfo = new DirectoryInfo(filePath);
+                // foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
+                // {
+                //     bxPower.Add(new ExtendedBitmap($"{file.FullName}"));
+                // }
+
+                var buttonImages = I9Gfx.LoadButtons().GetAwaiter().GetResult();
+                foreach (var buttonImage in buttonImages)
                 {
-                    bxPower.Add(new ExtendedBitmap($"{file.FullName}"));
+                    bxPower.Add(new ExtendedBitmap(buttonImage));
                 }
 
                 ColorSwitch();
                 InitColumns = MidsContext.Config.Columns;
                 SzPower = bxPower[0].Size;
-                foreach (var pg in bxPower)
-                {
-                    pg.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    pg.Graphics.InterpolationMode = InterpolationMode.Bicubic;
-                    pg.Graphics.CompositingMode = CompositingMode.SourceOver;
-                    pg.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    pg.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    pg.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                    pg.Graphics.PageUnit = GraphicsUnit.Pixel;
-                }
                 szSlot = new Size(30, 30);
                 // szBuffer = GetMaxDrawingArea();
                 szBuffer = GetRequiredDrawingArea();
-                var size = new Size(szBuffer.Width, szBuffer.Height);
-                bxBuffer = new ExtendedBitmap(size);
+                bxBuffer = new ExtendedBitmap(szBuffer.Width, szBuffer.Height);
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -172,7 +167,8 @@ namespace Mids_Reborn.Controls
                 bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
                 bxBuffer.Graphics.PageUnit = GraphicsUnit.Pixel;
                 szBuffer = GetRequiredDrawingArea();
-                bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
+                bxNewSlot = new ExtendedBitmap(I9Gfx.LoadNewSlot().GetAwaiter().GetResult());
+                //bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
                 gTarget = iTarget.CreateGraphics();
                 gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -192,7 +188,7 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null && MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
+        public bool EpicColumns => MidsContext.Character is { Archetype.ClassType: Enums.eClassType.HeroEpic };
 
         public int Columns
         {
@@ -207,7 +203,7 @@ namespace Mids_Reborn.Controls
 
         private int InitColumns
         {
-            set
+            init
             {
                 if (value == vcCols)
                     return;
