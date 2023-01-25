@@ -1556,10 +1556,10 @@ namespace Mids_Reborn.Forms
         {
             if (drawing == null) return;
             var prevDrawingWidth = pnlGFX.Width;
-            // var clientWidth = ClientRectangle.Width - pnlGFXFlow.Left;
-            // var clientHeight = ClientRectangle.Height - pnlGFXFlow.Top;
-            // pnlGFXFlow.Width = clientWidth;
-            // pnlGFXFlow.Height = clientHeight;
+            var clientWidth = ClientRectangle.Width - pnlGFXFlow.Left;
+            var clientHeight = ClientRectangle.Height - pnlGFXFlow.Top;
+            pnlGFXFlow.Width = clientWidth;
+            pnlGFXFlow.Height = clientHeight;
             var drawingArea = drawing.GetDrawingArea();
             var drawingWidth = pnlGFXFlow.Width - 30;
             var prevScale = prevDrawingWidth / (double)drawingArea.Width;
@@ -1583,7 +1583,7 @@ namespace Mids_Reborn.Forms
             drawing.bxBuffer.Size = pnlGFX.Size;
             drawing.ReInit(pnlGFX);
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
-            //drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
+            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             drawing.SetScaling(pnlGFX.Size);
             ReArrange(false);
             NoResizeEvent = true;
@@ -2341,17 +2341,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
 
-            ResizeGfxPanels();
             UpdateControls();
             DoRedraw();
-        }
-
-        private void ResizeGfxPanels()
-        {
-            pnlGFXFlow.Width = ClientRectangle.Width - pnlGFXFlow.Left;
-            pnlGFX.Width = pnlGFXFlow.Width - 30;
-            // DoResize();
-            // DoRedraw();
         }
 
         internal void DoCalcOptUpdates()

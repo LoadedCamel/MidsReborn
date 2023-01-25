@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -162,12 +163,39 @@ namespace Mids_Reborn.Core
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             foreach (var c in DatabaseAPI.Database.Classes)
             {
-                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c.ClassName}.png").Path;
+                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;
                 }
-                retList.Add(path);
+                if (retList.All(p => p != path))
+                {
+                    retList.Add(path);
+                }
+            }
+
+            cSource.TrySetResult(retList);
+            return await cSource.Task;
+        }
+
+        public static async Task<List<string>> LoadOrigins()
+        {
+            var cSource = new TaskCompletionSource<List<string>>();
+            var retList = new List<string>();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            var images = Images.Where(x => x.Directory == "Origins").ToList();
+            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            foreach (var o in DatabaseAPI.Database.Origins)
+            {
+                var path = images.FirstOrDefault(i => i.FileName == $"{o.Name}.png").Path;
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    path = unknown;
+                }
+                if (retList.All(p => p != path))
+                {
+                    retList.Add(path);
+                }
             }
 
             cSource.TrySetResult(retList);
@@ -189,7 +217,10 @@ namespace Mids_Reborn.Core
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            retList.Add(unknown);
+            if (retList.Any(p => p != unknown))
+            {
+                retList.Add(unknown); 
+            }
             retList.AddRange(DatabaseAPI.Database.Powersets
                 .Select(ps => powersetImages.FirstOrDefault(i => i.FileName == $"{ps.ImageName}").Path)
                 .Where(path => !string.IsNullOrWhiteSpace(path)));

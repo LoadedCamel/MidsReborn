@@ -117,7 +117,6 @@ namespace Mids_Reborn.UIv2.v2Controls
         [Category("Appearance")]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public override string Text
         {
@@ -331,43 +330,45 @@ namespace Mids_Reborn.UIv2.v2Controls
             {
                 e.Graphics.FillRectangle((e.State & DrawItemState.Selected) == DrawItemState.Selected ? new SolidBrush(HighlightColor) : new SolidBrush(BackColor), e.Bounds);
                 Image comboImage = null;
-                string imagesFolder;
                 List<string> images;
+                string selectedImage;
                 switch (DropType)
                 {
                     case DropDownType.Archetype:
-                        var atImages = I9Gfx.LoadArchetypes().Result;
-                        var selectedAt = Items[e.Index].ToString();
-                        Debug.WriteLine(selectedAt);
+                        images = I9Gfx.LoadArchetypes().GetAwaiter().GetResult();
+                        var selectedAt = (Archetype)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedAt.ClassName));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                     case DropDownType.Origin:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Origins";
-                        //images = Directory.GetFiles(imagesFolder).ToList();
-                        //comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(Items[e.Index].ToString())) ?? throw new InvalidOperationException());
+                        images = I9Gfx.LoadOrigins().GetAwaiter().GetResult();
+                        var selectedOrigin = (Origin)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedOrigin.Name));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                     case DropDownType.Primary:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";
-                        images = Directory.GetFiles(imagesFolder).ToList();
-                        var primary = (IPowerset)Items[e.Index];
-                        comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(primary.ImageName)) ?? throw new InvalidOperationException());
+                        images = I9Gfx.LoadPowerSets().GetAwaiter().GetResult();
+                        var selectedPrimary = (IPowerset)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedPrimary.ImageName));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                     case DropDownType.Secondary:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";
-                        images = Directory.GetFiles(imagesFolder).ToList();
-                        var secondary = (IPowerset)Items[e.Index];
-                        comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(secondary.ImageName)) ?? throw new InvalidOperationException());
+                        images = I9Gfx.LoadPowerSets().GetAwaiter().GetResult();
+                        var selectedSecondary = (IPowerset)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedSecondary.ImageName));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                     case DropDownType.Pool:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";
-                        images = Directory.GetFiles(imagesFolder).ToList();
-                        var pool = (IPowerset)Items[e.Index];
-                        comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(pool.ImageName)) ?? throw new InvalidOperationException());
+                        images = I9Gfx.LoadPowerSets().GetAwaiter().GetResult();
+                        var selectedPool = (IPowerset)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedPool.ImageName));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                     case DropDownType.Ancillary:
-                        imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";
-                        images = Directory.GetFiles(imagesFolder).ToList();
-                        var ancillary = (IPowerset)Items[e.Index];
-                        comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(ancillary.ImageName)) ?? throw new InvalidOperationException());
+                        images = I9Gfx.LoadPowerSets().GetAwaiter().GetResult();
+                        var selectedAncil = (IPowerset)Items[e.Index];
+                        selectedImage = images.FirstOrDefault(i => i.Contains(selectedAncil.ImageName));
+                        if (selectedImage != null) comboImage = Image.FromFile(selectedImage);
                         break;
                 }
 
