@@ -147,45 +147,6 @@ namespace Mids_Reborn.Forms.Controls
         public event Unlock_ClickEventHandler Unlock_Click;
         public event EntityDetailsEventHandler EntityDetails;
 
-        private List<int> GetSimilarEffects(IPower power, fxIdentifier fxIdentifier, float mag, Enums.eSpecialCase specialCase = Enums.eSpecialCase.None, bool enhancementEffect = false)
-        {
-            return fxIdentifier.EffectType switch
-            {
-                Enums.eEffectType.Enhancement when fxIdentifier.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ETModifies == fxIdentifier.ETModifies && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                Enums.eEffectType.MezResist => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                Enums.eEffectType.DamageBuff when specialCase == Enums.eSpecialCase.Defiance => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                Enums.eEffectType.DamageBuff => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.SpecialCase != Enums.eSpecialCase.Defiance && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => power
-                    .Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                _ => new List<int>()
-            };
-        }
-
         private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
             var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
@@ -843,11 +804,14 @@ namespace Mids_Reborn.Forms.Controls
                                          MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
 
 
-                        similarFxIds = GetSimilarEffects(pEnh,
+                        similarFxIds = GroupedFx.GetSimilarEffects(pEnh,
                             new fxIdentifier
                             {
-                                DamageType = Enums.eDamage.None, EffectType = Enums.eEffectType.DamageBuff,
-                                ETModifies = Enums.eEffectType.None, MezType = Enums.eMez.None
+                                DamageType = Enums.eDamage.None,
+                                EffectType = Enums.eEffectType.DamageBuff,
+                                ETModifies = Enums.eEffectType.None,
+                                MezType = Enums.eMez.None,
+                                ToWho = pEnh.Effects[rankedEffects[id]].ToWho
                             }, pEnh.Effects[rankedEffects[id]].BuffedMag,
                             isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None);
 
@@ -859,7 +823,8 @@ namespace Mids_Reborn.Forms.Controls
                                     DamageType = Enums.eDamage.None,
                                     EffectType = Enums.eEffectType.DamageBuff,
                                     ETModifies = Enums.eEffectType.None,
-                                    MezType = Enums.eMez.None
+                                    MezType = Enums.eMez.None,
+                                    ToWho = pEnh.Effects[rankedEffects[id]].ToWho
                                 },
                                 pEnh.Effects[rankedEffects[id]].BuffedMag,
                                 isDefiance ? "Defiance" : $"{pEnh.Effects[rankedEffects[id]].EffectType}",
@@ -874,14 +839,15 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Elusivity:
                     case Enums.eEffectType.MezResist:
                     case Enums.eEffectType.ResEffect:
-                    case Enums.eEffectType.Enhancement when pEnh.Effects[rankedEffects[id]].ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
-                        similarFxIds = GetSimilarEffects(pEnh,
+                    case Enums.eEffectType.Enhancement:
+                        similarFxIds = GroupedFx.GetSimilarEffects(pEnh,
                             new fxIdentifier
                             {
                                 EffectType = pEnh.Effects[rankedEffects[id]].EffectType,
                                 ETModifies = pEnh.Effects[rankedEffects[id]].ETModifies,
                                 MezType = Enums.eMez.None,
-                                DamageType = Enums.eDamage.None
+                                DamageType = Enums.eDamage.None,
+                                ToWho = pEnh.Effects[rankedEffects[id]].ToWho
                             },
                             pEnh.Effects[rankedEffects[id]].BuffedMag,
                             Enums.eSpecialCase.None,
@@ -895,7 +861,8 @@ namespace Mids_Reborn.Forms.Controls
                                     EffectType = pEnh.Effects[rankedEffects[id]].EffectType,
                                     ETModifies = pEnh.Effects[rankedEffects[id]].ETModifies,
                                     MezType = Enums.eMez.None,
-                                    DamageType = Enums.eDamage.None
+                                    DamageType = Enums.eDamage.None,
+                                    ToWho = pEnh.Effects[rankedEffects[id]].ToWho
                                 },
                                 pEnh.Effects[rankedEffects[id]].BuffedMag,
                                 pEnh.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Enhancement
@@ -921,8 +888,8 @@ namespace Mids_Reborn.Forms.Controls
                 var rankedEffect = GetRankedEffect(rankedEffects, greIndex);
                 var effectType = gre.EffectType;
                 var effectSource = gre.GetEffectAt(pEnh);
-                //var statName = gre.GetStatName(pEnh);
-                //var tooltip = gre.GetTooltip(pEnh);
+                var statName = gre.GetStatName(pEnh);
+                var tooltip = gre.GetTooltip(pEnh);
 
                 switch (effectType)
                 {
@@ -1002,9 +969,10 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Defense:
                     case Enums.eEffectType.Elusivity:
                     case Enums.eEffectType.MezResist:
-                    case Enums.eEffectType.Enhancement when effectSource.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
-                        rankedEffect.Name = ShortStr(Enums.GetEffectName(effectSource.EffectType),
-                            Enums.GetEffectNameShort(effectSource.EffectType));
+                    case Enums.eEffectType.Enhancement:
+                        rankedEffect.Name = effectType == Enums.eEffectType.Enhancement & gre.ToWho == Enums.eToWho.Target & effectSource.Mag < 0
+                                ? "Debuff"
+                                : ShortStr(Enums.GetEffectName(effectSource.EffectType), Enums.GetEffectNameShort(effectSource.EffectType));
                         rankedEffect.SpecialTip = gre.GetTooltip(pEnh);
 
                         break;
