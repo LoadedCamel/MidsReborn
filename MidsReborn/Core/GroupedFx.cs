@@ -322,11 +322,11 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
                     or Enums.eEffectType.MezResist => baseEffectString.Replace(
                     $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[0]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
 
                 Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => baseEffectString.Replace(
                     $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType} {power.Effects[IncludedEffects[0]].ETModifies})",
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors} {power.Effects[IncludedEffects[0]].ETModifies})"),
+                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
 
                 Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => baseEffectString.Replace(
                     $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].ETModifies})",
@@ -339,16 +339,6 @@ namespace Mids_Reborn.Core
                 
                 _ => baseEffectString
             };
-
-            /*
-            var fx = power.Effects
-                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                .Where(e => IncludedEffects.Contains(e.Key))
-                .Select(e => e.Value)
-                .ToList();
-
-            return string.Join("\r\n", fx.Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)));
-            */
         }
 
         /// <summary>
