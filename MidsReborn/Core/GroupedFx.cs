@@ -146,36 +146,36 @@ namespace Mids_Reborn.Core
                 .ToList();
 
             var allDefenses = new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                    DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic, Enums.eDamage.Melee,
-                    Enums.eDamage.Ranged, Enums.eDamage.AoE
-                };
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic, Enums.eDamage.Melee,
+                Enums.eDamage.Ranged, Enums.eDamage.AoE
+            };
 
             var positionDefenses = new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                };
+            {
+                Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+            };
 
             var typedDefenses = new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                    DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
-                };
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
+            };
 
             var allResistances = new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
-                };
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
+            };
 
             var allMez = new List<Enums.eMez>
-                {
-                    Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
-                    Enums.eMez.Terrorized, Enums.eMez.Confused
-                };
+            {
+                Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
+                Enums.eMez.Terrorized, Enums.eMez.Confused
+            };
 
             var fxDamageTypes = fx.Select(e => e.DamageType).ToList();
             var fxMezTypes = fx.Select(e => e.MezType).ToList();
@@ -356,6 +356,7 @@ namespace Mids_Reborn.Core
         /// Group up Enhancement(Mez)/Enhancement(MezResist) by mez type, other enhancement effects by effect type (those to the exclusion of Mez/MezResist)
         /// Group up DamageBuff effects by damage type, and special case (for Defiance)
         /// Group up Defense, Resistance, Elusivity by damage type
+        /// Group up ResEffect by sub effect type (ETModifies)
         /// </summary>
         /// <param name="power">Power to inspect effects from</param>
         /// <param name="fxIdentifier">Effect identifier struct</param>
@@ -380,7 +381,7 @@ namespace Mids_Reborn.Core
                     .Select(e => e.Key)
                     .ToList(),
 
-                Enums.eEffectType.MezResist => power.Effects
+                Enums.eEffectType.MezResist or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.ResEffect => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
                     .Select(e => e.Key)
@@ -395,13 +396,6 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.DamageBuff => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.SpecialCase != Enums.eSpecialCase.Defiance && e.Value.isEnhancementEffect == enhancementEffect)
-                    .Select(e => e.Key)
-                    .ToList(),
-
-                Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => power
-                    .Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho && Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon && e.Value.isEnhancementEffect == enhancementEffect)
                     .Select(e => e.Key)
                     .ToList(),
 

@@ -888,8 +888,8 @@ namespace Mids_Reborn.Forms.Controls
                 var rankedEffect = GetRankedEffect(rankedEffects, greIndex);
                 var effectType = gre.EffectType;
                 var effectSource = gre.GetEffectAt(pEnh);
-                var statName = gre.GetStatName(pEnh);
                 var tooltip = gre.GetTooltip(pEnh);
+                //var statName = gre.GetStatName(pEnh);
 
                 switch (effectType)
                 {
@@ -961,7 +961,7 @@ namespace Mids_Reborn.Forms.Controls
                                 Enums.GetEffectNameShort(effectSource.EffectType));
                         rankedEffect.SpecialTip = isDefiance
                             ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                            : gre.GetTooltip(pEnh); // pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+                            : tooltip; // pEnh.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
 
                         break;
 
@@ -970,10 +970,11 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Elusivity:
                     case Enums.eEffectType.MezResist:
                     case Enums.eEffectType.Enhancement:
+                    case Enums.eEffectType.ResEffect:
                         rankedEffect.Name = effectType == Enums.eEffectType.Enhancement & gre.ToWho == Enums.eToWho.Target & effectSource.Mag < 0
                                 ? "Debuff"
                                 : ShortStr(Enums.GetEffectName(effectSource.EffectType), Enums.GetEffectNameShort(effectSource.EffectType));
-                        rankedEffect.SpecialTip = gre.GetTooltip(pEnh);
+                        rankedEffect.SpecialTip = tooltip;
 
                         break;
 
