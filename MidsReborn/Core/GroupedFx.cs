@@ -6,11 +6,24 @@ namespace Mids_Reborn.Core
 {
     public static class ListExtGFx
     {
+        /// <summary>
+        /// Check if a list contains all elements of another list
+        /// </summary>
+        /// <typeparam name="T">Elements type</typeparam>
+        /// <param name="list">List to look for elements into</param>
+        /// <param name="elements">Values to look from</param>
+        /// <returns>true if list contains all elements, false otherwise</returns>
         public static bool ContainsAll<T>(this List<T> list, List<T> elements)
         {
             return elements.All(list.Contains);
         }
 
+        /// <summary>
+        /// Add a range of elements to a list, but avoid duplicating entries
+        /// </summary>
+        /// <typeparam name="T">Elements type</typeparam>
+        /// <param name="list">List to add elements into</param>
+        /// <param name="elements">Values to add</param>
         public static void AddRangeUnique<T>(this List<T> list, List<T> elements)
         {
             foreach (var e in elements)
@@ -129,6 +142,102 @@ namespace Mids_Reborn.Core
         }
 
         /// <summary>
+        /// Get all defense vectors, including None
+        /// </summary>
+        /// <returns>List of defense vectors. If real uses toxic defense, it will be included.</returns>
+        private static List<Enums.eDamage> GetAllDefensesEx()
+        {
+            return DatabaseAPI.RealmUsesToxicDef()
+                ? new List<Enums.eDamage>
+                {
+                    Enums.eDamage.None,
+                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
+                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+                }
+                : new List<Enums.eDamage>
+                {
+                    Enums.eDamage.None,
+                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+                };
+        }
+
+        /// <summary>
+        /// Get all defense vectors
+        /// </summary>
+        /// <returns>List of defense vectors. If real uses toxic defense, it will be included.</returns>
+        private static List<Enums.eDamage> GetAllDefenses()
+        {
+            return DatabaseAPI.RealmUsesToxicDef()
+                ? new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
+                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+                }
+                : new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+                };
+        }
+
+        /// <summary>
+        /// Get all position defense vectors
+        /// </summary>
+        /// <returns>List of position defense vectors.</returns>
+        private static List<Enums.eDamage> GetPositionDefenses()
+        {
+            return new List<Enums.eDamage>
+            {
+                Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+            };
+        }
+
+        /// <summary>
+        /// Get all typed defense vectors
+        /// </summary>
+        /// <returns>List of defense vectors. If real uses toxic defense, it will be included.</returns>
+        private static List<Enums.eDamage> GetTypedDefenses()
+        {
+            return new List<Enums.eDamage>
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
+            };
+        }
+
+        /// <summary>
+        /// Get all damage resistance vectors
+        /// </summary>
+        /// <returns>List of damage resistance vectors.</returns>
+        private static List<Enums.eDamage> GetAllResistances()
+        {
+            return new List<Enums.eDamage>
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
+            };
+        }
+
+        /// <summary>
+        /// Get all mez vectors
+        /// </summary>
+        /// <returns>List of main vectors: immobilized, held, stunned, sleep, terrorized, confused.</returns>
+        private static List<Enums.eMez> GetAllMez()
+        {
+            return new List<Enums.eMez>
+            {
+                Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
+                Enums.eMez.Terrorized, Enums.eMez.Confused
+            };
+        }
+
+        /// <summary>
         /// Try to find a fitting alias for the grouped effect.
         /// For Defense, all present vectors will output Defense(all), all positions Defense(All positions), all types Defense(All types)
         /// Mixed vectors in a partial set will show as 'Multi'
@@ -145,37 +254,11 @@ namespace Mids_Reborn.Core
                 .Select(e => e.Value)
                 .ToList();
 
-            var allDefenses = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic, Enums.eDamage.Melee,
-                Enums.eDamage.Ranged, Enums.eDamage.AoE
-            };
-
-            var positionDefenses = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-            };
-
-            var typedDefenses = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
-            };
-
-            var allResistances = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
-            };
-
-            var allMez = new List<Enums.eMez>
-            {
-                Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
-                Enums.eMez.Terrorized, Enums.eMez.Confused
-            };
+            var allDefenses = GetAllDefenses();
+            var positionDefenses = GetPositionDefenses();
+            var typedDefenses = GetTypedDefenses();
+            var allResistances = GetAllResistances();
+            var allMez = GetAllMez();
 
             var fxDamageTypes = fx.Select(e => e.DamageType).ToList();
             var fxMezTypes = fx.Select(e => e.MezType).ToList();
@@ -230,7 +313,7 @@ namespace Mids_Reborn.Core
                         : $"{fxDamageTypes[0]}",
 
                 Enums.eEffectType.ResEffect => fxEffectTypes.Count > 1 ? "Multi" : $"{fxEffectTypes[0]}",
-                
+
                 _ => ""
             };
 
@@ -255,6 +338,163 @@ namespace Mids_Reborn.Core
         }
 
         /// <summary>
+        /// Compact display of a list of vectors
+        /// Defense, Elusivity, Resistance and Mez will show stat(All) when possible
+        /// </summary>
+        /// <remarks>Behavior unknown with Elusivity, Resistance and Mez</remarks>
+        /// <param name="vectors">List of vectors, as strings</param>
+        /// <returns>Compact form of the list of vectors</returns>
+        private static List<string> CompactVectorsList(IReadOnlyList<string> vectors)
+        {
+            // Defense
+            var allDefensesEx = GetAllDefensesEx()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var allDefenses = GetAllDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var positionDefenses = GetPositionDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var typedDefenses = GetTypedDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            // Elusivity
+            var allElusivity = GetAllDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            var positionElusivity = GetPositionDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            var typedElusivity = GetTypedDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            // Resistance
+            var allResistances = GetAllResistances()
+                .ToDictionary(e => $"{e} Resistance", _ => -1);
+
+            // Mez
+            var allMez = GetAllMez()
+                .ToDictionary(e => $"{e}", _ => -1);
+
+            for (var i = 0; i < vectors.Count; i++)
+            {
+                if (allDefensesEx.ContainsKey(vectors[i]))
+                {
+                    allDefensesEx[vectors[i]] = i;
+                }
+
+                if (allDefenses.ContainsKey(vectors[i]))
+                {
+                    allDefenses[vectors[i]] = i;
+                }
+
+                if (positionDefenses.ContainsKey(vectors[i]))
+                {
+                    positionDefenses[vectors[i]] = i;
+                }
+
+                if (typedDefenses.ContainsKey(vectors[i]))
+                {
+                    typedDefenses[vectors[i]] = i;
+                }
+
+                //////////////////////
+                
+                if (allElusivity.ContainsKey(vectors[i]))
+                {
+                    allElusivity[vectors[i]] = i;
+                }
+
+                if (positionElusivity.ContainsKey(vectors[i]))
+                {
+                    positionElusivity[vectors[i]] = i;
+                }
+
+                if (typedElusivity.ContainsKey(vectors[i]))
+                {
+                    typedElusivity[vectors[i]] = i;
+                }
+
+                //////////////////////
+
+                if (allResistances.ContainsKey(vectors[i]))
+                {
+                    allResistances[vectors[i]] = i;
+                }
+
+                //////////////////////
+
+                if (allMez.ContainsKey(vectors[i]))
+                {
+                    allMez[vectors[i]] = i;
+                }
+            }
+
+            var ignoredVectors = new List<int>();
+            var cVectors = new List<string>();
+
+            if (allDefensesEx.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All)");
+                ignoredVectors.AddRangeUnique(allDefensesEx.Values.ToList());
+            }
+            else if (allDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All)");
+                ignoredVectors.AddRangeUnique(allDefenses.Values.ToList());
+            }
+            else if (positionDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All positions)");
+                ignoredVectors.AddRangeUnique(positionDefenses.Values.ToList());
+            }
+            else if (typedDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All types)");
+                ignoredVectors.AddRangeUnique(typedDefenses.Values.ToList());
+            }
+
+            //////////////////////
+
+            if (allElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All)");
+                ignoredVectors.AddRangeUnique(allElusivity.Values.ToList());
+            }
+            else if (positionElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All positions)");
+                ignoredVectors.AddRangeUnique(positionElusivity.Values.ToList());
+            }
+            else if (typedElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All types)");
+                ignoredVectors.AddRangeUnique(typedElusivity.Values.ToList());
+            }
+
+            //////////////////////
+
+            if (allResistances.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Resistance(All)");
+                ignoredVectors.AddRangeUnique(allResistances.Values.ToList());
+            }
+
+            //////////////////////
+
+            if (allMez.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Mez");
+                ignoredVectors.AddRangeUnique(allMez.Values.ToList());
+            }
+
+            cVectors.AddRange(vectors.Where((_, i) => !ignoredVectors.Contains(i)));
+
+            return cVectors;
+        }
+
+        /// <summary>
         /// Generate tooltip for a grouped effect.
         /// </summary>
         /// <param name="power">Source power</param>
@@ -264,7 +504,7 @@ namespace Mids_Reborn.Core
             var vectors = "";
             var statName = GetStatName(power);
             var groupedVector = GetGroupedVector(statName);
-            
+
             if (!string.IsNullOrEmpty(groupedVector))
             {
                 vectors = groupedVector;
@@ -281,7 +521,7 @@ namespace Mids_Reborn.Core
                     Enums.eEffectType.Enhancement when
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
                             or Enums.eEffectType.MezResist => !string.IsNullOrEmpty(groupedVector)
-                        ? new List<string> { $"{groupedVector}"} // ???
+                        ? new List<string> { $"{groupedVector}" }
                         : IncludedEffects
                             .Select(e => $"{power.Effects[e].MezType}")
                             .ToList(),
@@ -294,7 +534,7 @@ namespace Mids_Reborn.Core
 
                     Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
                         or Enums.eEffectType.DamageBuff => !string.IsNullOrEmpty(groupedVector)
-                        ? new List<string> { $"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})"}
+                        ? new List<string> { $"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})" }
                         : IncludedEffects
                             .Select(e => $"{power.Effects[e].DamageType}")
                             .ToList(),
@@ -307,10 +547,12 @@ namespace Mids_Reborn.Core
                 };
 
                 uniqueVectors.AddRangeUnique(vectorsChunks);
+                uniqueVectors = CompactVectorsList(uniqueVectors);
                 vectors = string.Join(", ", uniqueVectors);
             }
 
             // Change stat name inside effect string with list of vectors
+            // Use the first effect of the group as base
             var baseEffectString = power.Effects[IncludedEffects[0]].BuildEffectString(false, "", false, false, false, false, false, true);
 
             return power.Effects[IncludedEffects[0]].EffectType switch
@@ -318,7 +560,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
                     $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
                     $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
-                
+
                 Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
                     or Enums.eEffectType.MezResist => baseEffectString.Replace(
                     $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
@@ -336,7 +578,7 @@ namespace Mids_Reborn.Core
                     or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
                         $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType})",
                         $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
-                
+
                 _ => baseEffectString
             };
         }
