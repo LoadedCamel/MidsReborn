@@ -750,7 +750,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
              */
 
-            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs, e => e is {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Teleport} || e.EffectType is not Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez);
+            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs, e => e is {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Teleport} || e.EffectType is not Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez or Enums.eEffectType.GrantPower);
             foreach (var rex in rankedEffectsExt)
             {
                 info_DataList.AddItem(rex.Value);

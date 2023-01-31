@@ -68,6 +68,7 @@ namespace Mids_Reborn.Core
         private List<int> IncludedEffects;
         private bool IsEnhancement;
         private IEffect? SingleEffectSource;
+        private bool IsAggregated;
 
         public int NumEffects => IncludedEffects.Count;
         public Enums.eEffectType EffectType => FxIdentifier.EffectType;
@@ -96,6 +97,31 @@ namespace Mids_Reborn.Core
             IsEnhancement = isEnhancement;
             SpecialCase = specialCase;
             SingleEffectSource = null;
+            IsAggregated = false;
+        }
+
+        /// <summary>
+        /// Build a grouped effect from an aggregate of multiple grouped effects
+        /// </summary>
+        /// <param name="fxIdentifier">Effect identifier struct</param>
+        /// <param name="greList">List of grouped effects</param>
+        public GroupedFx(FxId fxIdentifier, List<GroupedFx> greList)
+        {
+            FxIdentifier = fxIdentifier;
+            Mag = greList[0].Mag;
+            Alias = greList[0].Alias;
+            IsEnhancement = greList[0].IsEnhancement;
+            SpecialCase = greList[0].SpecialCase;
+            IsAggregated = true;
+            SingleEffectSource = null;
+
+            IncludedEffects = new List<int>();
+            foreach (var gre in greList)
+            {
+                IncludedEffects.AddRangeUnique(gre.IncludedEffects);
+            }
+
+            IncludedEffects.Sort();
         }
 
         /// <summary>
@@ -119,6 +145,7 @@ namespace Mids_Reborn.Core
             IncludedEffects = new List<int> {fxIndex};
             IsEnhancement = effect.isEnhancementEffect;
             SpecialCase = effect.SpecialCase;
+            IsAggregated = false;
         }
 
         public override string ToString()
@@ -543,6 +570,12 @@ namespace Mids_Reborn.Core
         /// <returns>Build effect string from each effect, then concatenate into a single string (one effect per line)</returns>
         public string GetTooltip(IPower power)
         {
+            if (IsAggregated)
+            {
+                return string.Join("\r\n", IncludedEffects
+                    .Select(e => power.Effects[e].BuildEffectString(false, "", false, false, false, false, false, true)));
+            }
+
             var vectors = "";
             var statName = GetStatName(power);
             var groupedVector = GetGroupedVector(statName);
@@ -748,6 +781,8 @@ namespace Mids_Reborn.Core
                 return new List<GroupedFx>();
             }
 
+            // Pass 1: build grouped effects from power effects
+
             foreach (var re in rankedEffects)
             {
                 if (re <= -1)
@@ -773,8 +808,6 @@ namespace Mids_Reborn.Core
                 {
                     continue;
                 }
-
-                //var rankedEffect = GetRankedEffect(rankedEffects, id);
 
                 if (!(power.Effects[re].Probability > 0 &
                       (MidsContext.Config?.Suppression & power.Effects[re].Suppression) ==
@@ -971,7 +1004,35 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            return groupedRankedEffects;
+            // Pass 2: aggregate similar grouped effect containing a single effect
+            
+            var groupedRankedEffects2 = new List<GroupedFx>();
+            var ignoredGroups = new List<int>();
+            for (var i = 0; i < groupedRankedEffects.Count; i++)
+            {
+                if (ignoredGroups.Contains(i))
+                {
+                    continue;
+                }
+
+                if (groupedRankedEffects[i].NumEffects > 1)
+                {
+                    groupedRankedEffects2.Add(groupedRankedEffects[i]);
+                }
+
+                var similarGreList = groupedRankedEffects
+                    .Select((e, id) => new KeyValuePair<int, GroupedFx>(id, e))
+                    .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
+                                Math.Abs(e.Value.Mag - groupedRankedEffects[i].Mag) < float.Epsilon &&
+                                e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
+                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase)
+                    .ToList();
+
+                ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
+                groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
+            }
+
+            return groupedRankedEffects2;
         }
 
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
