@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
@@ -1236,11 +1235,7 @@ namespace Mids_Reborn.Core
         {
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             rankedEffect.UniqueColor = effectSource.isEnhancementEffect;
-            rankedEffect.AlternateColor = false; //!effectSource.isEnhancementEffect && effectIndex < pBase.Effects.Length && effectIndex < pEnh.Effects.Length && Math.Abs(pBase.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].BuffedMag) > float.Epsilon;
-            /*if (effectType == Enums.eEffectType.ToHit)
-            {
-                Debug.WriteLine($"effect: {effectType}, {effectSource.isEnhancementEffect}");
-            }*/
+            rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && effectIndex < pBase.Effects.Length && effectIndex < pEnh.Effects.Length && Math.Abs(pBase.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].BuffedMag) > float.Epsilon;
 
             switch (effectType)
             {
