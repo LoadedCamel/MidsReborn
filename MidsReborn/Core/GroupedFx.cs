@@ -150,7 +150,7 @@ namespace Mids_Reborn.Core
 
         public override string ToString()
         {
-            return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}}}";
+            return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}, Aggregated: {IsAggregated}}}";
         }
 
         /// <summary>
@@ -1003,7 +1003,7 @@ namespace Mids_Reborn.Core
                         break;
                 }
             }
-
+            
             // Pass 2: aggregate similar grouped effect containing a single effect
             
             var groupedRankedEffects2 = new List<GroupedFx>();
@@ -1018,6 +1018,7 @@ namespace Mids_Reborn.Core
                 if (groupedRankedEffects[i].NumEffects > 1)
                 {
                     groupedRankedEffects2.Add(groupedRankedEffects[i]);
+                    continue;
                 }
 
                 var similarGreList = groupedRankedEffects
@@ -1029,6 +1030,7 @@ namespace Mids_Reborn.Core
                     .ToList();
 
                 ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
+
                 groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
             }
 
