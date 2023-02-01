@@ -971,107 +971,19 @@ namespace Mids_Reborn.Forms.Controls
                 .Where(e => e.ItemPairs.Count > 0)
                 .ToList();
 
-            for (var i = 0; i < Math.Min(3, activeItemPairGroups.Count); i++)
+            // Fill the 3 blocks once
+            // If more categories left, combine titles then display along with the other first 3 groups
+            for (var i = 0; i < activeItemPairGroups.Count; i++)
             {
-                labelArray[i].Text = $"{activeItemPairGroups[i].Label}:";
+                labelArray[i % 3].Text = labelArray[i % 3].Text.EndsWith(":")
+                    ? labelArray[i % 3].Text.Replace(":", $" | {activeItemPairGroups[i].Label}:")
+                    : $"{activeItemPairGroups[i].Label}:";
+                
                 foreach (var ip in activeItemPairGroups[i].ItemPairs)
                 {
-                    pairedListArray[i].AddItem(ip);
+                    pairedListArray[i % 3].AddItem(ip);
                 }
             }
-
-            /*var index = EffectsDrh();
-            var num1 = 0;
-            var hasStatusFx = false;
-            var hasHealFx = false;
-            if (index < pairedListArray.Length)
-            {
-                pairedListArray[index].Clear();
-                num1 = EffectsHeal(labelArray[index], pairedListArray[index]);
-                if (num1 > 0)
-                {
-                    hasHealFx = true;
-                    index++;
-                    if (index < pairedListArray.Length)
-                    {
-                        pairedListArray[index].Clear();
-                    }
-                }
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                num1 = EffectsStatus(labelArray[index], pairedListArray[index]);
-                if (num1 > 0)
-                {
-                    hasStatusFx = true;
-                }
-
-                if (num1 > 2 | num1 > 0 & index == 0)
-                {
-                    index++;
-                    if (index < pairedListArray.Length)
-                    {
-                        pairedListArray[index].Clear();
-                    }
-                }
-            }
-
-            if (!hasStatusFx & hasHealFx & num1 < 3)
-            {
-                --index;
-            }
-
-            if (index < pairedListArray.Length &&
-                EffectsBuffDebuff(labelArray[index], pairedListArray[index]) > 0 &
-                pairedListArray[index].ItemCount > 2 & index + 1 < pairedListArray.Length)
-            {
-                index++;
-                if (index < pairedListArray.Length)
-                {
-                    pairedListArray[index].Clear();
-                }
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                index += EffectsMovement(labelArray[index], pairedListArray[index]);
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                index += EffectsSummon(labelArray[index], pairedListArray[index]);
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                index += EffectsGrantPower(labelArray[index], pairedListArray[index]);
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                index += EffectsModifyEffect(labelArray[index], pairedListArray[index]);
-            }
-
-            if (index < pairedListArray.Length)
-            {
-                index += EffectsElusivity(labelArray[index], pairedListArray[index]);
-            }
-
-            if (fx_lblHead1.Text != string.Empty)
-            {
-                fx_lblHead1.Text += ":";
-            }
-
-            if (fx_lblHead2.Text != string.Empty)
-            {
-                fx_lblHead2.Text += ":";
-            }
-
-            if (fx_LblHead3.Text != string.Empty)
-            {
-                fx_LblHead3.Text += ":";
-            }*/
 
             fx_List1.Draw();
             fx_List2.Draw();
