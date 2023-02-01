@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
@@ -558,7 +559,7 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="value">Input value (string)</param>
         /// <returns>Negative value if it is positive, stripped of the minus sign if it is negative.</returns>
-        private string InvertStringValue(string value)
+        private static string InvertStringValue(string value)
         {
             return value.StartsWith("-") ? value[1..] : $"-{value}";
         }
@@ -1235,7 +1236,11 @@ namespace Mids_Reborn.Core
         {
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             rankedEffect.UniqueColor = effectSource.isEnhancementEffect;
-            rankedEffect.AlternateColor = effectIndex < pBase.Effects.Length && effectIndex < pEnh.Effects.Length && Math.Abs(pBase.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].BuffedMag) > float.Epsilon;
+            rankedEffect.AlternateColor = false; //!effectSource.isEnhancementEffect && effectIndex < pBase.Effects.Length && effectIndex < pEnh.Effects.Length && Math.Abs(pBase.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].BuffedMag) > float.Epsilon;
+            /*if (effectType == Enums.eEffectType.ToHit)
+            {
+                Debug.WriteLine($"effect: {effectType}, {effectSource.isEnhancementEffect}");
+            }*/
 
             switch (effectType)
             {
@@ -1354,7 +1359,7 @@ namespace Mids_Reborn.Core
                             Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.SpecialTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
-                        : greTooltip; // power.BuildTooltipStringAllVectorsEffects(effectSource.EffectType);
+                        : greTooltip;
 
                     break;
 
@@ -1370,13 +1375,27 @@ namespace Mids_Reborn.Core
                         };
                     }
 
-                    // This needs improvement (see Combat Jumping)
-                    rankedEffect.Value = $"{effectSource.Duration:###0.##} (Mag {effectSource.BuffedMag:###0.##})";
+                    rankedEffect.Value = effectSource.ToWho == Enums.eToWho.Self
+                        ? $"{effectSource.BuffedMag:###0.##}"
+                        : $"{effectSource.Duration:###0.##} (Mag {effectSource.BuffedMag:###0.##})";
                     rankedEffect.SpecialTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.Translucency:
+                    rankedEffect.SpecialTip = greTooltip;
+
+                    break;
+
+                case Enums.eEffectType.SpeedFlying:
+                case Enums.eEffectType.SpeedJumping:
+                case Enums.eEffectType.SpeedRunning:
+                    if (gre.GetStatName(pEnh) == "Slow")
+                    {
+                        rankedEffect.Name = "Slow";
+                        rankedEffect.Value = InvertStringValue(rankedEffect.Value);
+                    }
+
                     rankedEffect.SpecialTip = greTooltip;
 
                     break;
@@ -1434,7 +1453,7 @@ namespace Mids_Reborn.Core
                         _ => ""
                     };
 
-                    rankedEffect.AlternateColor = Math.Abs(magSumEnh - magSumBase) > float.Epsilon;
+                    rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.SpecialTip = string.Join("\r\n", pEnh.Effects

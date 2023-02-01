@@ -739,17 +739,6 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].Probability < 1));
             }
 
-            /*
-             * if (power.Effects[rankedEffects[id]].EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Null
-                    or Enums.eEffectType.NullBool or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.MaxRunSpeed
-                    or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Damage
-                    or Enums.eEffectType.SetMode or Enums.eEffectType.Null or Enums.eEffectType.NullBool
-                    or Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.ExecutePower)
-                {
-                    continue;
-                }
-             */
-
             var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs, e => e is {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Teleport} || e.EffectType is not Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez or Enums.eEffectType.GrantPower);
             foreach (var rex in rankedEffectsExt)
             {
