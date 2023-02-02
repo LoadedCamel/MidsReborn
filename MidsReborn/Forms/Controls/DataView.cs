@@ -26,6 +26,14 @@ namespace Mids_Reborn.Forms.Controls
             public List<PairedList.ItemPair> ItemPairs;
         }
 
+        private struct ItemPairGroupEx
+        {
+            public string Label;
+            public Func<GroupedFx.FxId, bool> Filter;
+            public List<KeyValuePair<GroupedFx, PairedList.ItemPair>> ItemPairsEx;
+        }
+
+
         /*internal ctlDamageDisplay Info_Damage
         {
             get;
@@ -739,7 +747,11 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].Probability < 1));
             }
 
-            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs, e => e is {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Teleport} || e.EffectType is not Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez or Enums.eEffectType.GrantPower);
+            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                e => e.EffectType is not Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                         or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez ||
+                     e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                         {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
             foreach (var rex in rankedEffectsExt)
             {
                 info_DataList.AddItem(rex.Value);
@@ -870,13 +882,13 @@ namespace Mids_Reborn.Forms.Controls
             fx_lblHead2.Text = string.Empty;
             fx_LblHead3.Text = string.Empty;
 
-            var itemPairGroups = new List<ItemPairGroup>
+            var itemPairGroups = new List<ItemPairGroupEx>
             {
                 new()
                 {
                     Label = "Defense/Resistance",
                     Filter = e => e.EffectType is Enums.eEffectType.Defense or Enums.eEffectType.Resistance,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
@@ -884,14 +896,15 @@ namespace Mids_Reborn.Forms.Controls
                     Label = "Heal/Endurance",
                     Filter = e => e.EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints
                         or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance or Enums.eEffectType.Recovery,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
                 {
                     Label = "Status",
-                    Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist or Enums.eEffectType.Translucency,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist
+                        or Enums.eEffectType.Translucency,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
@@ -902,7 +915,7 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.StealthRadiusPlayer or Enums.eEffectType.ResEffect
                         or Enums.eEffectType.ThreatLevel or Enums.eEffectType.DropToggles
                         or Enums.eEffectType.RechargeTime or Enums.eEffectType.Enhancement,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
@@ -912,28 +925,28 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.SpeedFlying or Enums.eEffectType.JumpHeight or Enums.eEffectType.Jumppack
                         or Enums.eEffectType.Fly or Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxJumpSpeed
                         or Enums.eEffectType.MaxFlySpeed,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
                 {
                     Label = "Summon",
                     Filter = e => e.EffectType is Enums.eEffectType.EntCreate,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
                 {
                     Label = "Granted Powers",
                     Filter = e => e.EffectType == Enums.eEffectType.GrantPower,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
                 {
                     Label = "Modify Effect",
                     Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 },
 
                 new()
@@ -942,22 +955,22 @@ namespace Mids_Reborn.Forms.Controls
                     Filter = e =>
                         (MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE) &
                         e.EffectType == Enums.eEffectType.Elusivity,
-                    ItemPairs = new List<PairedList.ItemPair>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
                 }
             };
 
             for (var i = 0; i < itemPairGroups.Count; i++)
             {
-                itemPairGroups[i] = new ItemPairGroup
+                itemPairGroups[i] = new ItemPairGroupEx
                 {
                     Label = itemPairGroups[i].Label,
                     Filter = itemPairGroups[i].Filter,
-                    ItemPairs = GroupedFx.FilterListItems(EffectsItemPairs, itemPairGroups[i].Filter)
+                    ItemPairsEx = GroupedFx.FilterListItemsExt(EffectsItemPairs, itemPairGroups[i].Filter)
                 };
             }
 
             var activeItemPairGroups = itemPairGroups
-                .Where(e => e.ItemPairs.Count > 0)
+                .Where(e => e.ItemPairsEx.Count > 0)
                 .ToList();
 
             // Fill the 3 blocks once
@@ -968,9 +981,13 @@ namespace Mids_Reborn.Forms.Controls
                     ? labelArray[i % 3].Text.Replace(":", $" | {activeItemPairGroups[i].Label}:")
                     : $"{activeItemPairGroups[i].Label}:";
                 
-                foreach (var ip in activeItemPairGroups[i].ItemPairs)
+                foreach (var ip in activeItemPairGroups[i].ItemPairsEx)
                 {
-                    pairedListArray[i % 3].AddItem(ip);
+                    pairedListArray[i % 3].AddItem(ip.Value);
+                    if (ip.Key.EnhancementEffect)
+                    {
+                        pairedListArray[i % 3].SetUnique();
+                    }
                 }
             }
 

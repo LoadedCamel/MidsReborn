@@ -57,7 +57,7 @@ namespace Mids_Reborn.Core
 
             public override string ToString()
             {
-                return $"<FxId> {{{EffectType}, {ETModifies}, {MezType}, {DamageType}, {ToWho}}}";
+                return $"<FxId> {{Type: {EffectType}, Modifies: {ETModifies}, Mez: {MezType}, Damage: {DamageType}, ToWho: {ToWho}}}";
             }
         }
 
@@ -119,6 +119,11 @@ namespace Mids_Reborn.Core
             foreach (var gre in greList)
             {
                 IncludedEffects.AddRangeUnique(gre.IncludedEffects);
+            }
+
+            if (IncludedEffects.Count <= 1)
+            {
+                IsAggregated = false;
             }
 
             IncludedEffects.Sort();
@@ -858,7 +863,9 @@ namespace Mids_Reborn.Core
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = power.Effects[re].nSummon,
                                 Duration = 0 //power.Effects[re].Duration
-                            }, power.Effects[re].BuffedMag);
+                            }, power.Effects[re].BuffedMag,
+                            Enums.eSpecialCase.None,
+                            power.Effects[re].isEnhancementEffect);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -893,7 +900,9 @@ namespace Mids_Reborn.Core
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
                                 Duration = 0
-                            }, power.Effects[re].BuffedMag);
+                            }, power.Effects[re].BuffedMag,
+                            Enums.eSpecialCase.None,
+                            power.Effects[re].isEnhancementEffect);
                         
                         ignoredEffects.AddRangeUnique(similarFxIds);
                         
@@ -931,7 +940,8 @@ namespace Mids_Reborn.Core
                                 SummonId = -1,
                                 Duration = 0
                             }, power.Effects[re].BuffedMag,
-                            isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None);
+                            isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
+                            power.Effects[re].isEnhancementEffect);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -945,7 +955,7 @@ namespace Mids_Reborn.Core
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
                                     Duration = 0
-                            },
+                                },
                                 power.Effects[re].BuffedMag,
                                 isDefiance ? "Defiance" : $"{power.Effects[re].EffectType}",
                                 similarFxIds,
