@@ -751,9 +751,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-
             var inherentPowersList = CurrentBuild?.Powers
-                .Where(p => p is { Chosen: false } && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
+                .Where(p => p is { Chosen: false, Power: { }} && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
                 .ToList();
             if (inherentPowersList != null)
             {
