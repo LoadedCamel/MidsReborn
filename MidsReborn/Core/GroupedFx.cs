@@ -1445,9 +1445,18 @@ namespace Mids_Reborn.Core
                         };
                     }
 
-                    rankedEffect.Value = effectSource.ToWho == Enums.eToWho.Self
-                        ? $"{effectSource.BuffedMag:###0.##}"
-                        : $"{effectSource.Duration:###0.##} (Mag {effectSource.BuffedMag:###0.##})";
+                    rankedEffect.Value = effectSource.ToWho switch
+                    {
+                        Enums.eToWho.Target => effectSource.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
+                            or Enums.eMez.Teleport
+                            ? $"{effectSource.BuffedMag:###0.##} (Tgt)"
+                            : $"{effectSource.Duration:###0.##}s (Mag {effectSource.BuffedMag:###0.##}, to Tgt)",
+
+                        Enums.eToWho.Self => rankedEffect.Value = $"{effectSource.BuffedMag:###0.##} (Slf)",
+                        
+                        _ => rankedEffect.Value
+                    };
+                    
                     rankedEffect.SpecialTip = greTooltip;
 
                     break;
