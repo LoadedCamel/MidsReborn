@@ -6393,6 +6393,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
+        private void tsViewBuildComment_Click(object sender, EventArgs e)
+        {
+            using var editor = new frmEditComment();
+            
+            editor.ShowDialog(this);
+        }
+
         private void tsView2Col_Click(object sender, EventArgs e)
         {
             tsView3Col.Checked = false;

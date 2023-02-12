@@ -204,6 +204,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator30 = new ToolStripSeparator();
             this.ToolStripSeparator31 = new ToolStripSeparator();
+            this.ToolStripSeparator32 = new ToolStripSeparator();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
             this.lblName = new GFXLabel();
@@ -221,6 +222,7 @@ namespace Mids_Reborn.Forms
             this.poolsPanel = new Panel();
             this.enhCheckMode = new EnhCheckMode(this);
             this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
+            this.tsViewBuildComment = new ToolStripMenuItem();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -1128,11 +1130,21 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator2,
             this.tsViewActualDamage_New,
             this.tsViewDPS_New,
-            this.tlsDPA});
+            this.tlsDPA,
+            this.ToolStripSeparator32,
+            this.tsViewBuildComment,
+            });
             this.ViewToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
             this.ViewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.ViewToolStripMenuItem.Text = "&View";
+            //
+            // tsViewBuildComment
+            //
+            this.tsViewBuildComment.Name = "tsViewBuildComment";
+            this.tsViewBuildComment.Size = new System.Drawing.Size(282, 22);
+            this.tsViewBuildComment.Text = "Build comment...";
+            this.tsViewBuildComment.Click += new System.EventHandler(this.tsViewBuildComment_Click);
             // 
             // tsView2Col
             // 
@@ -2477,9 +2489,11 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator29;
         private ToolStripSeparator ToolStripSeparator30;
         private ToolStripSeparator ToolStripSeparator31;
+        private ToolStripSeparator ToolStripSeparator32;
         ToolStripMenuItem ShareToolStripMenuItem;
         ToolStripMenuItem DonateToolStripMenuItem;
         public ToolStripComboBox EnemyRelativeToolStripComboBox;
+        private ToolStripMenuItem tsViewBuildComment;
         Timer tmrGfx;
         Panel poolsPanel;
         ToolTip tTip;

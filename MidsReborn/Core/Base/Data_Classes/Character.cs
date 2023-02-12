@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -788,6 +787,60 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (CurrentBuild != null && (power.Chosen || !CurrentBuild.PowerUsed(power.Power))) continue;
                     var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
                     power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
+                }
+            }
+        }
+
+        protected void ReadMetadata(string buildText)
+        {
+            var tags = new List<string> {"comment", "enhobtained"};
+
+            var metadata = MidsCharacterFileFormat.ReadMetadata(tags, buildText);
+
+            foreach (var tag in tags)
+            {
+                if (!metadata.ContainsKey(tag))
+                {
+                    continue;
+                }
+
+                switch (tag)
+                {
+                    case "comment":
+                        CurrentBuild.Comment = metadata[tag];
+                        break;
+
+                    case "enhobtained":
+                        var obtainedSlots = metadata[tag];
+                        var n = obtainedSlots.Length;
+                        var k = 0;
+
+                        for (var i = 0; i < CurrentBuild.Powers.Count; i++)
+                        {
+                            if (CurrentBuild.Powers[i].Power == null)
+                            {
+                                continue;
+                            }
+
+                            for (var j = 0; j < CurrentBuild.Powers[i].Slots.Length; j++)
+                            {
+                                if (k < n)
+                                {
+                                    var obtained = obtainedSlots[k] == '1';
+                                    CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained = obtained;
+                                    CurrentBuild.Powers[i].Slots[j].FlippedEnhancement.Obtained = obtained;
+
+                                    k++;
+                                }
+                                else
+                                {
+                                    CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained = false;
+                                    CurrentBuild.Powers[i].Slots[j].FlippedEnhancement.Obtained = false;
+                                }
+                            }
+                        }
+
+                        break;
                 }
             }
         }

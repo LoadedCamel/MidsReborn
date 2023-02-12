@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -11,7 +11,6 @@ namespace Mids_Reborn.Core
 {
     public static class MidsCharacterFileFormat
     {
-
         private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
@@ -34,7 +33,6 @@ namespace Mids_Reborn.Core
         private const float PriorVersion = 3.10f;
         private const float ThisVersion = 3.20f;
 
-
         private const int DataLinkMaxLength = 2048;
 
         private const bool UseQualifiedNames = false;
@@ -50,6 +48,59 @@ namespace Mids_Reborn.Core
         };
 
         //const bool UseHexEncoding = true;
+
+        private static string DecodeEntities(string s)
+        {
+            return s.Replace("&lt;", "<").Replace("&gt;", ">");
+        }
+
+        private static string EncodeEntities(string s)
+        {
+            return s.Replace("<", "&lt;").Replace(">", "&gt;");
+        }
+
+        public static string? ReadMetadata(string tagName, string s)
+        {
+            var r = new Regex($@"\<{tagName}\>(.+)\<\/{tagName}\>");
+            if (!r.IsMatch(s))
+            {
+                return null;
+            }
+
+            var m = r.Match(s);
+
+            return DecodeEntities(m.Groups[1].Value.Trim());
+        }
+
+        public static Dictionary<string, string> ReadMetadata(List<string> tagNames, string s)
+        {
+            var ret = new Dictionary<string, string>();
+
+            foreach (var tag in tagNames)
+            {
+                var r = new Regex($@"\<{tag}\>(.+)\<\/{tag}\>");
+                if (!r.IsMatch(s))
+                {
+                    continue;
+                }
+
+                var m = r.Match(s);
+
+                ret.Add(tag, DecodeEntities(m.Groups[1].Value.Trim()));
+            }
+
+            return ret;
+        }
+
+        private static string SaveMetadata(string tagName, string s)
+        {
+            return $"<{tagName}>{EncodeEntities(s.Trim())}</{tagName}>";
+        }
+
+        private static string SaveMetadata(Dictionary<string, string> tagValues)
+        {
+            return string.Join("\r\n", tagValues.Select(e => $"<{e.Key}>{EncodeEntities(e.Value.Trim())}</{e.Key}>")) + (tagValues.Count > 0 ? "\r\n" : "");
+        }
 
         private static bool MxDBuildSaveBuffer(ref byte[] buffer, bool includeAltEnh)
         {
@@ -171,10 +222,51 @@ namespace Mids_Reborn.Core
         {
             var cData = new CompressionData();
             var str1 = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
+
+            var str4 = "";
+
+            // Save metadata
+            var comment = MidsContext.Character.CurrentBuild.Comment.Trim();
+            if (!string.IsNullOrEmpty(comment))
+            {
+                str4 += $"\r\n<comment>{EncodeEntities(comment)}</comment>";
+            }
+
+            var enhObtainedBin = "";
+            var featureUsed = false;
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe.Power == null)
+                {
+                    continue;
+                }
+
+                for (var j = 0; j < pe.Slots.Length; j++)
+                {
+                    var obtained = pe.Slots[j].Enhancement.Obtained |
+                                   pe.Slots[j].FlippedEnhancement.Obtained;
+
+                    enhObtainedBin += obtained
+                        ? '1'
+                        : '0';
+
+                    if (obtained)
+                    {
+                        featureUsed = true;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(enhObtainedBin) & featureUsed)
+            {
+                str4 += $"\r\n<enhobtained>{enhObtainedBin}</enhobtained>";
+            }
+
+            str4 += "\r\n\r\n\r\n";
+
             if (string.IsNullOrEmpty(str1)) return string.Empty;
 
             var str3 = "\n";
-            string str4;
             if (forumMode)
             {
                 var flag1 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
@@ -192,12 +284,12 @@ namespace Mids_Reborn.Core
                 var str5 = "| Copy & Paste this data into Mids Reborn : Hero Designer to view the build |" + str3;
                 if (flag1)
                     str5 = str5.Replace(" ", "&nbsp;");
-                str4 = str5 + "|-------------------------------------------------------------------|" + str3;
+                str4 += str5 + "|-------------------------------------------------------------------|" + str3;
             }
             else
             {
-                str4 = "|              Do not modify anything below this line!              |" + str3 +
-                       "|-------------------------------------------------------------------|" + str3;
+                str4 += "|              Do not modify anything below this line!              |" + str3 +
+                        "|-------------------------------------------------------------------|" + str3;
             }
 
             const string str6 = ";HEX";
