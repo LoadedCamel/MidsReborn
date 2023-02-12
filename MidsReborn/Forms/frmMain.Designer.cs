@@ -2272,7 +2272,7 @@ namespace Mids_Reborn.Forms
             //
             // enhCheckMode
             //
-            this.enhCheckMode.Location = new Point(5, poolsPanel.Bottom + 2);
+            this.enhCheckMode.Location = new Point(5, 825); // poolsPanel.Bottom + 2;
             this.enhCheckMode.Name = "enhCheckMode";
             this.enhCheckMode.Size = new Size(445, 35);
             this.enhCheckMode.Visible = false;

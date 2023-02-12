@@ -7067,7 +7067,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void tsToggleCheckModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MidsContext.EnhCheckMode = !MidsContext.EnhCheckMode;
-            if (fRecipe != null && fRecipe.Visible)
+            if (fRecipe is {Visible: true})
             {
                 fRecipe.UpdateData();
             }
