@@ -1,6 +1,6 @@
-﻿namespace Mids_Reborn.UIv2.v2Controls
+﻿namespace Mids_Reborn.Controls
 {
-    partial class PowerList_Test
+    partial class AtOriginCombo
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.components = new System.ComponentModel.Container();
         }
 
         #endregion
+
     }
 }

@@ -89,7 +89,7 @@
             this.ctlOutlinedLabel1.Location = new System.Drawing.Point(43, 7);
             this.ctlOutlinedLabel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 1);
             this.ctlOutlinedLabel1.Name = "ctlOutlinedLabel1";
-            this.ctlOutlinedLabel1.OutlineForeColor = System.Drawing.Color.Black;
+            this.ctlOutlinedLabel1.OutlineColor = System.Drawing.Color.Black;
             this.ctlOutlinedLabel1.OutlineWidth = 1.5F;
             this.ctlOutlinedLabel1.Size = new System.Drawing.Size(87, 13);
             this.ctlOutlinedLabel1.TabIndex = 2;

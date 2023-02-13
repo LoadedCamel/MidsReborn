@@ -17,10 +17,10 @@ namespace Mids_Reborn.Core
         public static HashSet<string> setSlotted = new HashSet<string>();
         private readonly Character _character;
 
-        public readonly List<PowerEntry?>? Powers;
+        public readonly List<PowerEntry?> Powers;
         public readonly List<I9SetData> SetBonus;
 
-        private IPower _setBonusVirtualPower;
+        private IPower? _setBonusVirtualPower;
 
         public string compareStringSlottedEnh;
 
@@ -50,7 +50,7 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                IPower power;
+                IPower? power;
                 if ((power = _setBonusVirtualPower) == null)
                     power = _setBonusVirtualPower = GetSetBonusVirtualPower();
                 return power;
@@ -168,7 +168,7 @@ namespace Mids_Reborn.Core
             }
 
             Powers[powerIdx].Slots = new SlotEntry[slotEntryArray.Length];
-            for (var index2 = 0; index2 <= Powers[powerIdx].Slots.Length - 1; ++index2)
+            for (var index2 = 0; index2 <= Powers[powerIdx]?.Slots.Length - 1; ++index2)
                 Powers[powerIdx].Slots[index2].Assign(slotEntryArray[index2]);
         }
 

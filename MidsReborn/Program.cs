@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Mids_Reborn.Forms;
+using Mids_Reborn.UIv2;
 
 namespace Mids_Reborn
 {
@@ -16,6 +17,7 @@ namespace Mids_Reborn
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.Run(new frmMain(args));
+            //Application.Run(new Main());
         }
     }
 }

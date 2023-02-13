@@ -2164,7 +2164,7 @@ namespace Mids_Reborn
             return true;
         }
 
-        private static string[] IoGrab2(StreamReader iStream, string delimiter = ";", char fakeLf = '\0')
+        private static string[]? IoGrab2(StreamReader iStream, string delimiter = ";", char fakeLf = '\0')
         {
             var str = FileIO.ReadLineUnlimited(iStream, fakeLf);
             var strArray = str.Split(Convert.ToChar(delimiter));
@@ -2884,7 +2884,7 @@ namespace Mids_Reborn
         private bool ReadInternalData(StreamReader iStream)
         {
             iStream.BaseStream.Seek(0L, SeekOrigin.Begin);
-            string[] strArray;
+            string[]? strArray;
             string a;
             try
             {
@@ -2996,14 +2996,10 @@ namespace Mids_Reborn
                         var index3 = index1 + 1 + 1;
                         power.Level = Convert.ToInt32(strArray4[index3]);
                         var index4 = index3 + 1;
-                        power.NIDPowerset = Convert.ToDouble(strArray4[index4]) >= 0.0
-                            ? Powersets[Convert.ToInt32(strArray4[index4])].nID
-                            : -1;
+                        power.NIDPowerset = Convert.ToDouble(strArray4[index4]) >= 0.0 ? Powersets[Convert.ToInt32(strArray4[index4])].nID : -1;
                         var index5 = index4 + 1;
                         power.IDXPower = Convert.ToInt32(strArray4[index5]);
-                        power.NIDPower = !((power.NIDPowerset > -1) & (power.IDXPower > -1))
-                            ? -1
-                            : DatabaseAPI.Database.Powersets[power.NIDPowerset].Power[power.IDXPower];
+                        power.NIDPower = !((power.NIDPowerset > -1) & (power.IDXPower > -1)) ? -1 : DatabaseAPI.Database.Powersets[power.NIDPowerset].Power[power.IDXPower];
                         var index6 = index5 + 1;
                         power.Slots = new SlotEntry[Convert.ToInt32(strArray4[index6]) + 1];
                         var index7 = index6 + 1;
@@ -3018,11 +3014,9 @@ namespace Mids_Reborn
 
                         power.VariableValue = Convert.ToInt32(strArray4[index7]);
                         index1 = index7 + 1;
-                        if (!(nVer >= BuildFormatChange2))
-                            continue;
+                        if (!(nVer >= BuildFormatChange2)) continue;
                         {
-                            power.SubPowers =
-                                new PowerSubEntry[Convert.ToInt32(strArray4[index1]) + 1];
+                            power.SubPowers = new PowerSubEntry[Convert.ToInt32(strArray4[index1]) + 1];
                             ++index1;
                             var num7 = power.SubPowers.Length - 1;
                             for (var index8 = 0; index8 <= num7; ++index8)
@@ -3034,14 +3028,9 @@ namespace Mids_Reborn
                                 index1++;
                                 power.SubPowers[index8].Powerset = Convert.ToInt32(strArray4[index1]);
                                 index1++;
-                                power.SubPowers[index8].StatInclude =
-                                    Math.Abs(Convert.ToDouble(strArray4[index1])) > 0.01;
+                                power.SubPowers[index8].StatInclude = Math.Abs(Convert.ToDouble(strArray4[index1])) > 0.01;
                                 index1++;
-                                power.SubPowers[index8].nIDPower =
-                                    !((power.SubPowers[index8].Powerset > -1) & (power.SubPowers[index8].Power > -1))
-                                        ? -1
-                                        : DatabaseAPI.Database.Powersets[power.SubPowers[index8].Powerset]
-                                            .Power[power.SubPowers[index8].Power];
+                                power.SubPowers[index8].nIDPower = !((power.SubPowers[index8].Powerset > -1) & (power.SubPowers[index8].Power > -1)) ? -1 : DatabaseAPI.Database.Powersets[power.SubPowers[index8].Powerset].Power[power.SubPowers[index8].Power];
                             }
 
                             power.SubPowers = Array.Empty<PowerSubEntry>();
