@@ -2178,24 +2178,29 @@ namespace Mids_Reborn
         public bool Load(string iFileName, ref Stream? mStream)
         {
             if (mStream == null || !string.IsNullOrEmpty(iFileName))
+            {
                 mStream = new FileStream(iFileName, FileMode.Open, FileAccess.Read);
+            }
 
-            var iStream1 = mStream;
             //Stream iStream1 = mStream != null ? mStream : (Stream) new FileStream(iFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            switch (MidsCharacterFileFormat.MxDExtractAndLoad(iStream1))
+            var buildString = File.ReadAllText(iFileName);
+            switch (MidsCharacterFileFormat.MxDExtractAndLoad(mStream))
             {
                 case MidsCharacterFileFormat.eLoadReturnCode.Failure:
-                    iStream1.Close();
+                    mStream.Close();
+                    
                     return false;
                 case MidsCharacterFileFormat.eLoadReturnCode.Success:
-                    iStream1.Close();
+                    mStream.Close();
                     ResetLevel();
                     PoolShuffle();
                     I9Gfx.OriginIndex = Origin;
                     Validate();
+                    ReadMetadata(buildString);
+
                     return true;
                 case MidsCharacterFileFormat.eLoadReturnCode.IsOldFormat:
-                    iStream1.Close();
+                    mStream.Close();
                     break;
             }
 
@@ -2207,6 +2212,7 @@ namespace Mids_Reborn
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
                 return false;
             }
 
@@ -2216,6 +2222,8 @@ namespace Mids_Reborn
             PoolShuffle();
             I9Gfx.OriginIndex = Origin;
             Validate();
+            ReadMetadata(buildString);
+
             return flag;
         }
 
@@ -3066,7 +3074,7 @@ namespace Mids_Reborn
             var str2 = new clsOutput
             {
                 Plain = true, idFormat = 0
-            }.Build("") + "\r\n\r\n";
+            }.Build("", false) + "\r\n\r\n";
             StreamWriter streamWriter;
             try
             {
