@@ -226,7 +226,9 @@ namespace Mids_Reborn.Core
             var str4 = "";
 
             // Save metadata
-            var comment = MidsContext.Character.CurrentBuild.Comment.Trim();
+            var comment = MidsContext.Character.CurrentBuild.Comment == null
+                ? ""
+                : MidsContext.Character.CurrentBuild.Comment.Trim();
             if (!string.IsNullOrEmpty(comment))
             {
                 str4 += $"\r\n<comment>{EncodeEntities(comment)}</comment>";
