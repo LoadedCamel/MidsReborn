@@ -144,11 +144,6 @@ namespace Mids_Reborn.Forms.Controls
 
         private void lblEnhObtained_MouseClick(object sender, MouseEventArgs e)
         {
-            if (MidsContext.Character == null)
-            {
-                return;
-            }
-
             if (MidsContext.Character.CurrentBuild == null)
             {
                 return;
@@ -159,7 +154,7 @@ namespace Mids_Reborn.Forms.Controls
                 case MouseButtons.Left:
                     foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
                     {
-                        if (pe.Power == null)
+                        if (pe?.Power == null)
                         {
                             continue;
                         }

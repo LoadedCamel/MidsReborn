@@ -1,6 +1,8 @@
-﻿namespace Mids_Reborn.Controls
+﻿using System.Windows.Forms;
+
+namespace Mids_Reborn.Forms.Controls
 {
-    partial class ctlCombo
+    partial class PowerFlowPanel
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +30,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
+            SuspendLayout();
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            WrapContents = false;
+            HorizontalScroll.Maximum = 0;
+            AutoScroll = false;
+            VerticalScroll.Visible = false;
+            AutoScroll = true;
+            ResumeLayout();
         }
 
         #endregion
-
     }
 }

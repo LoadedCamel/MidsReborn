@@ -6,7 +6,19 @@ namespace Mids_Reborn.Controls
 {
     public partial class ctlOutlinedLabel : Label
     {
-        public Color OutlineForeColor { get; set; }
+        protected override CreateParams CreateParams
+        {
+            get 
+            { 
+                var cp = base.CreateParams;
+                cp.Style &= ~0x0002;
+                cp.ExStyle &= ~0x02000000;
+                cp.ExStyle &= ~0x00000020;
+                return cp;
+            }
+        }
+
+        public Color OutlineColor { get; set; }
         public float OutlineWidth { get; set; }
         public bool OutlineEnabled { get; set; }
         public sealed override ContentAlignment TextAlign { get; set; }
@@ -20,9 +32,9 @@ namespace Mids_Reborn.Controls
         {
             if (OutlineEnabled)
             {
-                e.Graphics.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
+                //e.Graphics.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
                 using GraphicsPath gp = new GraphicsPath();
-                using Pen outline = new Pen(OutlineForeColor, OutlineWidth) { LineJoin = LineJoin.Round };
+                using Pen outline = new Pen(OutlineColor, OutlineWidth) { LineJoin = LineJoin.Round };
                 using StringFormat sf = new StringFormat();
                 using Brush foreBrush = new SolidBrush(ForeColor);
                 gp.AddString(Text, Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle, sf);
@@ -35,6 +47,11 @@ namespace Mids_Reborn.Controls
             {
                 base.OnPaint(e);
             }
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs pevent)
+        {
+            //base.OnPaintBackground(pevent);
         }
     }
 }
