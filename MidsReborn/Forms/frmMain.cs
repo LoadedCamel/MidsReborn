@@ -1611,8 +1611,9 @@ namespace Mids_Reborn.Forms
         private bool doSaveAs()
         {
             FloatTop(false);
-            if (LastFileName != string.Empty)
+            if (LastFileName != string.Empty && FileIO.StripPath(LastFileName).Length is < 256 and >= 3 && !Regex.IsMatch(LastFileName, @"(Villain|Hero|Character) build"))
             {
+                Debug.WriteLine($"Last file name: {LastFileName}");
                 DlgSave.FileName = FileIO.StripPath(LastFileName);
                 if (DlgSave.FileName.Length > 3 && DlgSave.FileName.ToUpper().EndsWith(".TXT"))
                 {
@@ -6709,7 +6710,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             ComboCheckPS(CbtPrimary.Value, Enums.PowersetType.Primary, Enums.ePowerSetType.Primary);
             ComboCheckPS(CbtSecondary.Value, Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary);
-            cbSecondary.Enabled = MidsContext.Character.Powersets[0].nIDLinkSecondary <= -1;
+            cbSecondary.Enabled = MidsContext.Character.Powersets[0] is {nIDLinkSecondary: <= -1};
             ComboCheckPool(CbtPool0.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool1.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool2.Value, Enums.ePowerSetType.Pool);
