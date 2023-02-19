@@ -1942,24 +1942,27 @@ namespace Mids_Reborn
             }
 
             var powerMath = GBPA_SubPass0_AssemblePowerEntry(nIDPower, iPower);
-            for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)
+            /*for (var index = 0; index < CurrentBuild.Powers.Count; index++)
             {
-                if (CurrentBuild.Powers[index] != null)
+                if (CurrentBuild.Powers[index] == null)
                 {
-                    switch (iPower != index & CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1) & (index < _mathPower.Length))
-                    {
-                        case false:
-                            continue;
-                        default:
-                        {
-                            var effectType = Enums.eEffectType.GrantPower;
-                            GBPA_ApplyIncarnateEnhancements(ref powerMath, -1, _mathPower[index], false,
-                                ref effectType);
-                            break;
-                        }
-                    }
+                    continue;
                 }
-            }
+
+                if (!(iPower != index & CurrentBuild.Powers[index].StatInclude &
+                      CurrentBuild.Powers[index].NIDPower > -1 & index < _mathPower.Length))
+                {
+                    continue;
+                }
+
+                var effectType = Enums.eEffectType.GrantPower;
+                GBPA_ApplyIncarnateEnhancements(ref powerMath, -1, _mathPower[index], false,
+                    ref effectType);
+            }*/
+
+            powerMath = new Power(DatabaseAPI.GetPowerByFullName(powerMath.FullName));
+            powerMath?.ProcessExecutes();
+            powerMath?.AbsorbPetEffects();
 
             return powerMath;
         }

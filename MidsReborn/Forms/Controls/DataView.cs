@@ -2377,9 +2377,7 @@ namespace Mids_Reborn.Forms.Controls
             }*/
 
             pBase?.ProcessExecutes();
-            pBase?.AbsorbPetEffects();
             pEnh?.ProcessExecutes();
-            //pEnh?.AbsorbPetEffects(); // Done already during calculations (see clsToonX.GenerateBuffedPowerArray())
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
             EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
