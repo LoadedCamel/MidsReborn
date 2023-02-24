@@ -684,11 +684,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             FillImageList();
             foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
             {
-                for (var index2 = 0; index2 < s.SetInfo.Length; index2++)
+                for (var i = 0; i < s.SetInfo.Length; i++)
                 {
                     var setInfo = s.SetInfo;
-                    var index3 = index2;
-                    items[0] = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX].DisplayName;
+                    
+                    items[0] = DatabaseAPI.Database.EnhancementSets[setInfo[i].SetIDX].DisplayName;
                     items[1] =
                         MidsContext.Character.CurrentBuild
                             .Powers[s.PowerIndex]
@@ -702,16 +702,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                     MainModule.MidsController.Toon.CurrentBuild
                                         .Powers[s.PowerIndex]
                                         .IDXPower].DisplayName;
-                    items[2] = Convert.ToString(setInfo[index3].SlottedCount);
+                    items[2] = Convert.ToString(setInfo[i].SlottedCount);
                     imageIndex++;
                     lstSets.Items.Add(new ListViewItem(items, imageIndex));
-                    lstSets.Items[lstSets.Items.Count - 1].Tag = setInfo[index3].SetIDX;
+                    lstSets.Items[^1].Tag = setInfo[i].SetIDX;
                 }
             }
 
             lstSets.EndUpdate();
             if (lstSets.Items.Count > 0)
+            {
                 lstSets.Items[0].Selected = true;
+            }
+
             FillEffectView();
         }
 
@@ -844,19 +847,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     if (s.SetInfo[index2].Powers.Length <= 0) continue;
 
                     var setInfo = s.SetInfo;
-                    var index3 = index2;
-                    enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
+                    enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index2].SetIDX];
                     var str2 = str1 + RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
                     if (MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset > -1)
                     {
-                        str2 += RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" +  DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower].DisplayName + ")";
+                        str2 += $"{RTF.Crlf()}{RTF.Color(RTF.ElementID.Faded)}({DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower].DisplayName})";
                     }
 
-                    var str3 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Text);
+                    var str3 = $"{str2}{RTF.Crlf()}{RTF.Color(RTF.ElementID.Text)}";
                     var str4 = "";
                     for (var index4 = 0; index4 < enhancementSet.Bonus.Length; index4++)
                     {
-                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
+                        if (!((setInfo[index2].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
                                ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) &
                                 !MidsContext.Config.Inc.DisablePvE) |
@@ -870,7 +872,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var str5 = enhancementSet.GetEffectString(index4, false, true, true);
                         if (string.IsNullOrWhiteSpace(str5)) continue;
                         str5 = $"  {str5}";
-                        if (str4 != "") str4 += RTF.Crlf();
+                        if (str4 != "")
+                        {
+                            str4 += RTF.Crlf();
+                        }
 
                         foreach (var esb in enhancementSet.Bonus[index4].Index)
                         {
@@ -893,7 +898,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                         if (localOverCap)
                         {
-                            str5 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str5 + " >Cap" + RTF.Color(RTF.ElementID.Text));
+                            str5 = $"{RTF.Italic(RTF.Color(RTF.ElementID.Warning))}{str5} >Cap{RTF.Color(RTF.ElementID.Text)}";
                             hasOvercap = true;
                         }
 
@@ -905,8 +910,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var index5 = DatabaseAPI.IsSpecialEnh(si);
                         if (index5 <= -1) continue;
                         if (str4 != "")
+                        {
                             str4 += RTF.Crlf();
-                        var str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
+                        }
+
+                        var str5 = $"{str4}{RTF.Color(RTF.ElementID.Enhancement)}";
                         var localOverCap = false;
                         var str6 = "  " + DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].GetEffectString(index5, true, true, true);
                         foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].SpecialBonus[index5].Index)
@@ -929,7 +937,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                         if (localOverCap)
                         {
-                            str6 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str6 + " >Cap" + RTF.Color(RTF.ElementID.Text));
+                            str6 = $"{RTF.Italic(RTF.Color(RTF.ElementID.Warning))}{str6} >Cap{RTF.Color(RTF.ElementID.Text)}";
                             hasOvercap = true;
                         }
 
@@ -974,13 +982,24 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         fxGroup.Key.EffectType == Enums.eEffectType.EntCreate |
                         fxGroup.Key.EffectType == Enums.eEffectType.EntCreate_x |
                         fxGroup.Key.EffectType == Enums.eEffectType.Null |
-                        fxGroup.Key.EffectType == Enums.eEffectType.NullBool) continue;
-                    
-                    var l2Group = fxGroup.Key.L2Group;
-                    if (l2Group != Enums.eFXSubGroup.NoGroup && pickedGroups.ContainsKey(l2Group)) continue;
-                    if (l2Group != Enums.eFXSubGroup.NoGroup) pickedGroups.Add(l2Group, true);
-                    var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
+                        fxGroup.Key.EffectType == Enums.eEffectType.NullBool |
+                        fxGroup.Key.EffectType == Enums.eEffectType.ExecutePower)
+                    {
+                        continue;
+                    }
 
+                    var l2Group = fxGroup.Key.L2Group;
+                    if (l2Group != Enums.eFXSubGroup.NoGroup && pickedGroups.ContainsKey(l2Group))
+                    {
+                        continue;
+                    }
+
+                    if (l2Group != Enums.eFXSubGroup.NoGroup)
+                    {
+                        pickedGroups.Add(l2Group, true);
+                    }
+
+                    var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
                     if (fxGroup.Key.MezType != Enums.eMez.None)
                     {
                         effectName += $"({Enums.GetMezName(fxGroup.Key.MezType)})";
@@ -1014,8 +1033,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
                         fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
                     }
-                    var petSum = 0.0;
-                    var selfSum = 0.0;
+                    var petSum = 0;
+                    var selfSum = 0;
                     fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)";
 
                     foreach (var e in effectSources[fxGroup.Key])
@@ -1024,18 +1043,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         //if (e.EntitiesAutoHit != Enums.eEntity.None & ((e.EntitiesAutoHit & Enums.eEntity.Caster) == Enums.eEntity.None)) continue;
                         fxBlockStr += RTF.Crlf();
                         string effectString;
-                        if (l2Group != Enums.eFXSubGroup.NoGroup)
-                        {
-                            effectString = e.Fx.BuildEffectString(true, "", false, false, false, true).Replace(effectName, fxGroup.Key.L2GroupText());
-                        }
-                        else
-                        {
-                            effectString = e.Fx.BuildEffectString(true, "", false, false, false, true);
-                        }
+                        effectString = l2Group != Enums.eFXSubGroup.NoGroup
+                            ? e.Fx.BuildEffectString(true, "", false, false, false, true).Replace(effectName, fxGroup.Key.L2GroupText())
+                            : e.Fx.BuildEffectString(true, "", false, false, false, true);
 
                         if (!effectString.StartsWith("+"))
                         {
-                            effectString = "+" + effectString;
+                            effectString = $"+{effectString}";
                         }
 
                         effectString = Regex.Replace(effectString, @"Endurance\b|Max End", "Max Endurance");
@@ -1068,48 +1082,53 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             var str9 = RTF.StartRTF() + RTF.ToRTF(iStr) + RTF.EndRTF();
             if (rtApplied.Rtf == str9)
+            {
                 return;
+            }
+
             rtApplied.Rtf = str9;
+        }
+
+        private Bitmap DrawEnhancementSetBitmap(int w, int h, int imgIndex)
+        {
+            var xb = new ExtendedBitmap(w, h);
+            xb.Graphics.Clear(Color.Transparent);
+            var graphics = xb.Graphics;
+            I9Gfx.DrawEnhancementSet(ref graphics, imgIndex);
+
+            return xb.Bitmap ?? new Bitmap(w, h);
         }
 
         private void FillImageList()
         {
-            var imageSize1 = ilSet.ImageSize;
-            var width1 = imageSize1.Width;
-            imageSize1 = ilSet.ImageSize;
-            var height1 = imageSize1.Height;
-            var extendedBitmap = new ExtendedBitmap(width1, height1);
-            ilSet.Images.Clear();
-            foreach (var sb in MidsContext.Character.CurrentBuild.SetBonus)
+            /*
+            I9Gfx.LoadSets():
+            for (var index = 0; index < retList.Count; index++)
             {
-                for (var index2 = 0; index2 < sb.SetInfo.Length; index2++)
-                {
-                    if (sb.SetInfo[index2].SetIDX <= -1) continue;
-                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[index2].SetIDX];
-                    if (enhancementSet.ImageIdx > -1)
-                    {
-                        extendedBitmap.Graphics.Clear(Color.Transparent);
-                        var graphics = extendedBitmap.Graphics;
-                        I9Gfx.DrawEnhancementSet(ref graphics, enhancementSet.ImageIdx);
-                        ilSet.Images.Add(extendedBitmap.Bitmap);
-                    }
-                    else
-                    {
-                        var images = ilSet.Images;
-                        var imageSize2 = ilSet.ImageSize;
-                        var width2 = imageSize2.Width;
-                        imageSize2 = ilSet.ImageSize;
-                        var height2 = imageSize2.Height;
-                        var bitmap = new Bitmap(width2, height2);
-                        images.Add(bitmap);
-                    }
-                }
+                DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
+            }
+            */
+
+            var imgSets = MidsContext.Character.CurrentBuild.SetBonus
+                .SelectMany(e => e.SetInfo.Where(f => f.SetIDX >= 0))
+                .Select(e => DatabaseAPI.Database.EnhancementSets[e.SetIDX].Image)
+                .Select(e => DatabaseAPI.Database.EnhancementSets.TryFindIndex(f => f.Image == e))
+                .Select(e => DrawEnhancementSetBitmap(ilSet.ImageSize.Width, ilSet.ImageSize.Height, e))
+                .ToArray();
+
+            ilSet.Images.Clear();
+            foreach (var img in imgSets)
+            {
+                ilSet.Images.Add(img);
             }
         }
 
         private void Bar_Hover(object sender)
         {
-            if (!(sender is ctlLayeredBarPb bar)) return;
+            if (sender is not ctlLayeredBarPb bar)
+            {
+                return;
+            }
 
             var barData = BarsFX[bar.Name];
             var barValues = bar.GetValues();
