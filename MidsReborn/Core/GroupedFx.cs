@@ -1149,7 +1149,7 @@ namespace Mids_Reborn.Core
                 if (greIndex < 0) continue;
 
                 var rankedEffect = FastItemBuilder.GetRankedEffect(rankedEffects.ToArray(), greIndex, pBase, pEnh);
-                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre.GetEffectAt(pEnh), gre.EffectType, gre, gre.GetTooltip(pEnh), rankedEffects[greIndex], displayBlockFontSize);
+                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], displayBlockFontSize);
 
                 ret.Add(new KeyValuePair<GroupedFx, PairedList.ItemPair>(gre, rankedEffect));
             }
@@ -1320,35 +1320,37 @@ namespace Mids_Reborn.Core
         /// <param name="rankedEffect">Base ranked effect (as ref)</param>
         /// <param name="pBase">Source power (base)</param>
         /// <param name="pEnh">Source power (enhanced)</param>
-        /// <param name="effectSource">Source effect</param>
-        /// <param name="effectType">Source effect type (from groupedEffect.FxIdentifier.EffectType)</param>
         /// <param name="gre">Associated grouped effect</param>
-        /// <param name="greTooltip">Grouped effect tooltip string</param>
         /// <param name="effectIndex">Effect index in the enhanced power</param>
         /// <param name="displayBlockFontSize">Display block font size</param>
-        private static void FinalizeListItem(ref PairedList.ItemPair rankedEffect, IPower pBase, IPower pEnh,
-            IEffect effectSource, Enums.eEffectType effectType, GroupedFx gre, string greTooltip, int effectIndex,
-            float displayBlockFontSize)
+        private static void FinalizeListItem(ref PairedList.ItemPair rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
         {
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
+            var effectSource = gre.GetEffectAt(pEnh);
+            var effectType = gre.EffectType;
+            var greTooltip = gre.GetTooltip(pEnh);
+            var magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
+                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0));
+            var toWhoShort = effectSource.ToWho switch
+            {
+                Enums.eToWho.Self => "Slf",
+                Enums.eToWho.Target => "Tgt",
+                _ => ""
+            };
+
             rankedEffect.UniqueColor = effectSource.isEnhancementEffect;
-            rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && effectIndex < pBase.Effects.Length && effectIndex < pEnh.Effects.Length && Math.Abs(pBase.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].BuffedMag) > float.Epsilon;
+            rankedEffect.AlternateColor = !effectSource.isEnhancementEffect &
+                                          magDiff > float.Epsilon &
+                                          effectSource.Buffable;
 
             switch (effectType)
             {
                 case Enums.eEffectType.Recovery:
                 case Enums.eEffectType.Endurance:
                     rankedEffect.Name = $"{effectType}";
-                    var fxTarget = effectSource.ToWho switch
-                    {
-                        Enums.eToWho.Self => "(Self)",
-                        Enums.eToWho.Target => "(Tgt)",
-                        _ => ""
-                    };
-
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% {fxTarget}"
-                        : $"{effectSource.BuffedMag:###0.##} {fxTarget}";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
+                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
 
                     rankedEffect.SpecialTip = greTooltip;
 
@@ -1482,8 +1484,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Translucency:
                     rankedEffect.Name = "Trnslcncy";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({effectSource.ToWho})"
-                        : $"{effectSource.BuffedMag:###0.##} ({effectSource.ToWho})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
+                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
                     rankedEffect.SpecialTip = greTooltip;
 
                     break;
@@ -1512,14 +1514,14 @@ namespace Mids_Reborn.Core
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({effectSource.ToWho})"
-                        : $"{effectSource.BuffedMag:###0.##} ({effectSource.ToWho})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
+                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
                     rankedEffect.SpecialTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.PerceptionRadius:
-                    rankedEffect.Name = $"Pceptn({effectSource.ToWho})";
+                    rankedEffect.Name = $"Pceptn ({toWhoShort})";
                     rankedEffect.Value =
                         $"{(effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}%" : $"{effectSource.BuffedMag:###0.##}")} ({Statistics.BasePerception * effectSource.BuffedMag:###0.##}ft)";
 
@@ -1549,15 +1551,8 @@ namespace Mids_Reborn.Core
                         .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
                         .Sum();
 
-                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}";
-                    rankedEffect.Value += effectSource.ToWho switch
-                    {
-                        Enums.eToWho.Self => " (Self)",
-                        Enums.eToWho.Target => " (Tgt)",
-                        _ => ""
-                    };
-
-                    rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon;
+                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")} ({toWhoShort})";
+                    rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon && effectSource.Buffable;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.SpecialTip = string.Join("\r\n", pEnh.Effects

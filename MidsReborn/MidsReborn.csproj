@@ -68,6 +68,9 @@
     <Content Include="Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+	<Content Include="Images\Unknown.png">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
     <Content Include="Data\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -312,7 +315,6 @@
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Images\Unknown.png" />
     <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>

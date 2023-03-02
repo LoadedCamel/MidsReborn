@@ -251,7 +251,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.MinimizeBox = false;
             this.Name = "frmSetViewer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Currently Active Sets & Bonuses";
+            this.Text = "Active Sets & Bonuses";
             this.TopMost = true;
             this.panelButtons.ResumeLayout(false);
             this.ResumeLayout(false);

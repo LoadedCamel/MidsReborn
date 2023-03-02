@@ -509,24 +509,27 @@ namespace Mids_Reborn
                 {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
             };
 
-            var p = new RawPowerData { Valid = false };
             var listPowers = new List<PowerEntry>();
             PowerSets = new UniqueList<string>();
 
-            var r1 = new Regex(@"^Level ([0-9]+)\: ([A-Za-z\:\-\' ]+)"); // Powers
-            var r2 = new Regex(@"\((A|[0-9]+)\) ([A-Za-z0-9\%\+\-\:\'\/\(\)\, ]+)"); // Slots/enhancements
-            var rCharInfo = new Regex(@"^(.+)\: Level ([0-9]+) ([A-Za-z]+) ([A-Za-z ]+)"); // Character info
+            var rps = new Regex(@"^Level ([0-9]+)\:[\s]*([A-Za-z0-9\+\-][A-Za-z0-9\+\-\:\-\,\'\%\/ ]+[A-Za-z0-9\+\-\:\-\,\'\%\/])[\s]*(.*)"); // Powers/Slots/enhancements
+            var rCharInfo = new Regex(@"^(.+)\: Level ([0-9]+) ([A-Za-z]+) ([A-Za-z ]+)"); // Character info (with name)
+            var rCharInfo2 = new Regex(@"^Level ([0-9]+) ([A-Za-z]+) ([A-Za-z ]+)"); // Character info (nameless)
             var rpMain = new Regex(@"^(Primary|Secondary) Power Set\: ([A-Za-z\:\-\' ]+)"); // Main powersets
             var rpPool = new Regex(@"^Power Pool\: ([A-Za-z\:\-\' ]+)"); // Pool powersets
             var rpEpic = new Regex(@"(Ancillary|Epic) Pool\: ([A-Za-z\:\-\' ]+)"); // Epic powersets
 
             var lines = BuildString.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             var headerFound = false;
+            Archetype? archetypeData = null;
             foreach (var lineText in lines)
             {
-                if (rCharInfo.IsMatch(lineText))
+                var l = lineText.Trim();
+                l = Regex.Replace(l, @"[\s\t]{2,}", "\t");
+
+                if (rCharInfo.IsMatch(l))
                 {
-                    var m = rCharInfo.Match(lineText);
+                    var m = rCharInfo.Match(l);
                     CharacterInfo.Name = m.Groups[1].Value;
                     CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
                     CharacterInfo.Origin = m.Groups[3].Value;
@@ -534,6 +537,19 @@ namespace Mids_Reborn
 
                     SetCharacterInfo();
                     headerFound = true;
+                    archetypeData = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
+                }
+                else if (rCharInfo2.IsMatch(l))
+                {
+                    var m = rCharInfo2.Match(l);
+                    CharacterInfo.Name = "";
+                    CharacterInfo.Level = Convert.ToInt32(m.Groups[1].Value, null);
+                    CharacterInfo.Origin = m.Groups[2].Value;
+                    CharacterInfo.Archetype = m.Groups[3].Value;
+
+                    SetCharacterInfo();
+                    headerFound = true;
+                    archetypeData = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
                 }
 
                 if (!headerFound)
@@ -541,13 +557,10 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                var archetypeData = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype);
-
-                var m1 = r1.Match(lineText);
-                var m2 = r2.Match(lineText);
-                var mpMain = rpMain.Match(lineText);
-                var mpPool = rpPool.Match(lineText);
-                var mpEpic = rpEpic.Match(lineText);
+                var mps = rps.Match(l);
+                var mpMain = rpMain.Match(l);
+                var mpPool = rpPool.Match(l);
+                var mpEpic = rpEpic.Match(l);
 
                 if (mpMain.Success)
                 {
@@ -579,48 +592,55 @@ namespace Mids_Reborn
                     }
                 }
 
-                if (m1.Success)
+                if (!mps.Success)
                 {
-                    if (p.Valid)
-                    {
-                        AddPowerToBuildSheet(p, ref listPowers);
-                    }
+                    continue;
+                }
 
-                    var powerName = m1.Groups[2].Value.Trim();
-                    p.Level = Convert.ToInt32(m1.Groups[1].Value);
-                    p.pData = DatabaseAPI.Database.Power
+                var powerName = mps.Groups[2].Value;
+                var p = new RawPowerData
+                {
+                    Valid = false,
+                    Level = Convert.ToInt32(mps.Groups[1].Value),
+                    pData = DatabaseAPI.Database.Power
                         .DefaultIfEmpty(null)
                         .FirstOrDefault(e => e.GetPowerSet() != null &&
-                                             ((e.GetPowerSet().GetArchetypes().Contains(archetypeData.ClassName) & PowerSets.Contains(e.GetPowerSet().FullName)) |
-                                              e.GetPowerSet().SetType is Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary or Enums.ePowerSetType.Inherent) &
-                                             e.DisplayName == powerName);
+                                             ((e.GetPowerSet().GetArchetypes().Contains(archetypeData.ClassName) &
+                                               PowerSets.Contains(e.GetPowerSet().FullName)) |
+                                              e.GetPowerSet().SetType is Enums.ePowerSetType.Pool
+                                                  or Enums.ePowerSetType.Ancillary or Enums.ePowerSetType.Inherent) &
+                                             e.DisplayName == powerName)
+                };
 
-                    p.FullName = p.pData == null ? "" : p.pData.FullName;
-                    p.Powerset = p.pData?.GetPowerSet();
-
-                    p.Valid = CheckValid(p.pData);
-                    p.Slots = new List<RawEnhData>();
-                    if (p.Valid && CheckValid(p.Powerset))
-                    {
-                        PowerSets.Add(p.Powerset.FullName);
-                    }
-                }
-                
-                if (m2.Success)
+                p.FullName = p.pData == null ? "" : p.pData.FullName;
+                p.Powerset = p.pData?.GetPowerSet();
+                p.Valid = CheckValid(p.pData);
+                p.Slots = new List<RawEnhData>();
+                var enhSlots = Regex.Split(mps.Groups[3].Value, @",[\s\t]*").ToList();
+                var rs = new Regex(@"^(.+)\((A|[0-9]+)\)");
+                foreach (var slot in enhSlots)
                 {
-                    var rawEnhName = ReplaceFirstOccurrence(m2.Groups[2].Value.Trim(), " - ", ": ");
+                    if (!rs.IsMatch(slot))
+                    {
+                        continue;
+                    }
+
+                    var ms = rs.Match(slot);
+                    var rawEnhName = ReplaceFirstOccurrence(ms.Groups[1].Value.Trim(), "-", ": ");
                     if (oldEnhDict.ContainsKey(rawEnhName))
                     {
                         rawEnhName = oldEnhDict[rawEnhName];
                     }
 
+                    // Direct test
                     var enh = DatabaseAPI.Database.Enhancements
                         .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                        .FirstOrDefault(e => e.LongName == rawEnhName);
+                        .FirstOrDefault(e => e.ShortName == rawEnhName);
 
+                    // Regular IO/SO
                     if (enh == null || enh.StaticIndex < 0)
                     {
-                        var re = new Regex(@"^([A-Za-z ]+) (IO|SO|DO|TO)");
+                        var re = new Regex(@"^([A-Za-z]+)\: (I|S|D|T)");
                         if (!re.IsMatch(rawEnhName))
                         {
                             enh = null;
@@ -630,8 +650,8 @@ namespace Mids_Reborn
                             var mEnh = re.Match(rawEnhName);
                             enh = DatabaseAPI.Database.Enhancements
                                 .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                                .FirstOrDefault(e => e.Name == mEnh.Groups[1].Value.Trim() &&
-                                                     (mEnh.Groups[2].Value == "IO"
+                                .FirstOrDefault(e => e.ShortName == mEnh.Groups[1].Value.Trim() &&
+                                                     (mEnh.Groups[2].Value == "I"
                                                          ? e.TypeID == Enums.eType.InventO
                                                          : e.TypeID is Enums.eType.Normal or Enums.eType.SpecialO));
                         }
@@ -639,11 +659,52 @@ namespace Mids_Reborn
 
                     if (enh == null || enh.StaticIndex < 0)
                     {
-                        // Not found set enhancements where boosts order differs from current DB
-                        var chunks = Regex.Split(rawEnhName, @"\: |\/");
-                        enh = DatabaseAPI.Database.Enhancements
-                            .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                            .FirstOrDefault(e => chunks.All(e.LongName.Contains));
+                        if (Regex.IsMatch(rawEnhName, @"^(HO|TI|TN|HY)\:"))
+                        {
+                            //Database.SpecialEnhStringLong[0] = "None";
+                            //Database.SpecialEnhStringLong[1] = "Hamidon Origin";
+                            //Database.SpecialEnhStringLong[2] = "Hydra Origin";
+                            //Database.SpecialEnhStringLong[3] = "Titan Origin";
+                            //Database.SpecialEnhStringLong[4] = "D-Sync Origin";
+                            
+                            var chunks = rawEnhName.Split(':');
+                            var subTypeId = chunks[0] switch
+                            {
+                                "HO" => 1,
+                                "TI" or "TN" => 2,
+                                "HY" => 3,
+                                _ => 0
+                            };
+                            
+                            enh = DatabaseAPI.Database.Enhancements
+                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                .FirstOrDefault(e =>
+                                    e.ShortName == chunks[1] && e.TypeID == Enums.eType.SpecialO &&
+                                    e.SubTypeID == subTypeId);
+
+                        }
+                    }
+                    
+                    // IO sets
+                    if (enh == null || enh.StaticIndex < 0)
+                    {
+                        var chunks = rawEnhName.Split(": ");
+                        var subChunks = Regex.Split(rawEnhName, @"\: |\/");
+                        
+                        // Enhancement set short names can be non-unique.
+                        // E.g. Annihilation / Annoyance (Ann)
+                        var setsEnh = DatabaseAPI.Database.EnhancementSets
+                            .Where(e => e.ShortName == chunks[0])
+                            .SelectMany(e => e.Enhancements)
+                            .Select(e => DatabaseAPI.Database.Enhancements[e])
+                            .ToList();
+
+                        if (setsEnh.Count > 0)
+                        {
+                            enh = setsEnh
+                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                .FirstOrDefault(e => e.ShortName == chunks[1] || subChunks.Skip(1).All(s => e.ShortName.Contains(s)));
+                        }
                     }
 
                     var e = enh == null || enh.StaticIndex < 0
@@ -658,7 +719,7 @@ namespace Mids_Reborn
                         : new RawEnhData
                         {
                             InternalName = enh.UID,
-                            Level = m2.Groups[1].Value == "A" ? 0 : Convert.ToInt32(m2.Groups[1].Value),
+                            Level = ms.Groups[2].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[2].Value),
                             Boosters = 0,
                             HasCatalyst = false,
                             eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
@@ -666,11 +727,11 @@ namespace Mids_Reborn
 
                     p.Slots.Add(e);
                 }
-            }
 
-            if (p.Valid)
-            {
-                AddPowerToBuildSheet(p, ref listPowers);
+                if (p.Valid)
+                {
+                    AddPowerToBuildSheet(p, ref listPowers);
+                }
             }
 
             return listPowers;
