@@ -222,53 +222,10 @@ namespace Mids_Reborn.Core
         {
             var cData = new CompressionData();
             var str1 = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
-
-            var str4 = "";
-
-            // Save metadata
-            var comment = MidsContext.Character.CurrentBuild.Comment == null
-                ? ""
-                : MidsContext.Character.CurrentBuild.Comment.Trim();
-            if (!string.IsNullOrEmpty(comment))
-            {
-                str4 += $"\r\n<comment>{EncodeEntities(comment)}</comment>";
-            }
-
-            var enhObtainedBin = "";
-            var featureUsed = false;
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (pe.Power == null)
-                {
-                    continue;
-                }
-
-                for (var j = 0; j < pe.Slots.Length; j++)
-                {
-                    var obtained = pe.Slots[j].Enhancement.Obtained |
-                                   pe.Slots[j].FlippedEnhancement.Obtained;
-
-                    enhObtainedBin += obtained
-                        ? '1'
-                        : '0';
-
-                    if (obtained)
-                    {
-                        featureUsed = true;
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(enhObtainedBin) & featureUsed)
-            {
-                str4 += $"\r\n<enhobtained>{enhObtainedBin}</enhobtained>";
-            }
-
-            str4 += "\r\n\r\n\r\n";
-
             if (string.IsNullOrEmpty(str1)) return string.Empty;
 
             var str3 = "\n";
+            string str4;
             if (forumMode)
             {
                 var flag1 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
@@ -286,12 +243,12 @@ namespace Mids_Reborn.Core
                 var str5 = "| Copy & Paste this data into Mids Reborn : Hero Designer to view the build |" + str3;
                 if (flag1)
                     str5 = str5.Replace(" ", "&nbsp;");
-                str4 += str5 + "|-------------------------------------------------------------------|" + str3;
+                str4 = str5 + "|-------------------------------------------------------------------|" + str3;
             }
             else
             {
-                str4 += "|              Do not modify anything below this line!              |" + str3 +
-                        "|-------------------------------------------------------------------|" + str3;
+                str4 = "|              Do not modify anything below this line!              |" + str3 +
+                       "|-------------------------------------------------------------------|" + str3;
             }
 
             const string str6 = ";HEX";
@@ -416,13 +373,20 @@ namespace Mids_Reborn.Core
                             }
                         }
 
-                        if (magicFound) break;
+                        if (magicFound)
+                        {
+                            break;
+                        }
+
                         ++streamIndex;
                     }
                     else
                     {
                         if (!silent)
+                        {
                             MessageBox.Show("Unable to read data - Magic Number not found.", "ReadSaveData Failed");
+                        }
+
                         r.Close();
                         memoryStream.Close();
                         return false;
@@ -454,7 +418,11 @@ namespace Mids_Reborn.Core
                 var nIdClass = DatabaseAPI.NidFromUidClass(r.ReadString());
                 if (nIdClass < 0)
                 {
-                    if (!silent) MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
+                    if (!silent)
+                    {
+                        MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
+                    }
+
                     r.Close();
                     memoryStream.Close();
                     return false;
@@ -462,7 +430,11 @@ namespace Mids_Reborn.Core
 
                 var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIdClass);
                 var charClass = DatabaseAPI.Database.Classes[nIdClass];
-                if (charClass == null) return false;
+                if (charClass == null)
+                {
+                    return false;
+                }
+
                 MidsContext.Character.Reset(charClass, iOrigin);
                 if (fVersion > 1.0)
                 {
@@ -538,7 +510,11 @@ namespace Mids_Reborn.Core
                             flag5 = true;
                         }
 
-                        if (powerEntry1 == null) continue;
+                        if (powerEntry1 == null)
+                        {
+                            continue;
+                        }
+
                         if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
                         {
                             powerEntry1.Level = r.ReadSByte();
@@ -574,7 +550,9 @@ namespace Mids_Reborn.Core
                                     {
                                         var name2 = r.ReadString();
                                         if (!string.IsNullOrEmpty(name2))
+                                        {
                                             powerSub.nIDPower = DatabaseAPI.NidFromUidPower(name2);
+                                        }
                                     }
                                     else
                                     {
@@ -586,7 +564,11 @@ namespace Mids_Reborn.Core
 
                                     if (powerSub.nIDPower > -1)
                                     {
-                                        if (subPower == null) continue;
+                                        if (subPower == null)
+                                        {
+                                            continue;
+                                        }
+
                                         powerSub.Powerset = subPower.PowerSetID;
                                         powerSub.Power = subPower.PowerSetIndex;
                                     }
@@ -632,12 +614,22 @@ namespace Mids_Reborn.Core
                         }
 
                         if (powerEntry1.SubPowers.Length > 0)
+                        {
                             nId = -1;
+                        }
+
                         if (nId <= -1)
+                        {
                             continue;
+                        }
+
                         powerEntry1.NIDPower = nId;
                         var power = DatabaseAPI.Database.Power[nId];
-                        if (power == null) continue;
+                        if (power == null)
+                        {
+                            continue;
+                        }
+
                         powerEntry1.NIDPowerset = power.PowerSetID;
                         powerEntry1.IDXPower = power.PowerSetIndex;
                         if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
@@ -659,7 +651,11 @@ namespace Mids_Reborn.Core
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
                             var cPower = MidsContext.Character.CurrentBuild.Powers[powerIndex];
-                            if (cPower == null) continue;
+                            if (cPower == null)
+                            {
+                                continue;
+                            }
+
                             if (powerEntry1.Power != null && !(!cPower.Chosen & (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool")))
                             {
                                 flag5 = !cPower.Chosen;
@@ -719,7 +715,11 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                if (!silent) MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                if (!silent)
+                {
+                    MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                }
+
                 return false;
             }
         }
@@ -850,7 +850,7 @@ namespace Mids_Reborn.Core
             return eLoadReturnCode;
         }
 
-        private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot slot)
+        private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot? slot)
         {
             if (slot.Enh < 0)
             {
@@ -878,7 +878,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void ReadSlotData(BinaryReader reader, ref I9Slot slot, bool qualifiedNames, float fVersion)
+        private static void ReadSlotData(BinaryReader reader, ref I9Slot? slot, bool qualifiedNames, float fVersion)
         {
             var num = -1;
             if (qualifiedNames)

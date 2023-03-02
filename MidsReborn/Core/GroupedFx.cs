@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.WindowMenuItems;
 
 namespace Mids_Reborn.Core
 {
@@ -278,12 +279,29 @@ namespace Mids_Reborn.Core
         /// <returns>List of defense vectors. If real uses toxic defense, it will be included.</returns>
         private static List<Enums.eDamage> GetTypedDefenses()
         {
-            return new List<Enums.eDamage>
+            var damageTypes = Enum.GetValues(typeof(Enums.eDamage)).Cast<Enums.eDamage>().ToList();
+            var returnedTypes = DatabaseAPI.RealmUsesToxicDefense switch
             {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
+                false => from type in damageTypes
+                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
+                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
+                        or Enums.eDamage.Unique3 or Enums.eDamage.Toxic
+                    select type,
+                true => from type in damageTypes
+                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
+                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
+                        or Enums.eDamage.Unique3
+                    select type
             };
+
+            return returnedTypes.ToList();
+            // return new List<Enums.eDamage>
+            // {
+            //     Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+            //     Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
+            //     DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.Toxic : Enums.eDamage.Psionic
+            // };
+            // Old Commented out above
         }
 
         /// <summary>
@@ -1197,7 +1215,7 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="power">Source power</param>
         /// <returns>Brief of power effects. Self effects will always come first.</returns>
-        private static string GeneratePowerDescShort(IPower power)
+        private static string GeneratePowerDescShort(IPower? power)
         {
             var effectShorts = new List<string>();
             var fxIdList = new List<FxId>();

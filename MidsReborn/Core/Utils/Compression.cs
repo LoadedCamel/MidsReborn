@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace Mids_Reborn.Core.Utils
@@ -9,7 +10,7 @@ namespace Mids_Reborn.Core.Utils
         public static byte[] Compress(byte[] sourceBytes)
         {
             using var mStream = new MemoryStream();
-            using var deflateStream = new DeflaterOutputStream(mStream);
+            using var deflateStream = new DeflaterOutputStream(mStream, new Deflater((int) Deflater.CompressionLevel.BEST_COMPRESSION));
             deflateStream.Write(sourceBytes, 0, sourceBytes.Length);
             deflateStream.Finish();
             var compressedBytes = mStream.ToArray();

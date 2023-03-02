@@ -82,6 +82,7 @@ namespace Mids_Reborn.Forms
             this.tsFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.LegacyExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
@@ -487,13 +488,13 @@ namespace Mids_Reborn.Forms
             // 
             // DlgOpen
             // 
-            this.DlgOpen.DefaultExt = "mxd";
-            this.DlgOpen.Filter = "Hero/Villain Builds (*.mxd)|*.mxd;*.txt|Text Files (*.txt)|*.txt";
+            this.DlgOpen.DefaultExt = "mbd";
+            this.DlgOpen.Filter = "Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
             // 
             // DlgSave
             // 
-            this.DlgSave.DefaultExt = "mxd";
-            this.DlgSave.Filter = "Hero/Villain Builds (*.mxd)|*.mxd";
+            this.DlgSave.DefaultExt = "mbd";
+            this.DlgSave.Filter = "Character Builds (*.mbd)|*.mbd";
             // 
             // tTip
             // 
@@ -706,9 +707,9 @@ namespace Mids_Reborn.Forms
             // ExportToolStripMenuItem
             //
             this.ExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsExport,
-            this.tsExportDataLink,
             this.ToolStripSeparator25,
+            this.LegacyExportToolStripMenuItem,
+            this.ToolStripSeparator27,
             this.tsGenFreebies});
             this.ExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem";
@@ -748,6 +749,16 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator12.Name = "ToolStripSeparator12";
             this.ToolStripSeparator12.Size = new System.Drawing.Size(237, 6);
+            //
+            // LegacyExportToolStripMenuItem
+            //
+            this.LegacyExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsExport,
+            this.tsExportDataLink});
+            this.LegacyExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LegacyExportToolStripMenuItem.Name = "LegacyExportToolStripMenuItem";
+            this.LegacyExportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.LegacyExportToolStripMenuItem.Text = "Legacy Export...";
             // 
             // tsExport
             // 
@@ -2408,6 +2419,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewTotals;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
+        private ToolStripMenuItem LegacyExportToolStripMenuItem;
         private ToolStripMenuItem ExportToolStripMenuItem;
         private ToolStripMenuItem ImportToolStripMenuItem;
         ComboBox cbAncillary;

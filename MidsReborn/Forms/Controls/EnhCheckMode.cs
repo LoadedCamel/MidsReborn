@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using Mids_Reborn.Core.Base.Master_Classes;
 using System.Windows.Forms;
@@ -97,7 +98,6 @@ namespace Mids_Reborn.Forms.Controls
                 Refresh();
                 MidsContext.EnhCheckMode = true;
                 _myParent.UpdateEnhCheckModeToolStrip();
-                
                 return;
             }
 
@@ -158,7 +158,6 @@ namespace Mids_Reborn.Forms.Controls
                         {
                             continue;
                         }
-
                         foreach (var s in pe.Slots)
                         {
                             s.Enhancement.Obtained = !s.Enhancement.Obtained;

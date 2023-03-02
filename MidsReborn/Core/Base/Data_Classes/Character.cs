@@ -6,6 +6,7 @@ using System.Linq;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -71,7 +72,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int RequestedLevel { get; set; }
 
         private Build?[] Builds { get; }
-
 
         public Build? CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
 
@@ -374,6 +374,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] }).Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
         }
 
+        public void LoadPowerSetsByName(IEnumerable<string> sets)
+        {
+            Powersets = sets.Select(set => DatabaseAPI.Database.Powersets.FirstOrDefault(ps => ps?.FullName == set)).Select(powerSet => powerSet ?? new Powerset()).ToArray();
+        }
+
         public void Reset(Archetype? iArchetype = null, int iOrigin = 0)
         {
             Name = string.Empty;
@@ -460,7 +465,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public async void ClearInvalidInherentSlots()
         {
             ResetLevel();
-            foreach (var power in CurrentBuild.Powers.Where(power => power.Power != null))
+            foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
             {
                 switch (power.Power.FullName)
                 {
@@ -957,7 +962,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return 0;
         }
 
-        public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry powerEntry = null)
+        public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry? powerEntry = null)
         {
             var popupData1 = new PopUp.PopupData();
             var index1 = popupData1.Add();
@@ -968,6 +973,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (iLevel > -1)
                 {
                     popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
+                    if (powerEntry != null)
+                    {
+                        var slot = powerEntry.Slots.FirstOrDefault(x => x.Enhancement == iSlot);
+                        if (slot.IsInherent)
+                        {
+                            popupData1.Sections[index1].Add($"This slot is an Inherent slot.", PopUp.Colors.Text);
+                        }
+                    }
                 }
 
                 var index2 = popupData1.Add();

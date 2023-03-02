@@ -38,10 +38,12 @@ namespace Mids_Reborn.Core.Utils
             return controls;
         }
 
-        public static bool CompareVersions(Version serverVersion, Version localVersion)
+        public static bool CompareVersions(Version versionA, Version versionB)
         {
-            var comparisonResult = serverVersion.CompareTo(localVersion);
+            var comparisonResult = versionA.CompareTo(versionB);
             return comparisonResult > 0;
         }
+
+
     }
 }

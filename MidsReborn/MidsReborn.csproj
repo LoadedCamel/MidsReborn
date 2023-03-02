@@ -285,7 +285,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1518.46</Version>
+      <Version>1.0.1587.40</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
@@ -317,7 +317,7 @@
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <PropertyGroup>
-    <Nullable>annotations</Nullable>
+    <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
     <UseWPF>False</UseWPF>
   </PropertyGroup>

@@ -391,6 +391,7 @@ namespace Mids_Reborn.Core
                 if (isInherent)
                 {
                     Slots[index1].IsInherent = true;
+                    Slots[index1].Level = iLevel - 1;
                 }
                 slotIdx = index1;
             }

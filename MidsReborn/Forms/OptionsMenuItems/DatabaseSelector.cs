@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Utils;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
@@ -20,13 +21,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             Icon = Resources.MRB_Icon_Concept;
         }
 
-        private struct DatabaseItems
-        {
-            public string Name { get; set; }
-            public string Path { get; set; }
-        }
-
-        private void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object? sender, EventArgs e)
         {
             CenterToScreen();
             var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder));
@@ -59,7 +54,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine(dbDropdown.SelectedValue.ToString());
             DialogResult = DialogResult.Cancel;
             Close();
         }

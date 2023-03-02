@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Jace.Operations;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -194,6 +194,14 @@ namespace Mids_Reborn.Core
         public static int NidFromUidPower(string name)
         {
             return GetPowerByFullName(name)?.PowerIndex ?? -1;
+        }
+
+        public static int PiDFromUidPower(string name)
+        {
+            var powerDb = Database.Power.ToList();
+            var power = powerDb.FirstOrDefault(p => p?.FullName == name);
+            if (power == null) return -1;
+            return power.PowerIndex;
         }
 
         public static int NidFromUidEntity(string uidEntity)
@@ -635,18 +643,26 @@ namespace Mids_Reborn.Core
             if ((iSet != Enums.ePowerSetType.Pool) & (iSet != Enums.ePowerSetType.Inherent))
             {
                 foreach (var ps in Database.Powersets)
+                {
                     if ((ps.nArchetype == iAt) & (ps.SetType == iSet))
+                    {
                         powersetList.Add(ps);
+                    }
                     else if ((iSet == Enums.ePowerSetType.Ancillary) & (ps.SetType == iSet) && ps.ClassOk(iAt))
+                    {
                         powersetList.Add(ps);
+                    }
+                }
             }
             else
             {
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
-                    if (Database.Powersets[index].SetType == iSet)
+                {
+                    if (Database.Powersets[index]?.SetType == iSet)
                     {
                         powersetList.Add(Database.Powersets[index]);
                     }
+                }
             }
 
             powersetList.Sort();
@@ -950,17 +966,17 @@ namespace Mids_Reborn.Core
             return ret;
         }*/
 
-        public static List<IPower> SlottablePowersSetType(int enhSetType)
+        public static List<IPower?> SlottablePowersSetType(int enhSetType)
         {
-            var retList = new List<IPower>();
+            var retList = new List<IPower?>();
             foreach (var power in Database.Power)
             {
                 var powerset = power.GetPowerSet();
-                if (powerset.SetType != Enums.ePowerSetType.Primary &&
-                    powerset.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset.SetType != Enums.ePowerSetType.Pool &&
-                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+                if (powerset?.SetType != Enums.ePowerSetType.Primary &&
+                    powerset?.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset?.SetType != Enums.ePowerSetType.Pool &&
+                    powerset?.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset?.SetType != Enums.ePowerSetType.Inherent) continue;
                 var setTypes = power.SetTypes.ToList();
                 var containsType = setTypes.Any(x => x == enhSetType);
                 if (containsType)
@@ -1259,7 +1275,11 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                string name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                string name;
+                if (MidsContext.Config == null)
+                    name = new DirectoryInfo(Files.FDefaultPath).Name;
+                else
+                    name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
                 return name;
             }
         }
@@ -1285,6 +1305,8 @@ namespace Mids_Reborn.Core
         }
 
         public static bool RealmUsesToxicDef() => DatabaseName.Equals("Homecoming");
+
+        public static bool RealmUsesToxicDefense => DatabaseName.Equals("Homecoming"); //  This is new
 
         public static void SaveServerData(string? iPath)
         {
@@ -1730,14 +1752,21 @@ namespace Mids_Reborn.Core
         public static bool LoadLevelsDatabase(string? iPath)
         {
             var path = string.Empty;
-            switch (MidsContext.Config.BuildMode)
+            if (MidsContext.Config != null)
             {
-                case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
-                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileNLevels) : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
-                    break;
-                case Enums.dmModes.Respec:
-                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileRLevels) : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
-                    break;
+                switch (MidsContext.Config.BuildMode)
+                {
+                    case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
+                        path = string.IsNullOrWhiteSpace(iPath)
+                            ? Files.SelectDataFileLoad(Files.MxdbFileNLevels)
+                            : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
+                        break;
+                    case Enums.dmModes.Respec:
+                        path = string.IsNullOrWhiteSpace(iPath)
+                            ? Files.SelectDataFileLoad(Files.MxdbFileRLevels)
+                            : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
+                        break;
+                }
             }
 
             Database.Levels = Array.Empty<LevelMap>();
@@ -1754,14 +1783,25 @@ namespace Mids_Reborn.Core
 
             var strArray = FileIO.IOGrab(iStream);
             while (strArray[0] != "Level")
+            {
                 strArray = FileIO.IOGrab(iStream);
+            }
+
             Database.Levels = new LevelMap[50];
             for (var index = 0; index < 50; ++index)
+            {
                 Database.Levels[index] = new LevelMap(FileIO.IOGrab(iStream));
+            }
+
             var intList = new List<int> {0};
             for (var index = 0; index <= Database.Levels.Length - 1; ++index)
+            {
                 if (Database.Levels[index].Powers > 0)
+                {
                     intList.Add(index);
+                }
+            }
+
             Database.Levels_MainPowers = intList.ToArray();
             iStream.Close();
             return true;
@@ -2803,7 +2843,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void MatchRequirementId(IPower power)
+        private static void MatchRequirementId(IPower? power)
 
         {
             if (power.Requires.ClassName.Length > 0)

@@ -358,10 +358,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 return DatabaseAPI.Database.Powersets[PowerSetID];
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public float CastTimeReal { get; set; }

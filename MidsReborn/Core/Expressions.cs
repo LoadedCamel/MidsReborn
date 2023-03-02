@@ -90,7 +90,7 @@ namespace Mids_Reborn.Core
             };
         }
 
-        private static Dictionary<Regex, MatchEvaluator> FunctionsDict(IEffect sourceFx, ICollection<string> pickedPowerNames)
+        private static Dictionary<Regex, MatchEvaluator> FunctionsDict(IEffect sourceFx, List<string?> pickedPowerNames)
         {
             var fxPower = sourceFx.GetPower();
 
@@ -108,7 +108,7 @@ namespace Mids_Reborn.Core
             };
         }
 
-        private static string PowerVectorsContains(IPower sourcePower, string vector)
+        private static string PowerVectorsContains(IPower? sourcePower, string vector)
         {
             var ret = Enum.TryParse(typeof(Enums.eVector), vector, out var eValue);
 
@@ -176,14 +176,7 @@ namespace Mids_Reborn.Core
 
         private static float InternalParsing(IEffect sourceFx, ExpressionType expressionType, out ErrorData error)
         {
-            var pickedPowerNames = MidsContext.Character.CurrentBuild == null
-                ? new List<string>()
-                : MidsContext.Character.CurrentBuild.Powers == null
-                    ? new List<string>()
-                    : MidsContext.Character.CurrentBuild.Powers
-                        .Where(pe => pe.Power != null)
-                        .Select(pe => pe.Power.FullName)
-                        .ToList();
+            var pickedPowerNames = MidsContext.Character.CurrentBuild == null ? new List<string?>() : MidsContext.Character.CurrentBuild.Powers.Select(pe => pe?.Power?.FullName).ToList();
 
             error = new ErrorData();
             var mathEngine = CalculationEngine.New<double>();

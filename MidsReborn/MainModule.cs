@@ -152,6 +152,67 @@ namespace Mids_Reborn
                 GC.Collect();
             }
 
+            public static bool LoadData(string? path)
+            {
+                IsAppInitialized = true;
+                if (!DatabaseAPI.LoadServerData(path))
+                {
+                    MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                DatabaseAPI.Database.AttribMods = new Modifiers();
+                if (!DatabaseAPI.Database.AttribMods.Load(path)) { }
+
+                DatabaseAPI.LoadTypeGrades(path);
+                if (!DatabaseAPI.LoadLevelsDatabase(path))
+                {
+                    MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/LoadedCamel/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                if (!DatabaseAPI.LoadMainDatabase(path))
+                {
+                    MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+                
+                if (!DatabaseAPI.LoadMaths(path))
+                {
+                    Application.Exit();
+                }
+
+                if (!DatabaseAPI.LoadEffectIdsDatabase(path))
+                {
+                    Application.Exit();
+                }
+
+                if (!DatabaseAPI.LoadEnhancementClasses(path))
+                {
+                    Application.Exit();
+                }
+
+                DatabaseAPI.LoadEnhancementDb(path);
+                DatabaseAPI.LoadOrigins(path);
+                
+                //DatabaseAPI.ShowSetTypes();
+                //DatabaseAPI.LoadSetTypeStrings(path);
+
+                DatabaseAPI.LoadSalvage(path);
+                DatabaseAPI.LoadRecipes(path);
+
+                DatabaseAPI.LoadReplacementTable();
+
+                LoadGraphics(path).GetAwaiter().GetResult();
+
+                MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                DatabaseAPI.MatchIds();
+                DatabaseAPI.AssignSetBonusIndexes();
+                DatabaseAPI.AssignRecipeIDs();
+                GC.Collect();
+                return true;
+            }
+
             private static async Task LoadGraphics(string? path)
             {
                 await I9Gfx.Initialize(path);

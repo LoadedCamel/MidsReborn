@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -216,6 +217,7 @@ namespace Mids_Reborn.Controls
 
         public void ReInit(Control iTarget)
         {
+            if (iTarget.IsDisposed) return;
             gTarget = iTarget.CreateGraphics();
             gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             gTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -524,7 +526,7 @@ namespace Mids_Reborn.Controls
                     }
                     else if (iSlot.CanIncludeForStats())
                     {
-                        grey = (iSlot.Level >= MidsContext.Config.ForceLevel);
+                        grey = iSlot.Level >= MidsContext.Config.ForceLevel;
                         imageAttr = GreySlot(grey);
                     }
                     else
@@ -691,7 +693,7 @@ namespace Mids_Reborn.Controls
                     {
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height); // New slot rectangle
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
-                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level > MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(rectangleF));
@@ -700,12 +702,13 @@ namespace Mids_Reborn.Controls
                     }
                     else
                     {
+                        // Controls if powers or slots are greyed out
                         if (_inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         Graphics graphics6 = bxBuffer.Graphics;
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height);
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
+                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             RectangleF iValue3 = rectangleF;
@@ -1169,8 +1172,12 @@ namespace Mids_Reborn.Controls
 
         private void ResetTarget()
         {
-            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
+            if (bxBuffer.Graphics != null)
+                bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125
+                    ? TextRenderingHint.SystemDefault
+                    : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
+            if (cTarget.IsDisposed) return;
             gTarget = cTarget.CreateGraphics();
             gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
             gTarget.CompositingQuality = CompositingQuality.HighQuality;

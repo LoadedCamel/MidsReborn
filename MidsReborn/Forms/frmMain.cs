@@ -29,6 +29,7 @@ using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
+using Newtonsoft.Json;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -223,7 +224,16 @@ namespace Mids_Reborn.Forms
 
                 if (!MidsContext.Config.DisableLoadLastFileOnStart && !ProcessedFromCommand)
                 {
-                    toonLoaded = DoOpen(MidsContext.Config.LastFileName);
+                    switch (MidsContext.Config.LastFileName)
+                    {
+                        case var legacyBuild when MidsContext.Config.LastFileName.EndsWith(".mxd"):
+                            toonLoaded = DoOpen(legacyBuild);
+                            break;
+                        case var build when MidsContext.Config.LastFileName.EndsWith(".mbd"):
+                            Debug.WriteLine("Opening On Load With New Format");
+                            toonLoaded = LoadCharacterFile(build);
+                            break;
+                    }
                 }
 
                 if (!toonLoaded)
@@ -624,7 +634,7 @@ namespace Mids_Reborn.Forms
                 var power = MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.IsHero()
                     ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
                     : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                var iPowers = new List<IPower>();
+                var iPowers = new List<IPower?>();
                 if (power != null)
                 {
                     var num = power.NIDSubPower.Length - 1;
@@ -1277,8 +1287,8 @@ namespace Mids_Reborn.Forms
             var index = -1;
             var Enh1 = -1;
             var Enh2 = -1;
-            I9Slot i9Slot1 = null;
-            I9Slot i9Slot2 = null;
+            I9Slot? i9Slot1 = null;
+            I9Slot? i9Slot2 = null;
             var recolorIa = clsDrawX.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
@@ -1372,6 +1382,47 @@ namespace Mids_Reborn.Forms
             drawing.Refresh(drawing.ScaleDown(rectangle1));
             if (FlipSlotState[FlipSlotState.Length - 1] >= FlipSteps)
                 EndFlip();
+        }
+
+        private bool LoadCharacterFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            DataViewLocked = false;
+            NewToon(true, true);
+            LastFileName = fileName;
+            if (CharacterBuildFile.Load(fileName))
+            {
+                MidsContext.Config.LastFileName = LastFileName;
+            }
+
+            FileModified = false;
+            if (drawing != null) drawing.Highlight = -1;
+            switch (MidsContext.Character?.Archetype?.DisplayName)
+            {
+                case "Mastermind":
+                    ibPetsEx.Visible = true;
+                    ibPetsEx.Enabled = true;
+                    break;
+                default:
+                    ibPetsEx.Visible = false;
+                    ibPetsEx.Enabled = false;
+                    break;
+            }
+
+            myDataView.Clear();
+            MidsContext.Character?.ResetLevel();
+            PowerModified(false);
+            UpdateControls(true);
+            SetTitleBar();
+            Application.DoEvents();
+            GetBestDamageValues();
+            UpdateColors();
+            DoRedraw();
+            FloatUpdate(true);
+            return true;
         }
 
         private bool DoOpen(string fName)
@@ -1599,60 +1650,48 @@ namespace Mids_Reborn.Forms
         private bool doSave()
         {
             if (string.IsNullOrEmpty(LastFileName))
-                return doSaveAs();
-            if (LastFileName.Length > 3 && LastFileName.ToUpper().EndsWith(".TXT")) return doSaveAs();
+            {
+                return DoSaveAs();
+            }
 
-            if (!MainModule.MidsController.Toon.Save(LastFileName))
-                return false;
+            var fileInfo = new FileInfo(LastFileName);
+            switch (fileInfo.Extension)
+            {
+                case ".mxd" or ".txt":
+                    var fileName = LastFileName.Replace(fileInfo.Extension, ".mbd");
+                    LastFileName = fileName;
+                    break;
+            }
+            if (!CharacterBuildFile.Generate(LastFileName)) return false;
             FileModified = false;
+            SetTitleBar();
             return true;
         }
 
-        private bool doSaveAs()
+        private bool DoSaveAs()
         {
             FloatTop(false);
-            if (LastFileName != string.Empty)
+            FileInfo fileInfo;
+            var saveFile = string.Empty;
+            if (!string.IsNullOrWhiteSpace(LastFileName))
             {
-                DlgSave.FileName = FileIO.StripPath(LastFileName);
-                if (DlgSave.FileName.Length > 3 && DlgSave.FileName.ToUpper().EndsWith(".TXT"))
-                {
-                    DlgSave.FileName = DlgSave.FileName.Substring(0, DlgSave.FileName.Length - 3) + DlgSave.DefaultExt;
-                }
-
-                DlgSave.InitialDirectory = LastFileName.Substring(0, LastFileName.LastIndexOf("\\", StringComparison.Ordinal));
+                fileInfo = new FileInfo(LastFileName);
+                saveFile = fileInfo.Name.Replace(fileInfo.Extension, "");
+                DlgSave.InitialDirectory = fileInfo.Directory.FullName;
             }
             else if (!string.IsNullOrWhiteSpace(MidsContext.Character.Name))
             {
-                if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
-                {
-                    DlgSave.FileName = MidsContext.Character.Name + " - Arachnos " + MidsContext.Character.Powersets[0]
-                        .DisplayName
-                        .Replace(" Training", string.Empty).Replace("Arachnos ", string.Empty);
-                }
-                else
-                {
-                    DlgSave.FileName = MidsContext.Character.Name + " - " +
-                                       MidsContext.Character.Archetype.DisplayName + " (" +
-                                       MidsContext.Character.Powersets[0].DisplayName + ")";
-                }
-            }
-            else if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.VillainEpic)
-            {
-                DlgSave.FileName = "Arachnos " + MidsContext.Character.Powersets[0].DisplayName
-                    .Replace(" Training", string.Empty)
-                    .Replace("Arachnos ", string.Empty);
+                saveFile = $"{MidsContext.Character.Name} - {MidsContext.Character.Archetype.DisplayName} ({MidsContext.Character.Powersets[0].DisplayName} - {MidsContext.Character.Powersets[1].DisplayName})";
             }
             else
             {
-                DlgSave.FileName = MidsContext.Character.Archetype.DisplayName;
-                var dlgSave = DlgSave;
-                dlgSave.FileName = dlgSave.FileName + " - " + MidsContext.Character.Powersets[0].DisplayName + " - " + MidsContext.Character.Powersets[1].DisplayName;
+                saveFile = $"{MidsContext.Character.Archetype.DisplayName} ({MidsContext.Character.Powersets[0].DisplayName} - {MidsContext.Character.Powersets[1].DisplayName})";
             }
 
+            DlgSave.FileName = saveFile;
             if (DlgSave.ShowDialog() == DialogResult.OK)
             {
-                if (!MainModule.MidsController.Toon.Save(DlgSave.FileName))
-                    return false;
+                if (!CharacterBuildFile.Generate(DlgSave.FileName)) return false;
                 FileModified = false;
                 LastFileName = DlgSave.FileName;
                 MidsContext.Config.LastFileName = DlgSave.FileName;
@@ -1737,7 +1776,7 @@ namespace Mids_Reborn.Forms
             if (hIDPower <= -1 || MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length <= 0)
                 return false;
 
-            var iPowers = new List<IPower>();
+            var iPowers = new List<IPower?>();
             var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
@@ -2438,7 +2477,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return a.Playable;
         }
 
-        private I9Slot GetRepeatEnhancement(int powerIndex, int iSlotIndex)
+        private I9Slot? GetRepeatEnhancement(int powerIndex, int iSlotIndex)
         {
             if (LastEnhPlaced == null)
                 return new I9Slot();
@@ -2517,7 +2556,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             drawing?.Refresh(bounds);
         }
 
-        private void I9Picker_EnhancementPicked(I9Slot e)
+        private void I9Picker_EnhancementPicked(I9Slot? e)
         {
             e.RelativeLevel = I9Picker.Ui.View.RelLevel;
             if (EnhancingSlot <= -1)
@@ -2769,7 +2808,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void Info_Enhancement(I9Slot iEnh, int iLevel = -1)
+        private void Info_Enhancement(I9Slot? iEnh, int iLevel = -1)
         {
             myDataView.SetEnhancement(iEnh, iLevel);
         }
@@ -3269,8 +3308,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MidsContext.Character.Reset((Archetype)cbAT.SelectedItem, cbOrigin.SelectedIndex);
                 if (MidsContext.Character.Powersets[0].nIDLinkSecondary > -1)
                 {
-                    MidsContext.Character.Powersets[1] =
-                        DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
+                    MidsContext.Character.Powersets[1] = DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
                 }
 
                 MidsContext.Character.Name = str;
@@ -5012,7 +5050,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             frmEntityDetails.UpdateData();
         }
 
-        private void RefreshTabs(int iPower, I9Slot iEnh, int iLevel = -1)
+        private void RefreshTabs(int iPower, I9Slot? iEnh, int iLevel = -1)
         {
             if (iEnh.Enh > -1)
             {
@@ -5302,8 +5340,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 if (LastFileName != string.Empty)
                 {
-                    str1 = FileIO.StripPath(LastFileName) + " - ";
-                    tsFileSave.Text = @"&Save '" + FileIO.StripPath(LastFileName) + @"'";
+                    var fileInfo = new FileInfo(LastFileName);
+                    str1 = fileInfo.Name + " - ";
+                    tsFileSave.Text = $"&Save '{fileInfo.Name.Replace(fileInfo.Extension, "")}'";
                 }
                 else
                 {
@@ -5437,7 +5476,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -5648,7 +5687,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 // Inherent.Inherent.MxD_Temps
                 var power = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
-                var iPowers = new List<IPower>();
+                var iPowers = new List<IPower?>();
                 if (power != null)
                 {
                     var num = power.NIDSubPower.Length - 1;
@@ -6103,7 +6142,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 FloatBuildSalvageHud(false);
             }
 
-            DoOpen(DlgOpen.FileName);
+            switch (DlgOpen.FileName)
+            {
+                case var oldBuild when DlgOpen.FileName.EndsWith(".mxd"):
+                    DoOpen(oldBuild);
+                    break;
+
+                case var newBuild when DlgOpen.FileName.EndsWith(".mbd"):
+                    LoadCharacterFile(newBuild);
+                    break;
+            }
             FloatTop(true);
             var containsPower = MidsContext.Character.CurrentBuild.Powers
                 .Where(pe => pe?.Power != null)
@@ -6133,7 +6181,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFileSaveAs_Click(object sender, EventArgs e)
         {
-            doSaveAs();
+           //doSaveAs();
+           DoSaveAs();
         }
 
         private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
@@ -7365,7 +7414,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;
         private int LastEnhIndex;
-        private I9Slot LastEnhPlaced;
+        private I9Slot? LastEnhPlaced;
         private string LastFileName;
         private int LastIndex;
         private FormWindowState LastState;
