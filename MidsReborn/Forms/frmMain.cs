@@ -195,11 +195,20 @@ namespace Mids_Reborn.Forms
                             var nArgs = CommandArgs.Skip(1);
                             var file = string.Join(" ", nArgs);
                             MidsContext.Config.DisableLoadLastFileOnStart = false;
-                            DoOpen(file);
+                            switch (file)
+                            {
+                                case var legacyBuild when DlgOpen.FileName.EndsWith(".mxd"):
+                                    DoOpen(legacyBuild);
+                                    break;
+
+                                case var newBuild when DlgOpen.FileName.EndsWith(".mbd"):
+                                    LoadCharacterFile(newBuild);
+                                    break;
+                            }
                             ProcessedFromCommand = true;
 
                             break;
-                        case var fileLoad when CommandArgs[0].Contains(".mxd") && !CommandArgs[0].Contains("mrb://"):
+                        case var fileLoad when (CommandArgs[0].Contains(".mxd") || CommandArgs[0].Contains(".mbd")) && !CommandArgs[0].Contains("mrb://"):
                             ProcessedFromCommand = false;
                             MidsContext.Config.LastFileName = fileLoad;
                             break;
@@ -528,6 +537,7 @@ namespace Mids_Reborn.Forms
             var buildTask = await httpClient.GetStreamAsync(newUri);
             await buildTask.CopyToAsync(nStream);
             DoLoad(nStream);
+            // Need to update this method and all other URI/Command Line loads for new FileFormat once Bot is completed/online.
         }
 
         internal void ChildRequestedRedraw()
@@ -6144,8 +6154,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             switch (DlgOpen.FileName)
             {
-                case var oldBuild when DlgOpen.FileName.EndsWith(".mxd"):
-                    DoOpen(oldBuild);
+                case var legacyBuild when DlgOpen.FileName.EndsWith(".mxd"):
+                    DoOpen(legacyBuild);
                     break;
 
                 case var newBuild when DlgOpen.FileName.EndsWith(".mbd"):

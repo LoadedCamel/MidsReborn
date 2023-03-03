@@ -361,8 +361,7 @@ namespace Mids_Reborn
                     if (!((sPowerLineArray[index1].HistoryID > -1) & (sPowerLineArray[index1].Slots.Length > 0)))
                         continue;
                     if (sPowerLineArray[index1].Slots.Length > 1)
-                        MidsContext.Character.CurrentBuild.Powers[sPowerLineArray[index1].HistoryID].Slots =
-                            new SlotEntry[sPowerLineArray[index1].Slots.Length - 1 + 1];
+                        MidsContext.Character.CurrentBuild.Powers[sPowerLineArray[index1].HistoryID].Slots = new SlotEntry[sPowerLineArray[index1].Slots.Length];
                     var num2 = sPowerLineArray[index1].Slots.Length - 1;
                     for (var index2 = 0; index2 <= num2; ++index2)
                     {
