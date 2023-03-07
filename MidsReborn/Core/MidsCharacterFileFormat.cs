@@ -464,7 +464,7 @@ namespace Mids_Reborn.Core
                 var errors = MidsContext.Character.LoadPowersetsByName(names);
                 foreach (var (i, n) in errors)
                 {
-                    MessageBox.Show($"Failed to load powerset by name: {n} at {i}", "Powerset load failure");
+                    MessageBox.Show($"Failed to load powerset by name: {n} at {i} on {DatabaseAPI.DatabaseName} DB version {DatabaseAPI.Database.Version}", "Powerset load failure");
                 }
 
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
