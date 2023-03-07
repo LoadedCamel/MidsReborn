@@ -184,7 +184,7 @@ namespace Mids_Reborn.Core
                     {
                         var slotData = new SlotData
                         {
-                            Level = slot.Level,
+                            Level = slot.Level + 1,
                             IsInherent = slot.IsInherent
                         };
                         WriteSlotData(ref slotData, slot.Enhancement);
@@ -448,7 +448,7 @@ namespace Mids_Reborn.Core
 
                         powerEntry.Slots[slotIndex] = new SlotEntry
                         {
-                            Level = slotEntry.Level,
+                            Level = slotEntry.Level - 1,
                             IsInherent = slotEntry.IsInherent,
                             Enhancement = i9Enhancement,
                             FlippedEnhancement = i9Flipped
@@ -559,7 +559,7 @@ namespace Mids_Reborn.Core
             if (DatabaseAPI.DatabaseName == metaData.Database)
             {
                 // Compare Database Version
-                var dbVerResult = Helpers.CompareVersions(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
+                var dbVerResult = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
                 if (dbVerResult)
                 {
                     var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nPlease update the database and try again.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
