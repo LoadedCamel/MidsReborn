@@ -6035,7 +6035,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ForumExport_Click(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null || MidsContext.Character == null || drawing == null) return;
+            // var export = new ExportPreview();
+            // export.ShowDialog(this);
+            ForumExport.BuildExport(true, true, false);
+
+            /*if (MidsContext.Config == null || MidsContext.Character == null || drawing == null) return;
             FloatTop(false);
             var exportResult = MessageBox.Show(@"Do you wish to export the full build?", @"Export Type (Short/Long)", MessageBoxButtons.YesNoCancel);
             switch (exportResult)
@@ -6068,7 +6072,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             };
             forumExport.ShowDialog(this);
             FloatTop(true);
-            if (MidsContext.Config.LongExport) MidsContext.Config.LongExport = false;
+            if (MidsContext.Config.LongExport) MidsContext.Config.LongExport = false;*/
         }
 
         private void tsExportDataLink_Click(object sender, EventArgs e)

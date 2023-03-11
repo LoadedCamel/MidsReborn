@@ -30,7 +30,7 @@ namespace Mids_Reborn.Core
             return _instance;
         }
 
-        private static CharacterBuildFile? GetInstance()
+        public static CharacterBuildFile? GetInstance()
         {
             if (_instance != null) return _instance;
             throw new NullReferenceException("Instance was not initialized before access.");
