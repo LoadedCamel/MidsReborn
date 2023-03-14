@@ -305,6 +305,7 @@
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
     <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Forms\frmUpdate.cs" />
