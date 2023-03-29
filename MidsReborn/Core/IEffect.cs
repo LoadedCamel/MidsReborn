@@ -177,10 +177,9 @@ namespace Mids_Reborn.Core
 
         void UpdateAttrib();
         bool ValidateConditional();
-        bool ValidateConditional(bool rettype);
-        bool ValidateConditional(string powername);
-        bool ValidateConditional(string powername, bool rettype);
-        bool ValidateConditional(string ctype = "", string powername = "");
+        bool ValidateConditional(string powerName);
+        bool ValidateConditional(string cType, string powerName);
+        bool ValidateConditional(int index);
 
         string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 
