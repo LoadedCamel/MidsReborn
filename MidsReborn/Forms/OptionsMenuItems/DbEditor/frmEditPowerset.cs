@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
@@ -51,20 +52,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DisplayIcon();
         }
 
+        private void frmEditPowerset_CancelClose(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
-            var ps = myPS;
-            lblNameFull.Text = ps.GroupName + "." + ps.SetName;
-            if ((ps.GroupName == "") | (ps.SetName == ""))
+            FormClosing += frmEditPowerset_CancelClose;
+            lblNameFull.Text = $"{myPS.GroupName}.{myPS.SetName}";
+            if (myPS.GroupName == "" | myPS.SetName == "")
             {
-                MessageBox.Show($"Powerset name '{ps.FullName}' is invalid.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($"Powerset name '{myPS.FullName}' is invalid.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else if (!PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
+            else if (!PowersetFullNameIsUnique(Convert.ToString(myPS.nID)))
             {
-                MessageBox.Show($"Powerset name '{ps.FullName}' already exists, please enter a unique name.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($"Powerset name '{myPS.FullName}' already exists, please enter a unique name.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
+                FormClosing -= frmEditPowerset_CancelClose;
                 myPS.IsModified = true;
                 DialogResult = DialogResult.OK;
                 Hide();
@@ -93,10 +100,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private string BuildFullName()
         {
-            var str = cbNameGroup.Text + "." + txtNameSet.Text;
+            var str = $"{cbNameGroup.Text}.{txtNameSet.Text}";
             lblNameFull.Text = str;
             myPS.FullName = str;
             myPS.SetName = txtNameSet.Text;
+            Text = $"Edit Powerset ({str})";
+
             return str;
         }
 
@@ -240,14 +249,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DisplayNameData()
         {
-            var ps = myPS;
             lblNameFull.Text = BuildFullName();
-            if (string.IsNullOrEmpty(ps.GroupName) | string.IsNullOrEmpty(ps.SetName))
-                lblNameUnique.Text = "This name is invalid.";
-            else if (PowersetFullNameIsUnique(Convert.ToString(ps.nID, CultureInfo.InvariantCulture)))
-                lblNameUnique.Text = "This name is unique.";
-            else
-                lblNameUnique.Text = "This name is NOT unique.";
+            lblNameUnique.Text = string.IsNullOrEmpty(myPS.GroupName) | string.IsNullOrEmpty(myPS.SetName)
+                ? "This name is invalid."
+                : PowersetFullNameIsUnique(Convert.ToString(myPS.nID, CultureInfo.InvariantCulture))
+                    ? "This name is unique."
+                    : "This name is NOT unique.";
         }
 
         private void FillLinkGroupCombo()
@@ -255,13 +262,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbLinkGroup.BeginUpdate();
             cbLinkGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            {
                 cbLinkGroup.Items.Add(key);
+            }
+
             cbLinkGroup.EndUpdate();
             if (myPS.UIDLinkSecondary == "")
+            {
                 return;
+            }
+
             var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDLinkSecondary);
             if (index > -1)
+            {
                 cbLinkGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
+            }
         }
 
         private void FillLinkSetCombo()
@@ -272,8 +287,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 var index1 = DatabaseAPI.NidFromUidPowerset(myPS.UIDLinkSecondary);
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(cbLinkGroup.SelectedText);
-                var num = indexesByGroupName.Length - 1;
-                for (var index2 = 0; index2 <= num; ++index2)
+                for (var index2 = 0; index2 < indexesByGroupName.Length; index2++)
                 {
                     cbLinkSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index2]].SetName);
                     if (index1 > -1 && DatabaseAPI.Database.Powersets[indexesByGroupName[index2]].SetName ==
@@ -292,13 +306,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbTrunkGroup.BeginUpdate();
             cbTrunkGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            {
                 cbTrunkGroup.Items.Add(key);
+            }
+
             cbTrunkGroup.EndUpdate();
             if (myPS.UIDTrunkSet == "")
+            {
                 return;
+            }
+
             var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDTrunkSet);
             if (index > -1)
+            {
                 cbTrunkGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
+            }
         }
 
         private void FillTrunkSetCombo()
@@ -309,8 +331,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 var index1 = DatabaseAPI.NidFromUidPowerset(myPS.UIDTrunkSet);
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(cbTrunkGroup.SelectedText);
-                var num = indexesByGroupName.Length - 1;
-                for (var index2 = 0; index2 <= num; ++index2)
+                for (var index2 = 0; index2 < indexesByGroupName.Length; index2++)
                 {
                     cbTrunkSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index2]].SetName);
                     if (index1 > -1 && DatabaseAPI.Database.Powersets[indexesByGroupName[index2]].SetName ==
@@ -332,7 +353,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbNameGroup.BeginUpdate();
             cbNameGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            {
                 cbNameGroup.Items.Add(key);
+            }
+
             cbNameGroup.EndUpdate();
             cbNameGroup.Text = myPS.GroupName;
             txtNameSet.Text = myPS.SetName;
@@ -359,9 +383,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAT.BeginUpdate();
             cbAT.Items.Clear();
             cbAT.Items.Add("All / None");
-            var num = DatabaseAPI.Database.Classes.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                cbAT.Items.Add(DatabaseAPI.Database.Classes[index].DisplayName);
+            foreach (var c in DatabaseAPI.Database.Classes)
+            {
+                cbAT.Items.Add(c.DisplayName);
+            }
+
             cbAT.EndUpdate();
             cbAT.SelectedIndex = myPS.nArchetype + 1;
             cbSetType.BeginUpdate();
@@ -380,13 +406,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbMutexGroup.BeginUpdate();
             cbMutexGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            {
                 cbMutexGroup.Items.Add(key);
+            }
+
             cbMutexGroup.EndUpdate();
             if (myPS.nIDMutexSets.Length <= 0)
+            {
                 return;
+            }
+
             var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[0]);
             if (index > -1)
+            {
                 cbMutexGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
+            }
         }
 
         private void ListMutexSets()
@@ -395,19 +429,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvMutexSets.Items.Clear();
             if (cbMutexGroup.SelectedIndex > -1)
             {
-                var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1),
-                    Enums.ePowerSetType.None);
-                var num1 = numArray.Length - 1;
-                for (var index1 = 0; index1 <= num1; ++index1)
+                var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
+                for (var index1 = 0; index1 < numArray.Length; index1++)
                 {
                     lvMutexSets.Items.Add(DatabaseAPI.Database.Powersets[numArray[index1]].FullName);
-                    var num2 = myPS.nIDMutexSets.Length - 1;
-                    for (var index2 = 0; index2 <= num2; ++index2)
+                    if (myPS.nIDMutexSets.Any(t => numArray[index1] == t))
                     {
-                        if (numArray[index1] != myPS.nIDMutexSets[index2])
-                            continue;
                         lvMutexSets.SetSelected(index1, true);
-                        break;
                     }
                 }
             }
@@ -419,9 +447,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lvPowers.BeginUpdate();
             lvPowers.Items.Clear();
-            var num = myPS.Power.Length - 1;
-            for (var Index = 0; Index <= num; ++Index)
-                AddListItem(Index);
+            for (var index = 0; index < myPS.Power.Length; index++)
+            {
+                AddListItem(index);
+            }
+
             if (lvPowers.Items.Count > 0)
             {
                 lvPowers.Items[0].Selected = true;
@@ -434,58 +464,69 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvMutexSets_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading || cbMutexGroup.SelectedIndex < 0)
-                return;
-            var ps = myPS;
-            ps.UIDMutexSets = new string[lvMutexSets.SelectedIndices.Count - 1 + 1];
-            ps.nIDMutexSets = new int[lvMutexSets.SelectedIndices.Count - 1 + 1];
-            var numArray =
-                DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
-            var num = lvMutexSets.SelectedIndices.Count - 1;
-            for (var index = 0; index <= num; ++index)
             {
-                ps.UIDMutexSets[index] = DatabaseAPI.Database.Powersets[numArray[lvMutexSets.SelectedIndices[index]]]
-                    .FullName;
-                ps.nIDMutexSets[index] = DatabaseAPI.NidFromUidPowerset(ps.UIDMutexSets[index]);
+                return;
+            }
+
+            myPS.UIDMutexSets = new string[lvMutexSets.SelectedIndices.Count];
+            myPS.nIDMutexSets = new int[lvMutexSets.SelectedIndices.Count];
+            var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, "-1", Enums.ePowerSetType.None);
+            for (var index = 0; index < lvMutexSets.SelectedIndices.Count; index++)
+            {
+                myPS.UIDMutexSets[index] = DatabaseAPI.Database.Powersets[numArray[lvMutexSets.SelectedIndices[index]]].FullName;
+                myPS.nIDMutexSets[index] = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[index]);
             }
         }
 
         private static bool PowersetFullNameIsUnique(string iFullName, int skipId = -1)
         {
             if (string.IsNullOrEmpty(iFullName))
+            {
                 return true;
-            var num = DatabaseAPI.Database.Powersets.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (index != skipId && string.Equals(DatabaseAPI.Database.Powersets[index].FullName, iFullName,
-                    StringComparison.OrdinalIgnoreCase))
-                    return false;
-            return true;
+            }
+
+            return !DatabaseAPI.Database.Powersets
+                .Where((t, index) => index != skipId && string.Equals(t.FullName, iFullName, StringComparison.OrdinalIgnoreCase))
+                .Any();
         }
 
         private void txtDesc_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
+            {
                 return;
+            }
+
             myPS.Description = txtDesc.Text;
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
+            {
                 return;
+            }
+
             myPS.DisplayName = txtName.Text;
         }
 
         private void txtNameSet_Leave(object sender, EventArgs e)
         {
             if (Loading)
+            {
                 return;
+            }
+
             DisplayNameData();
         }
 
         private void txtNameSet_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
+            {
                 return;
+            }
+
             BuildFullName();
         }
     }
