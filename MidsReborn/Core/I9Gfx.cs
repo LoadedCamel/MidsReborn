@@ -866,5 +866,12 @@ namespace Mids_Reborn.Core
             var imageRect = GetImageRect(index);
             return new RectangleF(imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height);
         }
+
+        public static string UnknownImgPath()
+        {
+            return Images
+                .Where(x => x.IsBase)
+                .FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+        }
     }
 }
