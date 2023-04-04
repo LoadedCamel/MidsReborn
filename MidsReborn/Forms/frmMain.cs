@@ -564,6 +564,11 @@ namespace Mids_Reborn.Forms
             {
                 frmEntityDetails.UpdateColorTheme(e);
             }
+
+            if (fGraphStats is {Visible: true})
+            {
+                fGraphStats.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)

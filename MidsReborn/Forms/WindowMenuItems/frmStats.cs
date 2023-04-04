@@ -460,9 +460,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 _ => ImageButtonEx.States.ToggledOff
             };
 
+            UpdateColorTheme();
             UpdateData(false);
+        }
 
-            Debug.WriteLine($"ClientSize: {ClientSize}");
+        public void UpdateColorTheme()
+        {
+            chkOnTop.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            chkOnTop.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
         }
 
         private void frmStats_Move(object sender, EventArgs e)
