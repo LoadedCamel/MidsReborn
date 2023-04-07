@@ -93,8 +93,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             foreach (var cVp in Conditionals)
             {
                 var condition = getCondition.Replace(cVp.Key, "");
-                //var linkType = k > 1 && condition.StartsWith("OR ") ? "OR" : "";
-                var linkTypeLv = k > 1
+                //var linkType = k > 0 && condition.StartsWith("OR ") ? "OR" : "";
+                var linkTypeLv = k > 0
                     ? condition.StartsWith("OR ")
                         ? "OR"
                         : "AND"
