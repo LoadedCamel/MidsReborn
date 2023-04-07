@@ -1136,12 +1136,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
+            if (!simple || Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Endurance)
             {
                 sDuration = string.Empty;
                 var sForOver = EffectType switch
                 {
-                    Enums.eEffectType.Damage => " over ",
+                    Enums.eEffectType.Damage or Enums.eEffectType.Endurance => " over ",
                     Enums.eEffectType.SilentKill => " in ",
                     Enums.eEffectType.Mez when MezType is Enums.eMez.Knockback or Enums.eMez.Knockup => "For ",
                     _ => " for "
@@ -1432,20 +1432,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.EntCreate:
                     sResist = string.Empty;
                     var summon = DatabaseAPI.NidFromUidEntity(Summon);
-                    string tSummon;
-                    if (summon > -1)
-                    {
-                        tSummon = " " + (MidsContext.Config.CoDEffectFormat
+                    var tSummon = summon > -1
+                        ? " " + (MidsContext.Config.CoDEffectFormat
                             ? $"({DatabaseAPI.Database.Entities[summon].UID})"
-                            : DatabaseAPI.Database.Entities[summon].DisplayName);
-                    }
-                    else
-                    {
-                        tSummon = " " + Summon;
-                    }
+                            : DatabaseAPI.Database.Entities[summon].DisplayName)
+                        : " " + Summon;
                     sBuild = $"{sEffect}{tSummon}{sTarget}{(Duration > 9999 ? "" : sDuration)}";
                     break;
                 case Enums.eEffectType.Endurance:
+                    if (Ticks > 0)
+                    {
+                        sMag = $"{Ticks} x {sMag}";
+                    }
                     if (noMag) sBuild = "+Max End";
                     else if (Aspect == Enums.eAspect.Max)
                     {
