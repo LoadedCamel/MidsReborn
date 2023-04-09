@@ -34,6 +34,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private frmBusy BusyForm { get; set; }
 
         private bool _updating;
+        private int[] _selected;
 
         public frmPowerBrowser()
         {
@@ -327,6 +328,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             database.Power = powerList.ToArray();
             UpdateLists();
             Sort(2);
+
+            if (_selected[0] < lvGroup.Items.Count)
+            {
+                lvGroup.Items[_selected[0]].Selected = true;
+                lvGroup.Items[_selected[0]].EnsureVisible();
+            }
+
+            if (_selected[1] < lvSet.Items.Count)
+            {
+                lvSet.Items[_selected[1]].Selected = true;
+                lvSet.Items[_selected[1]].EnsureVisible();
+            }
+
+            if (_selected[2] < lvPower.Items.Count)
+            {
+                lvPower.Items[_selected[2]].Selected = true;
+                lvPower.Items[_selected[2]].EnsureVisible();
+            }
         }
 
         private void btnPowerClone_Click(object sender, EventArgs e)
@@ -595,6 +614,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.Powersets = psList.ToArray();
             UpdateLists();
             Sort(1);
+
+            if (_selected[0] < lvGroup.Items.Count)
+            {
+                lvGroup.Items[_selected[0]].Selected = true;
+                lvGroup.Items[_selected[0]].EnsureVisible();
+            }
+
+            if (_selected[1] < lvSet.Items.Count)
+            {
+                lvSet.Items[_selected[1]].Selected = true;
+                lvSet.Items[_selected[1]].EnsureVisible();
+            }
+
+            if (_selected[2] < lvPower.Items.Count)
+            {
+                lvPower.Items[_selected[2]].Selected = true;
+                lvPower.Items[_selected[2]].EnsureVisible();
+            }
         }
 
         private void btnSetDelete_Click(object sender, EventArgs e)
@@ -869,6 +906,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             btnDbQueries.Visible = MidsContext.Config.MasterMode;
             Text = $"Power Database Browser [{DatabaseAPI.DatabaseName} DB]";
+            _selected = new[] {0, 0, 0};
 
             try
             {
@@ -1237,7 +1275,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_updating)
+            {
                 return;
+            }
+
+            if (lvGroup.SelectedIndices.Count > 0)
+            {
+                _selected[0] = lvGroup.SelectedIndices[0];
+            }
+            
             List_Sets(0);
             Application.DoEvents();
             List_Powers(0);
@@ -1253,6 +1299,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvPower.SelectedItems.Count <= 0)
                 return;
             lblPower.Text = lvPower.SelectedItems[0].SubItems[3].Text;
+            _selected[2] = lvPower.SelectedIndices[0];
         }
 
         private void lvSet_DoubleClick(object sender, EventArgs e)
@@ -1263,9 +1310,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_updating)
+            {
                 return;
+            }
+
             if (lvSet.SelectedItems.Count > 0)
+            {
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
+                _selected[1] = lvSet.SelectedIndices[0];
+            }
+
             List_Powers(0);
         }
 
