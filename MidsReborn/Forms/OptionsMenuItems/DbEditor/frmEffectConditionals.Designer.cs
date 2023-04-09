@@ -45,6 +45,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             removeConditional = new System.Windows.Forms.Button();
             addConditional = new System.Windows.Forms.Button();
             lvActiveConditionals = new ctlListViewColored();
+            columnHeader1 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
             columnHeader8 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
@@ -57,7 +58,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnOkay = new System.Windows.Forms.Button();
             btnCancel = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
-            columnHeader1 = new ColumnHeader();
+            btnClearFilter = new System.Windows.Forms.Button();
+            tbFilter = new System.Windows.Forms.TextBox();
             groupBox2.SuspendLayout();
             panelLinkType.SuspendLayout();
             panel1.SuspendLayout();
@@ -192,6 +194,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvActiveConditionals.UseCompatibleStateImageBehavior = false;
             lvActiveConditionals.View = View.Details;
             // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "";
+            columnHeader1.Width = 50;
+            // 
             // columnHeader5
             // 
             columnHeader5.Text = "Active Conditional";
@@ -315,6 +322,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.Fixed3D;
+            panel1.Controls.Add(btnClearFilter);
+            panel1.Controls.Add(tbFilter);
             panel1.Controls.Add(btnCancel);
             panel1.Controls.Add(btnOkay);
             panel1.Controls.Add(groupBox2);
@@ -325,10 +334,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             panel1.Size = new System.Drawing.Size(1310, 542);
             panel1.TabIndex = 164;
             // 
-            // columnHeader1
+            // btnClearFilter
             // 
-            columnHeader1.Text = "";
-            columnHeader1.Width = 50;
+            btnClearFilter.BackColor = System.Drawing.Color.FromArgb(46, 56, 171);
+            btnClearFilter.FlatStyle = FlatStyle.Popup;
+            btnClearFilter.Location = new System.Drawing.Point(550, 494);
+            btnClearFilter.Margin = new Padding(4, 3, 4, 3);
+            btnClearFilter.Name = "btnClearFilter";
+            btnClearFilter.Size = new System.Drawing.Size(112, 23);
+            btnClearFilter.TabIndex = 165;
+            btnClearFilter.Text = "Clear Filter";
+            btnClearFilter.UseVisualStyleBackColor = false;
+            btnClearFilter.Click += btnClearFilter_Click;
+            // 
+            // tbFilter
+            // 
+            tbFilter.Location = new System.Drawing.Point(162, 494);
+            tbFilter.Name = "tbFilter";
+            tbFilter.Size = new System.Drawing.Size(380, 23);
+            tbFilter.TabIndex = 164;
+            tbFilter.TextChanged += tbFilter_TextChanged;
             // 
             // frmEffectConditionals
             // 
@@ -348,6 +373,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             panelLinkType.ResumeLayout(false);
             panelLinkType.PerformLayout();
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -376,5 +402,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.RadioButton rbLinkTypeAnd;
         private System.Windows.Forms.Label label1;
         private ColumnHeader columnHeader1;
+        private System.Windows.Forms.Button btnClearFilter;
+        private System.Windows.Forms.TextBox tbFilter;
     }
 }
