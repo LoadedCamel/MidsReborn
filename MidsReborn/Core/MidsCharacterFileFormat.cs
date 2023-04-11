@@ -540,9 +540,7 @@ namespace Mids_Reborn.Core
                             if (hasSubPower)
                             {
                                 powerEntry1.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
-                                for (var subPowerIndex = 0;
-                                     subPowerIndex < powerEntry1.SubPowers.Length;
-                                     ++subPowerIndex)
+                                for (var subPowerIndex = 0; subPowerIndex < powerEntry1.SubPowers.Length; ++subPowerIndex)
                                 {
                                     var powerSub = new PowerSubEntry();
                                     powerEntry1.SubPowers[subPowerIndex] = powerSub;

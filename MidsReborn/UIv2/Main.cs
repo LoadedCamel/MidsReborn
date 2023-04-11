@@ -48,7 +48,7 @@ namespace Mids_Reborn.UIv2
             BorderThickness = 37
         }
 
-        private string GetRgb(Color color)
+        private static string GetRgb(Color color)
         {
             return $"{color.B:X2}{color.G:X2}{color.R:X2}";
         }
@@ -93,14 +93,14 @@ namespace Mids_Reborn.UIv2
             PowerSelected += OnPowerSelected;
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private void Main_Load(object? sender, EventArgs e)
         {
             Loading = true;
             try
             {
                 OriginalWidth = ClientRectangle.Width;
                 OriginalHeight = ClientRectangle.Height;
-                if (MidsContext.Config != null && MidsContext.Config.I9.DefaultIOLevel == 27)
+                if (MidsContext.Config is { I9.DefaultIOLevel: 27 })
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }

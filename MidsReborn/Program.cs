@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Mids_Reborn.Forms;
 using Mids_Reborn.UIv2;

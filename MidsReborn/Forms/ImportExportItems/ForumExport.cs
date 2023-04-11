@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.BuildFile.RestModels;
+using Mids_Reborn.Forms.Controls;
+using RestSharp;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -22,6 +23,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
         public int PowerLevelSize { get; set; }
         public int SectionSize { get; set; }
         public int SlotLevelSize { get; set; }
+
+        public string? Code { get; set; }
+        public string? ShareUrl { get; set; }
 
         private sealed class ExportBuilder : IDisposable
         {
@@ -72,6 +76,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             using var output = new ExportBuilder(tempString);
             output.AppendLine($"Using {DatabaseAPI.DatabaseName} database {DatabaseAPI.Database.Version}[/color]");
             output.AppendLine(" ");
+            output.AppendLine($"[color=\"DodgerBlue\"][url=\"mrb://\"]Click Here To Open This Build In MRB");
             var character = string.IsNullOrWhiteSpace(MidsContext.Character.Name) ? $"[color=\"#eb2a1c\"]Character[/color]: Level {MidsContext.Character.Level + 1} {MidsContext.Character.Archetype?.Origin[MidsContext.Character.Origin]} {MidsContext.Character.Archetype?.DisplayName} ({MidsContext.Character.Alignment})" : $"[color=\"#eb2a1c\"]Character[/color]: \"{MidsContext.Character.Name}\" A Level {MidsContext.Character.Level + 1} {MidsContext.Character.Archetype?.Origin[MidsContext.Character.Origin]} {MidsContext.Character.Archetype?.DisplayName} ({MidsContext.Character.Alignment})";
             output.AppendLine(character);
             foreach (var set in MidsContext.Character.Powersets)
@@ -363,6 +368,40 @@ namespace Mids_Reborn.Forms.ImportExportItems
             output.AppendLine("[/b][/size]");
             var ret = output.ToString();
             Debug.WriteLine(ret);
+        }
+
+        private async void RequestShortUrl(string data)
+        {
+            var options = new RestClientOptions("https://mids.app")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var idResponse = await client.GetJsonAsync<ResponseModel>("build/requestId");
+            if (idResponse == null || idResponse.Status == "Failed")
+            {
+                var messageBox = new MessageBoxEx("Failed to obtain a share id.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+                return;
+            };
+            var submission = new SubmissionModel(idResponse.Id, data);
+            var subResponse = await client.PostJsonAsync<SubmissionModel, ResponseModel>("build/submit", submission);
+            if (subResponse == null)
+            {
+                var messageBox = new MessageBoxEx($"Failed to submit build data to the server.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+                return;
+            }
+
+            if (subResponse.Status == "Failed")
+            {
+                var messageBox = new MessageBoxEx($"Failed to submit build data to the server.\r\nReason: {subResponse.ErrorMessage}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+                return;
+            }
+
+            ShareUrl = subResponse.Url;
+            Code = subResponse.Code;
         }
     }
 }

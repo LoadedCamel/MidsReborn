@@ -60,7 +60,6 @@ namespace Mids_Reborn.UIv2.v2Controls
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             g.DrawImage(image, powerRect, 0,0, image.Width, image.Height, GraphicsUnit.Pixel, new ImageAttributes());
-            //TextRenderer.DrawText(g, Text, Font, powerRect, Color.Azure, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             var outlinePen = new Pen(Color.Black, 3) { LineJoin = LineJoin.Round };
             var brush = new SolidBrush(ForeColor);
             var sFormat = new StringFormat

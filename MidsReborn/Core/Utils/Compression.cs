@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using Zstandard.Net;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -10,7 +12,7 @@ namespace Mids_Reborn.Core.Utils
         public static byte[] Compress(byte[] sourceBytes)
         {
             using var mStream = new MemoryStream();
-            using var deflateStream = new DeflaterOutputStream(mStream, new Deflater((int) Deflater.CompressionLevel.BEST_COMPRESSION));
+            using var deflateStream = new DeflaterOutputStream(mStream, new Deflater(9));
             deflateStream.Write(sourceBytes, 0, sourceBytes.Length);
             deflateStream.Finish();
             var compressedBytes = mStream.ToArray();
@@ -25,6 +27,25 @@ namespace Mids_Reborn.Core.Utils
             inflaterStream.CopyTo(outStream);
             var decompressedBytes = outStream.ToArray();
             return decompressedBytes;
+        }
+
+        public static byte[] ZCompress(byte[] source)
+        {
+            using var stream = new MemoryStream();
+            using var compressionStream = new ZstandardStream(stream, CompressionMode.Compress);
+            compressionStream.CompressionLevel = 22;
+            compressionStream.Write(source, 0, source.Length);
+            compressionStream.Close();
+            return stream.ToArray();
+        }
+
+        public static byte[] ZDecompress(byte[] source)
+        {
+            using var stream = new MemoryStream(source);
+            using var compressionStream = new ZstandardStream(stream, CompressionMode.Decompress);
+            using var decompressedStream = new MemoryStream();
+            compressionStream.CopyTo(decompressedStream);
+            return decompressedStream.ToArray();
         }
 
         public static string BreakString(string iString, int length, bool bookend = false)

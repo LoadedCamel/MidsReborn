@@ -68,12 +68,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
-                _myParent.petWindowFlag = false;
+                _myParent.PetWindowFlag = false;
             }
 
             if (DialogResult != DialogResult.Cancel) return;
             _myParent.ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
-            _myParent.petWindowFlag = false;
+            _myParent.PetWindowFlag = false;
         }
 
         public void UpdateFonts(Font font)

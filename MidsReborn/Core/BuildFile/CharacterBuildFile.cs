@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.BuildFile.DataModels;
+using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
+using RestSharp;
 
-namespace Mids_Reborn.Core
+namespace Mids_Reborn.Core.BuildFile
 {
     public class CharacterBuildFile
     {
@@ -20,7 +23,7 @@ namespace Mids_Reborn.Core
         private static readonly object Mutex = new();
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
-        private static CharacterBuildFile? CreateInstance(Character characterData, bool refreshData = false)
+        private static CharacterBuildFile CreateInstance(Character characterData, bool refreshData = false)
         {
             if (_instance != null && !refreshData) return _instance;
             lock (Mutex)
@@ -30,7 +33,7 @@ namespace Mids_Reborn.Core
             return _instance;
         }
 
-        public static CharacterBuildFile? GetInstance()
+        public static CharacterBuildFile GetInstance()
         {
             if (_instance != null) return _instance;
             throw new NullReferenceException("Instance was not initialized before access.");
@@ -44,7 +47,9 @@ namespace Mids_Reborn.Core
         public List<string> PowerSets { get; set; }
         public int LastPower { get; set; }
         public List<PowerData?> PowerEntries { get; set; }
-        public List<string>? DataChunk { get; set; }
+
+        private static string? ShareUrl { get; set; }
+        private static string? Code { get; set; }
 
         private static IEnumerable<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
         {
@@ -125,6 +130,16 @@ namespace Mids_Reborn.Core
             PowerEntries = powerEntries;
         }
 
+        private CharacterBuildFile()
+        {
+            Class = string.Empty;
+            Origin = string.Empty;
+            Alignment = string.Empty;
+            Name = string.Empty;
+            PowerSets = new List<string>();
+            PowerEntries = new List<PowerData?>();
+        }
+
         private CharacterBuildFile(Character? characterData)
         {
             if (characterData == null) throw new ArgumentNullException(nameof(characterData));
@@ -193,8 +208,6 @@ namespace Mids_Reborn.Core
                     }
                 }
             }
-
-            DataChunk = GenerateSharedData();
         }
 
         private static void WriteSlotData(ref SlotData slotData, I9Slot slot)
@@ -211,12 +224,12 @@ namespace Mids_Reborn.Core
                     Obtained = slot.Obtained
                 };
 
-                if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO))
+                if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO)
                 {
                     slotData.Enhancement.RelativeLevel = slot.RelativeLevel.ToString();
                     slotData.Enhancement.Grade = slot.Grade.ToString();
                 }
-                else if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO))
+                else if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO)
                 {
                     slotData.Enhancement.IoLevel = slot.IOLevel;
                     slotData.Enhancement.RelativeLevel = slot.RelativeLevel.ToString();
@@ -237,76 +250,17 @@ namespace Mids_Reborn.Core
                     Obtained = slot.Obtained
                 };
 
-                if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO))
+                if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO)
                 {
                     slotData.FlippedEnhancement.RelativeLevel = slot.RelativeLevel.ToString();
                     slotData.FlippedEnhancement.Grade = slot.Grade.ToString();
                 }
-                else if ((DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO))
+                else if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO)
                 {
                     slotData.FlippedEnhancement.IoLevel = slot.IOLevel;
                     slotData.FlippedEnhancement.RelativeLevel = slot.RelativeLevel.ToString();
                 }
             }
-        }
-        private static List<string>? GenerateSharedData()
-        {
-            if (_instance == null) return null;
-            var serializedString = JsonConvert.SerializeObject(_instance);
-            var bytes = Encoding.ASCII.GetBytes(serializedString);
-            var compressedBytes = Compression.Compress(bytes);
-            var hexData = Convert.ToHexString(compressedBytes);
-            return hexData.Chunk(67).Select(x => new string(x)).ToList();
-        }
-
-        public class MetaData
-        {
-            public MetaData(string app, Version version, string database, Version databaseVersion)
-            {
-                App = app;
-                Version = version;
-                Database = database;
-                DatabaseVersion = databaseVersion;
-            }
-
-            public string App { get; set; }
-            public Version Version { get; set; }
-            public string Database { get; set; }
-            public Version DatabaseVersion { get; set; }
-
-        }
-
-        public class PowerData
-        {
-            public string PowerName { get; set; } = "";
-            public int Level { get; set; } = -1;
-            public bool StatInclude { get; set; }
-            public bool ProcInclude { get; set; }
-            public int VariableValue { get; set; }
-            public int InherentSlotsUsed { get; set; }
-            public List<SubPowerData> SubPowerEntries { get; set; } = new();
-            public List<SlotData> SlotEntries { get; set; } = new();
-        }
-        public class SubPowerData
-        {
-            public string PowerName { get; set; } = "";
-            public bool StatInclude { get; set; }
-        }
-        public class SlotData
-        {
-            public int Level { get; set; }
-            public bool IsInherent { get; set; }
-            public EnhancementData? Enhancement { get; set; }
-            public EnhancementData? FlippedEnhancement { get; set; }
-        }
-        public class EnhancementData
-        {
-            public string Enhancement { get; set; } = "";
-            public string Grade { get; set; } = "None";
-            public int IoLevel { get; set; } = 1;
-            public string RelativeLevel { get; set; } = "Even";
-            public bool Obtained { get; set; } = false;
-
         }
 
         private static bool LoadBuild()
@@ -380,7 +334,7 @@ namespace Mids_Reborn.Core
                                 }
 
                                 powerSubEntry.StatInclude = subEntry.StatInclude;
-                                if (!((powerSubEntry.nIDPower > -1) & powerSubEntry.StatInclude)) continue;
+                                if (!(powerSubEntry.nIDPower > -1 & powerSubEntry.StatInclude)) continue;
 
                                 var powerEntry2 = new PowerEntry(subPower)
                                 {
@@ -467,7 +421,7 @@ namespace Mids_Reborn.Core
 
                     powerEntry.NIDPowerset = power.PowerSetID;
                     powerEntry.IDXPower = power.PowerSetIndex;
-                    
+
                     var powerSet = powerEntry.Power?.GetPowerSet();
                     if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                     {
@@ -511,7 +465,7 @@ namespace Mids_Reborn.Core
                     MidsContext.Character.CurrentBuild.Powers.Add(entry);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var messageBox = new MessageBoxEx($"An error occurred while attempting to read the build data.\r\n{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
@@ -602,23 +556,55 @@ namespace Mids_Reborn.Core
             return returnedVal;
         }
 
-        public static bool ImportFromChunk(string dataChunk)
+        
+        private static byte[] CreateDataStream()
         {
-            if (string.IsNullOrWhiteSpace(dataChunk)) return false;
-            var compressedBytes = Convert.FromHexString(dataChunk);
-            var decompressedBytes = Compression.Decompress(compressedBytes);
-            var serializedString = Encoding.ASCII.GetString(decompressedBytes);
-            _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(serializedString);
-            return LoadBuild();
+            _instance ??= new CharacterBuildFile(MidsContext.Character);
+            using var stream = new MemoryStream();
+            using var writer = new BsonDataWriter(stream);
+            var serializer = new JsonSerializer();
+            serializer.Serialize(writer, _instance);
+            return stream.ToArray();
         }
 
-        public static void ExportDataChunk()
+        public static string GenerateShareData()
         {
-            var output = string.Empty;
-            if (_instance?.DataChunk == null) return;
-            output = _instance.DataChunk.Aggregate(output, (current, chunk) => current + chunk);
-            if (string.IsNullOrWhiteSpace(output)) return;
-            Clipboard.SetText(output);
+            var buffer = CreateDataStream();
+            var compressed = Compression.Compress(buffer);
+            var hex = Convert.ToHexString(compressed);
+            var shared = $"HEX;{hex};MBD";
+            return shared;
         }
+
+        private static bool ReadShareData(string data)
+        {
+            if (string.IsNullOrWhiteSpace(data)) return false;
+            if (!data.StartsWith("HEX;") && !data.EndsWith(";MBD")) return false;
+            data = data.Replace("HEX;", string.Empty).Replace(";MBD", string.Empty);
+            var compressed = Convert.FromHexString(data);
+            var decompressed = Compression.Decompress(compressed);
+            using var stream = new MemoryStream(decompressed);
+            try
+            {
+                using var reader = new BsonDataReader(stream);
+                var serializer = new JsonSerializer();
+                _instance ??= new CharacterBuildFile();
+                _instance = serializer.Deserialize<CharacterBuildFile>(reader);
+            }
+            catch (Exception ex)
+            {
+                var errorMsg = new MessageBoxEx($"{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                errorMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool LoadImportData(string data)
+        {
+            var dataRead = ReadShareData(data);
+            return dataRead && LoadBuild();
+        }
+
     }
 }
