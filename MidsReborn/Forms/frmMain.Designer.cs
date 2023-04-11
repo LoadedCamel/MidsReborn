@@ -25,6 +25,7 @@ namespace Mids_Reborn.Forms
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -36,7 +37,8 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            System.ComponentModel.ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.components = new System.ComponentModel.Container();
             this.txtName = new System.Windows.Forms.TextBox();
             this.cbAT = new System.Windows.Forms.ComboBox();
@@ -75,14 +77,13 @@ namespace Mids_Reborn.Forms
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.ImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LegacyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFilePrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.LegacyExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
@@ -294,7 +295,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblPrimary
             // 
-            this.lblPrimary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblPrimary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPrimary.ForeColor = System.Drawing.Color.White;
             this.lblPrimary.Location = new System.Drawing.Point(20, 166);
             this.lblPrimary.Name = "lblPrimary";
@@ -305,7 +307,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblSecondary
             // 
-            this.lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblSecondary.ForeColor = System.Drawing.Color.White;
             this.lblSecondary.Location = new System.Drawing.Point(172, 166);
             this.lblSecondary.Name = "lblSecondary";
@@ -350,7 +353,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool1
             // 
-            this.lblPool1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblPool1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool1.ForeColor = System.Drawing.Color.White;
             this.lblPool1.Location = new System.Drawing.Point(0, 5); // 328, 166
             this.lblPool1.Name = "lblPool1";
@@ -378,7 +382,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool2
             // 
-            this.lblPool2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblPool2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool2.ForeColor = System.Drawing.Color.White;
             this.lblPool2.Location = new System.Drawing.Point(0, 113); // 328, 274
             this.lblPool2.Name = "lblPool2";
@@ -406,7 +411,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool3
             // 
-            this.lblPool3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblPool3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool3.ForeColor = System.Drawing.Color.White;
             this.lblPool3.Location = new System.Drawing.Point(0, 221); // 328, 382
             this.lblPool3.Name = "lblPool3";
@@ -434,7 +440,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool4
             // 
-            this.lblPool4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblPool4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool4.ForeColor = System.Drawing.Color.White;
             this.lblPool4.Location = new System.Drawing.Point(0, 329); // 328, 490
             this.lblPool4.Name = "lblPool4";
@@ -461,7 +468,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblEpic
             // 
-            this.lblEpic.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblEpic.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblEpic.ForeColor = System.Drawing.Color.White;
             this.lblEpic.Location = new System.Drawing.Point(0, 437); // 328, 598
             this.lblEpic.Name = "lblEpic";
@@ -472,9 +480,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblATLocked
             // 
-            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
+                ((int)(((byte)(224)))));
             this.lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
             this.lblATLocked.Location = new System.Drawing.Point(94, 110);
             this.lblATLocked.Name = "lblATLocked";
@@ -489,7 +499,8 @@ namespace Mids_Reborn.Forms
             // DlgOpen
             // 
             this.DlgOpen.DefaultExt = "mbd";
-            this.DlgOpen.Filter = "Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
+            this.DlgOpen.Filter =
+                "Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
             // 
             // DlgSave
             // 
@@ -504,9 +515,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked0
             // 
-            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
+                ((int)(((byte)(224)))));
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
             this.lblLocked0.Location = new System.Drawing.Point(308, 166);
             this.lblLocked0.Name = "lblLocked0";
@@ -520,9 +533,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked1
             // 
-            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
+                ((int)(((byte)(224)))));
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
             this.lblLocked1.Location = new System.Drawing.Point(308, 186);
             this.lblLocked1.Name = "lblLocked1";
@@ -536,9 +551,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked2
             // 
-            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
+                ((int)(((byte)(224)))));
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
             this.lblLocked2.Location = new System.Drawing.Point(304, 194);
             this.lblLocked2.Name = "lblLocked2";
@@ -552,9 +569,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked3
             // 
-            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
+                ((int)(((byte)(224)))));
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
             this.lblLocked3.Location = new System.Drawing.Point(284, 210);
             this.lblLocked3.Name = "lblLocked3";
@@ -568,9 +587,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLockedAncillary
             // 
-            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
+                ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedAncillary.Location = new System.Drawing.Point(268, 230);
             this.lblLockedAncillary.Name = "lblLockedAncillary";
@@ -580,13 +601,16 @@ namespace Mids_Reborn.Forms
             this.lblLockedAncillary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblLockedAncillary.Paint += new System.Windows.Forms.PaintEventHandler(this.lblLockedAncillary_Paint);
             this.lblLockedAncillary.MouseLeave += new System.EventHandler(this.lblLocked0_MouseLeave);
-            this.lblLockedAncillary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lblLockedAncillary_MouseMove);
+            this.lblLockedAncillary.MouseMove +=
+                new System.Windows.Forms.MouseEventHandler(this.lblLockedAncillary_MouseMove);
             // 
             // lblLockedSecondary
             // 
-            this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
+                ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedSecondary.Location = new System.Drawing.Point(257, 246);
             this.lblLockedSecondary.Name = "lblLockedSecondary";
@@ -595,21 +619,24 @@ namespace Mids_Reborn.Forms
             this.lblLockedSecondary.Text = "Sec. Locked";
             this.lblLockedSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblLockedSecondary.MouseLeave += new System.EventHandler(this.lblLockedSecondary_MouseLeave);
-            this.lblLockedSecondary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lblLockedSecondary_MouseMove);
+            this.lblLockedSecondary.MouseMove +=
+                new System.Windows.Forms.MouseEventHandler(this.lblLockedSecondary_MouseMove);
             // 
             // MenuBar
             // 
             this.MenuBar.BackColor = System.Drawing.SystemColors.Control;
-            this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileToolStripMenuItem,
-            this.OptionsToolStripMenuItem,
-            this.ShareToolStripMenuItem,
-            this.CharacterToolStripMenuItem,
-            this.ViewToolStripMenuItem,
-            this.WindowToolStripMenuItem,
-            this.HelpToolStripMenuItem,
-            this.EnemyRelativeToolStripComboBox,
-            this.DonateToolStripMenuItem});
+            this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.FileToolStripMenuItem,
+                this.OptionsToolStripMenuItem,
+                this.ShareToolStripMenuItem,
+                this.CharacterToolStripMenuItem,
+                this.ViewToolStripMenuItem,
+                this.WindowToolStripMenuItem,
+                this.HelpToolStripMenuItem,
+                this.EnemyRelativeToolStripComboBox,
+                this.DonateToolStripMenuItem
+            });
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
@@ -623,25 +650,28 @@ namespace Mids_Reborn.Forms
             this.EnemyRelativeToolStripComboBox.Name = "EnemyRelativeToolStripComboBox";
             this.EnemyRelativeToolStripComboBox.Size = new Size(185, 22);
             this.EnemyRelativeToolStripComboBox.Text = "Enemy Relative Level";
-            this.EnemyRelativeToolStripComboBox.Margin = new Padding(70, 0, 0,0);
+            this.EnemyRelativeToolStripComboBox.Margin = new Padding(70, 0, 0, 0);
             this.EnemyRelativeToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.EnemyRelativeToolStripComboBox.ComboBox.SelectionChangeCommitted += new EventHandler(this.EnemyRelativeLevel_Changed);
+            this.EnemyRelativeToolStripComboBox.ComboBox.SelectionChangeCommitted +=
+                new EventHandler(this.EnemyRelativeLevel_Changed);
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsFileNew,
-            this.ToolStripSeparator7,
-            this.tsFileOpen,
-            this.tsFileSave,
-            this.tsFileSaveAs,
-            this.ToolStripSeparator22,
-            this.ImportToolStripMenuItem,
-            this.ExportToolStripMenuItem,
-            this.ToolStripSeparator8,
-            this.tsFilePrint,
-            this.ToolStripSeparator9,
-            this.tsFileQuit});
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsFileNew,
+                this.ToolStripSeparator7,
+                this.tsFileOpen,
+                this.tsFileSave,
+                this.tsFileSaveAs,
+                this.ToolStripSeparator22,
+                this.ExportToolStripMenuItem,
+                this.LegacyToolStripMenuItem,
+                this.ToolStripSeparator8,
+                this.tsFilePrint,
+                this.ToolStripSeparator9,
+                this.tsFileQuit
+            });
             this.FileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -650,7 +680,8 @@ namespace Mids_Reborn.Forms
             // tsFileNew
             // 
             this.tsFileNew.Name = "tsFileNew";
-            this.tsFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsFileNew.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.tsFileNew.Size = new System.Drawing.Size(179, 22);
             this.tsFileNew.Text = "&New / Clear";
             this.tsFileNew.Click += new System.EventHandler(this.tsFileNew_Click);
@@ -663,7 +694,8 @@ namespace Mids_Reborn.Forms
             // tsFileOpen
             // 
             this.tsFileOpen.Name = "tsFileOpen";
-            this.tsFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.tsFileOpen.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(this.tsFileOpen_Click);
@@ -678,7 +710,8 @@ namespace Mids_Reborn.Forms
             // tsFileSave
             // 
             this.tsFileSave.Name = "tsFileSave";
-            this.tsFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsFileSave.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.tsFileSave.Size = new System.Drawing.Size(179, 22);
             this.tsFileSave.Text = "&Save";
             this.tsFileSave.Click += new System.EventHandler(this.tsFileSave_Click);
@@ -697,20 +730,23 @@ namespace Mids_Reborn.Forms
             //
             // ImportToolStripMenuItem
             //
-            this.ImportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsImport});
-            this.ImportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem";
-            this.ImportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.ImportToolStripMenuItem.Text = "Import...";
+            this.LegacyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsImport
+            });
+            this.LegacyToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LegacyToolStripMenuItem.Name = "LegacyToolStripMenuItem";
+            this.LegacyToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.LegacyToolStripMenuItem.Text = "Legacy Import...";
             //
             // ExportToolStripMenuItem
             //
-            this.ExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripSeparator25,
-            this.LegacyExportToolStripMenuItem,
-            this.ToolStripSeparator27,
-            this.tsGenFreebies});
+            this.ExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsExport,
+                this.ToolStripSeparator27,
+                this.tsGenFreebies
+            });
             this.ExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem";
             this.ExportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
@@ -719,7 +755,8 @@ namespace Mids_Reborn.Forms
             // tsFilePrint
             // 
             this.tsFilePrint.Name = "tsFilePrint";
-            this.tsFilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.tsFilePrint.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
             this.tsFilePrint.Size = new System.Drawing.Size(179, 22);
             this.tsFilePrint.Text = "&Print...";
             this.tsFilePrint.Click += new System.EventHandler(this.tsFilePrint_Click);
@@ -732,7 +769,8 @@ namespace Mids_Reborn.Forms
             // tsFileQuit
             // 
             this.tsFileQuit.Name = "tsFileQuit";
-            this.tsFileQuit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.tsFileQuit.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
             this.tsFileQuit.Size = new System.Drawing.Size(179, 22);
             this.tsFileQuit.Text = "&Quit";
             this.tsFileQuit.Click += new System.EventHandler(this.tsFileQuit_Click);
@@ -740,7 +778,8 @@ namespace Mids_Reborn.Forms
             // tsImport
             // 
             this.tsImport.Name = "tsImport";
-            this.tsImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.tsImport.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.tsImport.Size = new System.Drawing.Size(240, 22);
             this.tsImport.Text = "From Forum Post";
             this.tsImport.Click += new System.EventHandler(this.tsImport_Click);
@@ -749,16 +788,6 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator12.Name = "ToolStripSeparator12";
             this.ToolStripSeparator12.Size = new System.Drawing.Size(237, 6);
-            //
-            // LegacyExportToolStripMenuItem
-            //
-            this.LegacyExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsExport,
-            this.tsExportDataLink});
-            this.LegacyExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LegacyExportToolStripMenuItem.Name = "LegacyExportToolStripMenuItem";
-            this.LegacyExportToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.LegacyExportToolStripMenuItem.Text = "Legacy Export...";
             // 
             // tsExport
             // 
@@ -766,13 +795,6 @@ namespace Mids_Reborn.Forms
             this.tsExport.Size = new System.Drawing.Size(240, 22);
             this.tsExport.Text = "Forum Export...";
             this.tsExport.Click += new System.EventHandler(this.ForumExport_Click);
-            // 
-            // tsExportDataLink
-            // 
-            this.tsExportDataLink.Name = "tsExportDataLink";
-            this.tsExportDataLink.Size = new System.Drawing.Size(240, 22);
-            this.tsExportDataLink.Text = "Export Data Link";
-            this.tsExportDataLink.Click += new System.EventHandler(this.tsExportDataLink_Click);
             // 
             // ToolStripSeparator25
             // 
@@ -794,12 +816,14 @@ namespace Mids_Reborn.Forms
             // OptionsToolStripMenuItem
             // 
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsChangeDb,
-            this.ToolStripSeparator29,
-            this.tsConfig,
-            this.ToolStripSeparator5,
-            this.AdvancedToolStripMenuItem1});
+            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsChangeDb,
+                this.ToolStripSeparator29,
+                this.tsConfig,
+                this.ToolStripSeparator5,
+                this.AdvancedToolStripMenuItem1
+            });
             this.OptionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
             this.OptionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -843,11 +867,13 @@ namespace Mids_Reborn.Forms
             // 
             // AdvancedToolStripMenuItem1
             // 
-            this.AdvancedToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsAdvDBEdit,
-            this.ToolStripSeparator15,
-            this.tsAdvFreshInstall,
-            this.tsAdvResetTips});
+            this.AdvancedToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsAdvDBEdit,
+                this.ToolStripSeparator15,
+                this.tsAdvFreshInstall,
+                this.tsAdvResetTips
+            });
             this.AdvancedToolStripMenuItem1.Name = "AdvancedToolStripMenuItem1";
             this.AdvancedToolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
             this.AdvancedToolStripMenuItem1.Text = "&Advanced";
@@ -883,15 +909,17 @@ namespace Mids_Reborn.Forms
             // 
             // CharacterToolStripMenuItem
             // 
-            this.CharacterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SetAllIOsToDefault35ToolStripMenuItem,
-            this.ToolStripSeparator16,
-            this.ToolStripMenuItem1,
-            this.ToolStripMenuItem2,
-            this.ToolStripSeparator17,
-            this.SlotsToolStripMenuItem,
-            this.ToolStripSeparator28,
-            this.ToggleCheckModeToolStripMenuItem});
+            this.CharacterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.SetAllIOsToDefault35ToolStripMenuItem,
+                this.ToolStripSeparator16,
+                this.ToolStripMenuItem1,
+                this.ToolStripMenuItem2,
+                this.ToolStripSeparator17,
+                this.SlotsToolStripMenuItem,
+                this.ToolStripSeparator28,
+                this.ToggleCheckModeToolStripMenuItem
+            });
             this.CharacterToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
             this.CharacterToolStripMenuItem.Size = new System.Drawing.Size(133, 20);
@@ -899,11 +927,13 @@ namespace Mids_Reborn.Forms
             // 
             // SetAllIOsToDefault35ToolStripMenuItem
             // 
-            this.SetAllIOsToDefault35ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsIODefault,
-            this.ToolStripSeparator11,
-            this.tsIOMin,
-            this.tsIOMax});
+            this.SetAllIOsToDefault35ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsIODefault,
+                this.ToolStripSeparator11,
+                this.tsIOMin,
+                this.tsIOMax
+            });
             this.SetAllIOsToDefault35ToolStripMenuItem.Name = "SetAllIOsToDefault35ToolStripMenuItem";
             this.SetAllIOsToDefault35ToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.SetAllIOsToDefault35ToolStripMenuItem.Text = "&Set all IOs to...";
@@ -941,10 +971,12 @@ namespace Mids_Reborn.Forms
             // 
             // ToolStripMenuItem1
             // 
-            this.ToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsEnhToSO,
-            this.tsEnhToDO,
-            this.tsEnhToTO});
+            this.ToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsEnhToSO,
+                this.tsEnhToDO,
+                this.tsEnhToTO
+            });
             this.ToolStripMenuItem1.Name = "ToolStripMenuItem1";
             this.ToolStripMenuItem1.Size = new System.Drawing.Size(245, 22);
             this.ToolStripMenuItem1.Text = "Set all Enhancements' &Origin to...";
@@ -959,7 +991,8 @@ namespace Mids_Reborn.Forms
             this.ToggleCheckModeToolStripMenuItem.Name = "ToggleCheckModeToolStripMenuItem";
             this.ToggleCheckModeToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.ToggleCheckModeToolStripMenuItem.Text = "Toggle Enhancement Check Mode";
-            this.ToggleCheckModeToolStripMenuItem.Click += new System.EventHandler(this.tsToggleCheckModeToolStripMenuItem_Click);
+            this.ToggleCheckModeToolStripMenuItem.Click +=
+                new System.EventHandler(this.tsToggleCheckModeToolStripMenuItem_Click);
             // 
             // tsEnhToSO
             // 
@@ -984,17 +1017,19 @@ namespace Mids_Reborn.Forms
             // 
             // ToolStripMenuItem2
             // 
-            this.ToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsEnhToPlus5,
-            this.tsEnhToPlus4,
-            this.tsEnhToPlus3,
-            this.tsEnhToPlus2,
-            this.tsEnhToPlus1,
-            this.tsEnhToEven,
-            this.tsEnhToMinus1,
-            this.tsEnhToMinus2,
-            this.tsEnhToMinus3,
-            this.tsEnhToNone});
+            this.ToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsEnhToPlus5,
+                this.tsEnhToPlus4,
+                this.tsEnhToPlus3,
+                this.tsEnhToPlus2,
+                this.tsEnhToPlus1,
+                this.tsEnhToEven,
+                this.tsEnhToMinus1,
+                this.tsEnhToMinus2,
+                this.tsEnhToMinus3,
+                this.tsEnhToNone
+            });
             this.ToolStripMenuItem2.Name = "ToolStripMenuItem2";
             this.ToolStripMenuItem2.Size = new System.Drawing.Size(245, 22);
             this.ToolStripMenuItem2.Text = "Set all &Relative Levels to...";
@@ -1076,13 +1111,15 @@ namespace Mids_Reborn.Forms
             // 
             // SlotsToolStripMenuItem
             // 
-            this.SlotsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsFlipAllEnh,
-            this.ToolStripSeparator4,
-            this.tsClearAllEnh,
-            this.tsRemoveAllSlots,
-            this.ToolStripSeparator1,
-            this.AutoArrangeAllSlotsToolStripMenuItem});
+            this.SlotsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsFlipAllEnh,
+                this.ToolStripSeparator4,
+                this.tsClearAllEnh,
+                this.tsRemoveAllSlots,
+                this.ToolStripSeparator1,
+                this.AutoArrangeAllSlotsToolStripMenuItem
+            });
             this.SlotsToolStripMenuItem.Name = "SlotsToolStripMenuItem";
             this.SlotsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.SlotsToolStripMenuItem.Text = "Slo&ts";
@@ -1123,27 +1160,29 @@ namespace Mids_Reborn.Forms
             this.AutoArrangeAllSlotsToolStripMenuItem.Name = "AutoArrangeAllSlotsToolStripMenuItem";
             this.AutoArrangeAllSlotsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.AutoArrangeAllSlotsToolStripMenuItem.Text = "&Auto-Arrange All Slots";
-            this.AutoArrangeAllSlotsToolStripMenuItem.Click += new System.EventHandler(this.AutoArrangeAllSlotsToolStripMenuItem_Click);
+            this.AutoArrangeAllSlotsToolStripMenuItem.Click +=
+                new System.EventHandler(this.AutoArrangeAllSlotsToolStripMenuItem_Click);
             // 
             // ViewToolStripMenuItem
             // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsView2Col,
-            this.tsView3Col,
-            this.tsView4Col,
-            this.tsView5Col,
-            this.tsView6Col,
-            this.ToolStripSeparator13,
-            this.tsViewIOLevels,
-            this.tsViewRelative,
-            this.tsViewSlotLevels,
-            this.tsViewRelativeAsSigns,
-            this.ToolStripSeparator2,
-            this.tsViewActualDamage_New,
-            this.tsViewDPS_New,
-            this.tlsDPA,
-            this.ToolStripSeparator32,
-            this.tsViewBuildComment,
+            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsView2Col,
+                this.tsView3Col,
+                this.tsView4Col,
+                this.tsView5Col,
+                this.tsView6Col,
+                this.ToolStripSeparator13,
+                this.tsViewIOLevels,
+                this.tsViewRelative,
+                this.tsViewSlotLevels,
+                this.tsViewRelativeAsSigns,
+                this.ToolStripSeparator2,
+                this.tsViewActualDamage_New,
+                this.tsViewDPS_New,
+                this.tlsDPA,
+                this.ToolStripSeparator32,
+                this.tsViewBuildComment,
             });
             this.ViewToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
@@ -1296,16 +1335,18 @@ namespace Mids_Reborn.Forms
             //
             // HelpToolStripMenuItem
             //
-            this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsHelp,
-            this.tsUpdateCheck,
-            this.ToolStripSeparator10,
-            this.tsBuildRcv,
-            this.ToolStripSeparator30,
-            this.tsGitHub,
-            this.tsSupport,
-            this.ToolStripSeparator31,
-            this.tsAbout});
+            this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsHelp,
+                this.tsUpdateCheck,
+                this.ToolStripSeparator10,
+                this.tsBuildRcv,
+                this.ToolStripSeparator30,
+                this.tsGitHub,
+                this.tsSupport,
+                this.ToolStripSeparator31,
+                this.tsAbout
+            });
             this.HelpToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
             this.HelpToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
@@ -1343,10 +1384,11 @@ namespace Mids_Reborn.Forms
             // DonateToolStripMenuItem
             //
             this.DonateToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
                 this.tsKoFi,
-                this.tsPatreon,
-                this.tsCoinbase});
+                this.tsPatreon
+            });
             this.DonateToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DonateToolStripMenuItem.Name = "DonateToolStripMenuItem";
             this.DonateToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
@@ -1387,19 +1429,21 @@ namespace Mids_Reborn.Forms
             // 
             // WindowToolStripMenuItem
             // 
-            this.WindowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsViewSets,
-            this.tsViewGraphs,
-            this.tsViewSetCompare,
-            this.tsViewData,
-            this.tsViewTotals,
-            this.ToolStripSeparator18,
-            this.tsRecipeViewer,
-            this.tsDPSCalc,
-            this.ToolStripSeparator19,
-            this.tsSetFind,
-            this.ToolStripSeparator21,
-            this.InGameRespecHelperToolStripMenuItem});
+            this.WindowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsViewSets,
+                this.tsViewGraphs,
+                this.tsViewSetCompare,
+                this.tsViewData,
+                this.tsViewTotals,
+                this.ToolStripSeparator18,
+                this.tsRecipeViewer,
+                this.tsDPSCalc,
+                this.ToolStripSeparator19,
+                this.tsSetFind,
+                this.ToolStripSeparator21,
+                this.InGameRespecHelperToolStripMenuItem
+            });
             this.WindowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             this.WindowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
@@ -1408,7 +1452,8 @@ namespace Mids_Reborn.Forms
             // tsViewSets
             // 
             this.tsViewSets.Name = "tsViewSets";
-            this.tsViewSets.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.tsViewSets.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.tsViewSets.Size = new System.Drawing.Size(232, 22);
             this.tsViewSets.Text = "&Sets && Bonuses";
             this.tsViewSets.Click += new System.EventHandler(this.tsViewSets_Click);
@@ -1416,7 +1461,8 @@ namespace Mids_Reborn.Forms
             // tsViewGraphs
             // 
             this.tsViewGraphs.Name = "tsViewGraphs";
-            this.tsViewGraphs.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.tsViewGraphs.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.tsViewGraphs.Size = new System.Drawing.Size(232, 22);
             this.tsViewGraphs.Text = "Power &Graphs";
             this.tsViewGraphs.Click += new System.EventHandler(this.tsViewGraphs_Click);
@@ -1424,7 +1470,8 @@ namespace Mids_Reborn.Forms
             // tsViewSetCompare
             // 
             this.tsViewSetCompare.Name = "tsViewSetCompare";
-            this.tsViewSetCompare.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.tsViewSetCompare.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.tsViewSetCompare.Size = new System.Drawing.Size(232, 22);
             this.tsViewSetCompare.Text = "Powerset &Comparison";
             this.tsViewSetCompare.Click += new System.EventHandler(this.tsViewSetCompare_Click);
@@ -1432,7 +1479,8 @@ namespace Mids_Reborn.Forms
             // tsViewData
             // 
             this.tsViewData.Name = "tsViewData";
-            this.tsViewData.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.tsViewData.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
             this.tsViewData.Size = new System.Drawing.Size(232, 22);
             this.tsViewData.Text = "&Data View";
             this.tsViewData.Click += new System.EventHandler(this.tsViewData_Click);
@@ -1440,7 +1488,8 @@ namespace Mids_Reborn.Forms
             // tsViewTotals
             // 
             this.tsViewTotals.Name = "tsViewTotals";
-            this.tsViewTotals.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.tsViewTotals.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.tsViewTotals.Size = new System.Drawing.Size(232, 22);
             this.tsViewTotals.Text = "Advanced &Totals";
             this.tsViewTotals.Click += new System.EventHandler(this.tsViewTotals_Click);
@@ -1453,7 +1502,8 @@ namespace Mids_Reborn.Forms
             // tsRecipeViewer
             // 
             this.tsRecipeViewer.Name = "tsRecipeViewer";
-            this.tsRecipeViewer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.tsRecipeViewer.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
             this.tsRecipeViewer.Size = new System.Drawing.Size(232, 22);
             this.tsRecipeViewer.Text = "&Recipe Viewer";
             this.tsRecipeViewer.Click += new System.EventHandler(this.tsRecipeViewer_Click);
@@ -1461,7 +1511,8 @@ namespace Mids_Reborn.Forms
             // tsDPSCalc
             // 
             this.tsDPSCalc.Name = "tsDPSCalc";
-            this.tsDPSCalc.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.tsDPSCalc.ShortcutKeys =
+                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.tsDPSCalc.Size = new System.Drawing.Size(232, 22);
             this.tsDPSCalc.Text = "DPS Calculator (Beta)";
             this.tsDPSCalc.Click += new System.EventHandler(this.tsDPSCalc_Click);
@@ -1485,12 +1536,14 @@ namespace Mids_Reborn.Forms
             // 
             // InGameRespecHelperToolStripMenuItem
             // 
-            this.InGameRespecHelperToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsHelperShort,
-            this.tsHelperLong,
-            this.ToolStripSeparator20,
-            this.tsHelperShort2,
-            this.tsHelperLong2});
+            this.InGameRespecHelperToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsHelperShort,
+                this.tsHelperLong,
+                this.ToolStripSeparator20,
+                this.tsHelperShort2,
+                this.tsHelperLong2
+            });
             this.InGameRespecHelperToolStripMenuItem.Name = "InGameRespecHelperToolStripMenuItem";
             this.InGameRespecHelperToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.InGameRespecHelperToolStripMenuItem.Text = "In-Game &Respec Helper";
@@ -1556,7 +1609,8 @@ namespace Mids_Reborn.Forms
             // 
             this.lblCharacter.AutoSize = true;
             this.lblCharacter.BackColor = System.Drawing.Color.Transparent;
-            this.lblCharacter.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblCharacter.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblCharacter.ForeColor = System.Drawing.Color.White;
             this.lblCharacter.Location = new System.Drawing.Point(3, 3);
             this.lblCharacter.Name = "lblCharacter";
@@ -1804,7 +1858,8 @@ namespace Mids_Reborn.Forms
             // 
             this.ibDynMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibDynMode.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibDynMode.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point);
             this.ibDynMode.ForeColor = Color.White;
             this.ibDynMode.Images.Background = Resources.HeroButton;
             this.ibDynMode.Images.Hover = Resources.HeroButtonHover;
@@ -1859,7 +1914,8 @@ namespace Mids_Reborn.Forms
             // llPrimary
             // 
             this.llPrimary.Expandable = true;
-            this.llPrimary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPrimary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPrimary.HighVis = true;
             this.llPrimary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPrimary.Location = new System.Drawing.Point(16, 206);
@@ -1883,7 +1939,8 @@ namespace Mids_Reborn.Forms
             // llSecondary
             // 
             this.llSecondary.Expandable = true;
-            this.llSecondary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llSecondary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llSecondary.HighVis = true;
             this.llSecondary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llSecondary.Location = new System.Drawing.Point(170, 206);
@@ -1907,7 +1964,8 @@ namespace Mids_Reborn.Forms
             // llPool0
             // 
             this.llPool0.Expandable = true;
-            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool0.Location = new System.Drawing.Point(0, 47); // 328, 206
@@ -1931,7 +1989,8 @@ namespace Mids_Reborn.Forms
             // llPool1
             // 
             this.llPool1.Expandable = true;
-            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool1.ForeColor = System.Drawing.Color.Yellow;
             this.llPool1.HighVis = true;
             this.llPool1.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1956,7 +2015,8 @@ namespace Mids_Reborn.Forms
             // llPool2
             // 
             this.llPool2.Expandable = true;
-            this.llPool2.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool2.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool2.ForeColor = System.Drawing.Color.Yellow;
             this.llPool2.HighVis = true;
             this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1981,7 +2041,8 @@ namespace Mids_Reborn.Forms
             // llPool3
             // 
             this.llPool3.Expandable = true;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool3.ForeColor = System.Drawing.Color.Yellow;
             this.llPool3.HighVis = true;
             this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -2006,7 +2067,8 @@ namespace Mids_Reborn.Forms
             // llAncillary
             // 
             this.llAncillary.Expandable = true;
-            this.llAncillary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llAncillary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llAncillary.HighVis = true;
             this.llAncillary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llAncillary.Location = new System.Drawing.Point(0, 477); // 328, 638
@@ -2028,7 +2090,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblName
             // 
-            this.lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.InitialText = "Name:";
             this.lblName.Location = new System.Drawing.Point(2, 82);
@@ -2039,7 +2102,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblOrigin
             // 
-            this.lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOrigin.InitialText = "Origin:";
             this.lblOrigin.Location = new System.Drawing.Point(2, 133);
             this.lblOrigin.Name = "lblOrigin";
@@ -2049,7 +2113,8 @@ namespace Mids_Reborn.Forms
             // 
             // lblAT
             // 
-            this.lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAT.InitialText = "Archetype:";
             this.lblAT.Location = new System.Drawing.Point(2, 109);
             this.lblAT.Name = "lblAT";
@@ -2069,7 +2134,8 @@ namespace Mids_Reborn.Forms
             this.i9Picker.Size = new System.Drawing.Size(198, 235);
             this.i9Picker.TabIndex = 83;
             this.i9Picker.Visible = false;
-            this.i9Picker.EnhancementPicked += new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.EnhancementPicked +=
+                new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
             this.i9Picker.HoverEnhancement += new I9Picker.HoverEnhancementEventHandler(this.I9Picker_HoverEnhancement);
             this.i9Picker.HoverSet += new I9Picker.HoverSetEventHandler(this.I9Picker_HoverSet);
             this.i9Picker.Moved += new I9Picker.MovedEventHandler(this.I9Picker_Moved);
@@ -2082,8 +2148,10 @@ namespace Mids_Reborn.Forms
             this.I9Popup.BXHeight = 675;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
-            this.I9Popup.Font = new System.Drawing.Font("Arial", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.I9Popup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(48)))), ((int)(((byte)(255)))));
+            this.I9Popup.Font = new System.Drawing.Font("Arial", 13F, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.I9Popup.ForeColor =
+                System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(48)))), ((int)(((byte)(255)))));
             this.I9Popup.InternalPadding = 3;
             this.I9Popup.Location = new System.Drawing.Point(513, 490);
             this.I9Popup.Name = "I9Popup";
@@ -2172,7 +2240,8 @@ namespace Mids_Reborn.Forms
             // 
             this.ibModeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibModeEx.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ibModeEx.Font = new System.Drawing.Font("MS Sans Serif", 11F, System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point);
             this.ibModeEx.ForeColor = Color.White;
             this.ibModeEx.Images.Background = Resources.HeroButton;
             this.ibModeEx.Images.Hover = Resources.HeroButtonHover;
@@ -2268,7 +2337,7 @@ namespace Mids_Reborn.Forms
             this.poolsPanel.Controls.Add(this.cbPool2);
             this.poolsPanel.Controls.Add(this.cbPool3);
             this.poolsPanel.Controls.Add(this.cbAncillary);
-            
+
             this.poolsPanel.Controls.Add(this.lblPool1);
             this.poolsPanel.Controls.Add(this.lblPool2);
             this.poolsPanel.Controls.Add(this.lblPool3);
@@ -2323,7 +2392,8 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.poolsPanel);
             this.Controls.Add(this.enhCheckMode);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
@@ -2340,7 +2410,6 @@ namespace Mids_Reborn.Forms
             this.pnlGFXFlow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -2419,9 +2488,8 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewTotals;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
-        private ToolStripMenuItem LegacyExportToolStripMenuItem;
         private ToolStripMenuItem ExportToolStripMenuItem;
-        private ToolStripMenuItem ImportToolStripMenuItem;
+        private ToolStripMenuItem LegacyToolStripMenuItem;
         ComboBox cbAncillary;
         ComboBox cbAT;
         ComboBox cbOrigin;

@@ -15,7 +15,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         public MidsBot(RestClient restClient)
         {
             _restClient = restClient;
-            _restClient.UseSystemTextJson();
+            //_restClient.UseSystemTextJson();
         }
 
         internal async Task<MbRegResponseModel> RegisterAsync(string id, string email, string username, string discriminator, string password)
@@ -64,7 +64,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             var subRequest = new RestRequest("build/submit-build");
             subRequest.AddJsonBody(model);
-            _restClient.Authenticator = new JwtAuthenticator(accessToken);
+            //_restClient.Authenticator = new JwtAuthenticator(accessToken);
             return await _restClient.PostAsync<MbSubResponse>(subRequest);
         }
 
@@ -76,7 +76,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             };
             var chanRequest = new RestRequest("user/channels");
             chanRequest.AddJsonBody(chanParams);
-            _restClient.Authenticator = new JwtAuthenticator(accessToken);
+            //_restClient.Authenticator = new JwtAuthenticator(accessToken);
             return await _restClient.PostAsync<MbServersResponseModel>(chanRequest);
         }
 

@@ -6,11 +6,9 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Forms.WindowMenuItems;
@@ -20,16 +18,17 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.BuildFile;
+using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
-using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
-using Newtonsoft.Json;
+using RestSharp;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -66,12 +65,12 @@ namespace Mids_Reborn.Forms
 
         public static frmMain MainInstance;
 
-        private string[] CommandArgs { get; }
+        private string[]? CommandArgs { get; }
         private string ProcessedCommand { get; set; }
         private bool ProcessedFromCommand { get; set; }
         private FrmEntityDetails frmEntityDetails { get; set; }
 
-        public frmMain(string[] args)
+        public frmMain(string[]? args = null)
         {
             CommandArgs = args;
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -91,10 +90,11 @@ namespace Mids_Reborn.Forms
                         ConfigData.Initialize(Serializer.GetSerializer());
                     }
                 }
-                if (MidsContext.Config is { ApplicationRegistered: false })
-                {
-                    RegisterUriScheme();
-                }
+                RegisterUriScheme();
+                // if (MidsContext.Config is { ApplicationRegistered: false })
+                // {
+                //     RegisterUriScheme();
+                // }
                 
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
@@ -132,6 +132,7 @@ namespace Mids_Reborn.Forms
                 DisplayApi.FrmMain = this;
             }
             InitializeComponent();
+
             MainInstance = this;
             if (MidsContext.Config is { CheckForUpdates: true }) UpdateUtils.CheckForUpdates(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
@@ -178,7 +179,7 @@ namespace Mids_Reborn.Forms
                 var prevLastFileNameCfg = MidsContext.Config.LastFileName;
                 var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
                 var toonLoaded = false;
-                if (CommandArgs.Length > 0)
+                if (CommandArgs is { Length: > 0 })
                 {
                     switch (CommandArgs[0])
                     {
@@ -197,12 +198,12 @@ namespace Mids_Reborn.Forms
                             MidsContext.Config.DisableLoadLastFileOnStart = false;
                             switch (file)
                             {
-                                case var legacyBuild when DlgOpen.FileName.EndsWith(".mxd"):
-                                    DoOpen(legacyBuild);
+                                case var _ when DlgOpen.FileName.EndsWith(".mxd"):
+                                    DoOpen(file);
                                     break;
 
-                                case var newBuild when DlgOpen.FileName.EndsWith(".mbd"):
-                                    LoadCharacterFile(newBuild);
+                                case var _ when DlgOpen.FileName.EndsWith(".mbd"):
+                                    LoadCharacterFile(file);
                                     break;
                             }
                             ProcessedFromCommand = true;
@@ -216,7 +217,9 @@ namespace Mids_Reborn.Forms
                             if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
                             {
                                 MidsContext.Config.DisableLoadLastFileOnStart = false;
-                                Task.Run(() => ProcessUriCommands(uri));
+                                toonLoaded = RunSchemaCommands(CommandArgs[0]);
+                                comLoad = false;
+                                
                                 ProcessedFromCommand = true;
                             }
                             else
@@ -239,7 +242,6 @@ namespace Mids_Reborn.Forms
                             toonLoaded = DoOpen(legacyBuild);
                             break;
                         case var build when MidsContext.Config.LastFileName.EndsWith(".mbd"):
-                            Debug.WriteLine("Opening On Load With New Format");
                             toonLoaded = LoadCharacterFile(build);
                             break;
                     }
@@ -271,9 +273,9 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        public bool petWindowFlag { get; set; }
+        public bool PetWindowFlag { get; set; }
 
-        private List<string> MMPets { get; set; } = new();
+        private List<string> MmPets { get; set; } = new();
 
         // store the instance for reuse, as these things are called per draw/redraw
         private Lazy<ComboBoxT<Archetype>> CbtAT => new(() => new ComboBoxT<Archetype>(cbAT));
@@ -334,14 +336,12 @@ namespace Mids_Reborn.Forms
             if (MidsContext.Config == null) return;
             // Modify to only perform on 1st run - need to account for removal as well. Perhaps move to the installer?
             const string friendlyName = "Mids Reborn Protocol";
-            var appLoc = Application.ExecutablePath;
-            using var key = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{UriScheme}");
-            key?.SetValue("", $"URL:{friendlyName}");
-            key?.SetValue("URL Protocol", "");
-            using var defaultIcon = key?.CreateSubKey("DefaultIcon");
-            defaultIcon?.SetValue("", appLoc + ",1");
-            using var commandKey = key?.CreateSubKey(@"shell\open\command");
-            commandKey?.SetValue("", $"\"{appLoc}\" \"%1\"");
+            var mrbKey = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{UriScheme}");
+            mrbKey.SetValue("", $"URL:{friendlyName}");
+            mrbKey.SetValue("URL Protocol", "");
+            mrbKey.CreateSubKey("DefaultIcon").SetValue("", @$"{Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe")},0");
+            mrbKey.CreateSubKey("shell\\open\\command").SetValue("", $"\"{Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe")}\" \"%1\"");
+            mrbKey.Close();
             MidsContext.Config.ApplicationRegistered = true;
         }
 
@@ -529,15 +529,21 @@ namespace Mids_Reborn.Forms
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
         }
 
-        private async Task ProcessUriCommands(Uri uri)
+        private bool RunSchemaCommands(string url)
         {
-            using var nStream = new MemoryStream();
-            using var httpClient = new HttpClient();
-            var newUri = uri.ToString().Replace("mrb://", "https://");
-            var buildTask = await httpClient.GetStreamAsync(newUri);
-            await buildTask.CopyToAsync(nStream);
-            DoLoad(nStream);
-            // Need to update this method and all other URI/Command Line loads for new FileFormat once Bot is completed/online.
+            var returnData = false;
+            var code = url.Replace("mrb://", "");
+            var options = new RestClientOptions("https://mids.app")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var response = client.GetJson<ImportModel>($"build/{code}");
+            if (response != null)
+            {
+               returnData = DoLoadFromSchema(response);
+            }
+            return returnData;
         }
 
         internal void ChildRequestedRedraw()
@@ -1397,6 +1403,39 @@ namespace Mids_Reborn.Forms
             drawing.Refresh(drawing.ScaleDown(rectangle1));
             if (FlipSlotState[FlipSlotState.Length - 1] >= FlipSteps)
                 EndFlip();
+        }
+
+        private bool DoLoadFromSchema(ImportModel response)
+        {
+            DataViewLocked = false;
+            NewToon(true, true);
+            var ret = CharacterBuildFile.LoadImportData(response.ImportData);
+            FileModified = false;
+            if (drawing != null) drawing.Highlight = -1;
+            switch (MidsContext.Character?.Archetype?.DisplayName)
+            {
+                case "Mastermind":
+                    ibPetsEx.Visible = true;
+                    ibPetsEx.Enabled = true;
+                    break;
+                default:
+                    ibPetsEx.Visible = false;
+                    ibPetsEx.Enabled = false;
+                    break;
+            }
+
+            myDataView.Clear();
+            // MidsContext.Character?.ResetLevel();
+             PowerModified(false);
+            // UpdateControls(true);
+            // SetTitleBar();
+            //Application.DoEvents();
+            // GetBestDamageValues();
+            // UpdateColors();
+            // DoRedraw();
+            // FloatUpdate(true);
+            // Debug.WriteLine("Complete");
+            return ret;
         }
 
         private bool LoadCharacterFile(string fileName)
@@ -3309,68 +3348,76 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void NewToon(bool init = true, bool skipDraw = false)
         {
-            if (MainModule.MidsController.Toon == null)
+            try
             {
-                MainModule.MidsController.Toon = new clsToonX();
-            }
-            else if (init)
-            {
-                MidsContext.Character.Reset();
-            }
-            else
-            {
-                var str = !MainModule.MidsController.Toon.Locked ? MidsContext.Character.Name : string.Empty;
-                MidsContext.Character.Reset((Archetype)cbAT.SelectedItem, cbOrigin.SelectedIndex);
-                if (MidsContext.Character.Powersets[0].nIDLinkSecondary > -1)
+                if (MainModule.MidsController.Toon == null)
                 {
-                    MidsContext.Character.Powersets[1] = DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
+                    MainModule.MidsController.Toon = new clsToonX();
+                }
+                else if (init)
+                {
+                    MidsContext.Character.Reset();
+                }
+                else
+                {
+                    var str = !MainModule.MidsController.Toon.Locked ? MidsContext.Character.Name : string.Empty;
+                    MidsContext.Character.Reset((Archetype)cbAT.SelectedItem, cbOrigin.SelectedIndex);
+                    if (MidsContext.Character.Powersets[0].nIDLinkSecondary > -1)
+                    {
+                        MidsContext.Character.Powersets[1] =
+                            DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
+                    }
+
+                    MidsContext.Character.Name = str;
                 }
 
-                MidsContext.Character.Name = str;
-            }
+                if (fAccolade is { IsDisposed: false })
+                {
+                    fAccolade.Dispose();
+                }
 
-            if (fAccolade is { IsDisposed: false })
+                if (fTemp is { IsDisposed: false })
+                {
+                    fTemp.Dispose();
+                }
+
+                if (fIncarnate is { IsDisposed: false })
+                {
+                    fIncarnate.Dispose();
+                }
+
+                if (fPrestige is { IsDisposed: false })
+                {
+                    fPrestige.Dispose();
+                }
+
+                switch (MidsContext.Character?.Archetype?.DisplayName)
+                {
+                    case "Mastermind":
+                        ibPetsEx.Visible = true;
+                        ibPetsEx.Enabled = true;
+                        break;
+                    default:
+                        ibPetsEx.Visible = false;
+                        ibPetsEx.Enabled = false;
+                        break;
+                }
+
+                NewDraw(skipDraw);
+                UpdateControls(true);
+                SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero());
+                UpdateColors();
+                MidsContext.EnhCheckMode = false;
+                UpdateEnhCheckModeToolStrip();
+                enhCheckMode.Hide();
+                info_Totals();
+                FileModified = false;
+                DoRedraw();
+            }
+            catch (Exception e)
             {
-                fAccolade.Dispose();
+                Debug.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
             }
-
-            if (fTemp is { IsDisposed: false })
-            {
-                fTemp.Dispose();
-            }
-
-            if (fIncarnate is { IsDisposed: false })
-            {
-                fIncarnate.Dispose();
-            }
-
-            if (fPrestige is { IsDisposed: false })
-            {
-                fPrestige.Dispose();
-            }
-
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
-            NewDraw(skipDraw);
-            UpdateControls(true);
-            SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero());
-            UpdateColors();
-            MidsContext.EnhCheckMode = false;
-            UpdateEnhCheckModeToolStrip();
-            enhCheckMode.Hide();
-            info_Totals();
-            FileModified = false;
-            DoRedraw();
         }
 
         private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
@@ -5731,17 +5778,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibPetsEx_OnClick(object? sender, EventArgs e)
         {
-            if (petWindowFlag)
+            if (PetWindowFlag)
             {
                 ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
                 fMMPets?.Close();
-                petWindowFlag = false;
+                PetWindowFlag = false;
             }
             else
             {
                 // Zed: added check on level so hidden Henchmen powers (*_H) don't get in,
                 // leading to duplicates.
-                MMPets = MidsContext.Character?.CurrentBuild.Powers == null
+                MmPets = MidsContext.Character?.CurrentBuild.Powers == null
                     ? new List<string>()
                     : MidsContext.Character.CurrentBuild.Powers
                     .Where(e =>
@@ -5751,10 +5798,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     .Select(e => e.Name)
                     .ToList();
 
-                var isEmpty = MMPets.Count <= 0;
+                var isEmpty = MmPets.Count <= 0;
                 if (!isEmpty)
                 {
-                    fMMPets = new frmMMPowers(this, MMPets)
+                    fMMPets = new frmMMPowers(this, MmPets)
                     {
                         Text = @"Mastermind Pets"
                     };
@@ -5762,7 +5809,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     if (!fMMPets.Visible)
                     {
                         ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOn;
-                        petWindowFlag = true;
+                        PetWindowFlag = true;
                         fMMPets.Show(this);
                     }
                     else
@@ -5791,7 +5838,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (FlipActive)
                 doFlipStep();
         }
-        //
+        
         private bool ToggleClicked(int hID, int iX, int iY)
         {
             var rectangle1 = new Rectangle();
@@ -6043,7 +6090,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             // var export = new ExportPreview();
             // export.ShowDialog(this);
-            ForumExport.BuildExport(true, true, false);
+            //ForumExport.BuildExport(true, true, false);
+            
+            //CharacterBuildFile.ExportShareData();
 
             /*if (MidsContext.Config == null || MidsContext.Character == null || drawing == null) return;
             FloatTop(false);
@@ -6079,14 +6128,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             forumExport.ShowDialog(this);
             FloatTop(true);
             if (MidsContext.Config.LongExport) MidsContext.Config.LongExport = false;*/
-        }
-
-        private void tsExportDataLink_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetDataObject(MidsCharacterFileFormat.MxDBuildSaveHyperlink(false, true), true);
-            MessageBox.Show("The data link has been placed on the clipboard and is ready to paste.", "Export Done",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
         }
 
         private void tsShareDiscord_Click(object sender, EventArgs e)
