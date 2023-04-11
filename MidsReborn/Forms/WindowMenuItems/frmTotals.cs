@@ -497,7 +497,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 
                 var iTip = $"{displayStats.Defense(dType):##0.##}% {defDmgNames[dType]} defense";
-                graphDef.AddItem($"{defDmgNames[dType]}| {displayStats.Defense(dType):##0.##}%", displayStats.Defense(dType), 0.0f, iTip);
+                graphDef.AddItem($"{defDmgNames[dType]}| {displayStats.Defense(dType):##0.##}%", Math.Max(0, displayStats.Defense(dType)), 0, iTip);
             }
 
             graphDef.Max = 100;
@@ -516,8 +516,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     MidsContext.Character.TotalsCapped.Res[dType] < MidsContext.Character.Totals.Res[dType]
                         ? $"{displayStats.DamageResistance(dType, true):##0.##}% {defDmgNames[dType]} resistance capped at {displayStats.DamageResistance(dType, false):##0.##}%"
                         : $"{displayStats.DamageResistance(dType, true):##0.##}% {defDmgNames[dType]} resistance. ({str1})";
-                graphRes.AddItem($"{defDmgNames[dType]}|{displayStats.DamageResistance(dType, false):##0.##}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
-
+                graphRes.AddItem($"{defDmgNames[dType]}|{displayStats.DamageResistance(dType, false):##0.##}%", Math.Max(0, displayStats.DamageResistance(dType, false)), Math.Max(0, displayStats.DamageResistance(dType, true)), iTip);
             }
 
             graphRes.Max = 100f;
@@ -551,7 +550,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 iTip3 += $"\r\nYour maximum endurance has been increased by {Utilities.FixDP(displayStats.EnduranceMaxEnd - 100f)}%";
             }
 
-            graphMaxEnd.AddItem($"Max End|{Utilities.FixDP(displayStats.EnduranceMaxEnd)}%", displayStats.EnduranceMaxEnd, 0, iTip3);
+            graphMaxEnd.AddItem($"Max End|{Utilities.FixDP(displayStats.EnduranceMaxEnd)}%", Math.Max(0, displayStats.EnduranceMaxEnd), 0, iTip3);
             graphMaxEnd.Max = 150;
             graphMaxEnd.MarkerValue = 100;
             graphMaxEnd.Draw();
@@ -562,7 +561,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphDrain.Draw();
             
             graphRec.Clear();
-            graphRec.AddItem($"EndRec|{displayStats.EnduranceRecoveryPercentage(false):###0}% ({displayStats.EnduranceRecoveryNumeric:##0.##}/s)", displayStats.EnduranceRecoveryPercentage(false), displayStats.EnduranceRecoveryPercentage(true), recTip);
+            graphRec.AddItem($"EndRec|{displayStats.EnduranceRecoveryPercentage(false):###0}% ({displayStats.EnduranceRecoveryNumeric:##0.##}/s)", Math.Max(0, displayStats.EnduranceRecoveryPercentage(false)), Math.Max(0, displayStats.EnduranceRecoveryPercentage(true)), recTip);
             graphRec.Max = 400;
             graphRec.MarkerValue = 100;
             graphRec.Draw();
@@ -574,7 +573,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             graphRegen.Clear();
-            graphRegen.AddItem($"Regeneration|{displayStats.HealthRegenPercent(false):###0}%", displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
+            graphRegen.AddItem($"Regeneration|{displayStats.HealthRegenPercent(false):###0}%", Math.Max(0, displayStats.HealthRegenPercent(false)), Math.Max(0, displayStats.HealthRegenPercent(true)), iTip4);
             graphRegen.Max = graphRegen.GetMaxValue();
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();
@@ -586,7 +585,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 iTip5 += $"\r\n(Capped from a total of: {displayStats.HealthHitpointsNumeric(true):###0.##})";
             }
 
-            graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
+            graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", Math.Max(0, displayStats.HealthHitpointsPercentage), Math.Max(0, displayStats.HealthHitpointsPercentage), iTip5);
             graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap / (double) MidsContext.Character.Archetype.Hitpoints * 100);
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
@@ -652,12 +651,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMovement.Draw();
             
             graphToHit.Clear();
-            graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", displayStats.BuffToHit, 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
+            graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", Math.Max(0, displayStats.BuffToHit), 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100;
             graphToHit.Draw();
             
             graphAcc.Clear();
-            graphAcc.AddItem($"Accuracy|{displayStats.BuffAccuracy:##0.##}%", displayStats.BuffAccuracy, 0, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
+            graphAcc.AddItem($"Accuracy|{displayStats.BuffAccuracy:##0.##}%", Math.Max(0, displayStats.BuffAccuracy), 0, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
             graphAcc.Max = 100;
             graphAcc.Draw();
             
@@ -668,7 +667,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 str7 = $"\r\n\nDamage Capped from {displayStats.BuffDamage(true)}% to {displayStats.BuffDamage(false)}%";
             }
 
-            graphDam.AddItem($"Damage|{displayStats.BuffDamage(false) - 100:##0.##}%", displayStats.BuffDamage(false), displayStats.BuffDamage(true), $"This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included.{str7}");
+            graphDam.AddItem($"Damage|{displayStats.BuffDamage(false) - 100:##0.##}%", Math.Max(0, displayStats.BuffDamage(false)), Math.Max(0, displayStats.BuffDamage(true)), $"This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included.{str7}");
             graphDam.Max = MidsContext.Character.Archetype.DamageCap * 100f;
             graphDam.MarkerValue = 100f;
             graphDam.Draw();
@@ -680,7 +679,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 str8 = $"\r\n\r\nRecharge Speed Capped from {displayStats.BuffHaste(true)}% to {displayStats.BuffHaste(false)}%";
             }
 
-            graphHaste.AddItem($"Haste|{displayStats.BuffHaste(false) - 100:##0.##}%", displayStats.BuffHaste(false), displayStats.BuffHaste(true), $"This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included.{str8}");
+            graphHaste.AddItem($"Haste|{displayStats.BuffHaste(false) - 100:##0.##}%", Math.Max(0, displayStats.BuffHaste(false)), Math.Max(0, displayStats.BuffHaste(true)), $"This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included.{str8}");
             graphHaste.MarkerValue = 100f;
             graphHaste.Max = displayStats.BuffHaste(true) switch
             {
@@ -711,7 +710,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             
             graphElusivity.Clear();
             var sElusivity = MidsContext.Character.Totals.ElusivityMax;
-            graphElusivity.AddItem($"Elusivity|{sElusivity * 100:##0.##}%", sElusivity * 100, 0, "This effect resists accuracy buffs of enemies attacking you.");
+            graphElusivity.AddItem($"Elusivity|{sElusivity * 100:##0.##}%", Math.Max(0, sElusivity * 100), 0, "This effect resists accuracy buffs of enemies attacking you.");
             graphElusivity.Max = 100;
             graphElusivity.Draw();
             if (Math.Abs(graphAcc.Font.Size - MidsContext.Config.RtFont.PairedBase) > float.Epsilon)

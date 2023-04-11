@@ -762,6 +762,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 foreach (var inherent in inherentPowersList)
                 {
+                    if (inherent == null)
+                    {
+                        continue;
+                    }
+
+                    if (inherent.InherentType == Enums.eGridType.None)
+                    {
+                        continue;
+                    }
+
                     var priority = (int)Enum.Parse(typeof(Enums.eInherentOrder), inherent.InherentType.ToString());
                     InherentDisplayList.Add(new InherentDisplayItem(priority, inherent));
                 }
@@ -771,7 +781,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (CurrentBuild == null) return;
             {
-                foreach (var power in (CurrentBuild.Powers).Where(power => power?.Power != null))
+                foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
                 {
                     switch (power.Power.PowerName.ToUpper())
                     {

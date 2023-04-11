@@ -64,12 +64,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Load += frmStats_Load;
             Move += frmStats_Move;
             Resize += frmStats_Resize;
-            VisibleChanged += frmStats_VisibleChanged;
+            //VisibleChanged += frmStats_VisibleChanged;
             BaseArray = Array.Empty<IPower?>();
             EnhArray = Array.Empty<IPower?>();
-            GraphMax = 1f;
+            GraphMax = 1;
             BaseOverride = false;
             Loaded = false;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             InitializeComponent();
             btnClose.Click += btnClose_Click;
             chkOnTop.Click += chkOnTop_Click;
@@ -87,7 +88,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             GetPowerArray();
             DisplayGraph();
         }
@@ -95,7 +99,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             SetGraphType();
             DisplayGraph();
         }
@@ -103,7 +110,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbValues_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             DisplayGraph();
         }
 
@@ -444,7 +454,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Loaded = true;
             tbScaleX.Minimum = 0;
             tbScaleX.Maximum = Graph.ScaleCount - 1;
+            chkOnTop.ToggleState = TopMost switch
+            {
+                true => ImageButtonEx.States.ToggledOn,
+                _ => ImageButtonEx.States.ToggledOff
+            };
+
+            UpdateColorTheme();
             UpdateData(false);
+        }
+
+        public void UpdateColorTheme()
+        {
+            chkOnTop.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            chkOnTop.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
         }
 
         private void frmStats_Move(object sender, EventArgs e)
@@ -456,41 +485,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (Graph != null)
             {
-                Graph.Width = ClientSize.Width - (Graph.Left + 4);
-                var graph = Graph;
-                var height = ClientSize.Height;
-                var top = Graph.Top;
-                var clientSize1 = ClientSize;
-                var num1 = clientSize1.Height - this.tbScaleX.Top;
-                var num2 = top + num1 + 4;
-                var num3 = height - num2;
-                graph.Height = num3;
-                var tbScaleX = this.tbScaleX;
-                clientSize1 = ClientSize;
-                var num4 = clientSize1.Width - (this.tbScaleX.Left + (ClientSize.Width - chkOnTop.Left) + 4);
-                tbScaleX.Width = num4;
-                lblScale.Left = (int) Math.Round(this.tbScaleX.Left + (this.tbScaleX.Width - lblScale.Width) / 2.0);
-                var num5 = this.cbStyle.Left + 154;
-                var clientSize2 = ClientSize;
-                var num6 = clientSize2.Width - 3;
-                if (num5 > num6)
-                {
-                    var cbStyle = this.cbStyle;
-                    clientSize2 = ClientSize;
-                    var num7 = clientSize2.Width - this.cbStyle.Left - 4;
-                    cbStyle.Width = num7;
-                }
-                else
-                {
-                    cbStyle.Width = 186;
-                }
+                Graph.Width = ClientSize.Width - Graph.Left - 4;
+                Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 4;
+                tbScaleX.Width = ClientSize.Width - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
+                lblScale.Left = (int) Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
+                cbStyle.Width = cbStyle.Left + 157 > ClientSize.Width
+                    ? ClientSize.Width - cbStyle.Left - 4
+                    : 186;
             }
 
-            StoreLocation();
-        }
+            btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
+            chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
 
-        private void frmStats_VisibleChanged(object sender, EventArgs e)
-        {
+            StoreLocation();
         }
 
         private void GetPowerArray()
