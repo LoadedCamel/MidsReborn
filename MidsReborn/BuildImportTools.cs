@@ -502,11 +502,45 @@ namespace Mids_Reborn
         ** Example build: https://forums.homecomingservers.com/topic/2915-enen-the-murder-bunny/?do=findComment&comment=465906
         */
 
+        private string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<KeyValuePair<string, string?>, string> oldPowersDict)
+        {
+            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic")
+            {
+                return powerName;
+            }
+
+            var k = new KeyValuePair<string, string?>(powerName, archetype);
+            if (oldPowersDict.TryGetValue(k, value: out var newName))
+            {
+                return newName;
+            }
+
+            k = new KeyValuePair<string, string?>(powerName, null);
+            return oldPowersDict.TryGetValue(k, value: out newName)
+                ? newName
+                : powerName;
+        }
+
         public List<PowerEntry>? ParseForumPost()
         {
             var oldEnhDict = new Dictionary<string, string>
             {
                 {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
+            };
+
+            // Applies to HC db only.
+            var oldPowersDict = new Dictionary<KeyValuePair<string, string?>, string>
+            {
+                // I27p6
+                {new KeyValuePair<string, string?>("Psionic Dart", null), "Psionic Darts"},
+                {new KeyValuePair<string, string?>("Whirling Axe", null), "Axe Cyclone"},
+                {new KeyValuePair<string, string?>("Will Domination", "Blaster"), "Dominate Will"},
+                {new KeyValuePair<string, string?>("Will Domination", "Corruptor"), "Dominate Will"},
+                {new KeyValuePair<string, string?>("Will Domination", "Defender"), "Dominate Will"},
+                {new KeyValuePair<string, string?>("Scramble Thoughts", "Blaster"), "Scramble Minds"},
+                
+                {new KeyValuePair<string, string?>("Afterburner", null), "Evasive Maneuvers"},
+                {new KeyValuePair<string, string?>("Quantum Acceleration", "Peacebringer"), "Quantum Maneuvers"},
             };
 
             var listPowers = new List<PowerEntry>();
@@ -522,8 +556,10 @@ namespace Mids_Reborn
             var lines = BuildString.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             var headerFound = false;
             Archetype? archetypeData = null;
+            var k = -1;
             foreach (var lineText in lines)
             {
+                k++;
                 var l = lineText.Trim();
                 l = Regex.Replace(l, @"[\s\t]{2,}", "\t");
 
@@ -597,7 +633,7 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                var powerName = mps.Groups[2].Value;
+                var powerName = ApplyPowerReplacementTable(mps.Groups[2].Value, archetypeData?.DisplayName ?? null, oldPowersDict);
                 var p = new RawPowerData
                 {
                     Valid = false,
@@ -616,116 +652,263 @@ namespace Mids_Reborn
                 p.Powerset = p.pData?.GetPowerSet();
                 p.Valid = CheckValid(p.pData);
                 p.Slots = new List<RawEnhData>();
-                var enhSlots = Regex.Split(mps.Groups[3].Value, @",[\s\t]*").ToList();
                 var rs = new Regex(@"^(.+)\((A|[0-9]+)\)");
-                foreach (var slot in enhSlots)
+                var rsFormat = 0;
+                var enhSlots = Regex.Split(mps.Groups[3].Value, @",[\s\t]*")
+                    .Where(e => !string.IsNullOrWhiteSpace(e))
+                    .ToList();
+                if (enhSlots.Count <= 0)
                 {
-                    if (!rs.IsMatch(slot))
+                    // Read ahead for slots
+                    rs = new Regex(@"^.*\((A|[0-9]+)\)(.+)");
+                    rsFormat = 1;
+                    var foundFirstSlot = false;
+                    for (var i = k + 1; i < Math.Min(lines.Length, k + 16); i++) // (offset=1 + max 6 slots + interline=1) x 2 (if double interlined)
                     {
-                        continue;
-                    }
-
-                    var ms = rs.Match(slot);
-                    var rawEnhName = ReplaceFirstOccurrence(ms.Groups[1].Value.Trim(), "-", ": ");
-                    if (oldEnhDict.ContainsKey(rawEnhName))
-                    {
-                        rawEnhName = oldEnhDict[rawEnhName];
-                    }
-
-                    // Direct test
-                    var enh = DatabaseAPI.Database.Enhancements
-                        .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                        .FirstOrDefault(e => e.ShortName == rawEnhName);
-
-                    // Regular IO/SO
-                    if (enh == null || enh.StaticIndex < 0)
-                    {
-                        var re = new Regex(@"^([A-Za-z]+)\: (I|S|D|T)");
-                        if (!re.IsMatch(rawEnhName))
+                        if (string.IsNullOrWhiteSpace(lines[i]))
                         {
-                            enh = null;
+                            continue;
                         }
-                        else
+
+                        if (rs.IsMatch(lines[i]))
                         {
-                            var mEnh = re.Match(rawEnhName);
-                            enh = DatabaseAPI.Database.Enhancements
-                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                                .FirstOrDefault(e => e.ShortName == mEnh.Groups[1].Value.Trim() &&
-                                                     (mEnh.Groups[2].Value == "I"
-                                                         ? e.TypeID == Enums.eType.InventO
-                                                         : e.TypeID is Enums.eType.Normal or Enums.eType.SpecialO));
+                            enhSlots.Add(lines[i]);
+                            foundFirstSlot = true;
+                        }
+                        else if (foundFirstSlot)
+                        {
+                            break;
                         }
                     }
+                }
 
-                    if (enh == null || enh.StaticIndex < 0)
-                    {
-                        if (Regex.IsMatch(rawEnhName, @"^(HO|TI|TN|HY)\:"))
+                switch (rsFormat)
+                {
+                    case 0:
+                        foreach (var slot in enhSlots)
                         {
-                            //Database.SpecialEnhStringLong[0] = "None";
-                            //Database.SpecialEnhStringLong[1] = "Hamidon Origin";
-                            //Database.SpecialEnhStringLong[2] = "Hydra Origin";
-                            //Database.SpecialEnhStringLong[3] = "Titan Origin";
-                            //Database.SpecialEnhStringLong[4] = "D-Sync Origin";
-                            
-                            var chunks = rawEnhName.Split(':');
-                            var subTypeId = chunks[0] switch
+                            if (!rs.IsMatch(slot))
                             {
-                                "HO" => 1,
-                                "TI" or "TN" => 2,
-                                "HY" => 3,
-                                _ => 0
-                            };
-                            
-                            enh = DatabaseAPI.Database.Enhancements
-                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                                .FirstOrDefault(e =>
-                                    e.ShortName == chunks[1] && e.TypeID == Enums.eType.SpecialO &&
-                                    e.SubTypeID == subTypeId);
+                                continue;
+                            }
 
-                        }
-                    }
-                    
-                    // IO sets
-                    if (enh == null || enh.StaticIndex < 0)
-                    {
-                        var chunks = rawEnhName.Split(": ");
-                        var subChunks = Regex.Split(rawEnhName, @"\: |\/");
+                            var ms = rs.Match(slot);
+                            var rawEnhName = ReplaceFirstOccurrence(ms.Groups[1].Value.Trim(), "-", ": ");
+                            if (oldEnhDict.ContainsKey(rawEnhName))
+                            {
+                                rawEnhName = oldEnhDict[rawEnhName];
+                            }
+
+                            // Direct test
+                            var enh = DatabaseAPI.Database.Enhancements
+                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                .FirstOrDefault(e => e.ShortName == rawEnhName);
+
+                            // Regular IO/SO
+                            if (enh == null || enh.StaticIndex < 0)
+                            {
+                                var re = new Regex(@"^([A-Za-z]+)\: (I|S|D|T)");
+                                if (!re.IsMatch(rawEnhName))
+                                {
+                                    enh = null;
+                                }
+                                else
+                                {
+                                    var mEnh = re.Match(rawEnhName);
+                                    enh = DatabaseAPI.Database.Enhancements
+                                        .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                        .FirstOrDefault(e => e.ShortName == mEnh.Groups[1].Value.Trim() &&
+                                                             (mEnh.Groups[2].Value == "I"
+                                                                 ? e.TypeID == Enums.eType.InventO
+                                                                 : e.TypeID is Enums.eType.Normal or Enums.eType.SpecialO));
+                                }
+                            }
+
+                            if (enh == null || enh.StaticIndex < 0)
+                            {
+                                if (Regex.IsMatch(rawEnhName, @"^(HO|TI|TN|HY)\:"))
+                                {
+                                    //Database.SpecialEnhStringLong[0] = "None";
+                                    //Database.SpecialEnhStringLong[1] = "Hamidon Origin";
+                                    //Database.SpecialEnhStringLong[2] = "Hydra Origin";
+                                    //Database.SpecialEnhStringLong[3] = "Titan Origin";
+                                    //Database.SpecialEnhStringLong[4] = "D-Sync Origin";
+                                
+                                    var chunks = rawEnhName.Split(':');
+                                    var subTypeId = chunks[0] switch
+                                    {
+                                        "HO" => 1,
+                                        "TI" or "TN" => 2,
+                                        "HY" => 3,
+                                        _ => 0
+                                    };
+                                
+                                    enh = DatabaseAPI.Database.Enhancements
+                                        .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                        .FirstOrDefault(e =>
+                                            e.ShortName == chunks[1] && e.TypeID == Enums.eType.SpecialO &&
+                                            e.SubTypeID == subTypeId);
+
+                                }
+                            }
                         
-                        // Enhancement set short names can be non-unique.
-                        // E.g. Annihilation / Annoyance (Ann)
-                        var setsEnh = DatabaseAPI.Database.EnhancementSets
-                            .Where(e => e.ShortName == chunks[0])
-                            .SelectMany(e => e.Enhancements)
-                            .Select(e => DatabaseAPI.Database.Enhancements[e])
-                            .ToList();
+                            // IO sets
+                            if (enh == null || enh.StaticIndex < 0)
+                            {
+                                var chunks = rawEnhName.Split(": ");
+                                var subChunks = Regex.Split(rawEnhName, @"\: |\/");
+                            
+                                // Enhancement set short names can be non-unique.
+                                // E.g. Annihilation / Annoyance (Ann)
+                                var setsEnh = DatabaseAPI.Database.EnhancementSets
+                                    .Where(e => e.ShortName == chunks[0])
+                                    .SelectMany(e => e.Enhancements)
+                                    .Select(e => DatabaseAPI.Database.Enhancements[e])
+                                    .ToList();
 
-                        if (setsEnh.Count > 0)
-                        {
-                            enh = setsEnh
-                                .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
-                                .FirstOrDefault(e => e.ShortName == chunks[1] || subChunks.Skip(1).All(s => e.ShortName.Contains(s)));
+                                if (setsEnh.Count > 0)
+                                {
+                                    enh = setsEnh
+                                        .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                        .FirstOrDefault(e => e.ShortName == chunks[1] || subChunks.Skip(1).All(s => e.ShortName.Contains(s)));
+                                }
+                            }
+
+                            var e = enh == null || enh.StaticIndex < 0
+                                ? new RawEnhData
+                                {
+                                    InternalName = "Empty",
+                                    Level = 0,
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = -1
+                                }
+                                : new RawEnhData
+                                {
+                                    InternalName = enh.UID,
+                                    Level = ms.Groups[2].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[2].Value),
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
+                                };
+
+                            p.Slots.Add(e);
                         }
-                    }
 
-                    var e = enh == null || enh.StaticIndex < 0
-                        ? new RawEnhData
+                        break;
+
+                    case 1:
+                        foreach (var slot in enhSlots)
                         {
-                            InternalName = "Empty",
-                            Level = 0,
-                            Boosters = 0,
-                            HasCatalyst = false,
-                            eData = -1
+                            // [1] -> Level, [2] -> Enhancement
+                            var ms = rs.Match(slot);
+                            var rawEnhName = ReplaceFirstOccurrence(ms.Groups[2].Value, " - ", ": ").Trim();
+
+                            if (rawEnhName == "Empty")
+                            {
+                                p.Slots.Add(new RawEnhData
+                                {
+                                    InternalName = "Empty",
+                                    Level = 0,
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = -1
+                                });
+
+                                continue;
+                            }
+
+                            // Direct test, for Sets IO
+                            var enh = DatabaseAPI.Database.Enhancements
+                                .DefaultIfEmpty(new Enhancement { StaticIndex = -1 })
+                                .FirstOrDefault(e => e.LongName == rawEnhName);
+
+                            if (enh is {StaticIndex: >= 0})
+                            {
+                                p.Slots.Add(new RawEnhData
+                                {
+                                    InternalName = enh.UID,
+                                    Level = ms.Groups[1].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[1].Value),
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
+                                });
+
+                                continue;
+                            }
+
+                            // Regular IO/SO
+                            var enhName = rawEnhName.Replace(" IO", "");
+                            var enhClass = rawEnhName.EndsWith(" IO") ? "IO" : "SO";
+                            enh = enhClass == "IO"
+                                ? DatabaseAPI.Database.Enhancements
+                                    .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                    .FirstOrDefault(e =>
+                                        e.LongName == $"Invention: {enhName}" &&
+                                        e.TypeID == Enums.eType.InventO)
+
+                                : DatabaseAPI.Database.Enhancements
+                                    .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                    .FirstOrDefault(e =>
+                                        e.LongName.EndsWith(enhName) &&
+                                        e.UID.StartsWith("Magic_") &&
+                                        e.TypeID == Enums.eType.Normal);
+
+                            if (enh is { StaticIndex: >= 0 })
+                            {
+                                p.Slots.Add(new RawEnhData
+                                {
+                                    InternalName = enh.UID,
+                                    Level = ms.Groups[1].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[1].Value),
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
+                                });
+
+                                continue;
+                            }
+
+                            // Hamidon/Titan/Hydra/D-Sync
+                            var re = new Regex(@"^(Hamidon|Titan|Hydra|D\-Sync) Origin\:\s*(.+)$");
+                            if (!re.IsMatch(rawEnhName))
+                            {
+                                enh = null;
+                            }
+                            else
+                            {
+                                var mEnh = re.Match(rawEnhName);
+                                enhName = mEnh.Groups[2].Value.Trim();
+                                enh = DatabaseAPI.Database.Enhancements
+                                    .DefaultIfEmpty(new Enhancement {StaticIndex = -1})
+                                    .FirstOrDefault(e => e.LongName.EndsWith(enhName) &&
+                                                         e.TypeID == Enums.eType.SpecialO);
+                            }
+
+                            if (enh is { StaticIndex: >= 0 })
+                            {
+                                p.Slots.Add(new RawEnhData
+                                {
+                                    InternalName = enh.UID,
+                                    Level = ms.Groups[1].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[1].Value),
+                                    Boosters = 0,
+                                    HasCatalyst = false,
+                                    eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
+                                });
+
+                                continue;
+                            }
+
+                            p.Slots.Add(new RawEnhData
+                            {
+                                InternalName = "Empty",
+                                Level = 0,
+                                Boosters = 0,
+                                HasCatalyst = false,
+                                eData = -1
+                            });
                         }
-                        : new RawEnhData
-                        {
-                            InternalName = enh.UID,
-                            Level = ms.Groups[2].Value == "A" ? 0 : Convert.ToInt32(ms.Groups[2].Value),
-                            Boosters = 0,
-                            HasCatalyst = false,
-                            eData = DatabaseAPI.GetEnhancementByUIDName(enh.UID)
-                        };
 
-                    p.Slots.Add(e);
+                        break;
                 }
 
                 if (p.Valid)
