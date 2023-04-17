@@ -1,3 +1,4 @@
+using System;
 using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.Core
@@ -18,6 +19,7 @@ namespace Mids_Reborn.Core
         public static readonly float BasePerception = DatabaseAPI.ServerData.BasePerception;
         public const float MaxDefenseDebuffRes = 95f;
         public const float MaxGenericDebuffRes = 100f; // All but defense that has a specific value
+        public const float MaxHaste = 400f;
         private readonly Character _character;
 
         internal Statistics(Character character)
@@ -165,15 +167,15 @@ namespace Mids_Reborn.Core
         public float BuffHaste(bool uncapped)
         {
             return !uncapped
-                ? (float) ((_character.TotalsCapped.BuffHaste + 1.0) * 100.0)
-                : (float) ((_character.Totals.BuffHaste + 1.0) * 100.0);
+                ? Math.Min(MaxHaste, (_character.TotalsCapped.BuffHaste + 1) * 100)
+                : (_character.Totals.BuffHaste + 1) * 100;
         }
 
         public float BuffDamage(bool uncapped)
         {
             return !uncapped
-                ? (float) ((_character.TotalsCapped.BuffDam + 1.0) * 100.0)
-                : (float) ((_character.Totals.BuffDam + 1.0) * 100.0);
+                ? Math.Min(_character.Archetype?.DamageCap * 100 ?? float.PositiveInfinity, (_character.TotalsCapped.BuffDam + 1) * 100)
+                : (_character.Totals.BuffDam + 1) * 100;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls;
@@ -2180,13 +2181,40 @@ namespace Mids_Reborn
 
         public bool Load(string iFileName, ref Stream? mStream)
         {
+            var buildString = "";
+            
+            // From file
             if (mStream == null || !string.IsNullOrEmpty(iFileName))
             {
                 mStream = new FileStream(iFileName, FileMode.Open, FileAccess.Read);
+                buildString = File.ReadAllText(iFileName);
+            }
+            // From clipboard (old datachunk)
+            else if (Clipboard.ContainsText())
+            {
+                buildString = Clipboard.GetText();
+                if (!Regex.IsMatch(buildString, @"\|MxD[uz];[0-9]+\;[0-9]+;[0-9]+;[A-Z]+;\|"))
+                {
+                    MessageBox.Show("Clipboard doesn't contain a valid datachunk.", "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    return false;
+                }
+
+                // This ignores previously set mStream
+                mStream = new MemoryStream();
+                var streamWriter = new StreamWriter(mStream);
+                streamWriter.Write(buildString);
+                streamWriter.Flush();
+                mStream.Position = 0;
+            }
+            else
+            {
+                MessageBox.Show("Cannot load build: no data to load from.", "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                return false;
             }
 
             //Stream iStream1 = mStream != null ? mStream : (Stream) new FileStream(iFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            var buildString = File.ReadAllText(iFileName);
             switch (MidsCharacterFileFormat.MxDExtractAndLoad(mStream))
             {
                 case MidsCharacterFileFormat.eLoadReturnCode.Failure:

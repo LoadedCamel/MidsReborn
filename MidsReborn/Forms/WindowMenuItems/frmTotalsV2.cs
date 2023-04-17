@@ -483,8 +483,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                    (valueBase > 0
                        ? $"\r\nBase: {(plusSignEnabled && valueBase > 0 ? "+" : "")}{valueBase:##0.##}{percentageSign}{movementUnit}"
                        : "") +
-                   (statName == "Damage"
-                       ? $"\r\nEnh: {value - valueBase}{percentageSign}"
+                   (statName is "Damage" or "Haste" || valueBase > 0
+                       ? $"\r\n(Enh: {value - valueBase:##0.##}{percentageSign})"
                        : "");
         }
 
@@ -852,12 +852,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     continue;
                 }
 
+                var damageVector = damageVectorsNames[i] == "None" ? "Untyped" : damageVectorsNames[i];
                 var elValue = (MidsContext.Character.Totals.Elusivity[i] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100;
-                graphElusivity.AddItemPair(damageVectorsNames[i],
+                graphElusivity.AddItemPair(damageVector,
                     $"{elValue:##0.##}%",
                     0,
                     Math.Max(0, elValue),
-                    $"{elValue:##0.##} Elusivity ({damageVectorsNames[i]})");
+                    $"{elValue:##0.##}% Elusivity ({damageVector})");
             }
 
             graphElusivity.Size = graphElusivity.Size with { Height = Math.Max(graphElusivity.Size.Height, graphElusivity.ContentHeight + graphBottomMargin) };

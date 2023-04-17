@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.ComponentModel;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
-using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -1097,7 +1093,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.Location = new System.Drawing.Point(12, 314);
             this.graphElusivity.MarkerValue = 0F;
             this.graphElusivity.Max = 100F;
-            this.graphElusivity.MaxItems = 60;
+            this.graphElusivity.MaxItems = 13;
             this.graphElusivity.Name = "graphElusivity";
             this.graphElusivity.OuterBorder = true;
             this.graphElusivity.Overcap = false;
@@ -1110,7 +1106,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.ScaleIndex = 8;
             this.graphElusivity.ShowScale = false;
             this.graphElusivity.Size = new System.Drawing.Size(526, 235);
-            this.graphElusivity.Style = Mids_Reborn.Core.Enums.GraphStyle.baseOnly;
+            this.graphElusivity.Style = Mids_Reborn.Core.Enums.GraphStyle.enhOnly;
             this.graphElusivity.TabIndex = 116;
             this.graphElusivity.TabStop = false;
             this.graphElusivity.TextWidth = 187;

@@ -5404,8 +5404,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (LastFileName != string.Empty)
                 {
                     var fileInfo = new FileInfo(LastFileName);
-                    str1 = fileInfo.Name + " - ";
-                    tsFileSave.Text = $"&Save '{fileInfo.Name.Replace(fileInfo.Extension, "")}'";
+                    var fileName = fileInfo.Name.Length > 255 ? "Build" : fileInfo.Name;
+                    str1 = $"{fileName} - ";
+                    tsFileSave.Text = $"&Save '{(string.IsNullOrEmpty(fileInfo.Extension) ? fileName : fileName.Replace(fileInfo.Extension, ""))}'";
                 }
                 else
                 {
@@ -5417,7 +5418,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 tsFileSave.Text = @"&Save";
             }
 
-            var str2 = str1 + MidsContext.Title;
+            var str2 = $"{str1}{MidsContext.Title}";
             if (!hero)
             {
                 str2 = str2.Replace(nameof(hero), "Villain");
@@ -6301,7 +6302,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
-            Debug.WriteLine($"Forum import string: {str.Length} char.");
             NewToon();
             try
             {
