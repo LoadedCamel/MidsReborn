@@ -24,8 +24,6 @@ namespace Mids_Reborn.Core
         public int LastPower;
         public EnhancementSet? MySet;
 
-        public string? Comment;
-
         public Build(Character owner, IList<LevelMap> iLevels)
         {
             _character = owner;

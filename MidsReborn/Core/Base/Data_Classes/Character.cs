@@ -38,6 +38,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string Name { get; set; }
 
+        public string Comment { get; set; }
+
         public int Level
         {
             get
@@ -822,7 +824,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 switch (tag)
                 {
                     case "comment":
-                        CurrentBuild.Comment = metadata[tag];
+                        Comment = metadata[tag];
                         break;
 
                     case "enhobtained":

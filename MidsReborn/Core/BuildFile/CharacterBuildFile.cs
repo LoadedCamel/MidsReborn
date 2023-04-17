@@ -44,12 +44,10 @@ namespace Mids_Reborn.Core.BuildFile
         public string Origin { get; set; }
         public string Alignment { get; set; }
         public string Name { get; set; }
+        public string? Comment { get; set; }
         public List<string> PowerSets { get; set; }
         public int LastPower { get; set; }
         public List<PowerData?> PowerEntries { get; set; }
-
-        private static string? ShareUrl { get; set; }
-        private static string? Code { get; set; }
 
         private static IEnumerable<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
         {
@@ -120,12 +118,13 @@ namespace Mids_Reborn.Core.BuildFile
             return outList;
         }
 
-        public CharacterBuildFile(string @class, string origin, string alignment, string name, List<string> powerSets, List<PowerData?> powerEntries)
+        public CharacterBuildFile(string @class, string origin, string alignment, string name, string? comment, List<string> powerSets, List<PowerData?> powerEntries)
         {
             Class = @class;
             Origin = origin;
             Alignment = alignment;
             Name = name;
+            Comment = comment;
             PowerSets = powerSets;
             PowerEntries = powerEntries;
         }
@@ -136,6 +135,7 @@ namespace Mids_Reborn.Core.BuildFile
             Origin = string.Empty;
             Alignment = string.Empty;
             Name = string.Empty;
+            Comment = string.Empty;
             PowerSets = new List<string>();
             PowerEntries = new List<PowerData?>();
         }
@@ -150,6 +150,7 @@ namespace Mids_Reborn.Core.BuildFile
             Origin = characterData.Archetype.Origin[characterData.Origin];
             Alignment = characterData.Alignment.ToString();
             Name = characterData.Name;
+            Comment = characterData.Comment;
             PowerSets = new List<string>();
             PowerEntries = new List<PowerData?>();
 
@@ -275,6 +276,7 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Reset(DatabaseAPI.Database.Classes[atNiD], atOrigin);
             MidsContext.Character.Alignment = Enum.Parse<Enums.Alignment>(_instance.Alignment);
             MidsContext.Character.Name = _instance.Name;
+            MidsContext.Character.Comment = _instance.Comment;
             MidsContext.Character.LoadPowerSetsByName(_instance.PowerSets);
             MidsContext.Character.CurrentBuild!.LastPower = _instance.LastPower;
 
@@ -556,7 +558,6 @@ namespace Mids_Reborn.Core.BuildFile
             return returnedVal;
         }
 
-        
         private static byte[] CreateDataStream()
         {
             _instance ??= new CharacterBuildFile(MidsContext.Character);

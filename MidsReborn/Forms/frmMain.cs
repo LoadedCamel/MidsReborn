@@ -23,6 +23,7 @@ using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
+using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
@@ -6085,48 +6086,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             OnGradePick(Enums.eEnhGrade.TrainingO);
         }
 
-        private void ForumExport_Click(object? sender, EventArgs e)
+        private async void ForumExport_Click(object? sender, EventArgs e)
         {
-            // var export = new ExportPreview();
-            // export.ShowDialog(this);
-            //ForumExport.BuildExport(true, true, false);
-            
-            //CharacterBuildFile.ExportShareData();
-
-            /*if (MidsContext.Config == null || MidsContext.Character == null || drawing == null) return;
-            FloatTop(false);
-            var exportResult = MessageBox.Show(@"Do you wish to export the full build?", @"Export Type (Short/Long)", MessageBoxButtons.YesNoCancel);
-            switch (exportResult)
-            {
-                case DialogResult.Yes:
-                    MidsContext.Config.LongExport = true;
-                    break;
-                case DialogResult.No:
-                    MidsContext.Config.LongExport = false;
-                    break;
-                case DialogResult.Cancel:
-                    return;
-            }
-
-            using var forumExport = new frmForum
-            {
-                BackColor = BackColor,
-                IBCancel =
-                {
-                    IA = drawing.pImageAttributes,
-                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
-                },
-                IBExport =
-                {
-                    IA = drawing.pImageAttributes,
-                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
-                }
-            };
-            forumExport.ShowDialog(this);
-            FloatTop(true);
-            if (MidsContext.Config.LongExport) MidsContext.Config.LongExport = false;*/
+            var export = new ForumExport();
+            export.BuildExport();
         }
 
         private void tsShareDiscord_Click(object sender, EventArgs e)

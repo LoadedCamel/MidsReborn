@@ -2,13 +2,15 @@
 {
     internal class SubmissionModel
     {
-        public long Id { get; set; }
+        public string? Id { get; set; }
         public string? Data { get; set; }
+        public string? Image { get; set; }
 
-        public SubmissionModel(long id, string data)
+        public SubmissionModel(string? id, string data, string image)
         {
             Id = id;
             Data = data;
+            Image = image;
         }
     }
 }
