@@ -184,32 +184,6 @@ namespace Mids_Reborn.Forms
                 {
                     switch (CommandArgs[0])
                     {
-                        case "-master":
-                            MidsContext.Config.MasterMode = true;
-                            ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
-                            AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
-                            SetTitleBar();
-                            ProcessedCommand = CommandArgs[0];
-                            ProcessedFromCommand = true;
-
-                            break;
-                        case "-load":
-                            var nArgs = CommandArgs.Skip(1);
-                            var file = string.Join(" ", nArgs);
-                            MidsContext.Config.DisableLoadLastFileOnStart = false;
-                            switch (file)
-                            {
-                                case var _ when DlgOpen.FileName.EndsWith(".mxd"):
-                                    DoOpen(file);
-                                    break;
-
-                                case var _ when DlgOpen.FileName.EndsWith(".mbd"):
-                                    LoadCharacterFile(file);
-                                    break;
-                            }
-                            ProcessedFromCommand = true;
-
-                            break;
                         case var fileLoad when (CommandArgs[0].Contains(".mxd") || CommandArgs[0].Contains(".mbd")) && !CommandArgs[0].Contains("mrb://"):
                             ProcessedFromCommand = false;
                             MidsContext.Config.LastFileName = fileLoad;
@@ -2338,13 +2312,13 @@ namespace Mids_Reborn.Forms
                 MidsContext.Config.FirstRun = false;
             }
 
-            if (MidsContext.Config.MasterMode)
-            {
-                if (ProcessedFromCommand && ProcessedCommand.Contains("master"))
-                {
-                    MidsContext.Config.MasterMode = false;
-                }
-            }
+            // if (MidsContext.Config.MasterMode)
+            // {
+            //     if (ProcessedFromCommand && ProcessedCommand.Contains("master"))
+            //     {
+            //         MidsContext.Config.MasterMode = false;
+            //     }
+            // }
 
             switch (WindowState)
             {
