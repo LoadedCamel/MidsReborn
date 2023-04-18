@@ -132,328 +132,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             defActs[listScenarios.SelectedIndex] = (short)cmbAction.SelectedIndex;
         }
 
-        private void csAdd_Click(object sender, EventArgs e)
-        {
-            MidsContext.Config.Export.AddScheme();
-            csPopulateList(MidsContext.Config.Export.ColorSchemes.Length - 1);
-        }
-
-        private void csBtnEdit_Click(object sender, EventArgs e)
-        {
-            if (csList.Items.Count <= 0)
-                return;
-            var frmExportColor = new frmExportColor(ref MidsContext.Config.Export.ColorSchemes[csList.SelectedIndex]);
-            if (frmExportColor.ShowDialog() == DialogResult.OK)
-            {
-                MidsContext.Config.Export.ColorSchemes[csList.SelectedIndex].Assign(frmExportColor.myScheme);
-                csPopulateList();
-            }
-
-            BringToFront();
-        }
-
-        private void csDelete_Click(object sender, EventArgs e)
-        {
-            if (csList.Items.Count <= 0 || MessageBox.Show($"Delete {csList.SelectedItem}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-            MidsContext.Config.Export.RemoveScheme(csList.SelectedIndex);
-            csPopulateList();
-        }
-
-        private void csList_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Convert.ToString(e.KeyChar) == "[")
-            {
-                forumColorUp();
-            }
-            else
-            {
-                if (Convert.ToString(e.KeyChar) != "]")
-                    return;
-                ForumColorDown();
-            }
-        }
-
-        private void csPopulateList(int HighlightID = -1)
-        {
-            csList.Items.Clear();
-            var export = MidsContext.Config.Export;
-            var num = export.ColorSchemes.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                csList.Items.Add(export.ColorSchemes[index].SchemeName);
-            if ((csList.Items.Count > 0) & (HighlightID == -1))
-                csList.SelectedIndex = 0;
-            if (!((HighlightID < csList.Items.Count) & (HighlightID > -1)))
-                return;
-            csList.SelectedIndex = HighlightID;
-        }
-
-        private void csReset_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("This will remove all of the colors you have set and replace them with the defaults. Do you want to do this?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-            MidsContext.Config.Export.ResetColorsToDefaults();
-            csPopulateList();
-        }
-
-        private void fcAdd_Click(object sender, EventArgs e)
-        {
-            MidsContext.Config.Export.AddCodes();
-            fcPopulateList(MidsContext.Config.Export.FormatCode.Length - 1);
-        }
-
-        private void fcBoldOff_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].BoldOff = fcBoldOff.Text;
-        }
-
-        private void fcBoldOn_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].BoldOn = fcBoldOn.Text;
-        }
-
-        private void fcColorOff_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColorOff = fcColorOff.Text;
-        }
-
-        private void fcColorOn_TextChanged(object sender, EventArgs e)
-        {
-            if (fcList.SelectedIndex < 0 || fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColorOn = fcColorOn.Text;
-        }
-
-        private void fcDelete_Click(object sender, EventArgs e)
-        {
-            if (fcList.Items.Count <= 0 || MessageBox.Show($"Delete {fcList.SelectedItem}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-            MidsContext.Config.Export.RemoveCodes(fcList.SelectedIndex);
-            fcPopulateList();
-        }
-
-        private void fcDisplay()
-        {
-            fcNoUpdate = true;
-            if (fcList.SelectedIndex > -1)
-            {
-                var formatCode = MidsContext.Config.Export.FormatCode;
-                var selectedIndex = fcList.SelectedIndex;
-                fcName.Text = formatCode[selectedIndex].Name;
-                fcNotes.Text = formatCode[selectedIndex].Notes;
-                fcColorOn.Text = formatCode[selectedIndex].ColorOn;
-                fcColorOff.Text = formatCode[selectedIndex].ColorOff;
-                fcTextOn.Text = formatCode[selectedIndex].SizeOn;
-                fcTextOff.Text = formatCode[selectedIndex].SizeOff;
-                fcBoldOn.Text = formatCode[selectedIndex].BoldOn;
-                fcBoldOff.Text = formatCode[selectedIndex].BoldOff;
-                fcItalicOn.Text = formatCode[selectedIndex].ItalicOn;
-                fcItalicOff.Text = formatCode[selectedIndex].ItalicOff;
-                fcUnderlineOn.Text = formatCode[selectedIndex].UnderlineOn;
-                fcUnderlineOff.Text = formatCode[selectedIndex].UnderlineOff;
-                fcWSSpace.Checked = formatCode[selectedIndex].Space == ExportConfig.WhiteSpace.Space;
-                fcWSTab.Checked = formatCode[selectedIndex].Space == ExportConfig.WhiteSpace.Tab;
-            }
-            else
-            {
-                fcName.Text = "";
-                fcNotes.Text = "";
-                fcColorOn.Text = "";
-                fcColorOff.Text = "";
-                fcTextOn.Text = "";
-                fcTextOff.Text = "";
-                fcBoldOn.Text = "";
-                fcBoldOff.Text = "";
-                fcItalicOn.Text = "";
-                fcItalicOff.Text = "";
-                fcUnderlineOn.Text = "";
-                fcUnderlineOff.Text = "";
-                fcWSSpace.Checked = true;
-            }
-
-            fcNoUpdate = false;
-        }
-
-        private void fcItalicOff_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ItalicOff = fcItalicOff.Text;
-        }
-
-        private void fcItalicOn_TextChanged(object sender, EventArgs e)
-        {
-            if (fcList.SelectedIndex < 0 || fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ItalicOn = fcItalicOn.Text;
-        }
-
-        private void fcList_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Convert.ToString(e.KeyChar) == "[")
-            {
-                forumCodeUp();
-            }
-            else
-            {
-                if (Convert.ToString(e.KeyChar) != "]")
-                    return;
-                ForumCodeDown();
-            }
-        }
-
-        private void fcList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            fcDisplay();
-        }
-
-        private void fcNotes_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].Notes = fcNotes.Text;
-        }
-
-        private void fcPopulateList(int HighlightID = -1)
-        {
-            fcList.Items.Clear();
-            var export = MidsContext.Config.Export;
-            var num = export.FormatCode.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                fcList.Items.Add(export.FormatCode[index].Name);
-            if ((fcList.Items.Count > 0) & (HighlightID == -1))
-                fcList.SelectedIndex = 0;
-            if (!((HighlightID < fcList.Items.Count) & (HighlightID > -1)))
-                return;
-            fcList.SelectedIndex = HighlightID;
-        }
-
-        private void fcReset_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("This will remove all of the formatting code sets and replace them with the default set. Do you want to do this?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-            MidsContext.Config.Export.ResetCodesToDefaults();
-            fcPopulateList();
-        }
-
-        private void fcSet_Click(object sender, EventArgs e)
-        {
-            if (fcList.SelectedIndex < 0)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].Name = fcName.Text;
-            fcPopulateList(fcList.SelectedIndex);
-        }
-
-        private void fcTextOff_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].SizeOff = fcTextOff.Text;
-        }
-
-        private void fcTextOn_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].SizeOn = fcTextOn.Text;
-        }
-
-        private void fcUnderlineOff_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].UnderlineOff = fcUnderlineOff.Text;
-        }
-
-        private void fcUnderlineOn_TextChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].UnderlineOn = fcUnderlineOn.Text;
-        }
-
-        private void fcWSSpace_CheckedChanged(object sender, EventArgs e)
-        {
-            if ((fcList.SelectedIndex < 0) | fcNoUpdate)
-                return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].Space =
-                !fcWSSpace.Checked ? ExportConfig.WhiteSpace.Tab : ExportConfig.WhiteSpace.Space;
-        }
-
-        private void ForumCodeDown()
-        {
-            var selectedIndex = fcList.SelectedIndex;
-            if (selectedIndex >= fcList.Items.Count - 1)
-                return;
-            var formatCodesArray = new ExportConfig.FormatCodes[2];
-            formatCodesArray[0].Assign(MidsContext.Config.Export.FormatCode[selectedIndex]);
-            formatCodesArray[1].Assign(MidsContext.Config.Export.FormatCode[selectedIndex + 1]);
-            MidsContext.Config.Export.FormatCode[selectedIndex].Assign(formatCodesArray[1]);
-            MidsContext.Config.Export.FormatCode[selectedIndex + 1].Assign(formatCodesArray[0]);
-            fcPopulateList();
-            if ((selectedIndex + 1 > -1) & (fcList.Items.Count > selectedIndex + 1))
-                fcList.SelectedIndex = selectedIndex + 1;
-            else if (fcList.Items.Count > 0)
-                fcList.SelectedIndex = 0;
-        }
-
-        private void forumCodeUp()
-        {
-            var selectedIndex = fcList.SelectedIndex;
-            if (selectedIndex < 1)
-                return;
-            var formatCodesArray = new ExportConfig.FormatCodes[2];
-            formatCodesArray[0].Assign(MidsContext.Config.Export.FormatCode[selectedIndex]);
-            formatCodesArray[1].Assign(MidsContext.Config.Export.FormatCode[selectedIndex - 1]);
-            MidsContext.Config.Export.FormatCode[selectedIndex].Assign(formatCodesArray[1]);
-            MidsContext.Config.Export.FormatCode[selectedIndex - 1].Assign(formatCodesArray[0]);
-            fcPopulateList();
-            if ((selectedIndex - 1 > -1) & (fcList.Items.Count > selectedIndex - 1))
-                fcList.SelectedIndex = selectedIndex - 1;
-            else if (fcList.Items.Count > 0)
-                fcList.SelectedIndex = 0;
-        }
-
-        private void ForumColorDown()
-        {
-            var selectedIndex = csList.SelectedIndex;
-            if (selectedIndex >= csList.Items.Count - 1)
-                return;
-            var colorSchemeArray = new ExportConfig.ColorScheme[2];
-            colorSchemeArray[0].Assign(MidsContext.Config.Export.ColorSchemes[selectedIndex]);
-            colorSchemeArray[1].Assign(MidsContext.Config.Export.ColorSchemes[selectedIndex + 1]);
-            MidsContext.Config.Export.ColorSchemes[selectedIndex].Assign(colorSchemeArray[1]);
-            MidsContext.Config.Export.ColorSchemes[selectedIndex + 1].Assign(colorSchemeArray[0]);
-            csPopulateList();
-            if ((selectedIndex + 1 > -1) & (csList.Items.Count > selectedIndex + 1))
-                csList.SelectedIndex = selectedIndex + 1;
-            else if (csList.Items.Count > 0)
-                csList.SelectedIndex = 0;
-        }
-
-        private void forumColorUp()
-        {
-            var selectedIndex = csList.SelectedIndex;
-            if (selectedIndex < 1)
-                return;
-            var colorSchemeArray = new ExportConfig.ColorScheme[2];
-            colorSchemeArray[0].Assign(MidsContext.Config.Export.ColorSchemes[selectedIndex]);
-            colorSchemeArray[1].Assign(MidsContext.Config.Export.ColorSchemes[selectedIndex - 1]);
-            MidsContext.Config.Export.ColorSchemes[selectedIndex].Assign(colorSchemeArray[1]);
-            MidsContext.Config.Export.ColorSchemes[selectedIndex - 1].Assign(colorSchemeArray[0]);
-            csPopulateList();
-            if ((selectedIndex - 1 > -1) & (csList.Items.Count > selectedIndex - 1))
-                csList.SelectedIndex = selectedIndex - 1;
-            else if (csList.Items.Count > 0)
-                csList.SelectedIndex = 0;
-        }
-
         private void frmCalcOpt_Closing(object? sender, CancelEventArgs e)
         {
             if (DialogResult != DialogResult.Abort)
@@ -465,8 +143,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
         {
             setupScenarios();
             SetControls();
-            csPopulateList();
-            fcPopulateList();
             PopulateSuppression();
             var associatedProgram = FileAssociation.CheckdAssociatedProgram();
             var regAssociations = FileAssociation.CheckAssociations();
@@ -619,10 +295,10 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             cbCurrency.Items.Clear();
             foreach (var c in Enum.GetValues(typeof(Enums.RewardCurrency)))
             {
-                cbCurrency.Items.Add(clsRewardCurrency.GetCurrencyName((Enums.RewardCurrency) c));
+                cbCurrency.Items.Add(clsRewardCurrency.GetCurrencyName((Enums.RewardCurrency)c));
             }
 
-            cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
+            cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
             ResumeLayout();
@@ -829,7 +505,7 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
-            config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
+            config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle)cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
             do
@@ -837,7 +513,7 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
-            config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
+            config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
         }
 
         private void btnFileAssoc_Click(object sender, EventArgs e)
