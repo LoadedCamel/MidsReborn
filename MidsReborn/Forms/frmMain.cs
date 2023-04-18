@@ -184,6 +184,23 @@ namespace Mids_Reborn.Forms
                 {
                     switch (CommandArgs[0])
                     {
+                        case "-load":
+                            var nArgs = CommandArgs.Skip(1);
+                            var file = string.Join(" ", nArgs);
+                            MidsContext.Config.DisableLoadLastFileOnStart = false;
+                            switch (file)
+                            {
+                                case var _ when DlgOpen.FileName.EndsWith(".mxd"):
+                                    DoOpen(file);
+                                    break;
+
+                                case var _ when DlgOpen.FileName.EndsWith(".mbd"):
+                                    LoadCharacterFile(file);
+                                    break;
+                            }
+                            ProcessedFromCommand = true;
+
+                            break;
                         case var fileLoad when (CommandArgs[0].Contains(".mxd") || CommandArgs[0].Contains(".mbd")) && !CommandArgs[0].Contains("mrb://"):
                             ProcessedFromCommand = false;
                             MidsContext.Config.LastFileName = fileLoad;
