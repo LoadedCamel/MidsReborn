@@ -6,7 +6,6 @@ using System.Linq;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -22,6 +21,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         internal Character()
         {
             Name = string.Empty;
+            Comment = string.Empty;
             Powersets = new IPowerset?[8];
             PoolLocked = new bool[5];
             Totals = new TotalStatistics();
