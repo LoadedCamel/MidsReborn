@@ -56,6 +56,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cPicker = new ColorDialog();
             fbdSave = new FolderBrowserDialog();
             TabPage5 = new TabPage();
+            groupBox4 = new GroupBox();
+            SchemaStatus = new Label();
+            btnRepairSchemaAssoc = new Button();
+            label6 = new Label();
+            lblSchemaAssoc = new Label();
             groupBox16 = new GroupBox();
             Label1 = new Label();
             lblSaveFolder = new Label();
@@ -63,9 +68,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             btnSaveFolderReset = new Button();
             btnSaveFolder = new Button();
             groupBox19 = new GroupBox();
-            btnFileAssoc = new Button();
+            FileAssocStatus = new Label();
+            btnRepairFileAssoc = new Button();
+            lblFileAssocTxt = new Label();
             lblFileAssoc = new Label();
-            lblAssocStatus = new Label();
             GroupBox1 = new GroupBox();
             Label34 = new Label();
             chkUpdates = new CheckBox();
@@ -134,6 +140,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
+            groupBox4.SuspendLayout();
             groupBox16.SuspendLayout();
             groupBox19.SuspendLayout();
             GroupBox1.SuspendLayout();
@@ -355,15 +362,72 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
+            TabPage5.Controls.Add(groupBox4);
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 24);
+            TabPage5.Location = new System.Drawing.Point(4, 23);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 344);
+            TabPage5.Size = new System.Drawing.Size(777, 345);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(SchemaStatus);
+            groupBox4.Controls.Add(btnRepairSchemaAssoc);
+            groupBox4.Controls.Add(label6);
+            groupBox4.Controls.Add(lblSchemaAssoc);
+            groupBox4.Location = new System.Drawing.Point(394, 76);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new System.Drawing.Size(375, 87);
+            groupBox4.TabIndex = 73;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Schema Association (Build Sharing)";
+            // 
+            // SchemaStatus
+            // 
+            SchemaStatus.AutoSize = true;
+            SchemaStatus.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
+            SchemaStatus.Location = new System.Drawing.Point(252, 54);
+            SchemaStatus.Name = "SchemaStatus";
+            SchemaStatus.Size = new System.Drawing.Size(69, 16);
+            SchemaStatus.TabIndex = 71;
+            SchemaStatus.Text = "WARNING";
+            SchemaStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            SchemaStatus.MouseHover += Status_MouseHover;
+            // 
+            // btnRepairSchemaAssoc
+            // 
+            btnRepairSchemaAssoc.FlatStyle = FlatStyle.System;
+            btnRepairSchemaAssoc.Location = new System.Drawing.Point(24, 45);
+            btnRepairSchemaAssoc.Name = "btnRepairSchemaAssoc";
+            btnRepairSchemaAssoc.Size = new System.Drawing.Size(141, 36);
+            btnRepairSchemaAssoc.TabIndex = 68;
+            btnRepairSchemaAssoc.Text = "Repair Schema";
+            btnRepairSchemaAssoc.UseVisualStyleBackColor = true;
+            btnRepairSchemaAssoc.Click += btnRepairSchemaAssoc_Click;
+            // 
+            // label6
+            // 
+            label6.Location = new System.Drawing.Point(5, 18);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(374, 17);
+            label6.TabIndex = 69;
+            label6.Text = "If your status is in the warning state you can repair it via the button below.\r\n";
+            label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblSchemaAssoc
+            // 
+            lblSchemaAssoc.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblSchemaAssoc.Location = new System.Drawing.Point(196, 54);
+            lblSchemaAssoc.Name = "lblSchemaAssoc";
+            lblSchemaAssoc.Size = new System.Drawing.Size(50, 14);
+            lblSchemaAssoc.TabIndex = 70;
+            lblSchemaAssoc.Text = "Status: ";
+            lblSchemaAssoc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox16
             // 
@@ -428,41 +492,59 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // groupBox19
             // 
-            groupBox19.Controls.Add(btnFileAssoc);
+            groupBox19.Controls.Add(FileAssocStatus);
+            groupBox19.Controls.Add(btnRepairFileAssoc);
+            groupBox19.Controls.Add(lblFileAssocTxt);
             groupBox19.Controls.Add(lblFileAssoc);
-            groupBox19.Controls.Add(lblAssocStatus);
             groupBox19.Location = new System.Drawing.Point(8, 76);
             groupBox19.Name = "groupBox19";
-            groupBox19.Size = new System.Drawing.Size(761, 87);
+            groupBox19.Size = new System.Drawing.Size(380, 87);
             groupBox19.TabIndex = 71;
             groupBox19.TabStop = false;
-            groupBox19.Text = "File Association Repair:";
+            groupBox19.Text = "File Associations";
             // 
-            // btnFileAssoc
+            // FileAssocStatus
             // 
-            btnFileAssoc.Location = new System.Drawing.Point(9, 47);
-            btnFileAssoc.Name = "btnFileAssoc";
-            btnFileAssoc.Size = new System.Drawing.Size(129, 36);
-            btnFileAssoc.TabIndex = 68;
-            btnFileAssoc.Text = "Rebuild file associations";
-            btnFileAssoc.UseVisualStyleBackColor = true;
-            btnFileAssoc.Click += btnFileAssoc_Click;
+            FileAssocStatus.AutoSize = true;
+            FileAssocStatus.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
+            FileAssocStatus.Location = new System.Drawing.Point(252, 54);
+            FileAssocStatus.Name = "FileAssocStatus";
+            FileAssocStatus.Size = new System.Drawing.Size(69, 16);
+            FileAssocStatus.TabIndex = 71;
+            FileAssocStatus.Text = "WARNING";
+            FileAssocStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            FileAssocStatus.MouseHover += Status_MouseHover;
+            // 
+            // btnRepairFileAssoc
+            // 
+            btnRepairFileAssoc.FlatStyle = FlatStyle.System;
+            btnRepairFileAssoc.Location = new System.Drawing.Point(24, 45);
+            btnRepairFileAssoc.Name = "btnRepairFileAssoc";
+            btnRepairFileAssoc.Size = new System.Drawing.Size(141, 36);
+            btnRepairFileAssoc.TabIndex = 68;
+            btnRepairFileAssoc.Text = "Repair Associations";
+            btnRepairFileAssoc.UseVisualStyleBackColor = true;
+            btnRepairFileAssoc.Click += btnRepairFileAssoc_Click;
+            // 
+            // lblFileAssocTxt
+            // 
+            lblFileAssocTxt.Location = new System.Drawing.Point(5, 18);
+            lblFileAssocTxt.Name = "lblFileAssocTxt";
+            lblFileAssocTxt.Size = new System.Drawing.Size(369, 17);
+            lblFileAssocTxt.TabIndex = 69;
+            lblFileAssocTxt.Text = "If your status is in the warning state you can repair it via the button below.";
+            lblFileAssocTxt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblFileAssoc
             // 
-            lblFileAssoc.Location = new System.Drawing.Point(5, 16);
+            lblFileAssoc.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblFileAssoc.Location = new System.Drawing.Point(196, 54);
             lblFileAssoc.Name = "lblFileAssoc";
-            lblFileAssoc.Size = new System.Drawing.Size(521, 28);
-            lblFileAssoc.TabIndex = 69;
-            lblFileAssoc.Text = "If you need to reassociate your .MXD build files with MRB you can do so by clicking the button below.\r\n";
-            // 
-            // lblAssocStatus
-            // 
-            lblAssocStatus.Location = new System.Drawing.Point(144, 57);
-            lblAssocStatus.Name = "lblAssocStatus";
-            lblAssocStatus.Size = new System.Drawing.Size(274, 14);
-            lblAssocStatus.TabIndex = 70;
-            lblAssocStatus.Text = "Status: --";
+            lblFileAssoc.Size = new System.Drawing.Size(50, 14);
+            lblFileAssoc.TabIndex = 70;
+            lblFileAssoc.Text = "Status: ";
+            lblFileAssoc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // GroupBox1
             // 
@@ -473,7 +555,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox1.Size = new System.Drawing.Size(761, 67);
             GroupBox1.TabIndex = 7;
             GroupBox1.TabStop = false;
-            GroupBox1.Text = "Automatic Updates:";
+            GroupBox1.Text = "Automatic Updates";
             // 
             // Label34
             // 
@@ -1137,6 +1219,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabControl1.SelectedIndex = 0;
             TabControl1.Size = new System.Drawing.Size(785, 372);
             TabControl1.TabIndex = 0;
+            TabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
             // 
             // frmCalcOpt
             // 
@@ -1161,8 +1244,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             groupBox16.ResumeLayout(false);
             groupBox19.ResumeLayout(false);
+            groupBox19.PerformLayout();
             GroupBox1.ResumeLayout(false);
             TabPage1.ResumeLayout(false);
             TabPage1.PerformLayout();
@@ -1205,9 +1291,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Button btnSaveFolderReset;
         private Button btnSaveFolder;
         private GroupBox groupBox19;
-        private Button btnFileAssoc;
+        private Button btnRepairFileAssoc;
+        private Label lblFileAssocTxt;
         private Label lblFileAssoc;
-        private Label lblAssocStatus;
         private GroupBox GroupBox1;
         private Label Label34;
         private CheckBox chkUpdates;
@@ -1288,5 +1374,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private ComboBox cbEnhLevel;
         private Label Label4;
         private TabControl TabControl1;
+        private GroupBox groupBox4;
+        private Label SchemaStatus;
+        private Button btnRepairSchemaAssoc;
+        private Label label6;
+        private Label lblSchemaAssoc;
+        private Label FileAssocStatus;
     }
 }

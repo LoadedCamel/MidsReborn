@@ -61,7 +61,6 @@ namespace Mids_Reborn.Core
 
         public ConfigData()
         {
-            ApplicationRegistered = false;
             Authorized = false;
             Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
@@ -87,7 +86,6 @@ namespace Mids_Reborn.Core
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
 
-        public bool ApplicationRegistered { get; set; }
         public bool Authorized { get; set; }
         public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }

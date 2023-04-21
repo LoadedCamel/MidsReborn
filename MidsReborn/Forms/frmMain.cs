@@ -91,12 +91,7 @@ namespace Mids_Reborn.Forms
                         ConfigData.Initialize(Serializer.GetSerializer());
                     }
                 }
-                RegisterUriScheme();
-                // if (MidsContext.Config is { ApplicationRegistered: false })
-                // {
-                //     RegisterUriScheme();
-                // }
-                
+
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -321,20 +316,6 @@ namespace Mids_Reborn.Forms
         private ComboBoxT<string> GetCbOrigin()
         {
             return new ComboBoxT<string>(cbOrigin);
-        }
-
-        private static void RegisterUriScheme()
-        {
-            if (MidsContext.Config == null) return;
-            // Modify to only perform on 1st run - need to account for removal as well. Perhaps move to the installer?
-            const string friendlyName = "Mids Reborn Protocol";
-            var mrbKey = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\Classes\{UriScheme}");
-            mrbKey.SetValue("", $"URL:{friendlyName}");
-            mrbKey.SetValue("URL Protocol", "");
-            mrbKey.CreateSubKey("DefaultIcon").SetValue("", @$"{Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe")},0");
-            mrbKey.CreateSubKey("shell\\open\\command").SetValue("", $"\"{Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe")}\" \"%1\"");
-            mrbKey.Close();
-            MidsContext.Config.ApplicationRegistered = true;
         }
 
         private void frmMain_Load(object? sender, EventArgs e)
