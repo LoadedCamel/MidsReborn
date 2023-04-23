@@ -2140,7 +2140,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
-            var  path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
+            var path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;

@@ -34,7 +34,7 @@ namespace Mids_Reborn.Core
 
         public const string RoamingFolder = "Data\\";
         public const string BuildsFolder = "Hero & Villain Builds\\";
-
+        
         public static string FileData = string.Empty;
         private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
         public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
@@ -50,10 +50,10 @@ namespace Mids_Reborn.Core
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
             if (Debugger.IsAttached)
             {
-                filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+                filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..", RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
             }
 
-            FileData = FileData + filePath + '\n';
+            FileData += $"{filePath}\n";
             return filePath;
         }
 
