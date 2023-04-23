@@ -464,7 +464,7 @@ namespace Mids_Reborn.Core
                         var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
                         if (effectString.Contains("Null"))
                         {
-                            var enhId = DatabaseAPI.GetEnhancmentByBoostName(power.FullName);
+                            var enhId = DatabaseAPI.GetEnhancementByBoostName(power.FullName);
                             var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
                             var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
                             if (enhSetSpecials.SpecialBonus.Length > 0)

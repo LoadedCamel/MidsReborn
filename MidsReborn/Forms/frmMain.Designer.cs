@@ -87,6 +87,7 @@ namespace Mids_Reborn.Forms
             this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsGenJsonExport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
@@ -745,7 +746,9 @@ namespace Mids_Reborn.Forms
             {
                 this.tsExport,
                 this.ToolStripSeparator27,
-                this.tsGenFreebies
+                this.tsGenFreebies,
+                this.tsGenJsonExport
+
             });
             this.ExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem";
@@ -805,8 +808,15 @@ namespace Mids_Reborn.Forms
             //
             this.tsGenFreebies.Name = "tsGenFreebies";
             this.tsGenFreebies.Size = new System.Drawing.Size(240, 22);
-            this.tsGenFreebies.Text = "Export Build to Beta Server";
+            this.tsGenFreebies.Text = "Export Build to Beta Server (Menu)";
             this.tsGenFreebies.Click += new System.EventHandler(tsGenFreebies_Click);
+            //
+            // tsGenJsonExport
+            //
+            this.tsGenJsonExport.Name = "tsGenJsonExport";
+            this.tsGenJsonExport.Size = new System.Drawing.Size(240, 22);
+            this.tsGenJsonExport.Text = "Export Build to Test Server (Json)";
+            this.tsGenJsonExport.Click += new System.EventHandler(tsGenJsonExport_Click);
             //
             // ToolStripSeparator27
             // 
@@ -2443,6 +2453,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsExport;
         ToolStripMenuItem tsExportDataLink;
         ToolStripMenuItem tsGenFreebies;
+        ToolStripMenuItem tsGenJsonExport;
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;

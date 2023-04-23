@@ -394,6 +394,7 @@ namespace Mids_Reborn.Forms
                     EnemyRelativeToolStripComboBox.SelectedIndex = selectedIndex;
                 }
 
+                tsGenJsonExport.Visible = DatabaseAPI.Database.CrypticReplTable != null;
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
@@ -6209,7 +6210,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         void tsGenFreebies_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null) return;
+            if (MainModule.MidsController.Toon == null)
+            {
+                return;
+            }
+
             FloatTop(false);
             // Zed:
             // Rev. 2: use a folder picker instead of a file picker so the data folder
@@ -6220,20 +6225,28 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 ShowNewFolderButton = false
             };
             var dsr = dirSelector.ShowDialog();
-            if (dsr == DialogResult.Cancel) return;
-            var iResult = InputBox.Show("Enter a name for the popmenu", "Name your menu", false, "Enter the menu name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (!iResult.OK) return;
+            if (dsr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            var iResult = InputBox.Show("Enter a name for the popmenu", "Name your menu", false, clsGenFreebies.DefaultMenuName, InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!iResult.OK)
+            {
+                return;
+            }
+
             clsGenFreebies.MenuName = iResult.Text;
             Directory.CreateDirectory(dirSelector.SelectedPath + @"\data\texts\English\Menus");
-            var mnuFileName = dirSelector.SelectedPath + @"\data\texts\English\Menus\" + clsGenFreebies.MenuName + "." + clsGenFreebies.MenuExt;
-            var saveOp = clsGenFreebies.SaveTo(mnuFileName);
+            var mnuFileName = $@"{dirSelector.SelectedPath}\data\texts\English\Menus\{clsGenFreebies.MenuName}.{clsGenFreebies.MenuExt}";
+            var saveOp = clsGenFreebies.MenuExport.SaveTo(mnuFileName);
             if (!saveOp)
             {
-                MessageBox.Show("Couldn't save popmenu to file: " + mnuFileName, "Welp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Couldn't save popmenu to file: {mnuFileName}", "Welp", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("Popmenu created.\r\nIf necessary, restart your client for it to become available for use.\r\nUse /popmenu " + clsGenFreebies.MenuName + " to open it.",
+                MessageBox.Show($"Popmenu created.\r\nIf necessary, restart your client for it to become available for use.\r\nUse /popmenu {clsGenFreebies.MenuName} to open it.",
                     "Woop",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -6241,6 +6254,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             dirSelector.Dispose();
             FloatTop(true);
+        }
+
+        void tsGenJsonExport_Click(object sender, EventArgs e)
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return;
+            }
+
+            FloatTop(false);
+
+            clsGenFreebies.CrypticJsonExport.GenerateJson();
+
+            MessageBox.Show("Build data has been placed in the clipboard.\r\nFollow given instructions to proceed with the import.");
         }
 
         private void tsFlipAllEnh_Click(object sender, EventArgs e)

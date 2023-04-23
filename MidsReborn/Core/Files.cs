@@ -30,6 +30,7 @@ namespace Mids_Reborn.Core
 
         //public const string PatchRtf = "patch.rtf";
         private const string MxdbPowersReplTable = "PowersReplTable.mhd";
+        private const string MxdbCrypticReplTable = "CrypticPowerNames.mhd";
 
         public const string RoamingFolder = "Data\\";
         public const string BuildsFolder = "Hero & Villain Builds\\";
@@ -40,6 +41,7 @@ namespace Mids_Reborn.Core
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
         private static string? FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
+        public static string CNamePowersRepl => Path.Combine(FPathAppData, MxdbCrypticReplTable);
 
         public static string BaseDataPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder);
 

@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Jace.Operations;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using mrbBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -1015,7 +1015,7 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static int GetEnhancmentByBoostName(string iName)
+        public static int GetEnhancementByBoostName(string iName)
         {
             var enhUid = Regex.Replace(iName, ".*(.*)\\.", "");
             
@@ -1040,22 +1040,29 @@ namespace Mids_Reborn.Core
                     : Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName) && enh.TypeID == typeId);
             }
 
-            // Merge double dashes (Gaussian's set)
+            // Merge double dashes (E.g. Gaussian's set)
             var chunks = iName.Replace("--", "-").Split('-');
+            var enhShortName = string.Join("-", chunks[1..]).Trim('-');
 
-            // Gaussian's set short name is GssSynFr-
-            var enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName == chunks[0]);
-            if (enhSet < 0)
-            {
-                enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName.StartsWith(chunks[0]));
-            }
-
+            // Notes:
+            // - Gaussian's set short name is GssSynFr-
+            // - Ann short name matches Annoyance and Annihilation
+            // - Sudden Acceleration special is -KB/+KD
+            //
+            // Attempt to find a matching set ID based on its name trimmed from dashes, that contain
+            // an enhancement which dash-trimmed short name matches
+            var enhSet = Database.EnhancementSets
+                .Select((e, i) => new KeyValuePair<int, EnhancementSet>(i, e))
+                .Where(e => e.Value.ShortName.Trim('-') == chunks[0])
+                .DefaultIfEmpty(new KeyValuePair<int, EnhancementSet>(-1, new EnhancementSet())) // Dummy default value, only the integer will be used
+                .FirstOrDefault(e => e.Value.Enhancements.Select(e => Database.Enhancements[e].ShortName).Any(e => e.Trim('-') == enhShortName))
+                .Key;
+            
             if (enhSet < 0)
             {
                 return -1;
             }
 
-            var enhShortName = string.Join("-", chunks[1..]).Trim('-');
             var setEnhancementsShort = Database.EnhancementSets[enhSet].Enhancements.ToDictionary(enhIdx => Database.Enhancements[enhIdx].ShortName);
             if (setEnhancementsShort.ContainsKey(enhShortName))
             {
@@ -2178,6 +2185,24 @@ namespace Mids_Reborn.Core
                 MessageBox.Show(
                     $"An error occurred loading the automatic powers replacement table.\r\nOld powers will now be converted and may appear blank\r\nwhen loading builds.\r\n\r\n{ex.Message}",
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        public static void LoadCrypticReplacementTable()
+        {
+            if (!File.Exists(Files.CNamePowersRepl))
+            {
+                Database.CrypticReplTable = null;
+            }
+
+            try
+            {
+                CrypticReplTable.Initialize();
+                Database.CrypticReplTable = CrypticReplTable.Current;
+            }
+            catch (Exception)
+            {
+                Database.CrypticReplTable = null;
             }
         }
 
