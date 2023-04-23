@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -144,20 +145,6 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             setupScenarios();
             SetControls();
             PopulateSuppression();
-            var associatedProgram = FileAssociation.CheckdAssociatedProgram();
-            var regAssociations = FileAssociation.CheckAssociations();
-            if (!regAssociations)
-            {
-                lblAssocStatus.Text = @"Status: settings missing";
-            }
-            else if (!string.Equals(associatedProgram, Application.ExecutablePath, StringComparison.InvariantCultureIgnoreCase))
-            {
-                lblAssocStatus.Text = @"Status: .MXD set to a different program";
-            }
-            else
-            {
-                lblAssocStatus.Text = @"Status: Ok";
-            }
         }
 
         private void ServerSpecificEnablement()
@@ -516,23 +503,81 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
         }
 
-        private void btnFileAssoc_Click(object sender, EventArgs e)
-        {
-            var assocStatus = FileAssociation.CheckAssociations();
-            var ret = FileAssociation.SetAssociations();
-            if (ret)
-            {
-                MessageBox.Show("File associations updated. Enjoy!", "Woop", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
         {
             MidsContext.Config.ShowSelfBuffsAny = chkShowSelfBuffsAny.Checked;
+        }
+
+        private void FileAssocStatus_Update()
+        {
+            var filesAssociated = Association.FileTypeScan();
+            switch (filesAssociated)
+            {
+                case false:
+                    FileAssocStatus.ForeColor = Color.Orange;
+                    FileAssocStatus.Text = @"WARNING";
+                    myTip.SetToolTip(FileAssocStatus, "One or more build file types are not associated with this MRB.");
+                    break;
+                case true:
+                    FileAssocStatus.ForeColor = Color.Green;
+                    FileAssocStatus.Text = @"VALID";
+                    myTip.SetToolTip(FileAssocStatus, "All build files are associated.");
+                    break;
+            }
+        }
+
+        private void SchemaAssocStatus_Update()
+        {
+            var schemaAssociated = Association.SchemaScan();
+            switch (schemaAssociated)
+            {
+                case false:
+                    SchemaStatus.ForeColor = Color.Orange;
+                    SchemaStatus.Text = @"WARNING";
+                    myTip.SetToolTip(SchemaStatus, "Build sharing schema is not registered to this MRB.");
+                    break;
+                case true:
+                    SchemaStatus.ForeColor = Color.Green;
+                    SchemaStatus.Text = @"VALID";
+                    myTip.SetToolTip(SchemaStatus, "Build sharing schema is associated");
+                    break;
+            }
+        }
+
+        private void btnRepairFileAssoc_Click(object sender, EventArgs e)
+        {
+            Association.RepairFileTypes();
+            FileAssocStatus_Update();
+        }
+
+        private void btnRepairSchemaAssoc_Click(object sender, EventArgs e)
+        {
+            Association.RepairSchema();
+            SchemaAssocStatus_Update();
+        }
+
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tabControl = (TabControl)sender;
+            if (tabControl.SelectedIndex != 3) return;
+            FileAssocStatus_Update();
+            SchemaAssocStatus_Update();
+        }
+
+        private void Status_MouseHover(object sender, EventArgs e)
+        {
+            var control = sender as Control;
+            var controlName = control?.Name;
+            if (!string.IsNullOrWhiteSpace(controlName))
+            {
+                switch (controlName)
+                {
+                    case "FileAssocStatus":
+                        break;
+                    case "SchemaAssocStatus":
+                        break;
+                }
+            }
         }
     }
 }
