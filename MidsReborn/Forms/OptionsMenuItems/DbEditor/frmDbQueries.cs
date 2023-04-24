@@ -89,6 +89,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -110,6 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] {$"{pw.StaticIndex}", pw.DisplayName, pw.FullName})
                 .ToList();
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
