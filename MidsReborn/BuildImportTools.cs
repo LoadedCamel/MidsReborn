@@ -1025,6 +1025,11 @@ namespace Mids_Reborn
                 }
             }
 
+            if (sn.StartsWith("DSyncO:"))
+            {
+                sn = sn[7..];
+            }
+
             return sn;
         }
 
