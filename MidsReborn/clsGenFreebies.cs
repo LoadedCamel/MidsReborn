@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace Mids_Reborn
 
                 public override string ToString()
                 {
-                    // Debug.WriteLine(JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented }));
+                    Debug.WriteLine(JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented }));
 
                     var buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this,
                         Formatting.None,
@@ -135,7 +136,7 @@ namespace Mids_Reborn
                 // this makes the export blob slightly smaller.
                 if (MidsContext.Character.Level > 0)
                 {
-                    jc.Level = MidsContext.Character.Level;
+                    jc.Level = Math.Min(49, MidsContext.Character.Level + 1);
                 }
 
                 foreach (var p in MidsContext.Character.CurrentBuild.Powers)
@@ -177,7 +178,8 @@ namespace Mids_Reborn
 
                         var jb = new MidsJsonBoost();
                         var boost = p.Slots[j].Enhancement;
-                        jb.BoostName = DatabaseAPI.Database.Enhancements[boost.Enh].UID;
+                        jb.BoostName = DatabaseAPI.Database.Enhancements[boost.Enh].UID.Replace("Shrapnel_", "Artillery_");
+                        // enhData.UID.Replace("Shrapnel_", "Artillery_");
 
                         // The RelativeLevel field is used to set the level of standard enhancements
                         // and as the value of NumCombines in crafted enhancements.
