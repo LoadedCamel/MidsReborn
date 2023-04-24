@@ -89,7 +89,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
-            listView1.VirtualListSize = 0;
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -111,7 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] {$"{pw.StaticIndex}", pw.DisplayName, pw.FullName})
                 .ToList();
-            listView1.VirtualListSize = 0;
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -130,6 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 new[] {$"{availableIndices[0]}", "First available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             };
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -144,6 +145,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             };
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -162,6 +164,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvItems.Add(new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""});
 
             LvItems = lvItems;
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -233,6 +236,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             CurrentQueryType = QueryType.ListStaticIndices;
             var powersList = DatabaseAPI.Database.Power.Where(pw => pw != null).ToList();
             LvItems = powersList.Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -245,6 +249,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 e.Effects.Where(e => e.EffectType == Enums.eEffectType.EntCreate & e.nSummon < 0 & !string.IsNullOrEmpty(e.Summon)).ToList()));
 
             LvItems = itemsList.SelectMany(e => e.Value, (k, v) => new[] {$"{k.Key.StaticIndex}", v.Summon, k.Key.FullName}).ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -266,6 +271,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = itemsList.Count > 0
                 ? itemsList.Select(e => new[] {$"{e.StaticIndex}", e.DisplayName, e.FullName}).ToList()
                 : new List<string[]> {new[] {"", "Nothing found", ""}};
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
     }

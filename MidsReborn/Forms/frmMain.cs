@@ -7210,7 +7210,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
             }
             catch (Exception e)
             {
@@ -7218,7 +7218,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo)
+        private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo, bool addToAutoOpen = true)
         {
             // Need to pad pools powers list so there are 4
             // So epic pools doesn't end up shown as a regular pool...
@@ -7292,8 +7292,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Character.Lock();
             MidsContext.Character.PoolShuffle();
             I9Gfx.OriginIndex = MidsContext.Character.Origin;
-            MidsContext.Config.LastFileName = buildFile;
-            LastFileName = buildFile;
+            if (addToAutoOpen)
+            {
+                MidsContext.Config.LastFileName = buildFile;
+                LastFileName = buildFile;
+            }
+
             SetTitleBar();
 
             var idx = -1;
