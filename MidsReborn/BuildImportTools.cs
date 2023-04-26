@@ -12,10 +12,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn
 {
-    /***********************
-    ** Helpers
-    */
-
+    #region Common helpers
     public abstract class ImportBase
     {
         protected RawCharacterInfo CharacterInfo { get; set; }
@@ -32,7 +29,10 @@ namespace Mids_Reborn
             /*"Black_Dwarf_", "Dark_Nova_", "White_Dwarf_", "Bright_Nova_",*/
             "Sorcery.Translocation", "Experimentation.Jaunt", "Force_of_Will.Stomp",
             "Speed.SpeedPhase", "Leaping.Double_Jump",
-            "Flight.Fly_Boost" // Afterburner
+            "Flight.Fly_Boost", // Afterburner
+            "Inherent.Inherent.Lightning_Aura", // Storm Blast early iteration inherents
+            "Inherent.Inherent.Wind_Speed",
+            "Inherent.Inherent.Category_Five_Lightning"
         };
 
         protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
@@ -42,6 +42,46 @@ namespace Mids_Reborn
             [2555] = 1522,
             [2556] = 1524
         };
+
+        // Applies to HC db only.
+        protected Dictionary<KeyValuePair<string, string?>, string> OldPowersDict = new()
+        {
+            // I27p6
+            {new KeyValuePair<string, string?>("Psionic Dart", null), "Psionic Darts"},
+            {new KeyValuePair<string, string?>("Whirling Axe", null), "Axe Cyclone"},
+            {new KeyValuePair<string, string?>("Category 5", null), "Category Five"},
+            {new KeyValuePair<string, string?>("Will Domination", "Blaster"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Will Domination", "Corruptor"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Will Domination", "Defender"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Scramble Thoughts", "Blaster"), "Scramble Minds"},
+
+            {new KeyValuePair<string, string?>("Afterburner", null), "Evasive Maneuvers"},
+            {new KeyValuePair<string, string?>("Quantum Acceleration", "Peacebringer"), "Quantum Maneuvers"},
+        };
+
+        protected Dictionary<string, string> OldEnhDict = new()
+        {
+            {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
+        };
+
+        protected string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<KeyValuePair<string, string?>, string> oldPowersDict)
+        {
+            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic")
+            {
+                return powerName;
+            }
+
+            var k = new KeyValuePair<string, string?>(powerName, archetype);
+            if (oldPowersDict.TryGetValue(k, value: out var newName))
+            {
+                return newName;
+            }
+
+            k = new KeyValuePair<string, string?>(powerName, null);
+            return oldPowersDict.TryGetValue(k, value: out newName)
+                ? newName
+                : powerName;
+        }
 
         protected string ReplaceFirstOccurrence(string source, string find, string replace)
         {
@@ -339,10 +379,9 @@ namespace Mids_Reborn
                     .ToList()!);
         }
     }
+    #endregion
 
-    /***********************
-    ** Import from /buildsave .txt builds
-    */
+    #region Import from /buildsave .txt builds
     public class ImportFromBuildsave : ImportBase
     {
         private readonly int HeaderSize = 4; // Number of lines before actual build data
@@ -502,46 +541,9 @@ namespace Mids_Reborn
         ** Example build: https://forums.homecomingservers.com/topic/2915-enen-the-murder-bunny/?do=findComment&comment=465906
         */
 
-        private string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<KeyValuePair<string, string?>, string> oldPowersDict)
-        {
-            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic")
-            {
-                return powerName;
-            }
-
-            var k = new KeyValuePair<string, string?>(powerName, archetype);
-            if (oldPowersDict.TryGetValue(k, value: out var newName))
-            {
-                return newName;
-            }
-
-            k = new KeyValuePair<string, string?>(powerName, null);
-            return oldPowersDict.TryGetValue(k, value: out newName)
-                ? newName
-                : powerName;
-        }
-
         public List<PowerEntry>? ParseForumPost()
         {
-            var oldEnhDict = new Dictionary<string, string>
-            {
-                {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
-            };
-
             // Applies to HC db only.
-            var oldPowersDict = new Dictionary<KeyValuePair<string, string?>, string>
-            {
-                // I27p6
-                {new KeyValuePair<string, string?>("Psionic Dart", null), "Psionic Darts"},
-                {new KeyValuePair<string, string?>("Whirling Axe", null), "Axe Cyclone"},
-                {new KeyValuePair<string, string?>("Will Domination", "Blaster"), "Dominate Will"},
-                {new KeyValuePair<string, string?>("Will Domination", "Corruptor"), "Dominate Will"},
-                {new KeyValuePair<string, string?>("Will Domination", "Defender"), "Dominate Will"},
-                {new KeyValuePair<string, string?>("Scramble Thoughts", "Blaster"), "Scramble Minds"},
-                
-                {new KeyValuePair<string, string?>("Afterburner", null), "Evasive Maneuvers"},
-                {new KeyValuePair<string, string?>("Quantum Acceleration", "Peacebringer"), "Quantum Maneuvers"},
-            };
 
             var listPowers = new List<PowerEntry>();
             PowerSets = new UniqueList<string>();
@@ -633,7 +635,7 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                var powerName = ApplyPowerReplacementTable(mps.Groups[2].Value, archetypeData?.DisplayName ?? null, oldPowersDict);
+                var powerName = ApplyPowerReplacementTable(mps.Groups[2].Value, archetypeData?.DisplayName ?? null, OldPowersDict);
                 var p = new RawPowerData
                 {
                     Valid = false,
@@ -694,9 +696,9 @@ namespace Mids_Reborn
 
                             var ms = rs.Match(slot);
                             var rawEnhName = ReplaceFirstOccurrence(ms.Groups[1].Value.Trim(), "-", ": ");
-                            if (oldEnhDict.ContainsKey(rawEnhName))
+                            if (OldEnhDict.ContainsKey(rawEnhName))
                             {
-                                rawEnhName = oldEnhDict[rawEnhName];
+                                rawEnhName = OldEnhDict[rawEnhName];
                             }
 
                             // Direct test
@@ -920,13 +922,10 @@ namespace Mids_Reborn
             return listPowers;
         }
     }
+    #endregion
 
-    /***********************
-    ** Plain-text import from .mxd files
-    ** (Build recovery mode)
-    */
-
-        public class PlainTextParser : ImportBase
+    #region Plain-text import from .mxd files (Build recovery mode)
+    public class PlainTextParser : ImportBase
     {
         private readonly BuilderApp BuilderApp;
 
@@ -1024,6 +1023,11 @@ namespace Mids_Reborn
                 {
                     return sn.Replace(k.Key, k.Value);
                 }
+            }
+
+            if (sn.StartsWith("DSyncO:"))
+            {
+                sn = sn[7..];
             }
 
             return sn;
@@ -1148,11 +1152,13 @@ namespace Mids_Reborn
 
             foreach (Match mt in rMatches) // var mt is of type object?
             {
-                p = new RawPowerData();
-                p.Slots = new List<RawEnhData>();
+                p = new RawPowerData
+                {
+                    Slots = new List<RawEnhData>(),
+                    DisplayName = ApplyPowerReplacementTable(mt.Groups[2].Value.Trim(), CharacterInfo.Archetype, OldPowersDict),
+                    Level = Convert.ToInt32(mt.Groups[1].Value, null)
+                };
 
-                p.DisplayName = mt.Groups[2].Value.Trim();
-                p.Level = Convert.ToInt32(mt.Groups[1].Value, null);
                 p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsFullNamesList);
                 p.Powerset = p.pData?.GetPowerSet();
                 p.FullName = p.pData == null ? string.Empty : p.pData.FullName;
@@ -1220,4 +1226,5 @@ namespace Mids_Reborn
             return listPowers;
         }
     }
+    #endregion
 }

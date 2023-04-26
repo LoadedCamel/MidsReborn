@@ -30,16 +30,18 @@ namespace Mids_Reborn.Core
 
         //public const string PatchRtf = "patch.rtf";
         private const string MxdbPowersReplTable = "PowersReplTable.mhd";
+        private const string MxdbCrypticReplTable = "CrypticPowerNames.mhd";
 
         public const string RoamingFolder = "Data\\";
         public const string BuildsFolder = "Hero & Villain Builds\\";
-
+        
         public static string FileData = string.Empty;
         private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
         public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
         private static string? FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
+        public static string CNamePowersRepl => Path.Combine(FPathAppData, MxdbCrypticReplTable);
 
         public static string BaseDataPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder);
 
@@ -51,7 +53,7 @@ namespace Mids_Reborn.Core
                 filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
             }
 
-            FileData = FileData + filePath + '\n';
+            FileData += $"{filePath}\n";
             return filePath;
         }
 

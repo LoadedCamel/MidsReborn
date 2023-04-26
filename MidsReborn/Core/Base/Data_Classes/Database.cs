@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Mids_Reborn.Core.Utils;
+using mrbBase;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -54,6 +55,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Salvage[] Salvage { get; set; }
 
         public PowersReplTable ReplTable { get; set; }
+
+        public CrypticReplTable? CrypticReplTable { get; set; }
 
         public List<Origin> Origins { get; set; }
 

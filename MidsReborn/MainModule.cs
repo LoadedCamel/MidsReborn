@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -133,8 +134,14 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadSalvage(path);
                 DatabaseAPI.LoadRecipes(path);
 
-                iFrm?.SetMessage("Loading Powers Replacement Table...");
-                DatabaseAPI.LoadReplacementTable();
+                if (File.Exists(Files.CNamePowersRepl))
+                {
+                    iFrm?.SetMessage("Loading Powers Replacement Table...");
+                    DatabaseAPI.LoadReplacementTable();
+                }
+
+                iFrm?.SetMessage("Loading Cryptic-specific power names translation table");
+                DatabaseAPI.LoadCrypticReplacementTable();
 
                 iFrm?.SetMessage("Loading Graphics...");
                 LoadGraphics(path).GetAwaiter().GetResult();
