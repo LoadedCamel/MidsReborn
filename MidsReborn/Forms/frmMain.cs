@@ -125,7 +125,6 @@ namespace Mids_Reborn.Forms
                 dragdropScenarioAction = new short[20];
                 DoneDblClick = false;
                 DbChangeRequested = false;
-                DisplayApi.FrmMain = this;
             }
             InitializeComponent();
 
@@ -134,10 +133,10 @@ namespace Mids_Reborn.Forms
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
-            ShareToolStripMenuItem.Visible = false;
-            ShareToolStripMenuItem.Enabled = false;
-            tsShareDiscord.Visible = false;
-            tsShareDiscord.Enabled = false;
+            //ShareToolStripMenuItem.Visible = false;
+            //ShareToolStripMenuItem.Enabled = false;
+            //tsShareDiscord.Visible = false;
+            //tsShareDiscord.Enabled = false;
             tmrGfx.Tick += tmrGfx_Tick;
             //adding events
             if (Debugger.IsAttached && this.IsInDesignMode() && Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -6069,7 +6068,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             try
             {
-                new DiscordShare().ShowDialog(this);
+                new DiscordShare().ShowDialog();
             }
             catch (Exception ex)
             {

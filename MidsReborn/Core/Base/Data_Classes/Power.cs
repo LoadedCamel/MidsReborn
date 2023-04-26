@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +57,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableStart = 0;
         }
 
-        public Power(IPower template)
+        public Power(IPower? template)
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
@@ -2090,7 +2089,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return flag;
         }
 
-        public int[] AbsorbEffects(IPower source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
+        public int[] AbsorbEffects(IPower? source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
             var num1 = -1;
             var length = Effects.Length;

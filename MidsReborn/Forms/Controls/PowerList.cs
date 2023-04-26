@@ -406,14 +406,14 @@ namespace Mids_Reborn.Forms.Controls
             }
             var selectedSet = (Powerset)_typeDropDown.Items[_typeDropDown.SelectedIndex];
             SelectedPowerset = selectedSet;
-            var powerList = new List<IPower>();
+            var powerList = new List<IPower?>();
             switch (DropDown.Type)
             {
                 case DropDownType.Primary:
                     switch (selectedSet.DisplayName)
                     {
                         case "Arachnos Soldier":
-                            powerList = new List<IPower>(selectedSet.Powers);
+                            powerList = new List<IPower?>(selectedSet.Powers);
                             break;
                         case "Bane Spider Soldier":
                             var selected = DatabaseAPI.GetPowersetByName("Arachnos Soldier", Enums.ePowerSetType.Primary);
@@ -440,10 +440,10 @@ namespace Mids_Reborn.Forms.Controls
 
                             break;
                         case "Widow Training":
-                            powerList = new List<IPower>(selectedSet.Powers);
+                            powerList = new List<IPower?>(selectedSet.Powers);
                             break;
                         default:
-                            powerList = new List<IPower>(selectedSet.Powers);
+                            powerList = new List<IPower?>(selectedSet.Powers);
                             break;
                     }
 
@@ -472,13 +472,13 @@ namespace Mids_Reborn.Forms.Controls
                             powerList.AddRange(selectedSet.Powers);
                             break;
                         default:
-                            powerList = new List<IPower>(selectedSet.Powers);
+                            powerList = new List<IPower?>(selectedSet.Powers);
                             break;
                     }
 
                     break;
                 case DropDownType.Pool or DropDownType.Ancillary:
-                    powerList = new List<IPower>(selectedSet.Powers);
+                    powerList = new List<IPower?>(selectedSet.Powers);
                     break;
             }
 

@@ -280,7 +280,7 @@ namespace Mids_Reborn.Core
             bool ignoreConditions = false);
 
         int[] AbsorbEffects(
-            IPower source,
+            IPower? source,
             float nDuration,
             float nDelay,
             Archetype? archetype,

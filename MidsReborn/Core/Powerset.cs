@@ -167,7 +167,7 @@ namespace Mids_Reborn.Core
             set => _groupName = value;
         }
 
-        public IPower[] Powers { get; set; }
+        public IPower?[] Powers { get; set; }
 
         public bool ClassOk(int nIDClass)
         {

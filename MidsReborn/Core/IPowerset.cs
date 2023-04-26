@@ -20,7 +20,7 @@ namespace Mids_Reborn.Core
 
         int[] Power { get; set; }
 
-        IPower[] Powers { get; set; }
+        IPower?[] Powers { get; set; }
 
         string ImageName { get; set; }
 

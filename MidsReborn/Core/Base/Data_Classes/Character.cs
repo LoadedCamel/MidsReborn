@@ -27,7 +27,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Builds = new Build?[] { new Build(this, DatabaseAPI.Database.Levels) };
+            Build = new Build(this, DatabaseAPI.Database.Levels);
             PEnhancementsList = new List<string>();
             Reset();
         }
@@ -73,9 +73,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int RequestedLevel { get; set; }
 
-        private Build?[] Builds { get; }
+        private Build Build { get; set; }
 
-        public Build? CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
+        public Build CurrentBuild => Build;
 
         public Archetype? Archetype
         {
@@ -193,7 +193,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Statistics DisplayStats { get; }
 
         public int displayIndex { get; set; }
-        public List<InherentDisplayItem> InherentDisplayList { get; set; }
+        public List<InherentDisplayItem>? InherentDisplayList { get; set; }
         public int SlotsRemaining
         {
             get
@@ -426,7 +426,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         protected void NewBuild()
         {
-            Builds[0] = new Build(this, DatabaseAPI.Database.Levels);
+            Build = new Build(this, DatabaseAPI.Database.Levels);
             AcceleratedActive = false;
             ActiveComboLevel = 0;
             DelayedActive = false;

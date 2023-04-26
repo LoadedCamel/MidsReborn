@@ -213,7 +213,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            IPower newPower = new Power(frmEditPower.myPower) {IsModified = true};
+            IPower? newPower = new Power(frmEditPower.myPower) {IsModified = true};
             DatabaseAPI.Database.Power[index1] = newPower;
             if (text == DatabaseAPI.Database.Power[index1].FullName)
             {

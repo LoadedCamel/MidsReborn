@@ -21,7 +21,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private bool _locked;
 
-        private List<IPower> _myPetPowers;
+        private List<IPower?> _myPetPowers;
         private List<IPower> _myPowers;
 
         private ComboBox cbSelPetPower;
@@ -311,7 +311,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //var pow = DatabaseAPI.NidFromUidPower("Mastermind_Summon.Demon_Summoning.Summon_Demons");
             //var psetp = DatabaseAPI.Database.Power[pow].FXGetDamageValue();
             //MessageBox.Show(psetp.ToString());
-            _myPetPowers = new List<IPower>();
+            _myPetPowers = new List<IPower?>();
             var ent = DatabaseAPI.NidFromUidEntity($"Pets_{cbSelPets.SelectedItem.ToString().Replace(" ", "_")}");
             var pset = DatabaseAPI.Database.Entities[ent].GetNPowerset();
             foreach (var entity in pset)
@@ -425,7 +425,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPetPowers[pIDX]);
+            IPower? power1 = new Power(_myPetPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {

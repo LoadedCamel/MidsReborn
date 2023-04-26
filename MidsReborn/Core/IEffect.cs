@@ -170,8 +170,8 @@ namespace Mids_Reborn.Core
         List<KeyValue<string, string>>? ActiveConditionals { get; set; }
         bool Validated { get; set; }
         bool IsFromProc { get; }
-        IPower GetPower();
-        void SetPower(IPower power);
+        IPower? GetPower();
+        void SetPower(IPower? power);
 
         bool isDamage();
 

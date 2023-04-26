@@ -15,7 +15,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
     {
         private readonly string[] DisplayValueStrings;
         private readonly frmMain myParent;
-        private readonly IPower[][] Powers;
+        private readonly IPower?[][] Powers;
         private readonly string[][] Tips;
         private readonly float[][] Values;
         private ImageButton btnClose;
@@ -457,7 +457,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             return ePowerSetType;
         }
 
-        private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower iPower)
+        private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower? iPower)
         {
             var str1 = "";
             string str2;

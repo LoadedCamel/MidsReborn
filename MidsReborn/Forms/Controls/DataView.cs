@@ -2338,7 +2338,7 @@ namespace Mids_Reborn.Forms.Controls
             return pSrcRedirectParent.FullName == "" ? null : pSrcRedirectParent;
         }
 
-        public void SetData(IPower? basePower, IPower enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
+        public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
         {
             if (basePower == null)
             {

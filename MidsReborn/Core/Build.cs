@@ -105,7 +105,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public PowerEntry AddPower(IPower power, int specialLevel = -1)
+        public PowerEntry AddPower(IPower? power, int specialLevel = -1)
         {
             var powerEntry = GetPowerEntry(power);
             if (powerEntry == null)
@@ -118,7 +118,7 @@ namespace Mids_Reborn.Core
             return powerEntry;
         }
 
-        public void RemovePower(IPower powerToRemove)
+        public void RemovePower(IPower? powerToRemove)
         {
             foreach (var powerEntry in Powers.Where(powerEntry => powerEntry is { Power: { } } && powerEntry.Power.PowerIndex == powerToRemove.PowerIndex))
             {
@@ -127,7 +127,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private PowerEntry? GetPowerEntry(IPower power)
+        private PowerEntry? GetPowerEntry(IPower? power)
         {
             return Powers.FirstOrDefault(powerEntry => powerEntry is { Power: { } } && powerEntry.Power.PowerIndex.Equals(power.PowerIndex));
         }
@@ -908,7 +908,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public bool MeetsRequirement(IPower power, int nLevel, int skipIdx = -1)
+        public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
         {
             if (nLevel < 0)
                 return false;
@@ -988,7 +988,7 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public bool PowerUsed(IPower power)
+        public bool PowerUsed(IPower? power)
         {
             return FindInToonHistory(power.PowerIndex) > -1;
         }

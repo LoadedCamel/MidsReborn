@@ -1,200 +1,96 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
 
 namespace Mids_Reborn.Controls
 {
-    [Designer("System.Windows.Forms.Design.ParentControlDesigner, System.Design", typeof(IDesigner))]
     public partial class FormPages : UserControl
     {
-        #region Declarations
+        public event EventHandler<int> SelectedPageChanged;
+        private int _pageIndex;
 
-        #endregion
-
-        #region Events
-
-        
-
-        #endregion
-
-        #region Designer Props - Hidden
-
-        public override Color BackColor { get; set; } = Color.LightGray;
-
-        #endregion
-
-        #region Designer Props - Visible
-
-        [Description("The pages in the FormPages control.")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Editor("System.ComponentModel.Design.CollectionEditor, System.Design", typeof(UITypeEditor))]
         [Category("Behavior")]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        public PagesCollection Pages { get; set; }
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public ObservableCollection<Page> Pages { get; set; }
 
-        #endregion
-
-        #region Enums
-
-        
-
-        #endregion
-
-        #region TypeConverters
-
-        
-
-        #endregion
-
-        #region Collections
-
-        public class PagesCollection : List<Page>, IEnumerable
+        [Category("Behavior")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [SettingsBindable(true)]
+        [DefaultValue(0)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int SelectedPage
         {
-            private readonly List<Page> _pages = new();
-
-            public new IEnumerator<Page> GetEnumerator()
+            get => _pageIndex;
+            set
             {
-                return ((IEnumerable<Page>)_pages).GetEnumerator();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            public new void Add(Page page)
-            {
-                _pages.Add(page);
-            }
-
-            public new void Remove(Page page)
-            {
-                _pages.Remove(page);
-            }
-
-            public new void Clear()
-            {
-                _pages.Clear();
+                _pageIndex = value;
+                SelectedPageChanged?.Invoke(this, _pageIndex);
             }
         }
-
-        #endregion
-
-        #region Constructor
 
         public FormPages()
         {
-            Pages = new PagesCollection
-            {
-                new Page()
-            };
             InitializeComponent();
+            BorderStyle = BorderStyle.FixedSingle;
+            Pages = new ObservableCollection<Page>();
+            Pages.CollectionChanged += PagesOnCollectionChanged;
+            SelectedPageChanged += OnSelectedPageChanged;
         }
 
-        #endregion
-
-        #region Methods
-
-        
-
-        #endregion
-
-        #region Override Methods
-
-        
-
-        #endregion
-
-        #region EventHandler Methods
-
-        
-
-        #endregion
-
-        #region SubControls
-
-        public sealed class Page : Panel
+        private void OnSelectedPageChanged(object? sender, int pageIndex)
         {
-            #region Designer Props - Hidden
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override AnchorStyles Anchor { get; set; } = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override DockStyle Dock { get; set; } = DockStyle.None;
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public new Point Location { get; set; } = new(0, 0);
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override bool AutoSize { get; set; }
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override AutoSizeMode AutoSizeMode { get; set; }
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override Size MaximumSize { get; set; }
-
-            [Browsable(false)]
-            [Bindable(false)]
-            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            public override Size MinimumSize { get; set; }
-
-            #endregion
-
-            #region Designer Props - Visible
-            
-            
-            #endregion
-
-            #region Constructor
-
-            public Page()
+            for (var index = 0; index < Pages.Count; index++)
             {
-                
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region SubClasses
-
-        internal sealed class PageDesigner : ParentControlDesigner
-        {
-            protected override Control? GetParentForComponent(IComponent component)
-            {
-                var page = component as Page;
-                return page;
+                var page = Pages[index];
+                if (page == null) continue;
+                page.Visible = index == pageIndex - 1;
             }
         }
 
-        #endregion
+        private void PagesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add when e.NewItems != null:
+                {
+                    foreach (Page page in e.NewItems)
+                    {
+                        if (Controls.Contains(page)) return;
+                        page.Location = new Point(3, 3);
+                        page.Size = ClientRectangle.Size;
+                        page.Dock = DockStyle.Fill;
+                        Controls.Add(page);
+                        Controls.SetChildIndex(page, e.NewStartingIndex);
+                        page.Visible = e.NewStartingIndex == 0;
+                    }
+
+                    break;
+                }
+                case NotifyCollectionChangedAction.Remove when e.OldItems != null:
+                {
+                    Controls.RemoveAt(e.OldStartingIndex);
+                    break;
+                }
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
     }
 }

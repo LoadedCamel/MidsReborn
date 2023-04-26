@@ -1527,7 +1527,7 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        public void SetData(IPower? basePower, IPower enhancedPower, bool noLevel = false, bool locked = false, int i_entryIndex = -1)
+        public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int i_entryIndex = -1)
         {
             if (basePower == null)
             {

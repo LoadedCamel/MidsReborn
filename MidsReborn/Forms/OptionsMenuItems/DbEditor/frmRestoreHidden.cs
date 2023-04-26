@@ -10,7 +10,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmRestoreHidden : Form
     {
-        private List<IPower> _hiddenPowers;
+        private List<IPower?> _hiddenPowers;
         private bool _ignoreTemps = true;
 
         public frmRestoreHidden()
