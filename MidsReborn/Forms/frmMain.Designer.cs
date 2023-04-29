@@ -1396,7 +1396,8 @@ namespace Mids_Reborn.Forms
             this.DonateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsKoFi,
-                this.tsPatreon
+                this.tsPatreon,
+                this.tsCoinbase
             });
             this.DonateToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DonateToolStripMenuItem.Name = "DonateToolStripMenuItem";
@@ -1424,10 +1425,10 @@ namespace Mids_Reborn.Forms
             // 
             // tsCoinbase
             // 
-            this.tsPatreon.Name = "tsCoinbase";
-            this.tsPatreon.Size = new System.Drawing.Size(266, 22);
-            this.tsPatreon.Text = "Donate Crypto via Coinbase";
-            this.tsPatreon.Click += new System.EventHandler(this.tsCoinbase_Click);
+            this.tsCoinbase.Name = "tsCoinbase";
+            this.tsCoinbase.Size = new System.Drawing.Size(266, 22);
+            this.tsCoinbase.Text = "Donate Crypto via Coinbase";
+            this.tsCoinbase.Click += new System.EventHandler(this.tsCoinbase_Click);
             // 
             // tsGitHub
             // 
