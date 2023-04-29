@@ -18,10 +18,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private static readonly Statistics Display = MidsContext.Character.DisplayStats;
 
         private static Graphics? _graphics;
-        private static readonly Font FooterFont = new("Noto Sans SC", 8.25f, FontStyle.Bold);
-        private static readonly Font TextFont = new("Noto Sans SC", 10.75f, FontStyle.Bold);
-        private static readonly Font HeaderFont = new("Noto Sans SC", 12.75f, FontStyle.Bold);
-        private static readonly Font HeaderFontUl = new("Noto Sans SC", 12.75f, FontStyle.Bold | FontStyle.Underline);
+        private static readonly Font FooterFont = new("Noto Sans Bold", 8.25f, FontStyle.Bold);
+        private static readonly Font TextFont = new("Noto Sans Bold", 10.75f, FontStyle.Bold);
+        private static readonly Font HeaderFont = new("Noto Sans Bold", 12.75f, FontStyle.Bold);
+        private static readonly Font HeaderFontUl = new("Noto Sans Bold", 12.75f, FontStyle.Bold | FontStyle.Underline);
 
         public static string Generate()
         {
@@ -87,9 +87,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             _graphics.DrawString(maxHp, TextFont, foreground, new PointF(7, textSize.Height*5+7));
             _graphics.DrawString(hpRegen, TextFont, foreground, new PointF(7, textSize.Height*6+7));
             _graphics.DrawString(haste, TextFont, foreground, new PointF(7, textSize.Height*7+7));
-            _graphics.DrawString(maxEnd, TextFont, foreground, new PointF(tmp.Width - Measured(maxEnd, TextFont).Width, textSize.Height*5+7));
-            _graphics.DrawString(endRec, TextFont, foreground, new PointF(tmp.Width - Measured(endRec, TextFont).Width, textSize.Height*6+7));
-            _graphics.DrawString(endUse, TextFont, foreground, new PointF(tmp.Width - Measured(endUse, TextFont).Width, textSize.Height*7+7));
+            _graphics.DrawString(maxEnd, TextFont, foreground, new PointF(tmp.Width - Measured(maxEnd, TextFont).Width - 7, textSize.Height*5+7));
+            _graphics.DrawString(endRec, TextFont, foreground, new PointF(tmp.Width - Measured(endRec, TextFont).Width - 7, textSize.Height*6+7));
+            _graphics.DrawString(endUse, TextFont, foreground, new PointF(tmp.Width - Measured(endUse, TextFont).Width - 7, textSize.Height*7+7));
 
             // Insert App Version
             var versionString = $"This build was created with {MidsContext.AppName} v{MidsContext.AppFileVersion}\r\nUsing the {DatabaseAPI.DatabaseName} database v{DatabaseAPI.Database.Version}";
