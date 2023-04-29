@@ -14,7 +14,7 @@ namespace Mids_Reborn.Controls
     public class ctlDamageDisplay : UserControl
     {
         private readonly Enums.eDDText pText;
-        private ExtendedBitmap bxBuffer;
+        private ExtendedBitmap? bxBuffer;
         private IContainer components;
         private Graphics myGFX;
 
@@ -458,6 +458,7 @@ namespace Mids_Reborn.Controls
             var layoutRectangle = new RectangleF(0f, 0f, 0f, 0f);
             var stringFormat = new StringFormat();
             var height = Font.GetHeight(myGFX) + 10;
+            if (bxBuffer?.Graphics == null) return;
             bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             layoutRectangle.X = checked(bounds.X + phPadding);
             layoutRectangle.Y = pStyle == Enums.eDDStyle.TextUnderGraph
@@ -513,13 +514,13 @@ namespace Mids_Reborn.Controls
                 return;
             var rectangle = new Rectangle(0, 2, Width, Height);
             Brush brush = new SolidBrush(BackColor);
-            bxBuffer.Graphics.FillRectangle(brush, rectangle);
+            bxBuffer.Graphics?.FillRectangle(brush, rectangle);
             if (pStyle != 0)
                 DrawGraph();
             else
                 DrawText(rectangle);
             //bxBuffer.Graphics.SetClip(rectangle2);
-            myGFX.DrawImageUnscaled(bxBuffer.Bitmap, 0, 0);
+            if (bxBuffer.Bitmap != null) myGFX.DrawImageUnscaled(bxBuffer.Bitmap, 0, 0);
         }
 
         // Token: 0x06000079 RID: 121 RVA: 0x00007505 File Offset: 0x00005705
