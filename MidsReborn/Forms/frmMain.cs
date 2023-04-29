@@ -12,7 +12,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Forms.WindowMenuItems;
-using Microsoft.Win32;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -23,9 +22,9 @@ using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
-using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.Forms.Sharing;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
@@ -135,8 +134,8 @@ namespace Mids_Reborn.Forms
             tsHelp.Enabled = false;
             //ShareToolStripMenuItem.Visible = false;
             //ShareToolStripMenuItem.Enabled = false;
-            //tsShareDiscord.Visible = false;
-            //tsShareDiscord.Enabled = false;
+            tsShareDiscord.Visible = false;
+            tsShareDiscord.Enabled = false;
             tmrGfx.Tick += tmrGfx_Tick;
             //adding events
             if (Debugger.IsAttached && this.IsInDesignMode() && Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
@@ -6061,8 +6060,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void ForumExport_Click(object? sender, EventArgs e)
         {
-            var export = new ForumExport();
-            export.BuildExport();
+            var preview = new InfographicPreview();
+            var result = preview.ShowDialog(this);
+            if (result == DialogResult.Continue)
+            {
+                var export = new ForumExport();
+                export.BuildExport();
+            }
         }
 
         private void tsShareDiscord_Click(object sender, EventArgs e)

@@ -11,7 +11,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using FontStyle = System.Drawing.FontStyle;
 
-namespace Mids_Reborn.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.Sharing
 {
     public static class InfoGraphic
     {
@@ -19,10 +19,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private static readonly Statistics Display = MidsContext.Character.DisplayStats;
 
         private static Graphics? _graphics;
-        private static readonly Font FooterFont = new(Fonts.Family("Noto Sans"), 8.25f, FontStyle.Bold);
+        private static readonly Font FooterFont = new(Fonts.Family("Noto Sans Medium"), 8.25f, FontStyle.Bold);
         private static readonly Font TextFont = new(Fonts.Family("Noto Sans"), 10.75f, FontStyle.Bold);
-        private static readonly Font HeaderFont = new(Fonts.Family("Noto Sans"), 12.75f, FontStyle.Bold);
-        private static readonly Font HeaderFontUl = new(Fonts.Family("Noto Sans"), 12.75f, FontStyle.Bold | FontStyle.Underline);
+        private static readonly Font HeaderFont = new(Fonts.Family("Noto Sans Black"), 12.75f, FontStyle.Bold);
+        private static readonly Font HeaderFontUl = new(Fonts.Family("Noto Sans Black"), 12.75f, FontStyle.Bold | FontStyle.Underline);
 
         public static string Generate()
         {
@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             _graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             _graphics.SmoothingMode = SmoothingMode.HighQuality;
             _graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _graphics.Clear(Color.FromArgb(44,47,51));
+            _graphics.Clear(Color.FromArgb(44, 47, 51));
 
             // Conditional Variables and Disposables
             outline = MidsContext.Character.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
@@ -58,7 +58,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             _graphics.DrawRectangle(pen, 0, 0, 450, 250);
 
             // Insert Backdrop
-            _graphics.DrawImage(MidsContext.Character.IsHero() ? Image.FromFile("Images\\InfoBackDropH.png") : Image.FromFile("Images\\InfoBackDropV.png"), new RectangleF(0 , 0, 450, 250));
+            _graphics.DrawImage(MidsContext.Character.IsHero() ? Image.FromFile("Images\\InfoBackDropH.png") : Image.FromFile("Images\\InfoBackDropV.png"), new RectangleF(0, 0, 450, 250));
 
             // Insert Character Name & Level
             _graphics.DrawString($"Name: {MidsContext.Character.Name}", TextFont, foreground, new PointF(7, 7));
@@ -66,17 +66,17 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
             // Insert AT Header
             var powerSets = $"{MidsContext.Character.Powersets[0].DisplayName} / {MidsContext.Character.Powersets[1].DisplayName}";
-            var psSize = Measured(powerSets,  TextFont);
+            var psSize = Measured(powerSets, HeaderFont);
             var archetype = MidsContext.Character.Archetype.DisplayName;
             var atSize = Measured(archetype, HeaderFont);
-            _graphics.DrawString(archetype, HeaderFont, foreground, new PointF(tmp.Width - atSize.Width - 7, textSize.Height/2 - 7));
-            _graphics.DrawString(powerSets, TextFont, foreground, new PointF(tmp.Width - psSize.Width - 7, textSize.Height + 7));
+            _graphics.DrawString(archetype, HeaderFont, foreground, new PointF(tmp.Width - atSize.Width - 7, textSize.Height / 2 - 7));
+            _graphics.DrawString(powerSets, HeaderFont, foreground, new PointF(tmp.Width - psSize.Width - 7, textSize.Height + 7));
 
             // Draw Separator
-            _graphics.DrawLine(new Pen(outline, 2),  0, textSize.Height*3-7, 450, textSize.Height*3-7);
+            _graphics.DrawLine(new Pen(outline, 2), 0, textSize.Height * 3 - 7, 450, textSize.Height * 3 - 7);
 
             // Insert Stats Header
-            _graphics.DrawString("Stats Preview", HeaderFontUl, foreground, new PointF(tmp.Width / 2f - Measured("Stats Preview", HeaderFontUl).Width/2, textSize.Height*3+7-4));
+            _graphics.DrawString("Stats Preview", HeaderFontUl, foreground, new PointF(tmp.Width / 2f - Measured("Stats Preview", HeaderFontUl).Width / 2, textSize.Height * 3 + 7 - 4));
 
             // Insert Stats
             var hpRegen = $"Regen: {Convert.ToDecimal(Display.HealthRegenPercent(false)):0.##}% ({Convert.ToDecimal(Display.HealthRegenHPPerSec):0.##}/s)";
@@ -85,12 +85,15 @@ namespace Mids_Reborn.Forms.ImportExportItems
             var endRec = $"Recovery: {Display.EnduranceRecoveryPercentage(false):###0}% ({Convert.ToDecimal(Display.EnduranceRecoveryNumeric):0.##}/s)";
             var maxEnd = $"Max End: {Convert.ToDecimal(Totals.EndMax + 100f):0.##}%";
             var haste = $"Haste: {Convert.ToDecimal(Totals.BuffHaste * 100):0.##}%";
-            _graphics.DrawString(maxHp, TextFont, foreground, new PointF(7, textSize.Height*5+7));
-            _graphics.DrawString(hpRegen, TextFont, foreground, new PointF(7, textSize.Height*6+7));
-            _graphics.DrawString(haste, TextFont, foreground, new PointF(7, textSize.Height*7+7));
-            _graphics.DrawString(maxEnd, TextFont, foreground, new PointF(tmp.Width - Measured(maxEnd, TextFont).Width - 7, textSize.Height*5+7));
-            _graphics.DrawString(endRec, TextFont, foreground, new PointF(tmp.Width - Measured(endRec, TextFont).Width - 7, textSize.Height*6+7));
-            _graphics.DrawString(endUse, TextFont, foreground, new PointF(tmp.Width - Measured(endUse, TextFont).Width - 7, textSize.Height*7+7));
+            _graphics.DrawString(maxHp, TextFont, foreground, new PointF(7, (float)(textSize.Height * 4.5 + 7)));
+            _graphics.DrawString(hpRegen, TextFont, foreground, new PointF(7, (float)(textSize.Height * 5.5 + 7)));
+            if (Totals.BuffHaste > 0)
+            {
+                _graphics.DrawString(haste, TextFont, foreground, new PointF(7, (float)(textSize.Height * 6.5 + 7)));
+            }
+            _graphics.DrawString(maxEnd, TextFont, foreground, new PointF(tmp.Width - Measured(maxEnd, TextFont).Width - 7, (float)(textSize.Height * 4.5 + 7)));
+            _graphics.DrawString(endRec, TextFont, foreground, new PointF(tmp.Width - Measured(endRec, TextFont).Width - 7, (float)(textSize.Height * 5.5 + 7)));
+            _graphics.DrawString(endUse, TextFont, foreground, new PointF(tmp.Width - Measured(endUse, TextFont).Width - 7, (float)(textSize.Height * 6.5 + 7)));
 
             // Insert App Version
             var versionString = $"This build was created with {MidsContext.AppName} v{MidsContext.AppFileVersion}\r\nUsing the {DatabaseAPI.DatabaseName} database v{DatabaseAPI.Database.Version}";

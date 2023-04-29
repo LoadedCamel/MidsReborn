@@ -84,13 +84,13 @@ namespace Mids_Reborn.Forms
             this.tsFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGenJsonExport = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareForum = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
@@ -744,8 +744,6 @@ namespace Mids_Reborn.Forms
             //
             this.ExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
-                this.tsExport,
-                this.ToolStripSeparator27,
                 this.tsGenFreebies,
                 this.tsGenJsonExport
 
@@ -791,13 +789,6 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator12.Name = "ToolStripSeparator12";
             this.ToolStripSeparator12.Size = new System.Drawing.Size(237, 6);
-            // 
-            // tsExport
-            // 
-            this.tsExport.Name = "tsExport";
-            this.tsExport.Size = new System.Drawing.Size(240, 22);
-            this.tsExport.Text = "Forum Export...";
-            this.tsExport.Click += new System.EventHandler(this.ForumExport_Click);
             // 
             // ToolStripSeparator25
             // 
@@ -1319,6 +1310,7 @@ namespace Mids_Reborn.Forms
             //
             this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
+                this.tsShareForum,
                 this.tsShareDiscord
             });
             this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -1340,8 +1332,15 @@ namespace Mids_Reborn.Forms
             //
             this.tsShareDiscord.Name = "tsShareDiscord";
             this.tsShareDiscord.Size = new System.Drawing.Size(240, 22);
-            this.tsShareDiscord.Text = "Via Discord (RebornBot)";
+            this.tsShareDiscord.Text = "Via Discord";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
+            // 
+            // tsShareForum
+            //
+            this.tsShareForum.Name = "tsShareForum";
+            this.tsShareForum.Size = new System.Drawing.Size(240, 22);
+            this.tsShareForum.Text = "Via Forum Export";
+            this.tsShareForum.Click += new System.EventHandler(this.ForumExport_Click);
             //
             // HelpToolStripMenuItem
             //
@@ -2450,13 +2449,13 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsEnhToPlus5;
         ToolStripMenuItem tsEnhToSO;
         ToolStripMenuItem tsEnhToTO;
-        ToolStripMenuItem tsExport;
         ToolStripMenuItem tsExportDataLink;
         ToolStripMenuItem tsGenFreebies;
         ToolStripMenuItem tsGenJsonExport;
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
+        ToolStripMenuItem tsShareForum;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;

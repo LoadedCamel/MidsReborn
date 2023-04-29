@@ -6,7 +6,7 @@ using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Forms.Controls;
 using RestSharp;
 
-namespace Mids_Reborn.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.Sharing
 {
     internal class ForumExport
     {
@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             msgBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
 
-        
+
         private async Task<ResponseModel?> SendBuildToShare(string buildData, string imageData)
         {
             var options = new RestClientOptions("https://mids.app")
