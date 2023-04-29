@@ -15,6 +15,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -211,6 +212,8 @@ namespace Mids_Reborn.Controls
             _myBx.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
+
         private void FullDraw()
         {
             SetBxSize();
@@ -297,7 +300,7 @@ namespace Mids_Reborn.Controls
             layoutRectangle.Y += font.GetHeight(_myBx.Graphics) + 3f;
             rectBounds.Height = checked(Height - (rectBounds.Y + _nPad));
             brush = new SolidBrush(ForeColor);
-            font = new Font("Arial", 19f, FontStyle.Bold, GraphicsUnit.Pixel);
+            font = new Font(Fonts.Family("Noto Sans"), 19f, FontStyle.Bold, GraphicsUnit.Pixel);
             string s;
             if ((Ui.View.TabId == Enums.eType.InventO) | (Ui.View.TabId == Enums.eType.SetO))
             {

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -180,7 +181,7 @@ namespace Mids_Reborn.Controls
                 gTarget.PageUnit = GraphicsUnit.Pixel;
                 cTarget = iTarget;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -228,7 +229,7 @@ namespace Mids_Reborn.Controls
             gTarget.PageUnit = GraphicsUnit.Pixel;
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
@@ -244,7 +245,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -254,7 +255,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -264,7 +265,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -274,7 +275,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 48);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -284,7 +285,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),

@@ -40,6 +40,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -977,7 +978,7 @@ namespace Mids_Reborn.Forms.Controls
 
             // Font
             //this.Font = new Font("Tahoma", 6.75f);
-            Font = new Font("Microsoft Sans Serif", 6f);
+            Font = new Font(Fonts.Family("Noto Sans"), 6f);
 
             Minimum = min;
             Maximum = max;

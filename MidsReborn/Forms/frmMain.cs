@@ -146,7 +146,7 @@ namespace Mids_Reborn.Forms
             dvAnchored.BackColor = Color.Black;
             dvAnchored.DrawVillain = false;
             dvAnchored.Floating = false;
-            dvAnchored.Font = new Font("Arial", 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+            dvAnchored.Font = new Font(Fonts.Family("Noto Sans"), 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 
             dvAnchored.Location = new Point(16, 425);
             dvAnchored.Name = "dvAnchored";

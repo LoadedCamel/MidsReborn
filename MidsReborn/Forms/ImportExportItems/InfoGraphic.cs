@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using FontStyle = System.Drawing.FontStyle;
 
 namespace Mids_Reborn.Forms.ImportExportItems
@@ -18,10 +19,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private static readonly Statistics Display = MidsContext.Character.DisplayStats;
 
         private static Graphics? _graphics;
-        private static readonly Font FooterFont = new("Noto Sans Bold", 8.25f, FontStyle.Bold);
-        private static readonly Font TextFont = new("Noto Sans Bold", 10.75f, FontStyle.Bold);
-        private static readonly Font HeaderFont = new("Noto Sans Bold", 12.75f, FontStyle.Bold);
-        private static readonly Font HeaderFontUl = new("Noto Sans Bold", 12.75f, FontStyle.Bold | FontStyle.Underline);
+        private static readonly Font FooterFont = new(Fonts.Family("Noto Sans"), 8.25f, FontStyle.Bold);
+        private static readonly Font TextFont = new(Fonts.Family("Noto Sans"), 10.75f, FontStyle.Bold);
+        private static readonly Font HeaderFont = new(Fonts.Family("Noto Sans"), 12.75f, FontStyle.Bold);
+        private static readonly Font HeaderFontUl = new(Fonts.Family("Noto Sans"), 12.75f, FontStyle.Bold | FontStyle.Underline);
 
         public static string Generate()
         {

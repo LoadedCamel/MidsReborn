@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -115,7 +116,7 @@ namespace Mids_Reborn.Controls
                 Bitmap res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
                 g.Clear(ColorOptions.BGColor);
 
-                using Font segoeFont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
+                using Font font = new Font(Fonts.Family("Noto Sans"), 9, FontStyle.Regular, GraphicsUnit.Pixel);
                 TextFormatFlags sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
                 TextFormatFlags sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -172,7 +173,7 @@ namespace Mids_Reborn.Controls
                                 h + InnerPadding.Top));
                     }
 
-                    TextRenderer.DrawText(g, Convert.ToString(xPlateau + 1, null), segoeFont,
+                    TextRenderer.DrawText(g, Convert.ToString(xPlateau + 1, null), font,
                         new Point((int) ((xMin + xPlateau) * xScale + InnerPadding.Left + 3), InnerPadding.Top + h / 2),
                         ColorOptions.AxisPlateauColor, Color.FromArgb(128, ColorOptions.BGColor), sfH);
                 }
@@ -247,7 +248,7 @@ namespace Mids_Reborn.Controls
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 for (i = (int)xMin; i <= xMax; i += 10)
                 {
-                    TextRenderer.DrawText(g, Convert.ToString(i + 1, null), segoeFont, new Point(
+                    TextRenderer.DrawText(g, Convert.ToString(i + 1, null), font, new Point(
                         (int) Math.Round((i - xMin) * xScale) + InnerPadding.Left - (i < 10 ? 2 : 4),
                         h + InnerPadding.Top + 7), ColorOptions.AxisValuesColor, Color.Transparent, sfH);
                 }
@@ -258,7 +259,7 @@ namespace Mids_Reborn.Controls
                     for (i = 0; i < 6; i++)
                     {
                         TextRenderer.DrawText(g,
-                            Convert.ToString(Math.Round(k, Math.Abs(yMaxR - yMinR) < 1 ? 2 : 1), null), segoeFont,
+                            Convert.ToString(Math.Round(k, Math.Abs(yMaxR - yMinR) < 1 ? 2 : 1), null), font,
                             new Rectangle(1, InnerPadding.Top + h - h / 5 * i - 7,
                                 InnerPadding.Left - 5, 11),
                             ColorOptions.AxisValuesColor, Color.Transparent,

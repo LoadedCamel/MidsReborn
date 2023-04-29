@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -40,7 +41,7 @@ namespace Mids_Reborn.Controls
 
         public new Color DefaultBackColor => Color.Transparent;
         public HorizontalAlignment OverlayHAlign = HorizontalAlignment.Right;
-        public Font OverlayTextFont = new Font("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+        public Font OverlayTextFont = new Font(Fonts.Family("Noto Sans"), 9f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
         public bool EnableOverlayOutline = true;
         public Color OverlayTextColor = Color.WhiteSmoke;
         public Color OverlayOutlineColor = Color.Black;

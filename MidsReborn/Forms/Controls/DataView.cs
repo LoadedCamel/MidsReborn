@@ -14,6 +14,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -1371,8 +1372,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
-            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);//
-            var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
+            var font1 = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Regular);//
+            var font2 = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);

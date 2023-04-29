@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -394,6 +395,8 @@ namespace Mids_Reborn.Controls
             _scrollOffset = 0;
             HoverId = -1;
         }
+
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         private void SetLineHeight()
         {
@@ -1072,7 +1075,7 @@ namespace Mids_Reborn.Controls
                 if (_items[index].Underline) fontStyle += 4;
                 if (_items[index].Strikethrough) fontStyle += 8;
 
-                var font = new Font(new FontFamily("Tahoma"), Font.Size, fontStyle);
+                var font = new Font(Fonts.Family("Noto Sans"), Font.Size, fontStyle);
                 if (index == HoverId && _highlightOn[(int) _items[index].ItemState])
                 {
                     var brush = new SolidBrush(_hvrColor);

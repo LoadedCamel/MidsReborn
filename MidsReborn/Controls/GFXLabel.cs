@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -35,6 +36,8 @@ namespace Mids_Reborn.Controls
             Paint += GFXlabel_Paint;
             InitializeComponent();
         }
+
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         // Token: 0x17000050 RID: 80
         // (get) Token: 0x0600012E RID: 302 RVA: 0x0000AF38 File Offset: 0x00009138

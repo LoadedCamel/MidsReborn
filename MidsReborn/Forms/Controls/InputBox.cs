@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -71,7 +72,7 @@ namespace Mids_Reborn.Forms.Controls
             // inputLabel
             // 
             inputLabel.AutoSize = true;
-            inputLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            inputLabel.Font = new Font(Fonts.Family("Noto Sans"), 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             inputLabel.Location = new Point(73, 9);
             inputLabel.Name = "inputLabel";
             inputLabel.Size = new Size(71, 13);

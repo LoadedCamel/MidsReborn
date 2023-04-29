@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -346,12 +347,12 @@ namespace Mids_Reborn.Controls
 
                 if (pGraph == 0)
                 {
-                    /*var num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
+                    var num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
                     var brush2 = new SolidBrush(pFadeBaseStart);
-                    var rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
+                    var rect2 = rectangle2 with { Width = num };
                     bxBuffer.Graphics.FillRectangle(brush2, rect2);
                     var width = (int) Math.Round(nEnhanced / nMaxEnhanced * rectangle2.Width - num);
-                    rect2 = new Rectangle(rectangle2.X + num, rectangle2.Y, width, rectangle2.Height);
+                    rect2 = rectangle2 with { X = rectangle2.X + num, Width = width };
                     Rectangle rect3 = default;
                     rect3.X = rectangle2.X + num;
                     rect3.Y = rectangle2.Y;
@@ -362,7 +363,7 @@ namespace Mids_Reborn.Controls
 
                     rect3.Height = rectangle2.Height;
                     brush = new LinearGradientBrush(rect3, pFadeEnhStart, pFadeEnhEnd, 0f);
-                    bxBuffer.Graphics.FillRectangle(brush, rect2);*/
+                    bxBuffer.Graphics.FillRectangle(brush, rect2);
                 }
                 else
                 {
@@ -486,7 +487,7 @@ namespace Mids_Reborn.Controls
                 ? TextRenderingHint.ClearTypeGridFit
                 : TextRenderingHint.AntiAliasGridFit;
             //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
-            var smlFont = new Font("Arial", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
+            var smlFont = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Bold, GraphicsUnit.Point);
             var font = txtSizeF.Width > layoutRectangle.Width ? smlFont : Font;
             bxBuffer.Graphics.MeasureString(pString, font,
                 new SizeF(layoutRectangle.Width, layoutRectangle.Height), stringFormat,
