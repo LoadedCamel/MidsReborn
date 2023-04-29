@@ -1341,7 +1341,7 @@ namespace Mids_Reborn.Core
             rankedEffect.UniqueColor = effectSource.isEnhancementEffect;
             rankedEffect.AlternateColor = !effectSource.isEnhancementEffect &
                                           magDiff > float.Epsilon &
-                                          Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon &
+                                          (effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) &
                                           effectSource.Buffable;
 
             switch (effectType)
