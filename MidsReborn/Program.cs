@@ -16,7 +16,7 @@ namespace Mids_Reborn
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
             Application.Run(new frmMain(args));
         }
     }
