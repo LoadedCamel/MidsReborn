@@ -1374,8 +1374,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
-            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);//
-            var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
+            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Bold);//
+            var font2 = new Font("Segoe UI", 10.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);
@@ -1425,37 +1425,23 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
 
-            Rectangle layoutRectangle;
-            string? pageTitle;
-            Size pageMeasured;
             for (var index = 0; index < Pages.Length; index++)
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
-                pageTitle = Pages[TabPage];
-                pageMeasured = TextRenderer.MeasureText(pageTitle, font1);
-                //layoutRectangle = new Rectangle(rect.X, rect.Y, rect.Width, pageMeasured.Height);
-                //layoutRectangle = new Rectangle(rect.X, rect.Y + (int)((rect.Height - font1.GetHeight(graphics)) / 2.0), rect.Width, (int)font1.GetHeight(graphics));
                 if (TabsMask != null && !TabsMask[index])
                 {
                     continue;
                 }
 
                 extendedBitmap.Graphics?.DrawRectangle(pen, rect);
-                TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[index], font1, rect, Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-                //extendedBitmap.Graphics?.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
+                TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[index], font1, rect, Color.WhiteSmoke, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             }
 
             rect = new Rectangle(70 * TabPage, 0, 70, pnlTabs.Height);
-
-            pageTitle = Pages[TabPage];
-            pageMeasured = TextRenderer.MeasureText(pageTitle, font2);
-            //layoutRectangle = new Rectangle(rect.X, rect.Y, rect.Width, pageMeasured.Height);
-            //layoutRectangle = new Rectangle(rect.X, rect.Y + (int)((rect.Height - font1.GetHeight(graphics)) / 2.0), rect.Width, (int)font1.GetHeight(graphics));
             extendedBitmap.Graphics?.FillRectangle(solidBrush3, rect);
             extendedBitmap.Graphics?.DrawRectangle(pen, rect);
-            //extendedBitmap.Graphics?.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle2, format);
-            TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[TabPage], font2, rect, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-            graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
+            TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[TabPage], font2, rect, Color.WhiteSmoke, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            graphics.DrawImageUnscaled(extendedBitmap.Bitmap!, 0, 0);
         }
 
         private string GetToWhoShort(IEffect fx)
