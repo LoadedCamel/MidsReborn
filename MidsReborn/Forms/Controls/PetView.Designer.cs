@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.Controls
             this.powerScaler = new Mids_Reborn.Controls.ctlMultiGraph();
             this.info_TxtLarge = new System.Windows.Forms.RichTextBox();
             this.info_TxtSmall = new System.Windows.Forms.RichTextBox();
-            this.info_Title = new Mids_Reborn.Controls.GFXLabel();
+            this.info_Title = new Label();
             this.infoTip = new System.Windows.Forms.ToolTip(this.components);
             this.info_DataList = new Mids_Reborn.Controls.PairedListEx();
             this.panelSeparator1 = new System.Windows.Forms.Panel();
@@ -180,7 +180,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_Title.Dock = System.Windows.Forms.DockStyle.Top;
             this.info_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.info_Title.ForeColor = System.Drawing.Color.White;
-            this.info_Title.InitialText = "Title";
+            this.info_Title.Text = "Title";
             this.info_Title.Location = new System.Drawing.Point(0, 0);
             this.info_Title.Name = "info_Title";
             this.info_Title.Size = new System.Drawing.Size(436, 39);
@@ -307,7 +307,7 @@ namespace Mids_Reborn.Forms.Controls
         private Mids_Reborn.Controls.ctlMultiGraph powerScaler;
         internal System.Windows.Forms.RichTextBox info_TxtLarge;
         private System.Windows.Forms.RichTextBox info_TxtSmall;
-        private Mids_Reborn.Controls.GFXLabel info_Title;
+        private Label info_Title;
         private System.Windows.Forms.ToolTip infoTip;
         internal System.Windows.Forms.Panel panelSeparator1;
         internal System.Windows.Forms.Panel panelSeparator2;

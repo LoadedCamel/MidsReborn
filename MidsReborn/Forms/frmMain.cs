@@ -70,6 +70,10 @@ namespace Mids_Reborn.Forms
         private bool ProcessedFromCommand { get; set; }
         private FrmEntityDetails frmEntityDetails { get; set; }
 
+        private Rectangle _pnlGfxOrigin;
+        private Rectangle _pnlGfxFlowOrigin;
+        private Rectangle _formOrigin;
+
         public frmMain(string[]? args = null)
         {
             CommandArgs = args;
@@ -94,7 +98,8 @@ namespace Mids_Reborn.Forms
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
-                ResizeEnd += frmMain_Resize;
+                //Resize += frmMain_Resize;
+                ResizeEnd += frmMain_ResizeEnd;
                 KeyDown += frmMain_KeyDown;
                 MouseWheel += frmMain_MouseWheel;
                 TitleUpdated += OnTitleUpdate;
@@ -156,13 +161,34 @@ namespace Mids_Reborn.Forms
             dvAnchored.MouseWheel += frmMain_MouseWheel;
             dvAnchored.SizeChange += dvAnchored_SizeChange;
             dvAnchored.FloatChange += dvAnchored_Float;
-            dvAnchored.Unlock_Click += dvAnchored_Unlock;
+            dvAnchored.UnlockClick += dvAnchored_Unlock;
             dvAnchored.SlotUpdate += DataView_SlotUpdate;
             dvAnchored.SlotFlip += DataView_SlotFlip;
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
             dvAnchored.EntityDetails += dvAnchored_EntityDetails;
             Icon = Resources.MRB_Icon_Concept;
+        }
+
+        private void ResizeControl(Rectangle r, Control c)
+        {
+            var xRatio = (float)Width / _formOrigin.Width;
+            var yRatio = (float)Height / _formOrigin.Height;
+
+            var newX = (int)(r.Width * xRatio);
+            var newY = (int)(r.Height * yRatio);
+
+            var newWidth = (int)(r.Width * xRatio);
+            var newHeight = (int)(r.Height * yRatio);
+
+            c.Location = new Point(newX, newY);
+            c.Size = new Size(newWidth, newHeight);
+        }
+
+        private void frmMain_Resize(object? sender, EventArgs e)
+        {
+            ResizeControl(_pnlGfxFlowOrigin, pnlGFXFlow);
+            ResizeControl(_pnlGfxOrigin, pnlGFX);
         }
 
         private void OnShown(object? sender, EventArgs e)
@@ -264,19 +290,15 @@ namespace Mids_Reborn.Forms
 
         // store the instance for reuse, as these things are called per draw/redraw
         private Lazy<ComboBoxT<Archetype>> CbtAT => new(() => new ComboBoxT<Archetype>(cbAT));
-
         private Lazy<ComboBoxT<string>> CbtPrimary => new(() => new ComboBoxT<string>(cbPrimary));
-
         private Lazy<ComboBoxT<string>> CbtSecondary => new(() => new ComboBoxT<string>(cbSecondary));
-
         private Lazy<ComboBoxT<string>> CbtAncillary => new(() => new ComboBoxT<string>(cbAncillary));
-
         private Lazy<ComboBoxT<string>> CbtPool0 => new(() => new ComboBoxT<string>(cbPool0));
         private Lazy<ComboBoxT<string>> CbtPool1 => new(() => new ComboBoxT<string>(cbPool1));
         private Lazy<ComboBoxT<string>> CbtPool2 => new(() => new ComboBoxT<string>(cbPool2));
         private Lazy<ComboBoxT<string>> CbtPool3 => new(() => new ComboBoxT<string>(cbPool3));
 
-        internal clsDrawX Drawing => drawing;
+        internal clsDrawX? Drawing => drawing;
 
         private void InitializeDv()
         {
@@ -421,6 +443,10 @@ namespace Mids_Reborn.Forms
                             break;
                     }
                 }
+
+                _formOrigin = Bounds;
+                _pnlGfxFlowOrigin = pnlGFXFlow.Bounds;
+                _pnlGfxOrigin = pnlGFX.Bounds;
 
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
@@ -2377,7 +2403,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             dvAnchored.Info_txtLarge.Focus();
         }
 
-        private void frmMain_Resize(object? sender, EventArgs e)
+        private void frmMain_ResizeEnd(object? sender, EventArgs e)
         {
             if (loading) return;
 
@@ -2905,7 +2931,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if ((MainModule.MidsController.Toon == null) | !MainModule.MidsController.IsAppInitialized)
                 return;
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
+            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
             myDataView.DisplayTotals();
             FloatUpdate();
         }
@@ -5157,18 +5183,19 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         internal void SetDataViewTab(int index)
         {
+            RefreshInfo();
             if (index == 2)
             {
-                drawing.InterfaceMode = Enums.eInterfaceMode.PowerToggle;
+                if (drawing != null) drawing.InterfaceMode = Enums.eInterfaceMode.PowerToggle;
                 DoRedraw();
                 //Fix so tips only show once
                 //MidsContext.Config.Tips.Show(Tips.TipType.TotalsTab);
             }
             else
             {
-                if (drawing.InterfaceMode == Enums.eInterfaceMode.Normal)
+                if (drawing is { InterfaceMode: Enums.eInterfaceMode.Normal })
                     return;
-                drawing.InterfaceMode = Enums.eInterfaceMode.Normal;
+                if (drawing != null) drawing.InterfaceMode = Enums.eInterfaceMode.Normal;
                 DoRedraw();
             }
         }
@@ -5440,7 +5467,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
             dvAnchored.Visible = true;
             NoResizeEvent = true;
-            OnResizeEnd(new EventArgs());
+            OnResizeEnd(EventArgs.Empty);
             NoResizeEvent = false;
             RefreshInfo();
             ReArrange(false);
@@ -7429,7 +7456,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private int[] FlipSlotState;
         private readonly int FlipStepDelay;
         private readonly int FlipSteps;
-        private frmFloatingStats FloatingDataForm;
+        private frmFloatingStats? FloatingDataForm;
         private frmMiniList fMini;
         private frmRecipeViewer fRecipe;
         private frmDPSCalc fDPSCalc;

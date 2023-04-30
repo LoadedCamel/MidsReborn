@@ -50,7 +50,7 @@ namespace Mids_Reborn.Forms
             this.dvFloat.Load += new System.EventHandler(this.dvFloat_Load);
             this.dvFloat.SizeChange += this.dvFloat_SizeChange;
             this.dvFloat.FloatChange += this.dvFloat_FloatChanged;
-            this.dvFloat.Unlock_Click += new DataView.Unlock_ClickEventHandler(this.dvFloat_Unlock);
+            this.dvFloat.UnlockClick += new DataView.UnlockClickEventHandler(this.dvFloat_Unlock);
             this.dvFloat.TabChanged += this.dvFloat_TabChanged;
             this.dvFloat.SlotUpdate += new DataView.SlotUpdateEventHandler(this.dvFloat_SlotUpdate);
             this.dvFloat.SlotFlip += new DataView.SlotFlipEventHandler(this.dvFloat_SlotFlip);

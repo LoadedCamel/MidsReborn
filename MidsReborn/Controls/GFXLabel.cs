@@ -14,7 +14,7 @@ namespace Mids_Reborn.Controls
     public class GFXLabel : UserControl
     {
         // Token: 0x04000092 RID: 146
-        private ExtendedBitmap bxBuffer;
+        private ExtendedBitmap? bxBuffer;
 
         // Token: 0x04000094 RID: 148
         private ContentAlignment myAlign;

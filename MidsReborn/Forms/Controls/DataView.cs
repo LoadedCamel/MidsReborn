@@ -24,14 +24,14 @@ namespace Mids_Reborn.Forms.Controls
         {
             public string Label;
             public Func<GroupedFx.FxId, bool> Filter;
-            public List<PairedList.ItemPair> ItemPairs;
+            public List<PairedListEx.Item> ItemPairs;
         }
 
         private struct ItemPairGroupEx
         {
             public string Label;
             public Func<GroupedFx.FxId, bool> Filter;
-            public List<KeyValuePair<GroupedFx, PairedList.ItemPair>> ItemPairsEx;
+            public List<KeyValuePair<GroupedFx, PairedListEx.Item>> ItemPairsEx;
         }
 
 
@@ -52,10 +52,10 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void FloatChangeEventHandler();
         public delegate void MovedEventHandler();
         public delegate void SizeChangeEventHandler(Size newSize, bool isCompact);
-        public delegate void SlotFlipEventHandler(int PowerIndex);
+        public delegate void SlotFlipEventHandler(int powerIndex);
         public delegate void SlotUpdateEventHandler();
-        public delegate void TabChangedEventHandler(int Index);
-        public delegate void Unlock_ClickEventHandler();
+        public delegate void TabChangedEventHandler(int index);
+        public delegate void UnlockClickEventHandler();
         public delegate void EntityDetailsEventHandler(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo);
 
         private const int SnapDistance = 10;
@@ -82,7 +82,7 @@ namespace Mids_Reborn.Forms.Controls
         private bool VillainColor;
         public bool[]? TabsMask;
         private List<GroupedFx> GroupedRankedEffects;
-        private List<KeyValuePair<GroupedFx, PairedList.ItemPair>> EffectsItemPairs;
+        private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
 
         public PetInfo PetInfo;
 
@@ -156,24 +156,24 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        public event FloatChangeEventHandler FloatChange;
-        public event MovedEventHandler Moved;
-        public event SizeChangeEventHandler SizeChange;
-        public event SlotFlipEventHandler SlotFlip;
-        public event SlotUpdateEventHandler SlotUpdate;
-        public event TabChangedEventHandler TabChanged;
-        public event Unlock_ClickEventHandler Unlock_Click;
+        public event FloatChangeEventHandler? FloatChange;
+        public event MovedEventHandler? Moved;
+        public event SizeChangeEventHandler? SizeChange;
+        public event SlotFlipEventHandler? SlotFlip;
+        public event SlotUpdateEventHandler? SlotUpdate;
+        public event TabChangedEventHandler? TabChanged;
+        public event UnlockClickEventHandler? UnlockClick;
         public event EntityDetailsEventHandler EntityDetails;
 
-        private static PairedList.ItemPair BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
+        private static PairedListEx.Item BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
         {
             var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
             var flag2 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][1];
             var iSpecialCase = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][2];
-            PairedList.ItemPair itemPair;
+            PairedListEx.Item itemPair;
             if (value[index] <= 0.0)
             {
-                itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false, false, false, string.Empty);
+                itemPair = new PairedListEx.Item(string.Empty, string.Empty, false, false, false, string.Empty);
             }
             else
             {
@@ -217,7 +217,7 @@ namespace Mids_Reborn.Forms.Controls
                     iTip = str4 + "This effect has not been affected by ED.\r\n";
                 }
 
-                itemPair = new PairedList.ItemPair(iName, iValue, flag2 & !iSpecialCase, flag1 & !flag2,
+                itemPair = new PairedListEx.Item(iName, iValue, flag2 & !iSpecialCase, flag1 & !flag2,
                     iSpecialCase, iTip);
             }
 
@@ -229,7 +229,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.Clear(true);
             info_Title.Text = Pages[0];
             Info_txtLarge.Text = string.Empty;
-            info_txtSmall.Text = "Hold the mouse over a power to see its description.";
+            info_txtSmall.Text = @"Hold the mouse over a power to see its description.";
             PowerScaler.Visible = false;
             fx_lblHead1.Text = string.Empty;
             fx_lblHead2.Text = string.Empty;
@@ -239,7 +239,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_List3.Clear(true);
             fx_Title.Text = Pages[1];
             enhListing.Clear(true);
-            Enh_Title.Text = "Enhancements";
+            Enh_Title.Text = @"Enhancements";
             total_Misc.Clear(true);
         }
 
@@ -279,12 +279,12 @@ namespace Mids_Reborn.Forms.Controls
             SizeChange?.Invoke(Size, Compact);
         }
 
-        private void DataView_BackColorChanged(object sender, EventArgs e)
+        private void DataView_BackColorChanged(object? sender, EventArgs e)
         {
             SetBackColor();
         }
 
-        private void DataView_Load(object sender, EventArgs e)
+        private void DataView_Load(object? sender, EventArgs e)
         {
             pnlInfo.Top = 20;
             pnlInfo.Left = 0;
@@ -301,10 +301,6 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.nMaxEnhVal = 0;
             Info_txtLarge.Height = 100;
             Floating = bFloating;
-            info_DataList.LinePadding = 1;
-            fx_List1.LinePadding = 1;
-            fx_List2.LinePadding = 2;
-            fx_List3.LinePadding = 3;
 
             var useToxicDefOffSet = DatabaseAPI.RealmUsesToxicDef() ? 15 : 0;
             total_lblRes.Location = new Point(4, 135 + useToxicDefOffSet);
@@ -327,14 +323,14 @@ namespace Mids_Reborn.Forms.Controls
             enhListing.Clear();
             if (MidsContext.Character == null)
             {
-                enhListing.Draw();
+                enhListing.Redraw();
             }
             else
             {
                 var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(pBase.PowerIndex);
                 if (inToonHistory < 0)
                 {
-                    enhListing.Draw();
+                    enhListing.Redraw();
                 }
                 else
                 {
@@ -603,7 +599,7 @@ namespace Mids_Reborn.Forms.Controls
                             enhListing.SetUnique();
                     }
 
-                    enhListing.Draw();
+                    enhListing.Redraw();
                     DisplayFlippedEnhancements();
                 }
             }
@@ -665,7 +661,7 @@ namespace Mids_Reborn.Forms.Controls
                 effect.UpdateAttrib();
                 SetDamageTip();
             }*/
-            info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = pBase.Effects.Any(t => t.RequiresToHitCheck);
 
@@ -685,23 +681,23 @@ namespace Mids_Reborn.Forms.Controls
                 if (Math.Abs(accuracy1 - accuracy2) > float.Epsilon & Math.Abs(num2 - accuracy2) > float.Epsilon)
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - MidsContext.Config.ScalingToHit):##0.00000}x{str}";
-                    info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Accuracy", "Acc"),
+                    info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Accuracy", "Acc"),
                         MidsContext.Config.ScalingToHit * pBase.Accuracy * 100, enhancedPower.Accuracy * 100, suffix2, tip2));
                 }
                 else
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult:##0.00}x{str}";
-                    info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Accuracy", "Acc"),
+                    info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Accuracy", "Acc"),
                         MidsContext.Config.ScalingToHit * pBase.Accuracy * 100,
                         MidsContext.Config.ScalingToHit * pBase.Accuracy * 100, suffix2, tip2));
                 }
             }
             else
             {
-                info_DataList.AddItem(new PairedList.ItemPair(string.Empty, string.Empty, false, false, false, string.Empty));
+                info_DataList.AddItem(new PairedListEx.Item(string.Empty, string.Empty, false, false, false, string.Empty));
             }
 
-            info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Recharge", "Rchg"), pBase.RechargeTime, enhancedPower.RechargeTime, "s"));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Recharge", "Rchg"), pBase.RechargeTime, enhancedPower.RechargeTime, "s"));
             var s1 = 0f;
             var s2 = 0f;
             var durationEffectId = pBase.GetDurationEffectID();
@@ -720,15 +716,15 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
-            info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
-                ? FastItemBuilder.FI.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
-                : FastItemBuilder.FI.FastItem("Radius", pBase.Radius, enhancedPower.Radius, "ft"));
-            info_DataList.AddItem(FastItemBuilder.FI.FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {pBase.CastTime}s\r\nArcana CastTime: {(Math.Ceiling(enhancedPower.CastTime / 0.132f) + 1) * 0.132:####0.###}s", false, true, false, false, 3));
+                ? FastItemBuilder.Fi.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
+                : FastItemBuilder.Fi.FastItem("Radius", pBase.Radius, enhancedPower.Radius, "ft"));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {pBase.CastTime}s\r\nArcana CastTime: {(Math.Ceiling(enhancedPower.CastTime / 0.132f) + 1) * 0.132:####0.###}s", false, true, false, false, 3));
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
-                ? FastItemBuilder.FI.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
-                : FastItemBuilder.FI.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
+                ? FastItemBuilder.Fi.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
+                : FastItemBuilder.Fi.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
             if (durationEffectId > -1 &&
                 pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
                 pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
@@ -736,13 +732,13 @@ namespace Mids_Reborn.Forms.Controls
                    pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
                   pBase.Effects[durationEffectId].Mag < 0))
             {
-                info_DataList.AddItem(new PairedList.ItemPair("Effect:",
+                info_DataList.AddItem(new PairedListEx.Item("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
                     pBase.Effects[durationEffectId].Probability < 1,
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
 
-                info_DataList.AddItem(new PairedList.ItemPair("Mag:",
+                info_DataList.AddItem(new PairedListEx.Item("Mag:",
                     $"{enhancedPower.Effects[durationEffectId].BuffedMag:####0.##}",
                     Math.Abs(pBase.Effects[durationEffectId].BuffedMag - enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon,
                     pBase.Effects[durationEffectId].Probability < 1));
@@ -762,7 +758,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            info_DataList.Draw();
+            info_DataList.Redraw();
             var str1 = "Damage";
             switch (MidsContext.Config.DamageMath.ReturnValue)
             {
@@ -866,7 +862,7 @@ namespace Mids_Reborn.Forms.Controls
                 fxTitle.Text = $"{fxTitle.Text} (Slot Level {iEnhLvl + 1})";
             }
 
-            PairedList[] pairedListArray =
+            PairedListEx[] pairedListArray =
             {
                 fx_List1, fx_List2, fx_List3
             };
@@ -889,7 +885,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Defense/Resistance",
                     Filter = e => e.EffectType is Enums.eEffectType.Defense or Enums.eEffectType.Resistance,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
@@ -897,7 +893,7 @@ namespace Mids_Reborn.Forms.Controls
                     Label = "Heal/Endurance",
                     Filter = e => e.EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints
                         or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance or Enums.eEffectType.Recovery,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
@@ -905,7 +901,7 @@ namespace Mids_Reborn.Forms.Controls
                     Label = "Status",
                     Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist
                         or Enums.eEffectType.Translucency,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
@@ -916,7 +912,7 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.StealthRadiusPlayer or Enums.eEffectType.ResEffect
                         or Enums.eEffectType.ThreatLevel or Enums.eEffectType.DropToggles
                         or Enums.eEffectType.RechargeTime or Enums.eEffectType.Enhancement,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
@@ -926,28 +922,28 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.SpeedFlying or Enums.eEffectType.JumpHeight or Enums.eEffectType.Jumppack
                         or Enums.eEffectType.Fly or Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxJumpSpeed
                         or Enums.eEffectType.MaxFlySpeed,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
                 {
                     Label = "Summon",
                     Filter = e => e.EffectType is Enums.eEffectType.EntCreate,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
                 {
                     Label = "Granted Powers",
                     Filter = e => e.EffectType == Enums.eEffectType.GrantPower,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
                 {
                     Label = "Modify Effect",
                     Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
                 new()
@@ -956,7 +952,7 @@ namespace Mids_Reborn.Forms.Controls
                     Filter = e =>
                         (MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE) &
                         e.EffectType == Enums.eEffectType.Elusivity,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>()
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 }
             };
 
@@ -992,9 +988,9 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            fx_List1.Draw();
-            fx_List2.Draw();
-            fx_List3.Draw();
+            fx_List1.Redraw();
+            fx_List2.Redraw();
+            fx_List3.Redraw();
         }
 
         private void DisplayFlippedEnhancements()
@@ -1024,7 +1020,7 @@ namespace Mids_Reborn.Forms.Controls
                 var size = bxFlip.Size;
                 var height = (int)Math.Round(size.Height / 2.0);
                 local1 = new Rectangle(-4, 0, width, height);
-                using var solidBrush1 = new SolidBrush(enhListing.NameColor);
+                using var solidBrush1 = new SolidBrush(enhListing.ItemColor);
                 format.Alignment = StringAlignment.Far;
                 format.LineAlignment = StringAlignment.Center;
                 bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
@@ -1240,7 +1236,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var dmgNames = Enum.GetNames(typeof(Enums.eDamage));
             var displayStats = MidsContext.Character.DisplayStats;
-            total_Misc.Clear();
+            total_Misc.Clear(true);
             gDef1.Clear();
             gDef2.Clear();
             var numArray1 = new[]
@@ -1341,13 +1337,14 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
-            total_Misc.AddItem(new PairedList.ItemPair("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.#}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
-            total_Misc.AddItem(new PairedList.ItemPair("Regen:", $"{displayStats.HealthRegenPercent(false):0.#}%", false, false, false, iTip3));
-            total_Misc.AddItem(new PairedList.ItemPair("EndDrain:", $"{displayStats.EnduranceUsage:0.#}/s", false, false, false, iTip1));
-            total_Misc.AddItem(new PairedList.ItemPair("+ToHit:", $"{displayStats.BuffToHit:0.#}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
-            total_Misc.AddItem(new PairedList.ItemPair("+EndRdx:", $"{displayStats.BuffEndRdx:0.#}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new PairedList.ItemPair("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
-            total_Misc.Draw();
+            total_Misc.AddItem(new PairedListEx.Item("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.#}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
+            total_Misc.AddItem(new PairedListEx.Item("Regen:", $"{displayStats.HealthRegenPercent(false):0.#}%", false, false, false, iTip3));
+            total_Misc.AddItem(new PairedListEx.Item("EndDrain:", $"{displayStats.EnduranceUsage:0.#}/s", false, false, false, iTip1));
+            total_Misc.AddItem(new PairedListEx.Item("+ToHit:", $"{displayStats.BuffToHit:0.#}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
+            total_Misc.AddItem(new PairedListEx.Item("+EndRdx:", $"{displayStats.BuffEndRdx:0.#}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            total_Misc.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.Rows = 3;
+            total_Misc.Redraw();
         }
 
         /*protected override void Dispose(bool disposing)
@@ -1382,7 +1379,7 @@ namespace Mids_Reborn.Forms.Controls
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
             var rect = new Rectangle(0, 0, 75, pnlTabs.Height);
-            extendedBitmap.Graphics.FillRectangle(solidBrush2, extendedBitmap.ClipRect);
+            extendedBitmap.Graphics?.FillRectangle(solidBrush2, extendedBitmap.ClipRect);
             switch (TabPage)
             {
                 case 0:
@@ -1433,15 +1430,15 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                extendedBitmap.Graphics.DrawRectangle(pen, rect);
-                extendedBitmap.Graphics.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
+                extendedBitmap.Graphics?.DrawRectangle(pen, rect);
+                extendedBitmap.Graphics?.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
             }
 
             rect = new Rectangle(70 * TabPage, 0, 70, pnlTabs.Height);
             layoutRectangle = new RectangleF(rect.X, (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
-            extendedBitmap.Graphics.FillRectangle(solidBrush3, rect);
-            extendedBitmap.Graphics.DrawRectangle(pen, rect);
-            extendedBitmap.Graphics.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle, format);
+            extendedBitmap.Graphics?.FillRectangle(solidBrush3, rect);
+            extendedBitmap.Graphics?.DrawRectangle(pen, rect);
+            extendedBitmap.Graphics?.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle, format);
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -1583,7 +1580,7 @@ namespace Mids_Reborn.Forms.Controls
             return str;
         }
 
-        private PairedList.ItemPair GetRankedEffect(int[] Index, int ID)
+        private PairedListEx.Item GetRankedEffect(int[] Index, int ID)
         {
             var title = string.Empty;
             var shortFxBase = new Enums.ShortFX();
@@ -1607,7 +1604,7 @@ namespace Mids_Reborn.Forms.Controls
 
             if (fx == null)
             {
-                return FastItemBuilder.FI.FastItem("", 0f, 0f, string.Empty);
+                return FastItemBuilder.Fi.FastItem("", 0f, 0f, string.Empty);
             }
 
             if (Index[ID] > -1)
@@ -1825,7 +1822,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 if (flag)
                 {
-                    return FastItemBuilder.FI.FastItem("", 0f, 0f, string.Empty);
+                    return FastItemBuilder.Fi.FastItem("", 0f, 0f, string.Empty);
                 }
             }
 
@@ -1886,15 +1883,15 @@ namespace Mids_Reborn.Forms.Controls
 
             if (fx.ActiveConditionals.Count > 0)
             {
-                return FastItemBuilder.FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.ActiveConditionals.Count > 0, tip);
+                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.ActiveConditionals.Count > 0, tip);
             }
 
             if (fx.SpecialCase != Enums.eSpecialCase.None)
             {
-                return FastItemBuilder.FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.SpecialCase != Enums.eSpecialCase.None, tip);
+                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.SpecialCase != Enums.eSpecialCase.None, tip);
             }
 
-            return FastItemBuilder.FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
+            return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
         }
 
         public void Init()
@@ -1924,7 +1921,7 @@ namespace Mids_Reborn.Forms.Controls
         private void lblLock_Click(object sender, EventArgs e)
 
         {
-            var unlockClick = Unlock_Click;
+            var unlockClick = UnlockClick;
             unlockClick?.Invoke();
             lblLock.Visible = false;
             pnlTabs.Select();
@@ -1965,7 +1962,7 @@ namespace Mids_Reborn.Forms.Controls
             return -1;
         }
 
-        private void PairedList_Hover(object sender, Enums.ShortFX tag, string tooltip)
+        private void PairedList_Hover(object? sender, int index, Enums.ShortFX tag, string tooltip)
         {
             var empty1 = string.Empty;
             var str1 = string.Empty;
@@ -2295,13 +2292,13 @@ namespace Mids_Reborn.Forms.Controls
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
             */
-            info_DataList.Draw();
+            info_DataList.Redraw();
             Info_Damage.Draw(); //Drawing controls
-            fx_List1.Draw();
-            fx_List2.Draw();
-            fx_List3.Draw();
-            total_Misc.Draw();
-            enhListing.Draw();
+            fx_List1.Redraw();
+            fx_List2.Redraw();
+            fx_List3.Redraw();
+            total_Misc.Redraw();
+            enhListing.Redraw();
         }
 
         private void SetDamageTip()
@@ -2540,48 +2537,48 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.Font = new Font(total_Misc.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
             enhListing.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
             pnlEnhActive.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
-            info_DataList.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            fx_List1.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            fx_List2.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            fx_List3.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            total_Misc.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            enhListing.ForceBold = MidsContext.Config.RtFont.PairedBold;
+            info_DataList.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
+            fx_List1.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
+            fx_List2.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
+            fx_List3.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
+            total_Misc.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
+            enhListing.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
             gDef1.Font = new Font(gDef1.Font.FontFamily, 8.25f, style);
             //gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
             gDef2.Font = gDef1.Font;
             gRes1.Font = gDef1.Font;
             gRes2.Font = gDef1.Font;
             SetBackColor();
-            info_DataList.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            fx_List1.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            fx_List2.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            fx_List3.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            total_Misc.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            enhListing.NameColor = MidsContext.Config.RtFont.ColorPlName;
-            info_DataList.ItemColor = MidsContext.Config.RtFont.ColorText;
-            fx_List1.ItemColor = MidsContext.Config.RtFont.ColorText;
-            fx_List2.ItemColor = MidsContext.Config.RtFont.ColorText;
-            fx_List3.ItemColor = MidsContext.Config.RtFont.ColorText;
-            enhListing.ItemColor = MidsContext.Config.RtFont.ColorText;
-            total_Misc.ItemColor = MidsContext.Config.RtFont.ColorText;
-            info_DataList.ItemColorAlt = MidsContext.Config.RtFont.ColorEnhancement;
-            fx_List1.ItemColorAlt = MidsContext.Config.RtFont.ColorEnhancement;
-            fx_List2.ItemColorAlt = MidsContext.Config.RtFont.ColorEnhancement;
-            fx_List3.ItemColorAlt = MidsContext.Config.RtFont.ColorEnhancement;
-            enhListing.ItemColorAlt = Color.Yellow;
-            total_Misc.ItemColorAlt = MidsContext.Config.RtFont.ColorEnhancement;
-            info_DataList.ValueColorD = MidsContext.Config.RtFont.ColorInvention;
-            fx_List1.ValueColorD = MidsContext.Config.RtFont.ColorInvention;
-            fx_List2.ValueColorD = MidsContext.Config.RtFont.ColorInvention;
-            fx_List3.ValueColorD = MidsContext.Config.RtFont.ColorInvention;
-            enhListing.ValueColorD = Color.Red;
-            total_Misc.ValueColorD = MidsContext.Config.RtFont.ColorInvention;
-            info_DataList.ItemColorSpecial = MidsContext.Config.RtFont.ColorPlSpecial;
-            fx_List1.ItemColorSpecial = MidsContext.Config.RtFont.ColorPlSpecial;
-            fx_List2.ItemColorSpecial = MidsContext.Config.RtFont.ColorPlSpecial;
-            fx_List3.ItemColorSpecial = MidsContext.Config.RtFont.ColorPlSpecial;
-            enhListing.ItemColorSpecial = Color.FromArgb(0, byte.MaxValue, 0);
-            total_Misc.ItemColorSpecial = MidsContext.Config.RtFont.ColorPlSpecial;
+            info_DataList.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            fx_List1.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            fx_List2.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            fx_List3.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            total_Misc.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            enhListing.ItemColor = MidsContext.Config.RtFont.ColorPlName;
+            info_DataList.ValueColor = MidsContext.Config.RtFont.ColorText;
+            fx_List1.ValueColor = MidsContext.Config.RtFont.ColorText;
+            fx_List2.ValueColor = MidsContext.Config.RtFont.ColorText;
+            fx_List3.ValueColor = MidsContext.Config.RtFont.ColorText;
+            enhListing.ValueColor = MidsContext.Config.RtFont.ColorText;
+            total_Misc.ValueColor = MidsContext.Config.RtFont.ColorText;
+            info_DataList.ValueAlternateColor = MidsContext.Config.RtFont.ColorEnhancement;
+            fx_List1.ValueAlternateColor = MidsContext.Config.RtFont.ColorEnhancement;
+            fx_List2.ValueAlternateColor = MidsContext.Config.RtFont.ColorEnhancement;
+            fx_List3.ValueAlternateColor = MidsContext.Config.RtFont.ColorEnhancement;
+            enhListing.ValueAlternateColor = Color.Yellow;
+            total_Misc.ValueAlternateColor = MidsContext.Config.RtFont.ColorEnhancement;
+            info_DataList.ValueConditionColor = MidsContext.Config.RtFont.ColorInvention;
+            fx_List1.ValueConditionColor = MidsContext.Config.RtFont.ColorInvention;
+            fx_List2.ValueConditionColor = MidsContext.Config.RtFont.ColorInvention;
+            fx_List3.ValueConditionColor = MidsContext.Config.RtFont.ColorInvention;
+            enhListing.ValueConditionColor = Color.Red;
+            total_Misc.ValueConditionColor = MidsContext.Config.RtFont.ColorInvention;
+            info_DataList.ValueSpecialColor = MidsContext.Config.RtFont.ColorPlSpecial;
+            fx_List1.ValueSpecialColor = MidsContext.Config.RtFont.ColorPlSpecial;
+            fx_List2.ValueSpecialColor = MidsContext.Config.RtFont.ColorPlSpecial;
+            fx_List3.ValueSpecialColor = MidsContext.Config.RtFont.ColorPlSpecial;
+            enhListing.ValueSpecialColor = Color.FromArgb(0, byte.MaxValue, 0);
+            total_Misc.ValueSpecialColor = MidsContext.Config.RtFont.ColorPlSpecial;
         }
 
         public void SetLocation(Point iLocation, bool Force)
@@ -2687,7 +2684,7 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.Style = graphStyle;
         }
 
-        private bool SplitFX_AddToList(ref Enums.ShortFX BaseSFX, ref Enums.ShortFX EnhSFX, ref PairedList iList, string SpecialTitle = "")
+        private bool SplitFX_AddToList(ref Enums.ShortFX BaseSFX, ref Enums.ShortFX EnhSFX, ref PairedListEx iList, string SpecialTitle = "")
         {
             bool flag;
             if (!BaseSFX.Present)
@@ -2752,7 +2749,7 @@ namespace Mids_Reborn.Forms.Controls
                         s2 = 0.0f;
                     }
 
-                    iList.AddItem(FastItemBuilder.FI.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
+                    iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
                     if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
                         iList.SetUnique();
                 }
@@ -2800,7 +2797,7 @@ namespace Mids_Reborn.Forms.Controls
             moved?.Invoke();
         }
 
-        private void Fx_ListItemClick(PairedList.ItemPair? item, MouseEventArgs e)
+        private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)
         {
             if (item == null)
             {

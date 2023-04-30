@@ -879,7 +879,7 @@ namespace Mids_Reborn.Controls
         {
             ColorSwitch();
             BackColor = cTarget.BackColor;
-            bxBuffer.Graphics.Clear(BackColor);
+            bxBuffer.Graphics?.Clear(BackColor);
             DrawPowers();
             var location = new Point(0, 0);
             OutputUnscaled(ref bxBuffer, location);

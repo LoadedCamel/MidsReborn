@@ -20,6 +20,7 @@ namespace Mids_Reborn
             Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
             Fonts.BuildFontCollection();
             Application.Run(new frmMain(args));
+            //Application.Run(new MainForm());
         }
     }
 }

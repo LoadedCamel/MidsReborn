@@ -24,7 +24,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static PairedList.ItemPair GetRankedEffect(int[] index, int id, IPower pBase, IPower pEnh)
+        public static PairedListEx.Item GetRankedEffect(int[] index, int id, IPower pBase, IPower pEnh)
         {
             var title = string.Empty;
             var shortFxBase = new Enums.ShortFX();
@@ -48,7 +48,7 @@ namespace Mids_Reborn.Core
 
             if (fx == null)
             {
-                return FI.FastItem("", 0f, 0f, string.Empty);
+                return Fi.FastItem("", 0f, 0f, string.Empty);
             }
 
             if (index[id] > -1)
@@ -286,7 +286,7 @@ namespace Mids_Reborn.Core
 
                 if (flag)
                 {
-                    return FI.FastItem("", 0f, 0f, string.Empty);
+                    return Fi.FastItem("", 0f, 0f, string.Empty);
                 }
             }
 
@@ -348,46 +348,46 @@ namespace Mids_Reborn.Core
 
             if (fx.ActiveConditionals.Count > 0)
             {
-                return FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
+                return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
                     fx.ActiveConditionals.Count > 0, tip);
             }
 
             if (fx.SpecialCase != Enums.eSpecialCase.None)
             {
-                return FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
+                return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
                     fx.SpecialCase != Enums.eSpecialCase.None, tip);
             }
 
-            return FI.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
+            return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
         }
 
         // FastItem/ItemPair constructors
-        public static class FI
+        public static class Fi
         {
 
-            public static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
+            public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
                 Enums.ShortFX tag, IPower basePower)
             {
                 return FastItem(title, s1, s2, suffix, false, false, false, false, tag, basePower);
             }
 
-            public static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, string tip)
+            public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, string tip)
             {
                 return FastItem(title, s1, s2, suffix, false, false, false, false, tip.Trim());
             }
 
-            public static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
+            public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
                 bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
             {
                 var iValue = Utilities.FixDP(s2.Sum) + suffix;
-                PairedList.ItemPair iItem;
+                PairedListEx.Item iItem;
                 if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
                 {
-                    iItem = new PairedList.ItemPair(string.Empty, string.Empty, false);
+                    iItem = new PairedListEx.Item(string.Empty, string.Empty, false);
                 }
                 else if (Math.Abs(s1.Sum) < float.Epsilon)
                 {
-                    iItem = new PairedList.ItemPair($"{title}:", string.Empty, false);
+                    iItem = new PairedListEx.Item($"{title}:", string.Empty, false);
                 }
                 else
                 {
@@ -403,24 +403,24 @@ namespace Mids_Reborn.Core
                         iAlternate = true;
                     }
 
-                    iItem = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
+                    iItem = new PairedListEx.Item(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
                 }
 
                 return iItem;
             }
 
-            public static PairedList.ItemPair FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
+            public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
                 bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, Enums.ShortFX tag, IPower basePower)
             {
                 var iValue = Utilities.FixDP(s2.Sum) + suffix;
-                PairedList.ItemPair itemPair;
+                PairedListEx.Item itemPair;
                 if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
                 {
-                    itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
+                    itemPair = new PairedListEx.Item(string.Empty, string.Empty, false);
                 }
                 else if (Math.Abs(s1.Sum) < float.Epsilon)
                 {
-                    itemPair = new PairedList.ItemPair($"{title}:", string.Empty, false);
+                    itemPair = new PairedListEx.Item($"{title}:", string.Empty, false);
                 }
                 else
                 {
@@ -436,24 +436,24 @@ namespace Mids_Reborn.Core
                     }
 
                     var tip = Tooltip.GenerateTipFromEffect(basePower, tag).Trim();
-                    itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
+                    itemPair = new PairedListEx.Item(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
                 }
 
                 return itemPair;
             }
 
-            public static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, bool skipBase,
+            public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, bool skipBase,
                 bool alwaysShow, bool isChance, bool isSpecial, string tip)
             {
                 var iValue = Utilities.FixDP(s2) + suffix;
-                PairedList.ItemPair itemPair;
+                PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
-                    itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
+                    itemPair = new PairedListEx.Item(string.Empty, string.Empty, false);
                 }
                 else if (Math.Abs(s1) < float.Epsilon)
                 {
-                    itemPair = new PairedList.ItemPair(title, string.Empty, false);
+                    itemPair = new PairedListEx.Item(title, string.Empty, false);
                 }
                 else
                 {
@@ -468,21 +468,21 @@ namespace Mids_Reborn.Core
                         iAlternate = true;
                     }
 
-                    itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
+                    itemPair = new PairedListEx.Item(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
                 }
 
                 return itemPair;
             }
 
-            public static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix,
+            public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix,
                 bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false,
                 int tagId = -1, int maxDecimal = -1)
             {
                 var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
-                PairedList.ItemPair itemPair;
+                PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
-                    itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
+                    itemPair = new PairedListEx.Item(string.Empty, string.Empty, false);
                 }
                 else
                 {
@@ -497,21 +497,19 @@ namespace Mids_Reborn.Core
                         iAlternate = true;
                     }
 
-                    itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tagId);
+                    itemPair = new PairedListEx.Item(title, iValue, iAlternate, isChance, isSpecial, tagId);
                 }
 
                 return itemPair;
             }
 
-            public static PairedList.ItemPair FastItem(string title, float s1, float s2, string suffix, string tip,
-                bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false,
-                int maxDecimal = -1)
+            public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, string tip, bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false, int maxDecimal = -1)
             {
                 var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
-                PairedList.ItemPair itemPair;
+                PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
-                    itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
+                    itemPair = new PairedListEx.Item(string.Empty, string.Empty, false);
                 }
                 else
                 {
@@ -526,7 +524,7 @@ namespace Mids_Reborn.Core
                         iAlternate = true;
                     }
 
-                    itemPair = new PairedList.ItemPair(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
+                    itemPair = new PairedListEx.Item(title, iValue, iAlternate, isChance, isSpecial, tip.Trim());
                 }
 
                 return itemPair;

@@ -210,9 +210,9 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator32 = new ToolStripSeparator();
             this.pnlGFX = new pnlGFX();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblName = new GFXLabel();
-            this.lblOrigin = new GFXLabel();
-            this.lblAT = new GFXLabel();
+            this.lblName = new Label();
+            this.lblOrigin = new Label();
+            this.lblAT = new Label();
             this.llPool0 = new ListLabelV3();
             this.llPool1 = new ListLabelV3();
             this.llSecondary = new ListLabelV3();
@@ -1896,7 +1896,7 @@ namespace Mids_Reborn.Forms
             this.pnlGFX.BackColor = System.Drawing.Color.Black;
             this.pnlGFX.Location = new System.Drawing.Point(3, 3);
             this.pnlGFX.Name = "pnlGFX";
-            this.pnlGFX.Size = new System.Drawing.Size(680, 885);
+            this.pnlGFX.Size = new System.Drawing.Size(838, 885);
             this.pnlGFX.TabIndex = 103;
             this.pnlGFX.TabStop = false;
             this.pnlGFX.DragDrop += new System.Windows.Forms.DragEventHandler(this.pnlGFX_DragDrop);
@@ -1911,12 +1911,12 @@ namespace Mids_Reborn.Forms
             // 
             // pnlGFXFlow
             // 
-            this.pnlGFXFlow.Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left;
+            this.pnlGFXFlow.Anchor = AnchorStyles.Left | AnchorStyles.Top;
             this.pnlGFXFlow.AutoScroll = true;
             this.pnlGFXFlow.Controls.Add(this.pnlGFX);
             this.pnlGFXFlow.Location = new System.Drawing.Point(480, 80);
             this.pnlGFXFlow.Name = "pnlGFXFlow";
-            this.pnlGFXFlow.Size = new System.Drawing.Size(687, 891);
+            this.pnlGFXFlow.Size = new System.Drawing.Size(850, 891);
             this.pnlGFXFlow.TabIndex = 112;
             this.pnlGFXFlow.MouseEnter += new System.EventHandler(this.pnlGFXFlow_MouseEnter);
             this.pnlGFXFlow.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pnlGFXFlow_Scroll);
@@ -2103,7 +2103,7 @@ namespace Mids_Reborn.Forms
             this.lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.White;
-            this.lblName.InitialText = "Name:";
+            this.lblName.Text = "Name:";
             this.lblName.Location = new System.Drawing.Point(2, 82);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(92, 21);
@@ -2114,7 +2114,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOrigin.InitialText = "Origin:";
+            this.lblOrigin.Text = "Origin:";
             this.lblOrigin.Location = new System.Drawing.Point(2, 133);
             this.lblOrigin.Name = "lblOrigin";
             this.lblOrigin.Size = new System.Drawing.Size(92, 21);
@@ -2125,7 +2125,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAT.InitialText = "Archetype:";
+            this.lblAT.Text = "Archetype:";
             this.lblAT.Location = new System.Drawing.Point(2, 109);
             this.lblAT.Name = "lblAT";
             this.lblAT.Size = new System.Drawing.Size(92, 21);
@@ -2515,7 +2515,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem FileToolStripMenuItem;
         ToolStripMenuItem HelpToolStripMenuItem;
         ToolStripMenuItem InGameRespecHelperToolStripMenuItem;
-        GFXLabel lblAT;
+        Label lblAT;
         Label lblATLocked;
         Label lblEpic;
         Label lblCharacter;
@@ -2525,8 +2525,8 @@ namespace Mids_Reborn.Forms
         Label lblLocked3;
         Label lblLockedAncillary;
         Label lblLockedSecondary;
-        GFXLabel lblName;
-        GFXLabel lblOrigin;
+        Label lblName;
+        Label lblOrigin;
         Label lblPool1;
         Label lblPool2;
         Label lblPool3;

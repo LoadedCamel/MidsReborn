@@ -1137,11 +1137,11 @@ namespace Mids_Reborn.Core
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
         /// <param name="groupedRankedEffects">Raw grouped effects (use output from AssembleGroupedEffects)</param>
         /// <returns>Ranked effects matching grouped effects in the form of ItemPairs, with their associated grouped effect, and effect identifier</returns>
-        public static List<KeyValuePair<GroupedFx, PairedList.ItemPair>> GenerateListItems(
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(
             List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects,
             float displayBlockFontSize)
         {
-            var ret = new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>();
+            var ret = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
 
             foreach (var gre in groupedRankedEffects)
             {
@@ -1151,7 +1151,7 @@ namespace Mids_Reborn.Core
                 var rankedEffect = FastItemBuilder.GetRankedEffect(rankedEffects.ToArray(), greIndex, pBase, pEnh);
                 FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], displayBlockFontSize);
 
-                ret.Add(new KeyValuePair<GroupedFx, PairedList.ItemPair>(gre, rankedEffect));
+                ret.Add(new KeyValuePair<GroupedFx, PairedListEx.Item>(gre, rankedEffect));
             }
 
             return ret;
@@ -1162,11 +1162,11 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="itemsDict">ItemPairs (use output from GenerateListItems)</param>
         /// <returns>List of ItemPair matching criteria in filterFunc</returns>
-        public static List<PairedList.ItemPair> FilterListItems(List<KeyValuePair<GroupedFx, PairedList.ItemPair>> itemsDict, Func<FxId, bool> filterFunc)
+        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict, Func<FxId, bool> filterFunc)
         {
             if (itemsDict == null)
             {
-                return new List<PairedList.ItemPair>();
+                return new List<PairedListEx.Item>();
             }
 
             return itemsDict
@@ -1175,11 +1175,11 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static List<KeyValuePair<GroupedFx, PairedList.ItemPair>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedList.ItemPair>> itemsDict, Func<FxId, bool> filterFunc)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict, Func<FxId, bool> filterFunc)
         {
             if (itemsDict == null)
             {
-                return new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>();
+                return new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
             }
 
             return itemsDict
@@ -1193,11 +1193,11 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="itemsDict">ItemPairs (use output from GenerateListItems)</param>
         /// <returns>Full list of ItemPairs</returns>
-        public static List<PairedList.ItemPair> FilterListItems(List<KeyValuePair<GroupedFx, PairedList.ItemPair>> itemsDict)
+        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict)
         {
             if (itemsDict == null)
             {
-                return new List<PairedList.ItemPair>();
+                return new List<PairedListEx.Item>();
             }
 
             return itemsDict
@@ -1205,9 +1205,9 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static List<KeyValuePair<GroupedFx, PairedList.ItemPair>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedList.ItemPair>> itemsDict)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict)
         {
-            return itemsDict ?? new List<KeyValuePair<GroupedFx, PairedList.ItemPair>>();
+            return itemsDict ?? new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
         }
 
         /// <summary>
@@ -1323,7 +1323,7 @@ namespace Mids_Reborn.Core
         /// <param name="gre">Associated grouped effect</param>
         /// <param name="effectIndex">Effect index in the enhanced power</param>
         /// <param name="displayBlockFontSize">Display block font size</param>
-        private static void FinalizeListItem(ref PairedList.ItemPair rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
+        private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
         {
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
@@ -1338,8 +1338,8 @@ namespace Mids_Reborn.Core
                 _ => ""
             };
 
-            rankedEffect.UniqueColor = effectSource.isEnhancementEffect;
-            rankedEffect.AlternateColor = !effectSource.isEnhancementEffect &
+            rankedEffect.UseUniqueColor = effectSource.isEnhancementEffect;
+            rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &
                                           magDiff > float.Epsilon &
                                           (effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) &
                                           effectSource.Buffable;
@@ -1353,7 +1353,7 @@ namespace Mids_Reborn.Core
                         ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
                         : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
 
-                    rankedEffect.SpecialTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -1398,11 +1398,11 @@ namespace Mids_Reborn.Core
                             }
                         }
 
-                        rankedEffect.SpecialTip = entityTooltip;
+                        rankedEffect.ToolTip = entityTooltip;
                     }
                     else
                     {
-                        rankedEffect.SpecialTip = greTooltip;
+                        rankedEffect.ToolTip = greTooltip;
                     }
 
                     break;
@@ -1421,7 +1421,7 @@ namespace Mids_Reborn.Core
                                             (e.ActiveConditionals.Count <= 0 || e.ValidateConditional()))
                                 .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)
                                     .Replace("\r\n", "\n").Replace("\n", " -- ").Replace("  ", " ")));
-                        rankedEffect.SpecialTip = $"{mainEffectTip}\r\n----------\r\n{subEffectsTip}";
+                        rankedEffect.ToolTip = $"{mainEffectTip}\r\n----------\r\n{subEffectsTip}";
                     }
 
                     break;
@@ -1448,7 +1448,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
-                    rankedEffect.SpecialTip = isDefiance
+                    rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
 
@@ -1478,7 +1478,7 @@ namespace Mids_Reborn.Core
                         _ => rankedEffect.Value
                     };
                     
-                    rankedEffect.SpecialTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -1487,7 +1487,7 @@ namespace Mids_Reborn.Core
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
                         : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
-                    rankedEffect.SpecialTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -1500,7 +1500,7 @@ namespace Mids_Reborn.Core
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
 
-                    rankedEffect.SpecialTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -1517,7 +1517,7 @@ namespace Mids_Reborn.Core
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
                         : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
-                    rankedEffect.SpecialTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -1553,10 +1553,10 @@ namespace Mids_Reborn.Core
                         .Sum();
 
                     rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")} ({toWhoShort})";
-                    rankedEffect.AlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon && effectSource.Buffable;
+                    rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon && effectSource.Buffable;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
-                    rankedEffect.SpecialTip = string.Join("\r\n", pEnh.Effects
+                    rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects
                         .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
                                      !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
                                      e.PvMode == Enums.ePvX.Any) &

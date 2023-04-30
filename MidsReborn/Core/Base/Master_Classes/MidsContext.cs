@@ -9,10 +9,10 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 5;
         private const int AppBuildVersion = 3;
-        private const int AppRevisionVersion = 3;
+        private const int AppRevisionVersion = 4;
 
-        public const string AssemblyVersion = "3.5.3";
-        public const string AssemblyFileVersion = "3.5.3.3";
+        public const string AssemblyVersion = "3.5.4";
+        public const string AssemblyFileVersion = "3.5.3.4";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
@@ -26,7 +26,7 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public static Archetype? Archetype;
-        public static Character Character;
+        public static Character? Character;
         public static Build Build;
 
         public static ConfigData? Config => ConfigData.Current;

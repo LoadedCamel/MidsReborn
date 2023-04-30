@@ -486,7 +486,7 @@ namespace Mids_Reborn.Controls
                 ? TextRenderingHint.ClearTypeGridFit
                 : TextRenderingHint.AntiAliasGridFit;
             //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
-            var smlFont = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Bold, GraphicsUnit.Point);
+            var smlFont = new Font("Segoe UI", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
             var font = txtSizeF.Width > layoutRectangle.Width ? smlFont : Font;
             bxBuffer.Graphics.MeasureString(pString, font,
                 new SizeF(layoutRectangle.Width, layoutRectangle.Height), stringFormat,
