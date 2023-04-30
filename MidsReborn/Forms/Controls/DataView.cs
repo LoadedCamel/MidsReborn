@@ -1374,7 +1374,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
-            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Bold);//
+            var font1 = new Font("Segoe UI", 8.25f, FontStyle.Bold);//
             var font2 = new Font("Segoe UI", 10.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
