@@ -35,270 +35,346 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.removeConditional = new System.Windows.Forms.Button();
-            this.addConditional = new System.Windows.Forms.Button();
-            this.lvConditionalOp = new ctlListViewColored();
-            this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
-            this.lvActiveConditionals = new ctlListViewColored();
-            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-            this.lvConditionalBool = new ctlListViewColored();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            this.lvConditionalType = new ctlListViewColored();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.lvSubConditional = new ctlListViewColored();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.btnOkay = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox2.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
-            this.groupBox2.Controls.Add(this.lvConditionalOp);
-            this.groupBox2.Controls.Add(this.removeConditional);
-            this.groupBox2.Controls.Add(this.addConditional);
-            this.groupBox2.Controls.Add(this.lvActiveConditionals);
-            this.groupBox2.Controls.Add(this.lvConditionalBool);
-            this.groupBox2.Controls.Add(this.lvConditionalType);
-            this.groupBox2.Controls.Add(this.lvSubConditional);
-            this.groupBox2.Location = new System.Drawing.Point(13, 0);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Size = new System.Drawing.Size(1284, 483);
-            this.groupBox2.TabIndex = 161;
-            this.groupBox2.TabStop = false;
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            panelLinkType = new System.Windows.Forms.Panel();
+            rbLinkTypeOr = new System.Windows.Forms.RadioButton();
+            rbLinkTypeAnd = new System.Windows.Forms.RadioButton();
+            label1 = new System.Windows.Forms.Label();
+            lvConditionalOp = new ctlListViewColored();
+            columnHeader7 = new ColumnHeader();
+            removeConditional = new System.Windows.Forms.Button();
+            addConditional = new System.Windows.Forms.Button();
+            lvActiveConditionals = new ctlListViewColored();
+            columnHeader1 = new ColumnHeader();
+            columnHeader5 = new ColumnHeader();
+            columnHeader8 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
+            lvConditionalBool = new ctlListViewColored();
+            columnHeader4 = new ColumnHeader();
+            lvConditionalType = new ctlListViewColored();
+            columnHeader3 = new ColumnHeader();
+            lvSubConditional = new ctlListViewColored();
+            columnHeader2 = new ColumnHeader();
+            btnOkay = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            panel1 = new System.Windows.Forms.Panel();
+            btnClearFilter = new System.Windows.Forms.Button();
+            tbFilter = new System.Windows.Forms.TextBox();
+            groupBox2.SuspendLayout();
+            panelLinkType.SuspendLayout();
+            panel1.SuspendLayout();
+            SuspendLayout();
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(panelLinkType);
+            groupBox2.Controls.Add(lvConditionalOp);
+            groupBox2.Controls.Add(removeConditional);
+            groupBox2.Controls.Add(addConditional);
+            groupBox2.Controls.Add(lvActiveConditionals);
+            groupBox2.Controls.Add(lvConditionalBool);
+            groupBox2.Controls.Add(lvConditionalType);
+            groupBox2.Controls.Add(lvSubConditional);
+            groupBox2.Location = new System.Drawing.Point(13, 0);
+            groupBox2.Margin = new Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(1284, 483);
+            groupBox2.TabIndex = 161;
+            groupBox2.TabStop = false;
+            // 
+            // panelLinkType
+            // 
+            panelLinkType.BackColor = System.Drawing.Color.FromArgb(79, 87, 93);
+            panelLinkType.Controls.Add(rbLinkTypeOr);
+            panelLinkType.Controls.Add(rbLinkTypeAnd);
+            panelLinkType.Controls.Add(label1);
+            panelLinkType.Location = new System.Drawing.Point(657, 291);
+            panelLinkType.Name = "panelLinkType";
+            panelLinkType.Size = new System.Drawing.Size(181, 117);
+            panelLinkType.TabIndex = 167;
+            // 
+            // rbLinkTypeOr
+            // 
+            rbLinkTypeOr.AutoSize = true;
+            rbLinkTypeOr.Location = new System.Drawing.Point(31, 71);
+            rbLinkTypeOr.Name = "rbLinkTypeOr";
+            rbLinkTypeOr.Size = new System.Drawing.Size(41, 20);
+            rbLinkTypeOr.TabIndex = 2;
+            rbLinkTypeOr.TabStop = true;
+            rbLinkTypeOr.Text = "OR";
+            rbLinkTypeOr.UseVisualStyleBackColor = true;
+            rbLinkTypeOr.CheckedChanged += rbLinkTypeOr_CheckedChanged;
+            // 
+            // rbLinkTypeAnd
+            // 
+            rbLinkTypeAnd.AutoSize = true;
+            rbLinkTypeAnd.Location = new System.Drawing.Point(31, 45);
+            rbLinkTypeAnd.Name = "rbLinkTypeAnd";
+            rbLinkTypeAnd.Size = new System.Drawing.Size(50, 20);
+            rbLinkTypeAnd.TabIndex = 1;
+            rbLinkTypeAnd.TabStop = true;
+            rbLinkTypeAnd.Text = "AND";
+            rbLinkTypeAnd.UseVisualStyleBackColor = true;
+            rbLinkTypeAnd.CheckedChanged += rbLinkTypeAnd_CheckedChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(14, 15);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(112, 16);
+            label1.TabIndex = 0;
+            label1.Text = "Link condition with:";
             // 
             // lvConditionalOp
             // 
-            this.lvConditionalOp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader7});
-            this.lvConditionalOp.FullRowSelect = true;
-            this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
-            this.lvConditionalOp.Location = new System.Drawing.Point(537, 16);
-            this.lvConditionalOp.LostFocusItem = -1;
-            this.lvConditionalOp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lvConditionalOp.MultiSelect = false;
-            this.lvConditionalOp.Name = "lvConditionalOp";
-            this.lvConditionalOp.OwnerDraw = true;
-            this.lvConditionalOp.Size = new System.Drawing.Size(112, 95);
-            this.lvConditionalOp.TabIndex = 166;
-            this.lvConditionalOp.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalOp.View = System.Windows.Forms.View.Details;
-            this.lvConditionalOp.Visible = false;
-            this.lvConditionalOp.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalOp.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalOp.Leave += new System.EventHandler(this.ListView_Leave);
+            lvConditionalOp.Columns.AddRange(new ColumnHeader[] { columnHeader7 });
+            lvConditionalOp.FullRowSelect = true;
+            lvConditionalOp.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] { listViewItem1, listViewItem2, listViewItem3 });
+            lvConditionalOp.Location = new System.Drawing.Point(537, 16);
+            lvConditionalOp.LostFocusItem = -1;
+            lvConditionalOp.Margin = new Padding(4, 3, 4, 3);
+            lvConditionalOp.MultiSelect = false;
+            lvConditionalOp.Name = "lvConditionalOp";
+            lvConditionalOp.OwnerDraw = true;
+            lvConditionalOp.Size = new System.Drawing.Size(112, 95);
+            lvConditionalOp.TabIndex = 166;
+            lvConditionalOp.UseCompatibleStateImageBehavior = false;
+            lvConditionalOp.View = View.Details;
+            lvConditionalOp.Visible = false;
+            lvConditionalOp.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvConditionalOp.DrawItem += ListView_DrawItem;
+            lvConditionalOp.Leave += ListView_Leave;
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "Stack is?";
-            this.columnHeader7.Width = 81;
+            columnHeader7.Text = "Stack is?";
+            columnHeader7.Width = 81;
             // 
             // removeConditional
             // 
-            this.removeConditional.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
-            this.removeConditional.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.removeConditional.Location = new System.Drawing.Point(657, 237);
-            this.removeConditional.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.removeConditional.Name = "removeConditional";
-            this.removeConditional.Size = new System.Drawing.Size(181, 33);
-            this.removeConditional.TabIndex = 165;
-            this.removeConditional.Text = "<= Remove Condition";
-            this.removeConditional.UseVisualStyleBackColor = false;
-            this.removeConditional.Click += new System.EventHandler(this.removeConditional_Click);
+            removeConditional.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            removeConditional.FlatStyle = FlatStyle.Popup;
+            removeConditional.Location = new System.Drawing.Point(657, 237);
+            removeConditional.Margin = new Padding(4, 3, 4, 3);
+            removeConditional.Name = "removeConditional";
+            removeConditional.Size = new System.Drawing.Size(181, 33);
+            removeConditional.TabIndex = 165;
+            removeConditional.Text = "<= Remove Condition";
+            removeConditional.UseVisualStyleBackColor = false;
+            removeConditional.Click += removeConditional_Click;
             // 
             // addConditional
             // 
-            this.addConditional.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(78)))), ((int)(((byte)(237)))));
-            this.addConditional.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.addConditional.Location = new System.Drawing.Point(657, 196);
-            this.addConditional.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.addConditional.Name = "addConditional";
-            this.addConditional.Size = new System.Drawing.Size(181, 33);
-            this.addConditional.TabIndex = 164;
-            this.addConditional.Text = "Add Condition =>";
-            this.addConditional.UseVisualStyleBackColor = false;
-            this.addConditional.Click += new System.EventHandler(this.addConditional_Click);
+            addConditional.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
+            addConditional.FlatStyle = FlatStyle.Popup;
+            addConditional.Location = new System.Drawing.Point(657, 196);
+            addConditional.Margin = new Padding(4, 3, 4, 3);
+            addConditional.Name = "addConditional";
+            addConditional.Size = new System.Drawing.Size(181, 33);
+            addConditional.TabIndex = 164;
+            addConditional.Text = "Add Condition =>";
+            addConditional.UseVisualStyleBackColor = false;
+            addConditional.Click += addConditional_Click;
             // 
             // lvActiveConditionals
             // 
-            this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader8,
-            this.columnHeader6});
-            this.lvActiveConditionals.FullRowSelect = true;
-            this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvActiveConditionals.Location = new System.Drawing.Point(845, 16);
-            this.lvActiveConditionals.LostFocusItem = -1;
-            this.lvActiveConditionals.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lvActiveConditionals.MultiSelect = false;
-            this.lvActiveConditionals.Name = "lvActiveConditionals";
-            this.lvActiveConditionals.Size = new System.Drawing.Size(432, 460);
-            this.lvActiveConditionals.TabIndex = 163;
-            this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
-            this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
+            lvActiveConditionals.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader5, columnHeader8, columnHeader6 });
+            lvActiveConditionals.FullRowSelect = true;
+            lvActiveConditionals.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvActiveConditionals.Location = new System.Drawing.Point(845, 16);
+            lvActiveConditionals.LostFocusItem = -1;
+            lvActiveConditionals.Margin = new Padding(4, 3, 4, 3);
+            lvActiveConditionals.MultiSelect = false;
+            lvActiveConditionals.Name = "lvActiveConditionals";
+            lvActiveConditionals.Size = new System.Drawing.Size(432, 460);
+            lvActiveConditionals.TabIndex = 163;
+            lvActiveConditionals.UseCompatibleStateImageBehavior = false;
+            lvActiveConditionals.View = View.Details;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "";
+            columnHeader1.Width = 50;
             // 
             // columnHeader5
             // 
-            this.columnHeader5.Text = "Active Conditional";
-            this.columnHeader5.Width = 138;
+            columnHeader5.Text = "Active Conditional";
+            columnHeader5.Width = 260;
             // 
             // columnHeader8
             // 
-            this.columnHeader8.Text = "";
-            this.columnHeader8.Width = 27;
+            columnHeader8.Text = "";
+            columnHeader8.Width = 27;
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Value";
-            this.columnHeader6.Width = 46;
+            columnHeader6.Text = "Value";
+            columnHeader6.Width = 46;
             // 
             // lvConditionalBool
             // 
-            this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4});
-            this.lvConditionalBool.FullRowSelect = true;
-            this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalBool.Location = new System.Drawing.Point(537, 117);
-            this.lvConditionalBool.LostFocusItem = -1;
-            this.lvConditionalBool.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lvConditionalBool.MultiSelect = false;
-            this.lvConditionalBool.Name = "lvConditionalBool";
-            this.lvConditionalBool.OwnerDraw = true;
-            this.lvConditionalBool.Size = new System.Drawing.Size(112, 359);
-            this.lvConditionalBool.TabIndex = 162;
-            this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalBool.View = System.Windows.Forms.View.Details;
-            this.lvConditionalBool.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalBool.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalBool.Leave += new System.EventHandler(this.ListView_Leave);
+            lvConditionalBool.Columns.AddRange(new ColumnHeader[] { columnHeader4 });
+            lvConditionalBool.FullRowSelect = true;
+            lvConditionalBool.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvConditionalBool.Location = new System.Drawing.Point(537, 117);
+            lvConditionalBool.LostFocusItem = -1;
+            lvConditionalBool.Margin = new Padding(4, 3, 4, 3);
+            lvConditionalBool.MultiSelect = false;
+            lvConditionalBool.Name = "lvConditionalBool";
+            lvConditionalBool.OwnerDraw = true;
+            lvConditionalBool.Size = new System.Drawing.Size(112, 359);
+            lvConditionalBool.TabIndex = 162;
+            lvConditionalBool.UseCompatibleStateImageBehavior = false;
+            lvConditionalBool.View = View.Details;
+            lvConditionalBool.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvConditionalBool.DrawItem += ListView_DrawItem;
+            lvConditionalBool.Leave += ListView_Leave;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Conditional Boolean";
-            this.columnHeader4.Width = 81;
+            columnHeader4.Text = "Conditional Boolean";
+            columnHeader4.Width = 81;
             // 
             // lvConditionalType
             // 
-            this.lvConditionalType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3});
-            this.lvConditionalType.FullRowSelect = true;
-            this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalType.Location = new System.Drawing.Point(7, 16);
-            this.lvConditionalType.LostFocusItem = -1;
-            this.lvConditionalType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lvConditionalType.MultiSelect = false;
-            this.lvConditionalType.Name = "lvConditionalType";
-            this.lvConditionalType.OwnerDraw = true;
-            this.lvConditionalType.Size = new System.Drawing.Size(135, 460);
-            this.lvConditionalType.TabIndex = 161;
-            this.lvConditionalType.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalType.View = System.Windows.Forms.View.Details;
-            this.lvConditionalType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvConditionalType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
-            this.lvConditionalType.Leave += new System.EventHandler(this.ListView_Leave);
+            lvConditionalType.Columns.AddRange(new ColumnHeader[] { columnHeader3 });
+            lvConditionalType.FullRowSelect = true;
+            lvConditionalType.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvConditionalType.Location = new System.Drawing.Point(7, 16);
+            lvConditionalType.LostFocusItem = -1;
+            lvConditionalType.Margin = new Padding(4, 3, 4, 3);
+            lvConditionalType.MultiSelect = false;
+            lvConditionalType.Name = "lvConditionalType";
+            lvConditionalType.OwnerDraw = true;
+            lvConditionalType.Size = new System.Drawing.Size(135, 460);
+            lvConditionalType.TabIndex = 161;
+            lvConditionalType.UseCompatibleStateImageBehavior = false;
+            lvConditionalType.View = View.Details;
+            lvConditionalType.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvConditionalType.DrawItem += ListView_DrawItem;
+            lvConditionalType.ItemSelectionChanged += lvConditionalType_SelectionChanged;
+            lvConditionalType.Leave += ListView_Leave;
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Effect Conditional";
-            this.columnHeader3.Width = 102;
+            columnHeader3.Text = "Effect Conditional";
+            columnHeader3.Width = 102;
             // 
             // lvSubConditional
             // 
-            this.lvSubConditional.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this.lvSubConditional.FullRowSelect = true;
-            this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSubConditional.Location = new System.Drawing.Point(149, 16);
-            this.lvSubConditional.LostFocusItem = -1;
-            this.lvSubConditional.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lvSubConditional.MultiSelect = false;
-            this.lvSubConditional.Name = "lvSubConditional";
-            this.lvSubConditional.OwnerDraw = true;
-            this.lvSubConditional.Size = new System.Drawing.Size(380, 460);
-            this.lvSubConditional.TabIndex = 160;
-            this.lvSubConditional.UseCompatibleStateImageBehavior = false;
-            this.lvSubConditional.View = System.Windows.Forms.View.Details;
-            this.lvSubConditional.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvSubConditional.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
-            this.lvSubConditional.Leave += new System.EventHandler(this.ListView_Leave);
-            this.lvSubConditional.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvSubConditional_MouseClick);
+            lvSubConditional.Columns.AddRange(new ColumnHeader[] { columnHeader2 });
+            lvSubConditional.FullRowSelect = true;
+            lvSubConditional.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvSubConditional.Location = new System.Drawing.Point(149, 16);
+            lvSubConditional.LostFocusItem = -1;
+            lvSubConditional.Margin = new Padding(4, 3, 4, 3);
+            lvSubConditional.MultiSelect = false;
+            lvSubConditional.Name = "lvSubConditional";
+            lvSubConditional.OwnerDraw = true;
+            lvSubConditional.Size = new System.Drawing.Size(380, 460);
+            lvSubConditional.TabIndex = 160;
+            lvSubConditional.UseCompatibleStateImageBehavior = false;
+            lvSubConditional.View = View.Details;
+            lvSubConditional.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvSubConditional.DrawItem += ListView_DrawItem;
+            lvSubConditional.ItemSelectionChanged += lvSubConditional_SelectionChanged;
+            lvSubConditional.Leave += ListView_Leave;
+            lvSubConditional.MouseClick += lvSubConditional_MouseClick;
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Sub-Conditional Attribute";
-            this.columnHeader2.Width = 202;
+            columnHeader2.Text = "Sub-Conditional Attribute";
+            columnHeader2.Width = 320;
             // 
             // btnOkay
             // 
-            this.btnOkay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(78)))), ((int)(((byte)(237)))));
-            this.btnOkay.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOkay.Location = new System.Drawing.Point(1108, 490);
-            this.btnOkay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnOkay.Name = "btnOkay";
-            this.btnOkay.Size = new System.Drawing.Size(88, 43);
-            this.btnOkay.TabIndex = 162;
-            this.btnOkay.Text = "Okay";
-            this.btnOkay.UseVisualStyleBackColor = false;
-            this.btnOkay.Click += new System.EventHandler(this.btnOkay_Click);
+            btnOkay.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
+            btnOkay.DialogResult = DialogResult.OK;
+            btnOkay.FlatStyle = FlatStyle.Popup;
+            btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnOkay.Location = new System.Drawing.Point(1108, 490);
+            btnOkay.Margin = new Padding(4, 3, 4, 3);
+            btnOkay.Name = "btnOkay";
+            btnOkay.Size = new System.Drawing.Size(88, 43);
+            btnOkay.TabIndex = 162;
+            btnOkay.Text = "Okay";
+            btnOkay.UseVisualStyleBackColor = false;
+            btnOkay.Click += btnOkay_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnCancel.Location = new System.Drawing.Point(1203, 490);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(88, 43);
-            this.btnCancel.TabIndex = 163;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.FlatStyle = FlatStyle.Popup;
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnCancel.Location = new System.Drawing.Point(1203, 490);
+            btnCancel.Margin = new Padding(4, 3, 4, 3);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(88, 43);
+            btnCancel.TabIndex = 163;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Click += btnCancel_Click;
             // 
             // panel1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.btnOkay);
-            this.panel1.Controls.Add(this.groupBox2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1310, 542);
-            this.panel1.TabIndex = 164;
+            panel1.BorderStyle = BorderStyle.Fixed3D;
+            panel1.Controls.Add(btnClearFilter);
+            panel1.Controls.Add(tbFilter);
+            panel1.Controls.Add(btnCancel);
+            panel1.Controls.Add(btnOkay);
+            panel1.Controls.Add(groupBox2);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Margin = new Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(1310, 542);
+            panel1.TabIndex = 164;
+            // 
+            // btnClearFilter
+            // 
+            btnClearFilter.BackColor = System.Drawing.Color.FromArgb(46, 56, 171);
+            btnClearFilter.FlatStyle = FlatStyle.Popup;
+            btnClearFilter.Location = new System.Drawing.Point(550, 494);
+            btnClearFilter.Margin = new Padding(4, 3, 4, 3);
+            btnClearFilter.Name = "btnClearFilter";
+            btnClearFilter.Size = new System.Drawing.Size(112, 23);
+            btnClearFilter.TabIndex = 165;
+            btnClearFilter.Text = "Clear Filter";
+            btnClearFilter.UseVisualStyleBackColor = false;
+            btnClearFilter.Click += btnClearFilter_Click;
+            // 
+            // tbFilter
+            // 
+            tbFilter.Location = new System.Drawing.Point(162, 494);
+            tbFilter.Name = "tbFilter";
+            tbFilter.Size = new System.Drawing.Size(380, 23);
+            tbFilter.TabIndex = 164;
+            tbFilter.TextChanged += tbFilter_TextChanged;
             // 
             // frmEffectConditionals
             // 
-            this.AcceptButton = this.btnOkay;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(170)))), ((int)(((byte)(181)))));
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(1310, 542);
-            this.Controls.Add(this.panel1);
-            this.ForeColor = System.Drawing.Color.Azure;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "frmEffectConditionals";
-            this.Text = "Effect Conditions";
-            this.groupBox2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AcceptButton = btnOkay;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.FromArgb(153, 170, 181);
+            CancelButton = btnCancel;
+            ClientSize = new System.Drawing.Size(1310, 542);
+            Controls.Add(panel1);
+            ForeColor = System.Drawing.Color.Azure;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "frmEffectConditionals";
+            Text = "Effect Conditions";
+            groupBox2.ResumeLayout(false);
+            panelLinkType.ResumeLayout(false);
+            panelLinkType.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -321,5 +397,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.Button btnOkay;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelLinkType;
+        private System.Windows.Forms.RadioButton rbLinkTypeOr;
+        private System.Windows.Forms.RadioButton rbLinkTypeAnd;
+        private System.Windows.Forms.Label label1;
+        private ColumnHeader columnHeader1;
+        private System.Windows.Forms.Button btnClearFilter;
+        private System.Windows.Forms.TextBox tbFilter;
     }
 }

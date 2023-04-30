@@ -147,6 +147,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Check if power taken in pool
             for (i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
+                if (MidsContext.Character.CurrentBuild.Powers[i] == null)
+                {
+                    continue;
+                }
+
                 if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset == MidsContext.Character.Powersets[idx].nID)
                 {
                     return idx;
@@ -478,8 +483,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                    (valueBase > 0
                        ? $"\r\nBase: {(plusSignEnabled && valueBase > 0 ? "+" : "")}{valueBase:##0.##}{percentageSign}{movementUnit}"
                        : "") +
-                   (statName == "Damage"
-                       ? $"\r\nEnh: {value - valueBase}{percentageSign}"
+                   (statName is "Damage" or "Haste" || valueBase > 0
+                       ? $"\r\n(Enh: {value - valueBase:##0.##}{percentageSign})"
                        : "");
         }
 
@@ -535,8 +540,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 graphDef.AddItemPair(damageVectorsNames[i],
                     $"{displayStats.Defense(i):##0.##}%",
-                    displayStats.Defense(i),
-                    displayStats.Defense(i),
+                    Math.Max(0, displayStats.Defense(i)),
+                    Math.Max(0, displayStats.Defense(i)),
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
             }
 
@@ -554,10 +559,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 var resValue = displayStats.DamageResistance(i, false);
                 var resValueUncapped = displayStats.DamageResistance(i, true);
                 graphRes.AddItemPair(damageVectorsNames[i], $"{resValue:##0.##}%",
-                    resValue,
-                    resValue,
-                    resValueUncapped,
-                    resValueUncapped > resValue
+                    Math.Max(0, resValue),
+                    Math.Max(0, resValue),
+                    Math.Max(0, resValueUncapped),
+                    resValueUncapped > resValue & resValue > 0
                         ? $"{resValueUncapped:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
@@ -571,10 +576,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             const float regenBase = 100;
             graphHP.AddItemPair("Regeneration",
                 $"{regenValue:###0.##}%",
-                regenBase,
-                regenValue,
-                regenValueUncapped,
-                (regenValueUncapped > regenValue
+                Math.Max(0, regenBase),
+                Math.Max(0, regenValue),
+                Math.Max(0, regenValueUncapped),
+                (regenValueUncapped > regenValue & regenValue > 0
                     ? $"{regenValueUncapped:##0.##}% Regeneration, capped at {regenValue:##0.##}%"
                     : $"{regenValue:##0.##}% Regeneration"
                 ) +
@@ -586,11 +591,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var hpBase = MidsContext.Character.Archetype.Hitpoints;
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
             graphHP.AddItemPair("Max HP", $"{hpValue:###0.##}",
-                hpBase,
-                hpValue,
-                hpValueUncapped,
-                absorbValue,
-                (hpValueUncapped > hpValue
+                Math.Max(0, hpBase),
+                Math.Max(0, hpValue),
+                Math.Max(0, hpValueUncapped),
+                Math.Max(0, absorbValue),
+                (hpValueUncapped > hpValue & hpValue > 0
                     ? $"{hpValueUncapped:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
                     : $"{hpValue:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
 
@@ -608,10 +613,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var endRecValueUncapped = displayStats.EnduranceRecoveryNumericUncapped;
             var endRecBase = MidsContext.Character.Archetype.BaseRecovery * displayStats.EnduranceMaxEnd / 60f;
             graphEnd.AddItemPair("End Rec", $"{endRecValue:##0.##}/s",
-                endRecBase,
-                endRecValue,
-                endRecValueUncapped,
-                (endRecValueUncapped > endRecValue
+                Math.Max(0, endRecBase),
+                Math.Max(0, endRecValue),
+                Math.Max(0, endRecValueUncapped),
+                (endRecValueUncapped > endRecValue & endRecValue > 0
                     ? $"{endRecValueUncapped:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(true):##0.##}%), capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
                     : $"{endRecValue:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
                 ) +
@@ -642,10 +647,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var runSpdUncapped = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
             graphMovement.AddItemPair("Run Speed",
                 $"{runSpdValue:##0.##} mph",
-                runSpdBase,
-                runSpdValue,
-                runSpdUncapped,
-                (runSpdUncapped > runSpdValue
+                Math.Max(0, runSpdBase),
+                Math.Max(0, runSpdValue),
+                Math.Max(0, runSpdUncapped),
+                (runSpdUncapped > runSpdValue & runSpdValue > 0
                     ? $"{runSpdUncapped:##0.##} {movementUnitSpeed} Run Speed, capped at {runSpdValue:##0.##} {movementUnitSpeed}"
                     : $"{runSpdValue:##0.##} {movementUnitSpeed} Run Speed"
                 ) +
@@ -660,10 +665,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var jumpSpdUncapped = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
             graphMovement.AddItemPair("Jump Speed",
                 $"{jumpSpdValue:##0.##} mph",
-                jumpSpdBase,
-                jumpSpdValue,
-                jumpSpdUncapped,
-                (jumpSpdUncapped > jumpSpdValue
+                Math.Max(0, jumpSpdBase),
+                Math.Max(0, jumpSpdValue),
+                Math.Max(0, jumpSpdUncapped),
+                (jumpSpdUncapped > jumpSpdValue & jumpSpdValue > 0
                     ? $"{jumpSpdUncapped:##0.##} {movementUnitSpeed} Jump Speed, capped at {jumpSpdValue:##0.##} {movementUnitSpeed}"
                     : $"{jumpSpdValue:##0.##} {movementUnitSpeed} Jump Speed"
                 ) +
@@ -678,8 +683,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var jumpHeightValue = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.AddItemPair("Jump Height",
                 $"{jumpHeightValue:##0.##} ft",
-                jumpHeightBase,
-                jumpHeightValue,
+                Math.Max(0, jumpHeightBase),
+                Math.Max(0, jumpHeightValue),
                 $"{jumpHeightValue:##0.##} {movementUnitDistance} Jump Height" +
                 (jumpHeightBase > 0
                     ? $"\r\nBase: {jumpHeightBase:##0.##} {movementUnitDistance}"
@@ -694,10 +699,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var flySpeedUncapped = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
             graphMovement.AddItemPair("Fly Speed",
                 $"{flySpeedValue:##0.##} mph",
-                flySpeedBase,
-                flySpeedValue,
-                flySpeedUncapped,
-                (flySpeedUncapped > flySpeedValue
+                Math.Max(0, flySpeedBase),
+                Math.Max(0, flySpeedValue),
+                Math.Max(0, flySpeedUncapped),
+                (flySpeedUncapped > flySpeedValue & flySpeedValue > 0
                     ? $"{flySpeedUncapped:##0.##} {movementUnitSpeed} Fly Speed, capped at {flySpeedValue:##0.##} {movementUnitSpeed}"
                     : $"{flySpeedValue:##0.##} {movementUnitSpeed} Fly Speed"
                 ) +
@@ -740,30 +745,30 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphHaste.AddItemPair("Haste",
                 $"{displayStats.BuffHaste(false):##0.##}%",
                 100,
-                displayStats.BuffHaste(false),
-                displayStats.BuffHaste(true),
+                Math.Max(0, displayStats.BuffHaste(false)),
+                Math.Max(0, displayStats.BuffHaste(true)),
                 GenericDataTooltip3(displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true), "Haste"));
 
             graphToHit.Clear();
             graphToHit.AddItemPair("ToHit",
                 $"{displayStats.BuffToHit:##0.##}%",
                 0,
-                displayStats.BuffToHit,
+                Math.Max(0, displayStats.BuffToHit),
                 GenericDataTooltip3(displayStats.BuffToHit, 0, displayStats.BuffToHit, "ToHit", "%", "", true));
 
             graphAccuracy.Clear();
             graphAccuracy.AddItemPair("Accuracy",
                 $"{displayStats.BuffAccuracy:##0.##}%",
                 0,
-                displayStats.BuffAccuracy,
+                Math.Max(0, displayStats.BuffAccuracy),
                 GenericDataTooltip3(displayStats.BuffAccuracy, 0, displayStats.BuffAccuracy, "Accuracy", "%", "", true));
 
             graphDamage.Clear();
             graphDamage.AddItemPair("Damage",
                 $"{displayStats.BuffDamage(false):##0.##}%",
                 100,
-                displayStats.BuffDamage(false),
-                displayStats.BuffDamage(true),
+                Math.Max(0, displayStats.BuffDamage(false)),
+                Math.Max(0, displayStats.BuffDamage(true)),
                 GenericDataTooltip3(displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true), "Damage")
                 );
 
@@ -830,8 +835,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 graphDebuffRes.AddItemPair($"{DebuffEffectsList[i]}",
                     $"{cappedDebuffRes[i]:##0.##}%",
                     0,
-                    cappedDebuffRes[i],
-                    uncappedDebuffRes[i],
+                    Math.Max(0, cappedDebuffRes[i]),
+                    Math.Max(0, uncappedDebuffRes[i]),
                     GenericDataTooltip3(cappedDebuffRes[i], 0, uncappedDebuffRes[i], $"Debuff resistance to {DebuffEffectsList[i]}")
                 );
             }
@@ -847,12 +852,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     continue;
                 }
 
+                var damageVector = damageVectorsNames[i] == "None" ? "Untyped" : damageVectorsNames[i];
                 var elValue = (MidsContext.Character.Totals.Elusivity[i] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100;
-                graphElusivity.AddItemPair(damageVectorsNames[i],
+                graphElusivity.AddItemPair(damageVector,
                     $"{elValue:##0.##}%",
                     0,
-                    elValue,
-                    $"{elValue:##0.##} Elusivity ({damageVectorsNames[i]})");
+                    Math.Max(0, elValue),
+                    $"{elValue:##0.##}% Elusivity ({damageVector})");
             }
 
             graphElusivity.Size = graphElusivity.Size with { Height = Math.Max(graphElusivity.Size.Height, graphElusivity.ContentHeight + graphBottomMargin) };

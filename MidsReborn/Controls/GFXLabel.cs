@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -13,7 +14,7 @@ namespace Mids_Reborn.Controls
     public class GFXLabel : UserControl
     {
         // Token: 0x04000092 RID: 146
-        private ExtendedBitmap bxBuffer;
+        private ExtendedBitmap? bxBuffer;
 
         // Token: 0x04000094 RID: 148
         private ContentAlignment myAlign;
@@ -35,6 +36,8 @@ namespace Mids_Reborn.Controls
             Paint += GFXlabel_Paint;
             InitializeComponent();
         }
+
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         // Token: 0x17000050 RID: 80
         // (get) Token: 0x0600012E RID: 302 RVA: 0x0000AF38 File Offset: 0x00009138
@@ -138,8 +141,8 @@ namespace Mids_Reborn.Controls
                 num3 = 1f;
             }
 
-            //Font font = new Font(Font.Name, Font.Size * num, Font.Style, GraphicsUnit.Point, 0);
-            var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 1);
+            var font = new Font(Font.Name, Font.Size * num, Font.Style, GraphicsUnit.Point, 0);
+            //var font = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 1);
             layoutRectangle.Height = font.GetHeight() * num3;
             var contentAlignment = myAlign;
             switch (contentAlignment)

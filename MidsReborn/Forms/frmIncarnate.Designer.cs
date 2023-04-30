@@ -71,7 +71,7 @@ namespace Mids_Reborn.Forms
             this.PopInfo.BXHeight = 1024;
             this.PopInfo.ColumnPosition = 0.5f;
             this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.PopInfo.InternalPadding = 3;
             this.PopInfo.Location = new System.Drawing.Point(0, 0);
@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms
 
             this.lblLock.BackColor = System.Drawing.Color.Red;
             this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.lblLock.ForeColor = System.Drawing.Color.White;
             this.lblLock.Location = new System.Drawing.Point(12, 473);
             this.lblLock.Name = "lblLock";
@@ -105,7 +105,7 @@ namespace Mids_Reborn.Forms
 
             this.LLRight.AutoSize = true;
             this.LLRight.Expandable = true;
-            this.LLRight.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.LLRight.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.LLRight.HighVis = true;
             this.LLRight.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.LLRight.Location = new System.Drawing.Point(218, 0);
@@ -124,7 +124,7 @@ namespace Mids_Reborn.Forms
 
             this.LLLeft.AutoSize = true;
             this.LLLeft.Expandable = true;
-            this.LLLeft.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.LLLeft.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.LLLeft.HighVis = true;
             this.LLLeft.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.LLLeft.Location = new System.Drawing.Point(0, 0);
@@ -142,7 +142,7 @@ namespace Mids_Reborn.Forms
             this.LLLeft.TabIndex = 108;
 
             this.OmegaButton.Checked = false;
-            this.OmegaButton.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.OmegaButton.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.OmegaButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.OmegaButton.Location = new System.Drawing.Point(236, 68);
             this.OmegaButton.Name = "OmegaButton";
@@ -154,7 +154,7 @@ namespace Mids_Reborn.Forms
             this.OmegaButton.Enabled = false;
 
             this.VitaeButton.Checked = false;
-            this.VitaeButton.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.VitaeButton.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.VitaeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.VitaeButton.Location = new System.Drawing.Point(125, 68);
             this.VitaeButton.Name = "VitaeButton";
@@ -166,7 +166,7 @@ namespace Mids_Reborn.Forms
             this.VitaeButton.Enabled = false;
 
             this.StanceButton.Checked = false;
-            this.StanceButton.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.StanceButton.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.StanceButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.StanceButton.Location = new System.Drawing.Point(347, 40);
             this.StanceButton.Name = "StanceButton";
@@ -178,7 +178,7 @@ namespace Mids_Reborn.Forms
             this.StanceButton.Enabled = false;
 
             this.GenesisButton.Checked = false;
-            this.GenesisButton.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.GenesisButton.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.GenesisButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.GenesisButton.Location = new System.Drawing.Point(236, 40);
             this.GenesisButton.Name = "GenesisButton";
@@ -190,7 +190,7 @@ namespace Mids_Reborn.Forms
             this.GenesisButton.Enabled = false;
 
             this.hybridBtn.Checked = false;
-            this.hybridBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.hybridBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.hybridBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.hybridBtn.Location = new System.Drawing.Point(125, 40);
             this.hybridBtn.Name = "hybridBtn";
@@ -201,7 +201,7 @@ namespace Mids_Reborn.Forms
             this.hybridBtn.Toggle = true;
 
             this.destinyBtn.Checked = false;
-            this.destinyBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.destinyBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.destinyBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.destinyBtn.Location = new System.Drawing.Point(14, 40);
             this.destinyBtn.Name = "destinyBtn";
@@ -212,7 +212,7 @@ namespace Mids_Reborn.Forms
             this.destinyBtn.Toggle = true;
 
             this.loreBtn.Checked = false;
-            this.loreBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.loreBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.loreBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.loreBtn.Location = new System.Drawing.Point(347, 12);
             this.loreBtn.Name = "loreBtn";
@@ -223,7 +223,7 @@ namespace Mids_Reborn.Forms
             this.loreBtn.Toggle = true;
 
             this.interfaceBtn.Checked = false;
-            this.interfaceBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.interfaceBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.interfaceBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.interfaceBtn.Location = new System.Drawing.Point(236, 12);
             this.interfaceBtn.Name = "interfaceBtn";
@@ -234,7 +234,7 @@ namespace Mids_Reborn.Forms
             this.interfaceBtn.Toggle = true;
 
             this.judgementBtn.Checked = false;
-            this.judgementBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.judgementBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.judgementBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.judgementBtn.Location = new System.Drawing.Point(125, 12);
             this.judgementBtn.Name = "judgementBtn";
@@ -245,7 +245,7 @@ namespace Mids_Reborn.Forms
             this.judgementBtn.Toggle = true;
 
             this.alphaBtn.Checked = true;
-            this.alphaBtn.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.alphaBtn.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.alphaBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.alphaBtn.Location = new System.Drawing.Point(14, 12);
             this.alphaBtn.Name = "alphaBtn";
@@ -256,7 +256,7 @@ namespace Mids_Reborn.Forms
             this.alphaBtn.Toggle = true;
 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(181, 473);
             this.ibClose.Name = "ibClose";
@@ -283,7 +283,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add((System.Windows.Forms.Control)this.lblLock);
             this.Controls.Add((System.Windows.Forms.Control)this.Panel1);
             this.Controls.Add((System.Windows.Forms.Control)this.ibClose);
-            this.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

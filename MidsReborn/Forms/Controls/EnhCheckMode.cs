@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using Mids_Reborn.Core.Base.Master_Classes;
 using System.Windows.Forms;
@@ -97,7 +98,6 @@ namespace Mids_Reborn.Forms.Controls
                 Refresh();
                 MidsContext.EnhCheckMode = true;
                 _myParent.UpdateEnhCheckModeToolStrip();
-                
                 return;
             }
 
@@ -144,11 +144,6 @@ namespace Mids_Reborn.Forms.Controls
 
         private void lblEnhObtained_MouseClick(object sender, MouseEventArgs e)
         {
-            if (MidsContext.Character == null)
-            {
-                return;
-            }
-
             if (MidsContext.Character.CurrentBuild == null)
             {
                 return;
@@ -159,11 +154,10 @@ namespace Mids_Reborn.Forms.Controls
                 case MouseButtons.Left:
                     foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
                     {
-                        if (pe.Power == null)
+                        if (pe?.Power == null)
                         {
                             continue;
                         }
-
                         foreach (var s in pe.Slots)
                         {
                             s.Enhancement.Obtained = !s.Enhancement.Obtained;

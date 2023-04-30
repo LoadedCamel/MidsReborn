@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -135,6 +136,24 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
+        public static async Task<List<string>> LoadButtons()
+        {
+            var cSource = new TaskCompletionSource<List<string>>();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            var buttonImages = Images.Where(x => x.FileName.Contains("pSlot")).ToList();
+            var retList = buttonImages.Select(buttonImage => buttonImage.Path).ToList();
+            cSource.TrySetResult(retList);
+            return await cSource.Task;
+        }
+
+        public static async Task<string> LoadNewSlot()
+        {
+            var cSource = new TaskCompletionSource<string>();
+            var slotImage = Images.FirstOrDefault(x => x.FileName.Contains("New"));
+            cSource.TrySetResult(slotImage.Path);
+            return await cSource.Task;
+        }
+
         public static async Task<List<string>> LoadArchetypes()
         {
             var cSource = new TaskCompletionSource<List<string>>();
@@ -142,14 +161,41 @@ namespace Mids_Reborn.Core
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            for (var index = 0; index <= DatabaseAPI.Database.Classes.Length - 1; ++index)
+            foreach (var c in DatabaseAPI.Database.Classes)
             {
-                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Classes[index].ClassName}.png").Path;
+                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;
                 }
-                retList.Add(path);
+                if (retList.All(p => p != path))
+                {
+                    retList.Add(path);
+                }
+            }
+
+            cSource.TrySetResult(retList);
+            return await cSource.Task;
+        }
+
+        public static async Task<List<string>> LoadOrigins()
+        {
+            var cSource = new TaskCompletionSource<List<string>>();
+            var retList = new List<string>();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            var images = Images.Where(x => x.Directory == "Origins").ToList();
+            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            foreach (var o in DatabaseAPI.Database.Origins)
+            {
+                var path = images.FirstOrDefault(i => i.FileName == $"{o.Name}.png").Path;
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    path = unknown;
+                }
+                if (retList.All(p => p != path))
+                {
+                    retList.Add(path);
+                }
             }
 
             cSource.TrySetResult(retList);
@@ -171,18 +217,16 @@ namespace Mids_Reborn.Core
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            retList.Add(unknown);
-            for (var index = 0; index <= DatabaseAPI.Database.Powersets.Length - 1; ++index)
+            if (retList.Any(p => p != unknown))
             {
-                var path = powersetImages.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Powersets[index].ImageName}").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    continue;
-                }
-                retList.Add(path);
+                retList.Add(unknown); 
             }
+            retList.AddRange(DatabaseAPI.Database.Powersets
+                .Select(ps => powersetImages.FirstOrDefault(i => i.FileName == $"{ps.ImageName}").Path)
+                .Where(path => !string.IsNullOrWhiteSpace(path)));
 
             cSource.TrySetResult(retList);
+
             return await cSource.Task;
         }
 
@@ -193,10 +237,10 @@ namespace Mids_Reborn.Core
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var enhancementImages = Images.Where(x => x.Directory == "Enhancements").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            for (var index = 0; index <= DatabaseAPI.Database.EnhancementSets.Count - 1; ++index)
+            foreach (var es in DatabaseAPI.Database.EnhancementSets)
             {
                 //Debug.WriteLine(DatabaseAPI.Database.EnhancementSets[index].Image);
-                var path = enhancementImages.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.EnhancementSets[index].Image).Path;
+                var path = enhancementImages.FirstOrDefault(i => i.FileName == es.Image).Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;
@@ -222,7 +266,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Archetypes = ExtendedBitmap(DatabaseAPI.Database.Classes.Length * IconSmall, IconSmall);
-            for (var index = 0; index <= DatabaseAPI.Database.Classes.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             {
                 var x = index * IconSmall;
                 var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Classes[index].ClassName}.png").Path;
@@ -250,7 +294,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Powersets = ExtendedBitmap(DatabaseAPI.Database.Powersets.Length * IconSmall, IconSmall);
-            for (var index = 0; index <= DatabaseAPI.Database.Powersets.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Powersets.Length; index++)
             {
                 var x = index * IconSmall;
                 var path = images.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.Powersets[index].ImageName).Path;
@@ -277,7 +321,7 @@ namespace Mids_Reborn.Core
         private static async Task LoadOriginImages(IReadOnlyCollection<ImageInfo> images)
         {
             Origins = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconSmall, IconSmall);
-            for (var index = 0; index <= DatabaseAPI.Database.Origins.Count - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
             {
                 var x = index * IconSmall;
                 var path = images.FirstOrDefault(i => i.FileName.Contains(DatabaseAPI.Database.Origins[index].Name)).Path;
@@ -305,7 +349,7 @@ namespace Mids_Reborn.Core
             var incImage = baseImages.FirstOrDefault(i => i.FileName == "Inc.png").Path;
             Classes = ExtendedBitmap(DatabaseAPI.Database.EnhancementClasses.Length * IconLarge, IconLarge);
             var overlayBitmap = new ExtendedBitmap(classImage);
-            for (var index = 0; index <= DatabaseAPI.Database.EnhancementClasses.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
             {
                 if (index >= 27)
                 {
@@ -339,7 +383,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Enhancements = new Bitmap[DatabaseAPI.Database.Enhancements.Length];
-            for (var index = 0; index <= DatabaseAPI.Database.Enhancements.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
             {
                 if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.Enhancements[index].Image))
                 {
@@ -378,7 +422,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Sets = ExtendedBitmap(DatabaseAPI.Database.EnhancementSets.Count * IconLarge, IconLarge);
-            for (var index = 0; index <= DatabaseAPI.Database.EnhancementSets.Count - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.EnhancementSets.Count; index++)
             {
                 var x = index * IconLarge;
                 var path = images.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.EnhancementSets[index].Image).Path;
@@ -419,7 +463,7 @@ namespace Mids_Reborn.Core
 
             var setTypes = DatabaseAPI.Database.SetTypes;
             SetTypes = ExtendedBitmap(setTypes.Count * IconLarge, IconLarge);
-            for (var index = 0; index <= setTypes.Count - 1; ++index)
+            for (var index = 0; index < setTypes.Count; index++)
             {
                 var x = index * IconLarge;
                 var path = images.FirstOrDefault(i => i.FileName == $"{setTypes[index].ShortName}.png").Path;
@@ -452,7 +496,7 @@ namespace Mids_Reborn.Core
             var names1 = Enum.GetNames(typeof(Enums.eType));
             names1[3] = "HamiO";
             EnhTypes = ExtendedBitmap(values1.Length * IconLarge, IconLarge);
-            for (var index = 0; index <= values1.Length - 1; ++index)
+            for (var index = 0; index < values1.Length; index++)
             {
                 var x = index * IconLarge;
                 var path = images.FirstOrDefault(i => i.FileName == $"{names1[index]}.png").Path;
@@ -479,7 +523,7 @@ namespace Mids_Reborn.Core
             var values2 = Enum.GetValues(typeof(Enums.eEnhGrade));
             var names2 = Enum.GetNames(typeof(Enums.eEnhGrade));
             EnhGrades = ExtendedBitmap(values2.Length * IconLarge, IconLarge);
-            for (var index = 0; index <= values2.Length - 1; ++index)
+            for (var index = 0; index < values2.Length; index++)
             {
                 var x = index * IconLarge;
                 var path = images.FirstOrDefault(i => i.FileName == $"{names2[index]}.png").Path;
@@ -509,7 +553,7 @@ namespace Mids_Reborn.Core
             var specialEnhTypes = DatabaseAPI.Database.SpecialEnhancements;
             var specEnhNames = specialEnhTypes.Select(x => x.Name.Replace(" Origin", string.Empty)).ToArray();
             EnhSpecials = ExtendedBitmap(specialEnhTypes.Count * IconLarge, IconLarge);
-            for (var index = 0; index <= specialEnhTypes.Count - 1; ++index)
+            for (var index = 0; index < specialEnhTypes.Count; index++)
             {
                 var x = index * IconLarge;
                 var path = images.FirstOrDefault(i => i.FileName == $"{specEnhNames[index]}.png").Path;
@@ -538,7 +582,7 @@ namespace Mids_Reborn.Core
         private static async Task LoadBorderImages(IReadOnlyCollection<ImageInfo> images)
         {
             Borders = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
-            for (var index = 0; index <= DatabaseAPI.Database.Origins.Count - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
             {
                 var x = index * IconLarge;
                 for (var index2 = 0; index2 <= 5; ++index2)
@@ -821,6 +865,13 @@ namespace Mids_Reborn.Core
         {
             var imageRect = GetImageRect(index);
             return new RectangleF(imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height);
+        }
+
+        public static string UnknownImgPath()
+        {
+            return Images
+                .Where(x => x.IsBase)
+                .FirstOrDefault(i => i.FileName == "Unknown.png").Path;
         }
     }
 }

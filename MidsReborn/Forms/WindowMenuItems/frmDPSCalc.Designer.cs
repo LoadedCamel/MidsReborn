@@ -170,7 +170,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblHeader
             // 
-            this.lblHeader.Font = new System.Drawing.Font("Arial", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblHeader.Location = new System.Drawing.Point(0, 0);
             this.lblHeader.Name = "lblHeader";
@@ -182,7 +182,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // lblDPS
             // 
             this.lblDPS.BackColor = System.Drawing.Color.Black;
-            this.lblDPS.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblDPS.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblDPS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblDPS.Location = new System.Drawing.Point(650, 10);
             this.lblDPS.MinimumSize = new System.Drawing.Size(200, 30);
@@ -194,7 +194,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // lblEPS
             // 
             this.lblEPS.BackColor = System.Drawing.Color.Black;
-            this.lblEPS.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblEPS.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblEPS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblEPS.Location = new System.Drawing.Point(650, 75);
             this.lblEPS.MinimumSize = new System.Drawing.Size(200, 30);
@@ -206,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // lblDPSNum
             // 
             this.lblDPSNum.BackColor = System.Drawing.Color.Black;
-            this.lblDPSNum.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblDPSNum.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblDPSNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblDPSNum.Location = new System.Drawing.Point(660, 40);
             this.lblDPSNum.MinimumSize = new System.Drawing.Size(200, 30);
@@ -218,7 +218,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // lblEPSNum
             // 
             this.lblEPSNum.BackColor = System.Drawing.Color.Black;
-            this.lblEPSNum.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblEPSNum.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblEPSNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblEPSNum.Location = new System.Drawing.Point(660, 105);
             this.lblEPSNum.MinimumSize = new System.Drawing.Size(200, 30);
@@ -243,7 +243,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // tbDPSOutput
             // 
             this.tbDPSOutput.BackColor = System.Drawing.Color.Black;
-            this.tbDPSOutput.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.tbDPSOutput.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.tbDPSOutput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.tbDPSOutput.Location = new System.Drawing.Point(0, 36);
             this.tbDPSOutput.Name = "tbDPSOutput";
@@ -262,7 +262,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibAutoMode
             // 
             this.ibAutoMode.Checked = false;
-            this.ibAutoMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibAutoMode.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibAutoMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibAutoMode.Location = new System.Drawing.Point(123, 445);
             this.ibAutoMode.Name = "ibAutoMode";
@@ -277,7 +277,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibClear
             // 
             this.ibClear.Checked = false;
-            this.ibClear.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClear.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClear.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClear.Location = new System.Drawing.Point(12, 445);
             this.ibClear.Name = "ibClear";
@@ -291,7 +291,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibTopmost
             // 
             this.ibTopmost.Checked = true;
-            this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibTopmost.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibTopmost.Location = new System.Drawing.Point(406, 445);
             this.ibTopmost.Name = "ibTopmost";
@@ -305,7 +305,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibClose
             // 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(517, 445);
             this.ibClose.Name = "ibClose";
@@ -329,7 +329,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.ibClose);
             this.Controls.Add(this.lvPower);
             this.Controls.Add(this.Panel2);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmDPSCalc";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

@@ -8,6 +8,7 @@ namespace Mids_Reborn.Core
 {
     public interface IPower : IComparable
     {
+        bool HasEntity { get; }
         bool HasProcSlotted { get; set; }
         string FullSetName { get; }
 
@@ -212,9 +213,12 @@ namespace Mids_Reborn.Core
         
         float FXGetDamageValue(bool absorb = false);
 
+        string GetDamageTip();
+
         string FXGetDamageString(bool absorb = false);
 
         int[] GetRankedEffects();
+        int[] GetRankedEffects(bool newMode);
 
         int GetDurationEffectID();
 
@@ -297,7 +301,7 @@ namespace Mids_Reborn.Core
 
         void ProcessExecutes();
 
-        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false);
+        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false, bool activeOnly = true);
 
         string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false);
 

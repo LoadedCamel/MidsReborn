@@ -39,33 +39,33 @@ namespace Mids_Reborn.Forms
             // 
             // Label1
             // 
-            this.Label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.Label1.BackColor = System.Drawing.Color.Transparent;
+            this.Label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label1.ForeColor = System.Drawing.Color.Gold;
-            this.Label1.Location = new System.Drawing.Point(52, 0);
-            this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label1.Location = new System.Drawing.Point(0, 0);
+            this.Label1.Margin = new System.Windows.Forms.Padding(55, 0, 55, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(699, 29);
+            this.Label1.Size = new System.Drawing.Size(936, 51);
             this.Label1.TabIndex = 2;
             this.Label1.Text = "Reading data files, please wait.";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmInitializing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = Resources.MRB_Splash_Concept;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(752, 531);
+            this.BackgroundImage = global::MRBResourceLib.Resources.MRB_Splash_Concept;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ClientSize = new System.Drawing.Size(936, 627);
             this.Controls.Add(this.Label1);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Margin = new System.Windows.Forms.Padding(55, 18, 55, 18);
             this.Name = "frmInitializing";
             this.Text = "frmInitializing";
+            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Black;
             this.ResumeLayout(false);
 

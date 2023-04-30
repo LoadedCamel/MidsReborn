@@ -107,7 +107,7 @@ namespace Mids_Reborn.Controls
             set => myIA = value;
         }
 
-        public Bitmap ImageOff
+        public Bitmap? ImageOff
         {
             set
             {
@@ -119,7 +119,7 @@ namespace Mids_Reborn.Controls
         }
 
         
-        public Bitmap ImageOn
+        public Bitmap? ImageOn
         {
             set
             {
@@ -178,7 +178,7 @@ namespace Mids_Reborn.Controls
             SuspendLayout();
             var autoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleDimensions = autoScaleDimensions;
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Dpi;
             Name = "ImageButton";
             ResumeLayout(false);
         }
@@ -191,7 +191,7 @@ namespace Mids_Reborn.Controls
             if (bxOut.Bitmap != null) CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
         }
 
-        public void SetImages(ImageAttributes ia, Bitmap imageOff, Bitmap imageOn)
+        public void SetImages(ImageAttributes ia, Bitmap? imageOff, Bitmap? imageOn)
         {
             IA = ia;
             ImageOff = imageOff;

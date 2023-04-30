@@ -52,7 +52,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnTweakMatch = new System.Windows.Forms.Button();
             this.chkOnTop = new Mids_Reborn.Controls.ImageButton();
             this.btnClose = new Mids_Reborn.Controls.ImageButton();
-            this.Graph = new Mids_Reborn.Controls.ctlMultiGraph();
+            this.Graph = new Mids_Reborn.Controls.CtlMultiGraph();
             this.GroupBox4 = new System.Windows.Forms.GroupBox();
             this.lstDisplay = new System.Windows.Forms.ListBox();
             this.GroupBox1.SuspendLayout();
@@ -216,7 +216,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // chkOnTop
             // 
             this.chkOnTop.Checked = true;
-            this.chkOnTop.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.chkOnTop.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.chkOnTop.Location = new System.Drawing.Point(530, 476);
             this.chkOnTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -232,7 +232,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.Checked = false;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.btnClose.Location = new System.Drawing.Point(530, 504);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -266,7 +266,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.DrawRuler = true;
             this.Graph.Dual = true;
             this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
-            this.Graph.Font = new System.Drawing.Font("Arial", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Graph.ForcedMax = 0F;
             this.Graph.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Graph.Highlight = true;
@@ -285,7 +285,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.PaddingX = 2F;
             this.Graph.PaddingY = 6F;
             this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
-            this.Graph.RulerPos = Mids_Reborn.Controls.ctlMultiGraph.RulerPosition.Top;
+            this.Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
             this.Graph.ScaleHeight = 16;
             this.Graph.ScaleIndex = 8;
             this.Graph.ShowScale = false;
@@ -331,7 +331,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.GroupBox2);
             this.Controls.Add(this.GroupBox1);
             this.Controls.Add(this.Graph);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;

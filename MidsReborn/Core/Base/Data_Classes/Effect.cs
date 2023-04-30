@@ -12,7 +12,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     {
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
-        private IPower? power;
+        private IPower power;
 
         public double Rand => new Random().NextDouble();
 
@@ -81,7 +81,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AtrModSecondaryRange = -1;
         }
 
-        public Effect(IPower? power) : this()
+        public Effect(IPower power) : this()
         {
             this.power = power;
         }
@@ -300,33 +300,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             get
             {
                 var probability = BaseProbability;
-                if (ProcsPerMinute > 0.0 && probability < 0.01 && power != null)
+                
+                // Sometimes BaseProbability sticks at 0.75 when PPM is > 0,
+                // preventing PPM calculation
+                if (ProcsPerMinute > 0 && power != null)
                 {
                     var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
-                    var procsPerMinute = ProcsPerMinute;
+
                     var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    float rechargeVal;
-                    if (Math.Abs(power.RechargeTime) < float.Epsilon)
-                    {
-                        rechargeVal = 0;
-                    }
-                    else
-                    {
-                        rechargeVal = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
-                    }
+                    var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
+                        ? 0
+                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
 
-                    if (power.PowerType == Enums.ePowerType.Click)
-                    {
-                        probability = Math.Min(
-                            Math.Max(procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                    }
-                    else
-                    {
-                        probability = Math.Min(Math.Max(procsPerMinute * 10 / (60f * areaFactor), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                    }
+                    probability = Math.Min(power.PowerType == Enums.ePowerType.Click
+                        ? Math.Max(ProcsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute))
+                        : Math.Max(ProcsPerMinute * 10 / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);
                 }
-
 
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
                 {
@@ -373,7 +362,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public float BuffedMag => Math.Abs(Math_Mag) > 0.01 ? Math_Mag : Mag;
+        public float BuffedMag => Math_Mag > float.Epsilon ? Math_Mag : Mag;
 
         public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
@@ -509,12 +498,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string Special { get; set; }
 
-        public IPower? GetPower()
+        public IPower GetPower()
         {
             return power;
         }
 
-        public void SetPower(IPower? power)
+        public void SetPower(IPower power)
         {
             this.power = power;
         }
@@ -883,7 +872,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false, bool editorDisplay = false, bool dvDisplay = false, bool ignoreConditions = false)
         {
-            if (MidsContext.Config is null) return string.Empty;
             var sBuild = string.Empty;
             var sSubEffect = string.Empty;
             var sSubSubEffect = string.Empty;
@@ -953,11 +941,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (ProcsPerMinute > 0 && Probability < 0.01)
                 {
                     sChance = $"{ProcsPerMinute} PPM";
-
-                    if (CancelOnMiss)
-                    {
-                        sChance += ", Cancels on Miss";
-                    }
                 }
                 else if (useBaseProbability)
                 {
@@ -972,16 +955,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                         }
 
-                        if (ProcsPerMinute > 0)
+                        if (EffectId != "" & EffectId != "Ones")
                         {
-                            sChance = fromPopup
-                                ? $"{ProcsPerMinute} PPM"
-                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                            sChance += $"when {EffectId}";
                         }
 
                         if (CancelOnMiss)
                         {
                             sChance += ", Cancels on Miss";
+                        }
+
+                        if (ProcsPerMinute > 0)
+                        {
+                            sChance = fromPopup | editorDisplay
+                                ? $"{ProcsPerMinute} PPM"
+                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
@@ -1002,27 +990,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                         }
 
-                        if (ProcsPerMinute > 0)
+                        if (EffectId != "" & EffectId != "Ones" & !fromPopup)
                         {
-                            sChance = fromPopup
-                                ? $"{ProcsPerMinute} PPM"
-                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                            sChance += $"when {EffectId}";
                         }
 
                         if (CancelOnMiss)
                         {
                             sChance += ", Cancels on Miss";
                         }
+
+                        if (ProcsPerMinute > 0)
+                        {
+                            sChance = fromPopup | editorDisplay
+                                ? $"{ProcsPerMinute} PPM"
+                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                        }
                     }
                     /*else if (EffectId != "" & EffectId != "Ones")
                     {
                         sChance = $"when {EffectId}";
                     }*/
-                }
-
-                if (EffectId != "" & EffectId != "Ones" & !fromPopup)
-                {
-                    sChance += $"{(sChance != "" ? ", " : "")}when {EffectId}";
                 }
             }
 
@@ -1104,27 +1092,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
                         var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
                         var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                        string conditionOperator;
-                        if (cVp.Value.Equals("True"))
+                        var conditionOperator = cVp.Value switch
                         {
-                            conditionOperator = "is ";
-                        }
-                        else if (cVp.Value.Equals("False"))
-                        {
-                            conditionOperator = "not ";
-                        }
-                        else
-                        {
-                            conditionOperator = "";
-                        }
+                            "True" => "is ",
+                            "False" => "not ",
+                            _ => ""
+                        };
 
                         if (!condition.Equals("Stacks") && !condition.Equals("Team"))
                         {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? conditionPower.FullName : conditionPower.DisplayName)} {conditionOperator}{condition}");
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {conditionOperator}{condition}");
                         }
                         else if (condition.Equals("Stacks"))
                         {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? conditionPower.FullName : conditionPower.DisplayName)} {condition} {cVp.Value}");
+                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {condition} {cVp.Value}");
                         }
                         else if (condition.Equals("Team"))
                         {
@@ -1134,17 +1115,33 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         /*conList.Add(!condition.Equals("Stacks")
                             ? $"{conditionPower.DisplayName} {conditionOperator}{condition}"
                             : $"{conditionPower.DisplayName} {condition} {cVp.Value}");*/
-                        sConditional = string.Join(" AND ", conList);
+                    }
+
+                    sConditional = string.Empty;
+                    foreach (var c in conList)
+                    {
+                        if (sConditional == string.Empty)
+                        {
+                            sConditional += c.Replace(" OR ", " ");
+                        }
+                        else if (c.Contains("OR "))
+                        {
+                            sConditional += $" OR {c.Replace(" OR ", " ")}";
+                        }
+                        else
+                        {
+                            sConditional += $" AND {c}";
+                        }
                     }
                 }
             }
 
-            if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
+            if (!simple || Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Endurance)
             {
                 sDuration = string.Empty;
                 var sForOver = EffectType switch
                 {
-                    Enums.eEffectType.Damage => " over ",
+                    Enums.eEffectType.Damage or Enums.eEffectType.Endurance => " over ",
                     Enums.eEffectType.SilentKill => " in ",
                     Enums.eEffectType.Mez when MezType is Enums.eMez.Knockback or Enums.eMez.Knockup => "For ",
                     _ => " for "
@@ -1163,11 +1160,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sDuration += " ";
                 }
 
-                if (EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup)
-                {
-                    sDuration += ": ";
-                }
-
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                 {
                     sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && MezType is Enums.eMez.Knockback or Enums.eMez.Knockup ? ": " : "")}";
@@ -1178,13 +1170,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (Expressions.Magnitude != "" & AttribType == Enums.eAttribType.Expression)
                 {
-                    var mag = Parse(this, ExpressionType.Magnitude, out _);
-                    var absAllowed = new List<Enums.eEffectType>
-                    {
-                        Enums.eEffectType.Damage
-                    };
-
-                    /*
+                    //var mag = Math.Abs(Parse(this, ExpressionType.Magnitude, out _));
+                    var mag = BuffedMag * (DisplayPercentage ? 100 : 1);
                     var absAllowed = new List<Enums.eEffectType>
                     {
                         Enums.eEffectType.Damage,
@@ -1192,35 +1179,44 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         Enums.eEffectType.Defense,
                         Enums.eEffectType.Resistance
                     };
-                    */
 
                     if (editorDisplay)
                     {
-                        sMag = absAllowed.Contains(EffectType)
-                            ? $"{Math.Abs(mag) * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")} Variable"
-                            : $"{mag * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")} Variable";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
+                        {
+                            sMag = $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")} Variable";
+                        }
+                        else
+                        {
+                            sMag = $"{mag:####0.##}{(DisplayPercentage ? "%" : "")} Variable";
+                        }
 
                         sMagExp = $"Mag Expression: {Expressions.Magnitude.Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
-                        sMag = absAllowed.Contains(EffectType)
-                            ? $"{Math.Abs(mag) * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")}"
-                            : $"{mag * (DisplayPercentage ? 100 : 1):####0.##}{(DisplayPercentage ? "%" : "")}";
+                        if (mag > float.Epsilon && absAllowed.Any(x => x == EffectType))
+                        {
+                            sMag = $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")}";
+                        }
+                        else
+                        {
+                            sMag = $"{mag:####0.#}{(DisplayPercentage ? "%" : "")}";
+                        }
                     }
                 }
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
                 {
                     var perceptionDistance = Statistics.BasePerception * BuffedMag;
                     sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
-                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance:####0.##}ft)"
+                        ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
                         : DisplayPercentage
-                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance:####0.##}ft)"
-                            : $"{perceptionDistance:####0.##}ft";
+                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
+                            : $"{perceptionDistance}ft";
                 }
                 else
                 {
-                    sMag = MidsContext.Config.CoDEffectFormat & !fromPopup & EffectType != Enums.eEffectType.Mez
+                    sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                         : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
@@ -1278,13 +1274,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (Ticks > 1)
-            {
-                sMag = EffectType == Enums.eEffectType.Mez & MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
-                    ? $"{sMag} x {Ticks}"
-                    : $"{Ticks} x {sMag}";
-            }
-
             switch (EffectType)
             {
                 case Enums.eEffectType.Elusivity:
@@ -1297,6 +1286,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         sSubEffect = grouped ? "%VALUE%" : Enum.GetName(DamageType.GetType(), DamageType);
                         if (EffectType == Enums.eEffectType.Damage)
                         {
+                            if (Ticks > 0)
+                            {
+                                sMag = $"{Ticks} x {sMag}";
+                            }
                             sBuild = $"{sMag} {sSubEffect} {sEffect}{sTarget}{sDuration}";
                         }
                         else
@@ -1323,18 +1316,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (AttribType == Enums.eAttribType.Magnitude & nDuration > 0 & Aspect == Enums.eAspect.Str)
                     {
-                        sBuild = $"{(MidsContext.Config != null && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale * nMagnitude:####0.####} x {ModifierTable})%" : sMag)} {sSubEffect}{sTarget}{sDuration}";
+                        sBuild = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale * nMagnitude:####0.####} x {ModifierTable})%" : sMag)} {sSubEffect}{sTarget}{sDuration}";
                     }
                     else
                     {
                         if (Duration > 0 & (!simple | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
                         {
-                            sDuration = $"{(MidsContext.Config != null && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                            sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
                         }
 
                         if (!noMag)
                         {
-                            sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat & !fromPopup ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
+                            sMag = $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
                         }
 
                         sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
@@ -1342,7 +1335,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     break;
                 case Enums.eEffectType.MezResist:
-
                     sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
                     if (noMag == false)
                     {
@@ -1393,6 +1385,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.HitPoints:
                     if (!noMag)
                     {
+                        if (Ticks > 0)
+                        {
+                            sMag = $"{Ticks} x {sMag}";
+                        }
                         if (Aspect == Enums.eAspect.Cur)
                         {
                             sBuild = $"{Utilities.FixDP(BuffedMag * 100)}% {sEffect}{sTarget}{sDuration}";
@@ -1436,20 +1432,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.EntCreate:
                     sResist = string.Empty;
                     var summon = DatabaseAPI.NidFromUidEntity(Summon);
-                    string tSummon;
-                    if (summon > -1)
-                    {
-                        tSummon = " " + (MidsContext.Config.CoDEffectFormat & !fromPopup
+                    var tSummon = summon > -1
+                        ? " " + (MidsContext.Config.CoDEffectFormat
                             ? $"({DatabaseAPI.Database.Entities[summon].UID})"
-                            : DatabaseAPI.Database.Entities[summon].DisplayName);
-                    }
-                    else
-                    {
-                        tSummon = $" {Summon}";
-                    }
+                            : DatabaseAPI.Database.Entities[summon].DisplayName)
+                        : " " + Summon;
                     sBuild = $"{sEffect}{tSummon}{sTarget}{(Duration > 9999 ? "" : sDuration)}";
                     break;
                 case Enums.eEffectType.Endurance:
+                    if (Ticks > 0)
+                    {
+                        sMag = $"{Ticks} x {sMag}";
+                    }
                     if (noMag) sBuild = "+Max End";
                     else if (Aspect == Enums.eAspect.Max)
                     {
@@ -1466,7 +1460,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
                     tGrant = pID != null
-                        ? $" {(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({pID.FullName})" : pID.DisplayName)}"
+                        ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
                     sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}";
                     break;
@@ -1477,7 +1471,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
                     sBuild = sSubEffect switch
                     {
-                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * MidsContext.Config.ScalingToHit * 100f):0.##}%)",
+                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * DatabaseAPI.ServerData.BaseToHit * 100f):0.##}%)",
                         "ActivateInterval" => $"{sEffect}({sSubEffect}) to {AtrModActivatePeriod} second(s)",
                         "Arc" => $"{sEffect}({sSubEffect}) to {AtrModArc} degrees",
                         "CastTime" => $"{sEffect}({sSubEffect}) to {AtrModCastTime} second(s)",
@@ -1524,25 +1518,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 sExtra2 = BuildCs(sResist, sExtra2);
                 if (!string.IsNullOrEmpty(sPvx))
                 {
-                    sExtra = !string.IsNullOrEmpty(sSpecial) ? BuildCs($"{sPvx}, if {sSpecial}", sExtra, resistPresent) : BuildCs(sPvx, sExtra, resistPresent);
-                    sExtra2 = !string.IsNullOrEmpty(sConditional) ? BuildCs($"{sPvx}, if {sConditional}", sExtra2, resistPresent) : BuildCs(sPvx, sExtra2, resistPresent);
+                    sExtra = !string.IsNullOrEmpty(sSpecial) ? BuildCs(sPvx + ", if " + sSpecial, sExtra, resistPresent) : BuildCs(sPvx, sExtra, resistPresent);
+                    sExtra2 = !string.IsNullOrEmpty(sConditional) ? BuildCs(sPvx + ", if " + sConditional, sExtra2, resistPresent) : BuildCs(sPvx, sExtra2, resistPresent);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(sSpecial))
-                    {
-                        sExtra = BuildCs($"if {sSpecial}", sExtra);
-                    }
-
+                        sExtra = BuildCs("if " + sSpecial, sExtra);
                     if (!string.IsNullOrEmpty(sConditional))
-                    {
-                        sExtra2 = BuildCs($"if {sConditional}", sExtra2);
-                    }
+                        sExtra2 = BuildCs("if " + sConditional, sExtra2);
                 }
                 sExtra = BuildCs(sToHit, sExtra);
-                sExtra = $" ({sExtra})";
+                sExtra = " (" + sExtra + ")";
                 sExtra2 = BuildCs(sToHit, sExtra2);
-                sExtra2 = $" ({sExtra2})";
+                sExtra2 = " (" + sExtra2 + ")";
                 if (AttribType == Enums.eAttribType.Expression)
                 {
                     if (!editorDisplay && !dvDisplay)
@@ -1556,28 +1545,24 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             sExtra = BuildCs(sNearGround, sExtra);
 
-            if (sExtra.Equals(" ()"))
-            {
-                sExtra = "";
-            }
+            if (sExtra.Equals(" ()")) { sExtra = ""; }
 
             var sFinal = string.Empty;
             if (AttribType == Enums.eAttribType.Expression && editorDisplay)
             {
-                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\r\n{sProbExp}";
+                sFinal = $"{(sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim()}\r\n{sMagExp}\n{sProbExp}";
             }
             else
             {
                 sFinal = (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Replace("--", "-").Trim();
             }
 
-            sFinal = Regex.Replace(sFinal, @"^\-0(\%?)[^\.]", e => $"0{e.Groups[1].Value} "); // +Recharge with mag == 0
             sFinal = sFinal
                 .Replace("( ", "(").Replace("  ", " ") // Requires ToHit Check formatting
                 .Replace("(, ", "(") // Some Boosts effect with PPM chance and Cancel on Miss
-                .Replace(" , ", ", ") // xx% chance , when something
-                .Replace("chance )", "chance)") // (xx% chance )
-                .Trim(' ', ':'); // Knockback/Knockup with no duration/ticks
+                .Replace("chance )", "chance)")
+                .Replace("SelfFor ", "Self for ") // Some knockback/knockup forms
+                .Replace("TargetFor ", "Target for ");
 
             return sFinal;
         }
@@ -1665,354 +1650,94 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int SetTicks(float iDuration, float iInterval)
         {
             Ticks = 0;
-            if (iInterval > 0.0)
-                Ticks = (int)(1.0 + Math.Floor(iDuration / (double)iInterval));
+            if (iInterval > 0)
+            {
+                Ticks = (int)(1 + Math.Floor(iDuration / (double)iInterval));
+            }
+
             return Ticks;
         }
 
         public bool ValidateConditional(string cPowername)
         {
-            if (ActiveConditionals.Count <= 0)
-            {
-                return false;
-            }
-            var getCondition = new Regex("(:.*)");
-            var getConditionItem = new Regex("(.*:)");
-            foreach (var cVp in ActiveConditionals)
-            {
-                var condition = getCondition.Replace(cVp.Key, "");
-                var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                var buildPowers = MidsContext.Character.CurrentBuild.Powers;
-                var cVal = cVp.Value.Split(' ');
-                var powerDisplayName = conditionPower?.DisplayName;
-                if (powerDisplayName == null || !powerDisplayName.Contains(cPowername))
-                {
-                    return false;
-                }
-                switch (condition)
-                {
-                    case "Active":
-                        bool? boolVal = Convert.ToBoolean(cVp.Value);
-                        if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
-                        {
-                            cVp.Validated = true;
-                        }
-                        else
-                        {
-                            cVp.Validated = false;
-                        }
-
-                        break;
-                    case "Taken":
-                        cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                            .Equals(Convert.ToBoolean(cVp.Value));
-
-                        break;
-                    case "Stacks":
-                        {
-                            var stacks = buildPowers.Where(x => x.Power == conditionPower).Select(x => x.Power.Stacks)
-                                .ToList();
-                            switch (cVal[0])
-                            {
-                                case "=":
-
-                                    cVp.Validated = stacks[0].Equals(Convert.ToInt32(cVal[1]));
-
-                                    break;
-                                case ">":
-                                    cVp.Validated = stacks[0] > Convert.ToInt32(cVal[1]);
-
-                                    break;
-                                case "<":
-                                    cVp.Validated = stacks[0] < Convert.ToInt32(cVal[1]);
-
-                                    break;
-                            }
-                        }
-
-                        break;
-                    case "Team":
-                        switch (cVal[0])
-                        {
-                            case "=":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                    .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                            case ">":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                    MidsContext.Config.TeamMembers[conditionItemName] >
-                                    Convert.ToInt32(cVal[1]))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                            case "<":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                    MidsContext.Config.TeamMembers[conditionItemName] <
-                                    Convert.ToInt32(cVal[1]))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                        }
-
-                        break;
-                }
-            }
-
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
-            if (ActiveConditionals.Count > 0)
-            {
-                Validated = validCount == ActiveConditionals.Count;
-            }
-
-            return Validated;
+            return BooleanExprPreprocessor.Parse(this, cPowername);
         }
 
         public bool ValidateConditional(string cType, string cPowername)
         {
+            return BooleanExprPreprocessor.Parse(this, cType, cPowername);
+        }
+
+        public bool ValidateConditional(int index)
+        {
+            if (ActiveConditionals is not {Count: > 0})
+            {
+                return true;
+            }
+
             var getCondition = new Regex("(:.*)");
             var getConditionItem = new Regex("(.*:)");
-            foreach (var cVp in ActiveConditionals)
+
+            var cVp = ActiveConditionals[index];
+            var k = cVp.Key.Replace("AND ", "").Replace("OR ", "");
+            var condition = getCondition.Replace(k, "");
+            var conditionItemName = getConditionItem.Replace(k, "").Replace(":", "");
+            var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+            var cVal = cVp.Value.Split(' ');
+            switch (condition)
             {
-                var condition = getCondition.Replace(cVp.Key, "");
-                var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                var cVal = cVp.Value.Split(' ');
-                var powerDisplayName = conditionPower?.DisplayName;
-                if (powerDisplayName == null || !powerDisplayName.Contains(cPowername))
-                {
-                    return false;
-                }
-
-                if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
-                {
-                    bool? boolVal = Convert.ToBoolean(cVp.Value);
-                    if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
+                case "Active":
+                    if (conditionPower != null)
                     {
-                        cVp.Validated = true;
+                        bool? boolVal = Convert.ToBoolean(cVp.Value);
+                        cVp.Validated = MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal;
                     }
-                    else
+
+                    break;
+                case "Taken":
+                    if (conditionPower != null)
                     {
-                        cVp.Validated = false;
+                        cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value));
                     }
-                }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Taken")
-                {
-                    cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value));
-                }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Stacks")
-                {
-                    switch (cVal[0])
+
+                    break;
+                case "Stacks":
+                    if (conditionPower != null)
                     {
-                        case "=":
-
-                            cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                            break;
-                        case ">":
-                            cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                            break;
-                        case "<":
-                            cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                            break;
+                        cVp.Validated = cVal[0] switch
+                        {
+                            "=" => conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1])),
+                            ">" => conditionPower.Stacks > Convert.ToInt32(cVal[1]),
+                            "<" => conditionPower.Stacks < Convert.ToInt32(cVal[1]),
+                            _ => cVp.Validated
+                        };
                     }
-                }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
-                         condition == "Team")
-                {
-                    switch (cVal[0])
+
+                    break;
+                case "Team":
+                    cVp.Validated = cVal[0] switch
                     {
-                        case "=":
-                            if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                            {
-                                cVp.Validated = true;
-                            }
-                            else
-                            {
-                                cVp.Validated = false;
-                            }
+                        "=" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config
+                            .TeamMembers[conditionItemName]
+                            .Equals(Convert.ToInt32(cVal[1])),
+                        ">" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                               MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]),
+                        "<" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                               MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]),
+                        _ => cVp.Validated
+                    };
 
-                            break;
-                        case ">":
-                            if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                MidsContext.Config.TeamMembers[conditionItemName] >
-                                Convert.ToInt32(cVal[1]))
-                            {
-                                cVp.Validated = true;
-                            }
-                            else
-                            {
-                                cVp.Validated = false;
-                            }
-
-                            break;
-                        case "<":
-                            if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                MidsContext.Config.TeamMembers[conditionItemName] <
-                                Convert.ToInt32(cVal[1]))
-                            {
-                                cVp.Validated = true;
-                            }
-                            else
-                            {
-                                cVp.Validated = false;
-                            }
-
-                            break;
-                    }
-                }
+                    break;
             }
 
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            if (ActiveConditionals.Count > 0)
-            {
-                Validated = validCount == ActiveConditionals.Count;
-            }
-
-            return Validated;
+            return cVp.Validated;
         }
 
         public bool ValidateConditional()
         {
-            var getCondition = new Regex("(:.*)");
-            var getConditionItem = new Regex("(.*:)");
-            foreach (var cVp in ActiveConditionals)
-            {
-                var condition = getCondition.Replace(cVp.Key, "");
-                var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                var cVal = cVp.Value.Split(' ');
-                switch (condition)
-                {
-                    case "Active":
-                        if (conditionPower != null)
-                        {
-                            bool? boolVal = Convert.ToBoolean(cVp.Value);
-                            if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
-                            {
-                                cVp.Validated = true;
-                            }
-                            else
-                            {
-                                cVp.Validated = false;
-                            }
-                        }
-
-                        break;
-                    case "Taken":
-                        if (conditionPower != null)
-                        {
-                            cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                                .Equals(Convert.ToBoolean(cVp.Value));
-                        }
-
-                        break;
-                    case "Stacks":
-                        if (conditionPower != null)
-                        {
-                            switch (cVal[0])
-                            {
-                                case "=":
-
-                                    cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                                    break;
-                                case ">":
-                                    cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                                    break;
-                                case "<":
-                                    cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                                    break;
-                            }
-                        }
-
-                        break;
-                    case "Team":
-                        switch (cVal[0])
-                        {
-                            case "=":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                    .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                            case ">":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                    MidsContext.Config.TeamMembers[conditionItemName] >
-                                    Convert.ToInt32(cVal[1]))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                            case "<":
-                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                    MidsContext.Config.TeamMembers[conditionItemName] <
-                                    Convert.ToInt32(cVal[1]))
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-
-                                break;
-                        }
-
-                        break;
-                }
-            }
-
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
-            if (ActiveConditionals.Count > 0)
-            {
-                Validated = validCount == ActiveConditionals.Count;
-                if (Validated)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return BooleanExprPreprocessor.Parse(this);
         }
+
         public void UpdateAttrib()
         {
             switch (PowerAttribs)
@@ -2066,8 +1791,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     power.RangeSecondary = conditionsMet ? AtrModSecondaryRange : AtrOrigSecondaryRange;
                     break;
             }
-
         }
+
         public bool CanInclude()
         {
             if (MidsContext.Character == null | ActiveConditionals == null | (ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))

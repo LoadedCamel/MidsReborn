@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.PInfo.BXHeight = 2048;
             this.PInfo.ColumnPosition = 0.5f;
             this.PInfo.ColumnRight = true;
-            this.PInfo.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.PInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.PInfo.InternalPadding = 3;
 
             this.PInfo.Location = new System.Drawing.Point(0, 0);
@@ -62,7 +62,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ClientSize = new System.Drawing.Size(249, 284);
             this.Controls.Add((System.Windows.Forms.Control)this.VScrollBar1);
             this.Controls.Add((System.Windows.Forms.Control)this.PInfo);
-            this.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 
             this.MaximumSize = new System.Drawing.Size(600, 600);

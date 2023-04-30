@@ -49,7 +49,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FirstAvailableIndex,
             HighestAvailableIndex,
             AllAvailableIndices,
-            ListStaticIndices
+            ListStaticIndices,
+            OrphanEntities,
+            FindDuplicateIndices
         }
 
         private List<string[]> LvItems;
@@ -87,6 +89,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -108,6 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] {$"{pw.StaticIndex}", pw.DisplayName, pw.FullName})
                 .ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -126,6 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 new[] {$"{availableIndices[0]}", "First available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             };
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -140,6 +145,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             };
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -158,6 +164,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvItems.Add(new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""});
 
             LvItems = lvItems;
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -176,7 +183,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     QueryType.HighestAvailableIndex => "Highest available index",
                     QueryType.AllAvailableIndices => "All available indices",
                     QueryType.ListStaticIndices => "List static indices with matched powers",
-                    _ => ""
+                    QueryType.OrphanEntities => "Find orphan entities",
+                    QueryType.FindDuplicateIndices => "Find duplicate indices",
+                    _ => CurrentQueryType.ToString()
                 };
             }
 
@@ -227,9 +236,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             CurrentQueryType = QueryType.ListStaticIndices;
             var powersList = DatabaseAPI.Database.Power.Where(pw => pw != null).ToList();
             LvItems = powersList.Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) => e.Item = new ListViewItem(LvItems[e.ItemIndex]);
+
+        private void btnOrphanEntities_Click(object sender, EventArgs e)
+        {
+            CurrentQueryType = QueryType.OrphanEntities;
+            var itemsList = DatabaseAPI.Database.Power.Select(e => new KeyValuePair<IPower, List<IEffect>>(e,
+                e.Effects.Where(e => e.EffectType == Enums.eEffectType.EntCreate & e.nSummon < 0 & !string.IsNullOrEmpty(e.Summon)).ToList()));
+
+            LvItems = itemsList.SelectMany(e => e.Value, (k, v) => new[] {$"{k.Key.StaticIndex}", v.Summon, k.Key.FullName}).ToList();
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = LvItems.Count;
+        }
+
+        private void btnDuplicateIndices_Click(object sender, EventArgs e)
+        {
+            CurrentQueryType = QueryType.FindDuplicateIndices;
+            var indexList = DatabaseAPI.Database.Power
+                .Select(e => e.StaticIndex)
+                .GroupBy(e => e)
+                .Where(e => e.Count() > 1)
+                .Select(e => e.Key)
+                .ToList();
+
+            var itemsList = DatabaseAPI.Database.Power
+                .Where(e => indexList.Contains(e.StaticIndex))
+                .OrderBy(e => e.StaticIndex)
+                .ToList();
+
+            LvItems = itemsList.Count > 0
+                ? itemsList.Select(e => new[] {$"{e.StaticIndex}", e.DisplayName, e.FullName}).ToList()
+                : new List<string[]> {new[] {"", "Nothing found", ""}};
+            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = LvItems.Count;
+        }
     }
 }

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -33,9 +35,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         
         private readonly frmMain myParent;
 
-        private IPower?[] BaseArray;
+        private IPower[] BaseArray;
         private bool BaseOverride;
-        private ImageButton btnClose;
 
         private ComboBox cbSet;
 
@@ -43,10 +44,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private ComboBox cbValues;
 
-        private ImageButton chkOnTop;
-
-        private IPower?[] EnhArray;
-        private ctlMultiGraph Graph;
+        private IPower[] EnhArray;
+        private CtlMultiGraph Graph;
         private float GraphMax;
         private Label lblKey1;
         private Label lblKey2;
@@ -65,22 +64,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Load += frmStats_Load;
             Move += frmStats_Move;
             Resize += frmStats_Resize;
-            VisibleChanged += frmStats_VisibleChanged;
+            //VisibleChanged += frmStats_VisibleChanged;
             BaseArray = Array.Empty<IPower?>();
             EnhArray = Array.Empty<IPower?>();
-            GraphMax = 1f;
+            GraphMax = 1;
             BaseOverride = false;
             Loaded = false;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             InitializeComponent();
-            btnClose.ButtonClicked += btnClose_Click;
-            chkOnTop.ButtonClicked += chkOnTop_CheckedChanged;
+            btnClose.Click += btnClose_Click;
+            chkOnTop.Click += chkOnTop_Click;
             Name = nameof(frmStats);
             //var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
             Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
         }
 
-        private void btnClose_Click()
+        private void btnClose_Click(object? sender, EventArgs e)
         {
             Close();
         }
@@ -88,7 +88,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             GetPowerArray();
             DisplayGraph();
         }
@@ -96,7 +99,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             SetGraphType();
             DisplayGraph();
         }
@@ -104,13 +110,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void cbValues_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             DisplayGraph();
         }
 
-        private void chkOnTop_CheckedChanged()
+        private void chkOnTop_Click(object? sender, EventArgs e)
         {
-            TopMost = chkOnTop.Checked;
+            TopMost = chkOnTop.ToggleState switch
+            {
+                ImageButtonEx.States.ToggledOn => true,
+                _ => false
+            };
         }
 
         private void DisplayGraph()
@@ -441,7 +454,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Loaded = true;
             tbScaleX.Minimum = 0;
             tbScaleX.Maximum = Graph.ScaleCount - 1;
+            chkOnTop.ToggleState = TopMost switch
+            {
+                true => ImageButtonEx.States.ToggledOn,
+                _ => ImageButtonEx.States.ToggledOff
+            };
+
+            UpdateColorTheme();
             UpdateData(false);
+        }
+
+        public void UpdateColorTheme()
+        {
+            chkOnTop.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            chkOnTop.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnClose.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
         }
 
         private void frmStats_Move(object sender, EventArgs e)
@@ -453,41 +485,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (Graph != null)
             {
-                Graph.Width = ClientSize.Width - (Graph.Left + 4);
-                var graph = Graph;
-                var height = ClientSize.Height;
-                var top = Graph.Top;
-                var clientSize1 = ClientSize;
-                var num1 = clientSize1.Height - this.tbScaleX.Top;
-                var num2 = top + num1 + 4;
-                var num3 = height - num2;
-                graph.Height = num3;
-                var tbScaleX = this.tbScaleX;
-                clientSize1 = ClientSize;
-                var num4 = clientSize1.Width - (this.tbScaleX.Left + (ClientSize.Width - chkOnTop.Left) + 4);
-                tbScaleX.Width = num4;
-                lblScale.Left = (int) Math.Round(this.tbScaleX.Left + (this.tbScaleX.Width - lblScale.Width) / 2.0);
-                var num5 = this.cbStyle.Left + 154;
-                var clientSize2 = ClientSize;
-                var num6 = clientSize2.Width - 3;
-                if (num5 > num6)
-                {
-                    var cbStyle = this.cbStyle;
-                    clientSize2 = ClientSize;
-                    var num7 = clientSize2.Width - this.cbStyle.Left - 4;
-                    cbStyle.Width = num7;
-                }
-                else
-                {
-                    cbStyle.Width = 186;
-                }
+                Graph.Width = ClientSize.Width - Graph.Left - 4;
+                Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 4;
+                tbScaleX.Width = ClientSize.Width - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
+                lblScale.Left = (int) Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
+                cbStyle.Width = cbStyle.Left + 157 > ClientSize.Width
+                    ? ClientSize.Width - cbStyle.Left - 4
+                    : 186;
             }
 
-            StoreLocation();
-        }
+            btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
+            chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
 
-        private void frmStats_VisibleChanged(object sender, EventArgs e)
-        {
+            StoreLocation();
         }
 
         private void GetPowerArray()
@@ -497,219 +507,110 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return;
             }
 
-            BaseArray = Array.Empty<IPower?>();
-            EnhArray = Array.Empty<IPower?>();
-            var basePowersList = new List<IPower?>();
-            var enhPowersList = new List<IPower?>();
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            if (cbSet.SelectedIndex <= -1)
+            // Powers in build
+            var powers = new Dictionary<int, KeyValuePair<IPower, IPower>>();
+            for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
-                return;
-            }
+                var pBase = MainModule.MidsController.Toon.GetBasePower(i);
+                var pEnh = MainModule.MidsController.Toon.GetEnhancedPower(i);
 
-            switch (cbSet.SelectedIndex)
-            {
-                case 0:
-                    GetSetArray(Enums.PowersetType.Primary, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Secondary, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Ancillary, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool0, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool1, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool2, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool3, Enums.ePowerType.Auto_);
-                    break;
-                case 1:
-                    GetSetArray(Enums.PowersetType.Primary, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Secondary, Enums.ePowerType.Auto_);
-                    break;
-                case 2:
-                    GetSetArray(Enums.PowersetType.Primary, Enums.ePowerType.Auto_);
-                    break;
-                case 3:
-                    GetSetArray(Enums.PowersetType.Secondary, Enums.ePowerType.Auto_);
-                    break;
-                case 4:
-                    GetSetArray(Enums.PowersetType.Ancillary, Enums.ePowerType.Auto_);
-                    break;
-                case 5:
-                    GetSetArray(Enums.PowersetType.Pool0, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool1, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool2, Enums.ePowerType.Auto_);
-                    GetSetArray(Enums.PowersetType.Pool3, Enums.ePowerType.Auto_);
-                    break;
-                case 6:
-                    if (!BaseOverride)
-                    {
-                        for (var iPower = 0; iPower < MidsContext.Character.CurrentBuild.Powers.Count; iPower++)
-                        {
-                            var p = MidsContext.Character.CurrentBuild.Powers[iPower];
-                            if (!(p.NIDPowerset > -1 & p.IDXPower > -1) || !DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[p.IDXPower].Slottable)
-                            {
-                                continue;
-                            }
-
-                            basePowersList.Add(new Power(DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[MainModule.MidsController.Toon.CurrentBuild.Powers[iPower].IDXPower]));
-                            enhPowersList.Add(MainModule.MidsController.Toon.GetEnhancedPower(iPower));
-                        }
-
-                        break;
-                    }
-
-                    for (var iPower = 0; iPower < MidsContext.Character.CurrentBuild.Powers.Count; iPower++)
-                    {
-                        var p = MidsContext.Character.CurrentBuild.Powers[iPower];
-                        if (!(p.NIDPowerset > -1 & p.IDXPower > -1) || !DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[p.IDXPower].Slottable)
-                        {
-                            continue;
-                        }
-
-                        //Array.Resize(ref BaseArray, BaseArray.Length + 1);
-                        //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
-                        //BaseArray[BaseArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
-                        basePowersList.Add(MainModule.MidsController.Toon.GetEnhancedPower(iPower));
-                    }
-
-                    MainModule.MidsController.Toon.FlipAllSlots();
-                    for (var iPower = 0; iPower < MidsContext.Character.CurrentBuild.Powers.Count; iPower++)
-                    {
-                        var p = MidsContext.Character.CurrentBuild.Powers[iPower];
-                        if (!(p.NIDPowerset > -1 & p.IDXPower > -1) || !DatabaseAPI.Database.Powersets[p.NIDPowerset].Powers[p.IDXPower].Slottable)
-                        {
-                            continue;
-                        }
-
-                        //Array.Resize(ref EnhArray, EnhArray.Length + 1);
-                        //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
-                        //EnhArray[EnhArray.Length - 1] = MainModule.MidsController.Toon.GetEnhancedPower(iPower);
-                        enhPowersList.Add(MainModule.MidsController.Toon.GetEnhancedPower(iPower));
-                    }
-
-                    BaseArray = basePowersList.ToArray();
-                    EnhArray = enhPowersList.ToArray();
-
-                    MainModule.MidsController.Toon.FlipAllSlots();
-                    break;
-                case 7:
-                    GetSetArray(Enums.PowersetType.Primary, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Secondary, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Ancillary, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Pool0, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Pool1, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Pool2, Enums.ePowerType.Toggle);
-                    GetSetArray(Enums.PowersetType.Pool3, Enums.ePowerType.Toggle);
-                    break;
-                case 8:
-                    GetSetArray(Enums.PowersetType.Primary, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Secondary, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Ancillary, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Pool0, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Pool1, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Pool2, Enums.ePowerType.Click);
-                    GetSetArray(Enums.PowersetType.Pool3, Enums.ePowerType.Click);
-                    break;
-            }
-        }
-
-        private void GetSetArray(Enums.PowersetType SetType, Enums.ePowerType iType)
-        {
-            if (MidsContext.Character.Powersets[(int) SetType] == null)
-            {
-                return;
-            }
-
-            if (cbStyle.SelectedIndex >= cbStyle.Items.Count - 2)
-            {
-                for (var iPower = 0; iPower < MidsContext.Character.Powersets[(int)SetType].Powers.Length; iPower++)
+                if (pBase == null)
                 {
-                    if (!(iType == Enums.ePowerType.Auto_ | MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType))
-                    {
-                        continue;
-                    }
-
-                    Array.Resize(ref BaseArray, BaseArray.Length + 1);
-                    //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
-                    var index = BaseArray.Length - 1;
-                    BaseArray[index] =
-                        MainModule.MidsController.Toon.GetEnhancedPower(GrabPlaced(
-                            MidsContext.Character.Powersets[(int) SetType].nID,
-                            iPower));
-                    if (BaseArray[index] != null)
-                    {
-                        continue;
-                    }
-
-                    BaseArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    BaseArray[index].Accuracy *= MidsContext.Config.ScalingToHit;
+                    continue;
                 }
 
-                MainModule.MidsController.Toon.FlipAllSlots();
-                for (var iPower = 0; iPower < MidsContext.Character.Powersets[(int)SetType].Powers.Length; iPower++)
-                {
-                    if (!(iType == Enums.ePowerType.Auto_ | MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType))
-                    {
-                        continue;
-                    }
+                var baseDmg = pBase.FXGetDamageValue();
+                var enhDmg = pEnh?.FXGetDamageValue(pEnh == null) ?? 0;
 
-                    Array.Resize(ref EnhArray, EnhArray.Length + 1);
-                    //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
-                    var index = EnhArray.Length - 1;
-                    EnhArray[index] =
-                        MainModule.MidsController.Toon.GetEnhancedPower(GrabPlaced(
-                            MidsContext.Character.Powersets[(int) SetType].nID,
-                            iPower));
-                    if (EnhArray[index] != null)
-                    {
-                        continue;
-                    }
-
-                    EnhArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    EnhArray[index].Accuracy *= MidsContext.Config.ScalingToHit;
-                }
-
-                MainModule.MidsController.Toon.FlipAllSlots();
-            }
-            else
-            {
-                for (var iPower = 0; iPower < MidsContext.Character.Powersets[(int)SetType].Powers.Length; iPower++)
-                {
-                    if (!((iType == Enums.ePowerType.Auto_) |
-                          MidsContext.Character.Powersets[(int) SetType].Powers[iPower].PowerType == iType))
-                    {
-                        continue;
-                    }
-
-                    Array.Resize(ref BaseArray, BaseArray.Length + 1);
-                    Array.Resize(ref EnhArray, EnhArray.Length + 1);
-                    //BaseArray = (IPower[]) Utils.CopyArray(BaseArray, new IPower[BaseArray.Length + 1]);
-                    //EnhArray = (IPower[]) Utils.CopyArray(EnhArray, new IPower[EnhArray.Length + 1]);
-                    var index = BaseArray.Length - 1;
-                    BaseArray[index] = new Power(MidsContext.Character.Powersets[(int) SetType].Powers[iPower]);
-                    EnhArray[index] =
-                        MainModule.MidsController.Toon.GetEnhancedPower(GrabPlaced(
-                            MidsContext.Character.Powersets[(int) SetType].nID,
-                            iPower)) ??
-                        new Power(BaseArray[index]);
-                }
-            }
-        }
-
-        private int GrabPlaced(int iSet, int iPower)
-        {
-            if (!MainModule.MidsController.Toon.Locked)
-            {
-                return -1;
+                powers.Add(i,
+                    baseDmg <= enhDmg
+                        ? new KeyValuePair<IPower, IPower>(pBase, pEnh)
+                        : new KeyValuePair<IPower, IPower>(pEnh, pBase));
             }
 
-            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
+            // Filter out zero damage powers
+            powers = powers
+                .Where(e => (e.Value.Value != null && e.Value.Value.FXGetDamageValue(e.Value.Value == null) > 0) || (e.Value.Key != null && e.Value.Key.FXGetDamageValue() > 0))
+                .ToDictionary(e => e.Key, e => e.Value);
+
+            // basePower FullName -> index
+            var powersDict = powers
+                .Select(e => new KeyValuePair<IPower, int>(e.Value.Key, e.Key))
+                .ToDictionary(e => e.Key.FullName, e => e.Value);
+
+            // Selected powersets in build
+            var powersets = MainModule.MidsController.Toon.Powersets
+                .Where(e => e != null)
+                .ToList();
+            
+            // Powers from powersets (use build base + enhanced if available)
+            var powersetsPowers = new Dictionary<int, KeyValuePair<IPower, IPower>>();
+            var k = 0;
+            foreach (var ps in powersets)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[index].NIDPowerset == iSet &
-                    MidsContext.Character.CurrentBuild.Powers[index].IDXPower == iPower)
+                foreach (var p in ps.Powers)
                 {
-                    return index;
+                    if (powersDict.ContainsKey(p.FullName))
+                    {
+                        var idx = powersDict[p.FullName];
+                        powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(powers[idx].Key.Clone(), powers[idx].Value.Clone()));
+                    }
+                    else
+                    {
+                        var pBase = p.Clone();
+                        pBase?.ProcessExecutes();
+                        pBase?.AbsorbPetEffects();
+                        powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(pBase, pBase));
+                    }
                 }
             }
 
-            return -1;
+            // Apply selection filter
+            powers = cbSet.SelectedIndex switch
+            {
+                // Primary/Secondary
+                1 => powersetsPowers
+                    .Where(e => e.Value.Key.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
+                    .ToDictionary(e => e.Key, e => e.Value),
+                
+                // Primary
+                2 => powersetsPowers
+                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Primary)
+                    .ToDictionary(e => e.Key, e => e.Value),
+                
+                // Secondary
+                3 => powersetsPowers
+                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Secondary)
+                    .ToDictionary(e => e.Key, e => e.Value),
+                
+                // Epic/Ancillary
+                4 => powersetsPowers
+                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                    .ToDictionary(e => e.Key, e => e.Value),
+                
+                // Pools
+                5 => powersetsPowers
+                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Pool)
+                    .ToDictionary(e => e.Key, e => e.Value),
+                
+                // Powers taken
+                6 => powers,
+                
+                // All toggles
+                7 => powers
+                    .Where(e => e.Value.Key.PowerType == Enums.ePowerType.Toggle)
+                    .ToDictionary(e => e.Key, e => e.Value),
+
+                // All clicks
+                8 => powersetsPowers
+                    .Where(e => e.Value.Key.PowerType == Enums.ePowerType.Click)
+                    .ToDictionary(e => e.Key, e => e.Value),
+
+                _ => powersetsPowers
+            };
+
+            BaseArray = powers.Select(e => e.Value.Key).ToArray();
+            EnhArray = powers.Select(e => e.Value.Value).ToArray();
         }
 
         /// <summary>
@@ -1210,19 +1111,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             StatDisplayed = (DisplayMode) cbValues.SelectedIndex;
             BackColor = myParent.BackColor;
-            btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             Graph.BackColor = BackColor;
             if (NewData)
+            {
                 NewSets();
+            }
+
             SetGraphType();
             GetPowerArray();
             DisplayGraph();

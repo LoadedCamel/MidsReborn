@@ -61,7 +61,6 @@ namespace Mids_Reborn.Core
 
         public ConfigData()
         {
-            ApplicationRegistered = false;
             Authorized = false;
             Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
@@ -87,7 +86,6 @@ namespace Mids_Reborn.Core
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
 
-        public bool ApplicationRegistered { get; set; }
         public bool Authorized { get; set; }
         public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }
@@ -115,6 +113,7 @@ namespace Mids_Reborn.Core
         public Enums.eDDGraph DataGraphType { get; set; } = Enums.eDDGraph.Both;
         public Enums.GraphStyle StatGraphStyle { get; set; } = Enums.GraphStyle.Stacked;
         public Enums.CompOverride[] CompOverride { get; set; }
+        public bool ShowSlotsLeft { get; set; }
 
         public bool DisableDesaturateInherent { get; set; }
         public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
@@ -199,6 +198,8 @@ namespace Mids_Reborn.Core
         public bool ShowSelfBuffsAny { get; set; }
 
         public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
+
+        public Point? EntityDetailsLocation { get; set; }
 
         internal static ConfigData? Current
         {
@@ -558,7 +559,7 @@ namespace Mids_Reborn.Core
             {
                 return fntSetting switch
                 {
-                    Enums.eFontSizeSetting.PairedBase => 10.25f,
+                    Enums.eFontSizeSetting.PairedBase => 8.25f,
                     Enums.eFontSizeSetting.PowersSelectBase => 9.25f,
                     Enums.eFontSizeSetting.PowersBase => 9.25f,
                     _ => 8.50f

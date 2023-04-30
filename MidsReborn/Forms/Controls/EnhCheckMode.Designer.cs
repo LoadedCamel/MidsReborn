@@ -91,7 +91,7 @@ namespace Mids_Reborn.Forms.Controls
             // lblCatalysts
             // 
             this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblCatalysts.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblCatalysts.Location = new System.Drawing.Point(196, 13);
             this.lblCatalysts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -103,7 +103,7 @@ namespace Mids_Reborn.Forms.Controls
             // lblBoosters
             // 
             this.lblBoosters.AutoSize = true;
-            this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblBoosters.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblBoosters.Location = new System.Drawing.Point(286, 13);
             this.lblBoosters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -137,7 +137,7 @@ namespace Mids_Reborn.Forms.Controls
             // lblEnhObtained
             // 
             this.lblEnhObtained.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblEnhObtained.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblEnhObtained.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEnhObtained.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblEnhObtained.Location = new System.Drawing.Point(40, 11);
             this.lblEnhObtained.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -170,8 +170,8 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // EnhCheckMode
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.pSalvageSummary);
             this.DoubleBuffered = true;

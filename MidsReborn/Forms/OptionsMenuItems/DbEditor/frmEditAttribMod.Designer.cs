@@ -353,8 +353,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // frmEditAttribMod
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(928, 450);
             this.Controls.Add(this.btnExportJson);
             this.Controls.Add(this.pbGraph);
@@ -383,6 +383,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnImportJson);
             this.Controls.Add(this.listBoxTables);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
             this.Icon = Resources.MRB_Icon_Concept;
             this.Name = "frmEditAttribMod";
             this.Text = "AttribMod Editor";

@@ -234,7 +234,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
                 iPopup.Sections[index1].Add(str1 + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
-                var str2 = power1.DescLong.Replace("<br>", "\r\n");
+                var str2 = power1.DescLong.Replace("\0", "").Replace("<br>", "\r\n");
                 iPopup.Sections[index1].Add(str1 + " " + str2, PopUp.Colors.Common, 1f, FontStyle.Regular);
                 var index2 = iPopup.Add();
                 if (power1.EndCost > 0.0)
@@ -394,7 +394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             /*iList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;*/
-            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            iList.Font = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
             iList.Refresh();
             iList.Update();
         }

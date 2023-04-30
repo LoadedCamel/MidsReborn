@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -9,6 +10,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -139,31 +141,26 @@ namespace Mids_Reborn.Controls
             bxPower = new List<ExtendedBitmap>();
             checked
             {
-                var filePath = Path.Combine(AppContext.BaseDirectory, I9Gfx.ImagePath());
-                var directoryInfo = new DirectoryInfo(filePath);
-                foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
+                // var filePath = Path.Combine(AppContext.BaseDirectory, I9Gfx.ImagePath());
+                // var directoryInfo = new DirectoryInfo(filePath);
+                // foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
+                // {
+                //     bxPower.Add(new ExtendedBitmap($"{file.FullName}"));
+                // }
+
+                var buttonImages = I9Gfx.LoadButtons().GetAwaiter().GetResult();
+                foreach (var buttonImage in buttonImages)
                 {
-                    bxPower.Add(new ExtendedBitmap($"{file.FullName}"));
+                    bxPower.Add(new ExtendedBitmap(buttonImage));
                 }
 
                 ColorSwitch();
                 InitColumns = MidsContext.Config.Columns;
                 SzPower = bxPower[0].Size;
-                foreach (var pg in bxPower)
-                {
-                    pg.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    pg.Graphics.InterpolationMode = InterpolationMode.Bicubic;
-                    pg.Graphics.CompositingMode = CompositingMode.SourceOver;
-                    pg.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    pg.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    pg.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                    pg.Graphics.PageUnit = GraphicsUnit.Pixel;
-                }
                 szSlot = new Size(30, 30);
                 // szBuffer = GetMaxDrawingArea();
                 szBuffer = GetRequiredDrawingArea();
-                var size = new Size(szBuffer.Width, szBuffer.Height);
-                bxBuffer = new ExtendedBitmap(size);
+                bxBuffer = new ExtendedBitmap(szBuffer.Width, szBuffer.Height);
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -172,7 +169,8 @@ namespace Mids_Reborn.Controls
                 bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
                 bxBuffer.Graphics.PageUnit = GraphicsUnit.Pixel;
                 szBuffer = GetRequiredDrawingArea();
-                bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
+                bxNewSlot = new ExtendedBitmap(I9Gfx.LoadNewSlot().GetAwaiter().GetResult());
+                //bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
                 gTarget = iTarget.CreateGraphics();
                 gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -183,7 +181,7 @@ namespace Mids_Reborn.Controls
                 gTarget.PageUnit = GraphicsUnit.Pixel;
                 cTarget = iTarget;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -192,7 +190,7 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null && MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
+        public bool EpicColumns => MidsContext.Character is { Archetype.ClassType: Enums.eClassType.HeroEpic };
 
         public int Columns
         {
@@ -207,7 +205,7 @@ namespace Mids_Reborn.Controls
 
         private int InitColumns
         {
-            set
+            init
             {
                 if (value == vcCols)
                     return;
@@ -220,6 +218,7 @@ namespace Mids_Reborn.Controls
 
         public void ReInit(Control iTarget)
         {
+            if (iTarget.IsDisposed) return;
             gTarget = iTarget.CreateGraphics();
             gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             gTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -230,7 +229,7 @@ namespace Mids_Reborn.Controls
             gTarget.PageUnit = GraphicsUnit.Pixel;
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
@@ -244,29 +243,27 @@ namespace Mids_Reborn.Controls
                 {
                     case 2:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
-                        bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
-                            MidsContext.Character.IsHero()
+                        bxBuffer.Graphics?.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
+                        bxBuffer.Graphics?.DrawString("Inherent Powers", new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel), MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
-                            ScaleDown(iValue));
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50), ScaleDown(iValue));
                         break;
                     case 3:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
+                        bxBuffer.Graphics?.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
+
                         break;
                     case 4:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -276,7 +273,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 48);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -286,7 +283,7 @@ namespace Mids_Reborn.Controls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
+                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
@@ -528,7 +525,7 @@ namespace Mids_Reborn.Controls
                     }
                     else if (iSlot.CanIncludeForStats())
                     {
-                        grey = (iSlot.Level >= MidsContext.Config.ForceLevel);
+                        grey = iSlot.Level >= MidsContext.Config.ForceLevel;
                         imageAttr = GreySlot(grey);
                     }
                     else
@@ -695,7 +692,7 @@ namespace Mids_Reborn.Controls
                     {
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height); // New slot rectangle
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
-                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level > MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(rectangleF));
@@ -704,12 +701,13 @@ namespace Mids_Reborn.Controls
                     }
                     else
                     {
+                        // Controls if powers or slots are greyed out
                         if (_inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         Graphics graphics6 = bxBuffer.Graphics;
                         Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height);
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
+                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             RectangleF iValue3 = rectangleF;
@@ -879,7 +877,7 @@ namespace Mids_Reborn.Controls
         {
             ColorSwitch();
             BackColor = cTarget.BackColor;
-            bxBuffer.Graphics.Clear(BackColor);
+            bxBuffer.Graphics?.Clear(BackColor);
             DrawPowers();
             var location = new Point(0, 0);
             OutputUnscaled(ref bxBuffer, location);
@@ -1173,8 +1171,12 @@ namespace Mids_Reborn.Controls
 
         private void ResetTarget()
         {
-            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
+            if (bxBuffer.Graphics != null)
+                bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125
+                    ? TextRenderingHint.SystemDefault
+                    : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
+            if (cTarget.IsDisposed) return;
             gTarget = cTarget.CreateGraphics();
             gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
             gTarget.CompositingQuality = CompositingQuality.HighQuality;

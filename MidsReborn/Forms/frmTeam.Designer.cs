@@ -65,10 +65,9 @@ namespace Mids_Reborn.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.udAny = new Mids_Reborn.Forms.EnhancedUpDown();
             this.label17 = new System.Windows.Forms.Label();
-            this.tbTotalTeam = new Syncfusion.Windows.Forms.Tools.IntegerTextBox();
-            this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
-            this.btnCancel = new System.Windows.Forms.PictureBox();
-            this.btnSave = new System.Windows.Forms.PictureBox();
+            this.tbTotalTeam = new System.Windows.Forms.TextBox();
+            this.btnSave = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            this.btnCancel = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udWidow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSoldier)).BeginInit();
@@ -86,11 +85,6 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.udController)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udBlaster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udAny)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTotalTeam)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).BeginInit();
-            this.gradientPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnSave)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -151,7 +145,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udWidow.BackColor = System.Drawing.Color.Black;
             this.udWidow.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udWidow.ForeColor = System.Drawing.Color.White;
+            this.udWidow.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udWidow.Location = new System.Drawing.Point(421, 173);
             this.udWidow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udWidow.Maximum = new decimal(new int[] {
@@ -169,7 +163,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udSoldier.BackColor = System.Drawing.Color.Black;
             this.udSoldier.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udSoldier.ForeColor = System.Drawing.Color.White;
+            this.udSoldier.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udSoldier.Location = new System.Drawing.Point(421, 150);
             this.udSoldier.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udSoldier.Maximum = new decimal(new int[] {
@@ -187,7 +181,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udCorruptor.BackColor = System.Drawing.Color.Black;
             this.udCorruptor.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udCorruptor.ForeColor = System.Drawing.Color.White;
+            this.udCorruptor.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udCorruptor.Location = new System.Drawing.Point(421, 127);
             this.udCorruptor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udCorruptor.Maximum = new decimal(new int[] {
@@ -205,7 +199,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udDominator.BackColor = System.Drawing.Color.Black;
             this.udDominator.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udDominator.ForeColor = System.Drawing.Color.White;
+            this.udDominator.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udDominator.Location = new System.Drawing.Point(421, 104);
             this.udDominator.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udDominator.Maximum = new decimal(new int[] {
@@ -223,7 +217,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udMastermind.BackColor = System.Drawing.Color.Black;
             this.udMastermind.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udMastermind.ForeColor = System.Drawing.Color.White;
+            this.udMastermind.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udMastermind.Location = new System.Drawing.Point(421, 81);
             this.udMastermind.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udMastermind.Maximum = new decimal(new int[] {
@@ -241,7 +235,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udStalker.BackColor = System.Drawing.Color.Black;
             this.udStalker.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udStalker.ForeColor = System.Drawing.Color.White;
+            this.udStalker.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udStalker.Location = new System.Drawing.Point(421, 58);
             this.udStalker.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udStalker.Maximum = new decimal(new int[] {
@@ -259,7 +253,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udBrute.BackColor = System.Drawing.Color.Black;
             this.udBrute.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udBrute.ForeColor = System.Drawing.Color.White;
+            this.udBrute.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udBrute.Location = new System.Drawing.Point(421, 31);
             this.udBrute.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udBrute.Maximum = new decimal(new int[] {
@@ -277,7 +271,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udSentGuard.BackColor = System.Drawing.Color.Black;
             this.udSentGuard.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udSentGuard.ForeColor = System.Drawing.Color.White;
+            this.udSentGuard.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udSentGuard.Location = new System.Drawing.Point(421, 3);
             this.udSentGuard.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udSentGuard.Maximum = new decimal(new int[] {
@@ -295,7 +289,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udWarshade.BackColor = System.Drawing.Color.Black;
             this.udWarshade.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udWarshade.ForeColor = System.Drawing.Color.White;
+            this.udWarshade.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udWarshade.Location = new System.Drawing.Point(115, 173);
             this.udWarshade.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udWarshade.Maximum = new decimal(new int[] {
@@ -313,7 +307,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udPeacebringer.BackColor = System.Drawing.Color.Black;
             this.udPeacebringer.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udPeacebringer.ForeColor = System.Drawing.Color.White;
+            this.udPeacebringer.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udPeacebringer.Location = new System.Drawing.Point(115, 150);
             this.udPeacebringer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udPeacebringer.Maximum = new decimal(new int[] {
@@ -331,7 +325,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udTanker.BackColor = System.Drawing.Color.Black;
             this.udTanker.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udTanker.ForeColor = System.Drawing.Color.White;
+            this.udTanker.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udTanker.Location = new System.Drawing.Point(115, 127);
             this.udTanker.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udTanker.Maximum = new decimal(new int[] {
@@ -349,7 +343,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udScrapper.BackColor = System.Drawing.Color.Black;
             this.udScrapper.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udScrapper.ForeColor = System.Drawing.Color.White;
+            this.udScrapper.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udScrapper.Location = new System.Drawing.Point(115, 104);
             this.udScrapper.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udScrapper.Maximum = new decimal(new int[] {
@@ -367,7 +361,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udDefender.BackColor = System.Drawing.Color.Black;
             this.udDefender.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udDefender.ForeColor = System.Drawing.Color.White;
+            this.udDefender.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udDefender.Location = new System.Drawing.Point(115, 81);
             this.udDefender.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udDefender.Maximum = new decimal(new int[] {
@@ -385,7 +379,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udController.BackColor = System.Drawing.Color.Black;
             this.udController.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udController.ForeColor = System.Drawing.Color.White;
+            this.udController.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udController.Location = new System.Drawing.Point(115, 58);
             this.udController.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udController.Maximum = new decimal(new int[] {
@@ -403,7 +397,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udBlaster.BackColor = System.Drawing.Color.Black;
             this.udBlaster.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udBlaster.ForeColor = System.Drawing.Color.White;
+            this.udBlaster.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udBlaster.Location = new System.Drawing.Point(115, 31);
             this.udBlaster.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udBlaster.Maximum = new decimal(new int[] {
@@ -422,6 +416,7 @@ namespace Mids_Reborn.Forms
             this.label16.AutoSize = true;
             this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label16.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label16.Location = new System.Drawing.Point(156, 170);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
@@ -435,6 +430,7 @@ namespace Mids_Reborn.Forms
             this.label15.AutoSize = true;
             this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label15.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label15.Location = new System.Drawing.Point(156, 147);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
@@ -448,6 +444,7 @@ namespace Mids_Reborn.Forms
             this.label14.AutoSize = true;
             this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label14.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label14.Location = new System.Drawing.Point(156, 124);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
@@ -461,6 +458,7 @@ namespace Mids_Reborn.Forms
             this.label13.AutoSize = true;
             this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label13.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label13.Location = new System.Drawing.Point(156, 101);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
@@ -474,6 +472,7 @@ namespace Mids_Reborn.Forms
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label12.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label12.Location = new System.Drawing.Point(156, 78);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
@@ -487,6 +486,7 @@ namespace Mids_Reborn.Forms
             this.label11.AutoSize = true;
             this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label11.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label11.Location = new System.Drawing.Point(156, 55);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
@@ -500,6 +500,7 @@ namespace Mids_Reborn.Forms
             this.label10.AutoSize = true;
             this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label10.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label10.Location = new System.Drawing.Point(156, 28);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
@@ -513,12 +514,13 @@ namespace Mids_Reborn.Forms
             this.label9.AutoSize = true;
             this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label9.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label9.Location = new System.Drawing.Point(156, 0);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(257, 28);
             this.label9.TabIndex = 2;
-            this.label9.Text = "SentGuardl:";
+            this.label9.Text = "Sentinel/Guardian:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label8
@@ -526,6 +528,7 @@ namespace Mids_Reborn.Forms
             this.label8.AutoSize = true;
             this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label8.Location = new System.Drawing.Point(4, 170);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
@@ -539,6 +542,7 @@ namespace Mids_Reborn.Forms
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label7.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label7.Location = new System.Drawing.Point(4, 147);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
@@ -552,6 +556,7 @@ namespace Mids_Reborn.Forms
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label6.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label6.Location = new System.Drawing.Point(4, 124);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
@@ -565,6 +570,7 @@ namespace Mids_Reborn.Forms
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label5.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label5.Location = new System.Drawing.Point(4, 101);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
@@ -578,6 +584,7 @@ namespace Mids_Reborn.Forms
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label4.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label4.Location = new System.Drawing.Point(4, 78);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
@@ -591,6 +598,7 @@ namespace Mids_Reborn.Forms
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label2.Location = new System.Drawing.Point(4, 28);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
@@ -604,6 +612,7 @@ namespace Mids_Reborn.Forms
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label3.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label3.Location = new System.Drawing.Point(4, 55);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
@@ -617,6 +626,7 @@ namespace Mids_Reborn.Forms
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label1.Location = new System.Drawing.Point(4, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
@@ -629,7 +639,7 @@ namespace Mids_Reborn.Forms
             // 
             this.udAny.BackColor = System.Drawing.Color.Black;
             this.udAny.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.udAny.ForeColor = System.Drawing.Color.White;
+            this.udAny.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.udAny.Location = new System.Drawing.Point(115, 3);
             this.udAny.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.udAny.Maximum = new decimal(new int[] {
@@ -647,6 +657,7 @@ namespace Mids_Reborn.Forms
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label17.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label17.Location = new System.Drawing.Point(14, 10);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
@@ -656,75 +667,84 @@ namespace Mids_Reborn.Forms
             // 
             // tbTotalTeam
             // 
-            this.tbTotalTeam.BackGroundColor = System.Drawing.Color.Black;
-            this.tbTotalTeam.BeforeTouchSize = new System.Drawing.Size(19, 23);
-            this.tbTotalTeam.BorderColor = System.Drawing.Color.White;
             this.tbTotalTeam.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbTotalTeam.ForeColor = System.Drawing.Color.White;
-            this.tbTotalTeam.IntegerValue = ((long)(0));
+            this.tbTotalTeam.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tbTotalTeam.Location = new System.Drawing.Point(172, 8);
             this.tbTotalTeam.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tbTotalTeam.Name = "tbTotalTeam";
-            this.tbTotalTeam.PositiveColor = System.Drawing.Color.White;
             this.tbTotalTeam.ReadOnly = true;
-            this.tbTotalTeam.ReadOnlyBackColor = System.Drawing.Color.Black;
             this.tbTotalTeam.Size = new System.Drawing.Size(19, 23);
             this.tbTotalTeam.TabIndex = 3;
             this.tbTotalTeam.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbTotalTeam.ZeroColor = System.Drawing.Color.White;
-            // 
-            // gradientPanel1
-            // 
-            this.gradientPanel1.BorderColor = System.Drawing.Color.Transparent;
-            this.gradientPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.gradientPanel1.Controls.Add(this.btnCancel);
-            this.gradientPanel1.Controls.Add(this.btnSave);
-            this.gradientPanel1.Controls.Add(this.tbTotalTeam);
-            this.gradientPanel1.Controls.Add(this.tableLayoutPanel1);
-            this.gradientPanel1.Controls.Add(this.label17);
-            this.gradientPanel1.Location = new System.Drawing.Point(-1, -1);
-            this.gradientPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.gradientPanel1.Name = "gradientPanel1";
-            this.gradientPanel1.Size = new System.Drawing.Size(589, 341);
-            this.gradientPanel1.TabIndex = 4;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(321, 300);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(122, 25);
-            this.btnCancel.TabIndex = 97;
-            this.btnCancel.TabStop = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            this.btnCancel.Paint += new System.Windows.Forms.PaintEventHandler(this.btnCancel_Paint);
+            this.tbTotalTeam.Text = "0";
             // 
             // btnSave
             // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnSave.CurrentText = "Save & Close";
+            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnSave.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.btnSave.Images.Background = global::MRBResourceLib.Resources.HeroButton;
+            this.btnSave.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
+            this.btnSave.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
+            this.btnSave.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
             this.btnSave.Location = new System.Drawing.Point(450, 300);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnSave.Lock = false;
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(122, 25);
-            this.btnSave.TabIndex = 96;
-            this.btnSave.TabStop = false;
+            this.btnSave.TabIndex = 5;
+            this.btnSave.Text = "Save & Close";
+            this.btnSave.TextOutline.Color = System.Drawing.Color.Black;
+            this.btnSave.TextOutline.Width = 2;
+            this.btnSave.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.btnSave.ToggleText.Indeterminate = "Indeterminate State";
+            this.btnSave.ToggleText.ToggledOff = "ToggledOff State";
+            this.btnSave.ToggleText.ToggledOn = "ToggledOn State";
+            this.btnSave.UseAlt = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            this.btnSave.Paint += new System.Windows.Forms.PaintEventHandler(this.btnSave_Paint);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnCancel.CurrentText = "Cancel";
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnCancel.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.btnCancel.Images.Background = global::MRBResourceLib.Resources.HeroButton;
+            this.btnCancel.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
+            this.btnCancel.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
+            this.btnCancel.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
+            this.btnCancel.Location = new System.Drawing.Point(321, 300);
+            this.btnCancel.Lock = false;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(122, 25);
+            this.btnCancel.TabIndex = 4;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextOutline.Color = System.Drawing.Color.Black;
+            this.btnCancel.TextOutline.Width = 2;
+            this.btnCancel.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.btnCancel.ToggleText.Indeterminate = "Indeterminate State";
+            this.btnCancel.ToggleText.ToggledOff = "ToggledOff State";
+            this.btnCancel.ToggleText.ToggledOn = "ToggledOn State";
+            this.btnCancel.UseAlt = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // FrmTeam
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(587, 339);
-            this.Controls.Add(this.gradientPanel1);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FrmTeam";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Team Members Selection";
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.tbTotalTeam);
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.label17);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udWidow)).EndInit();
@@ -743,12 +763,6 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.udController)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udBlaster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udAny)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTotalTeam)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).EndInit();
-            this.gradientPanel1.ResumeLayout(false);
-            this.gradientPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnSave)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -789,9 +803,8 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label17;
-        private Syncfusion.Windows.Forms.Tools.IntegerTextBox tbTotalTeam;
-        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel1;
-        private System.Windows.Forms.PictureBox btnCancel;
-        private System.Windows.Forms.PictureBox btnSave;
+        private System.Windows.Forms.TextBox tbTotalTeam;
+        private Controls.ImageButtonEx btnSave;
+        private Controls.ImageButtonEx btnCancel;
     }
 }

@@ -39,19 +39,31 @@ namespace Mids_Reborn.Forms.DiscordSharing
             Load += OnLoad;
             Closing += OnClosing;
             InitializeComponent();
-            tabControlAdv1.SelectedIndexChanged += TabControlAdv1OnSelectedIndexChanged;
+            InitializeAsync();
             serverCombo.SelectedIndexChanged += ServerComboOnSelectedIndexChanged;
-            webView21.SourceChanged += WebView21OnSourceChanged;
+            webView.SourceChanged += WebView21OnSourceChanged;
+            formPages1.SelectedPageChanged += FormPages1OnSelectedPageChanged;
+        }
+
+        private void FormPages1OnSelectedPageChanged(object? sender, int e)
+        {
+            // if (e == 1)
+            // {
+            //     if (webView is { CoreWebView2: not null })
+            //     {
+            //         webView.CoreWebView2.Navigate("https://discord.com/api/oauth2/authorize?client_id=729018208824066171&redirect_uri=https%3A%2F%2Fmidsreborn.com%2F&response_type=code&scope=identify%20email");
+            //     }
+            // }
         }
 
         private void SetTabPage(int page)
         {
-            tabControlAdv1.SelectedIndex = page;
+            formPages1.SelectedPage = page;
         }
 
         private void SetStatusText(string text)
         {
-            statusBarAdvPanel1.Text = text;
+            //statusBarAdvPanel1.Text = text;
         }
 
         private void OnClosing(object? sender, CancelEventArgs e)
@@ -63,11 +75,10 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             if (MidsContext.Config is { Authorized: false })
             {
-                SetTabPage(0);
-                return;
+                SetTabPage(1);
             }
 
-            _oAuth = await _dataStore.Retrieve<Models.OAuthModel>();
+            /*_oAuth = await _dataStore.Retrieve<Models.OAuthModel>();
             _discordUser = await _dataStore.Retrieve<Models.DiscordUserModel>();
             var dTokenExpiry = DateTimeOffset.Parse(_oAuth.Expirey).UtcDateTime;
             if (DateTime.Now < dTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > dTokenExpiry.Subtract(TimeSpan.FromHours(8)))
@@ -85,23 +96,23 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
             if (MidsContext.Config is { Registered: false })
             {
-                SetTabPage(1);
+                SetTabPage(0);
                 return;
             }
 
             _mrbAuth = await _dataStore.Retrieve<Models.MbAuthModel>();
             var mTokenExpiry = DateTimeOffset.Parse(_mrbAuth.RefreshTokenExpiration).UtcDateTime;
-            if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
-            {
-                _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);
-                if (!string.IsNullOrWhiteSpace(_mrbAuth.Message))
-                {
-                    SetTabPage(2);
-                    return;
-                }
-                await _dataStore.Repsert(_mrbAuth);
-                return;
-            }
+            // if (DateTime.UtcNow < mTokenExpiry.Subtract(TimeSpan.FromHours(1)) && DateTime.UtcNow > mTokenExpiry.Subtract(TimeSpan.FromHours(8)))
+            // {
+            //     _mrbAuth = await _midsBot.RequestAccessToken(_discordUser.DiscordId, pg2_passBox.Text);
+            //     if (!string.IsNullOrWhiteSpace(_mrbAuth.Message))
+            //     {
+            //         SetTabPage(2);
+            //         return;
+            //     }
+            //     await _dataStore.Repsert(_mrbAuth);
+            //     return;
+            // }
 
             if (DateTime.UtcNow >= mTokenExpiry)
             {
@@ -111,7 +122,17 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
             _mrbAuth = await _midsBot.RefreshAccessToken(_discordUser.DiscordId, _mrbAuth.RefreshToken);
             await _dataStore.Repsert(_mrbAuth);
-            SetTabPage(3);
+            SetTabPage(3);*/
+        }
+
+        private async void InitializeAsync()
+        {
+            await webView.EnsureCoreWebView2Async();
+        }
+
+        private void OnPage1Load(object? sender, EventArgs e)
+        {
+            webView.CoreWebView2.Navigate("https://discord.com/api/oauth2/authorize?client_id=729018208824066171&redirect_uri=https%3A%2F%2Fmidsreborn.com%2F&response_type=code&scope=identify%20email");
         }
 
         // Page 0 - Primary
@@ -123,7 +144,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                 return;
             }
 
-            var currentUrl = webView21.Source;
+            var currentUrl = webView.Source;
             if (currentUrl.Query.Contains("?code="))
             {
                 var redirectUrl = Regex.Replace(currentUrl.ToString(), "(\\?.*)", string.Empty);
@@ -159,7 +180,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             }
         }
 
-        private async void TabControlAdv1OnSelectedIndexChanged(object? sender, EventArgs e)
+        /*private async void TabControlAdv1OnSelectedIndexChanged(object? sender, EventArgs e)
         {
             switch (tabControlAdv1.SelectedIndex)
             {
@@ -183,9 +204,10 @@ namespace Mids_Reborn.Forms.DiscordSharing
                     break;
             }
         }
+        */
 
         // Page 1
-        private async void registerButton_Click(object sender, EventArgs e)
+        /*private async void registerButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(pg2_passBox.Text))
             {
@@ -244,7 +266,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             await _dataStore.Repsert(_mrbAuth);
             if (MidsContext.Config != null) MidsContext.Config.Registered = true;
             SetTabPage(3);
-        }
+        }*/
 
         private async void forgotPasswordButton_Click(object sender, EventArgs e)
         {
@@ -312,7 +334,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
         private void refreshButton_MouseEnter(object sender, EventArgs e)
         {
-            refreshButton.IconColor = Color.FromArgb(87,242,135);
+            refreshButton.IconColor = Color.FromArgb(87, 242, 135);
         }
 
         private void refreshButton_MouseLeave(object sender, EventArgs e)
@@ -329,14 +351,14 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             shareButton.IconColor = Color.FromArgb(88, 101, 242);
         }
-        
+
         private static void PerformValidation(out Validation validation)
         {
-            if (MidsContext.Character == null || MidsContext.Character.Archetype == null)
+            if (MidsContext.Character.Archetype == null)
             {
                 validation = new Validation { IsValid = false, Message = @"You must create a character and select some powers first." };
             }
-            else if (MidsContext.Character != null && string.IsNullOrWhiteSpace(MidsContext.Character.Name))
+            else if (string.IsNullOrWhiteSpace(MidsContext.Character.Name))
             {
                 validation = new Validation { IsValid = false, Message = @"You must specify a character name first." };
             }
@@ -551,20 +573,20 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
                             break;
                         case "miscCheckedList":
-                        {
-                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
-                            MisList.Add(selectedItem);
-                            if (SelectedStats.ContainsKey("Misc"))
                             {
-                                SelectedStats["Misc"] = MisList;
-                            }
-                            else
-                            {
-                                SelectedStats.Add("Misc", MisList);
-                            }
+                                var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                                MisList.Add(selectedItem);
+                                if (SelectedStats.ContainsKey("Misc"))
+                                {
+                                    SelectedStats["Misc"] = MisList;
+                                }
+                                else
+                                {
+                                    SelectedStats.Add("Misc", MisList);
+                                }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
 
                     break;
@@ -589,16 +611,16 @@ namespace Mids_Reborn.Forms.DiscordSharing
 
                             break;
                         case "miscCheckedList":
-                        {
-                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
-                            MisList.Remove(selectedItem);
-                            foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Misc" select list)
                             {
-                                list.Remove(obj.Items[e.Index].ToString());
-                            }
+                                var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                                MisList.Remove(selectedItem);
+                                foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Misc" select list)
+                                {
+                                    list.Remove(obj.Items[e.Index].ToString());
+                                }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
 
                     break;

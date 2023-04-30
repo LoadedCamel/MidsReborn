@@ -47,7 +47,7 @@ namespace Mids_Reborn.Forms
             this.ClientSize = new System.Drawing.Size(405, 79);
             this.ControlBox = false;
             this.Controls.Add(this.Message);
-            this.Font = new System.Drawing.Font("Arial", 9.75f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

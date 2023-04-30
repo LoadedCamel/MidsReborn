@@ -96,7 +96,6 @@ namespace Mids_Reborn.Core
             Accolade,
             Pet,
             Temp
-
         }
         public enum eAlphaOrder
         {
@@ -1731,7 +1730,7 @@ namespace Mids_Reborn.Core
 
         public struct ShortFX
         {
-            public int[] Index;
+            public int[]? Index;
             public float[] Value;
             public float Sum;
 

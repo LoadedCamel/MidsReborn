@@ -6,7 +6,7 @@
 	  <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,18 +36,12 @@
     <Compile Update="Forms\Controls\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Forms\Controls\InfoPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="Resources.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="UIv2\v2Controls\PowerList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="UIv2\v2Controls\PowerList_Test.cs">
+    <Compile Update="Forms\Controls\PowerList.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UIv2\v2Controls\PowersControl.cs">
@@ -74,6 +68,63 @@
     <Content Include="Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Fonts\NotoSans-Black.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-BlackItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-BoldItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-ExtraBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-ExtraBoldItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-ExtraLight.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-ExtraLightItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Italic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Light.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-LightItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Medium.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-MediumItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-SemiBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-SemiBoldItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-Thin.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\NotoSans-ThinItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+	<Content Include="Images\Unknown.png">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
     <Content Include="Data\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -132,15 +183,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MRB_Icon_Concept.ico" />
-    <None Update="Data\Generic\PowersReplTable.mhd">
+    <Content Include="Data\Generic\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Data\Generic\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Update="Data\Homecoming\PowersReplTable.mhd">
+    <Content Include="Data\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+	<Content Include="Data\Homecoming\CrypticPowerNames.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\Rebirth\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -283,49 +337,69 @@
       <Version>1.3.6</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
-      <Version>6.1.1</Version>
+      <Version>6.3.0</Version>
     </PackageReference>
-    <PackageReference Include="Jace4fc" Version="1.0.1" />
+    <PackageReference Include="Jace4fc" Version="1.0.2" />
     <PackageReference Include="LiteDB">
-      <Version>5.0.12</Version>
+      <Version>5.0.16</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1343.22</Version>
+      <Version>1.0.1722.45</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.3</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
     <PackageReference Include="RestSharp">
-      <Version>108.0.1</Version>
+      <Version>110.2.0</Version>
     </PackageReference>
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
-      <Version>108.0.1</Version>
+      <Version>110.2.0</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp" Version="2.88.1" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.1" />
-    <PackageReference Include="Syncfusion.Grid.Windows" Version="20.2.0.48" />
-    <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.48" />
-    <PackageReference Include="Syncfusion.Shared.Base" Version="20.2.0.48" />
-    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.2.0.48" />
+    <PackageReference Include="Zstandard2.Net" Version="1.4.4" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
     <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Forms\frmUpdate.cs" />
     <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
+    <Content Remove="Images\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Fonts\NotoSans-Black.ttf" />
+    <None Remove="Fonts\NotoSans-BlackItalic.ttf" />
+    <None Remove="Fonts\NotoSans-Bold.ttf" />
+    <None Remove="Fonts\NotoSans-BoldItalic.ttf" />
+    <None Remove="Fonts\NotoSans-ExtraBold.ttf" />
+    <None Remove="Fonts\NotoSans-ExtraBoldItalic.ttf" />
+    <None Remove="Fonts\NotoSans-ExtraLight.ttf" />
+    <None Remove="Fonts\NotoSans-ExtraLightItalic.ttf" />
+    <None Remove="Fonts\NotoSans-Italic.ttf" />
+    <None Remove="Fonts\NotoSans-Light.ttf" />
+    <None Remove="Fonts\NotoSans-LightItalic.ttf" />
+    <None Remove="Fonts\NotoSans-Medium.ttf" />
+    <None Remove="Fonts\NotoSans-MediumItalic.ttf" />
+    <None Remove="Fonts\NotoSans-Regular.ttf" />
+    <None Remove="Fonts\NotoSans-SemiBold.ttf" />
+    <None Remove="Fonts\NotoSans-SemiBoldItalic.ttf" />
+    <None Remove="Fonts\NotoSans-Thin.ttf" />
+    <None Remove="Fonts\NotoSans-ThinItalic.ttf" />
+    <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
+    <UseWPF>False</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>1701;1702;CA1416</NoWarn>

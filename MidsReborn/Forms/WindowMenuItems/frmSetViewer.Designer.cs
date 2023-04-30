@@ -119,7 +119,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // Label1
             // 
-            this.Label1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label1.ForeColor = System.Drawing.Color.White;
             this.Label1.Location = new System.Drawing.Point(625, 9);
             this.Label1.Name = "Label1";
@@ -141,7 +141,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // Label2
             // 
-            this.Label2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label2.ForeColor = System.Drawing.Color.White;
             this.Label2.Location = new System.Drawing.Point(12, 4);
             this.Label2.Name = "Label2";
@@ -175,7 +175,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // btnSmall
             // 
             this.btnSmall.Checked = false;
-            this.btnSmall.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.btnSmall.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnSmall.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.btnSmall.Location = new System.Drawing.Point(0, 31);
             this.btnSmall.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -190,7 +190,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // btnDetailFx
             // 
             this.btnDetailFx.Checked = false;
-            this.btnDetailFx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.btnDetailFx.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnDetailFx.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.btnDetailFx.Location = new System.Drawing.Point(0, 3);
             this.btnDetailFx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -205,7 +205,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // chkOnTop
             // 
             this.chkOnTop.Checked = true;
-            this.chkOnTop.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.chkOnTop.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.chkOnTop.Location = new System.Drawing.Point(224, 3);
             this.chkOnTop.Name = "chkOnTop";
@@ -219,7 +219,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // btnClose
             // 
             this.btnClose.Checked = false;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.btnClose.Location = new System.Drawing.Point(224, 31);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -244,14 +244,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.rtxtFX);
             this.Controls.Add(this.rtxtInfo);
             this.Controls.Add(this.lstSets);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmSetViewer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Currently Active Sets & Bonuses";
+            this.Text = "Active Sets & Bonuses";
             this.TopMost = true;
             this.panelButtons.ResumeLayout(false);
             this.ResumeLayout(false);

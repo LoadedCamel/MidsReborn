@@ -70,7 +70,7 @@ namespace Mids_Reborn.Core
 
         //IPower Power { get; set; }
         IPower? GetPower();
-        void SetPower(IPower? power);
+        void SetPower(IPower power);
 
         int CheckAndFixIOLevel(int level);
 

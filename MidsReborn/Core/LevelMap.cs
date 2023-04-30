@@ -29,7 +29,13 @@ namespace Mids_Reborn.Core
 
         public Enums.dmItem LevelType()
         {
-            return Powers <= 0 ? Slots <= 0 ? Enums.dmItem.None : Enums.dmItem.Slot : Enums.dmItem.Power;
+            if (Powers <= 0)
+                if (Slots <= 0)
+                    return Enums.dmItem.None;
+                else
+                    return Enums.dmItem.Slot;
+            else
+                return Enums.dmItem.Power;
         }
     }
 }

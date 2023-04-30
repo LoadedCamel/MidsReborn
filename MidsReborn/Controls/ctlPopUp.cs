@@ -7,6 +7,7 @@ using System.Drawing.Text;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -63,7 +64,7 @@ namespace Mids_Reborn.Controls
             pIDX = -1;
             eIDX = -1;
             psIDX = -1;
-            pFont = new Font("Arial", 12.25f, FontStyle.Bold, GraphicsUnit.Pixel);
+            pFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel);
             InitializeComponent();
         }
 
@@ -152,8 +153,8 @@ namespace Mids_Reborn.Controls
         private void InitializeComponent()
         {
             SuspendLayout();
-            AutoScaleMode = AutoScaleMode.Dpi;
-            Font = new Font("Arial", 11.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+            AutoScaleMode = AutoScaleMode.Font;
+            Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
             Name = "ctlPopUp";
             var size = new Size(167, 104);
             Size = size;

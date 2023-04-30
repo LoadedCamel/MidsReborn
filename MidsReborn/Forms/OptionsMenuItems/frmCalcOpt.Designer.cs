@@ -32,1681 +32,1249 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCalcOpt));
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.chkColorPrint = new System.Windows.Forms.CheckBox();
-            this.myTip = new System.Windows.Forms.ToolTip(this.components);
-            this.cPicker = new System.Windows.Forms.ColorDialog();
-            this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.TabPage5 = new System.Windows.Forms.TabPage();
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkUpdates = new System.Windows.Forms.CheckBox();
-            this.Label34 = new System.Windows.Forms.Label();
-            this.groupBox19 = new System.Windows.Forms.GroupBox();
-            this.lblAssocStatus = new System.Windows.Forms.Label();
-            this.lblFileAssoc = new System.Windows.Forms.Label();
-            this.btnFileAssoc = new System.Windows.Forms.Button();
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.btnSaveFolder = new System.Windows.Forms.Button();
-            this.btnSaveFolderReset = new System.Windows.Forms.Button();
-            this.chkLoadLastFile = new System.Windows.Forms.CheckBox();
-            this.lblSaveFolder = new System.Windows.Forms.Label();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.TabPage1 = new System.Windows.Forms.TabPage();
-            this.GroupBox7 = new System.Windows.Forms.GroupBox();
-            this.listScenarios = new System.Windows.Forms.ListBox();
-            this.GroupBox9 = new System.Windows.Forms.GroupBox();
-            this.lblExample = new System.Windows.Forms.Label();
-            this.cmbAction = new System.Windows.Forms.ComboBox();
-            this.Label10 = new System.Windows.Forms.Label();
-            this.Label15 = new System.Windows.Forms.Label();
-            this.TabPage4 = new System.Windows.Forms.TabPage();
-            this.GroupBox11 = new System.Windows.Forms.GroupBox();
-            this.csList = new System.Windows.Forms.ListBox();
-            this.csAdd = new System.Windows.Forms.Button();
-            this.csDelete = new System.Windows.Forms.Button();
-            this.csBtnEdit = new System.Windows.Forms.Button();
-            this.csReset = new System.Windows.Forms.Button();
-            this.GroupBox12 = new System.Windows.Forms.GroupBox();
-            this.Label33 = new System.Windows.Forms.Label();
-            this.Label24 = new System.Windows.Forms.Label();
-            this.Label25 = new System.Windows.Forms.Label();
-            this.fcList = new System.Windows.Forms.ListBox();
-            this.Label26 = new System.Windows.Forms.Label();
-            this.fcColorOn = new System.Windows.Forms.TextBox();
-            this.fcColorOff = new System.Windows.Forms.TextBox();
-            this.Label27 = new System.Windows.Forms.Label();
-            this.Label28 = new System.Windows.Forms.Label();
-            this.Label29 = new System.Windows.Forms.Label();
-            this.fcTextOn = new System.Windows.Forms.TextBox();
-            this.fcTextOff = new System.Windows.Forms.TextBox();
-            this.Label30 = new System.Windows.Forms.Label();
-            this.fcBoldOn = new System.Windows.Forms.TextBox();
-            this.fcBoldOff = new System.Windows.Forms.TextBox();
-            this.Label31 = new System.Windows.Forms.Label();
-            this.fcItalicOn = new System.Windows.Forms.TextBox();
-            this.fcItalicOff = new System.Windows.Forms.TextBox();
-            this.Label32 = new System.Windows.Forms.Label();
-            this.fcUnderlineOn = new System.Windows.Forms.TextBox();
-            this.fcUnderlineOff = new System.Windows.Forms.TextBox();
-            this.fcWSSpace = new System.Windows.Forms.RadioButton();
-            this.fcWSTab = new System.Windows.Forms.RadioButton();
-            this.fcName = new System.Windows.Forms.TextBox();
-            this.fcAdd = new System.Windows.Forms.Button();
-            this.fcDelete = new System.Windows.Forms.Button();
-            this.fcNotes = new System.Windows.Forms.TextBox();
-            this.fcSet = new System.Windows.Forms.Button();
-            this.fcReset = new System.Windows.Forms.Button();
-            this.TabPage2 = new System.Windows.Forms.TabPage();
-            this.GroupBox6 = new System.Windows.Forms.GroupBox();
-            this.rbPvE = new System.Windows.Forms.RadioButton();
-            this.rbPvP = new System.Windows.Forms.RadioButton();
-            this.Label7 = new System.Windows.Forms.Label();
-            this.GroupBox8 = new System.Windows.Forms.GroupBox();
-            this.Label9 = new System.Windows.Forms.Label();
-            this.rbChanceMax = new System.Windows.Forms.RadioButton();
-            this.rbChanceAverage = new System.Windows.Forms.RadioButton();
-            this.rbChanceIgnore = new System.Windows.Forms.RadioButton();
-            this.GroupBox15 = new System.Windows.Forms.GroupBox();
-            this.chkIOEffects = new System.Windows.Forms.CheckBox();
-            this.chkSetBonus = new System.Windows.Forms.CheckBox();
-            this.Label20 = new System.Windows.Forms.Label();
-            this.chkUseArcanaTime = new System.Windows.Forms.CheckBox();
-            this.GroupBox2 = new System.Windows.Forms.GroupBox();
-            this.Label8 = new System.Windows.Forms.Label();
-            this.clbSuppression = new System.Windows.Forms.CheckedListBox();
-            this.TeamSize = new System.Windows.Forms.NumericUpDown();
-            this.Label16 = new System.Windows.Forms.Label();
-            this.TabPage3 = new System.Windows.Forms.TabPage();
-            this.GroupBox3 = new System.Windows.Forms.GroupBox();
-            this.Label4 = new System.Windows.Forms.Label();
-            this.cbEnhLevel = new System.Windows.Forms.ComboBox();
-            this.optEnh = new System.Windows.Forms.Label();
-            this.optSO = new System.Windows.Forms.RadioButton();
-            this.optDO = new System.Windows.Forms.RadioButton();
-            this.optTO = new System.Windows.Forms.RadioButton();
-            this.Label3 = new System.Windows.Forms.Label();
-            this.chkRelSignOnly = new System.Windows.Forms.CheckBox();
-            this.chkShowSOLevels = new System.Windows.Forms.CheckBox();
-            this.GroupBox14 = new System.Windows.Forms.GroupBox();
-            this.udIOLevel = new System.Windows.Forms.NumericUpDown();
-            this.Label40 = new System.Windows.Forms.Label();
-            this.btnIOReset = new System.Windows.Forms.Button();
-            this.chkIOLevel = new System.Windows.Forms.CheckBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.cbCurrency = new System.Windows.Forms.ComboBox();
-            this.GroupBox5 = new System.Windows.Forms.GroupBox();
-            this.rbGraphTwoLine = new System.Windows.Forms.RadioButton();
-            this.rbGraphStacked = new System.Windows.Forms.RadioButton();
-            this.rbGraphSimple = new System.Windows.Forms.RadioButton();
-            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
-            this.chkIOPrintLevels = new System.Windows.Forms.CheckBox();
-            this.GroupBox17 = new System.Windows.Forms.GroupBox();
-            this.udRTFSize = new System.Windows.Forms.NumericUpDown();
-            this.udStatSize = new System.Windows.Forms.NumericUpDown();
-            this.Label21 = new System.Windows.Forms.Label();
-            this.Label22 = new System.Windows.Forms.Label();
-            this.btnFontColor = new System.Windows.Forms.Button();
-            this.chkTextBold = new System.Windows.Forms.CheckBox();
-            this.chkStatBold = new System.Windows.Forms.CheckBox();
-            this.Label36 = new System.Windows.Forms.Label();
-            this.chkHighVis = new System.Windows.Forms.CheckBox();
-            this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.udPowSelectSize = new System.Windows.Forms.NumericUpDown();
-            this.label18 = new System.Windows.Forms.Label();
-            this.udPowersSize = new System.Windows.Forms.NumericUpDown();
-            this.chkPowSelBold = new System.Windows.Forms.CheckBox();
-            this.chkPowersBold = new System.Windows.Forms.CheckBox();
-            this.chkMiddle = new System.Windows.Forms.CheckBox();
-            this.chkNoTips = new System.Windows.Forms.CheckBox();
-            this.groupBox18 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cbTotalsWindowTitleOpt = new System.Windows.Forms.ComboBox();
-            this.chkOldStyle = new System.Windows.Forms.CheckBox();
-            this.chkShowSelfBuffsAny = new System.Windows.Forms.CheckBox();
-            this.TabControl1 = new System.Windows.Forms.TabControl();
-            this.TabPage5.SuspendLayout();
-            this.GroupBox1.SuspendLayout();
-            this.groupBox19.SuspendLayout();
-            this.groupBox16.SuspendLayout();
-            this.TabPage1.SuspendLayout();
-            this.GroupBox7.SuspendLayout();
-            this.GroupBox9.SuspendLayout();
-            this.TabPage4.SuspendLayout();
-            this.GroupBox11.SuspendLayout();
-            this.GroupBox12.SuspendLayout();
-            this.TabPage2.SuspendLayout();
-            this.GroupBox6.SuspendLayout();
-            this.GroupBox8.SuspendLayout();
-            this.GroupBox15.SuspendLayout();
-            this.GroupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TeamSize)).BeginInit();
-            this.TabPage3.SuspendLayout();
-            this.GroupBox3.SuspendLayout();
-            this.GroupBox14.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udIOLevel)).BeginInit();
-            this.GroupBox5.SuspendLayout();
-            this.GroupBox17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).BeginInit();
-            this.groupBox18.SuspendLayout();
-            this.TabControl1.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(frmCalcOpt));
+            btnOK = new Button();
+            btnCancel = new Button();
+            chkColorPrint = new CheckBox();
+            myTip = new ToolTip(components);
+            chkIOEffects = new CheckBox();
+            chkSetBonus = new CheckBox();
+            chkUseArcanaTime = new CheckBox();
+            TeamSize = new NumericUpDown();
+            cbEnhLevel = new ComboBox();
+            optSO = new RadioButton();
+            optDO = new RadioButton();
+            optTO = new RadioButton();
+            chkRelSignOnly = new CheckBox();
+            udIOLevel = new NumericUpDown();
+            chkIOLevel = new CheckBox();
+            rbGraphTwoLine = new RadioButton();
+            rbGraphStacked = new RadioButton();
+            rbGraphSimple = new RadioButton();
+            chkHighVis = new CheckBox();
+            cPicker = new ColorDialog();
+            fbdSave = new FolderBrowserDialog();
+            TabPage5 = new TabPage();
+            groupBox4 = new GroupBox();
+            SchemaStatus = new Label();
+            btnRepairSchemaAssoc = new Button();
+            label6 = new Label();
+            lblSchemaAssoc = new Label();
+            groupBox16 = new GroupBox();
+            Label1 = new Label();
+            lblSaveFolder = new Label();
+            chkLoadLastFile = new CheckBox();
+            btnSaveFolderReset = new Button();
+            btnSaveFolder = new Button();
+            groupBox19 = new GroupBox();
+            FileAssocStatus = new Label();
+            btnRepairFileAssoc = new Button();
+            lblFileAssocTxt = new Label();
+            lblFileAssoc = new Label();
+            GroupBox1 = new GroupBox();
+            Label34 = new Label();
+            chkUpdates = new CheckBox();
+            TabPage1 = new TabPage();
+            Label15 = new Label();
+            Label10 = new Label();
+            cmbAction = new ComboBox();
+            GroupBox9 = new GroupBox();
+            lblExample = new Label();
+            GroupBox7 = new GroupBox();
+            listScenarios = new ListBox();
+            TabPage2 = new TabPage();
+            Label16 = new Label();
+            GroupBox2 = new GroupBox();
+            clbSuppression = new CheckedListBox();
+            Label8 = new Label();
+            GroupBox15 = new GroupBox();
+            Label20 = new Label();
+            GroupBox8 = new GroupBox();
+            rbChanceIgnore = new RadioButton();
+            rbChanceAverage = new RadioButton();
+            rbChanceMax = new RadioButton();
+            Label9 = new Label();
+            GroupBox6 = new GroupBox();
+            Label7 = new Label();
+            rbPvP = new RadioButton();
+            rbPvE = new RadioButton();
+            TabPage3 = new TabPage();
+            chkShowSelfBuffsAny = new CheckBox();
+            groupBox18 = new GroupBox();
+            chkOldStyle = new CheckBox();
+            cbTotalsWindowTitleOpt = new ComboBox();
+            label2 = new Label();
+            chkNoTips = new CheckBox();
+            chkMiddle = new CheckBox();
+            GroupBox17 = new GroupBox();
+            chkPowersBold = new CheckBox();
+            chkPowSelBold = new CheckBox();
+            udPowersSize = new NumericUpDown();
+            label18 = new Label();
+            udPowSelectSize = new NumericUpDown();
+            label17 = new Label();
+            chkShowAlphaPopup = new CheckBox();
+            Label36 = new Label();
+            chkStatBold = new CheckBox();
+            chkTextBold = new CheckBox();
+            btnFontColor = new Button();
+            Label22 = new Label();
+            Label21 = new Label();
+            udStatSize = new NumericUpDown();
+            udRTFSize = new NumericUpDown();
+            chkIOPrintLevels = new CheckBox();
+            GroupBox5 = new GroupBox();
+            chkEnableDmgGraph = new CheckBox();
+            GroupBox14 = new GroupBox();
+            cbCurrency = new ComboBox();
+            label19 = new Label();
+            btnIOReset = new Button();
+            Label40 = new Label();
+            GroupBox3 = new GroupBox();
+            chkShowSOLevels = new CheckBox();
+            Label3 = new Label();
+            optEnh = new Label();
+            Label4 = new Label();
+            TabControl1 = new TabControl();
+            ((ISupportInitialize)TeamSize).BeginInit();
+            ((ISupportInitialize)udIOLevel).BeginInit();
+            TabPage5.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox16.SuspendLayout();
+            groupBox19.SuspendLayout();
+            GroupBox1.SuspendLayout();
+            TabPage1.SuspendLayout();
+            GroupBox9.SuspendLayout();
+            GroupBox7.SuspendLayout();
+            TabPage2.SuspendLayout();
+            GroupBox2.SuspendLayout();
+            GroupBox15.SuspendLayout();
+            GroupBox8.SuspendLayout();
+            GroupBox6.SuspendLayout();
+            TabPage3.SuspendLayout();
+            groupBox18.SuspendLayout();
+            GroupBox17.SuspendLayout();
+            ((ISupportInitialize)udPowersSize).BeginInit();
+            ((ISupportInitialize)udPowSelectSize).BeginInit();
+            ((ISupportInitialize)udStatSize).BeginInit();
+            ((ISupportInitialize)udRTFSize).BeginInit();
+            GroupBox5.SuspendLayout();
+            GroupBox14.SuspendLayout();
+            GroupBox3.SuspendLayout();
+            TabControl1.SuspendLayout();
+            SuspendLayout();
             // 
             // btnOK
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(504, 380);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 28);
-            this.btnOK.TabIndex = 59;
-            this.btnOK.Text = "OK";
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.DialogResult = DialogResult.OK;
+            btnOK.Location = new System.Drawing.Point(504, 380);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new System.Drawing.Size(75, 28);
+            btnOK.TabIndex = 59;
+            btnOK.Text = "OK";
+            btnOK.Click += btnOK_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(408, 380);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 60;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.Location = new System.Drawing.Point(408, 380);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 28);
+            btnCancel.TabIndex = 60;
+            btnCancel.Text = "Cancel";
+            btnCancel.Click += btnCancel_Click;
             // 
             // chkColorPrint
             // 
-            this.chkColorPrint.Location = new System.Drawing.Point(246, 387);
-            this.chkColorPrint.Name = "chkColorPrint";
-            this.chkColorPrint.Size = new System.Drawing.Size(156, 16);
-            this.chkColorPrint.TabIndex = 2;
-            this.chkColorPrint.Text = "Print in color";
-            this.chkColorPrint.Visible = false;
+            chkColorPrint.Location = new System.Drawing.Point(246, 387);
+            chkColorPrint.Name = "chkColorPrint";
+            chkColorPrint.Size = new System.Drawing.Size(156, 16);
+            chkColorPrint.TabIndex = 2;
+            chkColorPrint.Text = "Print in color";
+            chkColorPrint.Visible = false;
             // 
             // myTip
             // 
-            this.myTip.AutoPopDelay = 10000;
-            this.myTip.InitialDelay = 500;
-            this.myTip.ReshowDelay = 100;
-            // 
-            // cPicker
-            // 
-            this.cPicker.FullOpen = true;
-            // 
-            // TabPage5
-            // 
-            this.TabPage5.Controls.Add(this.groupBox16);
-            this.TabPage5.Controls.Add(this.groupBox19);
-            this.TabPage5.Controls.Add(this.GroupBox1);
-            this.TabPage5.Location = new System.Drawing.Point(4, 23);
-            this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(777, 345);
-            this.TabPage5.TabIndex = 4;
-            this.TabPage5.Text = "Updates & Paths";
-            this.TabPage5.UseVisualStyleBackColor = true;
-            // 
-            // GroupBox1
-            // 
-            this.GroupBox1.Controls.Add(this.Label34);
-            this.GroupBox1.Controls.Add(this.chkUpdates);
-            this.GroupBox1.Location = new System.Drawing.Point(8, 3);
-            this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(761, 67);
-            this.GroupBox1.TabIndex = 7;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Automatic Updates:";
-            // 
-            // chkUpdates
-            // 
-            this.chkUpdates.Location = new System.Drawing.Point(552, 19);
-            this.chkUpdates.Name = "chkUpdates";
-            this.chkUpdates.Size = new System.Drawing.Size(167, 24);
-            this.chkUpdates.TabIndex = 6;
-            this.chkUpdates.Text = "Check for updates on startup";
-            // 
-            // Label34
-            // 
-            this.Label34.Location = new System.Drawing.Point(6, 16);
-            this.Label34.Name = "Label34";
-            this.Label34.Size = new System.Drawing.Size(486, 39);
-            this.Label34.TabIndex = 5;
-            this.Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when " +
-    "it starts. This feature requires an internet connection.";
-            this.Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // groupBox19
-            // 
-            this.groupBox19.Controls.Add(this.btnFileAssoc);
-            this.groupBox19.Controls.Add(this.lblFileAssoc);
-            this.groupBox19.Controls.Add(this.lblAssocStatus);
-            this.groupBox19.Location = new System.Drawing.Point(8, 76);
-            this.groupBox19.Name = "groupBox19";
-            this.groupBox19.Size = new System.Drawing.Size(761, 87);
-            this.groupBox19.TabIndex = 71;
-            this.groupBox19.TabStop = false;
-            this.groupBox19.Text = "File Association Repair:";
-            // 
-            // lblAssocStatus
-            // 
-            this.lblAssocStatus.Location = new System.Drawing.Point(144, 57);
-            this.lblAssocStatus.Name = "lblAssocStatus";
-            this.lblAssocStatus.Size = new System.Drawing.Size(274, 14);
-            this.lblAssocStatus.TabIndex = 70;
-            this.lblAssocStatus.Text = "Status: --";
-            // 
-            // lblFileAssoc
-            // 
-            this.lblFileAssoc.Location = new System.Drawing.Point(5, 16);
-            this.lblFileAssoc.Name = "lblFileAssoc";
-            this.lblFileAssoc.Size = new System.Drawing.Size(521, 28);
-            this.lblFileAssoc.TabIndex = 69;
-            this.lblFileAssoc.Text = "If you need to reassociate your .MXD build files with MRB you can do so by clicki" +
-    "ng the button below.\r\n";
-            // 
-            // btnFileAssoc
-            // 
-            this.btnFileAssoc.Location = new System.Drawing.Point(9, 47);
-            this.btnFileAssoc.Name = "btnFileAssoc";
-            this.btnFileAssoc.Size = new System.Drawing.Size(129, 36);
-            this.btnFileAssoc.TabIndex = 68;
-            this.btnFileAssoc.Text = "Rebuild file associations";
-            this.btnFileAssoc.UseVisualStyleBackColor = true;
-            this.btnFileAssoc.Click += new System.EventHandler(this.btnFileAssoc_Click);
-            // 
-            // groupBox16
-            // 
-            this.groupBox16.Controls.Add(this.Label1);
-            this.groupBox16.Controls.Add(this.lblSaveFolder);
-            this.groupBox16.Controls.Add(this.chkLoadLastFile);
-            this.groupBox16.Controls.Add(this.btnSaveFolderReset);
-            this.groupBox16.Controls.Add(this.btnSaveFolder);
-            this.groupBox16.Location = new System.Drawing.Point(8, 169);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(761, 120);
-            this.groupBox16.TabIndex = 72;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Character Builds Location";
-            // 
-            // btnSaveFolder
-            // 
-            this.btnSaveFolder.Location = new System.Drawing.Point(614, 30);
-            this.btnSaveFolder.Name = "btnSaveFolder";
-            this.btnSaveFolder.Size = new System.Drawing.Size(105, 22);
-            this.btnSaveFolder.TabIndex = 62;
-            this.btnSaveFolder.Text = "Browse...";
-            this.btnSaveFolder.UseVisualStyleBackColor = true;
-            this.btnSaveFolder.Click += new System.EventHandler(this.btnSaveFolder_Click);
-            // 
-            // btnSaveFolderReset
-            // 
-            this.btnSaveFolderReset.Location = new System.Drawing.Point(614, 72);
-            this.btnSaveFolderReset.Name = "btnSaveFolderReset";
-            this.btnSaveFolderReset.Size = new System.Drawing.Size(105, 22);
-            this.btnSaveFolderReset.TabIndex = 64;
-            this.btnSaveFolderReset.Text = "Reset to Default";
-            this.btnSaveFolderReset.UseVisualStyleBackColor = true;
-            this.btnSaveFolderReset.Click += new System.EventHandler(this.btnSaveFolderReset_Click);
-            // 
-            // chkLoadLastFile
-            // 
-            this.chkLoadLastFile.Location = new System.Drawing.Point(9, 72);
-            this.chkLoadLastFile.Name = "chkLoadLastFile";
-            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
-            this.chkLoadLastFile.TabIndex = 61;
-            this.chkLoadLastFile.Text = "Load last build on startup";
-            // 
-            // lblSaveFolder
-            // 
-            this.lblSaveFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblSaveFolder.Location = new System.Drawing.Point(97, 31);
-            this.lblSaveFolder.Name = "lblSaveFolder";
-            this.lblSaveFolder.Size = new System.Drawing.Size(511, 22);
-            this.lblSaveFolder.TabIndex = 63;
-            this.lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblSaveFolder.UseMnemonic = false;
-            // 
-            // Label1
-            // 
-            this.Label1.Location = new System.Drawing.Point(6, 30);
-            this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(85, 24);
-            this.Label1.TabIndex = 8;
-            this.Label1.Text = "Save Builds To:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // TabPage1
-            // 
-            this.TabPage1.Controls.Add(this.Label15);
-            this.TabPage1.Controls.Add(this.Label10);
-            this.TabPage1.Controls.Add(this.cmbAction);
-            this.TabPage1.Controls.Add(this.GroupBox9);
-            this.TabPage1.Controls.Add(this.GroupBox7);
-            this.TabPage1.Location = new System.Drawing.Point(4, 23);
-            this.TabPage1.Name = "TabPage1";
-            this.TabPage1.Size = new System.Drawing.Size(777, 345);
-            this.TabPage1.TabIndex = 6;
-            this.TabPage1.Text = "Drag & Drop";
-            this.TabPage1.UseVisualStyleBackColor = true;
-            // 
-            // GroupBox7
-            // 
-            this.GroupBox7.Controls.Add(this.listScenarios);
-            this.GroupBox7.Location = new System.Drawing.Point(8, 102);
-            this.GroupBox7.Name = "GroupBox7";
-            this.GroupBox7.Size = new System.Drawing.Size(380, 163);
-            this.GroupBox7.TabIndex = 0;
-            this.GroupBox7.TabStop = false;
-            this.GroupBox7.Text = "Scenario";
-            // 
-            // listScenarios
-            // 
-            this.listScenarios.FormattingEnabled = true;
-            this.listScenarios.ItemHeight = 14;
-            this.listScenarios.Items.AddRange(new object[] {
-            "Power is moved or swapped too low",
-            "Power is moved too high (some powers will no longer fit)",
-            "Power is moved or swapped higher than slots\' levels",
-            "Power is moved or swapped too high to have # slots",
-            "Power being replaced is swapped too low",
-            "Power being replaced is swapped higher than slots\' levels",
-            "Power being replaced is swapped too high to have # slots",
-            "Power being shifted down cannot shift to the necessary level",
-            "Power being shifted up has slots from lower levels",
-            "Power being shifted up has impossible # of slots",
-            "There is a gap in a group of powers that are being shifted",
-            "A power placed at its minimum level is being shifted up",
-            "The power in the destination slot is prevented from being shifted up",
-            "Slot being level-swapped is too low for the destination power",
-            "Slot being level-swapped is too low for the source power"});
-            this.listScenarios.Location = new System.Drawing.Point(13, 19);
-            this.listScenarios.Name = "listScenarios";
-            this.listScenarios.Size = new System.Drawing.Size(353, 116);
-            this.listScenarios.TabIndex = 0;
-            this.listScenarios.SelectedIndexChanged += new System.EventHandler(this.listScenarios_SelectedIndexChanged);
-            // 
-            // GroupBox9
-            // 
-            this.GroupBox9.Controls.Add(this.lblExample);
-            this.GroupBox9.Location = new System.Drawing.Point(403, 104);
-            this.GroupBox9.Name = "GroupBox9";
-            this.GroupBox9.Size = new System.Drawing.Size(366, 161);
-            this.GroupBox9.TabIndex = 1;
-            this.GroupBox9.TabStop = false;
-            this.GroupBox9.Text = "Description / Example(s)";
-            // 
-            // lblExample
-            // 
-            this.lblExample.Location = new System.Drawing.Point(13, 17);
-            this.lblExample.Name = "lblExample";
-            this.lblExample.Size = new System.Drawing.Size(347, 141);
-            this.lblExample.TabIndex = 0;
-            // 
-            // cmbAction
-            // 
-            this.cmbAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAction.FormattingEnabled = true;
-            this.cmbAction.Location = new System.Drawing.Point(18, 293);
-            this.cmbAction.Name = "cmbAction";
-            this.cmbAction.Size = new System.Drawing.Size(356, 22);
-            this.cmbAction.TabIndex = 2;
-            this.cmbAction.SelectedIndexChanged += new System.EventHandler(this.cmbAction_SelectedIndexChanged);
-            // 
-            // Label10
-            // 
-            this.Label10.AutoSize = true;
-            this.Label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label10.Location = new System.Drawing.Point(19, 268);
-            this.Label10.Name = "Label10";
-            this.Label10.Size = new System.Drawing.Size(285, 15);
-            this.Label10.TabIndex = 3;
-            this.Label10.Text = "Action to take whenever the above scenario occurs:";
-            // 
-            // Label15
-            // 
-            this.Label15.Location = new System.Drawing.Point(14, 9);
-            this.Label15.Name = "Label15";
-            this.Label15.Size = new System.Drawing.Size(755, 92);
-            this.Label15.TabIndex = 4;
-            this.Label15.Text = resources.GetString("Label15.Text");
-            this.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // TabPage4
-            // 
-            this.TabPage4.Controls.Add(this.GroupBox12);
-            this.TabPage4.Controls.Add(this.GroupBox11);
-            this.TabPage4.Location = new System.Drawing.Point(4, 23);
-            this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(777, 345);
-            this.TabPage4.TabIndex = 3;
-            this.TabPage4.Text = "Forum Export Settings";
-            this.TabPage4.UseVisualStyleBackColor = true;
-            // 
-            // GroupBox11
-            // 
-            this.GroupBox11.Controls.Add(this.csReset);
-            this.GroupBox11.Controls.Add(this.csBtnEdit);
-            this.GroupBox11.Controls.Add(this.csDelete);
-            this.GroupBox11.Controls.Add(this.csAdd);
-            this.GroupBox11.Controls.Add(this.csList);
-            this.GroupBox11.Location = new System.Drawing.Point(12, 8);
-            this.GroupBox11.Name = "GroupBox11";
-            this.GroupBox11.Size = new System.Drawing.Size(160, 308);
-            this.GroupBox11.TabIndex = 0;
-            this.GroupBox11.TabStop = false;
-            this.GroupBox11.Text = "Color Schemes:";
-            // 
-            // csList
-            // 
-            this.csList.ItemHeight = 14;
-            this.csList.Location = new System.Drawing.Point(8, 20);
-            this.csList.Name = "csList";
-            this.csList.Size = new System.Drawing.Size(144, 186);
-            this.csList.TabIndex = 0;
-            this.csList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.csList_KeyPress);
-            // 
-            // csAdd
-            // 
-            this.csAdd.Location = new System.Drawing.Point(88, 216);
-            this.csAdd.Name = "csAdd";
-            this.csAdd.Size = new System.Drawing.Size(64, 20);
-            this.csAdd.TabIndex = 2;
-            this.csAdd.Text = "Add";
-            this.csAdd.Click += new System.EventHandler(this.csAdd_Click);
-            // 
-            // csDelete
-            // 
-            this.csDelete.Location = new System.Drawing.Point(8, 216);
-            this.csDelete.Name = "csDelete";
-            this.csDelete.Size = new System.Drawing.Size(64, 20);
-            this.csDelete.TabIndex = 1;
-            this.csDelete.Text = "Delete";
-            this.csDelete.Click += new System.EventHandler(this.csDelete_Click);
-            // 
-            // csBtnEdit
-            // 
-            this.csBtnEdit.Location = new System.Drawing.Point(8, 242);
-            this.csBtnEdit.Name = "csBtnEdit";
-            this.csBtnEdit.Size = new System.Drawing.Size(144, 32);
-            this.csBtnEdit.TabIndex = 3;
-            this.csBtnEdit.Text = "Edit...";
-            this.csBtnEdit.Click += new System.EventHandler(this.csBtnEdit_Click);
-            // 
-            // csReset
-            // 
-            this.csReset.Location = new System.Drawing.Point(8, 280);
-            this.csReset.Name = "csReset";
-            this.csReset.Size = new System.Drawing.Size(144, 24);
-            this.csReset.TabIndex = 4;
-            this.csReset.Text = "Reset To Defaults";
-            this.csReset.Click += new System.EventHandler(this.csReset_Click);
-            // 
-            // GroupBox12
-            // 
-            this.GroupBox12.Controls.Add(this.fcReset);
-            this.GroupBox12.Controls.Add(this.fcSet);
-            this.GroupBox12.Controls.Add(this.fcNotes);
-            this.GroupBox12.Controls.Add(this.fcDelete);
-            this.GroupBox12.Controls.Add(this.fcAdd);
-            this.GroupBox12.Controls.Add(this.fcName);
-            this.GroupBox12.Controls.Add(this.fcWSTab);
-            this.GroupBox12.Controls.Add(this.fcWSSpace);
-            this.GroupBox12.Controls.Add(this.fcUnderlineOff);
-            this.GroupBox12.Controls.Add(this.fcUnderlineOn);
-            this.GroupBox12.Controls.Add(this.Label32);
-            this.GroupBox12.Controls.Add(this.fcItalicOff);
-            this.GroupBox12.Controls.Add(this.fcItalicOn);
-            this.GroupBox12.Controls.Add(this.Label31);
-            this.GroupBox12.Controls.Add(this.fcBoldOff);
-            this.GroupBox12.Controls.Add(this.fcBoldOn);
-            this.GroupBox12.Controls.Add(this.Label30);
-            this.GroupBox12.Controls.Add(this.fcTextOff);
-            this.GroupBox12.Controls.Add(this.fcTextOn);
-            this.GroupBox12.Controls.Add(this.Label29);
-            this.GroupBox12.Controls.Add(this.Label28);
-            this.GroupBox12.Controls.Add(this.Label27);
-            this.GroupBox12.Controls.Add(this.fcColorOff);
-            this.GroupBox12.Controls.Add(this.fcColorOn);
-            this.GroupBox12.Controls.Add(this.Label26);
-            this.GroupBox12.Controls.Add(this.fcList);
-            this.GroupBox12.Controls.Add(this.Label25);
-            this.GroupBox12.Controls.Add(this.Label24);
-            this.GroupBox12.Controls.Add(this.Label33);
-            this.GroupBox12.Location = new System.Drawing.Point(180, 8);
-            this.GroupBox12.Name = "GroupBox12";
-            this.GroupBox12.Size = new System.Drawing.Size(589, 308);
-            this.GroupBox12.TabIndex = 1;
-            this.GroupBox12.TabStop = false;
-            this.GroupBox12.Text = "Formatting Codes:";
-            // 
-            // Label33
-            // 
-            this.Label33.Location = new System.Drawing.Point(140, 196);
-            this.Label33.Name = "Label33";
-            this.Label33.Size = new System.Drawing.Size(76, 20);
-            this.Label33.TabIndex = 33;
-            this.Label33.Text = "White Space:";
-            this.Label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // Label24
-            // 
-            this.Label24.Location = new System.Drawing.Point(8, 16);
-            this.Label24.Name = "Label24";
-            this.Label24.Size = new System.Drawing.Size(344, 20);
-            this.Label24.TabIndex = 13;
-            this.Label24.Text = "You can set the formatting codes available for Forum Export here.";
-            // 
-            // Label25
-            // 
-            this.Label25.Location = new System.Drawing.Point(148, 224);
-            this.Label25.Name = "Label25";
-            this.Label25.Size = new System.Drawing.Size(435, 76);
-            this.Label25.TabIndex = 14;
-            this.Label25.Text = "When defining a formatting code which takes a value, such as a color tag, use %VA" +
-    "L% as a placeholder for the actual value, which will replace it when a build is " +
-    "exported.";
-            this.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // fcList
-            // 
-            this.fcList.ItemHeight = 14;
-            this.fcList.Location = new System.Drawing.Point(8, 40);
-            this.fcList.Name = "fcList";
-            this.fcList.Size = new System.Drawing.Size(136, 102);
-            this.fcList.TabIndex = 0;
-            this.fcList.SelectedIndexChanged += new System.EventHandler(this.fcList_SelectedIndexChanged);
-            this.fcList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fcList_KeyPress);
-            // 
-            // Label26
-            // 
-            this.Label26.Location = new System.Drawing.Point(148, 64);
-            this.Label26.Name = "Label26";
-            this.Label26.Size = new System.Drawing.Size(68, 20);
-            this.Label26.TabIndex = 16;
-            this.Label26.Text = "Color:";
-            this.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // fcColorOn
-            // 
-            this.fcColorOn.Location = new System.Drawing.Point(220, 64);
-            this.fcColorOn.Name = "fcColorOn";
-            this.fcColorOn.Size = new System.Drawing.Size(100, 20);
-            this.fcColorOn.TabIndex = 6;
-            this.fcColorOn.TextChanged += new System.EventHandler(this.fcColorOn_TextChanged);
-            // 
-            // fcColorOff
-            // 
-            this.fcColorOff.Location = new System.Drawing.Point(324, 64);
-            this.fcColorOff.Name = "fcColorOff";
-            this.fcColorOff.Size = new System.Drawing.Size(60, 20);
-            this.fcColorOff.TabIndex = 7;
-            this.fcColorOff.TextChanged += new System.EventHandler(this.fcColorOff_TextChanged);
-            // 
-            // Label27
-            // 
-            this.Label27.Location = new System.Drawing.Point(220, 44);
-            this.Label27.Name = "Label27";
-            this.Label27.Size = new System.Drawing.Size(100, 16);
-            this.Label27.TabIndex = 19;
-            this.Label27.Text = "On";
-            this.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Label28
-            // 
-            this.Label28.Location = new System.Drawing.Point(324, 44);
-            this.Label28.Name = "Label28";
-            this.Label28.Size = new System.Drawing.Size(60, 16);
-            this.Label28.TabIndex = 20;
-            this.Label28.Text = "Off";
-            this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Label29
-            // 
-            this.Label29.Location = new System.Drawing.Point(148, 88);
-            this.Label29.Name = "Label29";
-            this.Label29.Size = new System.Drawing.Size(68, 20);
-            this.Label29.TabIndex = 21;
-            this.Label29.Text = "Code Block:";
-            this.Label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // fcTextOn
-            // 
-            this.fcTextOn.Location = new System.Drawing.Point(220, 88);
-            this.fcTextOn.Name = "fcTextOn";
-            this.fcTextOn.Size = new System.Drawing.Size(100, 20);
-            this.fcTextOn.TabIndex = 8;
-            this.fcTextOn.TextChanged += new System.EventHandler(this.fcTextOn_TextChanged);
-            // 
-            // fcTextOff
-            // 
-            this.fcTextOff.Location = new System.Drawing.Point(324, 88);
-            this.fcTextOff.Name = "fcTextOff";
-            this.fcTextOff.Size = new System.Drawing.Size(60, 20);
-            this.fcTextOff.TabIndex = 9;
-            this.fcTextOff.TextChanged += new System.EventHandler(this.fcTextOff_TextChanged);
-            // 
-            // Label30
-            // 
-            this.Label30.Location = new System.Drawing.Point(148, 112);
-            this.Label30.Name = "Label30";
-            this.Label30.Size = new System.Drawing.Size(68, 20);
-            this.Label30.TabIndex = 24;
-            this.Label30.Text = "Bold:";
-            this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // fcBoldOn
-            // 
-            this.fcBoldOn.Location = new System.Drawing.Point(220, 112);
-            this.fcBoldOn.Name = "fcBoldOn";
-            this.fcBoldOn.Size = new System.Drawing.Size(100, 20);
-            this.fcBoldOn.TabIndex = 10;
-            this.fcBoldOn.TextChanged += new System.EventHandler(this.fcBoldOn_TextChanged);
-            // 
-            // fcBoldOff
-            // 
-            this.fcBoldOff.Location = new System.Drawing.Point(324, 112);
-            this.fcBoldOff.Name = "fcBoldOff";
-            this.fcBoldOff.Size = new System.Drawing.Size(60, 20);
-            this.fcBoldOff.TabIndex = 11;
-            this.fcBoldOff.TextChanged += new System.EventHandler(this.fcBoldOff_TextChanged);
-            // 
-            // Label31
-            // 
-            this.Label31.Location = new System.Drawing.Point(148, 136);
-            this.Label31.Name = "Label31";
-            this.Label31.Size = new System.Drawing.Size(68, 20);
-            this.Label31.TabIndex = 27;
-            this.Label31.Text = "Italic:";
-            this.Label31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // fcItalicOn
-            // 
-            this.fcItalicOn.Location = new System.Drawing.Point(220, 136);
-            this.fcItalicOn.Name = "fcItalicOn";
-            this.fcItalicOn.Size = new System.Drawing.Size(100, 20);
-            this.fcItalicOn.TabIndex = 12;
-            this.fcItalicOn.TextChanged += new System.EventHandler(this.fcItalicOn_TextChanged);
-            // 
-            // fcItalicOff
-            // 
-            this.fcItalicOff.Location = new System.Drawing.Point(324, 136);
-            this.fcItalicOff.Name = "fcItalicOff";
-            this.fcItalicOff.Size = new System.Drawing.Size(60, 20);
-            this.fcItalicOff.TabIndex = 13;
-            this.fcItalicOff.TextChanged += new System.EventHandler(this.fcItalicOff_TextChanged);
-            // 
-            // Label32
-            // 
-            this.Label32.Location = new System.Drawing.Point(148, 160);
-            this.Label32.Name = "Label32";
-            this.Label32.Size = new System.Drawing.Size(68, 20);
-            this.Label32.TabIndex = 30;
-            this.Label32.Text = "Underline:";
-            this.Label32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // fcUnderlineOn
-            // 
-            this.fcUnderlineOn.Location = new System.Drawing.Point(220, 160);
-            this.fcUnderlineOn.Name = "fcUnderlineOn";
-            this.fcUnderlineOn.Size = new System.Drawing.Size(100, 20);
-            this.fcUnderlineOn.TabIndex = 14;
-            this.fcUnderlineOn.TextChanged += new System.EventHandler(this.fcUnderlineOn_TextChanged);
-            // 
-            // fcUnderlineOff
-            // 
-            this.fcUnderlineOff.Location = new System.Drawing.Point(324, 160);
-            this.fcUnderlineOff.Name = "fcUnderlineOff";
-            this.fcUnderlineOff.Size = new System.Drawing.Size(60, 20);
-            this.fcUnderlineOff.TabIndex = 15;
-            this.fcUnderlineOff.TextChanged += new System.EventHandler(this.fcUnderlineOff_TextChanged);
-            // 
-            // fcWSSpace
-            // 
-            this.fcWSSpace.Location = new System.Drawing.Point(220, 196);
-            this.fcWSSpace.Name = "fcWSSpace";
-            this.fcWSSpace.Size = new System.Drawing.Size(80, 20);
-            this.fcWSSpace.TabIndex = 16;
-            this.fcWSSpace.Text = "Space";
-            this.fcWSSpace.CheckedChanged += new System.EventHandler(this.fcWSSpace_CheckedChanged);
-            // 
-            // fcWSTab
-            // 
-            this.fcWSTab.Location = new System.Drawing.Point(304, 196);
-            this.fcWSTab.Name = "fcWSTab";
-            this.fcWSTab.Size = new System.Drawing.Size(80, 20);
-            this.fcWSTab.TabIndex = 17;
-            this.fcWSTab.Text = "Tab";
-            this.fcWSTab.CheckedChanged += new System.EventHandler(this.fcWSSpace_CheckedChanged);
-            // 
-            // fcName
-            // 
-            this.fcName.Location = new System.Drawing.Point(8, 176);
-            this.fcName.Name = "fcName";
-            this.fcName.Size = new System.Drawing.Size(136, 20);
-            this.fcName.TabIndex = 3;
-            // 
-            // fcAdd
-            // 
-            this.fcAdd.Location = new System.Drawing.Point(80, 148);
-            this.fcAdd.Name = "fcAdd";
-            this.fcAdd.Size = new System.Drawing.Size(64, 20);
-            this.fcAdd.TabIndex = 2;
-            this.fcAdd.Text = "Add";
-            this.fcAdd.Click += new System.EventHandler(this.fcAdd_Click);
-            // 
-            // fcDelete
-            // 
-            this.fcDelete.Location = new System.Drawing.Point(8, 148);
-            this.fcDelete.Name = "fcDelete";
-            this.fcDelete.Size = new System.Drawing.Size(64, 20);
-            this.fcDelete.TabIndex = 1;
-            this.fcDelete.Text = "Delete";
-            this.fcDelete.Click += new System.EventHandler(this.fcDelete_Click);
-            // 
-            // fcNotes
-            // 
-            this.fcNotes.Location = new System.Drawing.Point(8, 228);
-            this.fcNotes.Multiline = true;
-            this.fcNotes.Name = "fcNotes";
-            this.fcNotes.Size = new System.Drawing.Size(136, 48);
-            this.fcNotes.TabIndex = 5;
-            this.fcNotes.TextChanged += new System.EventHandler(this.fcNotes_TextChanged);
-            // 
-            // fcSet
-            // 
-            this.fcSet.Location = new System.Drawing.Point(8, 200);
-            this.fcSet.Name = "fcSet";
-            this.fcSet.Size = new System.Drawing.Size(136, 20);
-            this.fcSet.TabIndex = 4;
-            this.fcSet.Text = "Set New Name";
-            this.fcSet.Click += new System.EventHandler(this.fcSet_Click);
-            // 
-            // fcReset
-            // 
-            this.fcReset.Location = new System.Drawing.Point(16, 280);
-            this.fcReset.Name = "fcReset";
-            this.fcReset.Size = new System.Drawing.Size(124, 24);
-            this.fcReset.TabIndex = 18;
-            this.fcReset.Text = "Reset To Defaults";
-            this.fcReset.Click += new System.EventHandler(this.fcReset_Click);
-            // 
-            // TabPage2
-            // 
-            this.TabPage2.Controls.Add(this.Label16);
-            this.TabPage2.Controls.Add(this.TeamSize);
-            this.TabPage2.Controls.Add(this.GroupBox2);
-            this.TabPage2.Controls.Add(this.chkUseArcanaTime);
-            this.TabPage2.Controls.Add(this.GroupBox15);
-            this.TabPage2.Controls.Add(this.GroupBox8);
-            this.TabPage2.Controls.Add(this.GroupBox6);
-            this.TabPage2.Location = new System.Drawing.Point(4, 23);
-            this.TabPage2.Name = "TabPage2";
-            this.TabPage2.Size = new System.Drawing.Size(777, 345);
-            this.TabPage2.TabIndex = 1;
-            this.TabPage2.Text = "Effects & Maths";
-            this.TabPage2.UseVisualStyleBackColor = true;
-            // 
-            // GroupBox6
-            // 
-            this.GroupBox6.Controls.Add(this.Label7);
-            this.GroupBox6.Controls.Add(this.rbPvP);
-            this.GroupBox6.Controls.Add(this.rbPvE);
-            this.GroupBox6.Location = new System.Drawing.Point(8, 192);
-            this.GroupBox6.Name = "GroupBox6";
-            this.GroupBox6.Size = new System.Drawing.Size(301, 122);
-            this.GroupBox6.TabIndex = 1;
-            this.GroupBox6.TabStop = false;
-            this.GroupBox6.Text = "Targets:";
-            // 
-            // rbPvE
-            // 
-            this.rbPvE.Checked = true;
-            this.rbPvE.Location = new System.Drawing.Point(11, 73);
-            this.rbPvE.Name = "rbPvE";
-            this.rbPvE.Size = new System.Drawing.Size(260, 20);
-            this.rbPvE.TabIndex = 0;
-            this.rbPvE.TabStop = true;
-            this.rbPvE.Text = "Show values for Mobs (PvE)";
-            // 
-            // rbPvP
-            // 
-            this.rbPvP.Location = new System.Drawing.Point(11, 93);
-            this.rbPvP.Name = "rbPvP";
-            this.rbPvP.Size = new System.Drawing.Size(260, 20);
-            this.rbPvP.TabIndex = 1;
-            this.rbPvP.Text = "Show values for Players (PvP)";
-            // 
-            // Label7
-            // 
-            this.Label7.Location = new System.Drawing.Point(8, 16);
-            this.Label7.Name = "Label7";
-            this.Label7.Size = new System.Drawing.Size(295, 54);
-            this.Label7.TabIndex = 2;
-            this.Label7.Text = "Some powers  have different effects when used against players (Mez effects are a " +
-    "good example of this). Where a power has different effects, which should be disp" +
-    "layed?";
-            // 
-            // GroupBox8
-            // 
-            this.GroupBox8.Controls.Add(this.rbChanceIgnore);
-            this.GroupBox8.Controls.Add(this.rbChanceAverage);
-            this.GroupBox8.Controls.Add(this.rbChanceMax);
-            this.GroupBox8.Controls.Add(this.Label9);
-            this.GroupBox8.Location = new System.Drawing.Point(4, 4);
-            this.GroupBox8.Name = "GroupBox8";
-            this.GroupBox8.Size = new System.Drawing.Size(537, 182);
-            this.GroupBox8.TabIndex = 3;
-            this.GroupBox8.TabStop = false;
-            this.GroupBox8.Text = "Chance of Damage:";
-            // 
-            // Label9
-            // 
-            this.Label9.Location = new System.Drawing.Point(8, 16);
-            this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(522, 137);
-            this.Label9.TabIndex = 4;
-            this.Label9.Text = resources.GetString("Label9.Text");
-            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // rbChanceMax
-            // 
-            this.rbChanceMax.Location = new System.Drawing.Point(180, 156);
-            this.rbChanceMax.Name = "rbChanceMax";
-            this.rbChanceMax.Size = new System.Drawing.Size(161, 20);
-            this.rbChanceMax.TabIndex = 6;
-            this.rbChanceMax.Text = "Maximum (Always Include)";
-            // 
-            // rbChanceAverage
-            // 
-            this.rbChanceAverage.Checked = true;
-            this.rbChanceAverage.Location = new System.Drawing.Point(6, 156);
-            this.rbChanceAverage.Name = "rbChanceAverage";
-            this.rbChanceAverage.Size = new System.Drawing.Size(168, 20);
-            this.rbChanceAverage.TabIndex = 7;
-            this.rbChanceAverage.TabStop = true;
-            this.rbChanceAverage.Text = "Average (Damage x Chance)";
-            // 
-            // rbChanceIgnore
-            // 
-            this.rbChanceIgnore.Location = new System.Drawing.Point(347, 156);
-            this.rbChanceIgnore.Name = "rbChanceIgnore";
-            this.rbChanceIgnore.Size = new System.Drawing.Size(183, 20);
-            this.rbChanceIgnore.TabIndex = 8;
-            this.rbChanceIgnore.Text = "Minimum (Ignore Extra Damage)\r\n";
-            // 
-            // GroupBox15
-            // 
-            this.GroupBox15.Controls.Add(this.Label20);
-            this.GroupBox15.Controls.Add(this.chkSetBonus);
-            this.GroupBox15.Controls.Add(this.chkIOEffects);
-            this.GroupBox15.Location = new System.Drawing.Point(315, 194);
-            this.GroupBox15.Name = "GroupBox15";
-            this.GroupBox15.Size = new System.Drawing.Size(226, 121);
-            this.GroupBox15.TabIndex = 68;
-            this.GroupBox15.TabStop = false;
-            this.GroupBox15.Text = "Invention Effects:";
+            myTip.AutoPopDelay = 10000;
+            myTip.InitialDelay = 500;
+            myTip.ReshowDelay = 100;
             // 
             // chkIOEffects
             // 
-            this.chkIOEffects.Location = new System.Drawing.Point(11, 69);
-            this.chkIOEffects.Name = "chkIOEffects";
-            this.chkIOEffects.Size = new System.Drawing.Size(169, 22);
-            this.chkIOEffects.TabIndex = 63;
-            this.chkIOEffects.Text = "Include Enhancement effects";
-            this.myTip.SetToolTip(this.chkIOEffects, "Some enhancments have power effects, such as minor Psionic resistance. This effec" +
-        "t can be added into the power.");
+            chkIOEffects.Location = new System.Drawing.Point(11, 69);
+            chkIOEffects.Name = "chkIOEffects";
+            chkIOEffects.Size = new System.Drawing.Size(169, 22);
+            chkIOEffects.TabIndex = 63;
+            chkIOEffects.Text = "Include Enhancement effects";
+            myTip.SetToolTip(chkIOEffects, "Some enhancments have power effects, such as minor Psionic resistance. This effect can be added into the power.");
             // 
             // chkSetBonus
             // 
-            this.chkSetBonus.Location = new System.Drawing.Point(11, 93);
-            this.chkSetBonus.Name = "chkSetBonus";
-            this.chkSetBonus.Size = new System.Drawing.Size(169, 22);
-            this.chkSetBonus.TabIndex = 64;
-            this.chkSetBonus.Text = "Include Set Bonus effects\r\n";
-            this.myTip.SetToolTip(this.chkSetBonus, "Add set bonus effects to the totals view.");
-            // 
-            // Label20
-            // 
-            this.Label20.Location = new System.Drawing.Point(6, 17);
-            this.Label20.Name = "Label20";
-            this.Label20.Size = new System.Drawing.Size(213, 49);
-            this.Label20.TabIndex = 65;
-            this.Label20.Text = "The effects of set bonusses and special IO enhancements can be included when stat" +
-    "s are calculated.";
+            chkSetBonus.Location = new System.Drawing.Point(11, 93);
+            chkSetBonus.Name = "chkSetBonus";
+            chkSetBonus.Size = new System.Drawing.Size(169, 22);
+            chkSetBonus.TabIndex = 64;
+            chkSetBonus.Text = "Include Set Bonus effects\r\n";
+            myTip.SetToolTip(chkSetBonus, "Add set bonus effects to the totals view.");
             // 
             // chkUseArcanaTime
             // 
-            this.chkUseArcanaTime.Location = new System.Drawing.Point(8, 320);
-            this.chkUseArcanaTime.Name = "chkUseArcanaTime";
-            this.chkUseArcanaTime.Size = new System.Drawing.Size(204, 22);
-            this.chkUseArcanaTime.TabIndex = 66;
-            this.chkUseArcanaTime.Text = "Use ArcanaTime for Animation Times";
-            this.myTip.SetToolTip(this.chkUseArcanaTime, "Displays all cast times in ArcanaTime, the real time all animations take due to s" +
-        "erver clock ticks.");
-            // 
-            // GroupBox2
-            // 
-            this.GroupBox2.Controls.Add(this.clbSuppression);
-            this.GroupBox2.Controls.Add(this.Label8);
-            this.GroupBox2.Location = new System.Drawing.Point(547, 4);
-            this.GroupBox2.Name = "GroupBox2";
-            this.GroupBox2.Size = new System.Drawing.Size(221, 310);
-            this.GroupBox2.TabIndex = 69;
-            this.GroupBox2.TabStop = false;
-            this.GroupBox2.Text = "Suppression";
-            // 
-            // Label8
-            // 
-            this.Label8.Location = new System.Drawing.Point(6, 28);
-            this.Label8.Name = "Label8";
-            this.Label8.Size = new System.Drawing.Size(209, 44);
-            this.Label8.TabIndex = 65;
-            this.Label8.Text = "Some effects are suppressed on specific conditions. You can enable those conditio" +
-    "ns here.";
-            // 
-            // clbSuppression
-            // 
-            this.clbSuppression.CheckOnClick = true;
-            this.clbSuppression.FormattingEnabled = true;
-            this.clbSuppression.Location = new System.Drawing.Point(9, 75);
-            this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(206, 229);
-            this.clbSuppression.TabIndex = 9;
-            this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
+            chkUseArcanaTime.Location = new System.Drawing.Point(8, 320);
+            chkUseArcanaTime.Name = "chkUseArcanaTime";
+            chkUseArcanaTime.Size = new System.Drawing.Size(204, 22);
+            chkUseArcanaTime.TabIndex = 66;
+            chkUseArcanaTime.Text = "Use ArcanaTime for Animation Times";
+            myTip.SetToolTip(chkUseArcanaTime, "Displays all cast times in ArcanaTime, the real time all animations take due to server clock ticks.");
             // 
             // TeamSize
             // 
-            this.TeamSize.Enabled = false;
-            this.TeamSize.Location = new System.Drawing.Point(638, 320);
-            this.TeamSize.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.TeamSize.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TeamSize.Name = "TeamSize";
-            this.TeamSize.Size = new System.Drawing.Size(88, 20);
-            this.TeamSize.TabIndex = 70;
-            this.myTip.SetToolTip(this.TeamSize, "Sets the number of players on your team. (Depreciated: Use TeamMembers from main window.)");
-            this.TeamSize.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.TeamSize.Visible = false;
-            // 
-            // Label16
-            // 
-            this.Label16.Enabled = false;
-            this.Label16.Location = new System.Drawing.Point(575, 322);
-            this.Label16.Name = "Label16";
-            this.Label16.Size = new System.Drawing.Size(57, 18);
-            this.Label16.TabIndex = 66;
-            this.Label16.Text = "Team Size";
-            this.Label16.Visible = false;
-            // 
-            // TabPage3
-            // 
-            this.TabPage3.Controls.Add(this.chkShowSelfBuffsAny);
-            this.TabPage3.Controls.Add(this.groupBox18);
-            this.TabPage3.Controls.Add(this.chkNoTips);
-            this.TabPage3.Controls.Add(this.chkMiddle);
-            this.TabPage3.Controls.Add(this.GroupBox17);
-            this.TabPage3.Controls.Add(this.chkIOPrintLevels);
-            this.TabPage3.Controls.Add(this.GroupBox5);
-            this.TabPage3.Controls.Add(this.GroupBox14);
-            this.TabPage3.Controls.Add(this.GroupBox3);
-            this.TabPage3.Location = new System.Drawing.Point(4, 23);
-            this.TabPage3.Name = "TabPage3";
-            this.TabPage3.Size = new System.Drawing.Size(777, 345);
-            this.TabPage3.TabIndex = 2;
-            this.TabPage3.Text = "Enhancements & View";
-            this.TabPage3.UseVisualStyleBackColor = true;
-            // 
-            // GroupBox3
-            // 
-            this.GroupBox3.Controls.Add(this.chkShowSOLevels);
-            this.GroupBox3.Controls.Add(this.chkRelSignOnly);
-            this.GroupBox3.Controls.Add(this.Label3);
-            this.GroupBox3.Controls.Add(this.optTO);
-            this.GroupBox3.Controls.Add(this.optDO);
-            this.GroupBox3.Controls.Add(this.optSO);
-            this.GroupBox3.Controls.Add(this.optEnh);
-            this.GroupBox3.Controls.Add(this.cbEnhLevel);
-            this.GroupBox3.Controls.Add(this.Label4);
-            this.GroupBox3.Location = new System.Drawing.Point(4, 4);
-            this.GroupBox3.Name = "GroupBox3";
-            this.GroupBox3.Size = new System.Drawing.Size(184, 338);
-            this.GroupBox3.TabIndex = 62;
-            this.GroupBox3.TabStop = false;
-            this.GroupBox3.Text = "Regular Enhancements:";
-            // 
-            // Label4
-            // 
-            this.Label4.Location = new System.Drawing.Point(6, 18);
-            this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(172, 50);
-            this.Label4.TabIndex = 58;
-            this.Label4.Text = "Default Enhancement Type:\r\n(This does not affect Inventions or Special enhancemen" +
-    "ts)";
-            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            TeamSize.Enabled = false;
+            TeamSize.Location = new System.Drawing.Point(638, 320);
+            TeamSize.Maximum = new decimal(new int[] { 8, 0, 0, 0 });
+            TeamSize.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            TeamSize.Name = "TeamSize";
+            TeamSize.Size = new System.Drawing.Size(88, 20);
+            TeamSize.TabIndex = 70;
+            myTip.SetToolTip(TeamSize, "Sets the number of players on your team. (Depreciated: Use TeamMembers from main window.)");
+            TeamSize.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            TeamSize.Visible = false;
             // 
             // cbEnhLevel
             // 
-            this.cbEnhLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbEnhLevel.Items.AddRange(new object[] {
-            "None (Enh. has no effect)",
-            "-3 Levels",
-            "-2 Levels",
-            "-1 Level",
-            "Even Level",
-            "+1 Level",
-            "+2 Levels",
-            "+3 Levels"});
-            this.cbEnhLevel.Location = new System.Drawing.Point(9, 224);
-            this.cbEnhLevel.Name = "cbEnhLevel";
-            this.cbEnhLevel.Size = new System.Drawing.Size(167, 22);
-            this.cbEnhLevel.TabIndex = 53;
-            this.cbEnhLevel.Tag = "";
-            this.myTip.SetToolTip(this.cbEnhLevel, "This is the relative level of the enhancements in relation to your own. ");
-            // 
-            // optEnh
-            // 
-            this.optEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.optEnh.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.optEnh.Location = new System.Drawing.Point(21, 121);
-            this.optEnh.Name = "optEnh";
-            this.optEnh.Size = new System.Drawing.Size(143, 16);
-            this.optEnh.TabIndex = 52;
-            this.optEnh.Text = "Single Origin";
-            this.optEnh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            cbEnhLevel.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbEnhLevel.Items.AddRange(new object[] { "None (Enh. has no effect)", "-3 Levels", "-2 Levels", "-1 Level", "Even Level", "+1 Level", "+2 Levels", "+3 Levels" });
+            cbEnhLevel.Location = new System.Drawing.Point(9, 224);
+            cbEnhLevel.Name = "cbEnhLevel";
+            cbEnhLevel.Size = new System.Drawing.Size(167, 22);
+            cbEnhLevel.TabIndex = 53;
+            cbEnhLevel.Tag = "";
+            myTip.SetToolTip(cbEnhLevel, "This is the relative level of the enhancements in relation to your own. ");
             // 
             // optSO
             // 
-            this.optSO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optSO.Checked = true;
-            this.optSO.Location = new System.Drawing.Point(120, 74);
-            this.optSO.Name = "optSO";
-            this.optSO.Size = new System.Drawing.Size(44, 44);
-            this.optSO.TabIndex = 50;
-            this.optSO.TabStop = true;
-            this.optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optSO, "Single Origin enhancements are the most powerful kind, and can be bought from lev" +
-        "el 22.");
-            this.optSO.CheckedChanged += new System.EventHandler(this.optSO_CheckedChanged);
+            optSO.Appearance = Appearance.Button;
+            optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            optSO.Checked = true;
+            optSO.Location = new System.Drawing.Point(120, 74);
+            optSO.Name = "optSO";
+            optSO.Size = new System.Drawing.Size(44, 44);
+            optSO.TabIndex = 50;
+            optSO.TabStop = true;
+            optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            myTip.SetToolTip(optSO, "Single Origin enhancements are the most powerful kind, and can be bought from level 22.");
+            optSO.CheckedChanged += optSO_CheckedChanged;
             // 
             // optDO
             // 
-            this.optDO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optDO.Location = new System.Drawing.Point(72, 74);
-            this.optDO.Name = "optDO";
-            this.optDO.Size = new System.Drawing.Size(44, 44);
-            this.optDO.TabIndex = 49;
-            this.optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
-            this.optDO.CheckedChanged += new System.EventHandler(this.optDO_CheckedChanged);
+            optDO.Appearance = Appearance.Button;
+            optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            optDO.Location = new System.Drawing.Point(72, 74);
+            optDO.Name = "optDO";
+            optDO.Size = new System.Drawing.Size(44, 44);
+            optDO.TabIndex = 49;
+            optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            myTip.SetToolTip(optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
+            optDO.CheckedChanged += optDO_CheckedChanged;
             // 
             // optTO
             // 
-            this.optTO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optTO.Location = new System.Drawing.Point(24, 74);
-            this.optTO.Name = "optTO";
-            this.optTO.Size = new System.Drawing.Size(44, 44);
-            this.optTO.TabIndex = 48;
-            this.optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optTO, "Training enhancements are the weakest kind.");
-            this.optTO.CheckedChanged += new System.EventHandler(this.optTO_CheckedChanged);
-            // 
-            // Label3
-            // 
-            this.Label3.Location = new System.Drawing.Point(6, 142);
-            this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(172, 79);
-            this.Label3.TabIndex = 59;
-            this.Label3.Text = "Default Relative Level:\r\n(Ehancements can function up to five levels above or thr" +
-    "ee below that of the character.)";
-            this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            optTO.Appearance = Appearance.Button;
+            optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            optTO.Location = new System.Drawing.Point(24, 74);
+            optTO.Name = "optTO";
+            optTO.Size = new System.Drawing.Size(44, 44);
+            optTO.TabIndex = 48;
+            optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            myTip.SetToolTip(optTO, "Training enhancements are the weakest kind.");
+            optTO.CheckedChanged += optTO_CheckedChanged;
             // 
             // chkRelSignOnly
             // 
-            this.chkRelSignOnly.Location = new System.Drawing.Point(11, 278);
-            this.chkRelSignOnly.Name = "chkRelSignOnly";
-            this.chkRelSignOnly.Size = new System.Drawing.Size(167, 43);
-            this.chkRelSignOnly.TabIndex = 69;
-            this.chkRelSignOnly.Text = "Show signs only for relative levels (\'++\' rather than \'+2\')";
-            this.myTip.SetToolTip(this.chkRelSignOnly, "Show signs only for relative levels (\'++\' rather than \'+2\')");
-            // 
-            // chkShowSOLevels
-            // 
-            this.chkShowSOLevels.Location = new System.Drawing.Point(11, 257);
-            this.chkShowSOLevels.Name = "chkShowSOLevels";
-            this.chkShowSOLevels.Size = new System.Drawing.Size(150, 23);
-            this.chkShowSOLevels.TabIndex = 71;
-            this.chkShowSOLevels.Text = "Display SO/HO Levels";
-            this.chkShowSOLevels.UseVisualStyleBackColor = true;
-            this.chkShowSOLevels.CheckedChanged += new System.EventHandler(this.chkShowSOLevels_CheckedChanged);
-            // 
-            // GroupBox14
-            // 
-            this.GroupBox14.Controls.Add(this.cbCurrency);
-            this.GroupBox14.Controls.Add(this.label19);
-            this.GroupBox14.Controls.Add(this.chkIOLevel);
-            this.GroupBox14.Controls.Add(this.btnIOReset);
-            this.GroupBox14.Controls.Add(this.Label40);
-            this.GroupBox14.Controls.Add(this.udIOLevel);
-            this.GroupBox14.Location = new System.Drawing.Point(196, 4);
-            this.GroupBox14.Name = "GroupBox14";
-            this.GroupBox14.Size = new System.Drawing.Size(188, 160);
-            this.GroupBox14.TabIndex = 69;
-            this.GroupBox14.TabStop = false;
-            this.GroupBox14.Text = "Inventions:";
+            chkRelSignOnly.Location = new System.Drawing.Point(11, 278);
+            chkRelSignOnly.Name = "chkRelSignOnly";
+            chkRelSignOnly.Size = new System.Drawing.Size(167, 43);
+            chkRelSignOnly.TabIndex = 69;
+            chkRelSignOnly.Text = "Show signs only for relative levels ('++' rather than '+2')";
+            myTip.SetToolTip(chkRelSignOnly, "Show signs only for relative levels ('++' rather than '+2')");
             // 
             // udIOLevel
             // 
-            this.udIOLevel.Location = new System.Drawing.Point(108, 20);
-            this.udIOLevel.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.udIOLevel.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.udIOLevel.Name = "udIOLevel";
-            this.udIOLevel.Size = new System.Drawing.Size(72, 20);
-            this.udIOLevel.TabIndex = 57;
-            this.myTip.SetToolTip(this.udIOLevel, "Inventions will be placed at this level by default. You can override the default " +
-        "by typing a level number in the picker.");
-            this.udIOLevel.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
-            // Label40
-            // 
-            this.Label40.Location = new System.Drawing.Point(8, 20);
-            this.Label40.Name = "Label40";
-            this.Label40.Size = new System.Drawing.Size(96, 20);
-            this.Label40.TabIndex = 58;
-            this.Label40.Text = "Default IO Level:";
-            this.Label40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnIOReset
-            // 
-            this.btnIOReset.Location = new System.Drawing.Point(8, 109);
-            this.btnIOReset.Name = "btnIOReset";
-            this.btnIOReset.Size = new System.Drawing.Size(172, 44);
-            this.btnIOReset.TabIndex = 59;
-            this.btnIOReset.Text = "Set All IO and SetO levels to default";
-            this.btnIOReset.Click += new System.EventHandler(this.btnIOReset_Click);
+            udIOLevel.Location = new System.Drawing.Point(108, 20);
+            udIOLevel.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            udIOLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            udIOLevel.Name = "udIOLevel";
+            udIOLevel.Size = new System.Drawing.Size(72, 20);
+            udIOLevel.TabIndex = 57;
+            myTip.SetToolTip(udIOLevel, "Inventions will be placed at this level by default. You can override the default by typing a level number in the picker.");
+            udIOLevel.Value = new decimal(new int[] { 50, 0, 0, 0 });
             // 
             // chkIOLevel
             // 
-            this.chkIOLevel.Location = new System.Drawing.Point(8, 40);
-            this.chkIOLevel.Name = "chkIOLevel";
-            this.chkIOLevel.Size = new System.Drawing.Size(172, 24);
-            this.chkIOLevel.TabIndex = 60;
-            this.chkIOLevel.Text = "Display IO Levels";
-            this.myTip.SetToolTip(this.chkIOLevel, "Show the level of Inventions in the build view");
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(5, 64);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 14);
-            this.label19.TabIndex = 61;
-            this.label19.Text = "Preferred currency:";
-            // 
-            // cbCurrency
-            // 
-            this.cbCurrency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCurrency.FormattingEnabled = true;
-            this.cbCurrency.Location = new System.Drawing.Point(9, 81);
-            this.cbCurrency.Name = "cbCurrency";
-            this.cbCurrency.Size = new System.Drawing.Size(171, 22);
-            this.cbCurrency.TabIndex = 62;
-            // 
-            // GroupBox5
-            // 
-            this.GroupBox5.Controls.Add(this.chkEnableDmgGraph);
-            this.GroupBox5.Controls.Add(this.rbGraphSimple);
-            this.GroupBox5.Controls.Add(this.rbGraphStacked);
-            this.GroupBox5.Controls.Add(this.rbGraphTwoLine);
-            this.GroupBox5.Location = new System.Drawing.Point(388, 4);
-            this.GroupBox5.Name = "GroupBox5";
-            this.GroupBox5.Size = new System.Drawing.Size(353, 117);
-            this.GroupBox5.TabIndex = 72;
-            this.GroupBox5.TabStop = false;
-            this.GroupBox5.Text = "Damage Graph Style:";
+            chkIOLevel.Location = new System.Drawing.Point(8, 40);
+            chkIOLevel.Name = "chkIOLevel";
+            chkIOLevel.Size = new System.Drawing.Size(172, 24);
+            chkIOLevel.TabIndex = 60;
+            chkIOLevel.Text = "Display IO Levels";
+            myTip.SetToolTip(chkIOLevel, "Show the level of Inventions in the build view");
             // 
             // rbGraphTwoLine
             // 
-            this.rbGraphTwoLine.Checked = true;
-            this.rbGraphTwoLine.Location = new System.Drawing.Point(6, 45);
-            this.rbGraphTwoLine.Name = "rbGraphTwoLine";
-            this.rbGraphTwoLine.Size = new System.Drawing.Size(286, 23);
-            this.rbGraphTwoLine.TabIndex = 3;
-            this.rbGraphTwoLine.TabStop = true;
-            this.rbGraphTwoLine.Text = "Base / Enhanced against Max Enhancable (Default)";
-            this.myTip.SetToolTip(this.rbGraphTwoLine, "The blue bar will indicate base damage, the yellow bar will indicate enhanced dam" +
-        "age.");
+            rbGraphTwoLine.Checked = true;
+            rbGraphTwoLine.Location = new System.Drawing.Point(6, 45);
+            rbGraphTwoLine.Name = "rbGraphTwoLine";
+            rbGraphTwoLine.Size = new System.Drawing.Size(286, 23);
+            rbGraphTwoLine.TabIndex = 3;
+            rbGraphTwoLine.TabStop = true;
+            rbGraphTwoLine.Text = "Base / Enhanced against Max Enhancable (Default)";
+            myTip.SetToolTip(rbGraphTwoLine, "The blue bar will indicate base damage, the yellow bar will indicate enhanced damage.");
             // 
             // rbGraphStacked
             // 
-            this.rbGraphStacked.Location = new System.Drawing.Point(6, 66);
-            this.rbGraphStacked.Name = "rbGraphStacked";
-            this.rbGraphStacked.Size = new System.Drawing.Size(286, 23);
-            this.rbGraphStacked.TabIndex = 4;
-            this.rbGraphStacked.Text = "Base + Enhanced (stacked) against Max Enhancable";
-            this.myTip.SetToolTip(this.rbGraphStacked, "\'Max Enhacable\' is damage if slotted with 6 +3 damage enhancements.");
+            rbGraphStacked.Location = new System.Drawing.Point(6, 66);
+            rbGraphStacked.Name = "rbGraphStacked";
+            rbGraphStacked.Size = new System.Drawing.Size(286, 23);
+            rbGraphStacked.TabIndex = 4;
+            rbGraphStacked.Text = "Base + Enhanced (stacked) against Max Enhancable";
+            myTip.SetToolTip(rbGraphStacked, "'Max Enhacable' is damage if slotted with 6 +3 damage enhancements.");
             // 
             // rbGraphSimple
             // 
-            this.rbGraphSimple.Location = new System.Drawing.Point(6, 87);
-            this.rbGraphSimple.Name = "rbGraphSimple";
-            this.rbGraphSimple.Size = new System.Drawing.Size(164, 23);
-            this.rbGraphSimple.TabIndex = 5;
-            this.rbGraphSimple.Text = "Base against Enhanced";
-            this.myTip.SetToolTip(this.rbGraphSimple, "This graph type doesn\'t reflect the max damage potential of other powers.");
-            // 
-            // chkEnableDmgGraph
-            // 
-            this.chkEnableDmgGraph.AutoSize = true;
-            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
-            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
-            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
-            this.chkEnableDmgGraph.TabIndex = 6;
-            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
-            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
-            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
-            // 
-            // chkIOPrintLevels
-            // 
-            this.chkIOPrintLevels.Location = new System.Drawing.Point(194, 304);
-            this.chkIOPrintLevels.Name = "chkIOPrintLevels";
-            this.chkIOPrintLevels.Size = new System.Drawing.Size(221, 18);
-            this.chkIOPrintLevels.TabIndex = 75;
-            this.chkIOPrintLevels.Text = "Display Invention levels in printed builds";
-            // 
-            // GroupBox17
-            // 
-            this.GroupBox17.Controls.Add(this.chkPowersBold);
-            this.GroupBox17.Controls.Add(this.chkPowSelBold);
-            this.GroupBox17.Controls.Add(this.udPowersSize);
-            this.GroupBox17.Controls.Add(this.label18);
-            this.GroupBox17.Controls.Add(this.udPowSelectSize);
-            this.GroupBox17.Controls.Add(this.label17);
-            this.GroupBox17.Controls.Add(this.chkShowAlphaPopup);
-            this.GroupBox17.Controls.Add(this.chkHighVis);
-            this.GroupBox17.Controls.Add(this.Label36);
-            this.GroupBox17.Controls.Add(this.chkStatBold);
-            this.GroupBox17.Controls.Add(this.chkTextBold);
-            this.GroupBox17.Controls.Add(this.btnFontColor);
-            this.GroupBox17.Controls.Add(this.Label22);
-            this.GroupBox17.Controls.Add(this.Label21);
-            this.GroupBox17.Controls.Add(this.udStatSize);
-            this.GroupBox17.Controls.Add(this.udRTFSize);
-            this.GroupBox17.Location = new System.Drawing.Point(196, 166);
-            this.GroupBox17.Name = "GroupBox17";
-            this.GroupBox17.Size = new System.Drawing.Size(545, 132);
-            this.GroupBox17.TabIndex = 76;
-            this.GroupBox17.TabStop = false;
-            this.GroupBox17.Text = "Font Size/Colors:";
-            // 
-            // udRTFSize
-            // 
-            this.udRTFSize.Location = new System.Drawing.Point(108, 21);
-            this.udRTFSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udRTFSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udRTFSize.Name = "udRTFSize";
-            this.udRTFSize.Size = new System.Drawing.Size(52, 20);
-            this.udRTFSize.TabIndex = 0;
-            this.udRTFSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
-            // 
-            // udStatSize
-            // 
-            this.udStatSize.DecimalPlaces = 2;
-            this.udStatSize.Location = new System.Drawing.Point(108, 47);
-            this.udStatSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udStatSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udStatSize.Name = "udStatSize";
-            this.udStatSize.Size = new System.Drawing.Size(52, 20);
-            this.udStatSize.TabIndex = 1;
-            this.udStatSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
-            // 
-            // Label21
-            // 
-            this.Label21.Location = new System.Drawing.Point(5, 21);
-            this.Label21.Name = "Label21";
-            this.Label21.Size = new System.Drawing.Size(102, 20);
-            this.Label21.TabIndex = 59;
-            this.Label21.Text = "InfoPanel Tab Text:";
-            this.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // Label22
-            // 
-            this.Label22.Location = new System.Drawing.Point(16, 47);
-            this.Label22.Name = "Label22";
-            this.Label22.Size = new System.Drawing.Size(91, 20);
-            this.Label22.TabIndex = 60;
-            this.Label22.Text = "Stats:";
-            this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnFontColor
-            // 
-            this.btnFontColor.Location = new System.Drawing.Point(280, 32);
-            this.btnFontColor.Name = "btnFontColor";
-            this.btnFontColor.Size = new System.Drawing.Size(172, 27);
-            this.btnFontColor.TabIndex = 61;
-            this.btnFontColor.Text = "Set Colors...";
-            this.btnFontColor.UseVisualStyleBackColor = true;
-            this.btnFontColor.Click += new System.EventHandler(this.btnFontColor_Click);
-            // 
-            // chkTextBold
-            // 
-            this.chkTextBold.AutoSize = true;
-            this.chkTextBold.Location = new System.Drawing.Point(173, 25);
-            this.chkTextBold.Name = "chkTextBold";
-            this.chkTextBold.Size = new System.Drawing.Size(15, 14);
-            this.chkTextBold.TabIndex = 62;
-            this.chkTextBold.UseVisualStyleBackColor = true;
-            // 
-            // chkStatBold
-            // 
-            this.chkStatBold.AutoSize = true;
-            this.chkStatBold.Location = new System.Drawing.Point(173, 50);
-            this.chkStatBold.Name = "chkStatBold";
-            this.chkStatBold.Size = new System.Drawing.Size(15, 14);
-            this.chkStatBold.TabIndex = 63;
-            this.chkStatBold.UseVisualStyleBackColor = true;
-            // 
-            // Label36
-            // 
-            this.Label36.Location = new System.Drawing.Point(161, 8);
-            this.Label36.Name = "Label36";
-            this.Label36.Size = new System.Drawing.Size(39, 16);
-            this.Label36.TabIndex = 64;
-            this.Label36.Text = "Bold";
-            this.Label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            rbGraphSimple.Location = new System.Drawing.Point(6, 87);
+            rbGraphSimple.Name = "rbGraphSimple";
+            rbGraphSimple.Size = new System.Drawing.Size(164, 23);
+            rbGraphSimple.TabIndex = 5;
+            rbGraphSimple.Text = "Base against Enhanced";
+            myTip.SetToolTip(rbGraphSimple, "This graph type doesn't reflect the max damage potential of other powers.");
             // 
             // chkHighVis
             // 
-            this.chkHighVis.Location = new System.Drawing.Point(280, 106);
-            this.chkHighVis.Name = "chkHighVis";
-            this.chkHighVis.Size = new System.Drawing.Size(222, 20);
-            this.chkHighVis.TabIndex = 69;
-            this.chkHighVis.Text = "Use High-Visiblity text on the build view";
-            this.myTip.SetToolTip(this.chkHighVis, "Draw white text with a black outline on the build view (power bars on the right o" +
-        "f the screen)");
+            chkHighVis.Location = new System.Drawing.Point(280, 106);
+            chkHighVis.Name = "chkHighVis";
+            chkHighVis.Size = new System.Drawing.Size(222, 20);
+            chkHighVis.TabIndex = 69;
+            chkHighVis.Text = "Use High-Visiblity text on the build view";
+            myTip.SetToolTip(chkHighVis, "Draw white text with a black outline on the build view (power bars on the right of the screen)");
             // 
-            // chkShowAlphaPopup
+            // cPicker
             // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
-            this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
-            this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
-            this.chkShowAlphaPopup.TabIndex = 79;
-            this.chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
+            cPicker.FullOpen = true;
             // 
-            // label17
+            // TabPage5
             // 
-            this.label17.Location = new System.Drawing.Point(11, 73);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(96, 20);
-            this.label17.TabIndex = 80;
-            this.label17.Text = "Power Selections:";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            TabPage5.Controls.Add(groupBox4);
+            TabPage5.Controls.Add(groupBox16);
+            TabPage5.Controls.Add(groupBox19);
+            TabPage5.Controls.Add(GroupBox1);
+            TabPage5.Location = new System.Drawing.Point(4, 23);
+            TabPage5.Name = "TabPage5";
+            TabPage5.Size = new System.Drawing.Size(777, 345);
+            TabPage5.TabIndex = 4;
+            TabPage5.Text = "Updates & Paths";
+            TabPage5.UseVisualStyleBackColor = true;
             // 
-            // udPowSelectSize
+            // groupBox4
             // 
-            this.udPowSelectSize.DecimalPlaces = 2;
-            this.udPowSelectSize.Location = new System.Drawing.Point(108, 73);
-            this.udPowSelectSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udPowSelectSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udPowSelectSize.Name = "udPowSelectSize";
-            this.udPowSelectSize.Size = new System.Drawing.Size(52, 20);
-            this.udPowSelectSize.TabIndex = 81;
-            this.udPowSelectSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
+            groupBox4.Controls.Add(SchemaStatus);
+            groupBox4.Controls.Add(btnRepairSchemaAssoc);
+            groupBox4.Controls.Add(label6);
+            groupBox4.Controls.Add(lblSchemaAssoc);
+            groupBox4.Location = new System.Drawing.Point(394, 76);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new System.Drawing.Size(375, 87);
+            groupBox4.TabIndex = 73;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Schema Association (Build Sharing)";
             // 
-            // label18
+            // SchemaStatus
             // 
-            this.label18.Location = new System.Drawing.Point(29, 98);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(78, 20);
-            this.label18.TabIndex = 82;
-            this.label18.Text = "Powers:";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            SchemaStatus.AutoSize = true;
+            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
+            SchemaStatus.Location = new System.Drawing.Point(252, 54);
+            SchemaStatus.Name = "SchemaStatus";
+            SchemaStatus.Size = new System.Drawing.Size(69, 16);
+            SchemaStatus.TabIndex = 71;
+            SchemaStatus.Text = "WARNING";
+            SchemaStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            SchemaStatus.MouseHover += Status_MouseHover;
             // 
-            // udPowersSize
+            // btnRepairSchemaAssoc
             // 
-            this.udPowersSize.DecimalPlaces = 2;
-            this.udPowersSize.Location = new System.Drawing.Point(108, 98);
-            this.udPowersSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udPowersSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udPowersSize.Name = "udPowersSize";
-            this.udPowersSize.Size = new System.Drawing.Size(52, 20);
-            this.udPowersSize.TabIndex = 83;
-            this.udPowersSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
+            btnRepairSchemaAssoc.FlatStyle = FlatStyle.System;
+            btnRepairSchemaAssoc.Location = new System.Drawing.Point(24, 45);
+            btnRepairSchemaAssoc.Name = "btnRepairSchemaAssoc";
+            btnRepairSchemaAssoc.Size = new System.Drawing.Size(141, 36);
+            btnRepairSchemaAssoc.TabIndex = 68;
+            btnRepairSchemaAssoc.Text = "Repair Schema";
+            btnRepairSchemaAssoc.UseVisualStyleBackColor = true;
+            btnRepairSchemaAssoc.Click += btnRepairSchemaAssoc_Click;
             // 
-            // chkPowSelBold
+            // label6
             // 
-            this.chkPowSelBold.AutoSize = true;
-            this.chkPowSelBold.Location = new System.Drawing.Point(173, 76);
-            this.chkPowSelBold.Name = "chkPowSelBold";
-            this.chkPowSelBold.Size = new System.Drawing.Size(15, 14);
-            this.chkPowSelBold.TabIndex = 84;
-            this.chkPowSelBold.UseVisualStyleBackColor = true;
+            label6.Location = new System.Drawing.Point(5, 18);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(374, 17);
+            label6.TabIndex = 69;
+            label6.Text = "If your status is in the warning state you can repair it via the button below.\r\n";
+            label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // chkPowersBold
+            // lblSchemaAssoc
             // 
-            this.chkPowersBold.AutoSize = true;
-            this.chkPowersBold.Location = new System.Drawing.Point(173, 101);
-            this.chkPowersBold.Name = "chkPowersBold";
-            this.chkPowersBold.Size = new System.Drawing.Size(15, 14);
-            this.chkPowersBold.TabIndex = 85;
-            this.chkPowersBold.UseVisualStyleBackColor = true;
+            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblSchemaAssoc.Location = new System.Drawing.Point(196, 54);
+            lblSchemaAssoc.Name = "lblSchemaAssoc";
+            lblSchemaAssoc.Size = new System.Drawing.Size(50, 14);
+            lblSchemaAssoc.TabIndex = 70;
+            lblSchemaAssoc.Text = "Status: ";
+            lblSchemaAssoc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // chkMiddle
+            // groupBox16
             // 
-            this.chkMiddle.Location = new System.Drawing.Point(500, 304);
-            this.chkMiddle.Name = "chkMiddle";
-            this.chkMiddle.Size = new System.Drawing.Size(222, 18);
-            this.chkMiddle.TabIndex = 77;
-            this.chkMiddle.Text = "Middle-Click repeats last enhancement";
+            groupBox16.Controls.Add(Label1);
+            groupBox16.Controls.Add(lblSaveFolder);
+            groupBox16.Controls.Add(chkLoadLastFile);
+            groupBox16.Controls.Add(btnSaveFolderReset);
+            groupBox16.Controls.Add(btnSaveFolder);
+            groupBox16.Location = new System.Drawing.Point(8, 169);
+            groupBox16.Name = "groupBox16";
+            groupBox16.Size = new System.Drawing.Size(761, 120);
+            groupBox16.TabIndex = 72;
+            groupBox16.TabStop = false;
+            groupBox16.Text = "Character Builds Location";
             // 
-            // chkNoTips
+            // Label1
             // 
-            this.chkNoTips.Location = new System.Drawing.Point(417, 304);
-            this.chkNoTips.Name = "chkNoTips";
-            this.chkNoTips.Size = new System.Drawing.Size(78, 18);
-            this.chkNoTips.TabIndex = 78;
-            this.chkNoTips.Text = "No Tooltips";
-            this.chkNoTips.Visible = false;
+            Label1.Location = new System.Drawing.Point(6, 30);
+            Label1.Name = "Label1";
+            Label1.Size = new System.Drawing.Size(85, 24);
+            Label1.TabIndex = 8;
+            Label1.Text = "Save Builds To:";
+            Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // groupBox18
+            // lblSaveFolder
             // 
-            this.groupBox18.Controls.Add(this.chkOldStyle);
-            this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
-            this.groupBox18.Controls.Add(this.label2);
-            this.groupBox18.Location = new System.Drawing.Point(388, 120);
-            this.groupBox18.Name = "groupBox18";
-            this.groupBox18.Size = new System.Drawing.Size(353, 44);
-            this.groupBox18.TabIndex = 79;
-            this.groupBox18.TabStop = false;
-            this.groupBox18.Text = "Totals Window:";
+            lblSaveFolder.BorderStyle = BorderStyle.FixedSingle;
+            lblSaveFolder.Location = new System.Drawing.Point(97, 31);
+            lblSaveFolder.Name = "lblSaveFolder";
+            lblSaveFolder.Size = new System.Drawing.Size(511, 22);
+            lblSaveFolder.TabIndex = 63;
+            lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblSaveFolder.UseMnemonic = false;
             // 
-            // label2
+            // chkLoadLastFile
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(108, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 14);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Show in titlebar:";
+            chkLoadLastFile.Location = new System.Drawing.Point(9, 72);
+            chkLoadLastFile.Name = "chkLoadLastFile";
+            chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
+            chkLoadLastFile.TabIndex = 61;
+            chkLoadLastFile.Text = "Load last build on startup";
             // 
-            // cbTotalsWindowTitleOpt
+            // btnSaveFolderReset
             // 
-            this.cbTotalsWindowTitleOpt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTotalsWindowTitleOpt.FormattingEnabled = true;
-            this.cbTotalsWindowTitleOpt.Items.AddRange(new object[] {
-            "Generic - Totals for Self",
-            "Character name + Archetype + Powersets",
-            "Build file name + Archetype + Powersets",
-            "Character name + Build file name (fallback to generic if none)"});
-            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(199, 13);
-            this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
-            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 22);
-            this.cbTotalsWindowTitleOpt.TabIndex = 1;
+            btnSaveFolderReset.Location = new System.Drawing.Point(614, 72);
+            btnSaveFolderReset.Name = "btnSaveFolderReset";
+            btnSaveFolderReset.Size = new System.Drawing.Size(105, 22);
+            btnSaveFolderReset.TabIndex = 64;
+            btnSaveFolderReset.Text = "Reset to Default";
+            btnSaveFolderReset.UseVisualStyleBackColor = true;
+            btnSaveFolderReset.Click += btnSaveFolderReset_Click;
             // 
-            // chkOldStyle
+            // btnSaveFolder
             // 
-            this.chkOldStyle.Location = new System.Drawing.Point(11, 17);
-            this.chkOldStyle.Name = "chkOldStyle";
-            this.chkOldStyle.Size = new System.Drawing.Size(88, 18);
-            this.chkOldStyle.TabIndex = 80;
-            this.chkOldStyle.Text = "Use old style";
-            this.chkOldStyle.CheckedChanged += new System.EventHandler(this.chkOldStyle_CheckedChanged);
+            btnSaveFolder.Location = new System.Drawing.Point(614, 30);
+            btnSaveFolder.Name = "btnSaveFolder";
+            btnSaveFolder.Size = new System.Drawing.Size(105, 22);
+            btnSaveFolder.TabIndex = 62;
+            btnSaveFolder.Text = "Browse...";
+            btnSaveFolder.UseVisualStyleBackColor = true;
+            btnSaveFolder.Click += btnSaveFolder_Click;
+            // 
+            // groupBox19
+            // 
+            groupBox19.Controls.Add(FileAssocStatus);
+            groupBox19.Controls.Add(btnRepairFileAssoc);
+            groupBox19.Controls.Add(lblFileAssocTxt);
+            groupBox19.Controls.Add(lblFileAssoc);
+            groupBox19.Location = new System.Drawing.Point(8, 76);
+            groupBox19.Name = "groupBox19";
+            groupBox19.Size = new System.Drawing.Size(380, 87);
+            groupBox19.TabIndex = 71;
+            groupBox19.TabStop = false;
+            groupBox19.Text = "File Associations";
+            // 
+            // FileAssocStatus
+            // 
+            FileAssocStatus.AutoSize = true;
+            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
+            FileAssocStatus.Location = new System.Drawing.Point(252, 54);
+            FileAssocStatus.Name = "FileAssocStatus";
+            FileAssocStatus.Size = new System.Drawing.Size(69, 16);
+            FileAssocStatus.TabIndex = 71;
+            FileAssocStatus.Text = "WARNING";
+            FileAssocStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            FileAssocStatus.MouseHover += Status_MouseHover;
+            // 
+            // btnRepairFileAssoc
+            // 
+            btnRepairFileAssoc.FlatStyle = FlatStyle.System;
+            btnRepairFileAssoc.Location = new System.Drawing.Point(24, 45);
+            btnRepairFileAssoc.Name = "btnRepairFileAssoc";
+            btnRepairFileAssoc.Size = new System.Drawing.Size(141, 36);
+            btnRepairFileAssoc.TabIndex = 68;
+            btnRepairFileAssoc.Text = "Repair Associations";
+            btnRepairFileAssoc.UseVisualStyleBackColor = true;
+            btnRepairFileAssoc.Click += btnRepairFileAssoc_Click;
+            // 
+            // lblFileAssocTxt
+            // 
+            lblFileAssocTxt.Location = new System.Drawing.Point(5, 18);
+            lblFileAssocTxt.Name = "lblFileAssocTxt";
+            lblFileAssocTxt.Size = new System.Drawing.Size(369, 17);
+            lblFileAssocTxt.TabIndex = 69;
+            lblFileAssocTxt.Text = "If your status is in the warning state you can repair it via the button below.";
+            lblFileAssocTxt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblFileAssoc
+            // 
+            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblFileAssoc.Location = new System.Drawing.Point(196, 54);
+            lblFileAssoc.Name = "lblFileAssoc";
+            lblFileAssoc.Size = new System.Drawing.Size(50, 14);
+            lblFileAssoc.TabIndex = 70;
+            lblFileAssoc.Text = "Status: ";
+            lblFileAssoc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // GroupBox1
+            // 
+            GroupBox1.Controls.Add(Label34);
+            GroupBox1.Controls.Add(chkUpdates);
+            GroupBox1.Location = new System.Drawing.Point(8, 3);
+            GroupBox1.Name = "GroupBox1";
+            GroupBox1.Size = new System.Drawing.Size(761, 67);
+            GroupBox1.TabIndex = 7;
+            GroupBox1.TabStop = false;
+            GroupBox1.Text = "Automatic Updates";
+            // 
+            // Label34
+            // 
+            Label34.Location = new System.Drawing.Point(6, 16);
+            Label34.Name = "Label34";
+            Label34.Size = new System.Drawing.Size(486, 39);
+            Label34.TabIndex = 5;
+            Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when it starts. This feature requires an internet connection.";
+            Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // chkUpdates
+            // 
+            chkUpdates.Location = new System.Drawing.Point(552, 19);
+            chkUpdates.Name = "chkUpdates";
+            chkUpdates.Size = new System.Drawing.Size(167, 24);
+            chkUpdates.TabIndex = 6;
+            chkUpdates.Text = "Check for updates on startup";
+            // 
+            // TabPage1
+            // 
+            TabPage1.Controls.Add(Label15);
+            TabPage1.Controls.Add(Label10);
+            TabPage1.Controls.Add(cmbAction);
+            TabPage1.Controls.Add(GroupBox9);
+            TabPage1.Controls.Add(GroupBox7);
+            TabPage1.Location = new System.Drawing.Point(4, 24);
+            TabPage1.Name = "TabPage1";
+            TabPage1.Size = new System.Drawing.Size(777, 344);
+            TabPage1.TabIndex = 6;
+            TabPage1.Text = "Drag & Drop";
+            TabPage1.UseVisualStyleBackColor = true;
+            // 
+            // Label15
+            // 
+            Label15.Location = new System.Drawing.Point(14, 9);
+            Label15.Name = "Label15";
+            Label15.Size = new System.Drawing.Size(755, 92);
+            Label15.TabIndex = 4;
+            Label15.Text = resources.GetString("Label15.Text");
+            Label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // Label10
+            // 
+            Label10.AutoSize = true;
+            Label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Label10.Location = new System.Drawing.Point(19, 268);
+            Label10.Name = "Label10";
+            Label10.Size = new System.Drawing.Size(285, 15);
+            Label10.TabIndex = 3;
+            Label10.Text = "Action to take whenever the above scenario occurs:";
+            // 
+            // cmbAction
+            // 
+            cmbAction.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbAction.FormattingEnabled = true;
+            cmbAction.Location = new System.Drawing.Point(18, 293);
+            cmbAction.Name = "cmbAction";
+            cmbAction.Size = new System.Drawing.Size(356, 22);
+            cmbAction.TabIndex = 2;
+            cmbAction.SelectedIndexChanged += cmbAction_SelectedIndexChanged;
+            // 
+            // GroupBox9
+            // 
+            GroupBox9.Controls.Add(lblExample);
+            GroupBox9.Location = new System.Drawing.Point(403, 104);
+            GroupBox9.Name = "GroupBox9";
+            GroupBox9.Size = new System.Drawing.Size(366, 161);
+            GroupBox9.TabIndex = 1;
+            GroupBox9.TabStop = false;
+            GroupBox9.Text = "Description / Example(s)";
+            // 
+            // lblExample
+            // 
+            lblExample.Location = new System.Drawing.Point(13, 17);
+            lblExample.Name = "lblExample";
+            lblExample.Size = new System.Drawing.Size(347, 141);
+            lblExample.TabIndex = 0;
+            // 
+            // GroupBox7
+            // 
+            GroupBox7.Controls.Add(listScenarios);
+            GroupBox7.Location = new System.Drawing.Point(8, 102);
+            GroupBox7.Name = "GroupBox7";
+            GroupBox7.Size = new System.Drawing.Size(380, 163);
+            GroupBox7.TabIndex = 0;
+            GroupBox7.TabStop = false;
+            GroupBox7.Text = "Scenario";
+            // 
+            // listScenarios
+            // 
+            listScenarios.FormattingEnabled = true;
+            listScenarios.ItemHeight = 14;
+            listScenarios.Items.AddRange(new object[] { "Power is moved or swapped too low", "Power is moved too high (some powers will no longer fit)", "Power is moved or swapped higher than slots' levels", "Power is moved or swapped too high to have # slots", "Power being replaced is swapped too low", "Power being replaced is swapped higher than slots' levels", "Power being replaced is swapped too high to have # slots", "Power being shifted down cannot shift to the necessary level", "Power being shifted up has slots from lower levels", "Power being shifted up has impossible # of slots", "There is a gap in a group of powers that are being shifted", "A power placed at its minimum level is being shifted up", "The power in the destination slot is prevented from being shifted up", "Slot being level-swapped is too low for the destination power", "Slot being level-swapped is too low for the source power" });
+            listScenarios.Location = new System.Drawing.Point(13, 19);
+            listScenarios.Name = "listScenarios";
+            listScenarios.Size = new System.Drawing.Size(353, 116);
+            listScenarios.TabIndex = 0;
+            listScenarios.SelectedIndexChanged += listScenarios_SelectedIndexChanged;
+            // 
+            // TabPage2
+            // 
+            TabPage2.Controls.Add(Label16);
+            TabPage2.Controls.Add(TeamSize);
+            TabPage2.Controls.Add(GroupBox2);
+            TabPage2.Controls.Add(chkUseArcanaTime);
+            TabPage2.Controls.Add(GroupBox15);
+            TabPage2.Controls.Add(GroupBox8);
+            TabPage2.Controls.Add(GroupBox6);
+            TabPage2.Location = new System.Drawing.Point(4, 24);
+            TabPage2.Name = "TabPage2";
+            TabPage2.Size = new System.Drawing.Size(777, 344);
+            TabPage2.TabIndex = 1;
+            TabPage2.Text = "Effects & Maths";
+            TabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Label16
+            // 
+            Label16.Enabled = false;
+            Label16.Location = new System.Drawing.Point(575, 322);
+            Label16.Name = "Label16";
+            Label16.Size = new System.Drawing.Size(57, 18);
+            Label16.TabIndex = 66;
+            Label16.Text = "Team Size";
+            Label16.Visible = false;
+            // 
+            // GroupBox2
+            // 
+            GroupBox2.Controls.Add(clbSuppression);
+            GroupBox2.Controls.Add(Label8);
+            GroupBox2.Location = new System.Drawing.Point(547, 4);
+            GroupBox2.Name = "GroupBox2";
+            GroupBox2.Size = new System.Drawing.Size(221, 310);
+            GroupBox2.TabIndex = 69;
+            GroupBox2.TabStop = false;
+            GroupBox2.Text = "Suppression";
+            // 
+            // clbSuppression
+            // 
+            clbSuppression.CheckOnClick = true;
+            clbSuppression.FormattingEnabled = true;
+            clbSuppression.Location = new System.Drawing.Point(9, 75);
+            clbSuppression.Name = "clbSuppression";
+            clbSuppression.Size = new System.Drawing.Size(206, 229);
+            clbSuppression.TabIndex = 9;
+            clbSuppression.SelectedIndexChanged += clbSuppression_SelectedIndexChanged;
+            // 
+            // Label8
+            // 
+            Label8.Location = new System.Drawing.Point(6, 28);
+            Label8.Name = "Label8";
+            Label8.Size = new System.Drawing.Size(209, 44);
+            Label8.TabIndex = 65;
+            Label8.Text = "Some effects are suppressed on specific conditions. You can enable those conditions here.";
+            // 
+            // GroupBox15
+            // 
+            GroupBox15.Controls.Add(Label20);
+            GroupBox15.Controls.Add(chkSetBonus);
+            GroupBox15.Controls.Add(chkIOEffects);
+            GroupBox15.Location = new System.Drawing.Point(315, 194);
+            GroupBox15.Name = "GroupBox15";
+            GroupBox15.Size = new System.Drawing.Size(226, 121);
+            GroupBox15.TabIndex = 68;
+            GroupBox15.TabStop = false;
+            GroupBox15.Text = "Invention Effects:";
+            // 
+            // Label20
+            // 
+            Label20.Location = new System.Drawing.Point(6, 17);
+            Label20.Name = "Label20";
+            Label20.Size = new System.Drawing.Size(213, 49);
+            Label20.TabIndex = 65;
+            Label20.Text = "The effects of set bonusses and special IO enhancements can be included when stats are calculated.";
+            // 
+            // GroupBox8
+            // 
+            GroupBox8.Controls.Add(rbChanceIgnore);
+            GroupBox8.Controls.Add(rbChanceAverage);
+            GroupBox8.Controls.Add(rbChanceMax);
+            GroupBox8.Controls.Add(Label9);
+            GroupBox8.Location = new System.Drawing.Point(4, 4);
+            GroupBox8.Name = "GroupBox8";
+            GroupBox8.Size = new System.Drawing.Size(537, 182);
+            GroupBox8.TabIndex = 3;
+            GroupBox8.TabStop = false;
+            GroupBox8.Text = "Chance of Damage:";
+            // 
+            // rbChanceIgnore
+            // 
+            rbChanceIgnore.Location = new System.Drawing.Point(347, 156);
+            rbChanceIgnore.Name = "rbChanceIgnore";
+            rbChanceIgnore.Size = new System.Drawing.Size(183, 20);
+            rbChanceIgnore.TabIndex = 8;
+            rbChanceIgnore.Text = "Minimum (Ignore Extra Damage)\r\n";
+            // 
+            // rbChanceAverage
+            // 
+            rbChanceAverage.Checked = true;
+            rbChanceAverage.Location = new System.Drawing.Point(6, 156);
+            rbChanceAverage.Name = "rbChanceAverage";
+            rbChanceAverage.Size = new System.Drawing.Size(168, 20);
+            rbChanceAverage.TabIndex = 7;
+            rbChanceAverage.TabStop = true;
+            rbChanceAverage.Text = "Average (Damage x Chance)";
+            // 
+            // rbChanceMax
+            // 
+            rbChanceMax.Location = new System.Drawing.Point(180, 156);
+            rbChanceMax.Name = "rbChanceMax";
+            rbChanceMax.Size = new System.Drawing.Size(161, 20);
+            rbChanceMax.TabIndex = 6;
+            rbChanceMax.Text = "Maximum (Always Include)";
+            // 
+            // Label9
+            // 
+            Label9.Location = new System.Drawing.Point(8, 16);
+            Label9.Name = "Label9";
+            Label9.Size = new System.Drawing.Size(522, 137);
+            Label9.TabIndex = 4;
+            Label9.Text = resources.GetString("Label9.Text");
+            Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // GroupBox6
+            // 
+            GroupBox6.Controls.Add(Label7);
+            GroupBox6.Controls.Add(rbPvP);
+            GroupBox6.Controls.Add(rbPvE);
+            GroupBox6.Location = new System.Drawing.Point(8, 192);
+            GroupBox6.Name = "GroupBox6";
+            GroupBox6.Size = new System.Drawing.Size(301, 122);
+            GroupBox6.TabIndex = 1;
+            GroupBox6.TabStop = false;
+            GroupBox6.Text = "Targets:";
+            // 
+            // Label7
+            // 
+            Label7.Location = new System.Drawing.Point(8, 16);
+            Label7.Name = "Label7";
+            Label7.Size = new System.Drawing.Size(295, 54);
+            Label7.TabIndex = 2;
+            Label7.Text = "Some powers  have different effects when used against players (Mez effects are a good example of this). Where a power has different effects, which should be displayed?";
+            // 
+            // rbPvP
+            // 
+            rbPvP.Location = new System.Drawing.Point(11, 93);
+            rbPvP.Name = "rbPvP";
+            rbPvP.Size = new System.Drawing.Size(260, 20);
+            rbPvP.TabIndex = 1;
+            rbPvP.Text = "Show values for Players (PvP)";
+            // 
+            // rbPvE
+            // 
+            rbPvE.Checked = true;
+            rbPvE.Location = new System.Drawing.Point(11, 73);
+            rbPvE.Name = "rbPvE";
+            rbPvE.Size = new System.Drawing.Size(260, 20);
+            rbPvE.TabIndex = 0;
+            rbPvE.TabStop = true;
+            rbPvE.Text = "Show values for Mobs (PvE)";
+            // 
+            // TabPage3
+            // 
+            TabPage3.Controls.Add(chkShowSelfBuffsAny);
+            TabPage3.Controls.Add(groupBox18);
+            TabPage3.Controls.Add(chkNoTips);
+            TabPage3.Controls.Add(chkMiddle);
+            TabPage3.Controls.Add(GroupBox17);
+            TabPage3.Controls.Add(chkIOPrintLevels);
+            TabPage3.Controls.Add(GroupBox5);
+            TabPage3.Controls.Add(GroupBox14);
+            TabPage3.Controls.Add(GroupBox3);
+            TabPage3.Location = new System.Drawing.Point(4, 23);
+            TabPage3.Name = "TabPage3";
+            TabPage3.Size = new System.Drawing.Size(777, 345);
+            TabPage3.TabIndex = 2;
+            TabPage3.Text = "Enhancements & View";
+            TabPage3.UseVisualStyleBackColor = true;
             // 
             // chkShowSelfBuffsAny
             // 
-            this.chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 324);
-            this.chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
-            this.chkShowSelfBuffsAny.Size = new System.Drawing.Size(190, 18);
-            this.chkShowSelfBuffsAny.TabIndex = 80;
-            this.chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
-            this.chkShowSelfBuffsAny.Visible = false;
-            this.chkShowSelfBuffsAny.CheckedChanged += new System.EventHandler(this.chkShowSelfBuffsAny_CheckedChanged);
+            chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 324);
+            chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
+            chkShowSelfBuffsAny.Size = new System.Drawing.Size(190, 18);
+            chkShowSelfBuffsAny.TabIndex = 80;
+            chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
+            chkShowSelfBuffsAny.Visible = false;
+            chkShowSelfBuffsAny.CheckedChanged += chkShowSelfBuffsAny_CheckedChanged;
+            // 
+            // groupBox18
+            // 
+            groupBox18.Controls.Add(chkOldStyle);
+            groupBox18.Controls.Add(cbTotalsWindowTitleOpt);
+            groupBox18.Controls.Add(label2);
+            groupBox18.Location = new System.Drawing.Point(388, 120);
+            groupBox18.Name = "groupBox18";
+            groupBox18.Size = new System.Drawing.Size(353, 44);
+            groupBox18.TabIndex = 79;
+            groupBox18.TabStop = false;
+            groupBox18.Text = "Totals Window:";
+            // 
+            // chkOldStyle
+            // 
+            chkOldStyle.Location = new System.Drawing.Point(11, 17);
+            chkOldStyle.Name = "chkOldStyle";
+            chkOldStyle.Size = new System.Drawing.Size(88, 18);
+            chkOldStyle.TabIndex = 80;
+            chkOldStyle.Text = "Use old style";
+            chkOldStyle.CheckedChanged += chkOldStyle_CheckedChanged;
+            // 
+            // cbTotalsWindowTitleOpt
+            // 
+            cbTotalsWindowTitleOpt.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTotalsWindowTitleOpt.FormattingEnabled = true;
+            cbTotalsWindowTitleOpt.Items.AddRange(new object[] { "Generic - Totals for Self", "Character name + Archetype + Powersets", "Build file name + Archetype + Powersets", "Character name + Build file name (fallback to generic if none)" });
+            cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(199, 13);
+            cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
+            cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 22);
+            cbTotalsWindowTitleOpt.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(108, 18);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(85, 14);
+            label2.TabIndex = 0;
+            label2.Text = "Show in titlebar:";
+            // 
+            // chkNoTips
+            // 
+            chkNoTips.Location = new System.Drawing.Point(417, 304);
+            chkNoTips.Name = "chkNoTips";
+            chkNoTips.Size = new System.Drawing.Size(78, 18);
+            chkNoTips.TabIndex = 78;
+            chkNoTips.Text = "No Tooltips";
+            chkNoTips.Visible = false;
+            // 
+            // chkMiddle
+            // 
+            chkMiddle.Location = new System.Drawing.Point(500, 304);
+            chkMiddle.Name = "chkMiddle";
+            chkMiddle.Size = new System.Drawing.Size(222, 18);
+            chkMiddle.TabIndex = 77;
+            chkMiddle.Text = "Middle-Click repeats last enhancement";
+            // 
+            // GroupBox17
+            // 
+            GroupBox17.Controls.Add(chkPowersBold);
+            GroupBox17.Controls.Add(chkPowSelBold);
+            GroupBox17.Controls.Add(udPowersSize);
+            GroupBox17.Controls.Add(label18);
+            GroupBox17.Controls.Add(udPowSelectSize);
+            GroupBox17.Controls.Add(label17);
+            GroupBox17.Controls.Add(chkShowAlphaPopup);
+            GroupBox17.Controls.Add(chkHighVis);
+            GroupBox17.Controls.Add(Label36);
+            GroupBox17.Controls.Add(chkStatBold);
+            GroupBox17.Controls.Add(chkTextBold);
+            GroupBox17.Controls.Add(btnFontColor);
+            GroupBox17.Controls.Add(Label22);
+            GroupBox17.Controls.Add(Label21);
+            GroupBox17.Controls.Add(udStatSize);
+            GroupBox17.Controls.Add(udRTFSize);
+            GroupBox17.Location = new System.Drawing.Point(196, 166);
+            GroupBox17.Name = "GroupBox17";
+            GroupBox17.Size = new System.Drawing.Size(545, 132);
+            GroupBox17.TabIndex = 76;
+            GroupBox17.TabStop = false;
+            GroupBox17.Text = "Font Size/Colors:";
+            // 
+            // chkPowersBold
+            // 
+            chkPowersBold.AutoSize = true;
+            chkPowersBold.Location = new System.Drawing.Point(173, 101);
+            chkPowersBold.Name = "chkPowersBold";
+            chkPowersBold.Size = new System.Drawing.Size(15, 14);
+            chkPowersBold.TabIndex = 85;
+            chkPowersBold.UseVisualStyleBackColor = true;
+            // 
+            // chkPowSelBold
+            // 
+            chkPowSelBold.AutoSize = true;
+            chkPowSelBold.Location = new System.Drawing.Point(173, 76);
+            chkPowSelBold.Name = "chkPowSelBold";
+            chkPowSelBold.Size = new System.Drawing.Size(15, 14);
+            chkPowSelBold.TabIndex = 84;
+            chkPowSelBold.UseVisualStyleBackColor = true;
+            // 
+            // udPowersSize
+            // 
+            udPowersSize.DecimalPlaces = 2;
+            udPowersSize.Location = new System.Drawing.Point(108, 98);
+            udPowersSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
+            udPowersSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
+            udPowersSize.Name = "udPowersSize";
+            udPowersSize.Size = new System.Drawing.Size(52, 20);
+            udPowersSize.TabIndex = 83;
+            udPowersSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
+            // 
+            // label18
+            // 
+            label18.Location = new System.Drawing.Point(29, 98);
+            label18.Name = "label18";
+            label18.Size = new System.Drawing.Size(78, 20);
+            label18.TabIndex = 82;
+            label18.Text = "Powers:";
+            label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udPowSelectSize
+            // 
+            udPowSelectSize.DecimalPlaces = 2;
+            udPowSelectSize.Location = new System.Drawing.Point(108, 73);
+            udPowSelectSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
+            udPowSelectSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
+            udPowSelectSize.Name = "udPowSelectSize";
+            udPowSelectSize.Size = new System.Drawing.Size(52, 20);
+            udPowSelectSize.TabIndex = 81;
+            udPowSelectSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
+            // 
+            // label17
+            // 
+            label17.Location = new System.Drawing.Point(11, 73);
+            label17.Name = "label17";
+            label17.Size = new System.Drawing.Size(96, 20);
+            label17.TabIndex = 80;
+            label17.Text = "Power Selections:";
+            label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // chkShowAlphaPopup
+            // 
+            chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
+            chkShowAlphaPopup.Name = "chkShowAlphaPopup";
+            chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
+            chkShowAlphaPopup.TabIndex = 79;
+            chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
+            // 
+            // Label36
+            // 
+            Label36.Location = new System.Drawing.Point(161, 8);
+            Label36.Name = "Label36";
+            Label36.Size = new System.Drawing.Size(39, 16);
+            Label36.TabIndex = 64;
+            Label36.Text = "Bold";
+            Label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // chkStatBold
+            // 
+            chkStatBold.AutoSize = true;
+            chkStatBold.Location = new System.Drawing.Point(173, 50);
+            chkStatBold.Name = "chkStatBold";
+            chkStatBold.Size = new System.Drawing.Size(15, 14);
+            chkStatBold.TabIndex = 63;
+            chkStatBold.UseVisualStyleBackColor = true;
+            // 
+            // chkTextBold
+            // 
+            chkTextBold.AutoSize = true;
+            chkTextBold.Location = new System.Drawing.Point(173, 25);
+            chkTextBold.Name = "chkTextBold";
+            chkTextBold.Size = new System.Drawing.Size(15, 14);
+            chkTextBold.TabIndex = 62;
+            chkTextBold.UseVisualStyleBackColor = true;
+            // 
+            // btnFontColor
+            // 
+            btnFontColor.Location = new System.Drawing.Point(280, 32);
+            btnFontColor.Name = "btnFontColor";
+            btnFontColor.Size = new System.Drawing.Size(172, 27);
+            btnFontColor.TabIndex = 61;
+            btnFontColor.Text = "Set Colors...";
+            btnFontColor.UseVisualStyleBackColor = true;
+            btnFontColor.Click += btnFontColor_Click;
+            // 
+            // Label22
+            // 
+            Label22.Location = new System.Drawing.Point(16, 47);
+            Label22.Name = "Label22";
+            Label22.Size = new System.Drawing.Size(91, 20);
+            Label22.TabIndex = 60;
+            Label22.Text = "Stats:";
+            Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label21
+            // 
+            Label21.Location = new System.Drawing.Point(5, 21);
+            Label21.Name = "Label21";
+            Label21.Size = new System.Drawing.Size(102, 20);
+            Label21.TabIndex = 59;
+            Label21.Text = "InfoPanel Tab Text:";
+            Label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udStatSize
+            // 
+            udStatSize.DecimalPlaces = 2;
+            udStatSize.Location = new System.Drawing.Point(108, 47);
+            udStatSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
+            udStatSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
+            udStatSize.Name = "udStatSize";
+            udStatSize.Size = new System.Drawing.Size(52, 20);
+            udStatSize.TabIndex = 1;
+            udStatSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
+            // 
+            // udRTFSize
+            // 
+            udRTFSize.Location = new System.Drawing.Point(108, 21);
+            udRTFSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
+            udRTFSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
+            udRTFSize.Name = "udRTFSize";
+            udRTFSize.Size = new System.Drawing.Size(52, 20);
+            udRTFSize.TabIndex = 0;
+            udRTFSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
+            // 
+            // chkIOPrintLevels
+            // 
+            chkIOPrintLevels.Location = new System.Drawing.Point(194, 304);
+            chkIOPrintLevels.Name = "chkIOPrintLevels";
+            chkIOPrintLevels.Size = new System.Drawing.Size(221, 18);
+            chkIOPrintLevels.TabIndex = 75;
+            chkIOPrintLevels.Text = "Display Invention levels in printed builds";
+            // 
+            // GroupBox5
+            // 
+            GroupBox5.Controls.Add(chkEnableDmgGraph);
+            GroupBox5.Controls.Add(rbGraphSimple);
+            GroupBox5.Controls.Add(rbGraphStacked);
+            GroupBox5.Controls.Add(rbGraphTwoLine);
+            GroupBox5.Location = new System.Drawing.Point(388, 4);
+            GroupBox5.Name = "GroupBox5";
+            GroupBox5.Size = new System.Drawing.Size(353, 117);
+            GroupBox5.TabIndex = 72;
+            GroupBox5.TabStop = false;
+            GroupBox5.Text = "Damage Graph Style:";
+            // 
+            // chkEnableDmgGraph
+            // 
+            chkEnableDmgGraph.AutoSize = true;
+            chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
+            chkEnableDmgGraph.Name = "chkEnableDmgGraph";
+            chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
+            chkEnableDmgGraph.TabIndex = 6;
+            chkEnableDmgGraph.Text = "Enable Damage Graph";
+            chkEnableDmgGraph.UseVisualStyleBackColor = true;
+            chkEnableDmgGraph.CheckedChanged += chkEnableDmgGraph_CheckedChanged;
+            // 
+            // GroupBox14
+            // 
+            GroupBox14.Controls.Add(cbCurrency);
+            GroupBox14.Controls.Add(label19);
+            GroupBox14.Controls.Add(chkIOLevel);
+            GroupBox14.Controls.Add(btnIOReset);
+            GroupBox14.Controls.Add(Label40);
+            GroupBox14.Controls.Add(udIOLevel);
+            GroupBox14.Location = new System.Drawing.Point(196, 4);
+            GroupBox14.Name = "GroupBox14";
+            GroupBox14.Size = new System.Drawing.Size(188, 160);
+            GroupBox14.TabIndex = 69;
+            GroupBox14.TabStop = false;
+            GroupBox14.Text = "Inventions:";
+            // 
+            // cbCurrency
+            // 
+            cbCurrency.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCurrency.FormattingEnabled = true;
+            cbCurrency.Location = new System.Drawing.Point(9, 81);
+            cbCurrency.Name = "cbCurrency";
+            cbCurrency.Size = new System.Drawing.Size(171, 22);
+            cbCurrency.TabIndex = 62;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(5, 64);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(103, 14);
+            label19.TabIndex = 61;
+            label19.Text = "Preferred currency:";
+            // 
+            // btnIOReset
+            // 
+            btnIOReset.Location = new System.Drawing.Point(8, 109);
+            btnIOReset.Name = "btnIOReset";
+            btnIOReset.Size = new System.Drawing.Size(172, 44);
+            btnIOReset.TabIndex = 59;
+            btnIOReset.Text = "Set All IO and SetO levels to default";
+            btnIOReset.Click += btnIOReset_Click;
+            // 
+            // Label40
+            // 
+            Label40.Location = new System.Drawing.Point(8, 20);
+            Label40.Name = "Label40";
+            Label40.Size = new System.Drawing.Size(96, 20);
+            Label40.TabIndex = 58;
+            Label40.Text = "Default IO Level:";
+            Label40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GroupBox3
+            // 
+            GroupBox3.Controls.Add(chkShowSOLevels);
+            GroupBox3.Controls.Add(chkRelSignOnly);
+            GroupBox3.Controls.Add(Label3);
+            GroupBox3.Controls.Add(optTO);
+            GroupBox3.Controls.Add(optDO);
+            GroupBox3.Controls.Add(optSO);
+            GroupBox3.Controls.Add(optEnh);
+            GroupBox3.Controls.Add(cbEnhLevel);
+            GroupBox3.Controls.Add(Label4);
+            GroupBox3.Location = new System.Drawing.Point(4, 4);
+            GroupBox3.Name = "GroupBox3";
+            GroupBox3.Size = new System.Drawing.Size(184, 338);
+            GroupBox3.TabIndex = 62;
+            GroupBox3.TabStop = false;
+            GroupBox3.Text = "Regular Enhancements:";
+            // 
+            // chkShowSOLevels
+            // 
+            chkShowSOLevels.Location = new System.Drawing.Point(11, 257);
+            chkShowSOLevels.Name = "chkShowSOLevels";
+            chkShowSOLevels.Size = new System.Drawing.Size(150, 23);
+            chkShowSOLevels.TabIndex = 71;
+            chkShowSOLevels.Text = "Display SO/HO Levels";
+            chkShowSOLevels.UseVisualStyleBackColor = true;
+            chkShowSOLevels.CheckedChanged += chkShowSOLevels_CheckedChanged;
+            // 
+            // Label3
+            // 
+            Label3.Location = new System.Drawing.Point(6, 142);
+            Label3.Name = "Label3";
+            Label3.Size = new System.Drawing.Size(172, 79);
+            Label3.TabIndex = 59;
+            Label3.Text = "Default Relative Level:\r\n(Ehancements can function up to five levels above or three below that of the character.)";
+            Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // optEnh
+            // 
+            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            optEnh.ForeColor = System.Drawing.SystemColors.ControlText;
+            optEnh.Location = new System.Drawing.Point(21, 121);
+            optEnh.Name = "optEnh";
+            optEnh.Size = new System.Drawing.Size(143, 16);
+            optEnh.TabIndex = 52;
+            optEnh.Text = "Single Origin";
+            optEnh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // Label4
+            // 
+            Label4.Location = new System.Drawing.Point(6, 18);
+            Label4.Name = "Label4";
+            Label4.Size = new System.Drawing.Size(172, 50);
+            Label4.TabIndex = 58;
+            Label4.Text = "Default Enhancement Type:\r\n(This does not affect Inventions or Special enhancements)";
+            Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TabControl1
             // 
-            this.TabControl1.Controls.Add(this.TabPage3);
-            this.TabControl1.Controls.Add(this.TabPage2);
-            this.TabControl1.Controls.Add(this.TabPage4);
-            this.TabControl1.Controls.Add(this.TabPage1);
-            this.TabControl1.Controls.Add(this.TabPage5);
-            this.TabControl1.Location = new System.Drawing.Point(0, 0);
-            this.TabControl1.Name = "TabControl1";
-            this.TabControl1.SelectedIndex = 0;
-            this.TabControl1.Size = new System.Drawing.Size(785, 372);
-            this.TabControl1.TabIndex = 0;
+            TabControl1.Controls.Add(TabPage3);
+            TabControl1.Controls.Add(TabPage2);
+            TabControl1.Controls.Add(TabPage1);
+            TabControl1.Controls.Add(TabPage5);
+            TabControl1.Location = new System.Drawing.Point(0, 0);
+            TabControl1.Name = "TabControl1";
+            TabControl1.SelectedIndex = 0;
+            TabControl1.Size = new System.Drawing.Size(785, 372);
+            TabControl1.TabIndex = 0;
+            TabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
             // 
             // frmCalcOpt
             // 
-            this.AcceptButton = this.btnOK;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(785, 412);
-            this.Controls.Add(this.chkColorPrint);
-            this.Controls.Add(this.TabControl1);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmCalcOpt";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Options";
-            this.TabPage5.ResumeLayout(false);
-            this.GroupBox1.ResumeLayout(false);
-            this.groupBox19.ResumeLayout(false);
-            this.groupBox16.ResumeLayout(false);
-            this.TabPage1.ResumeLayout(false);
-            this.TabPage1.PerformLayout();
-            this.GroupBox7.ResumeLayout(false);
-            this.GroupBox9.ResumeLayout(false);
-            this.TabPage4.ResumeLayout(false);
-            this.GroupBox11.ResumeLayout(false);
-            this.GroupBox12.ResumeLayout(false);
-            this.GroupBox12.PerformLayout();
-            this.TabPage2.ResumeLayout(false);
-            this.GroupBox6.ResumeLayout(false);
-            this.GroupBox8.ResumeLayout(false);
-            this.GroupBox15.ResumeLayout(false);
-            this.GroupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.TeamSize)).EndInit();
-            this.TabPage3.ResumeLayout(false);
-            this.GroupBox3.ResumeLayout(false);
-            this.GroupBox14.ResumeLayout(false);
-            this.GroupBox14.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udIOLevel)).EndInit();
-            this.GroupBox5.ResumeLayout(false);
-            this.GroupBox5.PerformLayout();
-            this.GroupBox17.ResumeLayout(false);
-            this.GroupBox17.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).EndInit();
-            this.groupBox18.ResumeLayout(false);
-            this.groupBox18.PerformLayout();
-            this.TabControl1.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AcceptButton = btnOK;
+            AutoScaleMode = AutoScaleMode.None;
+            BackColor = System.Drawing.SystemColors.Control;
+            CancelButton = btnCancel;
+            ClientSize = new System.Drawing.Size(785, 412);
+            Controls.Add(chkColorPrint);
+            Controls.Add(TabControl1);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOK);
+            Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            ForeColor = System.Drawing.SystemColors.ControlText;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmCalcOpt";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Options";
+            ((ISupportInitialize)TeamSize).EndInit();
+            ((ISupportInitialize)udIOLevel).EndInit();
+            TabPage5.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox16.ResumeLayout(false);
+            groupBox19.ResumeLayout(false);
+            groupBox19.PerformLayout();
+            GroupBox1.ResumeLayout(false);
+            TabPage1.ResumeLayout(false);
+            TabPage1.PerformLayout();
+            GroupBox9.ResumeLayout(false);
+            GroupBox7.ResumeLayout(false);
+            TabPage2.ResumeLayout(false);
+            GroupBox2.ResumeLayout(false);
+            GroupBox15.ResumeLayout(false);
+            GroupBox8.ResumeLayout(false);
+            GroupBox6.ResumeLayout(false);
+            TabPage3.ResumeLayout(false);
+            groupBox18.ResumeLayout(false);
+            groupBox18.PerformLayout();
+            GroupBox17.ResumeLayout(false);
+            GroupBox17.PerformLayout();
+            ((ISupportInitialize)udPowersSize).EndInit();
+            ((ISupportInitialize)udPowSelectSize).EndInit();
+            ((ISupportInitialize)udStatSize).EndInit();
+            ((ISupportInitialize)udRTFSize).EndInit();
+            GroupBox5.ResumeLayout(false);
+            GroupBox5.PerformLayout();
+            GroupBox14.ResumeLayout(false);
+            GroupBox14.PerformLayout();
+            GroupBox3.ResumeLayout(false);
+            TabControl1.ResumeLayout(false);
+            ResumeLayout(false);
         }
         #endregion
         Button btnCancel;
@@ -1723,9 +1291,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Button btnSaveFolderReset;
         private Button btnSaveFolder;
         private GroupBox groupBox19;
-        private Button btnFileAssoc;
+        private Button btnRepairFileAssoc;
+        private Label lblFileAssocTxt;
         private Label lblFileAssoc;
-        private Label lblAssocStatus;
         private GroupBox GroupBox1;
         private Label Label34;
         private CheckBox chkUpdates;
@@ -1737,43 +1305,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label lblExample;
         private GroupBox GroupBox7;
         private ListBox listScenarios;
-        private TabPage TabPage4;
-        private GroupBox GroupBox12;
-        private Button fcReset;
-        private Button fcSet;
-        private TextBox fcNotes;
-        private Button fcDelete;
-        private Button fcAdd;
-        private TextBox fcName;
-        private RadioButton fcWSTab;
-        private RadioButton fcWSSpace;
-        private TextBox fcUnderlineOff;
-        private TextBox fcUnderlineOn;
-        private Label Label32;
-        private TextBox fcItalicOff;
-        private TextBox fcItalicOn;
-        private Label Label31;
-        private TextBox fcBoldOff;
-        private TextBox fcBoldOn;
-        private Label Label30;
-        private TextBox fcTextOff;
-        private TextBox fcTextOn;
-        private Label Label29;
-        private Label Label28;
-        private Label Label27;
-        private TextBox fcColorOff;
-        private TextBox fcColorOn;
-        private Label Label26;
-        private ListBox fcList;
-        private Label Label25;
-        private Label Label24;
-        private Label Label33;
-        private GroupBox GroupBox11;
-        private Button csReset;
-        private Button csBtnEdit;
-        private Button csDelete;
-        private Button csAdd;
-        private ListBox csList;
         private TabPage TabPage2;
         private Label Label16;
         private NumericUpDown TeamSize;
@@ -1843,5 +1374,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private ComboBox cbEnhLevel;
         private Label Label4;
         private TabControl TabControl1;
+        private GroupBox groupBox4;
+        private Label SchemaStatus;
+        private Button btnRepairSchemaAssoc;
+        private Label label6;
+        private Label lblSchemaAssoc;
+        private Label FileAssocStatus;
     }
 }

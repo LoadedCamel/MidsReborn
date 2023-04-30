@@ -556,6 +556,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.CancelButton = (System.Windows.Forms.IButtonControl)this.btnCancel;
 
             this.ClientSize = new System.Drawing.Size(522, 614);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add((System.Windows.Forms.Control)this.GroupBox5);
             this.Controls.Add((System.Windows.Forms.Control)this.GroupBox4);
             this.Controls.Add((System.Windows.Forms.Control)this.GroupBox3);

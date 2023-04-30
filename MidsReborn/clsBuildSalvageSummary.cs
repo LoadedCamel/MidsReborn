@@ -4,7 +4,9 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
+using static Mids_Reborn.Core.Files.Headers;
 
 namespace Mids_Reborn
 {
@@ -25,14 +27,41 @@ namespace Mids_Reborn
             EnhCatalysts = 0;
             EnhBoosters = 0;
 
-            foreach (var p in MidsContext.Character.CurrentBuild.Powers)
+            if (MidsContext.Character.CurrentBuild?.Powers == null) return;
+            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
             {
+                var powerEntry = MidsContext.Character.CurrentBuild.Powers[index];
+                if (powerEntry == null) continue;
+                var slots = powerEntry.Slots;
+                if (slots.Length < 1) continue;
+                for (var i = 0; i < slots.Length; i++)
+                {
+                    var slot = slots[i];
+                    if (slot.Enhancement.Enh > -1)
+                    {
+                        Debug.WriteLine($"{Database.Instance.Enhancements[slot.Enhancement.Enh].LongName} - HasBeenObtained: {slot.Enhancement.Obtained}");
+                    }
+                }
+            }
+
+
+            for (var powerEntryIndex = 0; powerEntryIndex < MidsContext.Character.CurrentBuild.Powers.Count; powerEntryIndex++)
+            {
+                var p = MidsContext.Character.CurrentBuild.Powers[powerEntryIndex];
+                if (p == null) continue;
                 for (var j = 0; j < p.Slots.Length; j++)
                 {
                     var enhIdx = p.Slots[j].Enhancement.Enh;
 
-                    if (enhIdx > -1) TotalEnhancements++;
-                    if (p.Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
+                    if (enhIdx > -1)
+                    {
+                        TotalEnhancements++;
+                    }
+                    if (p.Slots[j].Enhancement.Obtained & enhIdx > -1)
+                    {
+                        EnhObtained++;
+                    }
+
                     if (enhIdx == -1) continue;
 
                     var enhName = Database.Instance.Enhancements[enhIdx].UID;
@@ -73,6 +102,7 @@ namespace Mids_Reborn
         private static void CalcEnhObtained()
         {
             EnhObtained = 0;
+            if (MidsContext.Character.CurrentBuild == null) return;
             foreach (var p in MidsContext.Character.CurrentBuild.Powers)
             {
                 for (var j = 0; j < p?.Slots.Length; j++)

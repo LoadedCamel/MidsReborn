@@ -81,7 +81,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnImage
             // 
-            this.btnImage.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImage.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnImage.Location = new System.Drawing.Point(12, 12);
             this.btnImage.Name = "btnImage";
@@ -94,7 +94,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnNoImage
             // 
-            this.btnNoImage.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNoImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNoImage.Location = new System.Drawing.Point(12, 86);
             this.btnNoImage.Name = "btnNoImage";
             this.btnNoImage.Size = new System.Drawing.Size(97, 23);
@@ -125,7 +125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtNameFull);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(115, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(230, 238);
@@ -136,7 +136,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbSetType
             // 
             this.cbSetType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSetType.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbSetType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSetType.FormattingEnabled = true;
             this.cbSetType.Location = new System.Drawing.Point(68, 209);
             this.cbSetType.Name = "cbSetType";
@@ -147,7 +147,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(13, 212);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(49, 14);
@@ -168,7 +168,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(6, 99);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(64, 14);
@@ -179,7 +179,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(6, 163);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 14);
@@ -190,7 +190,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(6, 123);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 14);
@@ -200,7 +200,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // udMaxLevel
             // 
-            this.udMaxLevel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.udMaxLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.udMaxLevel.Location = new System.Drawing.Point(13, 180);
             this.udMaxLevel.Name = "udMaxLevel";
             this.udMaxLevel.Size = new System.Drawing.Size(32, 20);
@@ -210,7 +210,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // udMinLevel
             // 
-            this.udMinLevel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.udMinLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.udMinLevel.Location = new System.Drawing.Point(13, 140);
             this.udMinLevel.Name = "udMinLevel";
             this.udMinLevel.Size = new System.Drawing.Size(32, 20);
@@ -229,7 +229,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(25, 76);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(45, 14);
@@ -248,7 +248,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(4, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 14);
@@ -267,7 +267,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(13, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 14);
@@ -278,7 +278,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lvEnh);
-            this.groupBox2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(12, 256);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(333, 229);
@@ -321,7 +321,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox3.Controls.Add(this.cbSlotCount);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.rtbBonus);
-            this.groupBox3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(351, 12);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(785, 473);
@@ -491,8 +491,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // frmSetEditPvPNEW
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1148, 522);
             this.Controls.Add(this.rbIfPlayer);
             this.Controls.Add(this.rbIfCritter);

@@ -158,7 +158,7 @@ namespace Mids_Reborn.Forms
             this.SetInfo.BXHeight = 600;
             this.SetInfo.ColumnPosition = 0.5F;
             this.SetInfo.ColumnRight = false;
-            this.SetInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.SetInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.SetInfo.InternalPadding = 3;
             this.SetInfo.Location = new System.Drawing.Point(0, 0);
             this.SetInfo.Name = "SetInfo";
@@ -222,7 +222,7 @@ namespace Mids_Reborn.Forms
             // ibClose
             // 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(881, 540);
             this.ibClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -236,7 +236,7 @@ namespace Mids_Reborn.Forms
             // ibTopmost
             // 
             this.ibTopmost.Checked = true;
-            this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibTopmost.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibTopmost.Location = new System.Drawing.Point(770, 540);
             this.ibTopmost.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -283,7 +283,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.lvSet);
             this.Controls.Add(this.lvMag);
             this.Controls.Add(this.lvBonus);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.Name = "frmSetFind";

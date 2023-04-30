@@ -42,9 +42,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.cbValues = new System.Windows.Forms.ComboBox();
             this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new Mids_Reborn.Controls.ctlMultiGraph();
-            this.chkOnTop = new Mids_Reborn.Controls.ImageButton();
-            this.btnClose = new Mids_Reborn.Controls.ImageButton();
+            this.Graph = new Mids_Reborn.Controls.CtlMultiGraph();
+            this.chkOnTop = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
             this.SuspendLayout();
             // 
@@ -173,7 +173,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.DrawRuler = true;
             this.Graph.Dual = true;
             this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
-            this.Graph.Font = new System.Drawing.Font("Arial", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Graph.ForcedMax = 0F;
             this.Graph.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Graph.Highlight = true;
@@ -192,7 +192,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.PaddingX = 2F;
             this.Graph.PaddingY = 4F;
             this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
-            this.Graph.RulerPos = Mids_Reborn.Controls.ctlMultiGraph.RulerPosition.Top;
+            this.Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
             this.Graph.ScaleHeight = 16;
             this.Graph.ScaleIndex = 7;
             this.Graph.ShowScale = false;
@@ -203,41 +203,60 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // chkOnTop
             // 
-            this.chkOnTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkOnTop.Checked = true;
-            this.chkOnTop.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.chkOnTop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.chkOnTop.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            this.chkOnTop.CurrentText = "To Top Most";
+            this.chkOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkOnTop.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.chkOnTop.Images.Background = global::MRBResourceLib.Resources.HeroButton;
+            this.chkOnTop.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
+            this.chkOnTop.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
+            this.chkOnTop.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
             this.chkOnTop.Location = new System.Drawing.Point(383, 438);
-            this.chkOnTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkOnTop.Lock = false;
             this.chkOnTop.Name = "chkOnTop";
             this.chkOnTop.Size = new System.Drawing.Size(105, 22);
-            this.chkOnTop.TabIndex = 17;
-            this.chkOnTop.TextOff = "Keep On Top";
-            this.chkOnTop.TextOn = "Keep On Top";
-            this.chkOnTop.Toggle = true;
+            this.chkOnTop.TabIndex = 13;
+            this.chkOnTop.Text = "imageButtonEx1";
+            this.chkOnTop.TextOutline.Color = System.Drawing.Color.Black;
+            this.chkOnTop.TextOutline.Width = 2;
+            this.chkOnTop.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.chkOnTop.ToggleText.Indeterminate = "Indeterminate State";
+            this.chkOnTop.ToggleText.ToggledOff = "To Top Most";
+            this.chkOnTop.ToggleText.ToggledOn = "Top Most";
+            this.chkOnTop.UseAlt = false;
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Checked = false;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnClose.CurrentText = "Close";
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnClose.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.btnClose.Images.Background = global::MRBResourceLib.Resources.HeroButton;
+            this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
+            this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
+            this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
             this.btnClose.Location = new System.Drawing.Point(383, 465);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnClose.Lock = false;
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(105, 22);
-            this.btnClose.TabIndex = 16;
-            this.btnClose.TextOff = "Close";
-            this.btnClose.TextOn = "Close";
-            this.btnClose.Toggle = false;
+            this.btnClose.TabIndex = 14;
+            this.btnClose.Text = "Close";
+            this.btnClose.TextOutline.Color = System.Drawing.Color.Black;
+            this.btnClose.TextOutline.Width = 2;
+            this.btnClose.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
+            this.btnClose.ToggleText.Indeterminate = "Indeterminate State";
+            this.btnClose.ToggleText.ToggledOff = "ToggledOff State";
+            this.btnClose.ToggleText.ToggledOn = "ToggledOn State";
+            this.btnClose.UseAlt = false;
             // 
             // frmStats
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(492, 491);
-            this.Controls.Add(this.chkOnTop);
             this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.chkOnTop);
             this.Controls.Add(this.cbStyle);
             this.Controls.Add(this.lblKey2);
             this.Controls.Add(this.cbValues);
@@ -263,5 +282,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         }
         #endregion
+
+        private Controls.ImageButtonEx chkOnTop;
+        private Controls.ImageButtonEx btnClose;
     }
 }

@@ -190,46 +190,57 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnEditPowerData_Click(object sender, EventArgs e)
         {
-            var enh = myEnh;
-            var power = enh.GetPower();
-            var text = power.FullName;
-            var index1 = DatabaseAPI.NidFromUidPower(power.FullName);
+            var power = myEnh.GetPower();
+            var text = power?.FullName;
+            var index1 = DatabaseAPI.NidFromUidPower(text);
+            if (string.IsNullOrEmpty(text))
+            {
+                MessageBox.Show("This enhancement has no power associated with it.", "Huh?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
+            }
+            
             if (index1 < 0)
             {
-                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else
-            {
-                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
-                if (frmEditPower.ShowDialog() != DialogResult.OK)
-                    return;
-                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
-                DatabaseAPI.Database.Power[index1] = newPower;
-                if (text == DatabaseAPI.Database.Power[index1].FullName)
-                    return;
-                //Update the full power name in the powerset array
-                if (newPower.PowerSetID > -1)
-                    DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName =
-                        newPower.FullName;
+                MessageBox.Show($"Unable to read power data for {text} .", "Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                var num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
-                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
-                var strArray =
-                    DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
-                var str1 = "";
-                var num3 = strArray.Length - 1;
-                for (var index2 = 0; index2 <= num3; ++index2)
-                    str1 = str1 + strArray[index2] + "\r\n";
-                if (strArray.Length > 0)
-                {
-                    var str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
-                               "\r\nThe following powers referenced this power and were updated:\r\n" + str1 +
-                               "\r\n\r\nThis list has been placed on the clipboard.";
-                    Clipboard.SetDataObject(str2, true);
-                    MessageBox.Show(str2);
-                }
+                return;
+            }
+
+            using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+            if (frmEditPower.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            IPower? newPower = new Power(frmEditPower.myPower) {IsModified = true};
+            DatabaseAPI.Database.Power[index1] = newPower;
+            if (text == DatabaseAPI.Database.Power[index1].FullName)
+            {
+                return;
+            }
+
+            // Update the full power name in the powerset array
+            if (newPower.PowerSetID > -1)
+            {
+                DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName = newPower.FullName;
+            }
+
+            foreach (var fx in DatabaseAPI.Database.Power[index1].Effects)
+            {
+                fx.PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
+            }
+
+            var strArray = DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
+            var str1 = strArray.Aggregate("", (current, t) => $"{current}{t}\r\n");
+
+            if (strArray.Length > 0)
+            {
+                var str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
+                           "\r\nThe following powers referenced this power and were updated:\r\n" + str1 +
+                           "\r\n\r\nThis list has been placed on the clipboard.";
+                Clipboard.SetDataObject(str2, true);
+                MessageBox.Show(str2);
             }
         }
 
@@ -371,12 +382,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (sender is ComboBox cb && cb.SelectedIndex != -1)
             {
-                var selectedItem = cb.SelectedText;
-                if (selectedItem != "None")
-                {
-                    var subType = DatabaseAPI.GetSpecialEnhByName(selectedItem).Index;
-                    myEnh.SubTypeID = subType;
-                }
+                myEnh.SubTypeID = cb.SelectedIndex;
             }
             else
             {

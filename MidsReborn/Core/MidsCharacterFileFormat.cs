@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -11,7 +11,6 @@ namespace Mids_Reborn.Core
 {
     public static class MidsCharacterFileFormat
     {
-
         private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
@@ -34,7 +33,6 @@ namespace Mids_Reborn.Core
         private const float PriorVersion = 3.10f;
         private const float ThisVersion = 3.20f;
 
-
         private const int DataLinkMaxLength = 2048;
 
         private const bool UseQualifiedNames = false;
@@ -50,6 +48,59 @@ namespace Mids_Reborn.Core
         };
 
         //const bool UseHexEncoding = true;
+
+        private static string DecodeEntities(string s)
+        {
+            return s.Replace("&lt;", "<").Replace("&gt;", ">");
+        }
+
+        private static string EncodeEntities(string s)
+        {
+            return s.Replace("<", "&lt;").Replace(">", "&gt;");
+        }
+
+        public static string? ReadMetadata(string tagName, string s)
+        {
+            var r = new Regex($@"\<{tagName}\>(.+)\<\/{tagName}\>");
+            if (!r.IsMatch(s))
+            {
+                return null;
+            }
+
+            var m = r.Match(s);
+
+            return DecodeEntities(m.Groups[1].Value.Trim());
+        }
+
+        public static Dictionary<string, string> ReadMetadata(List<string> tagNames, string s)
+        {
+            var ret = new Dictionary<string, string>();
+
+            foreach (var tag in tagNames)
+            {
+                var r = new Regex($@"\<{tag}\>(.+)\<\/{tag}\>");
+                if (!r.IsMatch(s))
+                {
+                    continue;
+                }
+
+                var m = r.Match(s);
+
+                ret.Add(tag, DecodeEntities(m.Groups[1].Value.Trim()));
+            }
+
+            return ret;
+        }
+
+        private static string SaveMetadata(string tagName, string s)
+        {
+            return $"<{tagName}>{EncodeEntities(s.Trim())}</{tagName}>";
+        }
+
+        private static string SaveMetadata(Dictionary<string, string> tagValues)
+        {
+            return string.Join("\r\n", tagValues.Select(e => $"<{e.Key}>{EncodeEntities(e.Value.Trim())}</{e.Key}>")) + (tagValues.Count > 0 ? "\r\n" : "");
+        }
 
         private static bool MxDBuildSaveBuffer(ref byte[] buffer, bool includeAltEnh)
         {
@@ -322,13 +373,20 @@ namespace Mids_Reborn.Core
                             }
                         }
 
-                        if (magicFound) break;
+                        if (magicFound)
+                        {
+                            break;
+                        }
+
                         ++streamIndex;
                     }
                     else
                     {
                         if (!silent)
+                        {
                             MessageBox.Show("Unable to read data - Magic Number not found.", "ReadSaveData Failed");
+                        }
+
                         r.Close();
                         memoryStream.Close();
                         return false;
@@ -360,7 +418,11 @@ namespace Mids_Reborn.Core
                 var nIdClass = DatabaseAPI.NidFromUidClass(r.ReadString());
                 if (nIdClass < 0)
                 {
-                    if (!silent) MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
+                    if (!silent)
+                    {
+                        MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
+                    }
+
                     r.Close();
                     memoryStream.Close();
                     return false;
@@ -368,7 +430,11 @@ namespace Mids_Reborn.Core
 
                 var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIdClass);
                 var charClass = DatabaseAPI.Database.Classes[nIdClass];
-                if (charClass == null) return false;
+                if (charClass == null)
+                {
+                    return false;
+                }
+
                 MidsContext.Character.Reset(charClass, iOrigin);
                 if (fVersion > 1.0)
                 {
@@ -398,7 +464,7 @@ namespace Mids_Reborn.Core
                 var errors = MidsContext.Character.LoadPowersetsByName(names);
                 foreach (var (i, n) in errors)
                 {
-                    MessageBox.Show($"Failed to load powerset by name: {n} at {i}", "Powerset load failure");
+                    MessageBox.Show($"Failed to load powerset by name: {n} at {i} on {DatabaseAPI.DatabaseName} DB version {DatabaseAPI.Database.Version}", "Powerset load failure");
                 }
 
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
@@ -444,7 +510,11 @@ namespace Mids_Reborn.Core
                             flag5 = true;
                         }
 
-                        if (powerEntry1 == null) continue;
+                        if (powerEntry1 == null)
+                        {
+                            continue;
+                        }
+
                         if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
                         {
                             powerEntry1.Level = r.ReadSByte();
@@ -470,9 +540,7 @@ namespace Mids_Reborn.Core
                             if (hasSubPower)
                             {
                                 powerEntry1.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
-                                for (var subPowerIndex = 0;
-                                     subPowerIndex < powerEntry1.SubPowers.Length;
-                                     ++subPowerIndex)
+                                for (var subPowerIndex = 0; subPowerIndex < powerEntry1.SubPowers.Length; ++subPowerIndex)
                                 {
                                     var powerSub = new PowerSubEntry();
                                     powerEntry1.SubPowers[subPowerIndex] = powerSub;
@@ -480,7 +548,9 @@ namespace Mids_Reborn.Core
                                     {
                                         var name2 = r.ReadString();
                                         if (!string.IsNullOrEmpty(name2))
+                                        {
                                             powerSub.nIDPower = DatabaseAPI.NidFromUidPower(name2);
+                                        }
                                     }
                                     else
                                     {
@@ -492,7 +562,11 @@ namespace Mids_Reborn.Core
 
                                     if (powerSub.nIDPower > -1)
                                     {
-                                        if (subPower == null) continue;
+                                        if (subPower == null)
+                                        {
+                                            continue;
+                                        }
+
                                         powerSub.Powerset = subPower.PowerSetID;
                                         powerSub.Power = subPower.PowerSetIndex;
                                     }
@@ -538,12 +612,22 @@ namespace Mids_Reborn.Core
                         }
 
                         if (powerEntry1.SubPowers.Length > 0)
+                        {
                             nId = -1;
+                        }
+
                         if (nId <= -1)
+                        {
                             continue;
+                        }
+
                         powerEntry1.NIDPower = nId;
                         var power = DatabaseAPI.Database.Power[nId];
-                        if (power == null) continue;
+                        if (power == null)
+                        {
+                            continue;
+                        }
+
                         powerEntry1.NIDPowerset = power.PowerSetID;
                         powerEntry1.IDXPower = power.PowerSetIndex;
                         if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
@@ -565,7 +649,11 @@ namespace Mids_Reborn.Core
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
                             var cPower = MidsContext.Character.CurrentBuild.Powers[powerIndex];
-                            if (cPower == null) continue;
+                            if (cPower == null)
+                            {
+                                continue;
+                            }
+
                             if (powerEntry1.Power != null && !(!cPower.Chosen & (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool")))
                             {
                                 flag5 = !cPower.Chosen;
@@ -625,7 +713,11 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                if (!silent) MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                if (!silent)
+                {
+                    MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                }
+
                 return false;
             }
         }
@@ -756,7 +848,7 @@ namespace Mids_Reborn.Core
             return eLoadReturnCode;
         }
 
-        private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot slot)
+        private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot? slot)
         {
             if (slot.Enh < 0)
             {
@@ -784,7 +876,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void ReadSlotData(BinaryReader reader, ref I9Slot slot, bool qualifiedNames, float fVersion)
+        private static void ReadSlotData(BinaryReader reader, ref I9Slot? slot, bool qualifiedNames, float fVersion)
         {
             var num = -1;
             if (qualifiedNames)

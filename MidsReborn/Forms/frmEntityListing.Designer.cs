@@ -154,7 +154,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add((System.Windows.Forms.Control)this.btnDown);
             this.Controls.Add((System.Windows.Forms.Control)this.btnUp);
             this.Controls.Add((System.Windows.Forms.Control)this.lvEntity);
-            this.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

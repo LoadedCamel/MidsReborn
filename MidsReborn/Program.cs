@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms;
+using Mids_Reborn.UIv2;
 
 namespace Mids_Reborn
 {
@@ -12,11 +15,12 @@ namespace Mids_Reborn
         [STAThread]
         private static void Main(string[] args)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTQyNTM5QDMxMzkyZTMzMmUzMGErM3R4akxDVTI4WkNtWmZ1TEpvZEpXeUhvcEJva3B4blhwTHRMV3R4SXM9");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
+            Fonts.BuildFontCollection();
             Application.Run(new frmMain(args));
+            //Application.Run(new MainForm());
         }
     }
 }

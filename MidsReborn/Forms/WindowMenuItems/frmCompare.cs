@@ -28,7 +28,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ComboBox cbType2;
         private CheckBox chkMatching;
         private ImageButton chkOnTop;
-        private ctlMultiGraph Graph;
+        private CtlMultiGraph Graph;
         private float GraphMax;
         private GroupBox GroupBox1;
         private GroupBox GroupBox2;
@@ -51,7 +51,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Resize += frmCompare_Resize;
             Move += frmCompare_Move;
             FormClosed += frmCompare_FormClosed;
-            Powers = new IPower?[2][];
+            Powers = new IPower[2][];
             Values = new float[2][];
             Tips = new string[2][];
             GraphMax = 1f;
@@ -394,7 +394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             do
             {
                 numArray[Index] = getSetIndex(Index);
-                Powers[Index] = new IPower?[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
+                Powers[Index] = new IPower[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
                 Values[Index] = new float[Powers[Index].Length + 1];
                 Tips[Index] = new string[Powers[Index].Length + 1];
                 var nIDClass = Index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;

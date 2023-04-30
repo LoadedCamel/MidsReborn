@@ -133,6 +133,26 @@ namespace MRBResourceLib {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap HeroesSilhouettesH {
+            get {
+                object obj = ResourceManager.GetObject("HeroesSilhouettesH", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap HeroesSilhouettesV {
+            get {
+                object obj = ResourceManager.GetObject("HeroesSilhouettesV", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Icon_AncientMemories {
             get {
                 object obj = ResourceManager.GetObject("Icon_AncientMemories", resourceCulture);
@@ -236,6 +256,16 @@ namespace MRBResourceLib {
         public static System.Drawing.Bitmap VillainButtonHover {
             get {
                 object obj = ResourceManager.GetObject("VillainButtonHover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ColorSpectrum {
+            get {
+                object obj = ResourceManager.GetObject("ColorSpectrum", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -64,7 +64,7 @@ namespace Mids_Reborn.Forms
             // lblCatalysts
             // 
             this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblCatalysts.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblCatalysts.Location = new System.Drawing.Point(224, 9);
             this.lblCatalysts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -76,7 +76,7 @@ namespace Mids_Reborn.Forms
             // lblBoosters
             // 
             this.lblBoosters.AutoSize = true;
-            this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblBoosters.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblBoosters.Location = new System.Drawing.Point(328, 9);
             this.lblBoosters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -110,7 +110,7 @@ namespace Mids_Reborn.Forms
             // lblEnhObtained
             // 
             this.lblEnhObtained.AutoSize = true;
-            this.lblEnhObtained.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblEnhObtained.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEnhObtained.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblEnhObtained.Location = new System.Drawing.Point(42, 9);
             this.lblEnhObtained.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -133,7 +133,7 @@ namespace Mids_Reborn.Forms
             // ibClose
             // 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(395, 7);
             this.ibClose.Margin = new System.Windows.Forms.Padding(5);
@@ -147,8 +147,8 @@ namespace Mids_Reborn.Forms
             // 
             // frmBuildSalvageHud
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(505, 37);
             this.Controls.Add(this.ibClose);

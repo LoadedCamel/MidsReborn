@@ -62,7 +62,7 @@ namespace Mids_Reborn.Core
                     SubPowers = Array.Empty<PowerSubEntry>();
                 }
 
-                if (power.Slottable & (power.GetPowerSet().GroupName != "Incarnate"))
+                if (power.Slottable & (power.GetPowerSet()?.GroupName != "Incarnate"))
                 {
                     Slots = new SlotEntry[1];
                     Slots[0].Enhancement = new I9Slot();
@@ -391,6 +391,7 @@ namespace Mids_Reborn.Core
                 if (isInherent)
                 {
                     Slots[index1].IsInherent = true;
+                    Slots[index1].Level = iLevel - 1;
                 }
                 slotIdx = index1;
             }

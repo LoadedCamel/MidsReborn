@@ -8,8 +8,8 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmBuildSalvageHud : Form
     {
-        private readonly frmMain myParent;
-        private bool executeOnCloseUpdates = true;
+        private readonly frmMain _myParent;
+        private bool _executeOnCloseUpdates = true;
 
         public frmBuildSalvageHud(frmMain iParent)
         {
@@ -18,7 +18,7 @@ namespace Mids_Reborn.Forms
             Icon = Resources.MRB_Icon_Concept;
             Load += frmBuildSalvageHud_Load;
             Closed += frmBuildSalvageHud_Closed;
-            myParent = iParent;
+            _myParent = iParent;
             Opacity = 0.9d;
         }
 
@@ -34,45 +34,45 @@ namespace Mids_Reborn.Forms
 
         public void UpdateColorTheme()
         {
-            ibClose.IA = myParent.Drawing.pImageAttributes;
+            ibClose.IA = _myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? _myParent.Drawing.bxPower[2].Bitmap
+                : _myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? _myParent.Drawing.bxPower[3].Bitmap
+                : _myParent.Drawing.bxPower[5].Bitmap;
         }
 
-        private void frmBuildSalvageHud_Load(object sender, EventArgs e)
+        private void frmBuildSalvageHud_Load(object? sender, EventArgs e)
         {
             TopMost = true;
             MaximizeBox = false;
             BringToFront();
-            Location = new Point(myParent.Location.X + 2, myParent.Location.Y + 56);
+            Location = new Point(_myParent.Location.X + 2, _myParent.Location.Y + 56);
             UpdateColorTheme();
             RecalcSalvage();
             MidsContext.EnhCheckMode = true;
-            myParent.UpdateEnhCheckModeToolStrip();
-            myParent.DoRedraw();
+            _myParent.UpdateEnhCheckModeToolStrip();
+            _myParent.DoRedraw();
             RecalcSalvage();
-            myParent.Activate();
+            _myParent.Activate();
         }
 
-        private void frmBuildSalvageHud_Closed(object sender, EventArgs e)
+        private void frmBuildSalvageHud_Closed(object? sender, EventArgs e)
         {
-            if (executeOnCloseUpdates)
+            if (_executeOnCloseUpdates)
             {
                 MidsContext.EnhCheckMode = false;
-                myParent.UpdateEnhCheckModeToolStrip();
-                myParent.DoRedraw();
+                _myParent.UpdateEnhCheckModeToolStrip();
+                _myParent.DoRedraw();
             }
 
-            myParent.FloatBuildSalvageHud(false);
+            _myParent.FloatBuildSalvageHud(false);
         }
 
         public void SetOnCloseUpdatesExecution(bool s)
         {
-            executeOnCloseUpdates = s;
+            _executeOnCloseUpdates = s;
         }
 
         private void ibClose_ButtonClicked()

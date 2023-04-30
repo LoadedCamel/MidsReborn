@@ -63,25 +63,20 @@ namespace Mids_Reborn.Controls
             public void Draw(Graphics g)
             {
                 int i;
-                int w = BitmapDimensions.Width - InnerPadding.Horizontal;
-                int h = BitmapDimensions.Height - InnerPadding.Vertical;
+                var w = BitmapDimensions.Width - InnerPadding.Horizontal;
+                var h = BitmapDimensions.Height - InnerPadding.Vertical;
 
-                float xMin = 0;
+                const float xMin = 0;
                 float xMax = DataSeries.Count;
-                float yMin;
-                float yMax;
-                float yMinR;
-                float yMaxR;
-                float xPlateau = float.NegativeInfinity;
-                float v;
+                var xPlateau = float.NegativeInfinity;
 
                 if (DataSeries.Count == 0) return;
 
-                yMin = DataSeries.Min();
-                yMax = DataSeries.Max();
+                var yMin = DataSeries.Min();
+                var yMax = DataSeries.Max();
 
-                yMinR = float.PositiveInfinity;
-                yMaxR = float.NegativeInfinity;
+                var yMinR = float.PositiveInfinity;
+                var yMaxR = float.NegativeInfinity;
                 for (i = 0; i < DataSeries.Count; i++)
                 {
                     if (DataSeries[i] < yMinR && DataSeries[i] != IgnoreValue) yMinR = DataSeries[i];
@@ -94,7 +89,7 @@ namespace Mids_Reborn.Controls
                 }
                 else
                 {
-                    v = IgnoreValue != null ? DataSeries.Last(e => e != IgnoreValue) : DataSeries.Last();
+                    var v = IgnoreValue != null ? DataSeries.Last(e => e != IgnoreValue) : DataSeries.Last();
                     for (i = DataSeries.Count - 1; i > 0; i--)
                     {
                         if (IgnoreValue == null)
@@ -112,16 +107,16 @@ namespace Mids_Reborn.Controls
                 }
 
                 Pen p;
-                Bitmap res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
+                var res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
                 g.Clear(ColorOptions.BGColor);
 
-                using Font segoeFont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
-                TextFormatFlags sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
-                TextFormatFlags sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                var font = new Font("Segoe UI", DefaultFont.Size, FontStyle.Regular, GraphicsUnit.Pixel);
+                var sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                var sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-                float xScale = w / Math.Max(xMax - xMin, 0.001f);
-                float yScale = h / Math.Max(yMax - yMin, 0.001f);
+                var xScale = w / Math.Max(xMax - xMin, 0.001f);
+                var yScale = h / Math.Max(yMax - yMin, 0.001f);
 
                 #region Graph: Inner Grid
                 using (p = new Pen(ColorOptions.InnerGridColor) { DashStyle = DashStyle.Dot })
@@ -172,7 +167,7 @@ namespace Mids_Reborn.Controls
                                 h + InnerPadding.Top));
                     }
 
-                    TextRenderer.DrawText(g, Convert.ToString(xPlateau + 1, null), segoeFont,
+                    TextRenderer.DrawText(g, Convert.ToString(xPlateau + 1, null), font,
                         new Point((int) ((xMin + xPlateau) * xScale + InnerPadding.Left + 3), InnerPadding.Top + h / 2),
                         ColorOptions.AxisPlateauColor, Color.FromArgb(128, ColorOptions.BGColor), sfH);
                 }
@@ -181,12 +176,12 @@ namespace Mids_Reborn.Controls
 
                 #region Graph: Lines
                 // Note: negate values if they are all negative, e.g. for damage tables.
-                bool reverseValues = ForceInvertValues || CheckAllNegativeValues();
+                var reverseValues = ForceInvertValues || CheckAllNegativeValues();
                 float val;
 
                 // Not using Array for graph data points.
                 // It may not have the same length as the source dataSeries.
-                List<Point> dataPoints = new List<Point>();
+                var dataPoints = new List<Point>();
 
                 using (p = new Pen(ColorOptions.LineColor) { DashStyle = DashStyle.Solid, Width = 1 })
                 {
@@ -247,18 +242,18 @@ namespace Mids_Reborn.Controls
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 for (i = (int)xMin; i <= xMax; i += 10)
                 {
-                    TextRenderer.DrawText(g, Convert.ToString(i + 1, null), segoeFont, new Point(
+                    TextRenderer.DrawText(g, Convert.ToString(i + 1, null), font, new Point(
                         (int) Math.Round((i - xMin) * xScale) + InnerPadding.Left - (i < 10 ? 2 : 4),
                         h + InnerPadding.Top + 7), ColorOptions.AxisValuesColor, Color.Transparent, sfH);
                 }
 
                 if (xPlateau > 0)
                 {
-                    float k = reverseValues ? Math.Abs(yMax) : yMin;
+                    var k = reverseValues ? Math.Abs(yMax) : yMin;
                     for (i = 0; i < 6; i++)
                     {
                         TextRenderer.DrawText(g,
-                            Convert.ToString(Math.Round(k, Math.Abs(yMaxR - yMinR) < 1 ? 2 : 1), null), segoeFont,
+                            Convert.ToString(Math.Round(k, Math.Abs(yMaxR - yMinR) < 1 ? 2 : 1), null), font,
                             new Rectangle(1, InnerPadding.Top + h - h / 5 * i - 7,
                                 InnerPadding.Left - 5, 11),
                             ColorOptions.AxisValuesColor, Color.Transparent,
@@ -278,9 +273,9 @@ namespace Mids_Reborn.Controls
 
             private bool DataSetCrossZero()
             {
-                bool vPositive = false;
-                bool vNegative = false;
-                foreach (float t in DataSeries)
+                var vPositive = false;
+                var vNegative = false;
+                foreach (var t in DataSeries)
                 {
                     if (t > 0) vPositive = true;
                     if (t < 0) vNegative = true;

@@ -32,7 +32,7 @@ namespace Mids_Reborn.Controls
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             SetStyle(ControlStyles.AllPaintingInWmPaint| ControlStyles.OptimizedDoubleBuffer| ControlStyles.SupportsTransparentBackColor|ControlStyles.ResizeRedraw, true);
         }
 

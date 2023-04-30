@@ -28,7 +28,7 @@ namespace Mids_Reborn.Core
             nIDTrunkSet = -1;
             nIDLinkSecondary = -1;
             UIDLinkSecondary = string.Empty;
-            Powers = new IPower?[0];
+            Powers = new IPower[0];
             Power = new int[0];
             nIDMutexSets = new int[0];
             UIDMutexSets = new string[0];
@@ -52,7 +52,7 @@ namespace Mids_Reborn.Core
             nIDTrunkSet = template.nIDTrunkSet;
             nIDLinkSecondary = template.nIDLinkSecondary;
             UIDLinkSecondary = template.UIDLinkSecondary;
-            Powers = new IPower?[template.Powers.Length];
+            Powers = new IPower[template.Powers.Length];
             Power = new int[template.Power.Length];
             Array.Copy(template.Power, Power, Power.Length);
             for (var index = 0; index < Powers.Length; ++index)

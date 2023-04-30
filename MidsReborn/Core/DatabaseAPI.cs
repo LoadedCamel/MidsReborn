@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using mrbBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -194,6 +194,14 @@ namespace Mids_Reborn.Core
         public static int NidFromUidPower(string name)
         {
             return GetPowerByFullName(name)?.PowerIndex ?? -1;
+        }
+
+        public static int PiDFromUidPower(string name)
+        {
+            var powerDb = Database.Power.ToList();
+            var power = powerDb.FirstOrDefault(p => p?.FullName == name);
+            if (power == null) return -1;
+            return power.PowerIndex;
         }
 
         public static int NidFromUidEntity(string uidEntity)
@@ -397,10 +405,8 @@ namespace Mids_Reborn.Core
         private static void AddZipFileEntry(string fileName, byte[] fileContent, ZipArchive archive)
         {
             var entry = archive.CreateEntry(fileName);
-            using (var stream = entry.Open())
-            {
-                stream.Write(fileContent, 0, fileContent.Length);
-            }
+            using var stream = entry.Open();
+            stream.Write(fileContent, 0, fileContent.Length);
         }
 
         public static string[] UidMutexAll()
@@ -415,11 +421,15 @@ namespace Mids_Reborn.Core
         {
             //Returns the index of the named set belonging to a named archetype (IE. Invulnerability, Tanker, or Invulnerability, Scrapper)
             var strArray = iName.Split('.');
-            if (strArray.Length < 2)
-                return null;
+            switch (strArray.Length)
+            {
+                case < 2:
+                    return null;
+                case > 2:
+                    iName = $"{strArray[0]}.{strArray[1]}";
+                    break;
+            }
 
-            if (strArray.Length > 2)
-                iName = $"{strArray[0]}.{strArray[1]}";
             var key = strArray[0];
             if (!Database.PowersetGroups.ContainsKey(key))
                 return null;
@@ -429,21 +439,22 @@ namespace Mids_Reborn.Core
 
         public static IPowerset? GetPowersetByName(string iName, string iArchetype)
         {
-            var idx = GetArchetypeByName(iArchetype).Idx;
+            var idx = GetArchetypeByName(iArchetype)?.Idx;
+            if (idx == null) return null;
             foreach (var powerset1 in Database.Powersets)
             {
-                if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
-                    !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                if (powerset1 != null && (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
+                                          !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase)))
                 {
                     continue;
                 }
 
-                if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (powerset1 != null && powerset1.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     return powerset1;
                 }
 
-                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                if (powerset1 != null && powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
                 {
                     return powerset1;
                 }
@@ -454,28 +465,29 @@ namespace Mids_Reborn.Core
 
         public static IPowerset? GetPowersetByName(string iName, string iArchetype, bool restrictGroups)
         {
-            var idx = GetArchetypeByName(iArchetype).Idx;
+            var idx = GetArchetypeByName(iArchetype)?.Idx;
+            if (idx == null) return null;
             foreach (var powerset1 in Database.Powersets)
             {
-                if (idx != powerset1.nArchetype && powerset1.nArchetype != -1 ||
-                    !string.Equals(iName, powerset1.DisplayName, StringComparison.OrdinalIgnoreCase))
+                if (idx != powerset1?.nArchetype && powerset1?.nArchetype != -1 ||
+                    !string.Equals(iName, powerset1?.DisplayName, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                if (restrictGroups & powerset1.SetType != Enums.ePowerSetType.Primary &
-                    powerset1.SetType != Enums.ePowerSetType.Secondary & powerset1.SetType != Enums.ePowerSetType.Pool &
-                    powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (restrictGroups & powerset1?.SetType != Enums.ePowerSetType.Primary &
+                    powerset1?.SetType != Enums.ePowerSetType.Secondary & powerset1?.SetType != Enums.ePowerSetType.Pool &
+                    powerset1?.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     continue;
                 }
 
-                if (powerset1.SetType != Enums.ePowerSetType.Ancillary)
+                if (powerset1?.SetType != Enums.ePowerSetType.Ancillary)
                 {
                     return powerset1;
                 }
 
-                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk(idx))
+                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
                 {
                     return powerset1;
                 }
@@ -497,22 +509,22 @@ namespace Mids_Reborn.Core
         }
 
         //Pine
-        public static IPowerset GetPowersetByName(string iName, Enums.ePowerSetType iSet)
+        public static IPowerset? GetPowersetByName(string iName, Enums.ePowerSetType iSet)
         {
             //Returns the index of the named set of a given type
             //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
             // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(powerset =>
-                iSet == powerset.SetType && string.Equals(iName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase));
+                iSet == powerset?.SetType && string.Equals(iName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static IPowerset GetPowersetByID(string iName, Enums.ePowerSetType iSet)
+        public static IPowerset? GetPowersetByID(string iName, Enums.ePowerSetType iSet)
         {
             //Returns a powerset by its SetName property, not the DisplayName property.
             //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
             // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(ps =>
-                iSet == ps.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
+                iSet == ps?.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IPowerset? GetInherentPowerset()
@@ -523,18 +535,18 @@ namespace Mids_Reborn.Core
         public static Archetype? GetArchetypeByName(string iArchetype)
         {
             return Database.Classes.FirstOrDefault(cls =>
-                string.Equals(iArchetype, cls.DisplayName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(iArchetype, cls?.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static Archetype GetArchetypeByClassName(string iArchetype)
+        public static Archetype? GetArchetypeByClassName(string iArchetype)
         {
             return Database.Classes.FirstOrDefault(cls =>
-                string.Equals(iArchetype, cls.ClassName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(iArchetype, cls?.ClassName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int GetOriginByName(Archetype? archetype, string iOrigin)
         {
-            for (var index = 0; index < archetype.Origin.Length; ++index)
+            for (var index = 0; index < archetype?.Origin.Length; ++index)
                 if (string.Equals(iOrigin, archetype.Origin[index], StringComparison.OrdinalIgnoreCase))
                     return index;
             return 0;
@@ -542,7 +554,7 @@ namespace Mids_Reborn.Core
 
         public static int GetPowerIndexByDisplayName(string iName, int iArchetype)
         {
-            var pw = Database.Power.DefaultIfEmpty(null).FirstOrDefault(p => p.DisplayName == iName && p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+            var pw = Database.Power.DefaultIfEmpty(null).FirstOrDefault(p => p != null && p.DisplayName == iName && p.GetPowerSet()?.nArchetype == iArchetype | p.GetPowerSet()?.nArchetype == -1);
             if (pw == null)
             {
                 return -1;
@@ -631,18 +643,26 @@ namespace Mids_Reborn.Core
             if ((iSet != Enums.ePowerSetType.Pool) & (iSet != Enums.ePowerSetType.Inherent))
             {
                 foreach (var ps in Database.Powersets)
+                {
                     if ((ps.nArchetype == iAt) & (ps.SetType == iSet))
+                    {
                         powersetList.Add(ps);
+                    }
                     else if ((iSet == Enums.ePowerSetType.Ancillary) & (ps.SetType == iSet) && ps.ClassOk(iAt))
+                    {
                         powersetList.Add(ps);
+                    }
+                }
             }
             else
             {
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
-                    if (Database.Powersets[index].SetType == iSet)
+                {
+                    if (Database.Powersets[index]?.SetType == iSet)
                     {
                         powersetList.Add(Database.Powersets[index]);
                     }
+                }
             }
 
             powersetList.Sort();
@@ -952,11 +972,11 @@ namespace Mids_Reborn.Core
             foreach (var power in Database.Power)
             {
                 var powerset = power.GetPowerSet();
-                if (powerset.SetType != Enums.ePowerSetType.Primary &&
-                    powerset.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset.SetType != Enums.ePowerSetType.Pool &&
-                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+                if (powerset?.SetType != Enums.ePowerSetType.Primary &&
+                    powerset?.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset?.SetType != Enums.ePowerSetType.Pool &&
+                    powerset?.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset?.SetType != Enums.ePowerSetType.Inherent) continue;
                 var setTypes = power.SetTypes.ToList();
                 var containsType = setTypes.Any(x => x == enhSetType);
                 if (containsType)
@@ -968,7 +988,7 @@ namespace Mids_Reborn.Core
             return retList;
         }
 
-        public static List<IPowerset> GetEpicPowersets(Archetype atClass)
+        public static List<IPowerset?> GetEpicPowersets(Archetype atClass)
         {
             if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
             {
@@ -995,7 +1015,7 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static int GetEnhancmentByBoostName(string iName)
+        public static int GetEnhancementByBoostName(string iName)
         {
             var enhUid = Regex.Replace(iName, ".*(.*)\\.", "");
             
@@ -1020,22 +1040,29 @@ namespace Mids_Reborn.Core
                     : Database.Enhancements.TryFindIndex(enh => enh.ShortName.Contains(iName) && enh.TypeID == typeId);
             }
 
-            // Merge double dashes (Gaussian's set)
+            // Merge double dashes (E.g. Gaussian's set)
             var chunks = iName.Replace("--", "-").Split('-');
+            var enhShortName = string.Join("-", chunks[1..]).Trim('-');
 
-            // Gaussian's set short name is GssSynFr-
-            var enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName == chunks[0]);
-            if (enhSet < 0)
-            {
-                enhSet = Database.EnhancementSets.TryFindIndex(set => set.ShortName.StartsWith(chunks[0]));
-            }
-
+            // Notes:
+            // - Gaussian's set short name is GssSynFr-
+            // - Ann short name matches Annoyance and Annihilation
+            // - Sudden Acceleration special is -KB/+KD
+            //
+            // Attempt to find a matching set ID based on its name trimmed from dashes, that contain
+            // an enhancement which dash-trimmed short name matches
+            var enhSet = Database.EnhancementSets
+                .Select((e, i) => new KeyValuePair<int, EnhancementSet>(i, e))
+                .Where(e => e.Value.ShortName.Trim('-') == chunks[0])
+                .DefaultIfEmpty(new KeyValuePair<int, EnhancementSet>(-1, new EnhancementSet())) // Dummy default value, only the integer will be used
+                .FirstOrDefault(e => e.Value.Enhancements.Select(e => Database.Enhancements[e].ShortName).Any(e => e.Trim('-') == enhShortName))
+                .Key;
+            
             if (enhSet < 0)
             {
                 return -1;
             }
 
-            var enhShortName = string.Join("-", chunks[1..]).Trim('-');
             var setEnhancementsShort = Database.EnhancementSets[enhSet].Enhancements.ToDictionary(enhIdx => Database.Enhancements[enhIdx].ShortName);
             if (setEnhancementsShort.ContainsKey(enhShortName))
             {
@@ -1255,7 +1282,11 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                string name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                string name;
+                if (MidsContext.Config == null)
+                    name = new DirectoryInfo(Files.FDefaultPath).Name;
+                else
+                    name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
                 return name;
             }
         }
@@ -1281,6 +1312,8 @@ namespace Mids_Reborn.Core
         }
 
         public static bool RealmUsesToxicDef() => DatabaseName.Equals("Homecoming");
+
+        public static bool RealmUsesToxicDefense => DatabaseName.Equals("Homecoming"); //  This is new
 
         public static void SaveServerData(string? iPath)
         {
@@ -1571,7 +1604,7 @@ namespace Mids_Reborn.Core
                     return false;
                 }
 
-                Database.Power = new IPower?[reader.ReadInt32() + 1];
+                Database.Power = new IPower[reader.ReadInt32() + 1];
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
                     Database.Power[index] = new Power(reader);
@@ -1726,14 +1759,21 @@ namespace Mids_Reborn.Core
         public static bool LoadLevelsDatabase(string? iPath)
         {
             var path = string.Empty;
-            switch (MidsContext.Config.BuildMode)
+            if (MidsContext.Config != null)
             {
-                case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
-                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileNLevels) : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
-                    break;
-                case Enums.dmModes.Respec:
-                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileRLevels) : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
-                    break;
+                switch (MidsContext.Config.BuildMode)
+                {
+                    case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
+                        path = string.IsNullOrWhiteSpace(iPath)
+                            ? Files.SelectDataFileLoad(Files.MxdbFileNLevels)
+                            : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
+                        break;
+                    case Enums.dmModes.Respec:
+                        path = string.IsNullOrWhiteSpace(iPath)
+                            ? Files.SelectDataFileLoad(Files.MxdbFileRLevels)
+                            : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
+                        break;
+                }
             }
 
             Database.Levels = Array.Empty<LevelMap>();
@@ -1750,14 +1790,25 @@ namespace Mids_Reborn.Core
 
             var strArray = FileIO.IOGrab(iStream);
             while (strArray[0] != "Level")
+            {
                 strArray = FileIO.IOGrab(iStream);
+            }
+
             Database.Levels = new LevelMap[50];
             for (var index = 0; index < 50; ++index)
+            {
                 Database.Levels[index] = new LevelMap(FileIO.IOGrab(iStream));
+            }
+
             var intList = new List<int> {0};
             for (var index = 0; index <= Database.Levels.Length - 1; ++index)
+            {
                 if (Database.Levels[index].Powers > 0)
+                {
                     intList.Add(index);
+                }
+            }
+
             Database.Levels_MainPowers = intList.ToArray();
             iStream.Close();
             return true;
@@ -2089,7 +2140,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
-            var  path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
+            var path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;
@@ -2134,6 +2185,24 @@ namespace Mids_Reborn.Core
                 MessageBox.Show(
                     $"An error occurred loading the automatic powers replacement table.\r\nOld powers will now be converted and may appear blank\r\nwhen loading builds.\r\n\r\n{ex.Message}",
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        public static void LoadCrypticReplacementTable()
+        {
+            if (!File.Exists(Files.CNamePowersRepl))
+            {
+                Database.CrypticReplTable = null;
+            }
+
+            try
+            {
+                CrypticReplTable.Initialize();
+                Database.CrypticReplTable = CrypticReplTable.Current;
+            }
+            catch (Exception)
+            {
+                Database.CrypticReplTable = null;
             }
         }
 

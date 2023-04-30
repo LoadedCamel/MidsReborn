@@ -44,6 +44,8 @@
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnListIndices = new System.Windows.Forms.Button();
+            this.btnOrphanEntities = new System.Windows.Forms.Button();
+            this.btnDuplicateIndices = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -51,7 +53,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(27, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 15);
+            this.label1.Size = new System.Drawing.Size(107, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Power Static Index:";
             // 
@@ -60,7 +62,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(27, 71);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(119, 15);
+            this.label2.Size = new System.Drawing.Size(118, 16);
             this.label2.TabIndex = 1;
             this.label2.Text = "Power Display Name:";
             // 
@@ -194,11 +196,33 @@
             this.btnListIndices.UseVisualStyleBackColor = true;
             this.btnListIndices.Click += new System.EventHandler(this.btnListIndices_Click);
             // 
+            // btnOrphanEntities
+            // 
+            this.btnOrphanEntities.Location = new System.Drawing.Point(432, 144);
+            this.btnOrphanEntities.Name = "btnOrphanEntities";
+            this.btnOrphanEntities.Size = new System.Drawing.Size(162, 28);
+            this.btnOrphanEntities.TabIndex = 13;
+            this.btnOrphanEntities.Text = "Find Orphan Entities";
+            this.btnOrphanEntities.UseVisualStyleBackColor = true;
+            this.btnOrphanEntities.Click += new System.EventHandler(this.btnOrphanEntities_Click);
+            // 
+            // btnDuplicateIndices
+            // 
+            this.btnDuplicateIndices.Location = new System.Drawing.Point(35, 144);
+            this.btnDuplicateIndices.Name = "btnDuplicateIndices";
+            this.btnDuplicateIndices.Size = new System.Drawing.Size(162, 28);
+            this.btnDuplicateIndices.TabIndex = 14;
+            this.btnDuplicateIndices.Text = "Find duplicate indices";
+            this.btnDuplicateIndices.UseVisualStyleBackColor = true;
+            this.btnDuplicateIndices.Click += new System.EventHandler(this.btnDuplicateIndices_Click);
+            // 
             // frmDbQueries
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(631, 422);
+            this.Controls.Add(this.btnDuplicateIndices);
+            this.Controls.Add(this.btnOrphanEntities);
             this.Controls.Add(this.btnListIndices);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnCopy);
@@ -239,5 +263,7 @@
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnListIndices;
+        private System.Windows.Forms.Button btnOrphanEntities;
+        private System.Windows.Forms.Button btnDuplicateIndices;
     }
 }

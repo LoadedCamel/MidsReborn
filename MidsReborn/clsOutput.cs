@@ -54,7 +54,7 @@ namespace Mids_Reborn
             NoHTMLBr = true;
         }
 
-        public string Build(string iDataLink)
+        public string Build(string iDataLink, bool forumMode = true)
         {
             var str1 = "";
             var formatCode = MidsContext.Config.Export.FormatCode;
@@ -126,10 +126,10 @@ namespace Mids_Reborn
             if (MidsContext.Character.Archetype.Epic)
                 str8 = str8 + formatColor("------------", ExportConfig.Element.Heading) + LineBreak() +
                        BuildPowerList(false, true, true);
-            if (MidsContext.Config.ExportBonusTotals)
+            if (MidsContext.Config.ExportBonusTotals & forumMode)
                 str8 = str8 + formatColor("------------", ExportConfig.Element.Heading) + LineBreak() +
                        BuildSetBonusListShort() + LineBreak();
-            if (MidsContext.Config.ExportBonusList)
+            if (MidsContext.Config.ExportBonusList & forumMode)
                 str8 = str8 + formatColor("------------", ExportConfig.Element.Heading) + LineBreak() +
                        buildSetBonusListLong() + LineBreak();
             return str8 + LineBreak();

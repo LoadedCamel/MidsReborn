@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         public Discord(RestClient restClient)
         {
             _restClient = restClient;
-            _restClient.UseNewtonsoftJson();
+            //_restClient.UseNewtonsoftJson();
         }
 
         internal async Task<OAuthModel?> RequestAccessToken(string accessCode, string redirectUrl)
@@ -70,7 +70,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
         {
             DiscordUserModel result = default;
             var infoRequest = new RestRequest("users/@me");
-            _restClient.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, "Bearer");
+            //_restClient.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, "Bearer");
             try
             {
                 result = await _restClient.GetAsync<DiscordUserModel>(infoRequest);

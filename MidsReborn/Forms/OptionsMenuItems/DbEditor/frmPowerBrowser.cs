@@ -34,6 +34,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private frmBusy BusyForm { get; set; }
 
         private bool _updating;
+        private int[] _selected;
 
         public frmPowerBrowser()
         {
@@ -121,7 +122,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Archetype?[] archetypeArray = Array.Empty<Archetype>();
                 Array.Copy(database.Classes, archetypeArray, DatabaseAPI.Database.Classes.Length + 1);
                 database.Classes = archetypeArray;
-                DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
+                DatabaseAPI.Database.Classes[^1] = new Archetype(frmEditArchetype.MyAT) { IsNew = true };
                 UpdateLists(lvGroup.Items.Count - 1);
                 Sort(0);
             }
@@ -151,7 +152,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                     else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length - 1 + 1];
+                        var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length];
                         var index2 = 0;
                         var num3 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num3; ++index3)
@@ -162,7 +163,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             ++index2;
                         }
 
-                        DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 2 + 1];
+                        DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 1];
                         var num4 = DatabaseAPI.Database.Classes.Length - 1;
                         for (var index3 = 0; index3 <= num4; ++index3)
                             DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
@@ -327,6 +328,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             database.Power = powerList.ToArray();
             UpdateLists();
             Sort(2);
+
+            if (_selected[0] < lvGroup.Items.Count)
+            {
+                lvGroup.Items[_selected[0]].Selected = true;
+                lvGroup.Items[_selected[0]].EnsureVisible();
+            }
+
+            if (_selected[1] < lvSet.Items.Count)
+            {
+                lvSet.Items[_selected[1]].Selected = true;
+                lvSet.Items[_selected[1]].EnsureVisible();
+            }
+
+            if (_selected[2] < lvPower.Items.Count)
+            {
+                lvPower.Items[_selected[2]].Selected = true;
+                lvPower.Items[_selected[2]].EnsureVisible();
+            }
         }
 
         private void btnPowerClone_Click(object sender, EventArgs e)
@@ -375,7 +394,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            var powerArray = new IPower?[DatabaseAPI.Database.Power.Length - 1 + 1];
+            IPower?[] powerArray = new IPower[DatabaseAPI.Database.Power.Length];
             var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (num1 < 0)
             {
@@ -393,7 +412,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index1;
                 }
 
-                DatabaseAPI.Database.Power = new IPower?[DatabaseAPI.Database.Power.Length - 2 + 1];
+                DatabaseAPI.Database.Power = new IPower[DatabaseAPI.Database.Power.Length - 1];
                 var num4 = DatabaseAPI.Database.Power.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
                     DatabaseAPI.Database.Power[index2] = new Power(powerArray[index2]);
@@ -595,6 +614,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.Powersets = psList.ToArray();
             UpdateLists();
             Sort(1);
+
+            if (_selected[0] < lvGroup.Items.Count)
+            {
+                lvGroup.Items[_selected[0]].Selected = true;
+                lvGroup.Items[_selected[0]].EnsureVisible();
+            }
+
+            if (_selected[1] < lvSet.Items.Count)
+            {
+                lvSet.Items[_selected[1]].Selected = true;
+                lvSet.Items[_selected[1]].EnsureVisible();
+            }
+
+            if (_selected[2] < lvPower.Items.Count)
+            {
+                lvPower.Items[_selected[2]].Selected = true;
+                lvPower.Items[_selected[2]].EnsureVisible();
+            }
         }
 
         private void btnSetDelete_Click(object sender, EventArgs e)
@@ -614,7 +651,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                           " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
                 if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-                var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1 + 1];
+                var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length];
                 var index2 = 0;
                 var num2 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num2; ++index3)
@@ -625,7 +662,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     ++index2;
                 }
 
-                DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 2 + 1];
+                DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1];
                 var num3 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num3; ++index3)
                     DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
@@ -699,12 +736,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             using var font = new Font(Font, FontStyle.Bold);
             var layoutRectangle = new RectangleF(17f, 0f, 16f, 18f);
             var loadedPowerSets = await I9Gfx.LoadPowerSets();
+            var unknownImgPath = I9Gfx.UnknownImgPath();
             foreach (var powerSet in iSets)
             {
-                var imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains(DatabaseAPI.Database.Powersets[powerSet].ImageName));
-                if (string.IsNullOrEmpty(imagePath))
+                var psImg = DatabaseAPI.Database.Powersets[powerSet].ImageName;
+                var imagePath = loadedPowerSets.DefaultIfEmpty("").FirstOrDefault(x => x != null && x.Contains(string.IsNullOrWhiteSpace(psImg) ? "Unknown.png" : psImg));
+                if (string.IsNullOrEmpty(imagePath) || imagePath.EndsWith("Unknown.png"))
                 {
-                    imagePath = loadedPowerSets.FirstOrDefault(x => x.Contains("Unknown"));
+                    imagePath = unknownImgPath;
                 }
 
                 using var extendedBitmap2 = new ExtendedBitmap(imagePath);
@@ -845,22 +884,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateLists();
         }
 
-        private static int[] ConcatArray(IReadOnlyList<int> iArray1, IReadOnlyList<int> iArray2)
-        {
-            var numArray = Array.Empty<int>();
-            if (iArray1 == null || iArray2 == null) return numArray;
-            var length = iArray1.Count;
-            numArray = new int[iArray1.Count + iArray2.Count - 1 + 1];
-            var num1 = length - 1;
-            for (var index = 0; index <= num1; ++index)
-                numArray[index] = iArray1[index];
-            var num2 = iArray2.Count - 1;
-            for (var index = 0; index <= num2; ++index)
-                numArray[length + index] = iArray2[index];
-
-            return numArray;
-        }
-
         private void FillFilter()
         {
             cbFilter.BeginUpdate();
@@ -882,6 +905,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvPower.EnableDoubleBuffer();
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             btnDbQueries.Visible = MidsContext.Config.MasterMode;
+            Text = $"Power Database Browser [{DatabaseAPI.DatabaseName} DB]";
+            _selected = new[] {0, 0, 0};
 
             try
             {
@@ -1064,7 +1089,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                             if (index > -1)
                             {
-                                iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length - 1 + 1];
+                                iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length];
                                 Array.Copy(DatabaseAPI.Database.Powersets[index].Power, iPowers1, iPowers1.Length);
                             }
                         }
@@ -1089,7 +1114,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case 3:
                     {
                         BusyMsg("Building List...");
-                        iPowers1 = new int[DatabaseAPI.Database.Power.Length - 1 + 1];
+                        iPowers1 = new int[DatabaseAPI.Database.Power.Length];
                         var num = DatabaseAPI.Database.Power.Length - 1;
                         for (var index = 0; index <= num; ++index)
                             iPowers1[index] = index;
@@ -1130,8 +1155,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void List_Sets(int selIdx)
         {
-            var numArray1 = Array.Empty<int>();
-            var numArray2 = Array.Empty<int>();
             if ((lvGroup.SelectedItems.Count == 0) & ((cbFilter.SelectedIndex == 0) | (cbFilter.SelectedIndex == 1)))
                 return;
             _updating = true;
@@ -1146,19 +1169,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else if ((cbFilter.SelectedIndex == 1) & (lvGroup.SelectedItems.Count > 0))
             {
-                var iSets = ConcatArray(
-                    ConcatArray(
-                        ConcatArray(
-                            ConcatArray(
-                                DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text,
-                                    Enums.ePowerSetType.Primary),
-                                DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text,
-                                    Enums.ePowerSetType.Secondary)),
-                            DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text,
-                                Enums.ePowerSetType.Ancillary)),
-                        DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text,
-                            Enums.ePowerSetType.Inherent)),
-                    DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Pool));
+                var iSets = DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Primary)
+                    .Concat(DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Secondary))
+                    .Concat(DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Ancillary))
+                    .Concat(DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Inherent))
+                    .Concat(DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Pool))
+                    .ToArray();
+
                 BuildPowersetImageList(iSets);
                 List_Sets_AddBlock(iSets);
                 lvSet.Enabled = true;
@@ -1169,17 +1186,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 {
                     case 4:
                         {
-                            var numArray3 = Array.Empty<int>();
+                            var ps = new List<int>();
                             var num = DatabaseAPI.Database.Powersets.Length - 1;
                             for (var index = 0; index <= num; ++index)
                             {
                                 if (!((DatabaseAPI.Database.Powersets[index].GetGroup() == null) |
                                       string.IsNullOrEmpty(DatabaseAPI.Database.Powersets[index].GroupName)))
                                     continue;
-                                int[] iArray2 = { index };
-                                numArray3 = ConcatArray(numArray3, iArray2);
+                                ps.Add(index);
                             }
 
+                            var numArray3 = ps.ToArray();
                             BuildPowersetImageList(numArray3);
                             List_Sets_AddBlock(numArray3);
                             lvSet.Enabled = true;
@@ -1258,7 +1275,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_updating)
+            {
                 return;
+            }
+
+            if (lvGroup.SelectedIndices.Count > 0)
+            {
+                _selected[0] = lvGroup.SelectedIndices[0];
+            }
+            
             List_Sets(0);
             Application.DoEvents();
             List_Powers(0);
@@ -1274,6 +1299,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvPower.SelectedItems.Count <= 0)
                 return;
             lblPower.Text = lvPower.SelectedItems[0].SubItems[3].Text;
+            _selected[2] = lvPower.SelectedIndices[0];
         }
 
         private void lvSet_DoubleClick(object sender, EventArgs e)
@@ -1284,9 +1310,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_updating)
+            {
                 return;
+            }
+
             if (lvSet.SelectedItems.Count > 0)
+            {
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
+                _selected[1] = lvSet.SelectedIndices[0];
+            }
+
             List_Powers(0);
         }
 

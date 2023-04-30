@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using FastDeepCloner;
+using Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -64,7 +68,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (new PowerData(str.Replace("\t", ",")).IsValid)
             {
                 MessageBox.Show("Import successful.");
-                refresh_PowerData();
+                RefreshPowerData();
             }
             else
             {
@@ -99,7 +103,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             myPower = powerData;
             SetFullName();
-            refresh_PowerData();
+            RefreshPowerData();
         }
 
         private void btnFXAdd_Click(object sender, EventArgs e)
@@ -337,10 +341,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 if (!myPower.VariableOverride)
                 {
-                    if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
+                    /*if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
                     {
                         myPower.VariableMax = myPower.MaxTargets;
-                    }
+                    }*/
                 }
                 else
                 {
@@ -565,7 +569,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
-            txtVisualLocation.ReadOnly = cbInherentType.SelectedIndex > 0;
             myPower.InherentType = (Enums.eGridType) cbInherentType.SelectedIndex;
         }
 
@@ -666,6 +669,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ret = float.TryParse(udScaleMax.Text, out var scaleMax);
             if (!ret) return;
 
+            // Sync variables after a change
+            scaleStart = myPower.VariableStart;
+            scaleMin = myPower.VariableMin;
+            scaleMax = myPower.VariableMax;
+
             if (scaleMin >= scaleMax & chkScale.Checked)
             {
                 udScaleMin.BackColor = Color.Coral;
@@ -681,7 +689,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 udScaleMax.ForeColor = SystemColors.WindowText;
             }
 
-            if (chkScale.Checked && scaleStart > scaleMin && scaleStart <= scaleMax)
+            if (chkScale.Checked && scaleStart < scaleMin | scaleStart > scaleMax)
             {
                 udScaleStart.BackColor = Color.Coral;
                 udScaleStart.ForeColor = Color.Black;
@@ -1440,17 +1448,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DrawSetList();
             Req_GroupList();
             FillTab_SubPowers();
-            refresh_PowerData();
+            RefreshPowerData();
             CheckScaleValues();
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
             {
                 cbInherentType.Enabled = true;
-            }
-
-            if (cbInherentType.SelectedIndex > 0)
-            {
-                txtVisualLocation.ReadOnly = true;
             }
 
             /*foreach (var boost in myPower.BoostsAllowed)
@@ -1521,6 +1524,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!t) return;
             
             myPower.StaticIndex = pIndex;
+            lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1987,7 +1991,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pbEnhancementList.CreateGraphics().DrawImageUnscaled(bxEnhPicker.Bitmap, 0, 0);
         }
 
-        private void refresh_PowerData()
+        private void RefreshPowerData()
         {
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.FullName})";
             lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture);
@@ -2014,7 +2018,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var num = power.Effects.Length;
             for (var index = 0; index < num; index++)
             {
-                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true).Replace("\r\n", " - "));
+                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true, false, true).Replace("\r\n", " - "));
             }
 
             lvFX.EndUpdate();
@@ -2669,6 +2673,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtVisualLocation_TextChanged(object sender, EventArgs e)
         {
+            Debug.WriteLine($"Updating: {Updating}, cbInherentType: {cbInherentType.SelectedIndex}");
+            
             if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
             var ret = float.TryParse(txtVisualLocation.Text, out var num);
@@ -2744,6 +2750,117 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
             RefreshFXData(lvFX.SelectedIndices.Count <= 0 ? 0 : lvFX.SelectedIndices[0]);
+        }
+
+        private void btnJsonExport_Click(object sender, EventArgs e)
+        {
+            var dlgSave = new SaveFileDialog
+            {
+                CheckPathExists = true,
+                DefaultExt = "json",
+                FileName = $"{(string.IsNullOrWhiteSpace(myPower.DisplayName) ? "power" : myPower.DisplayName)}-{myPower.StaticIndex}.json",
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1
+            };
+
+            if (dlgSave.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var targetFile = dlgSave.FileName;
+            var objStr = JsonConvert.SerializeObject(myPower, Formatting.Indented);
+            File.WriteAllText(targetFile, objStr);
+        }
+
+        private void btnJsonImport_Click(object sender, EventArgs e)
+        {
+            var dlgJsonOpen = new frmJsonImportOptions();
+            if (dlgJsonOpen.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var jsonStr = File.ReadAllText(dlgJsonOpen.FileName);
+
+            try
+            {
+                JsonConverter[] converters =
+                {
+                    new PowerConverter<IEffect, Effect>(),
+                    new PowerConverter<IEnhancement, Enhancement>()
+                };
+
+                var obj = JsonConvert.DeserializeObject<Power>(jsonStr, new JsonSerializerSettings {Converters = converters});
+                if (obj == null)
+                {
+                    MessageBox.Show("Could not deserialize JSON to object.");
+
+                    return;
+                }
+
+                var displayName = myPower.DisplayName;
+                var groupName = myPower.GroupName;
+                var setName = myPower.SetName;
+                var internalName = myPower.PowerName;
+                var staticIndex = myPower.StaticIndex;
+                myPower = obj.Clone();
+                if (!dlgJsonOpen.OverrideStaticIndex)
+                {
+                    myPower.StaticIndex = staticIndex;
+                }
+
+                if (!dlgJsonOpen.OverrideBasicData & !string.IsNullOrWhiteSpace(groupName) &
+                    !string.IsNullOrWhiteSpace(setName) & !string.IsNullOrWhiteSpace(internalName))
+                {
+                    myPower.DisplayName = displayName;
+                    myPower.GroupName = groupName;
+                    myPower.SetName = setName;
+                    myPower.PowerName = internalName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not deserialize JSON to object.\r\n{ex.GetType()}: {ex.Message}");
+                
+                return;
+            }
+
+            Updating = true;
+            RedrawEnhPicker();
+            FillComboBoxes();
+            FillComboInherent();
+            DrawSetList();
+            Req_GroupList();
+            FillTab_SubPowers();
+            RefreshPowerData();
+            CheckScaleValues();
+            Updating = false;
+
+            if (chkSubInclude.CheckState == CheckState.Checked)
+            {
+                cbInherentType.Enabled = true;
+            }
+        }
+    }
+
+    public class PowerConverter<TFromType, TToType> : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(TFromType);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return serializer.Deserialize<TToType>(reader);
+        }
+
+        public override bool CanWrite => false;
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -165,7 +165,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblHeader
             // 
-            this.lblHeader.Font = new System.Drawing.Font("Arial", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lblHeader.Location = new System.Drawing.Point(66, 0);
             this.lblHeader.Name = "lblHeader";
@@ -188,7 +188,7 @@ namespace Mids_Reborn.Forms
             this.RecipeInfo.BXHeight = 4096;
             this.RecipeInfo.ColumnPosition = 0.5F;
             this.RecipeInfo.ColumnRight = false;
-            this.RecipeInfo.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.RecipeInfo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.RecipeInfo.ForeColor = System.Drawing.Color.Black;
             this.RecipeInfo.InternalPadding = 3;
             this.RecipeInfo.Location = new System.Drawing.Point(3, -17);
@@ -256,7 +256,7 @@ namespace Mids_Reborn.Forms
             // ibMiniList
             // 
             this.ibMiniList.Checked = false;
-            this.ibMiniList.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibMiniList.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibMiniList.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibMiniList.Location = new System.Drawing.Point(123, 470);
             this.ibMiniList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -270,7 +270,7 @@ namespace Mids_Reborn.Forms
             // ibClipboard
             // 
             this.ibClipboard.Checked = false;
-            this.ibClipboard.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClipboard.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClipboard.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClipboard.Location = new System.Drawing.Point(12, 470);
             this.ibClipboard.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -284,7 +284,7 @@ namespace Mids_Reborn.Forms
             // ibTopmost
             // 
             this.ibTopmost.Checked = true;
-            this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibTopmost.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibTopmost.Location = new System.Drawing.Point(383, 470);
             this.ibTopmost.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -298,7 +298,7 @@ namespace Mids_Reborn.Forms
             // ibClose
             // 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(605, 470);
             this.ibClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -312,7 +312,7 @@ namespace Mids_Reborn.Forms
             // ibEnhCheckMode
             // 
             this.ibEnhCheckMode.Checked = false;
-            this.ibEnhCheckMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibEnhCheckMode.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibEnhCheckMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibEnhCheckMode.Location = new System.Drawing.Point(494, 470);
             this.ibEnhCheckMode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -340,7 +340,7 @@ namespace Mids_Reborn.Forms
             // lblCatalysts
             // 
             this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblCatalysts.ForeColor = System.Drawing.Color.White;
             this.lblCatalysts.Location = new System.Drawing.Point(260, 8);
             this.lblCatalysts.Name = "lblCatalysts";
@@ -351,7 +351,7 @@ namespace Mids_Reborn.Forms
             // lblBoosters
             // 
             this.lblBoosters.AutoSize = true;
-            this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblBoosters.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.White;
             this.lblBoosters.Location = new System.Drawing.Point(407, 8);
             this.lblBoosters.Name = "lblBoosters";
@@ -362,7 +362,7 @@ namespace Mids_Reborn.Forms
             // lblEnhObtained
             // 
             this.lblEnhObtained.AutoSize = true;
-            this.lblEnhObtained.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEnhObtained.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEnhObtained.ForeColor = System.Drawing.Color.White;
             this.lblEnhObtained.Location = new System.Drawing.Point(36, 8);
             this.lblEnhObtained.Name = "lblEnhObtained";
@@ -403,7 +403,7 @@ namespace Mids_Reborn.Forms
             this.ctlPopUp1.BXHeight = 2048;
             this.ctlPopUp1.ColumnPosition = 0.5F;
             this.ctlPopUp1.ColumnRight = false;
-            this.ctlPopUp1.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ctlPopUp1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ctlPopUp1.ForeColor = System.Drawing.Color.Black;
             this.ctlPopUp1.InternalPadding = 3;
             this.ctlPopUp1.Location = new System.Drawing.Point(3, -17);
@@ -424,7 +424,7 @@ namespace Mids_Reborn.Forms
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Arial", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label1.Location = new System.Drawing.Point(66, 0);
             this.label1.Name = "label1";
@@ -457,7 +457,7 @@ namespace Mids_Reborn.Forms
             // lblRewardMerits
             // 
             this.lblRewardMerits.AutoSize = true;
-            this.lblRewardMerits.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblRewardMerits.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblRewardMerits.ForeColor = System.Drawing.Color.White;
             this.lblRewardMerits.Location = new System.Drawing.Point(37, 8);
             this.lblRewardMerits.Name = "lblRewardMerits";
@@ -468,7 +468,7 @@ namespace Mids_Reborn.Forms
             // imageButton1
             // 
             this.imageButton1.Checked = false;
-            this.imageButton1.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.imageButton1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.imageButton1.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.imageButton1.Location = new System.Drawing.Point(374, 470);
             this.imageButton1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -495,7 +495,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.ibClose);
             this.Controls.Add(this.lvPower);
             this.Controls.Add(this.Panel2);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmRecipeViewer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

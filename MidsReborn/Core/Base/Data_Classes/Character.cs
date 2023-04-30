@@ -21,12 +21,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         internal Character()
         {
             Name = string.Empty;
+            Comment = string.Empty;
             Powersets = new IPowerset?[8];
             PoolLocked = new bool[5];
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Builds = new Build?[] { new Build(this, DatabaseAPI.Database.Levels) };
+            Build = new Build(this, DatabaseAPI.Database.Levels);
             PEnhancementsList = new List<string>();
             Reset();
         }
@@ -36,6 +37,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public string? setName { get; set; }
 
         public string Name { get; set; }
+
+        public string Comment { get; set; }
 
         public int Level
         {
@@ -70,10 +73,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int RequestedLevel { get; set; }
 
-        private Build?[] Builds { get; }
+        private Build Build { get; set; }
 
-
-        public Build? CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
+        public Build CurrentBuild => Build;
 
         public Archetype? Archetype
         {
@@ -191,7 +193,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Statistics DisplayStats { get; }
 
         public int displayIndex { get; set; }
-        public List<IPower>? inherentPowers { get; set; }
+        public List<InherentDisplayItem>? InherentDisplayList { get; set; }
         public int SlotsRemaining
         {
             get
@@ -374,6 +376,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] }).Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
         }
 
+        public void LoadPowerSetsByName(IEnumerable<string> sets)
+        {
+            Powersets = sets.Select(set => DatabaseAPI.Database.Powersets.FirstOrDefault(ps => ps?.FullName == set)).Select(powerSet => powerSet ?? new Powerset()).ToArray();
+        }
+
         public void Reset(Archetype? iArchetype = null, int iOrigin = 0)
         {
             Name = string.Empty;
@@ -419,7 +426,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         protected void NewBuild()
         {
-            Builds[0] = new Build(this, DatabaseAPI.Database.Levels);
+            Build = new Build(this, DatabaseAPI.Database.Levels);
             AcceleratedActive = false;
             ActiveComboLevel = 0;
             DelayedActive = false;
@@ -460,7 +467,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public async void ClearInvalidInherentSlots()
         {
             ResetLevel();
-            foreach (var power in CurrentBuild.Powers.Where(power => power.Power != null))
+            foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
             {
                 switch (power.Power.FullName)
                 {
@@ -536,7 +543,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-
         /// <summary>
         /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
         /// </summary>
@@ -574,10 +580,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
-            inherentPowers = new List<IPower>();
+            InherentDisplayList = new List<InherentDisplayItem>();
             PEnhancementsList = new List<string>();
 
             //CheckInherentSlots();
+            if (CurrentBuild?.Powers == null) return;
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null) continue;
@@ -590,6 +597,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     power.Power.HasProcSlotted = false;
                 }
+
                 switch (powName)
                 {
                     default:
@@ -598,14 +606,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             power.Power.Taken = true;
                         }
 
-                        if (!power.StatInclude)
+                        power.Power.Active = power.StatInclude switch
                         {
-                            power.Power.Active = false;
-                        }
-                        else if (power.StatInclude)
-                        {
-                            power.Power.Active = true;
-                        }
+                            false => false,
+                            true => true
+                        };
 
                         break;
                 }
@@ -613,22 +618,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
                     var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
-                    if (pSlotEnh != -1)
+                    if (pSlotEnh == -1) continue;
+                    var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                    if (!PEnhancementsList.Contains(enhancement.UID))
                     {
-                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        if (!PEnhancementsList.Contains(enhancement.UID))
-                        {
-                            PEnhancementsList.Add(enhancement.UID);
-                        }
+                        PEnhancementsList.Add(enhancement.UID);
                     }
                 }
 
-                if (power.Power.HasAttribModEffects())
+                if (!power.Power.HasAttribModEffects()) continue;
+                foreach (var effect in power.Power.Effects)
                 {
-                    foreach (var effect in power.Power.Effects)
-                    {
-                        effect.UpdateAttrib();
-                    }
+                    effect.UpdateAttrib();
                 }
             }
 
@@ -756,90 +757,107 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            foreach (var power in CurrentBuild.Powers)
+            var inherentPowersList = CurrentBuild?.Powers
+                .Where(p => p is { Chosen: false, Power: { }} && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
+                .ToList();
+            if (inherentPowersList != null)
             {
-                if (power?.Power == null) continue;
-                switch (power.Power.PowerName.ToUpper())
+                foreach (var inherent in inherentPowersList)
                 {
-                    case "BOXING":
-                        BoxingBuff = true;
-                        NotBoxingBuff = false;
-                        break;
-                    case "KICK":
-                        KickBuff = true;
-                        NotKickBuff = false;
-                        break;
-                    case "CROSS_PUNCH":
-                        CrossPunchBuff = true;
-                        NotCrossPunchBuff = false;
-                        break;
+                    if (inherent == null)
+                    {
+                        continue;
+                    }
+
+                    if (inherent.InherentType == Enums.eGridType.None)
+                    {
+                        continue;
+                    }
+
+                    var priority = (int)Enum.Parse(typeof(Enums.eInherentOrder), inherent.InherentType.ToString());
+                    InherentDisplayList.Add(new InherentDisplayItem(priority, inherent));
                 }
 
-                var powName = power.Power.PowerName;
-                //Console.WriteLine($@"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+                InherentDisplayList = new List<InherentDisplayItem>(InherentDisplayList.OrderBy(x => x.Priority));
+            }
 
-                if (!power.Chosen && CurrentBuild.PowerUsed(power.Power))
+            if (CurrentBuild == null) return;
+            {
+                foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
                 {
-                    inherentPowers.Add(power.Power);
-                    switch (power.Power.InherentType)
+                    switch (power.Power.PowerName.ToUpper())
                     {
-                        case Enums.eGridType.Class:
-                            displayIndex = 0;
-                            power.Power.DisplayLocation = displayIndex;
+                        case "BOXING":
+                            BoxingBuff = true;
+                            NotBoxingBuff = false;
                             break;
-                        case Enums.eGridType.Inherent when powName.Equals("Brawl"):
-                            displayIndex = 1;
-                            power.Power.DisplayLocation = displayIndex;
+                        case "KICK":
+                            KickBuff = true;
+                            NotKickBuff = false;
                             break;
-                        case Enums.eGridType.Inherent when powName.Equals("Sprint"):
-                            displayIndex = 2;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Rest"):
-                            displayIndex = 3;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Swift"):
-                            displayIndex = 4;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Hurdle"):
-                            displayIndex = 5;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Health"):
-                            displayIndex = 6;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Inherent when powName.Equals("Stamina"):
-                            displayIndex = 7;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Step"):
-                            displayIndex = 8;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Recall"):
-                            displayIndex = 9;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Combat_Flight"):
-                            displayIndex = 8;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        case Enums.eGridType.Powerset when powName.Equals("Energy_Flight"):
-                            displayIndex = 9;
-                            power.Power.DisplayLocation = displayIndex;
-                            break;
-                        default:
-                            displayIndex = inherentPowers.Count - 1;
-                            if (displayIndex > 7 && displayIndex < 59)
-                            {
-                                power.Power.DisplayLocation = displayIndex;
-                                ++displayIndex;
-                            }
+                        case "CROSS_PUNCH":
+                            CrossPunchBuff = true;
+                            NotCrossPunchBuff = false;
                             break;
                     }
+
+                    if (CurrentBuild != null && (power.Chosen || !CurrentBuild.PowerUsed(power.Power))) continue;
+                    var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
+                    power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
+                }
+            }
+        }
+
+        protected void ReadMetadata(string buildText)
+        {
+            var tags = new List<string> {"comment", "enhobtained"};
+
+            var metadata = MidsCharacterFileFormat.ReadMetadata(tags, buildText);
+
+            foreach (var tag in tags)
+            {
+                if (!metadata.ContainsKey(tag))
+                {
+                    continue;
+                }
+
+                switch (tag)
+                {
+                    case "comment":
+                        Comment = metadata[tag];
+                        break;
+
+                    case "enhobtained":
+                        var obtainedSlots = metadata[tag];
+                        var n = obtainedSlots.Length;
+                        var k = 0;
+
+                        for (var i = 0; i < CurrentBuild.Powers.Count; i++)
+                        {
+                            if (CurrentBuild.Powers[i].Power == null)
+                            {
+                                continue;
+                            }
+
+                            for (var j = 0; j < CurrentBuild.Powers[i].Slots.Length; j++)
+                            {
+                                if (k < n)
+                                {
+                                    var obtained = obtainedSlots[k] == '1';
+                                    CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained = obtained;
+                                    CurrentBuild.Powers[i].Slots[j].FlippedEnhancement.Obtained = obtained;
+
+                                    k++;
+                                }
+                                else
+                                {
+                                    CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained = false;
+                                    CurrentBuild.Powers[i].Slots[j].FlippedEnhancement.Obtained = false;
+                                }
+                            }
+                        }
+
+                        break;
                 }
             }
         }
@@ -847,7 +865,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void Validate()
         {
             CheckAncillaryPowerSet();
-            CurrentBuild.Validate();
+            CurrentBuild?.Validate();
             RefreshActiveSpecial();
         }
 
@@ -956,7 +974,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return 0;
         }
 
-        public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry powerEntry = null)
+        public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry? powerEntry = null)
         {
             var popupData1 = new PopUp.PopupData();
             var index1 = popupData1.Add();
@@ -966,7 +984,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f);
                 if (iLevel > -1)
                 {
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                    popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
+                    if (powerEntry != null)
+                    {
+                        var slot = powerEntry.Slots.FirstOrDefault(x => x.Enhancement == iSlot);
+                        if (slot.IsInherent)
+                        {
+                            popupData1.Sections[index1].Add($"This slot is an Inherent slot.", PopUp.Colors.Text);
+                        }
+                    }
                 }
 
                 var index2 = popupData1.Add();
@@ -983,7 +1009,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention: " + enhancement.Name, PopUp.Colors.Title, 1.25f);
+                        popupData1.Sections[index1].Add($"Invention: {enhancement.Name}", PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.SpecialO:
                         popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
@@ -1001,7 +1027,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             };
                         }
 
-                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
+                        popupData1.Sections[index1].Add($"{DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName}: {enhancement.Name}", iColor, 1.25f);
                         break;
                 }
 
@@ -1011,22 +1037,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention);
+                        popupData1.Sections[index1].Add($"Invention Level: {iSlot.IOLevel + 1}{iSlot.GetRelativeString(false)} - {iSlot.GetEnhancementString()}", PopUp.Colors.Invention);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(255, 255, 0));
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.Yellow);
                         break;
                     case Enums.eType.SetO:
                         if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
                         {
-                            popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention);
+                            popupData1.Sections[index1].Add($"Invention Level: {iSlot.IOLevel + 1}{iSlot.GetRelativeString(false)}", PopUp.Colors.Invention);
                         }
                         break;
                 }
 
                 if (iLevel > -1)
                 {
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
+                    popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
                 }
 
                 if (enhancement.Unique)
@@ -1063,22 +1089,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
 
                         var index4 = popupData1.Add();
-                        //Debug.WriteLine(iSlot.GetEnhancementStringLong());
                         var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
                         for (var index3 = 0; index3 < strArray3.Length; index3++)
                         {
-                            string[] strArray2;
-                            if (!enhancement.HasPowerEffect)
-                            {
-                                strArray2 = BreakByBracket(strArray3[index3]);
-                            }
-                            else
-                            {
-                                strArray2 = new[] { strArray3[index3], string.Empty };
-                            }
+                            var strArray2 = !enhancement.HasPowerEffect
+                                ? BreakByBracket(strArray3[index3])
+                                : new[] { strArray3[index3], string.Empty };
 
-                            var strArray4 = strArray2;
-                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+
+                            popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
                         }
 
                         break;

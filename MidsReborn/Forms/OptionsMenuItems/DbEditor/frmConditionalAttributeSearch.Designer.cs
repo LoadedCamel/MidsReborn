@@ -98,8 +98,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // frmConditionalAttributeSearch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(346, 137);
             this.Controls.Add(this.cbAtGroup);

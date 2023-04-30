@@ -9,18 +9,20 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
     public partial class ListLabelV3 : UserControl
     {
         public delegate void EmptyHoverEventHandler();
-        public delegate void ExpandChangedEventHandler(bool Expanded);
-        public delegate void ItemClickEventHandler(ListLabelItemV3 Item, MouseButtons Button);
-        public delegate void ItemHoverEventHandler(ListLabelItemV3 Item);
-        public delegate void ItemHoverEventHandler2(object sender, ListLabelItemV3 Item);
+        public delegate void ExpandChangedEventHandler(bool expanded);
+        public delegate void ItemClickEventHandler(ListLabelItemV3 item, MouseButtons button);
+        public delegate void ItemHoverEventHandler(ListLabelItemV3 item);
+        public delegate void ItemHoverEventHandler2(object sender, ListLabelItemV3 item);
 
-        public enum LLFontFlags
+        [Flags]
+        public enum LlFontFlags
         {
             Normal = 0,
             Bold = 1,
@@ -29,7 +31,7 @@ namespace Mids_Reborn.Controls
             Strikethrough = 8
         }
 
-        public enum LLItemState
+        public enum LlItemState
         {
             Enabled,
             Selected,
@@ -39,44 +41,44 @@ namespace Mids_Reborn.Controls
             Heading
         }
 
-        public enum LLTextAlign
+        public enum LlTextAlign
         {
             Left,
             Center,
             Right
         }
 
-        private readonly Color[] Colors;
-        private readonly Cursor[] Cursors;
-        private readonly bool[] HighlightOn;
-        private Color bgColor;
-        private Color hvrColor;
+        private readonly Color[] _colors;
+        private readonly Cursor[] _cursors;
+        private readonly bool[] _highlightOn;
+        private Color _bgColor;
+        private Color _hvrColor;
 
-        private ExtendedBitmap bxBuffer;
+        private ExtendedBitmap _bxBuffer;
 
-        private bool canExpand;
-        private bool canScroll;
-        private bool DisableEvents;
-        private bool DisableRedraw;
-        private bool DragMode;
-        private int expandMaxY;
+        private bool _canExpand;
+        private bool _canScroll;
+        private bool _disableEvents;
+        private bool _disableRedraw;
+        private bool _dragMode;
+        private int _expandMaxY;
 
-        public ListLabelItemV3[] Items => _Items.ToArray();
-        private List<ListLabelItemV3> _Items;
+        public ListLabelItemV3[] Items => _items.ToArray();
+        private List<ListLabelItemV3> _items;
 
-        private eMouseTarget LastMouseMoveTarget;
-        private Color scBarColor;
-        private Color scButtonColor;
-        private int ScrollOffset;
-        private int ScrollSteps;
-        private int ScrollWidth;
-        private Size szNormal;
-        private Rectangle TextArea;
-        private bool TextOutline;
-        private int VisibleLineCount;
+        private EMouseTarget _lastMouseMoveTarget;
+        private Color _scBarColor;
+        private Color _scButtonColor;
+        private int _scrollOffset;
+        private int _scrollSteps;
+        private int _scrollWidth;
+        private Size _szNormal;
+        private Rectangle _textArea;
+        private bool _textOutline;
+        private int _visibleLineCount;
 
-        private int xPadding;
-        private int yPadding;
+        private int _xPadding;
+        private int _yPadding;
 
         public ListLabelV3()
         {
@@ -90,113 +92,113 @@ namespace Mids_Reborn.Controls
             Load += ListLabelV3_Load;
             MouseDown += ListLabelV3_MouseDown;
             MouseWheel += ListLabelV3_MouseWheel;
-            bxBuffer = null;
-            _Items = new List<ListLabelItemV3>();
-            Colors = new[]
+            _bxBuffer = null;
+            _items = new List<ListLabelItemV3>();
+            _colors = new[]
             {
                 Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
             };
-            Cursors = new[]
+            _cursors = new[]
             {
-                System.Windows.Forms.Cursors.Hand, System.Windows.Forms.Cursors.Hand,
-                System.Windows.Forms.Cursors.Default,
-                System.Windows.Forms.Cursors.Hand, System.Windows.Forms.Cursors.Hand,
-                System.Windows.Forms.Cursors.Default
+                Cursors.Hand, Cursors.Hand,
+                Cursors.Default,
+                Cursors.Hand, Cursors.Hand,
+                Cursors.Default
             };
-            HighlightOn = new[]
+            _highlightOn = new[]
             {
                 true, true, true, true, true, true, false
             };
-            bgColor = Color.Black;
-            hvrColor = Color.WhiteSmoke;
-            TextOutline = true;
-            xPadding = 1;
-            yPadding = 1;
+            _bgColor = Color.Black;
+            _hvrColor = Color.WhiteSmoke;
+            _textOutline = true;
+            _xPadding = 1;
+            _yPadding = 1;
             ActualLineHeight = 8;
-            HoverID = -1;
-            DisableRedraw = true;
-            DisableEvents = false;
-            canScroll = true;
-            ScrollOffset = 0;
-            canExpand = false;
-            isExpanded = false;
-            szNormal = Size;
-            expandMaxY = 400;
-            TextArea = new Rectangle(0, 0, Width, Height);
-            ScrollWidth = 8;
-            scBarColor = Color.FromArgb(128, 96, 192);
-            scButtonColor = Color.FromArgb(96, 0, 192);
-            ScrollSteps = 0;
-            DragMode = false;
-            LastMouseMoveTarget = eMouseTarget.None;
-            VisibleLineCount = 0;
+            HoverId = -1;
+            _disableRedraw = true;
+            _disableEvents = false;
+            _canScroll = true;
+            _scrollOffset = 0;
+            _canExpand = false;
+            IsExpanded = false;
+            _szNormal = Size;
+            _expandMaxY = 400;
+            _textArea = new Rectangle(0, 0, Width, Height);
+            _scrollWidth = 8;
+            _scBarColor = Color.FromArgb(128, 96, 192);
+            _scButtonColor = Color.FromArgb(96, 0, 192);
+            _scrollSteps = 0;
+            _dragMode = false;
+            _lastMouseMoveTarget = EMouseTarget.None;
+            _visibleLineCount = 0;
 
             InitializeComponent();
         }
 
-        public bool isExpanded { get; set; }
+        public bool IsExpanded { get; set; }
 
         public Color TextColor
         {
             get
             {
                 Color result;
-                if ((Item.ItemState < LLItemState.Enabled) | (Item.ItemState > LLItemState.Heading))
+                if ((Item.ItemState < LlItemState.Enabled) | (Item.ItemState > LlItemState.Heading))
                     result = Color.Black;
                 else
-                    result = Colors[(int) Item.ItemState];
+                    result = _colors[(int) Item.ItemState];
 
                 return result;
             }
             set
             {
-                if ((Item.ItemState < LLItemState.Enabled) | (Item.ItemState > LLItemState.Heading))
+                if ((Item.ItemState < LlItemState.Enabled) | (Item.ItemState > LlItemState.Heading))
                     return;
-                Colors[(int) Item.ItemState] = value;
+                _colors[(int) Item.ItemState] = value;
                 Draw();
             }
         }
 
         public override Color BackColor
         {
-            get => bgColor;
+            get => _bgColor;
             set
             {
-                bgColor = value;
+                _bgColor = value;
                 Draw();
             }
         }
 
         public Color HoverColor
         {
-            get => hvrColor;
+            get => _hvrColor;
             set
             {
-                hvrColor = value;
+                _hvrColor = value;
                 Draw();
             }
         }
 
         public int PaddingX
         {
-            get => xPadding;
+            get => _xPadding;
             set
             {
                 if (!((value >= 0) & checked(value * 2 < Width - 5)))
                     return;
-                xPadding = value;
+                _xPadding = value;
                 Draw();
             }
         }
 
         public int PaddingY
         {
-            get => yPadding;
+            get => _yPadding;
             set
             {
                 if (!((value >= 0) & (value < Height / 3.0)))
                     return;
-                yPadding = value;
+                _yPadding = value;
                 SetLineHeight();
                 Draw();
             }
@@ -204,27 +206,27 @@ namespace Mids_Reborn.Controls
 
         public bool HighVis
         {
-            get => TextOutline;
+            get => _textOutline;
             set
             {
-                TextOutline = value;
+                _textOutline = value;
                 Draw();
             }
         }
 
-        private int HoverID { get; set; }
+        private int HoverId { get; set; }
 
         public bool SuspendRedraw
         {
-            get => DisableRedraw;
+            get => _disableRedraw;
             set
             {
-                DisableRedraw = value;
+                _disableRedraw = value;
                 if (value)
                     return;
-                if (isExpanded) RecomputeExpand();
+                if (IsExpanded) RecomputeExpand();
 
-                if (isExpanded)
+                if (IsExpanded)
                     return;
                 Recalculate();
                 Draw();
@@ -233,55 +235,55 @@ namespace Mids_Reborn.Controls
 
         public bool Scrollable
         {
-            get => canScroll;
+            get => _canScroll;
             set
             {
-                canScroll = value;
+                _canScroll = value;
                 Draw();
             }
         }
 
         public bool Expandable
         {
-            get => canExpand;
+            get => _canExpand;
             set
             {
-                canExpand = value;
+                _canExpand = value;
                 Draw();
             }
         }
 
         public Size SizeNormal
         {
-            get => szNormal;
+            get => _szNormal;
             set
             {
-                szNormal = value;
-                Expand(isExpanded);
+                _szNormal = value;
+                Expand(IsExpanded);
                 Draw();
             }
         }
 
         public int MaxHeight
         {
-            get => expandMaxY;
+            get => _expandMaxY;
             set
             {
-                if (value < szNormal.Height)
+                if (value < _szNormal.Height)
                     return;
                 if (value > 2000)
                     return;
-                expandMaxY = value;
+                _expandMaxY = value;
                 Draw();
             }
         }
 
         public int ScrollBarWidth
         {
-            get => ScrollWidth;
+            get => _scrollWidth;
             set
             {
-                if ((value > 0) & (value < Width / 2.0)) ScrollWidth = value;
+                if ((value > 0) & (value < Width / 2.0)) _scrollWidth = value;
 
                 Recalculate();
                 Draw();
@@ -290,20 +292,20 @@ namespace Mids_Reborn.Controls
 
         public Color ScrollBarColor
         {
-            get => scBarColor;
+            get => _scBarColor;
             set
             {
-                scBarColor = value;
+                _scBarColor = value;
                 Draw();
             }
         }
 
         public Color ScrollButtonColor
         {
-            get => scButtonColor;
+            get => _scButtonColor;
             set
             {
-                scButtonColor = value;
+                _scButtonColor = value;
                 Draw();
             }
         }
@@ -312,15 +314,15 @@ namespace Mids_Reborn.Controls
         {
             get
             {
-                if ((Item.Index < 0) | (Item.Index > checked(_Items.Count - 1)))
+                if ((Item.Index < 0) | (Item.Index > checked(_items.Count - 1)))
                     return new ListLabelItemV3();
-                return _Items[Item.Index];
+                return _items[Item.Index];
             }
             set
             {
-                if ((Item.Index < 0) | (Item.Index > checked(_Items.Count - 1)))
+                if ((Item.Index < 0) | (Item.Index > checked(_items.Count - 1)))
                     return;
-                _Items[Item.Index] = new ListLabelItemV3(value);
+                _items[Item.Index] = new ListLabelItemV3(value);
                 Draw();
             }
         }
@@ -331,15 +333,15 @@ namespace Mids_Reborn.Controls
 
         public int ActualLineHeight { get; set; }
 
-        public event ItemClickEventHandler ItemClick;
-        public event ItemHoverEventHandler ItemHover;
-        public event ItemHoverEventHandler2 ItemHover2;
-        public event EmptyHoverEventHandler EmptyHover;
-        public event ExpandChangedEventHandler ExpandChanged;
+        public event ItemClickEventHandler? ItemClick;
+        public event ItemHoverEventHandler? ItemHover;
+        public event ItemHoverEventHandler2? ItemHover2;
+        public event EmptyHoverEventHandler? EmptyHover;
+        public event ExpandChangedEventHandler? ExpandChanged;
 
         private int GetRealTotalHeight()
         {
-            return _Items.Sum(e => e.ItemHeight);
+            return _items.Sum(e => e.ItemHeight);
         }
 
         private void FillDefaultItems()
@@ -347,65 +349,67 @@ namespace Mids_Reborn.Controls
             if (!Debugger.IsAttached && !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv")) return;
             
             ClearItems();
-            AddItem(new ListLabelItemV3("Header Item", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold, LLTextAlign.Center));
-            AddItem(new ListLabelItemV3("Enabled", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Disabled Item", LLItemState.Disabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Selected Item", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold | LLFontFlags.Italic));
-            AddItem(new ListLabelItemV3("SD Item", LLItemState.SelectedDisabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Invalid Item", LLItemState.Invalid, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Automatic multiline Item", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Scrollable", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold, LLTextAlign.Center));
-            AddItem(new ListLabelItemV3("Item 1", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 2", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 3", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 4", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 5", LLItemState.Disabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 6", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 7", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 8", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 9", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 10", LLItemState.Disabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 11", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 12", LLItemState.Selected, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 13", LLItemState.Invalid, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 14", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
-            AddItem(new ListLabelItemV3("Item 15", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Header Item", LlItemState.Heading, -1, -1, -1, "", LlFontFlags.Bold, LlTextAlign.Center));
+            AddItem(new ListLabelItemV3("Enabled", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Disabled Item", LlItemState.Disabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Selected Item", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold | LlFontFlags.Italic));
+            AddItem(new ListLabelItemV3("SD Item", LlItemState.SelectedDisabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Invalid Item", LlItemState.Invalid, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Automatic multiline Item", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Scrollable", LlItemState.Heading, -1, -1, -1, "", LlFontFlags.Bold, LlTextAlign.Center));
+            AddItem(new ListLabelItemV3("Item 1", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 2", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 3", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 4", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 5", LlItemState.Disabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 6", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 7", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 8", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 9", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 10", LlItemState.Disabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 11", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 12", LlItemState.Selected, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 13", LlItemState.Invalid, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 14", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
+            AddItem(new ListLabelItemV3("Item 15", LlItemState.Enabled, -1, -1, -1, "", LlFontFlags.Bold));
             Draw();
         }
 
         public void AddItem(ListLabelItemV3 iItem)
         {
-            DisableEvents = true;
+            _disableEvents = true;
             if (iItem.Index < 0)
             {
-                iItem.Index = _Items.Count;
+                iItem.Index = _items.Count;
             }
 
-            _Items.Add(iItem);
-            WrapString(_Items.Count - 1);
+            _items.Add(iItem);
+            WrapString(_items.Count - 1);
             GetScrollSteps();
-            DisableEvents = false;
+            _disableEvents = false;
         }
 
         public void ClearItems()
         {
-            _Items = new List<ListLabelItemV3>();
-            ScrollOffset = 0;
-            HoverID = -1;
+            _items = new List<ListLabelItemV3>();
+            _scrollOffset = 0;
+            HoverId = -1;
         }
+
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         private void SetLineHeight()
         {
             var font = new Font(Font, Font.Style);
-            ActualLineHeight = checked((int) Math.Round(font.GetHeight() + checked(yPadding * 2)));
-            VisibleLineCount = GetVisibleLineCount();
+            ActualLineHeight = checked((int) Math.Round(font.GetHeight() + checked(_yPadding * 2)));
+            _visibleLineCount = GetVisibleLineCount();
         }
 
         private void Recalculate(bool expanded = false)
         {
             checked
             {
-                if (_Items.Count == 0) return;
+                if (_items.Count == 0) return;
                 InitBuffer();
                 if (AutoSize)
                 {
@@ -424,62 +428,62 @@ namespace Mids_Reborn.Controls
                 }
                 else if (Name == "llAncillary" | Name.StartsWith("llPool"))
                 {
-                    Height = 18 * _Items.Count;
+                    Height = 18 * _items.Count;
                 }
                 
-                var bRect = new Rectangle(xPadding, 0, Width - xPadding * 2, Height);
+                var bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height);
                 RecalcLines(bRect);
-                if ((ScrollSteps > 0) | isExpanded)
+                if ((_scrollSteps > 0) | IsExpanded)
                 {
-                    bRect = new Rectangle(xPadding, 0, Width - xPadding * 2, Height - (ScrollWidth + yPadding));
+                    bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height - (_scrollWidth + _yPadding));
                     RecalcLines(bRect);
                 }
 
-                if (expanded || ScrollSteps <= 0) return;
-                var num = (canExpand) ? ScrollWidth + yPadding : 0;
+                if (expanded || _scrollSteps <= 0) return;
+                var num = (_canExpand) ? _scrollWidth + _yPadding : 0;
 
-                bRect = new Rectangle(xPadding, 0, Width - (xPadding * 2 + ScrollWidth), Height - num);
+                bRect = new Rectangle(_xPadding, 0, Width - (_xPadding * 2 + _scrollWidth), Height - num);
                 RecalcLines(bRect);
             }
         }
 
         private void RecalcLines(Rectangle bRect)
         {
-            TextArea = bRect;
+            _textArea = bRect;
             SetLineHeight();
             checked
             {
-                for (var i = 0; i < _Items.Count; i++) WrapString(i);
+                for (var i = 0; i < _items.Count; i++) WrapString(i);
 
                 GetTotalLineCount();
                 GetScrollSteps();
             }
         }
 
-        private void WrapString(int Index)
+        private void WrapString(int index)
         {
             checked
             {
-                if (Operators.CompareString(_Items[Index].Text, "", false) == 0) return;
+                if (Operators.CompareString(_items[index].Text, "", false) == 0) return;
                 InitBuffer();
                 var num = 1;
-                if (_Items[Index].Text.Contains(" "))
+                if (_items[index].Text.Contains(" "))
                 {
-                    var array = _Items[Index].Text.Split(" ".ToCharArray());
+                    var array = _items[index].Text.Split(" ".ToCharArray());
                     var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
-                    var font = new Font(Font, (FontStyle) _Items[Index].FontFlags);
-                    var str = (_Items[Index].ItemState == LLItemState.Heading) ? "~  ~" : "";
+                    var font = new Font(Font, (FontStyle) _items[index].FontFlags);
+                    var str = (_items[index].ItemState == LlItemState.Heading) ? "~  ~" : "";
 
                     var text = array[0];
                     for (var i = 1; i < array.Length; i++)
                     {
-                        var graphics = bxBuffer.Graphics;
+                        var graphics = _bxBuffer.Graphics;
                         var text2 = $"{text} {array[i]}{str}";
                         var font2 = font;
                         var layoutArea = new SizeF(1024f, Height);
-                        if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) > TextArea.Width)
+                        if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) > _textArea.Width)
                         {
-                            text = _Items[Index].ItemState == LLItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
+                            text = _items[index].ItemState == LlItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
                             num++;
                         }
                         else
@@ -488,44 +492,43 @@ namespace Mids_Reborn.Controls
                         }
                     }
 
-                    _Items[Index].WrappedText = text;
+                    _items[index].WrappedText = text;
                 }
                 else
                 {
-                    _Items[Index].WrappedText = _Items[Index].Text;
+                    _items[index].WrappedText = _items[index].Text;
                 }
 
-                if (_Items[Index].ItemState == LLItemState.Heading)
+                if (_items[index].ItemState == LlItemState.Heading)
                 {
-                    _Items[Index].WrappedText = $"~ {_Items[Index].WrappedText} ~";
+                    _items[index].WrappedText = $"~ {_items[index].WrappedText} ~";
                 }
 
-                _Items[Index].LineCount = num;
-                _Items[Index].ItemHeight = num * (ActualLineHeight - yPadding * 2) + yPadding * 2;
+                _items[index].LineCount = num;
+                _items[index].ItemHeight = num * (ActualLineHeight - _yPadding * 2) + _yPadding * 2;
             }
         }
 
         private void InitBuffer()
         {
-            if (DisableRedraw) return;
-            if (((Width == 0) | (Height == 0)) & (bxBuffer == null)) return;
-            bxBuffer ??= new ExtendedBitmap(Width, Height);
+            if (_disableRedraw) return;
+            _bxBuffer ??= new ExtendedBitmap(Width, Height);
 
-            if ((bxBuffer.Size.Width != Width) | (bxBuffer.Size.Height != Height))
+            if ((_bxBuffer.Size.Width != Width) | (_bxBuffer.Size.Height != Height))
             {
-                bxBuffer.Dispose();
-                bxBuffer = null;
+                _bxBuffer.Dispose();
+                _bxBuffer = null;
                 GC.Collect();
                 if ((Height == 0) | (Width == 0)) return;
 
-                bxBuffer = new ExtendedBitmap(Width, Height);
+                _bxBuffer = new ExtendedBitmap(Width, Height);
             }
 
-            bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            bxBuffer.Graphics.TextContrast = 0;
-            bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            _bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            _bxBuffer.Graphics.TextContrast = 0;
+            _bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            _bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            _bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
         private int GetItemAtY(int y)
@@ -540,9 +543,9 @@ namespace Mids_Reborn.Controls
                 }
                 else
                 {
-                    for (var i = ScrollOffset; i < _Items.Count; i++)
+                    for (var i = _scrollOffset; i < _items.Count; i++)
                     {
-                        num += _Items[i].ItemHeight;
+                        num += _items[i].ItemHeight;
                         if (y < num) return i;
                     }
 
@@ -553,43 +556,43 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        private eMouseTarget GetMouseTarget(int x, int y)
+        private EMouseTarget GetMouseTarget(int x, int y)
         {
             checked
             {
-                eMouseTarget result;
-                if ((x >= TextArea.Left) & (x <= TextArea.Right) & (y <= TextArea.Bottom))
+                EMouseTarget result;
+                if ((x >= _textArea.Left) & (x <= _textArea.Right) & (y <= _textArea.Bottom))
                 {
-                    result = eMouseTarget.Item;
+                    result = EMouseTarget.Item;
                 }
-                else if ((x >= TextArea.Left) & (x <= TextArea.Right) & (y > TextArea.Bottom))
+                else if ((x >= _textArea.Left) & (x <= _textArea.Right) & (y > _textArea.Bottom))
                 {
-                    result = eMouseTarget.ExpandButton;
+                    result = EMouseTarget.ExpandButton;
                 }
-                else if ((x > TextArea.Right) & (y <= ScrollWidth + yPadding))
+                else if ((x > _textArea.Right) & (y <= _scrollWidth + _yPadding))
                 {
-                    result = eMouseTarget.UpButton;
+                    result = EMouseTarget.UpButton;
                 }
-                else if ((x > TextArea.Right) & (y >= Height - (ScrollWidth + yPadding)))
+                else if ((x > _textArea.Right) & (y >= Height - (_scrollWidth + _yPadding)))
                 {
-                    result = eMouseTarget.DownButton;
+                    result = EMouseTarget.DownButton;
                 }
-                else if (!((x > TextArea.Right) & (ScrollSteps > 0)))
+                else if (!((x > _textArea.Right) & (_scrollSteps > 0)))
                 {
-                    result = eMouseTarget.None;
+                    result = EMouseTarget.None;
                 }
                 else
                 {
-                    var num = Height - (yPadding + ScrollWidth) * 2 - yPadding * 2;
-                    var num2 = (int) Math.Round(checked(ScrollWidth + yPadding * 2) +
-                                                num / (double) ScrollSteps * ScrollOffset);
-                    var num3 = (int) Math.Round(num / (double) ScrollSteps);
+                    var num = Height - (_yPadding + _scrollWidth) * 2 - _yPadding * 2;
+                    var num2 = (int) Math.Round(checked(_scrollWidth + _yPadding * 2) +
+                                                num / (double) _scrollSteps * _scrollOffset);
+                    var num3 = (int) Math.Round(num / (double) _scrollSteps);
                     if (y < num2)
-                        result = eMouseTarget.ScrollBarUp;
+                        result = EMouseTarget.ScrollBarUp;
                     else if (y > num2 + num3)
-                        result = eMouseTarget.ScrollBarDown;
+                        result = EMouseTarget.ScrollBarDown;
                     else
-                        result = eMouseTarget.ScrollBlock;
+                        result = EMouseTarget.ScrollBlock;
                 }
 
                 return result;
@@ -598,14 +601,14 @@ namespace Mids_Reborn.Controls
 
         private void ListLabelV3_MouseWheel(object sender, MouseEventArgs e)
         {
-            if ((e.Delta > 0) & (ScrollSteps > 0) & (ScrollOffset > 0))
+            if ((e.Delta > 0) & (_scrollSteps > 0) & (_scrollOffset > 0))
             {
-                ScrollOffset--;
+                _scrollOffset--;
                 Draw();
             }
-            else if ((e.Delta < 0) & (ScrollOffset + 1 < ScrollSteps))
+            else if ((e.Delta < 0) & (_scrollOffset + 1 < _scrollSteps))
             {
-                ScrollOffset++;
+                _scrollOffset++;
                 Draw();
             }
         }
@@ -616,8 +619,8 @@ namespace Mids_Reborn.Controls
             {
                 if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control | Keys.Alt)))
                 {
-                    DisableEvents = false;
-                    DisableRedraw = false;
+                    _disableEvents = false;
+                    _disableRedraw = false;
                     Recalculate();
                     Draw();
                     var graphics = CreateGraphics();
@@ -625,92 +628,92 @@ namespace Mids_Reborn.Controls
                     var rect = new Rectangle(0, 0, Width - 1, Height - 1);
                     graphics.DrawRectangle(powderBlue, rect);
                 }
-                else if (!DisableEvents)
+                else if (!_disableEvents)
                 {
                     int num;
-                    if (ScrollSteps / 3.0 < 5.0)
-                        num = (int) Math.Round(ScrollSteps / 3.0);
+                    if (_scrollSteps / 3.0 < 5.0)
+                        num = (int) Math.Round(_scrollSteps / 3.0);
                     else
                         num = 5;
 
                     switch (GetMouseTarget(e.X, e.Y))
                     {
-                        case eMouseTarget.Item:
+                        case EMouseTarget.Item:
                         {
                             var itemAtY = GetItemAtY(e.Y);
                             if (itemAtY > -1)
                             {
                                 var num2 = 0;
-                                for (var i = ScrollOffset; i < itemAtY; i++) num2 += _Items[i].ItemHeight;
+                                for (var i = _scrollOffset; i < itemAtY; i++) num2 += _items[i].ItemHeight;
 
-                                if (((num2 + _Items[itemAtY].ItemHeight >= e.Y) &
-                                     (num2 + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                    ((_Items[itemAtY].LineCount > 1) & (num2 + ActualLineHeight >= e.Y) &
-                                     (num2 + ActualLineHeight <= TextArea.Height)))
-                                    ItemClick?.Invoke(_Items[itemAtY], e.Button);
+                                if (((num2 + _items[itemAtY].ItemHeight >= e.Y) &
+                                     (num2 + _items[itemAtY].ItemHeight <= _textArea.Height)) |
+                                    ((_items[itemAtY].LineCount > 1) & (num2 + ActualLineHeight >= e.Y) &
+                                     (num2 + ActualLineHeight <= _textArea.Height)))
+                                    ItemClick?.Invoke(_items[itemAtY], e.Button);
                             }
 
                             break;
                         }
-                        case eMouseTarget.UpButton:
-                            if ((ScrollSteps > 0) & (ScrollOffset > 0))
+                        case EMouseTarget.UpButton:
+                            if ((_scrollSteps > 0) & (_scrollOffset > 0))
                             {
-                                ScrollOffset--;
+                                _scrollOffset--;
                                 Draw();
                             }
 
                             break;
-                        case eMouseTarget.DownButton:
-                            if ((ScrollSteps > 0) & (ScrollOffset + 1 < ScrollSteps))
+                        case EMouseTarget.DownButton:
+                            if ((_scrollSteps > 0) & (_scrollOffset + 1 < _scrollSteps))
                             {
-                                ScrollOffset++;
+                                _scrollOffset++;
                                 Draw();
                             }
 
                             break;
-                        case eMouseTarget.ScrollBarUp:
-                            if (ScrollSteps > 0)
+                        case EMouseTarget.ScrollBarUp:
+                            if (_scrollSteps > 0)
                             {
-                                ScrollOffset -= num;
-                                if (ScrollOffset < 0) ScrollOffset = 0;
-
-                                Draw();
-                            }
-
-                            break;
-                        case eMouseTarget.ScrollBarDown:
-                            if (ScrollSteps > 0)
-                            {
-                                ScrollOffset += num;
-                                if (ScrollOffset >= ScrollSteps) ScrollOffset = ScrollSteps - 1;
+                                _scrollOffset -= num;
+                                if (_scrollOffset < 0) _scrollOffset = 0;
 
                                 Draw();
                             }
 
                             break;
-                        case eMouseTarget.ScrollBlock:
-                            if (ScrollSteps > 0) DragMode = true;
+                        case EMouseTarget.ScrollBarDown:
+                            if (_scrollSteps > 0)
+                            {
+                                _scrollOffset += num;
+                                if (_scrollOffset >= _scrollSteps) _scrollOffset = _scrollSteps - 1;
+
+                                Draw();
+                            }
 
                             break;
-                        case eMouseTarget.ExpandButton:
+                        case EMouseTarget.ScrollBlock:
+                            if (_scrollSteps > 0) _dragMode = true;
+
+                            break;
+                        case EMouseTarget.ExpandButton:
                         {
-                            if (!isExpanded)
+                            if (!IsExpanded)
                             {
-                                isExpanded = true;
-                                ScrollOffset = 0;
+                                IsExpanded = true;
+                                _scrollOffset = 0;
                                 RecomputeExpand();
                             }
                             else
                             {
-                                DisableRedraw = true;
-                                Height = szNormal.Height;
-                                isExpanded = false;
+                                _disableRedraw = true;
+                                Height = _szNormal.Height;
+                                IsExpanded = false;
                                 Recalculate();
-                                DisableRedraw = false;
+                                _disableRedraw = false;
                                 Draw();
                             }
 
-                            ExpandChanged?.Invoke(isExpanded);
+                            ExpandChanged?.Invoke(IsExpanded);
                             break;
                         }
                     }
@@ -718,111 +721,111 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        private void Expand(bool State)
+        private void Expand(bool state)
         {
-            if (State)
+            if (state)
             {
-                isExpanded = true;
-                ScrollOffset = 0;
+                IsExpanded = true;
+                _scrollOffset = 0;
                 RecomputeExpand();
             }
             else
             {
-                DisableRedraw = true;
-                Height = szNormal.Height;
-                isExpanded = false;
+                _disableRedraw = true;
+                Height = _szNormal.Height;
+                IsExpanded = false;
                 Recalculate();
-                DisableRedraw = false;
+                _disableRedraw = false;
                 Draw();
             }
 
-            ExpandChanged?.Invoke(isExpanded);
+            ExpandChanged?.Invoke(IsExpanded);
         }
 
         private void RecomputeExpand()
         {
-            if (!isExpanded) return;
+            if (!IsExpanded) return;
             
-            var num = expandMaxY;
+            var num = _expandMaxY;
             Recalculate(true);
-            var num2 = checked(GetRealTotalHeight() + ScrollWidth + yPadding * 3);
+            var num2 = checked(GetRealTotalHeight() + _scrollWidth + _yPadding * 3);
             if (num2 < num) num = num2;
 
-            DisableRedraw = true;
+            _disableRedraw = true;
             Height = num;
             Recalculate();
-            DisableRedraw = false;
+            _disableRedraw = false;
             Draw();
         }
 
         private void ListLabelV3_MouseLeave(object sender, EventArgs e)
         {
-            Cursor = System.Windows.Forms.Cursors.Default;
-            LastMouseMoveTarget = eMouseTarget.None;
-            HoverID = -1;
+            Cursor = Cursors.Default;
+            _lastMouseMoveTarget = EMouseTarget.None;
+            HoverId = -1;
             Draw();
             EmptyHover?.Invoke();
         }
 
         private void ListLabelV3_MouseMove2(object sender, MouseEventArgs e)
         {
-            var cursor = System.Windows.Forms.Cursors.Default;
+            var cursor = Cursors.Default;
             var mouseTarget = GetMouseTarget(e.X, e.Y);
             var flag = false;
             checked
             {
-                if (!DragMode)
+                if (!_dragMode)
                 {
                     EmptyHoverEventHandler emptyHoverEvent;
                     switch (mouseTarget)
                     {
-                        case eMouseTarget.Item:
+                        case EMouseTarget.Item:
                             {
                                 var itemAtY = GetItemAtY(e.Y);
                                 if (itemAtY <= -1)
                                 {
-                                    if (HoverID != -1) flag = true;
+                                    if (HoverId != -1) flag = true;
 
-                                    HoverID = -1;
+                                    HoverId = -1;
                                     EmptyHover?.Invoke();
                                     goto IL_3EA;
                                 }
 
                                 var num = 0;
-                                for (var i = ScrollOffset; i < itemAtY; i++) num += _Items[i].ItemHeight;
+                                for (var i = _scrollOffset; i < itemAtY; i++) num += _items[i].ItemHeight;
 
-                                if (!(((num + _Items[itemAtY].ItemHeight >= e.Y) &
-                                       (num + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                      ((_Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
-                                       (num + ActualLineHeight <= TextArea.Height))))
+                                if (!(((num + _items[itemAtY].ItemHeight >= e.Y) &
+                                       (num + _items[itemAtY].ItemHeight <= _textArea.Height)) |
+                                      ((_items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
+                                       (num + ActualLineHeight <= _textArea.Height))))
                                 {
-                                    if (HoverID != -1) flag = true;
+                                    if (HoverId != -1) flag = true;
 
-                                    HoverID = -1;
+                                    HoverId = -1;
                                     EmptyHover?.Invoke();
                                     goto IL_3EA;
                                 }
 
-                                cursor = Cursors[(int)_Items[itemAtY].ItemState];
-                                HoverID = itemAtY;
+                                cursor = _cursors[(int)_items[itemAtY].ItemState];
+                                HoverId = itemAtY;
                                 Draw();
-                                ItemHover2?.Invoke(sender, _Items[itemAtY]);
+                                ItemHover2?.Invoke(sender, _items[itemAtY]);
                                 goto IL_3EA;
                             }
-                        case eMouseTarget.UpButton:
-                            if (LastMouseMoveTarget != mouseTarget) Draw();
+                        case EMouseTarget.UpButton:
+                            if (_lastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
-                        case eMouseTarget.DownButton:
-                            if (LastMouseMoveTarget != mouseTarget) Draw();
+                        case EMouseTarget.DownButton:
+                            if (_lastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
-                        case eMouseTarget.ExpandButton:
-                            HoverID = -1;
+                        case EMouseTarget.ExpandButton:
+                            HoverId = -1;
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
@@ -833,23 +836,23 @@ namespace Mids_Reborn.Controls
                 }
                 else if (e.Button == MouseButtons.None)
                 {
-                    DragMode = false;
+                    _dragMode = false;
                 }
                 else
                 {
-                    cursor = System.Windows.Forms.Cursors.SizeNS;
-                    var num3 = Height - (yPadding + ScrollWidth) * 2 - yPadding * 2;
-                    var num4 = (int)Math.Round(checked(ScrollWidth + yPadding * 2) +
-                                                num3 / (double)ScrollSteps * ScrollOffset);
-                    var num5 = (int)Math.Round(num3 / (double)ScrollSteps);
-                    if ((e.Y < num4) & (ScrollOffset > 0))
+                    cursor = Cursors.SizeNS;
+                    var num3 = Height - (_yPadding + _scrollWidth) * 2 - _yPadding * 2;
+                    var num4 = (int)Math.Round(checked(_scrollWidth + _yPadding * 2) +
+                                                num3 / (double)_scrollSteps * _scrollOffset);
+                    var num5 = (int)Math.Round(num3 / (double)_scrollSteps);
+                    if ((e.Y < num4) & (_scrollOffset > 0))
                     {
-                        ScrollOffset--;
+                        _scrollOffset--;
                         Draw();
                     }
-                    else if ((e.Y > num4 + num5) & (ScrollOffset + 1 < ScrollSteps))
+                    else if ((e.Y > num4 + num5) & (_scrollOffset + 1 < _scrollSteps))
                     {
-                        ScrollOffset++;
+                        _scrollOffset++;
                         Draw();
                     }
 
@@ -861,68 +864,68 @@ namespace Mids_Reborn.Controls
                 if (flag) Draw();
 
                 Cursor = cursor;
-                LastMouseMoveTarget = mouseTarget;
+                _lastMouseMoveTarget = mouseTarget;
             }
         }
         private void ListLabelV3_MouseMove(object sender, MouseEventArgs e)
         {
-            var cursor = System.Windows.Forms.Cursors.Default;
+            var cursor = Cursors.Default;
             var mouseTarget = GetMouseTarget(e.X, e.Y);
             var flag = false;
             checked
             {
-                if (!DragMode)
+                if (!_dragMode)
                 {
                     EmptyHoverEventHandler emptyHoverEvent;
                     switch (mouseTarget)
                     {
-                        case eMouseTarget.Item:
+                        case EMouseTarget.Item:
                         {
                             var itemAtY = GetItemAtY(e.Y);
                             if (itemAtY <= -1)
                             {
-                                if (HoverID != -1) flag = true;
+                                if (HoverId != -1) flag = true;
 
-                                HoverID = -1;
+                                HoverId = -1;
                                 EmptyHover?.Invoke();
                                 goto IL_3EA;
                             }
 
                             var num = 0;
-                            for (var i = ScrollOffset; i < itemAtY ; i++) num += _Items[i].ItemHeight;
+                            for (var i = _scrollOffset; i < itemAtY ; i++) num += _items[i].ItemHeight;
 
-                            if (!(((num + _Items[itemAtY].ItemHeight >= e.Y) &
-                                   (num + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                  ((_Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
-                                   (num + ActualLineHeight <= TextArea.Height))))
+                            if (!(((num + _items[itemAtY].ItemHeight >= e.Y) &
+                                   (num + _items[itemAtY].ItemHeight <= _textArea.Height)) |
+                                  ((_items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
+                                   (num + ActualLineHeight <= _textArea.Height))))
                             {
-                                if (HoverID != -1) flag = true;
+                                if (HoverId != -1) flag = true;
 
-                                HoverID = -1;
+                                HoverId = -1;
                                 EmptyHover?.Invoke();
                                 goto IL_3EA;
                             }
 
-                            cursor = Cursors[(int) _Items[itemAtY].ItemState];
-                            HoverID = itemAtY;
+                            cursor = _cursors[(int) _items[itemAtY].ItemState];
+                            HoverId = itemAtY;
                             Draw();
-                            ItemHover?.Invoke(_Items[itemAtY]);
+                            ItemHover?.Invoke(_items[itemAtY]);
                             goto IL_3EA;
                         }
-                        case eMouseTarget.UpButton:
-                            if (LastMouseMoveTarget != mouseTarget) Draw();
+                        case EMouseTarget.UpButton:
+                            if (_lastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
-                        case eMouseTarget.DownButton:
-                            if (LastMouseMoveTarget != mouseTarget) Draw();
+                        case EMouseTarget.DownButton:
+                            if (_lastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
-                        case eMouseTarget.ExpandButton:
-                            HoverID = -1;
+                        case EMouseTarget.ExpandButton:
+                            HoverId = -1;
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
@@ -933,23 +936,23 @@ namespace Mids_Reborn.Controls
                 }
                 else if (e.Button == MouseButtons.None)
                 {
-                    DragMode = false;
+                    _dragMode = false;
                 }
                 else
                 {
-                    cursor = System.Windows.Forms.Cursors.SizeNS;
-                    var num3 = Height - (yPadding + ScrollWidth) * 2 - yPadding * 2;
-                    var num4 = (int) Math.Round(checked(ScrollWidth + yPadding * 2) +
-                                                num3 / (double) ScrollSteps * ScrollOffset);
-                    var num5 = (int) Math.Round(num3 / (double) ScrollSteps);
-                    if ((e.Y < num4) & (ScrollOffset > 0))
+                    cursor = Cursors.SizeNS;
+                    var num3 = Height - (_yPadding + _scrollWidth) * 2 - _yPadding * 2;
+                    var num4 = (int) Math.Round(checked(_scrollWidth + _yPadding * 2) +
+                                                num3 / (double) _scrollSteps * _scrollOffset);
+                    var num5 = (int) Math.Round(num3 / (double) _scrollSteps);
+                    if ((e.Y < num4) & (_scrollOffset > 0))
                     {
-                        ScrollOffset--;
+                        _scrollOffset--;
                         Draw();
                     }
-                    else if ((e.Y > num4 + num5) & (ScrollOffset + 1 < ScrollSteps))
+                    else if ((e.Y > num4 + num5) & (_scrollOffset + 1 < _scrollSteps))
                     {
-                        ScrollOffset++;
+                        _scrollOffset++;
                         Draw();
                     }
 
@@ -961,36 +964,36 @@ namespace Mids_Reborn.Controls
                 if (flag) Draw();
 
                 Cursor = cursor;
-                LastMouseMoveTarget = mouseTarget;
+                _lastMouseMoveTarget = mouseTarget;
             }
         }
 
         private void ListLabelV3_MouseUp(object sender, MouseEventArgs e)
         {
-            DragMode = false;
-            if (Cursor == System.Windows.Forms.Cursors.SizeNS) Cursor = System.Windows.Forms.Cursors.Default;
+            _dragMode = false;
+            if (Cursor == Cursors.SizeNS) Cursor = Cursors.Default;
         }
 
         private void ListLabelV3_Paint(object sender, PaintEventArgs e)
         {
-            if (bxBuffer == null) Draw();
+            if (_bxBuffer == null) Draw();
 
-            if (bxBuffer != null)
-                e.Graphics.DrawImage(bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
+            if (_bxBuffer != null)
+                e.Graphics.DrawImage(_bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
         }
 
         private void ListLabelV3_Resize(object sender, EventArgs e)
         {
-            ScrollOffset = 0;
+            _scrollOffset = 0;
             Recalculate();
             Draw();
         }
 
-        public void UpdateTextColors(LLItemState State, Color color)
+        public void UpdateTextColors(LlItemState state, Color color)
         {
-            if ((State < LLItemState.Enabled) | (State > LLItemState.Heading))
+            if ((state < LlItemState.Enabled) | (state > LlItemState.Heading))
                 return;
-            Colors[(int) State] = color;
+            _colors[(int) state] = color;
             Draw();
         }
 
@@ -1002,12 +1005,12 @@ namespace Mids_Reborn.Controls
 
         private void ListLabelV3_Load(object sender, EventArgs e)
         {
-            szNormal = Size;
-            DisableRedraw = true;
+            _szNormal = Size;
+            _disableRedraw = true;
             InitBuffer();
             Recalculate();
             FillDefaultItems();
-            DisableRedraw = false;
+            _disableRedraw = false;
         }
 
         private void Draw()
@@ -1016,93 +1019,93 @@ namespace Mids_Reborn.Controls
 
             checked
             {
-                if (DisableRedraw) return;
+                if (_disableRedraw) return;
                 if (!Visible) return;
                 InitBuffer();
                 if ((Width == 0) | (Height == 0)) return;
-                bxBuffer.Graphics.Clear(isExpanded ? Color.Black : BackColor);
-                for (var i = ScrollOffset; i < _Items.Count; i++) DrawItem(i);
+                _bxBuffer.Graphics.Clear(IsExpanded ? Color.Black : BackColor);
+                for (var i = _scrollOffset; i < _items.Count; i++) DrawItem(i);
 
                 DrawScrollBar();
                 DrawExpandButton();
                 var graphics = CreateGraphics();
-                graphics.DrawImageUnscaled(bxBuffer.Bitmap, 0, 0);
+                graphics.DrawImageUnscaled(_bxBuffer.Bitmap, 0, 0);
             }
         }
 
-        private void DrawItem(int Index)
+        private void DrawItem(int index)
         {
             checked
             {
-                if (Index < 0) return;
-                if (Index < ScrollOffset) return;
-                if (Index > _Items.Count - 1)  return;
+                if (index < 0) return;
+                if (index < _scrollOffset) return;
+                if (index > _items.Count - 1)  return;
                 var num = 0;
-                for (var i = ScrollOffset; i < Index; i++)
+                for (var i = _scrollOffset; i < index; i++)
                 {
-                    num += _Items[i].ItemHeight;
+                    num += _items[i].ItemHeight;
                     if (num > Height) return;
                 }
 
-                var height = _Items[Index].ItemHeight;
-                if (_Items[Index].LineCount == 1)
+                var height = _items[index].ItemHeight;
+                if (_items[index].LineCount == 1)
                 {
-                    if (num + _Items[Index].ItemHeight > TextArea.Height) return;
+                    if (num + _items[index].ItemHeight > _textArea.Height) return;
                 }
-                else if (num + _Items[Index].ItemHeight > TextArea.Height)
+                else if (num + _items[index].ItemHeight > _textArea.Height)
                 {
-                    if (num + ActualLineHeight > TextArea.Height) return;
+                    if (num + ActualLineHeight > _textArea.Height) return;
 
-                    height = ActualLineHeight - yPadding;
+                    height = ActualLineHeight - _yPadding;
                 }
 
-                var rectangle = new Rectangle(TextArea.Left, num, TextArea.Width, height);
+                var rectangle = new Rectangle(_textArea.Left, num, _textArea.Width, height);
                 var stringFormat = new StringFormat();
-                stringFormat.Alignment = _Items[Index].TextAlign switch
+                stringFormat.Alignment = _items[index].TextAlign switch
                 {
-                    LLTextAlign.Left => StringAlignment.Near,
-                    LLTextAlign.Center => StringAlignment.Center,
-                    LLTextAlign.Right => StringAlignment.Far,
+                    LlTextAlign.Left => StringAlignment.Near,
+                    LlTextAlign.Center => StringAlignment.Center,
+                    LlTextAlign.Right => StringAlignment.Far,
                     _ => stringFormat.Alignment
                 };
 
                 var fontStyle = FontStyle.Regular;
-                if (_Items[Index].Bold) fontStyle++;
-                if (_Items[Index].Italic) fontStyle += 2;
-                if (_Items[Index].Underline) fontStyle += 4;
-                if (_Items[Index].Strikethrough) fontStyle += 8;
+                if (_items[index].Bold) fontStyle++;
+                if (_items[index].Italic) fontStyle += 2;
+                if (_items[index].Underline) fontStyle += 4;
+                if (_items[index].Strikethrough) fontStyle += 8;
 
-                var font = new Font(new FontFamily("Tahoma"), Font.Size, fontStyle);
-                if (Index == HoverID && HighlightOn[(int) _Items[Index].ItemState])
+                var font = new Font(Fonts.Family("Noto Sans"), Font.Size, fontStyle);
+                if (index == HoverId && _highlightOn[(int) _items[index].ItemState])
                 {
-                    var brush = new SolidBrush(hvrColor);
-                    bxBuffer.Graphics.FillRectangle(brush, rectangle);
+                    var brush = new SolidBrush(_hvrColor);
+                    _bxBuffer.Graphics.FillRectangle(brush, rectangle);
                 }
 
                 var brush2 = new SolidBrush(Color.Black);
-                if (TextOutline)
+                if (_textOutline)
                 {
                     var r = rectangle;
                     r.X--;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.Y--;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.X++;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.X++;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.Y++;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.Y++;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.X--;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                     r.X--;
-                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, r, stringFormat);
                 }
 
-                brush2 = new SolidBrush(Colors[(int) _Items[Index].ItemState]);
-                bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, rectangle, stringFormat);
+                brush2 = new SolidBrush(_colors[(int) _items[index].ItemState]);
+                _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, rectangle, stringFormat);
 
             }
         }
@@ -1110,18 +1113,18 @@ namespace Mids_Reborn.Controls
         private int GetVisibleLineCount()
         {
             int result;
-            if (!canScroll)
+            if (!_canScroll)
             {
-                ScrollSteps = 0;
+                _scrollSteps = 0;
                 result = 0;
             }
-            else if (isExpanded)
+            else if (IsExpanded)
             {
                 result = GetTotalLineCount();
             }
             else
             {
-                result = checked((int) Math.Round(Conversion.Int(TextArea.Height / (double) ActualLineHeight)));
+                result = checked((int) Math.Round(Conversion.Int(_textArea.Height / (double) ActualLineHeight)));
             }
 
             return result;
@@ -1129,108 +1132,108 @@ namespace Mids_Reborn.Controls
 
         private int GetTotalLineCount()
         {
-            return _Items.Sum(e => e.LineCount);
+            return _items.Sum(e => e.LineCount);
         }
 
         private int GetScrollSteps()
         {
             checked
             {
-                if (!canScroll)
+                if (!_canScroll)
                 {
-                    ScrollSteps = 0;
+                    _scrollSteps = 0;
                     return 0;
                 }
 
                 var num = 0;
                 var wrapCount = 0;
-                foreach (var e in _Items)
+                foreach (var e in _items)
                 {
                     num += e.LineCount;
-                    if (num > VisibleLineCount) wrapCount++;
+                    if (num > _visibleLineCount) wrapCount++;
                 }
 
                 // Zed: add an extra scroll step to ensure the last element is always visible
                 if (wrapCount > 0) wrapCount++;
-                ScrollSteps = (wrapCount <= 1) ? 0 : wrapCount + 1;
+                _scrollSteps = (wrapCount <= 1) ? 0 : wrapCount + 1;
 
-                return ScrollSteps;
+                return _scrollSteps;
             }
         }
 
         private void DrawScrollBar()
         {
-            if ((ScrollWidth < 1) | !canScroll | (ScrollSteps < 1))
+            if ((_scrollWidth < 1) | !_canScroll | (_scrollSteps < 1))
                 return;
             SolidBrush brush;
-            var pen = new Pen(scBarColor);
+            var pen = new Pen(_scBarColor);
             var pen2 = new Pen(Color.FromArgb(96, 255, 255, 255), 1f);
             var pen3 = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
             PointF[] array;
             Rectangle rect;
             checked
             {
-                bxBuffer.Graphics.DrawLine(pen, (int) Math.Round(TextArea.Right + ScrollWidth / 2.0),
-                    yPadding + ScrollWidth,
-                    (int) Math.Round(TextArea.Right + ScrollWidth / 2.0), Height - (ScrollWidth + yPadding));
-                brush = new SolidBrush(scButtonColor);
+                _bxBuffer.Graphics.DrawLine(pen, (int) Math.Round(_textArea.Right + _scrollWidth / 2.0),
+                    _yPadding + _scrollWidth,
+                    (int) Math.Round(_textArea.Right + _scrollWidth / 2.0), Height - (_scrollWidth + _yPadding));
+                brush = new SolidBrush(_scButtonColor);
                 array = new PointF[3];
-                if (ScrollSteps > 0)
+                if (_scrollSteps > 0)
                 {
-                    var num = Height - (yPadding + ScrollWidth) * 2 - yPadding * 2;
-                    var y = (int) Math.Round(checked(ScrollWidth + yPadding * 2) +
-                                             num / (double) ScrollSteps * ScrollOffset);
-                    var height = (int) Math.Round(num / (double) ScrollSteps);
-                    rect = new Rectangle(TextArea.Right, y, ScrollWidth, height);
-                    bxBuffer.Graphics.FillRectangle(brush, rect);
-                    bxBuffer.Graphics.DrawLine(pen2, rect.Left, rect.Top, rect.Left, rect.Bottom);
-                    bxBuffer.Graphics.DrawLine(pen2, rect.Left + 1, rect.Top, rect.Right, rect.Top);
-                    bxBuffer.Graphics.DrawLine(pen3, rect.Right, rect.Top, rect.Right, rect.Bottom);
-                    bxBuffer.Graphics.DrawLine(pen3, rect.Left + 1, rect.Bottom, rect.Right - 1, rect.Bottom);
+                    var num = Height - (_yPadding + _scrollWidth) * 2 - _yPadding * 2;
+                    var y = (int) Math.Round(checked(_scrollWidth + _yPadding * 2) +
+                                             num / (double) _scrollSteps * _scrollOffset);
+                    var height = (int) Math.Round(num / (double) _scrollSteps);
+                    rect = new Rectangle(_textArea.Right, y, _scrollWidth, height);
+                    _bxBuffer.Graphics.FillRectangle(brush, rect);
+                    _bxBuffer.Graphics.DrawLine(pen2, rect.Left, rect.Top, rect.Left, rect.Bottom);
+                    _bxBuffer.Graphics.DrawLine(pen2, rect.Left + 1, rect.Top, rect.Right, rect.Top);
+                    _bxBuffer.Graphics.DrawLine(pen3, rect.Right, rect.Top, rect.Right, rect.Bottom);
+                    _bxBuffer.Graphics.DrawLine(pen3, rect.Left + 1, rect.Bottom, rect.Right - 1, rect.Bottom);
                 }
 
-                rect = new Rectangle(TextArea.Right, yPadding + ScrollWidth, ScrollWidth,
-                    Height - (ScrollWidth + yPadding) * 2);
+                rect = new Rectangle(_textArea.Right, _yPadding + _scrollWidth, _scrollWidth,
+                    Height - (_scrollWidth + _yPadding) * 2);
                 array[0] = new PointF(rect.Left, rect.Top);
                 array[1] = new PointF(rect.Right, rect.Top);
             }
 
-            array[2] = new PointF(rect.Left + rect.Width / 2f, yPadding);
-            bxBuffer.Graphics.FillPolygon(brush, array);
-            bxBuffer.Graphics.DrawLine(pen2, array[0], array[2]);
-            bxBuffer.Graphics.DrawLine(pen3, array[0], array[1]);
+            array[2] = new PointF(rect.Left + rect.Width / 2f, _yPadding);
+            _bxBuffer.Graphics.FillPolygon(brush, array);
+            _bxBuffer.Graphics.DrawLine(pen2, array[0], array[2]);
+            _bxBuffer.Graphics.DrawLine(pen3, array[0], array[1]);
             array[0] = new PointF(rect.Left, rect.Bottom);
             array[1] = new PointF(rect.Right, rect.Bottom);
-            array[2] = new PointF(rect.Left + rect.Width / 2f, checked(Height - yPadding));
-            bxBuffer.Graphics.FillPolygon(brush, array);
-            bxBuffer.Graphics.DrawLine(pen2, array[0], array[1]);
-            bxBuffer.Graphics.DrawLine(pen3, array[2], array[1]);
+            array[2] = new PointF(rect.Left + rect.Width / 2f, checked(Height - _yPadding));
+            _bxBuffer.Graphics.FillPolygon(brush, array);
+            _bxBuffer.Graphics.DrawLine(pen2, array[0], array[1]);
+            _bxBuffer.Graphics.DrawLine(pen3, array[2], array[1]);
         }
 
         private void DrawExpandButton()
         {
-            if (!canExpand | (!isExpanded & (ScrollSteps < 1)))
+            if (!_canExpand | (!IsExpanded & (_scrollSteps < 1)))
                 return;
-            var pen = new Pen(scBarColor);
+            var pen = new Pen(_scBarColor);
             var pen2 = new Pen(Color.FromArgb(96, 255, 255, 255), 1f);
             var pen3 = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
-            var brush = new SolidBrush(scButtonColor);
+            var brush = new SolidBrush(_scButtonColor);
             var array = new PointF[3];
-            var rectangle = checked(new Rectangle((int) Math.Round(Width / 3.0), Height - (ScrollWidth + yPadding),
-                (int) Math.Round(Width / 3.0), ScrollWidth - yPadding));
-            if (isExpanded)
+            var rectangle = checked(new Rectangle((int) Math.Round(Width / 3.0), Height - (_scrollWidth + _yPadding),
+                (int) Math.Round(Width / 3.0), _scrollWidth - _yPadding));
+            if (IsExpanded)
             {
                 array[0] = new PointF(rectangle.Left, rectangle.Bottom);
                 array[1] = new PointF(rectangle.Right, rectangle.Bottom);
                 array[2] = new PointF(rectangle.Left + rectangle.Width / 2f, rectangle.Top);
-                bxBuffer.Graphics.FillPolygon(brush, array);
-                bxBuffer.Graphics.DrawLine(pen2, array[0], array[2]);
-                bxBuffer.Graphics.DrawLine(pen3, array[0], array[1]);
+                _bxBuffer.Graphics.FillPolygon(brush, array);
+                _bxBuffer.Graphics.DrawLine(pen2, array[0], array[2]);
+                _bxBuffer.Graphics.DrawLine(pen3, array[0], array[1]);
                 checked
                 {
-                    bxBuffer.Graphics.DrawLine(pen, 0, 0, 0, Height - 1);
-                    bxBuffer.Graphics.DrawLine(pen, 0, Height - 1, Width - 1, Height - 1);
-                    bxBuffer.Graphics.DrawLine(pen, Width - 1, Height, Width - 1, 0);
+                    _bxBuffer.Graphics.DrawLine(pen, 0, 0, 0, Height - 1);
+                    _bxBuffer.Graphics.DrawLine(pen, 0, Height - 1, Width - 1, Height - 1);
+                    _bxBuffer.Graphics.DrawLine(pen, Width - 1, Height, Width - 1, 0);
                 }
             }
             else
@@ -1238,13 +1241,13 @@ namespace Mids_Reborn.Controls
                 array[0] = new PointF(rectangle.Left, rectangle.Top);
                 array[1] = new PointF(rectangle.Right, rectangle.Top);
                 array[2] = new PointF(rectangle.Left + rectangle.Width / 2f, rectangle.Bottom);
-                bxBuffer.Graphics.FillPolygon(brush, array);
-                bxBuffer.Graphics.DrawLine(pen2, array[0], array[1]);
-                bxBuffer.Graphics.DrawLine(pen3, array[2], array[1]);
+                _bxBuffer.Graphics.FillPolygon(brush, array);
+                _bxBuffer.Graphics.DrawLine(pen2, array[0], array[1]);
+                _bxBuffer.Graphics.DrawLine(pen3, array[2], array[1]);
             }
         }
 
-        private enum eMouseTarget
+        private enum EMouseTarget
         {
             None,
             Item,
@@ -1258,11 +1261,11 @@ namespace Mids_Reborn.Controls
 
         public class ListLabelItemV3
         {
-            public readonly int IDXPower;
-            public readonly int nIDPower;
-            public readonly int nIDSet;
-            private readonly string sTag;
-            public LLFontFlags FontFlags;
+            public readonly int IdxPower;
+            public readonly int NIdPower;
+            public readonly int NIdSet;
+            private readonly string _sTag;
+            public LlFontFlags FontFlags;
             public int Index;
             public int ItemHeight;
             public int LineCount;
@@ -1272,84 +1275,84 @@ namespace Mids_Reborn.Controls
             {
                 Text = "";
                 WrappedText = "";
-                ItemState = LLItemState.Enabled;
-                FontFlags = LLFontFlags.Normal;
-                TextAlign = LLTextAlign.Left;
-                nIDSet = -1;
-                IDXPower = -1;
-                nIDPower = -1;
-                sTag = "";
+                ItemState = LlItemState.Enabled;
+                FontFlags = LlFontFlags.Normal;
+                TextAlign = LlTextAlign.Left;
+                NIdSet = -1;
+                IdxPower = -1;
+                NIdPower = -1;
+                _sTag = "";
                 LineCount = 1;
                 ItemHeight = 1;
                 Index = -1;
             }
 
-            public ListLabelItemV3(string iText, LLItemState iState, int inIDSet = -1, int iIDXPower = -1, int inIDPower = -1, string iStringTag = "", LLFontFlags iFont = LLFontFlags.Normal, LLTextAlign iAlign = LLTextAlign.Left)
+            public ListLabelItemV3(string iText, LlItemState iState, int inIdSet = -1, int iIdxPower = -1, int inIdPower = -1, string iStringTag = "", LlFontFlags iFont = LlFontFlags.Normal, LlTextAlign iAlign = LlTextAlign.Left)
             {
                 Text = "";
                 WrappedText = "";
-                ItemState = LLItemState.Enabled;
-                FontFlags = LLFontFlags.Normal;
-                TextAlign = LLTextAlign.Left;
-                nIDSet = -1;
-                IDXPower = -1;
-                nIDPower = -1;
-                sTag = "";
+                ItemState = LlItemState.Enabled;
+                FontFlags = LlFontFlags.Normal;
+                TextAlign = LlTextAlign.Left;
+                NIdSet = -1;
+                IdxPower = -1;
+                NIdPower = -1;
+                _sTag = "";
                 LineCount = 1;
                 ItemHeight = 1;
                 Index = -1;
                 Text = iText;
                 ItemState = iState;
-                nIDSet = inIDSet;
-                IDXPower = iIDXPower;
-                nIDPower = inIDPower;
-                sTag = iStringTag;
+                NIdSet = inIdSet;
+                IdxPower = iIdxPower;
+                NIdPower = inIdPower;
+                _sTag = iStringTag;
                 FontFlags = iFont;
                 TextAlign = iAlign;
             }
 
-            public ListLabelItemV3(ListLabelItemV3 Template)
+            public ListLabelItemV3(ListLabelItemV3 template)
             {
                 Text = "";
                 WrappedText = "";
-                ItemState = LLItemState.Enabled;
-                FontFlags = LLFontFlags.Normal;
-                TextAlign = LLTextAlign.Left;
-                nIDSet = -1;
-                IDXPower = -1;
-                nIDPower = -1;
-                sTag = "";
+                ItemState = LlItemState.Enabled;
+                FontFlags = LlFontFlags.Normal;
+                TextAlign = LlTextAlign.Left;
+                NIdSet = -1;
+                IdxPower = -1;
+                NIdPower = -1;
+                _sTag = "";
                 LineCount = 1;
                 ItemHeight = 1;
                 Index = -1;
-                Text = Template.Text;
-                ItemState = Template.ItemState;
-                FontFlags = Template.FontFlags;
-                TextAlign = Template.TextAlign;
-                LineCount = Template.LineCount;
-                ItemHeight = Template.ItemHeight;
-                nIDSet = Template.nIDSet;
-                IDXPower = Template.IDXPower;
-                nIDPower = Template.nIDPower;
-                sTag = Template.sTag;
+                Text = template.Text;
+                ItemState = template.ItemState;
+                FontFlags = template.FontFlags;
+                TextAlign = template.TextAlign;
+                LineCount = template.LineCount;
+                ItemHeight = template.ItemHeight;
+                NIdSet = template.NIdSet;
+                IdxPower = template.IdxPower;
+                NIdPower = template.NIdPower;
+                _sTag = template._sTag;
             }
 
             public string Text { get; set; }
 
-            public LLItemState ItemState { get; set; }
+            public LlItemState ItemState { get; set; }
 
             public bool Bold
             {
-                get => (FontFlags & LLFontFlags.Bold) > LLFontFlags.Normal;
+                get => (FontFlags & LlFontFlags.Bold) > LlFontFlags.Normal;
                 set
                 {
                     checked
                     {
                         if (value)
                         {
-                            if ((~FontFlags & LLFontFlags.Bold) > LLFontFlags.Normal) FontFlags++;
+                            if ((~FontFlags & LlFontFlags.Bold) > LlFontFlags.Normal) FontFlags++;
                         }
-                        else if ((FontFlags & LLFontFlags.Bold) > LLFontFlags.Normal)
+                        else if ((FontFlags & LlFontFlags.Bold) > LlFontFlags.Normal)
                         {
                             FontFlags--;
                         }
@@ -1359,16 +1362,16 @@ namespace Mids_Reborn.Controls
 
             public bool Italic
             {
-                get => (FontFlags & LLFontFlags.Italic) > LLFontFlags.Normal;
+                get => (FontFlags & LlFontFlags.Italic) > LlFontFlags.Normal;
                 set
                 {
                     checked
                     {
                         if (value)
                         {
-                            if ((~FontFlags & LLFontFlags.Italic) > LLFontFlags.Normal) FontFlags += 2;
+                            if ((~FontFlags & LlFontFlags.Italic) > LlFontFlags.Normal) FontFlags += 2;
                         }
-                        else if ((FontFlags & LLFontFlags.Italic) > LLFontFlags.Normal)
+                        else if ((FontFlags & LlFontFlags.Italic) > LlFontFlags.Normal)
                         {
                             FontFlags -= 2;
                         }
@@ -1378,16 +1381,16 @@ namespace Mids_Reborn.Controls
 
             public bool Underline
             {
-                get => (FontFlags & LLFontFlags.Underline) > LLFontFlags.Normal;
+                get => (FontFlags & LlFontFlags.Underline) > LlFontFlags.Normal;
                 set
                 {
                     checked
                     {
                         if (value)
                         {
-                            if ((~FontFlags & LLFontFlags.Underline) > LLFontFlags.Normal) FontFlags += 4;
+                            if ((~FontFlags & LlFontFlags.Underline) > LlFontFlags.Normal) FontFlags += 4;
                         }
-                        else if ((FontFlags & LLFontFlags.Underline) > LLFontFlags.Normal)
+                        else if ((FontFlags & LlFontFlags.Underline) > LlFontFlags.Normal)
                         {
                             FontFlags -= 4;
                         }
@@ -1397,16 +1400,16 @@ namespace Mids_Reborn.Controls
 
             public bool Strikethrough
             {
-                get => (FontFlags & LLFontFlags.Strikethrough) > LLFontFlags.Normal;
+                get => (FontFlags & LlFontFlags.Strikethrough) > LlFontFlags.Normal;
                 set
                 {
                     checked
                     {
                         if (value)
                         {
-                            if ((~FontFlags & LLFontFlags.Strikethrough) > LLFontFlags.Normal) FontFlags += 8;
+                            if ((~FontFlags & LlFontFlags.Strikethrough) > LlFontFlags.Normal) FontFlags += 8;
                         }
-                        else if ((FontFlags & LLFontFlags.Strikethrough) > LLFontFlags.Normal)
+                        else if ((FontFlags & LlFontFlags.Strikethrough) > LlFontFlags.Normal)
                         {
                             FontFlags -= 8;
                         }
@@ -1414,7 +1417,7 @@ namespace Mids_Reborn.Controls
                 }
             }
 
-            public LLTextAlign TextAlign { get; set; }
+            public LlTextAlign TextAlign { get; set; }
         }
     }
 }

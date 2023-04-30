@@ -56,7 +56,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // OmegaButton
             // 
             this.OmegaButton.Checked = false;
-            this.OmegaButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.OmegaButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.OmegaButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.OmegaButton.Location = new System.Drawing.Point(234, 68);
             this.OmegaButton.Name = "OmegaButton";
@@ -69,7 +69,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // VitaeButton
             // 
             this.VitaeButton.Checked = false;
-            this.VitaeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.VitaeButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.VitaeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.VitaeButton.Location = new System.Drawing.Point(123, 68);
             this.VitaeButton.Name = "VitaeButton";
@@ -82,7 +82,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // StanceButton
             // 
             this.StanceButton.Checked = false;
-            this.StanceButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.StanceButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.StanceButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.StanceButton.Location = new System.Drawing.Point(345, 40);
             this.StanceButton.Name = "StanceButton";
@@ -95,7 +95,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // GenesisButton
             // 
             this.GenesisButton.Checked = false;
-            this.GenesisButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.GenesisButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.GenesisButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.GenesisButton.Location = new System.Drawing.Point(234, 40);
             this.GenesisButton.Name = "GenesisButton";
@@ -108,7 +108,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // hybridBtn
             // 
             this.hybridBtn.Checked = false;
-            this.hybridBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.hybridBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.hybridBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.hybridBtn.Location = new System.Drawing.Point(123, 40);
             this.hybridBtn.Name = "hybridBtn";
@@ -121,7 +121,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // destinyBtn
             // 
             this.destinyBtn.Checked = false;
-            this.destinyBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.destinyBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.destinyBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.destinyBtn.Location = new System.Drawing.Point(12, 40);
             this.destinyBtn.Name = "destinyBtn";
@@ -134,7 +134,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // loreBtn
             // 
             this.loreBtn.Checked = false;
-            this.loreBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.loreBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.loreBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.loreBtn.Location = new System.Drawing.Point(345, 12);
             this.loreBtn.Name = "loreBtn";
@@ -147,7 +147,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // interfaceBtn
             // 
             this.interfaceBtn.Checked = false;
-            this.interfaceBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.interfaceBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.interfaceBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.interfaceBtn.Location = new System.Drawing.Point(234, 12);
             this.interfaceBtn.Name = "interfaceBtn";
@@ -160,7 +160,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // judgementBtn
             // 
             this.judgementBtn.Checked = false;
-            this.judgementBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.judgementBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.judgementBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.judgementBtn.Location = new System.Drawing.Point(123, 12);
             this.judgementBtn.Name = "judgementBtn";
@@ -173,7 +173,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // alphaBtn
             // 
             this.alphaBtn.Checked = true;
-            this.alphaBtn.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.alphaBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.alphaBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.alphaBtn.Location = new System.Drawing.Point(12, 12);
             this.alphaBtn.Name = "alphaBtn";
@@ -221,7 +221,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.PopInfo.BXHeight = 1024;
             this.PopInfo.ColumnPosition = 0.5F;
             this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.PopInfo.ForeColor = System.Drawing.Color.Black;
             this.PopInfo.InternalPadding = 3;
             this.PopInfo.Location = new System.Drawing.Point(3, 3);
@@ -235,7 +235,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lblLock.BackColor = System.Drawing.Color.Red;
             this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblLock.ForeColor = System.Drawing.Color.White;
             this.lblLock.Location = new System.Drawing.Point(3, 585);
             this.lblLock.Name = "lblLock";
@@ -248,7 +248,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibClose
             // 
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.ibClose.Location = new System.Drawing.Point(172, 585);
             this.ibClose.Name = "ibClose";
@@ -282,8 +282,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // frmIncarnates
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(466, 614);
             this.Controls.Add(this.lblLock);

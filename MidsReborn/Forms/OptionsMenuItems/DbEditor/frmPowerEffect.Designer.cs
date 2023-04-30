@@ -140,7 +140,7 @@
             // lblEffectDescription
             // 
             this.lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblEffectDescription.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblEffectDescription.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblEffectDescription.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblEffectDescription.Location = new System.Drawing.Point(14, 11);
             this.lblEffectDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -807,7 +807,7 @@
             // 
             // label13
             // 
-            this.label13.Font = new System.Drawing.Font("Arial", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
             this.label13.Location = new System.Drawing.Point(4, 6);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
@@ -1222,8 +1222,8 @@
             // 
             // frmPowerEffect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1623, 698);
             this.Controls.Add(this.tpPowerAttribs);
             this.Controls.Add(this.btnExprBuilder);
