@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls;
@@ -15,6 +17,9 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using FontStyle = System.Drawing.FontStyle;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -1369,8 +1374,8 @@ namespace Mids_Reborn.Forms.Controls
 
             var graphics = pnlTabs.CreateGraphics();
             var pen = new Pen(Color.Black);
-            var font1 = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Regular);//
-            var font2 = new Font(Fonts.Family("Noto Sans"), 9.25f, FontStyle.Bold);
+            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);//
+            var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);
@@ -1420,25 +1425,36 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
 
-            RectangleF layoutRectangle;
+            Rectangle layoutRectangle;
+            string? pageTitle;
+            Size pageMeasured;
             for (var index = 0; index < Pages.Length; index++)
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
-                layoutRectangle = new RectangleF(rect.X, rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
+                pageTitle = Pages[TabPage];
+                pageMeasured = TextRenderer.MeasureText(pageTitle, font1);
+                //layoutRectangle = new Rectangle(rect.X, rect.Y, rect.Width, pageMeasured.Height);
+                //layoutRectangle = new Rectangle(rect.X, rect.Y + (int)((rect.Height - font1.GetHeight(graphics)) / 2.0), rect.Width, (int)font1.GetHeight(graphics));
                 if (TabsMask != null && !TabsMask[index])
                 {
                     continue;
                 }
 
                 extendedBitmap.Graphics?.DrawRectangle(pen, rect);
-                extendedBitmap.Graphics?.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
+                TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[index], font1, rect, Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                //extendedBitmap.Graphics?.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
             }
 
             rect = new Rectangle(70 * TabPage, 0, 70, pnlTabs.Height);
-            layoutRectangle = new RectangleF(rect.X, (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
+
+            pageTitle = Pages[TabPage];
+            pageMeasured = TextRenderer.MeasureText(pageTitle, font2);
+            //layoutRectangle = new Rectangle(rect.X, rect.Y, rect.Width, pageMeasured.Height);
+            //layoutRectangle = new Rectangle(rect.X, rect.Y + (int)((rect.Height - font1.GetHeight(graphics)) / 2.0), rect.Width, (int)font1.GetHeight(graphics));
             extendedBitmap.Graphics?.FillRectangle(solidBrush3, rect);
             extendedBitmap.Graphics?.DrawRectangle(pen, rect);
-            extendedBitmap.Graphics?.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle, format);
+            //extendedBitmap.Graphics?.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle2, format);
+            TextRenderer.DrawText(extendedBitmap.Graphics!, Pages[TabPage], font2, rect, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
