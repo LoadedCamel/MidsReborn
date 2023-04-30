@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -1373,9 +1375,11 @@ namespace Mids_Reborn.Forms.Controls
             if (pnlTabs.IsDisposed) return;
 
             var graphics = pnlTabs.CreateGraphics();
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var pen = new Pen(Color.Black);
-            var font1 = new Font("Segoe UI", 8.25f, FontStyle.Bold);//
-            var font2 = new Font("Segoe UI", 10.25f, FontStyle.Bold);
+            var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);
+            var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
             var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);
