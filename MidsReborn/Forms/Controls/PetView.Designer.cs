@@ -36,7 +36,7 @@ namespace Mids_Reborn.Forms.Controls
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PetView));
             this.info_Damage = new Mids_Reborn.Controls.ctlDamageDisplay();
             this.lblDmg = new System.Windows.Forms.Label();
-            this.powerScaler = new Mids_Reborn.Controls.ctlMultiGraph();
+            this.powerScaler = new Mids_Reborn.Controls.CtlMultiGraph();
             this.info_TxtLarge = new System.Windows.Forms.RichTextBox();
             this.info_TxtSmall = new System.Windows.Forms.RichTextBox();
             this.info_Title = new Label();
@@ -134,7 +134,7 @@ namespace Mids_Reborn.Forms.Controls
             this.powerScaler.PaddingX = 2F;
             this.powerScaler.PaddingY = 2F;
             this.powerScaler.PerItemScales = null;
-            this.powerScaler.RulerPos = Mids_Reborn.Controls.ctlMultiGraph.RulerPosition.Top;
+            this.powerScaler.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
             this.powerScaler.ScaleHeight = 32;
             this.powerScaler.ScaleIndex = 8;
             this.powerScaler.ShowScale = true;
@@ -142,7 +142,7 @@ namespace Mids_Reborn.Forms.Controls
             this.powerScaler.Style = Mids_Reborn.Core.Enums.GraphStyle.baseOnly;
             this.powerScaler.TabIndex = 72;
             this.powerScaler.TextWidth = 100;
-            this.powerScaler.BarClick += new Mids_Reborn.Controls.ctlMultiGraph.BarClickEventHandler(this.powerScaler_BarClick);
+            this.powerScaler.BarClick += new Mids_Reborn.Controls.CtlMultiGraph.BarClickEventHandler(this.powerScaler_BarClick);
             // 
             // info_TxtLarge
             // 
@@ -304,7 +304,7 @@ namespace Mids_Reborn.Forms.Controls
         #endregion
         internal Mids_Reborn.Controls.ctlDamageDisplay info_Damage;
         private System.Windows.Forms.Label lblDmg;
-        private Mids_Reborn.Controls.ctlMultiGraph powerScaler;
+        private Mids_Reborn.Controls.CtlMultiGraph powerScaler;
         internal System.Windows.Forms.RichTextBox info_TxtLarge;
         private System.Windows.Forms.RichTextBox info_TxtSmall;
         private Label info_Title;

@@ -40,7 +40,7 @@ namespace Mids_Reborn.Forms
             this.dvFloat.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             this.dvFloat.DrawVillain = false;
             this.dvFloat.Floating = true;
-            this.dvFloat.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.dvFloat.Font = new System.Drawing.Font("Segoe UI", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.dvFloat.Location = new System.Drawing.Point(0, 0);
             this.dvFloat.Name = "dvFloat";
 

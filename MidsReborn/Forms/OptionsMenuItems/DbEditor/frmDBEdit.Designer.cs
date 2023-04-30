@@ -105,7 +105,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label1
             // 
             this.Label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label1.Location = new System.Drawing.Point(5, 2);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(194, 26);
@@ -116,7 +116,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label2
             // 
             this.Label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label2.Location = new System.Drawing.Point(611, 2);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(197, 26);
@@ -129,7 +129,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblDate.BackColor = System.Drawing.Color.Transparent;
             this.lblDate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblDate.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblDate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDate.Location = new System.Drawing.Point(611, 30);
             this.lblDate.Name = "lblDate";
             this.lblDate.Size = new System.Drawing.Size(197, 26);
@@ -142,7 +142,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditEnh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(255)))), ((int)(((byte)(102)))));
             this.btnEditEnh.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditEnh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEditEnh.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnEditEnh.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnEditEnh.ForeColor = System.Drawing.Color.Black;
             this.btnEditEnh.Location = new System.Drawing.Point(3, 71);
             this.btnEditEnh.Name = "btnEditEnh";
@@ -157,7 +157,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditIOSetPvE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(222)))), ((int)(((byte)(255)))));
             this.btnEditIOSetPvE.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditIOSetPvE.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnEditIOSetPvE.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnEditIOSetPvE.ForeColor = System.Drawing.Color.Black;
             this.btnEditIOSetPvE.Location = new System.Drawing.Point(404, 71);
             this.btnEditIOSetPvE.Name = "btnEditIOSetPvE";
@@ -180,7 +180,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label6
             // 
             this.Label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label6.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label6.Location = new System.Drawing.Point(712, 2);
             this.Label6.Name = "Label6";
             this.Label6.Size = new System.Drawing.Size(96, 47);
@@ -201,7 +201,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label4
             // 
             this.Label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label4.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label4.Location = new System.Drawing.Point(611, 2);
             this.Label4.Name = "Label4";
             this.Label4.Size = new System.Drawing.Size(93, 47);
@@ -222,7 +222,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label15
             // 
             this.Label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label15.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label15.Location = new System.Drawing.Point(510, 2);
             this.Label15.Name = "Label15";
             this.Label15.Size = new System.Drawing.Size(93, 47);
@@ -243,7 +243,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label13
             // 
             this.Label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label13.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label13.Location = new System.Drawing.Point(409, 2);
             this.Label13.Name = "Label13";
             this.Label13.Size = new System.Drawing.Size(93, 47);
@@ -264,7 +264,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label11
             // 
             this.Label11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label11.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label11.Location = new System.Drawing.Point(308, 2);
             this.Label11.Name = "Label11";
             this.Label11.Size = new System.Drawing.Size(93, 47);
@@ -285,7 +285,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label9
             // 
             this.Label9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label9.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label9.Location = new System.Drawing.Point(207, 2);
             this.Label9.Name = "Label9";
             this.Label9.Size = new System.Drawing.Size(93, 47);
@@ -306,7 +306,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label7
             // 
             this.Label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label7.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label7.Location = new System.Drawing.Point(106, 2);
             this.Label7.Name = "Label7";
             this.Label7.Size = new System.Drawing.Size(93, 47);
@@ -328,7 +328,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.Label5.BackColor = System.Drawing.Color.Transparent;
             this.Label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label5.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label5.Location = new System.Drawing.Point(5, 2);
             this.Label5.Name = "Label5";
             this.Label5.Size = new System.Drawing.Size(93, 47);
@@ -341,7 +341,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnClose.BackColor = System.Drawing.Color.Firebrick;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnClose.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Location = new System.Drawing.Point(583, 587);
             this.btnClose.Name = "btnClose";
@@ -356,7 +356,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnSalvage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(168)))), ((int)(((byte)(102)))));
             this.btnSalvage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSalvage.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSalvage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnSalvage.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSalvage.ForeColor = System.Drawing.Color.Black;
             this.btnSalvage.Location = new System.Drawing.Point(404, 139);
             this.btnSalvage.Name = "btnSalvage";
@@ -371,7 +371,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnRecipe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(102)))), ((int)(((byte)(255)))));
             this.btnRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRecipe.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnRecipe.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnRecipe.ForeColor = System.Drawing.Color.Black;
             this.btnRecipe.Location = new System.Drawing.Point(3, 139);
             this.btnRecipe.Name = "btnRecipe";
@@ -386,7 +386,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnEditEntity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(186)))), ((int)(((byte)(194)))));
             this.btnEditEntity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnEditEntity.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEditEntity.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnEditEntity.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnEditEntity.ForeColor = System.Drawing.Color.Black;
             this.btnEditEntity.Location = new System.Drawing.Point(404, 3);
             this.btnEditEntity.Name = "btnEditEntity";
@@ -401,7 +401,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnPSBrowse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(102)))));
             this.btnPSBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnPSBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnPSBrowse.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnPSBrowse.ForeColor = System.Drawing.Color.Black;
             this.btnPSBrowse.Location = new System.Drawing.Point(3, 3);
             this.btnPSBrowse.Name = "btnPSBrowse";
@@ -414,7 +414,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // Label3
             // 
             this.Label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label3.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label3.Location = new System.Drawing.Point(409, 2);
             this.Label3.Name = "Label3";
             this.Label3.Size = new System.Drawing.Size(194, 26);
@@ -425,7 +425,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // exportIndexes
             // 
             this.exportIndexes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.exportIndexes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.exportIndexes.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exportIndexes.ForeColor = System.Drawing.SystemColors.ControlText;
             this.exportIndexes.Location = new System.Drawing.Point(236, 228);
             this.exportIndexes.Name = "exportIndexes";
@@ -439,7 +439,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnExportJSON.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExportJSON.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnExportJSON.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnExportJSON.ForeColor = System.Drawing.Color.Black;
             this.btnExportJSON.Location = new System.Drawing.Point(404, 343);
             this.btnExportJSON.Name = "btnExportJSON";
@@ -453,7 +453,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnJsonImporter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnJsonImporter.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnJsonImporter.ForeColor = System.Drawing.Color.Black;
             this.btnJsonImporter.Location = new System.Drawing.Point(404, 275);
             this.btnJsonImporter.Name = "btnJsonImporter";
@@ -468,7 +468,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(219)))), ((int)(((byte)(102)))));
             this.btnAttribModEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAttribModEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnAttribModEdit.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnAttribModEdit.ForeColor = System.Drawing.Color.Black;
             this.btnAttribModEdit.Location = new System.Drawing.Point(404, 207);
             this.btnAttribModEdit.Name = "btnAttribModEdit";
@@ -483,7 +483,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnGCMIO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(143)))));
             this.btnGCMIO.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnGCMIO.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnGCMIO.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGCMIO.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnGCMIO.ForeColor = System.Drawing.Color.Black;
             this.btnGCMIO.Location = new System.Drawing.Point(3, 207);
             this.btnGCMIO.Name = "btnGCMIO";
@@ -518,7 +518,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.txtPageVol.Cursor = System.Windows.Forms.Cursors.Hand;
             this.txtPageVol.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPageVol.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.txtPageVol.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.txtPageVol.Location = new System.Drawing.Point(207, 2);
             this.txtPageVol.Name = "txtPageVol";
             this.txtPageVol.Size = new System.Drawing.Size(194, 26);
@@ -558,7 +558,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.txtDBVer.AutoSize = true;
             this.txtDBVer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDBVer.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.txtDBVer.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.txtDBVer.Location = new System.Drawing.Point(409, 30);
             this.txtDBVer.Name = "txtDBVer";
             this.txtDBVer.Size = new System.Drawing.Size(194, 26);
@@ -608,7 +608,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.btnDbCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(126)))), ((int)(((byte)(51)))));
             this.btnDbCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnDbCreate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnDbCreate.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDbCreate.ForeColor = System.Drawing.Color.Black;
             this.btnDbCreate.Location = new System.Drawing.Point(17, 586);
             this.btnDbCreate.Name = "btnDbCreate";
@@ -623,7 +623,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnServerDataEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(92)))), ((int)(((byte)(255)))));
             this.btnServerDataEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnServerDataEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnServerDataEdit.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnServerDataEdit.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnServerDataEdit.ForeColor = System.Drawing.Color.Black;
             this.btnServerDataEdit.Location = new System.Drawing.Point(3, 275);
             this.btnServerDataEdit.Name = "btnServerDataEdit";
@@ -667,7 +667,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnGeneratePatch.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.btnGeneratePatch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnGeneratePatch.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnGeneratePatch.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGeneratePatch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnGeneratePatch.ForeColor = System.Drawing.Color.Black;
             this.btnGeneratePatch.Location = new System.Drawing.Point(3, 343);
             this.btnGeneratePatch.Name = "btnGeneratePatch";
@@ -687,7 +687,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.btnClose);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;

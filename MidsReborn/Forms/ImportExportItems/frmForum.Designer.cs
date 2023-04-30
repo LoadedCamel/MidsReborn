@@ -376,7 +376,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // ibCancel
             // 
             this.IBCancel.Checked = false;
-            this.IBCancel.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.IBCancel.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.IBCancel.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.IBCancel.Location = new System.Drawing.Point(52, 431);
             this.IBCancel.Name = "IBCancel";
@@ -390,7 +390,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // ibExport
             // 
             this.IBExport.Checked = false;
-            this.IBExport.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.IBExport.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.IBExport.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
             this.IBExport.Location = new System.Drawing.Point(246, 431);
             this.IBExport.Name = "IBExport";
@@ -424,7 +424,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             this.Controls.Add(this.GroupBox2);
             this.Controls.Add(this.GroupBox1);
             this.Controls.Add(this.lblRecess);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

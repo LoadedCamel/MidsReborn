@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
@@ -296,7 +297,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblPrimary
             // 
-            this.lblPrimary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblPrimary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPrimary.ForeColor = System.Drawing.Color.White;
             this.lblPrimary.Location = new System.Drawing.Point(20, 166);
@@ -308,7 +309,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblSecondary
             // 
-            this.lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblSecondary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblSecondary.ForeColor = System.Drawing.Color.White;
             this.lblSecondary.Location = new System.Drawing.Point(172, 166);
@@ -354,7 +355,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool1
             // 
-            this.lblPool1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblPool1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool1.ForeColor = System.Drawing.Color.White;
             this.lblPool1.Location = new System.Drawing.Point(0, 5); // 328, 166
@@ -383,7 +384,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool2
             // 
-            this.lblPool2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblPool2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool2.ForeColor = System.Drawing.Color.White;
             this.lblPool2.Location = new System.Drawing.Point(0, 113); // 328, 274
@@ -412,7 +413,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool3
             // 
-            this.lblPool3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblPool3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool3.ForeColor = System.Drawing.Color.White;
             this.lblPool3.Location = new System.Drawing.Point(0, 221); // 328, 382
@@ -441,7 +442,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblPool4
             // 
-            this.lblPool4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblPool4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblPool4.ForeColor = System.Drawing.Color.White;
             this.lblPool4.Location = new System.Drawing.Point(0, 329); // 328, 490
@@ -469,7 +470,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblEpic
             // 
-            this.lblEpic.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblEpic.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblEpic.ForeColor = System.Drawing.Color.White;
             this.lblEpic.Location = new System.Drawing.Point(0, 437); // 328, 598
@@ -484,8 +485,7 @@ namespace Mids_Reborn.Forms
             this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
                 ((int)(((byte)(224)))));
             this.lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblATLocked.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
             this.lblATLocked.Location = new System.Drawing.Point(94, 110);
             this.lblATLocked.Name = "lblATLocked";
@@ -519,7 +519,7 @@ namespace Mids_Reborn.Forms
             this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
                 ((int)(((byte)(224)))));
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLocked0.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
             this.lblLocked0.Location = new System.Drawing.Point(308, 166);
@@ -537,7 +537,7 @@ namespace Mids_Reborn.Forms
             this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
                 ((int)(((byte)(224)))));
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLocked1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
             this.lblLocked1.Location = new System.Drawing.Point(308, 186);
@@ -555,7 +555,7 @@ namespace Mids_Reborn.Forms
             this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
                 ((int)(((byte)(224)))));
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLocked2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
             this.lblLocked2.Location = new System.Drawing.Point(304, 194);
@@ -573,7 +573,7 @@ namespace Mids_Reborn.Forms
             this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
                 ((int)(((byte)(224)))));
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLocked3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
             this.lblLocked3.Location = new System.Drawing.Point(284, 210);
@@ -591,7 +591,7 @@ namespace Mids_Reborn.Forms
             this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
                 ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLockedAncillary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedAncillary.Location = new System.Drawing.Point(268, 230);
@@ -610,7 +610,7 @@ namespace Mids_Reborn.Forms
             this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
                 ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold,
+            this.lblLockedSecondary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedSecondary.Location = new System.Drawing.Point(257, 246);
@@ -1619,7 +1619,7 @@ namespace Mids_Reborn.Forms
             // 
             this.lblCharacter.AutoSize = true;
             this.lblCharacter.BackColor = System.Drawing.Color.Transparent;
-            this.lblCharacter.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold,
+            this.lblCharacter.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.lblCharacter.ForeColor = System.Drawing.Color.White;
             this.lblCharacter.Location = new System.Drawing.Point(3, 3);
@@ -1632,7 +1632,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibAlignmentEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibAlignmentEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibAlignmentEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAlignmentEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibAlignmentEx.CurrentText = "ibAlignmentEx";
             this.ibAlignmentEx.Images.Background = Resources.HeroButton;
             this.ibAlignmentEx.Images.Hover = Resources.HeroButtonHover;
@@ -1658,7 +1658,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibPetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibPetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPetsEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibPetsEx.CurrentText = "ibPetsEx";
             this.ibPetsEx.Images.Background = Resources.HeroButton;
             this.ibPetsEx.Images.Hover = Resources.HeroButtonHover;
@@ -1684,7 +1684,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibTempPowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibTempPowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibTempPowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTempPowersEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibTempPowersEx.Images.Background = Resources.HeroButton;
             this.ibTempPowersEx.Images.Hover = Resources.HeroButtonHover;
             this.ibTempPowersEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1709,7 +1709,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibAccoladesEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibAccoladesEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibAccoladesEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibAccoladesEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibAccoladesEx.CurrentText = "ibAccoladesEx";
             this.ibAccoladesEx.Images.Background = Resources.HeroButton;
             this.ibAccoladesEx.Images.Hover = Resources.HeroButtonHover;
@@ -1735,7 +1735,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibIncarnatePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibIncarnatePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibIncarnatePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibIncarnatePowersEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibIncarnatePowersEx.Images.Background = Resources.HeroButton;
             this.ibIncarnatePowersEx.Images.Hover = Resources.HeroButtonHover;
             this.ibIncarnatePowersEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1760,7 +1760,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPrestigePowersEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibPrestigePowersEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibPrestigePowersEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPrestigePowersEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibPrestigePowersEx.Images.Background = Resources.HeroButton;
             this.ibPrestigePowersEx.Images.Hover = Resources.HeroButtonHover;
             this.ibPrestigePowersEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1785,7 +1785,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPvXEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibPvXEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibPvXEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPvXEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibPvXEx.Images.Background = Resources.HeroButton;
             this.ibPvXEx.Images.Hover = Resources.HeroButtonHover;
             this.ibPvXEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1811,7 +1811,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibRecipeEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibRecipeEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibRecipeEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibRecipeEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibRecipeEx.Images.Background = Resources.HeroButton;
             this.ibRecipeEx.Images.Hover = Resources.HeroButtonHover;
             this.ibRecipeEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1837,7 +1837,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibPopupEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibPopupEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibPopupEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibPopupEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibPopupEx.Images.Background = Resources.HeroButton;
             this.ibPopupEx.Images.Hover = Resources.HeroButtonHover;
             this.ibPopupEx.ImagesAlt.Background = Resources.VillainButton;
@@ -1924,7 +1924,7 @@ namespace Mids_Reborn.Forms
             // llPrimary
             // 
             this.llPrimary.Expandable = true;
-            this.llPrimary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llPrimary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPrimary.HighVis = true;
             this.llPrimary.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1949,7 +1949,7 @@ namespace Mids_Reborn.Forms
             // llSecondary
             // 
             this.llSecondary.Expandable = true;
-            this.llSecondary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llSecondary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llSecondary.HighVis = true;
             this.llSecondary.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1974,7 +1974,7 @@ namespace Mids_Reborn.Forms
             // llPool0
             // 
             this.llPool0.Expandable = true;
-            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llPool0.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1999,7 +1999,7 @@ namespace Mids_Reborn.Forms
             // llPool1
             // 
             this.llPool1.Expandable = true;
-            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llPool1.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool1.ForeColor = System.Drawing.Color.Yellow;
             this.llPool1.HighVis = true;
@@ -2025,7 +2025,7 @@ namespace Mids_Reborn.Forms
             // llPool2
             // 
             this.llPool2.Expandable = true;
-            this.llPool2.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llPool2.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool2.ForeColor = System.Drawing.Color.Yellow;
             this.llPool2.HighVis = true;
@@ -2051,7 +2051,7 @@ namespace Mids_Reborn.Forms
             // llPool3
             // 
             this.llPool3.Expandable = true;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llPool3.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool3.ForeColor = System.Drawing.Color.Yellow;
             this.llPool3.HighVis = true;
@@ -2077,7 +2077,7 @@ namespace Mids_Reborn.Forms
             // llAncillary
             // 
             this.llAncillary.Expandable = true;
-            this.llAncillary.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular,
+            this.llAncillary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llAncillary.HighVis = true;
             this.llAncillary.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -2100,7 +2100,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblName
             // 
-            this.lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+            this.lblName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.Text = "Name:";
@@ -2112,7 +2112,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblOrigin
             // 
-            this.lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+            this.lblOrigin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOrigin.Text = "Origin:";
             this.lblOrigin.Location = new System.Drawing.Point(2, 133);
@@ -2123,7 +2123,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblAT
             // 
-            this.lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold,
+            this.lblAT.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAT.Text = "Archetype:";
             this.lblAT.Location = new System.Drawing.Point(2, 109);
@@ -2158,7 +2158,7 @@ namespace Mids_Reborn.Forms
             this.I9Popup.BXHeight = 675;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
-            this.I9Popup.Font = new System.Drawing.Font("Arial", 13F, System.Drawing.FontStyle.Regular,
+            this.I9Popup.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.I9Popup.ForeColor =
                 System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(48)))), ((int)(((byte)(255)))));
@@ -2176,7 +2176,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibTotalsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibTotalsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibTotalsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTotalsEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibTotalsEx.Images.Background = Resources.HeroButton;
             this.ibTotalsEx.Images.Hover = Resources.HeroButtonHover;
             this.ibTotalsEx.ImagesAlt.Background = Resources.VillainButton;
@@ -2200,7 +2200,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibSlotLevelsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibSlotLevelsEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibSlotLevelsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotLevelsEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibSlotLevelsEx.Images.Background = Resources.HeroButton;
             this.ibSlotLevelsEx.Images.Hover = Resources.HeroButtonHover;
             this.ibSlotLevelsEx.ImagesAlt.Background = Resources.VillainButton;
@@ -2226,7 +2226,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibTeamEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibTeamEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibTeamEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibTeamEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibTeamEx.Images.Background = Resources.HeroButton;
             this.ibTeamEx.Images.Hover = Resources.HeroButtonHover;
             this.ibTeamEx.ImagesAlt.Background = Resources.VillainButton;
@@ -2277,7 +2277,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibSetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibSetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibSetsEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSetsEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibSetsEx.Images.Background = Resources.HeroButton;
             this.ibSetsEx.Images.Hover = Resources.HeroButtonHover;
             this.ibSetsEx.ImagesAlt.Background = Resources.VillainButton;
@@ -2301,7 +2301,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ibSlotInfoEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ibSlotInfoEx.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
-            this.ibSlotInfoEx.Font = new Font("MS Sans Serif", 11f, FontStyle.Bold, GraphicsUnit.Point);
+            this.ibSlotInfoEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
             this.ibSlotInfoEx.CurrentText = "ibSlotInfoEx";
             this.ibSlotInfoEx.Images.Background = Resources.HeroButton;
             this.ibSlotInfoEx.Images.Hover = Resources.HeroButtonHover;
@@ -2402,7 +2402,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.poolsPanel);
             this.Controls.Add(this.enhCheckMode);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular,
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular,
                 System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.KeyPreview = true;

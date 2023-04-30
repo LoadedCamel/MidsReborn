@@ -90,7 +90,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.Label1);
             this.Controls.Add(this.udLevel);
-            this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FrmInputLevel";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

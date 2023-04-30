@@ -2544,7 +2544,7 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
             enhListing.SetItemsBold = MidsContext.Config.RtFont.PairedBold;
             gDef1.Font = new Font(gDef1.Font.FontFamily, 8.25f, style);
-            //gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+            //gDef1.Font = new Font("Segoe UI", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
             gDef2.Font = gDef1.Font;
             gRes1.Font = gDef1.Font;
             gRes2.Font = gDef1.Font;

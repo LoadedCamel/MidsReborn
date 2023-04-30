@@ -181,7 +181,7 @@ namespace Mids_Reborn.Controls
                 gTarget.PageUnit = GraphicsUnit.Pixel;
                 cTarget = iTarget;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -229,7 +229,7 @@ namespace Mids_Reborn.Controls
             gTarget.PageUnit = GraphicsUnit.Pixel;
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            _defaultFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
@@ -243,23 +243,21 @@ namespace Mids_Reborn.Controls
                 {
                     case 2:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
-                        bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
-                            MidsContext.Character.IsHero()
+                        bxBuffer.Graphics?.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
+                        bxBuffer.Graphics?.DrawString("Inherent Powers", new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel), MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
-                            ScaleDown(iValue));
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50), ScaleDown(iValue));
                         break;
                     case 3:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
+                        bxBuffer.Graphics?.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
+
                         break;
                     case 4:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);

@@ -49,7 +49,7 @@ namespace Mids_Reborn.Core
             this.lblStatus1.Size = new System.Drawing.Size(472, 16);
             this.lblStatus1.TabIndex = 4;
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTitle.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.lblTitle.Location = new System.Drawing.Point(8, 6);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(472, 20);
@@ -63,7 +63,7 @@ namespace Mids_Reborn.Core
             this.Controls.Add((System.Windows.Forms.Control)this.lblStatus2);
             this.Controls.Add((System.Windows.Forms.Control)this.lblStatus1);
             this.Controls.Add((System.Windows.Forms.Control)this.lblTitle);
-            this.Font = new System.Drawing.Font("Arial", 8.25f);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25f);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle= System.Windows.Forms.FormBorderStyle.None;
             this.Icon = Resources.MRB_Icon_Concept;

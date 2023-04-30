@@ -154,7 +154,7 @@ namespace Mids_Reborn.Controls
         {
             SuspendLayout();
             AutoScaleMode = AutoScaleMode.Font;
-            Font = new Font(Fonts.Family("Noto Sans"), 11.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+            Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
             Name = "ctlPopUp";
             var size = new Size(167, 104);
             Size = size;

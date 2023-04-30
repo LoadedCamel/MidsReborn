@@ -142,7 +142,7 @@ namespace Mids_Reborn.Controls
             }
 
             var font = new Font(Font.Name, Font.Size * num, Font.Style, GraphicsUnit.Point, 0);
-            //var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 1);
+            //var font = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 1);
             layoutRectangle.Height = font.GetHeight() * num3;
             var contentAlignment = myAlign;
             switch (contentAlignment)

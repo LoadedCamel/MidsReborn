@@ -254,15 +254,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //UpdateData();
         }
 
-        private static void SetFontDataSingle(ref ctlMultiGraph iGraph)
+        private static void SetFontDataSingle(ref CtlMultiGraph iGraph)
         {
             //iGraph.Font = new Font(iGraph.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            iGraph.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            iGraph.Font = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
         }
 
         private void SetFonts()
         {
-            var graphControls = new List<ctlMultiGraph>
+            var graphControls = new List<CtlMultiGraph>
             {
                 graphAcc, graphDam, graphDef, graphDrain, graphHaste, graphHP,
                 graphMaxEnd, graphMovement, graphRec, graphRegen, graphRes,

@@ -389,7 +389,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // SchemaStatus
             // 
             SchemaStatus.AutoSize = true;
-            SchemaStatus.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
             SchemaStatus.Location = new System.Drawing.Point(252, 54);
             SchemaStatus.Name = "SchemaStatus";
@@ -421,7 +421,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblSchemaAssoc
             // 
-            lblSchemaAssoc.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblSchemaAssoc.Location = new System.Drawing.Point(196, 54);
             lblSchemaAssoc.Name = "lblSchemaAssoc";
             lblSchemaAssoc.Size = new System.Drawing.Size(50, 14);
@@ -506,7 +506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // FileAssocStatus
             // 
             FileAssocStatus.AutoSize = true;
-            FileAssocStatus.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
             FileAssocStatus.Location = new System.Drawing.Point(252, 54);
             FileAssocStatus.Name = "FileAssocStatus";
@@ -538,7 +538,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblFileAssoc
             // 
-            lblFileAssoc.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblFileAssoc.Location = new System.Drawing.Point(196, 54);
             lblFileAssoc.Name = "lblFileAssoc";
             lblFileAssoc.Size = new System.Drawing.Size(50, 14);
@@ -600,7 +600,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // Label10
             // 
             Label10.AutoSize = true;
-            Label10.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             Label10.Location = new System.Drawing.Point(19, 268);
             Label10.Name = "Label10";
             Label10.Size = new System.Drawing.Size(285, 15);
@@ -1190,7 +1190,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // optEnh
             // 
-            optEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             optEnh.ForeColor = System.Drawing.SystemColors.ControlText;
             optEnh.Location = new System.Drawing.Point(21, 121);
             optEnh.Name = "optEnh";
@@ -1232,7 +1232,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             Controls.Add(TabControl1);
             Controls.Add(btnCancel);
             Controls.Add(btnOK);
-            Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             ForeColor = System.Drawing.SystemColors.ControlText;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;

@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms
             this.Label1.BackColor = System.Drawing.Color.Transparent;
             this.Label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Label1.ForeColor = System.Drawing.Color.Gold;
             this.Label1.Location = new System.Drawing.Point(0, 0);
             this.Label1.Margin = new System.Windows.Forms.Padding(55, 0, 55, 0);

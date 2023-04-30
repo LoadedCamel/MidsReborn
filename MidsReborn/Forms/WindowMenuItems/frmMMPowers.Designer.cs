@@ -91,7 +91,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.PopInfo.BXHeight = 1024;
             this.PopInfo.ColumnPosition = 0.5f;
             this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.PopInfo.InternalPadding = 3;
             this.PopInfo.Location = new System.Drawing.Point(0, 0);
@@ -107,7 +107,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //
             this.lblLock.BackColor = System.Drawing.Color.Red;
             this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.lblLock.ForeColor = System.Drawing.Color.White;
             this.lblLock.Location = new System.Drawing.Point(12, 205);
             this.lblLock.Name = "lblLock";
@@ -150,7 +150,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //
             this.llRight.AutoSize = true;
             this.llRight.Expandable = false;
-            this.llRight.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.llRight.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.llRight.HighVis = true;
             this.llRight.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llRight.Location = new System.Drawing.Point(202, 3);
@@ -174,7 +174,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //
             this.llLeft.AutoSize = true;
             this.llLeft.Expandable = false;
-            this.llLeft.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.llLeft.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.llLeft.HighVis = true;
             this.llLeft.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llLeft.Location = new System.Drawing.Point(3, 3);
@@ -206,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add((System.Windows.Forms.Control)this.lblLock);
             this.Controls.Add((System.Windows.Forms.Control)this.Panel1);
             this.Controls.Add((System.Windows.Forms.Control)this.ibClose);
-            this.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

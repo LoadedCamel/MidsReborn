@@ -280,7 +280,7 @@ namespace Mids_Reborn.Controls
 
                 // Draw outline text
                 //public HorizontalAlignment OverlayHAlign = HorizontalAlignment.Right;
-                //public Font OverlayTextFont = new Font("Arial", 7f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                //public Font OverlayTextFont = new Font("Segoe UI", 7f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 //public bool EnableOverlayOutline;
                 //public Color OverlayTextColor = Color.WhiteSmoke;
                 //public Color OverlayOutlineColor = Color.Black;

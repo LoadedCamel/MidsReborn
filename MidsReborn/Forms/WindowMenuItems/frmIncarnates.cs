@@ -394,7 +394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             /*iList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;*/
-            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            iList.Font = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
             iList.Refresh();
             iList.Update();
         }

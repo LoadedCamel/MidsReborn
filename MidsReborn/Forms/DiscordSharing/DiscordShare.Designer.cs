@@ -188,7 +188,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             // lblUsername
             // 
-            lblUsername.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblUsername.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblUsername.ForeColor = System.Drawing.Color.White;
             lblUsername.Location = new System.Drawing.Point(76, 16);
             lblUsername.Name = "lblUsername";
@@ -210,7 +210,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // lblDiscriminator
             // 
             lblDiscriminator.AutoSize = true;
-            lblDiscriminator.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDiscriminator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblDiscriminator.ForeColor = System.Drawing.Color.White;
             lblDiscriminator.Location = new System.Drawing.Point(76, 33);
             lblDiscriminator.Name = "lblDiscriminator";
@@ -244,7 +244,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             label3.AutoSize = true;
             label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            label3.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label3.ForeColor = System.Drawing.Color.White;
             label3.Location = new System.Drawing.Point(4, 4);
             label3.Margin = new System.Windows.Forms.Padding(3);
@@ -258,7 +258,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             label4.AutoSize = true;
             label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            label4.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label4.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label4.ForeColor = System.Drawing.Color.White;
             label4.Location = new System.Drawing.Point(148, 4);
             label4.Margin = new System.Windows.Forms.Padding(3);
@@ -272,7 +272,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
             // 
             label5.AutoSize = true;
             label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            label5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label5.ForeColor = System.Drawing.Color.White;
             label5.Location = new System.Drawing.Point(308, 4);
             label5.Margin = new System.Windows.Forms.Padding(3);

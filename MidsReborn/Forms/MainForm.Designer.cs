@@ -1316,7 +1316,7 @@
             // 
             // lblSecondary
             // 
-            lblSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblSecondary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblSecondary.ForeColor = System.Drawing.Color.White;
             lblSecondary.Location = new System.Drawing.Point(179, 86);
             lblSecondary.Name = "lblSecondary";
@@ -1327,7 +1327,7 @@
             // 
             // lblPool1
             // 
-            lblPool1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblPool1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblPool1.ForeColor = System.Drawing.Color.White;
             lblPool1.Location = new System.Drawing.Point(345, 86);
             lblPool1.Name = "lblPool1";
@@ -1416,7 +1416,7 @@
             // 
             // lblPool2
             // 
-            lblPool2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblPool2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblPool2.ForeColor = System.Drawing.Color.White;
             lblPool2.Location = new System.Drawing.Point(345, 211);
             lblPool2.Name = "lblPool2";
@@ -1427,7 +1427,7 @@
             // 
             // lblPool3
             // 
-            lblPool3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblPool3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblPool3.ForeColor = System.Drawing.Color.White;
             lblPool3.Location = new System.Drawing.Point(345, 338);
             lblPool3.Name = "lblPool3";
@@ -1438,7 +1438,7 @@
             // 
             // lblPool4
             // 
-            lblPool4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblPool4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblPool4.ForeColor = System.Drawing.Color.White;
             lblPool4.Location = new System.Drawing.Point(345, 462);
             lblPool4.Name = "lblPool4";
@@ -1449,7 +1449,7 @@
             // 
             // lblEpic
             // 
-            lblEpic.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblEpic.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblEpic.ForeColor = System.Drawing.Color.White;
             lblEpic.Location = new System.Drawing.Point(345, 586);
             lblEpic.Name = "lblEpic";
@@ -1460,7 +1460,7 @@
             // 
             // lblPrimary
             // 
-            lblPrimary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblPrimary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblPrimary.ForeColor = System.Drawing.Color.White;
             lblPrimary.Location = new System.Drawing.Point(12, 86);
             lblPrimary.Name = "lblPrimary";
@@ -1592,7 +1592,7 @@
             // 
             // lblName
             // 
-            lblName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblName.ForeColor = System.Drawing.Color.WhiteSmoke;
             lblName.Location = new System.Drawing.Point(12, 9);
             lblName.Name = "lblName";
@@ -1605,7 +1605,7 @@
             // 
             lblATLocked.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblATLocked.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblATLocked.ForeColor = System.Drawing.Color.Black;
             lblATLocked.Location = new System.Drawing.Point(104, 35);
             lblATLocked.Name = "lblATLocked";
@@ -1616,7 +1616,7 @@
             // 
             // lblOrigin
             // 
-            lblOrigin.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblOrigin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblOrigin.ForeColor = System.Drawing.Color.WhiteSmoke;
             lblOrigin.Location = new System.Drawing.Point(12, 60);
             lblOrigin.Name = "lblOrigin";
@@ -1627,7 +1627,7 @@
             // 
             // lblAT
             // 
-            lblAT.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblAT.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblAT.ForeColor = System.Drawing.Color.WhiteSmoke;
             lblAT.Location = new System.Drawing.Point(12, 36);
             lblAT.Name = "lblAT";

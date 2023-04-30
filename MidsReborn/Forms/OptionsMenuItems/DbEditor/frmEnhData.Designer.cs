@@ -619,7 +619,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lstSelected
             // 
-            this.lstSelected.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lstSelected.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lstSelected.ItemHeight = 14;
             this.lstSelected.Location = new System.Drawing.Point(240, 20);
             this.lstSelected.Name = "lstSelected";
@@ -629,7 +629,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lstAvailable
             // 
-            this.lstAvailable.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lstAvailable.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lstAvailable.ItemHeight = 14;
             this.lstAvailable.Location = new System.Drawing.Point(8, 20);
             this.lstAvailable.Name = "lstAvailable";
@@ -853,7 +853,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.gbBasic);
             this.Controls.Add(this.gbType);
             this.Controls.Add(this.btnImage);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

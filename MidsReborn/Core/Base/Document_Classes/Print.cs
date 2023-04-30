@@ -154,7 +154,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             args.Graphics.DrawRectangle(pen, bounds.Left, bounds.Top, bounds.Width, bounds.Height);
             var num1 = top + 8;
             var num2 = 28;
-            var font1 = new Font("Arial", num2, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            var font1 = new Font("Segoe UI", num2, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Near;
             var layoutRectangle = new RectangleF(bounds.Left, num1, bounds.Width, Convert.ToInt32(num2 * 1.25));
@@ -176,7 +176,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             format.LineAlignment = StringAlignment.Center;
             //var int32 = Convert.ToInt32(12.8); // 13
             layoutRectangle = new RectangleF(bounds.Left + 5.28f, bounds.Top, bounds.Width, num4 - bounds.Top);
-            var font2 = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            var font2 = new Font("Segoe UI", 13, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             args.Graphics.DrawString("Page " + _pageNumber, font2, solidBrush, layoutRectangle, format);
             format.Alignment = StringAlignment.Far;
             layoutRectangle = new RectangleF(bounds.Left, bounds.Top, bounds.Width - 5.28f, num4 - bounds.Top);
@@ -199,11 +199,11 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var lvl = 0;
             var s = $"{MidsContext.Character.Alignment} Build History";
             var layoutRectangle = new RectangleF(bounds.Left + 15, top, bounds.Width, 12.5f);
-            var font1 = new Font("Arial", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
+            var font1 = new Font("Segoe UI", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
             args.Graphics.DrawString(s, font1, solidBrush, layoutRectangle, format);
             var y1 = top + Convert.ToInt32(12.5f);
             var y2 = y1;
-            var font2 = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font2 = new Font("Segoe UI", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
             foreach (var hItem in historyMapArray)
             {
                 if (hItem.Level < 25)
@@ -414,11 +414,11 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             };
 
             var layoutRectangle = new RectangleF(bounds.Left + 15, top, bounds.Width, 12.5f);
-            var font1 = new Font("Arial", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
+            var font1 = new Font("Segoe UI", 10f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
             args.Graphics.DrawString("Build Statistics", font1, solidBrush, layoutRectangle, format);
             var y1 = top + Convert.ToInt32(12.5f);
             var y2 = y1;
-            var font2 = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font2 = new Font("Segoe UI", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
 
             foreach (var item in leftColumnItems)
             {
@@ -447,7 +447,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
         {
             var solidBrush = new SolidBrush(Color.Black);
             var top = bounds.Top;
-            var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             var format = new StringFormat(StringFormatFlags.NoClip)
             {
                 Alignment = StringAlignment.Near,
@@ -484,13 +484,13 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             if (_pageNumber == 1)
             {
                 var num = PpInfo(bounds, args) + 6;
-                var font = new Font("Arial", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
+                var font = new Font("Segoe UI", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
                 args.Graphics.DrawString($"Extended {MidsContext.Character.Alignment} Profile", font, solidBrush,
                     new RectangleF(bounds.Left + 15, num, bounds.Width, 15f), format);
                 vPos = num + 15;
             }
 
-            var font1 = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font1 = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             if (_sectionCompleted == PrintWhat.None)
             {
                 _endOfPage = false;
@@ -560,7 +560,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var format = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip);
             var solidBrush = new SolidBrush(Color.Black);
             var pgIdx = -1;
-            var font = new Font("Arial", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font("Segoe UI", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var isEnd = false;
             for (var pIndex = _pIndex; pIndex <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++pIndex)
             {
@@ -732,11 +732,11 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             };
 
             var vPos = PpInfo(bounds, args) + 6;
-            var font1 = new Font("Arial", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
+            var font1 = new Font("Segoe UI", 12f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Pixel);
             args.Graphics.DrawString(MidsContext.Character.Alignment + " Profile", font1, solidBrush,
                 new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
-            var font2 = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font2 = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             BuildPowerListShort(ref vPos, bounds, 12, true, false, false, args);
             var s2 = "------------";
             args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
@@ -773,7 +773,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var solidBrush = new SolidBrush(Color.Black);
             for (var index1 = 0; index1 <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index1)
             {
-                var font = new Font("Arial", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                var font = new Font("Segoe UI", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
                 var isChosen = !MidsContext.Character.CurrentBuild.Powers[index1].Chosen;
                 var include = false;
                 if (!skipInherent && isChosen && MidsContext.Character.CurrentBuild.Powers[index1].Power != null)
@@ -881,7 +881,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                         sizeF = args.Graphics.MeasureString(str1, font, (int) (layoutRectangle.Width * 5.0), format);
                         var width = sizeF.Width;
                         if (width > (double) layoutRectangle.Width)
-                            font = new Font("Arial", Convert.ToSingle(fontSize) * (layoutRectangle.Width / width),
+                            font = new Font("Segoe UI", Convert.ToSingle(fontSize) * (layoutRectangle.Width / width),
                                 FontStyle.Bold, GraphicsUnit.Pixel);
                     }
 

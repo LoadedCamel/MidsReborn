@@ -1389,7 +1389,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     header.Location = new Point(0, yPos + offset);
                     header.ForeColor = Color.Cyan;
                     header.BackColor = Color.Black;
-                    header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+                    header.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
                     header.Size = new Size(panelBars.Size.Width - 20, 16);
                     header.Name = $"HeaderLabel{nh + 1}";
                     header.Text = fxL1Group.ToString();

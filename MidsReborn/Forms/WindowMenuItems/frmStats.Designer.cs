@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.cbValues = new System.Windows.Forms.ComboBox();
             this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new Mids_Reborn.Controls.ctlMultiGraph();
+            this.Graph = new Mids_Reborn.Controls.CtlMultiGraph();
             this.chkOnTop = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
@@ -173,7 +173,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.DrawRuler = true;
             this.Graph.Dual = true;
             this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
-            this.Graph.Font = new System.Drawing.Font("Arial", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Graph.ForcedMax = 0F;
             this.Graph.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Graph.Highlight = true;
@@ -192,7 +192,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Graph.PaddingX = 2F;
             this.Graph.PaddingY = 4F;
             this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
-            this.Graph.RulerPos = Mids_Reborn.Controls.ctlMultiGraph.RulerPosition.Top;
+            this.Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
             this.Graph.ScaleHeight = 16;
             this.Graph.ScaleIndex = 7;
             this.Graph.ShowScale = false;

@@ -36,7 +36,7 @@ namespace Mids_Reborn.Forms.Controls
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataView));
             pnlTabs = new Panel();
             pnlInfo = new Panel();
-            PowerScaler = new ctlMultiGraph();
+            PowerScaler = new CtlMultiGraph();
             info_txtSmall = new RichTextBox();
             lblDmg = new Label();
             Info_Damage = new ctlDamageDisplay();
@@ -53,10 +53,10 @@ namespace Mids_Reborn.Forms.Controls
             fx_List1 = new PairedListEx();
             pnlTotal = new Panel();
             lblTotal = new Label();
-            gRes2 = new ctlMultiGraph();
-            gRes1 = new ctlMultiGraph();
-            gDef2 = new ctlMultiGraph();
-            gDef1 = new ctlMultiGraph();
+            gRes2 = new CtlMultiGraph();
+            gRes1 = new CtlMultiGraph();
+            gDef2 = new CtlMultiGraph();
+            gDef1 = new CtlMultiGraph();
             total_Title = new Label();
             total_lblMisc = new Label();
             total_Misc = new PairedListEx();
@@ -125,7 +125,7 @@ namespace Mids_Reborn.Forms.Controls
             PowerScaler.DrawRuler = false;
             PowerScaler.Dual = false;
             PowerScaler.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("PowerScaler.EnhBarColors");
-            PowerScaler.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            PowerScaler.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             PowerScaler.ForcedMax = 0F;
             PowerScaler.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             PowerScaler.Highlight = false;
@@ -143,7 +143,7 @@ namespace Mids_Reborn.Forms.Controls
             PowerScaler.PaddingX = 2F;
             PowerScaler.PaddingY = 2F;
             PowerScaler.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("PowerScaler.PerItemScales");
-            PowerScaler.RulerPos = ctlMultiGraph.RulerPosition.Top;
+            PowerScaler.RulerPos = CtlMultiGraph.RulerPosition.Top;
             PowerScaler.ScaleHeight = 32;
             PowerScaler.ScaleIndex = 8;
             PowerScaler.ShowScale = false;
@@ -168,7 +168,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // lblDmg
             // 
-            lblDmg.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDmg.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblDmg.ForeColor = System.Drawing.Color.White;
             lblDmg.Location = new System.Drawing.Point(3, 289);
             lblDmg.Name = "lblDmg";
@@ -186,7 +186,7 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.ColorBaseStart = System.Drawing.Color.Blue;
             Info_Damage.ColorEnhEnd = System.Drawing.Color.Yellow;
             Info_Damage.ColorEnhStart = System.Drawing.Color.Yellow;
-            Info_Damage.Font = new System.Drawing.Font("Arial", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            Info_Damage.Font = new System.Drawing.Font("Segoe UI", 12.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             Info_Damage.GraphType = Enums.eDDGraph.Enhanced;
             Info_Damage.Location = new System.Drawing.Point(2, 307);
             Info_Damage.Name = "Info_Damage";
@@ -243,7 +243,7 @@ namespace Mids_Reborn.Forms.Controls
             // info_Title
             // 
             info_Title.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            info_Title.Font = new System.Drawing.Font("Arial", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            info_Title.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             info_Title.ForeColor = System.Drawing.Color.White;
             info_Title.Location = new System.Drawing.Point(24, 4);
             info_Title.Name = "info_Title";
@@ -264,7 +264,7 @@ namespace Mids_Reborn.Forms.Controls
             pnlFX.Controls.Add(fx_lblHead1);
             pnlFX.Controls.Add(fx_List2);
             pnlFX.Controls.Add(fx_List1);
-            pnlFX.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            pnlFX.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             pnlFX.Location = new System.Drawing.Point(306, 3);
             pnlFX.Name = "pnlFX";
             pnlFX.Size = new System.Drawing.Size(300, 357);
@@ -273,7 +273,7 @@ namespace Mids_Reborn.Forms.Controls
             // fx_Title
             // 
             fx_Title.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            fx_Title.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            fx_Title.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             fx_Title.ForeColor = System.Drawing.Color.White;
             fx_Title.Location = new System.Drawing.Point(24, 4);
             fx_Title.Name = "fx_Title";
@@ -284,7 +284,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // fx_LblHead3
             // 
-            fx_LblHead3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            fx_LblHead3.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             fx_LblHead3.ForeColor = System.Drawing.Color.White;
             fx_LblHead3.Location = new System.Drawing.Point(4, 249);
             fx_LblHead3.Name = "fx_LblHead3";
@@ -298,7 +298,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_List3.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             fx_List3.Columns = 2;
             fx_List3.UseHighlighting = true;
-            fx_List3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            fx_List3.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             fx_List3.SetItemsBold = false;
             fx_List3.HighlightColor = System.Drawing.Color.FromArgb(128, 128, 255);
             fx_List3.HighlightTextColor = System.Drawing.Color.Black;
@@ -314,7 +314,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // fx_lblHead2
             // 
-            fx_lblHead2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            fx_lblHead2.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             fx_lblHead2.ForeColor = System.Drawing.Color.White;
             fx_lblHead2.Location = new System.Drawing.Point(4, 146);
             fx_lblHead2.Name = "fx_lblHead2";
@@ -325,7 +325,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // fx_lblHead1
             // 
-            fx_lblHead1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            fx_lblHead1.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             fx_lblHead1.ForeColor = System.Drawing.Color.White;
             fx_lblHead1.Location = new System.Drawing.Point(4, 24);
             fx_lblHead1.Name = "fx_lblHead1";
@@ -339,7 +339,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_List2.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             fx_List2.Columns = 2;
             fx_List2.UseHighlighting = true;
-            fx_List2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            fx_List2.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             fx_List2.SetItemsBold = false;
             fx_List2.HighlightColor = System.Drawing.Color.FromArgb(128, 128, 255);
             fx_List2.HighlightTextColor = System.Drawing.Color.Black;
@@ -358,7 +358,7 @@ namespace Mids_Reborn.Forms.Controls
             fx_List1.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             fx_List1.Columns = 2;
             fx_List1.UseHighlighting = true;
-            fx_List1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            fx_List1.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             fx_List1.SetItemsBold = false;
             fx_List1.HighlightColor = System.Drawing.Color.FromArgb(128, 128, 255);
             fx_List1.HighlightTextColor = System.Drawing.Color.Black;
@@ -392,7 +392,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // lblTotal
             // 
-            lblTotal.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblTotal.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblTotal.ForeColor = System.Drawing.Color.White;
             lblTotal.Location = new System.Drawing.Point(3, 338);
             lblTotal.Name = "lblTotal";
@@ -423,11 +423,11 @@ namespace Mids_Reborn.Forms.Controls
             gRes2.DrawRuler = false;
             gRes2.Dual = true;
             gRes2.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("gRes2.EnhBarColors");
-            gRes2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            gRes2.Font = new System.Drawing.Font("Segou UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             gRes2.ForcedMax = 0F;
             gRes2.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             gRes2.Highlight = true;
-            gRes2.ItemFontSizeOverride = 10F;
+            gRes2.ItemFontSizeOverride = 11.25F;
             gRes2.ItemHeight = 13;
             gRes2.Lines = true;
             gRes2.Location = new System.Drawing.Point(150, 166);
@@ -441,7 +441,7 @@ namespace Mids_Reborn.Forms.Controls
             gRes2.PaddingX = 2F;
             gRes2.PaddingY = 4F;
             gRes2.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("gRes2.PerItemScales");
-            gRes2.RulerPos = ctlMultiGraph.RulerPosition.Top;
+            gRes2.RulerPos = CtlMultiGraph.RulerPosition.Top;
             gRes2.ScaleHeight = 32;
             gRes2.ScaleIndex = 8;
             gRes2.ShowScale = false;
@@ -472,11 +472,11 @@ namespace Mids_Reborn.Forms.Controls
             gRes1.DrawRuler = false;
             gRes1.Dual = true;
             gRes1.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("gRes1.EnhBarColors");
-            gRes1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            gRes1.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             gRes1.ForcedMax = 0F;
             gRes1.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             gRes1.Highlight = true;
-            gRes1.ItemFontSizeOverride = 10F;
+            gRes1.ItemFontSizeOverride = 11.25F;
             gRes1.ItemHeight = 13;
             gRes1.Lines = true;
             gRes1.Location = new System.Drawing.Point(4, 166);
@@ -490,7 +490,7 @@ namespace Mids_Reborn.Forms.Controls
             gRes1.PaddingX = 2F;
             gRes1.PaddingY = 4F;
             gRes1.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("gRes1.PerItemScales");
-            gRes1.RulerPos = ctlMultiGraph.RulerPosition.Top;
+            gRes1.RulerPos = CtlMultiGraph.RulerPosition.Top;
             gRes1.ScaleHeight = 32;
             gRes1.ScaleIndex = 8;
             gRes1.ShowScale = false;
@@ -521,11 +521,11 @@ namespace Mids_Reborn.Forms.Controls
             gDef2.DrawRuler = false;
             gDef2.Dual = true;
             gDef2.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("gDef2.EnhBarColors");
-            gDef2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            gDef2.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             gDef2.ForcedMax = 0F;
             gDef2.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             gDef2.Highlight = true;
-            gDef2.ItemFontSizeOverride = 10F;
+            gDef2.ItemFontSizeOverride = 11.25F;
             gDef2.ItemHeight = 13;
             gDef2.Lines = true;
             gDef2.Location = new System.Drawing.Point(150, 40);
@@ -539,7 +539,7 @@ namespace Mids_Reborn.Forms.Controls
             gDef2.PaddingX = 2F;
             gDef2.PaddingY = 4F;
             gDef2.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("gDef2.PerItemScales");
-            gDef2.RulerPos = ctlMultiGraph.RulerPosition.Top;
+            gDef2.RulerPos = CtlMultiGraph.RulerPosition.Top;
             gDef2.ScaleHeight = 32;
             gDef2.ScaleIndex = 8;
             gDef2.ShowScale = false;
@@ -570,11 +570,11 @@ namespace Mids_Reborn.Forms.Controls
             gDef1.DrawRuler = false;
             gDef1.Dual = true;
             gDef1.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("gDef1.EnhBarColors");
-            gDef1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            gDef1.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             gDef1.ForcedMax = 0F;
             gDef1.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             gDef1.Highlight = true;
-            gDef1.ItemFontSizeOverride = 10F;
+            gDef1.ItemFontSizeOverride = 11.25F;
             gDef1.ItemHeight = 13;
             gDef1.Lines = true;
             gDef1.Location = new System.Drawing.Point(4, 40);
@@ -588,7 +588,7 @@ namespace Mids_Reborn.Forms.Controls
             gDef1.PaddingX = 2F;
             gDef1.PaddingY = 4F;
             gDef1.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("gDef1.PerItemScales");
-            gDef1.RulerPos = ctlMultiGraph.RulerPosition.Top;
+            gDef1.RulerPos = CtlMultiGraph.RulerPosition.Top;
             gDef1.ScaleHeight = 32;
             gDef1.ScaleIndex = 8;
             gDef1.ShowScale = false;
@@ -600,7 +600,7 @@ namespace Mids_Reborn.Forms.Controls
             // total_Title
             // 
             total_Title.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            total_Title.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            total_Title.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             total_Title.ForeColor = System.Drawing.Color.White;
             total_Title.Location = new System.Drawing.Point(24, 4);
             total_Title.Name = "total_Title";
@@ -613,7 +613,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // total_lblMisc
             // 
-            total_lblMisc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            total_lblMisc.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             total_lblMisc.ForeColor = System.Drawing.Color.White;
             total_lblMisc.Location = new System.Drawing.Point(4, 242);
             total_lblMisc.Name = "total_lblMisc";
@@ -627,7 +627,7 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             total_Misc.Columns = 2;
             total_Misc.UseHighlighting = true;
-            total_Misc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            total_Misc.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             total_Misc.SetItemsBold = false;
             total_Misc.HighlightColor = System.Drawing.Color.FromArgb(128, 128, 255);
             total_Misc.HighlightTextColor = System.Drawing.Color.Black;
@@ -643,7 +643,7 @@ namespace Mids_Reborn.Forms.Controls
             // total_lblRes
             // 
             total_lblRes.BackColor = System.Drawing.Color.Green;
-            total_lblRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            total_lblRes.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             total_lblRes.ForeColor = System.Drawing.Color.White;
             total_lblRes.Location = new System.Drawing.Point(4, 150);
             total_lblRes.Name = "total_lblRes";
@@ -654,7 +654,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // total_lblDef
             // 
-            total_lblDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            total_lblDef.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             total_lblDef.ForeColor = System.Drawing.Color.White;
             total_lblDef.Location = new System.Drawing.Point(4, 24);
             total_lblDef.Name = "total_lblDef";
@@ -690,7 +690,7 @@ namespace Mids_Reborn.Forms.Controls
             // pnlEnhActive
             // 
             pnlEnhActive.BackColor = System.Drawing.Color.Black;
-            pnlEnhActive.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            pnlEnhActive.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             pnlEnhActive.Location = new System.Drawing.Point(4, 239);
             pnlEnhActive.Name = "pnlEnhActive";
             pnlEnhActive.Size = new System.Drawing.Size(292, 38);
@@ -702,7 +702,7 @@ namespace Mids_Reborn.Forms.Controls
             // enhNameDisp
             // 
             enhNameDisp.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            enhNameDisp.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            enhNameDisp.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             enhNameDisp.ForeColor = System.Drawing.Color.White;
             enhNameDisp.Location = new System.Drawing.Point(4, 24);
             enhNameDisp.Name = "enhNameDisp";
@@ -716,7 +716,7 @@ namespace Mids_Reborn.Forms.Controls
             enhListing.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             enhListing.Columns = 1;
             enhListing.UseHighlighting = true;
-            enhListing.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            enhListing.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             enhListing.SetItemsBold = false;
             enhListing.HighlightColor = System.Drawing.Color.FromArgb(128, 128, 255);
             enhListing.HighlightTextColor = System.Drawing.Color.Black;
@@ -732,7 +732,7 @@ namespace Mids_Reborn.Forms.Controls
             // Enh_Title
             // 
             Enh_Title.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            Enh_Title.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            Enh_Title.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             Enh_Title.ForeColor = System.Drawing.Color.White;
             Enh_Title.Location = new System.Drawing.Point(24, 4);
             Enh_Title.Name = "Enh_Title";
@@ -753,7 +753,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             lblFloat.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             lblFloat.BorderStyle = BorderStyle.FixedSingle;
-            lblFloat.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblFloat.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             lblFloat.ForeColor = System.Drawing.Color.White;
             lblFloat.Location = new System.Drawing.Point(4, 24);
             lblFloat.Name = "lblFloat";
@@ -769,7 +769,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             lblShrink.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             lblShrink.BorderStyle = BorderStyle.FixedSingle;
-            lblShrink.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblShrink.Font = new System.Drawing.Font("Wingdings", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblShrink.ForeColor = System.Drawing.Color.White;
             lblShrink.Location = new System.Drawing.Point(280, 24);
             lblShrink.Name = "lblShrink";
@@ -786,7 +786,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             lblLock.BackColor = System.Drawing.Color.Red;
             lblLock.BorderStyle = BorderStyle.FixedSingle;
-            lblLock.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblLock.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblLock.ForeColor = System.Drawing.Color.White;
             lblLock.Location = new System.Drawing.Point(220, 24);
             lblLock.Name = "lblLock";
@@ -810,7 +810,7 @@ namespace Mids_Reborn.Forms.Controls
             Controls.Add(pnlTotal);
             Controls.Add(pnlEnh);
             Controls.Add(pnlFX);
-            Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             Name = "DataView";
             Size = new System.Drawing.Size(1221, 479);
             pnlInfo.ResumeLayout(false);
@@ -833,10 +833,10 @@ namespace Mids_Reborn.Forms.Controls
         private PairedListEx fx_List2;
         private PairedListEx fx_List3;
         private Label fx_Title;
-        private ctlMultiGraph gDef1;
-        private ctlMultiGraph gDef2;
-        private ctlMultiGraph gRes1;
-        private ctlMultiGraph gRes2;
+        private CtlMultiGraph gDef1;
+        private CtlMultiGraph gDef2;
+        private CtlMultiGraph gRes1;
+        private CtlMultiGraph gRes2;
         private PairedListEx info_DataList;
         private Label info_Title;
         private RichTextBox info_txtSmall;
@@ -852,7 +852,7 @@ namespace Mids_Reborn.Forms.Controls
         private Panel pnlInfo;
         private Panel pnlTabs;
         private Panel pnlTotal;
-        private ctlMultiGraph PowerScaler;
+        private CtlMultiGraph PowerScaler;
         private Label total_lblDef;
         private Label total_lblMisc;
         private Label total_lblRes;

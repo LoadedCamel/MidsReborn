@@ -6690,7 +6690,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             myDataView.BackColor = BackColor;
             /*var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
             using var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);*/
-            //using var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            //using var font = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             var toColor = new Control[]
             {
                 llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary, lblName, lblAT, lblOrigin,

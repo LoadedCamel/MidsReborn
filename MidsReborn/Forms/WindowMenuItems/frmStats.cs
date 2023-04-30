@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ComboBox cbValues;
 
         private IPower[] EnhArray;
-        private ctlMultiGraph Graph;
+        private CtlMultiGraph Graph;
         private float GraphMax;
         private Label lblKey1;
         private Label lblKey2;

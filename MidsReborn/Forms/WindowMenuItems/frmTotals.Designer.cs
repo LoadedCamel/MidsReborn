@@ -39,13 +39,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lblRes = new System.Windows.Forms.Label();
             this.lblRegenRec = new System.Windows.Forms.Label();
             this.pnlDRHE = new System.Windows.Forms.Panel();
-            this.graphMaxEnd = new ctlMultiGraph();
-            this.graphHP = new ctlMultiGraph();
-            this.graphDef = new ctlMultiGraph();
-            this.graphDrain = new ctlMultiGraph();
-            this.graphRes = new ctlMultiGraph();
-            this.graphRec = new ctlMultiGraph();
-            this.graphRegen = new ctlMultiGraph();
+            this.graphMaxEnd = new CtlMultiGraph();
+            this.graphHP = new CtlMultiGraph();
+            this.graphDef = new CtlMultiGraph();
+            this.graphDrain = new CtlMultiGraph();
+            this.graphRes = new CtlMultiGraph();
+            this.graphRec = new CtlMultiGraph();
+            this.graphRegen = new CtlMultiGraph();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.pnlMisc = new System.Windows.Forms.Panel();
             this.rbMSec = new System.Windows.Forms.RadioButton();
@@ -53,28 +53,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.rbKPH = new System.Windows.Forms.RadioButton();
             this.rbMPH = new System.Windows.Forms.RadioButton();
             this.lblStealth = new System.Windows.Forms.Label();
-            this.graphStealth = new ctlMultiGraph();
-            this.graphAcc = new ctlMultiGraph();
-            this.graphToHit = new ctlMultiGraph();
+            this.graphStealth = new CtlMultiGraph();
+            this.graphAcc = new CtlMultiGraph();
+            this.graphToHit = new CtlMultiGraph();
             this.lblMisc = new System.Windows.Forms.Label();
-            this.graphMovement = new ctlMultiGraph();
+            this.graphMovement = new CtlMultiGraph();
             this.lblMovement = new System.Windows.Forms.Label();
-            this.graphHaste = new ctlMultiGraph();
+            this.graphHaste = new CtlMultiGraph();
             this.Panel2 = new System.Windows.Forms.Panel();
-            this.graphElusivity = new ctlMultiGraph();
-            this.graphThreat = new ctlMultiGraph();
-            this.graphEndRdx = new ctlMultiGraph();
-            this.graphDam = new ctlMultiGraph();
+            this.graphElusivity = new CtlMultiGraph();
+            this.graphThreat = new CtlMultiGraph();
+            this.graphEndRdx = new CtlMultiGraph();
+            this.graphDam = new CtlMultiGraph();
             this.tab1 = new System.Windows.Forms.PictureBox();
             this.tab0 = new System.Windows.Forms.PictureBox();
             this.pbTopMost = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pnlStatus = new System.Windows.Forms.Panel();
-            this.graphSRes = new ctlMultiGraph();
+            this.graphSRes = new CtlMultiGraph();
             this.lblSRes = new System.Windows.Forms.Label();
-            this.graphSDeb = new ctlMultiGraph();
+            this.graphSDeb = new CtlMultiGraph();
             this.lblSDeb = new System.Windows.Forms.Label();
-            this.graphSProt = new ctlMultiGraph();
+            this.graphSProt = new CtlMultiGraph();
             this.lblSProt = new System.Windows.Forms.Label();
             this.tab2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -91,7 +91,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblDef
             // 
-            this.lblDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblDef.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDef.Location = new System.Drawing.Point(3, 0);
             this.lblDef.Name = "lblDef";
             this.lblDef.Size = new System.Drawing.Size(89, 16);
@@ -101,7 +101,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblRes
             // 
-            this.lblRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblRes.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblRes.Location = new System.Drawing.Point(3, 174);
             this.lblRes.Name = "lblRes";
             this.lblRes.Size = new System.Drawing.Size(125, 16);
@@ -111,7 +111,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblRegenRec
             // 
-            this.lblRegenRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblRegenRec.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblRegenRec.Location = new System.Drawing.Point(3, 312);
             this.lblRegenRec.Name = "lblRegenRec";
             this.lblRegenRec.Size = new System.Drawing.Size(125, 16);
@@ -160,7 +160,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMaxEnd.DifferentiateColors = false;
             this.graphMaxEnd.Dual = true;
             this.graphMaxEnd.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphMaxEnd.EnhBarColors")));
-            this.graphMaxEnd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphMaxEnd.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphMaxEnd.ForcedMax = 0F;
             this.graphMaxEnd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphMaxEnd.Highlight = true;
@@ -206,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHP.DifferentiateColors = false;
             this.graphHP.Dual = true;
             this.graphHP.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHP.EnhBarColors")));
-            this.graphHP.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphHP.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphHP.ForcedMax = 0F;
             this.graphHP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphHP.Highlight = true;
@@ -252,7 +252,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDef.DifferentiateColors = false;
             this.graphDef.Dual = true;
             this.graphDef.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDef.EnhBarColors")));
-            this.graphDef.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphDef.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDef.ForcedMax = 0F;
             this.graphDef.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphDef.Highlight = true;
@@ -298,7 +298,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDrain.DifferentiateColors = false;
             this.graphDrain.Dual = true;
             this.graphDrain.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDrain.EnhBarColors")));
-            this.graphDrain.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphDrain.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDrain.ForcedMax = 0F;
             this.graphDrain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphDrain.Highlight = true;
@@ -344,7 +344,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRes.DifferentiateColors = false;
             this.graphRes.Dual = true;
             this.graphRes.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphRes.EnhBarColors")));
-            this.graphRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphRes.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRes.ForcedMax = 0F;
             this.graphRes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphRes.Highlight = true;
@@ -390,7 +390,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRec.DifferentiateColors = false;
             this.graphRec.Dual = true;
             this.graphRec.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphRec.EnhBarColors")));
-            this.graphRec.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphRec.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRec.ForcedMax = 0F;
             this.graphRec.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphRec.Highlight = true;
@@ -436,7 +436,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphRegen.DifferentiateColors = false;
             this.graphRegen.Dual = true;
             this.graphRegen.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphRegen.EnhBarColors")));
-            this.graphRegen.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphRegen.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphRegen.ForcedMax = 0F;
             this.graphRegen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphRegen.Highlight = true;
@@ -537,7 +537,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblStealth
             // 
-            this.lblStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblStealth.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblStealth.Location = new System.Drawing.Point(3, 109);
             this.lblStealth.Name = "lblStealth";
             this.lblStealth.Size = new System.Drawing.Size(125, 16);
@@ -566,7 +566,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphStealth.DifferentiateColors = false;
             this.graphStealth.Dual = false;
             this.graphStealth.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphStealth.EnhBarColors")));
-            this.graphStealth.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphStealth.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphStealth.ForcedMax = 0F;
             this.graphStealth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphStealth.Highlight = true;
@@ -612,7 +612,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphAcc.DifferentiateColors = false;
             this.graphAcc.Dual = true;
             this.graphAcc.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphAcc.EnhBarColors")));
-            this.graphAcc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphAcc.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphAcc.ForcedMax = 0F;
             this.graphAcc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphAcc.Highlight = true;
@@ -658,7 +658,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.DifferentiateColors = false;
             this.graphToHit.Dual = true;
             this.graphToHit.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphToHit.EnhBarColors")));
-            this.graphToHit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphToHit.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphToHit.ForcedMax = 0F;
             this.graphToHit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphToHit.Highlight = true;
@@ -685,7 +685,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblMisc
             // 
-            this.lblMisc.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblMisc.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblMisc.Location = new System.Drawing.Point(3, 177);
             this.lblMisc.Name = "lblMisc";
             this.lblMisc.Size = new System.Drawing.Size(125, 16);
@@ -714,7 +714,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphMovement.DifferentiateColors = false;
             this.graphMovement.Dual = true;
             this.graphMovement.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphMovement.EnhBarColors")));
-            this.graphMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphMovement.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphMovement.ForcedMax = 0F;
             this.graphMovement.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphMovement.Highlight = true;
@@ -741,7 +741,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblMovement
             // 
-            this.lblMovement.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblMovement.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblMovement.Location = new System.Drawing.Point(3, 0);
             this.lblMovement.Name = "lblMovement";
             this.lblMovement.Size = new System.Drawing.Size(125, 16);
@@ -770,7 +770,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphHaste.DifferentiateColors = false;
             this.graphHaste.Dual = true;
             this.graphHaste.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphHaste.EnhBarColors")));
-            this.graphHaste.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphHaste.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphHaste.ForcedMax = 0F;
             this.graphHaste.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphHaste.Highlight = true;
@@ -828,7 +828,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphElusivity.DifferentiateColors = false;
             this.graphElusivity.Dual = true;
             this.graphElusivity.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphElusivity.EnhBarColors")));
-            this.graphElusivity.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphElusivity.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphElusivity.ForcedMax = 0F;
             this.graphElusivity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphElusivity.Highlight = true;
@@ -874,7 +874,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphThreat.DifferentiateColors = false;
             this.graphThreat.Dual = true;
             this.graphThreat.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphThreat.EnhBarColors")));
-            this.graphThreat.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphThreat.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphThreat.ForcedMax = 0F;
             this.graphThreat.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphThreat.Highlight = true;
@@ -920,7 +920,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphEndRdx.DifferentiateColors = false;
             this.graphEndRdx.Dual = true;
             this.graphEndRdx.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphEndRdx.EnhBarColors")));
-            this.graphEndRdx.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphEndRdx.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphEndRdx.ForcedMax = 0F;
             this.graphEndRdx.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphEndRdx.Highlight = true;
@@ -966,7 +966,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphDam.DifferentiateColors = false;
             this.graphDam.Dual = true;
             this.graphDam.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphDam.EnhBarColors")));
-            this.graphDam.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphDam.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphDam.ForcedMax = 0F;
             this.graphDam.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphDam.Highlight = true;
@@ -1069,7 +1069,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSRes.DifferentiateColors = false;
             this.graphSRes.Dual = true;
             this.graphSRes.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphSRes.EnhBarColors")));
-            this.graphSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphSRes.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSRes.ForcedMax = 0F;
             this.graphSRes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphSRes.Highlight = true;
@@ -1096,7 +1096,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSRes
             // 
-            this.lblSRes.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblSRes.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSRes.Location = new System.Drawing.Point(3, 156);
             this.lblSRes.Name = "lblSRes";
             this.lblSRes.Size = new System.Drawing.Size(125, 16);
@@ -1125,7 +1125,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSDeb.DifferentiateColors = false;
             this.graphSDeb.Dual = true;
             this.graphSDeb.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphSDeb.EnhBarColors")));
-            this.graphSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphSDeb.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSDeb.ForcedMax = 0F;
             this.graphSDeb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphSDeb.Highlight = true;
@@ -1152,7 +1152,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSDeb
             // 
-            this.lblSDeb.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblSDeb.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSDeb.Location = new System.Drawing.Point(3, 314);
             this.lblSDeb.Name = "lblSDeb";
             this.lblSDeb.Size = new System.Drawing.Size(125, 16);
@@ -1181,7 +1181,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphSProt.DifferentiateColors = false;
             this.graphSProt.Dual = true;
             this.graphSProt.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("graphSProt.EnhBarColors")));
-            this.graphSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.graphSProt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.graphSProt.ForcedMax = 0F;
             this.graphSProt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.graphSProt.Highlight = true;
@@ -1208,7 +1208,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lblSProt
             // 
-            this.lblSProt.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblSProt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSProt.Location = new System.Drawing.Point(3, 0);
             this.lblSProt.Name = "lblSProt";
             this.lblSProt.Size = new System.Drawing.Size(125, 16);
@@ -1239,7 +1239,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Controls.Add(this.tab0);
             this.Controls.Add(this.pnlMisc);
             this.Controls.Add(this.pnlDRHE);
-            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1287,25 +1287,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private PictureBox tab1;
         private PictureBox tab2;
 
-        private ctlMultiGraph graphAcc;
-        private ctlMultiGraph graphDam;
-        private ctlMultiGraph graphDef;
-        private ctlMultiGraph graphDrain;
-        private ctlMultiGraph graphElusivity;
-        private ctlMultiGraph graphEndRdx;
-        private ctlMultiGraph graphHaste;
-        private ctlMultiGraph graphHP;
-        private ctlMultiGraph graphMaxEnd;
-        private ctlMultiGraph graphMovement;
-        private ctlMultiGraph graphRec;
-        private ctlMultiGraph graphRegen;
-        private ctlMultiGraph graphRes;
-        private ctlMultiGraph graphSDeb;
-        private ctlMultiGraph graphSProt;
-        private ctlMultiGraph graphSRes;
-        private ctlMultiGraph graphStealth;
-        private ctlMultiGraph graphThreat;
-        private ctlMultiGraph graphToHit;
+        private CtlMultiGraph graphAcc;
+        private CtlMultiGraph graphDam;
+        private CtlMultiGraph graphDef;
+        private CtlMultiGraph graphDrain;
+        private CtlMultiGraph graphElusivity;
+        private CtlMultiGraph graphEndRdx;
+        private CtlMultiGraph graphHaste;
+        private CtlMultiGraph graphHP;
+        private CtlMultiGraph graphMaxEnd;
+        private CtlMultiGraph graphMovement;
+        private CtlMultiGraph graphRec;
+        private CtlMultiGraph graphRegen;
+        private CtlMultiGraph graphRes;
+        private CtlMultiGraph graphSDeb;
+        private CtlMultiGraph graphSProt;
+        private CtlMultiGraph graphSRes;
+        private CtlMultiGraph graphStealth;
+        private CtlMultiGraph graphThreat;
+        private CtlMultiGraph graphToHit;
 
         private ToolTip toolTip1;
     }

@@ -15,7 +15,7 @@ using static Mids_Reborn.Core.Enums;
 namespace Mids_Reborn.Controls
 {
     [DefaultEvent("BarClick")]
-    public class ctlMultiGraph : UserControl
+    public class CtlMultiGraph : UserControl
     {
         public delegate void BarClickEventHandler(float value);
 
@@ -28,44 +28,44 @@ namespace Mids_Reborn.Controls
 
         public int ContentHeight => CalcContentHeight();
 
-        private IContainer Components;
-        private bool DualName;
-        private List<GraphItem> Items;
-        private bool Loaded;
-        private int NameWidth;
-        private bool NoDraw;
-        private int OldMouseX;
-        private int OldMouseY;
-        private Color PBaseColor;
-        private Color PBlendColor1;
-        private Color PBlendColor2;
-        private bool PBorder;
-        private bool PDrawLines;
-        private bool PDrawRuler;
-        private RulerPosition PRulerPosition;
-        private Color PEnhColor;
-        private int PForcedMax;
-        private int PHighlight;
-        private Color PHighlightColor;
-        private int PItemHeight;
-        private Color PLineColor;
-        private Color PMarkerColor;
-        private Color PMarkerColor2;
-        private int PScaleHeight;
-        private bool PShowHighlight;
-        private bool PShowScale;
-        private GraphStyle PStyle;
-        private List<float> Scales;
-        private int XPadding;
-        private int YPadding;
-        private bool UseDifferentiateColors;
-        private bool DisplayOuterBorder;
-        private int MaxItemsCapacity;
-        private float FontSize;
-        private float FontSizeOverride;
+        private IContainer? Components;
+        private bool _dualName;
+        private List<GraphItem> _items;
+        private bool _loaded;
+        private int _nameWidth;
+        private bool _noDraw;
+        private int _oldMouseX;
+        private int _oldMouseY;
+        private Color _pBaseColor;
+        private Color _pBlendColor1;
+        private Color _pBlendColor2;
+        private bool _pBorder;
+        private bool _pDrawLines;
+        private bool _pDrawRuler;
+        private RulerPosition _pRulerPosition;
+        private Color _pEnhColor;
+        private int _pForcedMax;
+        private int _pHighlight;
+        private Color _pHighlightColor;
+        private int _pItemHeight;
+        private Color _pLineColor;
+        private Color _pMarkerColor;
+        private Color _pMarkerColor2;
+        private int _pScaleHeight;
+        private bool _pShowHighlight;
+        private bool _pShowScale;
+        private GraphStyle _pStyle;
+        private List<float> _scales;
+        private int _xPadding;
+        private int _yPadding;
+        private bool _useDifferentiateColors;
+        private bool _displayOuterBorder;
+        private int _maxItemsCapacity;
+        private float _fontSize;
+        private float _fontSizeOverride;
         private const float Name2XPadding = 9;
 
-        public ctlMultiGraph()
+        public CtlMultiGraph()
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
 
@@ -79,47 +79,47 @@ namespace Mids_Reborn.Controls
             ForeColorChanged += ctlMultiGraph_ForeColorChanged;
             Resize += ctlMultiGraph_Resize;
             MouseMove += ctlMultiGraph_MouseMove;
-            Scales = new List<float>();
-            Items = new List<GraphItem>();
-            PBaseColor = Color.Blue;
-            PEnhColor = Color.Yellow;
-            PBlendColor1 = Color.Black;
-            PBlendColor2 = Color.Red;
-            PLineColor = Color.Black;
-            PStyle = 0;
-            PDrawLines = false;
-            PDrawRuler = false;
-            PRulerPosition = RulerPosition.Top;
-            PBorder = true;
+            _scales = new List<float>();
+            _items = new List<GraphItem>();
+            _pBaseColor = Color.Blue;
+            _pEnhColor = Color.Yellow;
+            _pBlendColor1 = Color.Black;
+            _pBlendColor2 = Color.Red;
+            _pLineColor = Color.Black;
+            _pStyle = 0;
+            _pDrawLines = false;
+            _pDrawRuler = false;
+            _pRulerPosition = RulerPosition.Top;
+            _pBorder = true;
             ScaleValue = 100f;
-            YPadding = 5;
-            XPadding = 4;
-            OldMouseX = 0;
-            OldMouseY = 0;
-            PItemHeight = 8;
-            NameWidth = 72;
-            Loaded = false;
-            PShowScale = false;
-            PScaleHeight = 32;
-            PHighlight = -1;
-            PHighlightColor = Color.FromArgb(128, 128, 255);
-            NoDraw = false;
-            DualName = false;
+            _yPadding = 5;
+            _xPadding = 4;
+            _oldMouseX = 0;
+            _oldMouseY = 0;
+            _pItemHeight = 8;
+            _nameWidth = 72;
+            _loaded = false;
+            _pShowScale = false;
+            _pScaleHeight = 32;
+            _pHighlight = -1;
+            _pHighlightColor = Color.FromArgb(128, 128, 255);
+            _noDraw = false;
+            _dualName = false;
             MarkerValue = 0f;
-            PMarkerColor = Color.Black;
-            PMarkerColor2 = Color.Yellow;
-            PForcedMax = 0;
+            _pMarkerColor = Color.Black;
+            _pMarkerColor2 = Color.Yellow;
+            _pForcedMax = 0;
             Clickable = false;
-            MaxItemsCapacity = 60;
-            FontSize = PItemHeight;
-            FontSizeOverride = 0;
+            _maxItemsCapacity = 60;
+            _fontSize = _pItemHeight;
+            _fontSizeOverride = 0;
             
             InitializeComponent();
             FillScales();
         }
 
         [field: AccessedThroughProperty("tTip")]
-        protected virtual ToolTip tTip
+        protected virtual ToolTip? Tip
         {
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -128,70 +128,70 @@ namespace Mids_Reborn.Controls
 
         public Color ColorBase
         {
-            get => PBaseColor;
+            get => _pBaseColor;
             set
             {
-                PBaseColor = value;
+                _pBaseColor = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorEnh
         {
-            get => PEnhColor;
+            get => _pEnhColor;
             set
             {
-                PEnhColor = value;
+                _pEnhColor = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorFadeStart
         {
-            get => PBlendColor1;
+            get => _pBlendColor1;
             set
             {
-                PBlendColor1 = value;
+                _pBlendColor1 = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorFadeEnd
         {
-            get => PBlendColor2;
+            get => _pBlendColor2;
             set
             {
-                PBlendColor2 = value;
+                _pBlendColor2 = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorLines
         {
-            get => PLineColor;
+            get => _pLineColor;
             set
             {
-                PLineColor = value;
+                _pLineColor = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorHighlight
         {
-            get => PHighlightColor;
+            get => _pHighlightColor;
             set
             {
-                PHighlightColor = value;
+                _pHighlightColor = value;
                 if (DesignMode) Draw();
             }
         }
 
         public Color ColorMarkerInner
         {
-            get => PMarkerColor;
+            get => _pMarkerColor;
             set
             {
-                PMarkerColor = value;
+                _pMarkerColor = value;
                 if (DesignMode) Draw();
             }
         }
@@ -200,10 +200,10 @@ namespace Mids_Reborn.Controls
 
         public Color ColorMarkerOuter
         {
-            get => PMarkerColor2;
+            get => _pMarkerColor2;
             set
             {
-                PMarkerColor2 = value;
+                _pMarkerColor2 = value;
                 if (DesignMode) Draw();
             }
         }
@@ -220,111 +220,111 @@ namespace Mids_Reborn.Controls
 
         public float PaddingX
         {
-            get => XPadding;
+            get => _xPadding;
             set
             {
-                XPadding = checked((int) Math.Round(value));
+                _xPadding = checked((int) Math.Round(value));
                 if (DesignMode) Draw();
             }
         }
 
         public float PaddingY
         {
-            get => YPadding;
+            get => _yPadding;
             set
             {
-                YPadding = checked((int) Math.Round(value));
+                _yPadding = checked((int) Math.Round(value));
                 if (DesignMode) Draw();
             }
         }
 
         public int TextWidth
         {
-            get => NameWidth;
+            get => _nameWidth;
             set
             {
-                NameWidth = value;
+                _nameWidth = value;
                 if (DesignMode) Draw();
             }
         }
 
         public int ItemHeight
         {
-            get => PItemHeight;
+            get => _pItemHeight;
             set
             {
-                PItemHeight = value;
-                FontSize = value;
+                _pItemHeight = value;
+                _fontSize = value;
                 if (DesignMode) Draw();
             }
         }
 
         public bool Lines
         {
-            get => PDrawLines;
+            get => _pDrawLines;
             set
             {
-                PDrawLines = value;
+                _pDrawLines = value;
                 if (DesignMode) Draw();
             }
         }
 
         public bool Border
         {
-            get => PBorder;
+            get => _pBorder;
             set
             {
-                PBorder = value;
+                _pBorder = value;
                 if (DesignMode) Draw();
             }
         }
 
         public bool ShowScale
         {
-            get => PShowScale;
+            get => _pShowScale;
             set
             {
-                PShowScale = value;
+                _pShowScale = value;
                 if (DesignMode) Draw();
             }
         }
 
         public bool Highlight
         {
-            get => PShowHighlight;
+            get => _pShowHighlight;
             set
             {
-                PShowHighlight = value;
+                _pShowHighlight = value;
                 if (DesignMode) Draw();
             }
         }
 
         public int ScaleHeight
         {
-            get => PScaleHeight;
+            get => _pScaleHeight;
             set
             {
-                PScaleHeight = value;
+                _pScaleHeight = value;
                 if (DesignMode) Draw();
             }
         }
 
         public bool Dual
         {
-            get => DualName;
+            get => _dualName;
             set
             {
-                DualName = value;
+                _dualName = value;
                 if (DesignMode) Draw();
             }
         }
 
         public GraphStyle Style
         {
-            get => PStyle;
+            get => _pStyle;
             set
             {
-                PStyle = value;
+                _pStyle = value;
                 if (DesignMode) Draw();
             }
         }
@@ -334,9 +334,9 @@ namespace Mids_Reborn.Controls
             get => WhichScale(ScaleValue);
             set
             {
-                if ((value > -1) & (value < Scales.Count))
+                if ((value > -1) & (value < _scales.Count))
                 {
-                    ScaleValue = Scales[value];
+                    ScaleValue = _scales[value];
                 }
 
                 if (DesignMode) Draw();
@@ -345,19 +345,19 @@ namespace Mids_Reborn.Controls
 
         public float ScaleValue { get; private set; }
 
-        public int ItemCount => Items.Count;
+        public int ItemCount => _items.Count;
 
-        public int ScaleCount => Scales.Count;
+        public int ScaleCount => _scales.Count;
 
         public float ForcedMax
         {
-            get => PForcedMax;
+            get => _pForcedMax;
             set
             {
-                PForcedMax = checked((int) Math.Round(value));
-                if (PForcedMax > 0)
+                _pForcedMax = checked((int) Math.Round(value));
+                if (_pForcedMax > 0)
                 {
-                    ScaleValue = PForcedMax;
+                    ScaleValue = _pForcedMax;
                 }
                 else
                 {
@@ -370,20 +370,20 @@ namespace Mids_Reborn.Controls
 
         public bool DrawRuler
         {
-            get => PDrawRuler;
+            get => _pDrawRuler;
             set
             {
-                PDrawRuler = value;
+                _pDrawRuler = value;
                 if (DesignMode) Draw();
             }
         }
 
         public RulerPosition RulerPos
         {
-            get => PRulerPosition;
+            get => _pRulerPosition;
             set
             {
-                PRulerPosition = value;
+                _pRulerPosition = value;
                 if (DesignMode) Draw();
             }
         }
@@ -400,10 +400,10 @@ namespace Mids_Reborn.Controls
 
         public bool DifferentiateColors
         {
-            get => UseDifferentiateColors;
+            get => _useDifferentiateColors;
             set
             {
-                UseDifferentiateColors = value;
+                _useDifferentiateColors = value;
                 if (DesignMode) Draw();
             }
         }
@@ -416,37 +416,37 @@ namespace Mids_Reborn.Controls
 
         public bool OuterBorder
         {
-            get => DisplayOuterBorder;
+            get => _displayOuterBorder;
             set
             {
-                DisplayOuterBorder = value;
+                _displayOuterBorder = value;
                 if (DesignMode) Draw();
             }
         }
 
         public int MaxItems
         {
-            get => MaxItemsCapacity;
+            get => _maxItemsCapacity;
             set
             {
-                MaxItemsCapacity = value;
+                _maxItemsCapacity = value;
                 if (DesignMode) Draw();
             }
         }
 
         public float ItemFontSizeOverride
         {
-            get => FontSizeOverride;
+            get => _fontSizeOverride;
             set
             {
-                FontSizeOverride = value;
+                _fontSizeOverride = value;
                 if (DesignMode) Draw();
             }
         }
 
         public List<float> PerItemScales { get; set; } = new();
 
-        public event BarClickEventHandler BarClick;
+        public event BarClickEventHandler? BarClick;
 
         protected override void Dispose(bool disposing)
         {
@@ -459,24 +459,24 @@ namespace Mids_Reborn.Controls
         private void InitializeComponent()
         {
             Components = new Container();
-            tTip = new ToolTip(Components)
+            Tip = new ToolTip(Components)
             {
                 AutoPopDelay = 10000, InitialDelay = 500, ReshowDelay = 100
             };
 
-            Name = "ctlMultiGraph";
+            Name = "CtlMultiGraph";
             Size = new Size(332, 156);
         }
 
-        private void ctlMultiGraph_Load(object sender, EventArgs e)
+        private void ctlMultiGraph_Load(object? sender, EventArgs e)
         {
             if (DesignMode)
             {
                 var rng = new Random();
                 Clear();
-                for (var i = 0 ; i < MaxItemsCapacity ; i++)
+                for (var i = 0 ; i < _maxItemsCapacity ; i++)
                 {
-                    var max = (int) (PerItemScales.Count >= MaxItemsCapacity
+                    var max = (int) (PerItemScales.Count >= _maxItemsCapacity
                         ? PerItemScales[i]
                         : ScaleValue);
                     var values = new List<int> {rng.Next(0, max), rng.Next(0, max), rng.Next(0, (int) (1.5 * max))};
@@ -501,42 +501,42 @@ namespace Mids_Reborn.Controls
                 Draw();
             }
 
-            Loaded = true;
+            _loaded = true;
         }   
 
         public void AddItem(string sName, float nBase, float nEnh, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, nBase, nEnh, iTip));
+            _items.Add(new GraphItem(sName, nBase, nEnh, iTip));
         }
 
         public void AddItem(string sName, float nBase, float nEnh, float nOvercap, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, sName, nBase, nEnh, nOvercap, iTip));
+            _items.Add(new GraphItem(sName, sName, nBase, nEnh, nOvercap, iTip));
         }
 
         public void AddItem(string sName, float nBase, float nEnh, float nOvercap, float nAbsorbed, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, sName, nBase, nEnh, nOvercap, nAbsorbed, iTip));
+            _items.Add(new GraphItem(sName, sName, nBase, nEnh, nOvercap, nAbsorbed, iTip));
         }
 
         public void AddItemPair(string sName, string sName2, float nBase, float nEnh, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, sName2, nBase, nEnh, iTip));
+            _items.Add(new GraphItem(sName, sName2, nBase, nEnh, iTip));
         }
 
         public void AddItemPair(string sName, string sName2, float nBase, float nEnh, float nOvercap, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, sName2, nBase, nEnh, nOvercap, iTip));
+            _items.Add(new GraphItem(sName, sName2, nBase, nEnh, nOvercap, iTip));
         }
 
         public void AddItemPair(string sName, string sName2, float nBase, float nEnh, float nOvercap, float nAbsorbed, string iTip = "")
         {
-            Items.Add(new GraphItem(sName, sName2, nBase, nEnh, nOvercap, nAbsorbed, iTip));
+            _items.Add(new GraphItem(sName, sName2, nBase, nEnh, nOvercap, nAbsorbed, iTip));
         }
 
         public void Clear()
         {
-            Items = new List<GraphItem>();
+            _items = new List<GraphItem>();
         }
 
         /// <summary>
@@ -551,7 +551,7 @@ namespace Mids_Reborn.Controls
 
         public void Draw()
         {
-            if (NoDraw)
+            if (_noDraw)
             {
                 return;
             }
@@ -559,15 +559,15 @@ namespace Mids_Reborn.Controls
             using var s = SKSurface.Create(new SKImageInfo(Width, Height));
             s.Canvas.Clear(new SKColor(BackColor.R, BackColor.G, BackColor.B));
 
-            var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
+            var drawArea = new SKRect(_nameWidth, 0, Width - 1, Height - 1);
             var fullArea = new SKRect(0, 0, Width, Height);
-            var fontSize = FontSizeOverride > 0 ? FontSizeOverride : FontSize;
+            var fontSize = _fontSizeOverride > 0 ? _fontSizeOverride : _fontSize;
             using var bgGradientBrush = new SKPaint
             {
                 Shader = SKShader.CreateLinearGradient(
                     new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
-                    new[] {PBlendColor1.ToSKColor(), PBlendColor1.ToSKColor(), PBlendColor2.ToSKColor()},
-                    new[] {0, NameWidth / (float) Width, 1f},
+                    new[] {_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()},
+                    new[] {0, _nameWidth / (float) Width, 1f},
                     SKShaderTileMode.Clamp
                 ),
                 Style = SKPaintStyle.Fill
@@ -581,7 +581,7 @@ namespace Mids_Reborn.Controls
             using var lineBrush = new SKPaint
             {
                 IsAntialias = true,
-                Color = PLineColor.ToSKColor(),
+                Color = _pLineColor.ToSKColor(),
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
@@ -601,10 +601,10 @@ namespace Mids_Reborn.Controls
             var rulerYoffsetTop = 0;
             var rulerYoffsetBottom = 0;
             const int rulerHeight = 15;
-            if (PDrawRuler)
+            if (_pDrawRuler)
             {
                 DrawRulerLines(s, drawArea);
-                switch (PRulerPosition)
+                switch (_pRulerPosition)
                 {
                     case RulerPosition.Both:
                         rulerYoffsetTop = rulerHeight;
@@ -634,26 +634,26 @@ namespace Mids_Reborn.Controls
             };*/
 
             const float nameXPadding = 3;
-            for (var i = 0; i < Items.Count; i++)
+            for (var i = 0; i < _items.Count; i++)
             {
                 // Data sent from some components might contain nulls (e.g. frmCompare)
-                if (string.IsNullOrWhiteSpace(Items[i].Name) & string.IsNullOrWhiteSpace(Items[i].Name2))
+                if (string.IsNullOrWhiteSpace(_items[i].Name) & string.IsNullOrWhiteSpace(_items[i].Name2))
                 {
                     continue;
                 }
 
-                var ny = YPadding + i * (PItemHeight + YPadding);
+                var ny = _yPadding + i * (_pItemHeight + _yPadding);
                 var textRect = new SKRect(nameXPadding,
-                    drawArea.Top + ny - YPadding / 2f - (BaseLineOffset(Items[i].Name) ? fontSize / 4f : 0),
-                    Math.Max(Name2XPadding, NameWidth) - Name2XPadding,
-                    drawArea.Top + ny + PItemHeight + YPadding / 2f);
-                var textRect2 = textRect with { Top = drawArea.Top + ny - YPadding / 2f };
-                var separatorTextIndex = Items[i].Name.IndexOf("|", StringComparison.Ordinal);
-                var label1 = Items[i].Name;
-                var label2 = Items[i].Name2;
+                    drawArea.Top + ny - _yPadding / 2f - (BaseLineOffset(_items[i].Name) ? fontSize / 4f : 0),
+                    Math.Max(Name2XPadding, _nameWidth) - Name2XPadding,
+                    drawArea.Top + ny + _pItemHeight + _yPadding / 2f);
+                var textRect2 = textRect with { Top = drawArea.Top + ny - _yPadding / 2f };
+                var separatorTextIndex = _items[i].Name.IndexOf("|", StringComparison.Ordinal);
+                var label1 = _items[i].Name;
+                var label2 = _items[i].Name2;
                 if (separatorTextIndex >= 0)
                 {
-                    var combinedLabel = Items[i].Name;
+                    var combinedLabel = _items[i].Name;
                     label1 = combinedLabel[..separatorTextIndex];
                     label2 = combinedLabel[(separatorTextIndex + 1)..];
                 }
@@ -669,7 +669,7 @@ namespace Mids_Reborn.Controls
                     DrawOvercap(s, i, drawArea, ny);
                 }
 
-                switch (PStyle)
+                switch (_pStyle)
                 {
                     case GraphStyle.baseOnly:
                         DrawBase(s, i, drawArea, ny);
@@ -678,7 +678,7 @@ namespace Mids_Reborn.Controls
                         DrawEnh(s, i, drawArea, ny);
                         break;
                     default:
-                        if (Items[i].ValueBase > Items[i].ValueEnh)
+                        if (_items[i].ValueBase > _items[i].ValueEnh)
                         {
                             DrawBase(s, i, drawArea, ny);
                             DrawEnh(s, i, drawArea, ny);
@@ -692,7 +692,7 @@ namespace Mids_Reborn.Controls
                         break;
                 }
 
-                if (Items[i].ValueAbsorbed <= 0)
+                if (_items[i].ValueAbsorbed <= 0)
                 {
                     continue;
                 }
@@ -700,12 +700,12 @@ namespace Mids_Reborn.Controls
                 DrawAbsorbed(s, i, drawArea, ny);
             }
 
-            if (PBorder)
+            if (_pBorder)
             {
                 s.Canvas.DrawRect(drawArea, lineBrush);
             }
 
-            if (DisplayOuterBorder)
+            if (_displayOuterBorder)
             {
                 s.Canvas.DrawRect(fullArea, borderBrush);
             }
@@ -716,14 +716,14 @@ namespace Mids_Reborn.Controls
         private int CalcContentHeight()
         {
             var contentHeight = 0;
-            var drawArea = new SKRect(NameWidth, 0, Width - 1, Height - 1);
-            var fontSize = FontSizeOverride > 0 ? FontSizeOverride : FontSize;
+            var drawArea = new SKRect(_nameWidth, 0, Width - 1, Height - 1);
+            var fontSize = _fontSizeOverride > 0 ? _fontSizeOverride : _fontSize;
             var rulerYoffsetTop = 0;
             var rulerYoffsetBottom = 0;
             const int rulerHeight = 15;
-            if (PDrawRuler)
+            if (_pDrawRuler)
             {
-                switch (PRulerPosition)
+                switch (_pRulerPosition)
                 {
                     case RulerPosition.Both:
                         rulerYoffsetTop = rulerHeight;
@@ -744,27 +744,27 @@ namespace Mids_Reborn.Controls
             }
 
             const float nameXPadding = 3;
-            if (Items.Count == 0)
+            if (_items.Count == 0)
             {
                 return 0;
             }
 
-            for (var i = 0; i < Items.Count; i++)
+            for (var i = 0; i < _items.Count; i++)
             {
-                if (string.IsNullOrWhiteSpace(Items[i].Name) & string.IsNullOrWhiteSpace(Items[i].Name2))
+                if (string.IsNullOrWhiteSpace(_items[i].Name) & string.IsNullOrWhiteSpace(_items[i].Name2))
                 {
                     continue;
                 }
 
-                var ny = YPadding + i * (PItemHeight + YPadding);
+                var ny = _yPadding + i * (_pItemHeight + _yPadding);
                 var textRect = new SKRect(nameXPadding,
-                    drawArea.Top + ny - YPadding / 2f - (BaseLineOffset(Items[i].Name) ? fontSize / 4f : 0),
-                    Math.Max(Name2XPadding, NameWidth) - Name2XPadding,
-                    drawArea.Top + ny + PItemHeight + YPadding / 2f);
+                    drawArea.Top + ny - _yPadding / 2f - (BaseLineOffset(_items[i].Name) ? fontSize / 4f : 0),
+                    Math.Max(Name2XPadding, _nameWidth) - Name2XPadding,
+                    drawArea.Top + ny + _pItemHeight + _yPadding / 2f);
 
-                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
-                var barWidth = (int)Math.Round(drawArea.Width * (Items[i].ValueBase / itemScale));
-                var barRect = new SKRect(drawArea.Left, drawArea.Top + ny, drawArea.Left + barWidth, drawArea.Top + ny + PItemHeight);
+                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[i] : ScaleValue;
+                var barWidth = (int)Math.Round(drawArea.Width * (_items[i].ValueBase / itemScale));
+                var barRect = new SKRect(drawArea.Left, drawArea.Top + ny, drawArea.Left + barWidth, drawArea.Top + ny + _pItemHeight);
 
                 contentHeight = (int)Math.Ceiling(Math.Max(barRect.Bottom, textRect.Bottom));
             }
@@ -817,7 +817,7 @@ namespace Mids_Reborn.Controls
             var vMin = 0f;
             var vMax = ScaleValue;
 
-            if (PRulerPosition != RulerPosition.Bottom)
+            if (_pRulerPosition != RulerPosition.Bottom)
             {
                 s.Canvas.DrawLine(bounds.Left, 0, bounds.Right, 0, shadowPaint);
                 s.Canvas.DrawLine(bounds.Left, 2, bounds.Right, 2, shadowPaint);
@@ -847,7 +847,7 @@ namespace Mids_Reborn.Controls
                 }
             }
 
-            if (PRulerPosition != RulerPosition.Top)
+            if (_pRulerPosition != RulerPosition.Top)
             {
                 s.Canvas.DrawLine(bounds.Left, bounds.Bottom, bounds.Right, bounds.Bottom, shadowPaint);
                 s.Canvas.DrawLine(bounds.Left, bounds.Bottom - 2, bounds.Right, bounds.Bottom - 2, shadowPaint);
@@ -876,19 +876,19 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (!PShowHighlight | (PHighlight == -1))
+                if (!_pShowHighlight | (_pHighlight == -1))
                 {
                     return;
                 }
 
                 using var fillBrush = new SKPaint
                 {
-                    Color = new SKColor(PHighlightColor.R, PHighlightColor.G, PHighlightColor.B, 128),
+                    Color = new SKColor(_pHighlightColor.R, _pHighlightColor.G, _pHighlightColor.B, 128),
                     Style = SKPaintStyle.Fill
                 };
 
-                var ny = YPadding + PHighlight * (PItemHeight + YPadding);
-                var drawRect = new SKRect(0, bounds.Top + ny - YPadding / 2f, Width, bounds.Top + ny + PItemHeight + YPadding / 2f);
+                var ny = _yPadding + _pHighlight * (_pItemHeight + _yPadding);
+                var drawRect = new SKRect(0, bounds.Top + ny - _yPadding / 2f, Width, bounds.Top + ny + _pItemHeight + _yPadding / 2f);
 
                 s.Canvas.DrawRect(drawRect, fillBrush);
             }
@@ -898,7 +898,7 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (!PShowScale)
+                if (!_pShowScale)
                 {
                     return;
                 }
@@ -930,7 +930,7 @@ namespace Mids_Reborn.Controls
                     Color = ForeColor.ToSKColor()
                 };
 
-                var rect = new SKRect(bounds.Left, bounds.Top, bounds.Width, PScaleHeight);
+                var rect = new SKRect(bounds.Left, bounds.Top, bounds.Width, _pScaleHeight);
                 bounds.Top += rect.Height;
                 bounds.Bottom -= rect.Height;
                 s.Canvas.DrawRect(rect, fillBgBrush);
@@ -938,7 +938,7 @@ namespace Mids_Reborn.Controls
                 
                 var num = (int) Math.Round(rect.Width / 10f);
                 var num2 = (int) Math.Round(Font.Size + 1f);
-                var num3 = NameWidth;
+                var num3 = _nameWidth;
                 var num4 = (int) Math.Round(rect.Top + rect.Height / 5f * 4);
                 for (var i = 0; i < 11; i++)
                 {
@@ -951,7 +951,7 @@ namespace Mids_Reborn.Controls
                         layoutRectangle.Left = num3 - num;
                     }
 
-                    var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[i] : ScaleValue;
+                    var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[i] : ScaleValue;
                     var formattedValue = Max switch
                     {
                         >= 100f => $"{itemScale / 10f * i:#,##0}",
@@ -960,7 +960,7 @@ namespace Mids_Reborn.Controls
                         _ => $"{itemScale / 10f * i:#0.##}",
                     };
 
-                    s.Canvas.DrawTextShort(i > 0 ? formattedValue : "0", FontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
+                    s.Canvas.DrawTextShort(i > 0 ? formattedValue : "0", _fontSize, layoutRectangle.Left, layoutRectangle.Top, textPaint);
                     num3 += num;
                 }
             }
@@ -972,7 +972,7 @@ namespace Mids_Reborn.Controls
             {
                 Color = BaseBarColors.Count > 0
                     ? BaseBarColors[index % BaseBarColors.Count].ToSKColor()
-                    : PBaseColor.ToSKColor(),
+                    : _pBaseColor.ToSKColor(),
                 Style = SKPaintStyle.Fill
             };
 
@@ -980,7 +980,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PLineColor.ToSKColor(),
+                Color = _pLineColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -989,7 +989,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor.ToSKColor(),
+                Color = _pMarkerColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -998,7 +998,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor2.ToSKColor(),
+                Color = _pMarkerColor2.ToSKColor(),
                 StrokeWidth = 3,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1007,7 +1007,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor2.ToSKColor(),
+                Color = _pMarkerColor2.ToSKColor(),
                 StrokeWidth = 6,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1016,7 +1016,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor.ToSKColor(),
+                Color = _pMarkerColor.ToSKColor(),
                 StrokeWidth = 2,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1025,23 +1025,23 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor2.ToSKColor(),
+                Color = _pMarkerColor2.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
 
             checked
             {
-                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
-                var width = (int) Math.Round(bounds.Width * (Items[index].ValueBase / itemScale));
-                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+                var width = (int) Math.Round(bounds.Width * (_items[index].ValueBase / itemScale));
+                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
                 s.Canvas.DrawRect(rect, fillPaint);
-                if (PDrawLines)
+                if (_pDrawLines)
                 {
                     s.Canvas.DrawRect(rect, linePaint);
                 }
 
-                if ((MarkerValue > 0) & (Math.Abs(MarkerValue - Items[index].ValueBase) > float.Epsilon))
+                if ((MarkerValue > 0) & (Math.Abs(MarkerValue - _items[index].ValueBase) > float.Epsilon))
                 {
                     var markerY = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
                     s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, marker2Paint);
@@ -1066,7 +1066,7 @@ namespace Mids_Reborn.Controls
             {
                 Color = EnhBarColors.Count > 0
                     ? EnhBarColors[index % EnhBarColors.Count].ToSKColor()
-                    : PEnhColor.ToSKColor(),
+                    : _pEnhColor.ToSKColor(),
                 Style = SKPaintStyle.Fill
             };
 
@@ -1074,7 +1074,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PLineColor.ToSKColor(),
+                Color = _pLineColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1083,7 +1083,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor.ToSKColor(),
+                Color = _pMarkerColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1092,7 +1092,7 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PMarkerColor2.ToSKColor(),
+                Color = _pMarkerColor2.ToSKColor(),
                 StrokeWidth = 3,
                 StrokeCap = SKStrokeCap.Butt
             };
@@ -1105,9 +1105,9 @@ namespace Mids_Reborn.Controls
 
             checked
             {
-                var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
-                var width = (int) Math.Round(bounds.Width * (Items[index].ValueEnh / itemScale));
-                var num = PItemHeight;
+                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+                var width = (int) Math.Round(bounds.Width * (_items[index].ValueEnh / itemScale));
+                var num = _pItemHeight;
                 if (Style == GraphStyle.Twin)
                 {
                     num = (int) Math.Round(num / 2.0);
@@ -1116,12 +1116,12 @@ namespace Mids_Reborn.Controls
 
                 var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + num);
                 s.Canvas.DrawRect(rect, fillBrush);
-                if (PDrawLines)
+                if (_pDrawLines)
                 {
                     s.Canvas.DrawRect(rect, lineBrush);
                 }
 
-                if ((MarkerValue > 0f) & (Math.Abs(MarkerValue - Items[index].ValueEnh) > float.Epsilon))
+                if ((MarkerValue > 0f) & (Math.Abs(MarkerValue - _items[index].ValueEnh) > float.Epsilon))
                 {
                     var num2 = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
                     s.Canvas.DrawLine(num2, rect.Top + 1, num2, rect.Bottom, markerBrush2);
@@ -1144,17 +1144,17 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PLineColor.ToSKColor(),
+                Color = _pLineColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
-            var width = (int) Math.Round(bounds.Width * (Items[index].ValueOvercap / itemScale));
+            var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+            var width = (int) Math.Round(bounds.Width * (_items[index].ValueOvercap / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
-            if (PDrawLines)
+            if (_pDrawLines)
             {
                 s.Canvas.DrawRect(rect, linePaint);
             }
@@ -1172,86 +1172,86 @@ namespace Mids_Reborn.Controls
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
-                Color = PLineColor.ToSKColor(),
+                Color = _pLineColor.ToSKColor(),
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var itemScale = PerItemScales.Count == Items.Count && Items.Count > 0 ? PerItemScales[index] : ScaleValue;
-            var width = (int) Math.Round(bounds.Width * (Items[index].ValueAbsorbed / itemScale));
+            var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+            var width = (int) Math.Round(bounds.Width * (_items[index].ValueAbsorbed / itemScale));
             var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(PItemHeight / 2f) : PItemHeight));
+                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
-            if (PDrawLines)
+            if (_pDrawLines)
             {
                 s.Canvas.DrawRect(rect, linePaint);
             }
         }
 
-        private void ctlMultiGraph_BackColorChanged(object sender, EventArgs e)
+        private void ctlMultiGraph_BackColorChanged(object? sender, EventArgs e)
         {
             Draw();
         }
 
-        private void ctlMultiGraph_SizeChanged(object sender, EventArgs e)
+        private void ctlMultiGraph_SizeChanged(object? sender, EventArgs e)
         {
             Draw();
         }
 
-        private void ctlMultiGraph_Paint(object sender, PaintEventArgs e)
+        private void ctlMultiGraph_Paint(object? sender, PaintEventArgs e)
         {
         }
 
-        private void ctlMultiGraph_FontChanged(object sender, EventArgs e)
-        {
-            Draw();
-        }
-
-        private void ctlMultiGraph_ForeColorChanged(object sender, EventArgs e)
+        private void ctlMultiGraph_FontChanged(object? sender, EventArgs e)
         {
             Draw();
         }
 
-        private void ctlMultiGraph_Resize(object sender, EventArgs e)
+        private void ctlMultiGraph_ForeColorChanged(object? sender, EventArgs e)
         {
             Draw();
         }
 
-        private void ctlMultiGraph_MouseMove(object sender, MouseEventArgs e)
+        private void ctlMultiGraph_Resize(object? sender, EventArgs e)
+        {
+            Draw();
+        }
+
+        private void ctlMultiGraph_MouseMove(object? sender, MouseEventArgs e)
         {
             checked
             {
                 if (Clickable & e.Button == MouseButtons.Left)
                 {
-                    var valueAtXY = GetValueAtXY(e.X, e.Y);
+                    var valueAtXy = GetValueAtXy(e.X, e.Y);
                     var barClickEvent = BarClick;
-                    barClickEvent?.Invoke(valueAtXY);
+                    barClickEvent?.Invoke(valueAtXy);
                 }
-                else if (!(e.X == OldMouseX & e.Y == OldMouseY))
+                else if (!(e.X == _oldMouseX & e.Y == _oldMouseY))
                 {
-                    OldMouseX = e.X;
-                    OldMouseY = e.Y;
-                    var prevHighlight = PHighlight;
+                    _oldMouseX = e.X;
+                    _oldMouseY = e.Y;
+                    var prevHighlight = _pHighlight;
                     var rectangle = new Rectangle(0, 0, Width - 1, Height - 1);
-                    if (PShowScale)
+                    if (_pShowScale)
                     {
-                        rectangle.Height -= PScaleHeight;
-                        rectangle.Y += PScaleHeight;
+                        rectangle.Height -= _pScaleHeight;
+                        rectangle.Y += _pScaleHeight;
                     }
 
-                    var drawArea = new SKRect(NameWidth, PDrawRuler & PRulerPosition != RulerPosition.Bottom ? 15 : 0, Width - 1, Height - (PDrawRuler & PRulerPosition != RulerPosition.Top ? 1 : 16));
-                    for (var i = 0 ; i < Items.Count ; i++)
+                    var drawArea = new SKRect(_nameWidth, _pDrawRuler & _pRulerPosition != RulerPosition.Bottom ? 15 : 0, Width - 1, Height - (_pDrawRuler & _pRulerPosition != RulerPosition.Top ? 1 : 16));
+                    for (var i = 0 ; i < _items.Count ; i++)
                     {
                         //var num4 = (int) Math.Round(YPadding / 2.0 + checked(i * (PItemHeight + YPadding)));
                         //var rectangle2 = new Rectangle(rectangle.Left, rectangle.Top + num4, width, height);
-                        var ny = YPadding + i * (PItemHeight + YPadding);
-                        var rectangle2 = new SKRect(0, (int) Math.Round(drawArea.Top + ny - YPadding / 2f), Width, (int) Math.Round(drawArea.Top + ny + PItemHeight + YPadding / 2f));
+                        var ny = _yPadding + i * (_pItemHeight + _yPadding);
+                        var rectangle2 = new SKRect(0, (int) Math.Round(drawArea.Top + ny - _yPadding / 2f), Width, (int) Math.Round(drawArea.Top + ny + _pItemHeight + _yPadding / 2f));
                         if ((e.X >= rectangle2.Left) & (e.X <= rectangle2.Right) &&
                             (e.Y >= rectangle2.Top) & (e.Y <= rectangle2.Bottom))
                         {
-                            PHighlight = i;
-                            tTip.SetToolTip(this, Items[i].Tip);
-                            if (prevHighlight == PHighlight)
+                            _pHighlight = i;
+                            Tip?.SetToolTip(this, _items[i].Tip);
+                            if (prevHighlight == _pHighlight)
                             {
                                 return;
                             }
@@ -1262,9 +1262,9 @@ namespace Mids_Reborn.Controls
                         }
                     }
 
-                    PHighlight = -1;
-                    tTip.SetToolTip(this, "");
-                    if (prevHighlight != PHighlight)
+                    _pHighlight = -1;
+                    Tip?.SetToolTip(this, "");
+                    if (prevHighlight != _pHighlight)
                     {
                         Draw();
                     }
@@ -1272,11 +1272,11 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        private void ctlMultiGraph_MouseLeave(object sender, EventArgs e)
+        private void ctlMultiGraph_MouseLeave(object? sender, EventArgs e)
         {
-            var num = PHighlight;
-            PHighlight = -1;
-            if (num == PHighlight)
+            var num = _pHighlight;
+            _pHighlight = -1;
+            if (num == _pHighlight)
             {
                 return;
             }
@@ -1286,18 +1286,18 @@ namespace Mids_Reborn.Controls
 
         public void BeginUpdate()
         {
-            NoDraw = true;
+            _noDraw = true;
         }
 
         public void EndUpdate()
         {
-            NoDraw = false;
+            _noDraw = false;
             Draw();
         }
 
         private void FillScales()
         {
-            Scales = new List<float>
+            _scales = new List<float>
             {
                 1,
                 2,
@@ -1326,11 +1326,11 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (Scales.Count >= 1 && Items.Count >= 1)
+                if (_scales.Count >= 1 && _items.Count >= 1)
                 {
                     return Math.Max(
-                        Items.Select(e => e.ValueBase).Max(),
-                        Items.Select(e => e.ValueEnh).Max());
+                        _items.Select(e => e.ValueBase).Max(),
+                        _items.Select(e => e.ValueEnh).Max());
                 }
 
                 ScaleValue = 100;
@@ -1343,13 +1343,13 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (Scales.Count < 1)
+                if (_scales.Count < 1)
                 {
                     ScaleValue = value;
                 }
                 else
                 {
-                    foreach (var scale in Scales)
+                    foreach (var scale in _scales)
                     {
                         if (scale < value)
                         {
@@ -1361,7 +1361,7 @@ namespace Mids_Reborn.Controls
                         return;
                     }
 
-                    ScaleValue = Scales[^1];
+                    ScaleValue = _scales[^1];
                 }
             }
         }
@@ -1370,47 +1370,47 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                for (var i = 0; i < Scales.Count; i++)
+                for (var i = 0; i < _scales.Count; i++)
                 {
-                    if (Math.Abs(Scales[i] - iVal) < float.Epsilon)
+                    if (Math.Abs(_scales[i] - iVal) < float.Epsilon)
                     {
                         return i;
                     }
                 }
 
-                return Scales.Count - 1;
+                return _scales.Count - 1;
             }
         }
 
-        private void ctlMultiGraph_MouseDown(object sender, MouseEventArgs e)
+        private void ctlMultiGraph_MouseDown(object? sender, MouseEventArgs e)
         {
             if (!(Clickable & (e.Button == MouseButtons.Left)))
             {
                 return;
             }
 
-            var valueAtXY = GetValueAtXY(e.X, e.Y);
-            BarClick?.Invoke(valueAtXY);
+            var valueAtXy = GetValueAtXy(e.X, e.Y);
+            BarClick?.Invoke(valueAtXy);
         }
 
-        private float GetValueAtXY(int iX, int iY)
+        private float GetValueAtXy(int iX, int iY)
         {
             checked
             {
                 var rectangle = new Rectangle(0, 0, Width - 1, Height - 1);
-                if (PShowScale)
+                if (_pShowScale)
                 {
-                    rectangle.Height -= PScaleHeight;
-                    rectangle.Y += PScaleHeight;
+                    rectangle.Height -= _pScaleHeight;
+                    rectangle.Y += _pScaleHeight;
                 }
 
                 var num = rectangle.Width;
-                var height = ItemHeight + YPadding;
-                if (!Items.Select((t, i) => (int) Math.Round(YPadding / 2.0 + checked(i * (PItemHeight + YPadding))))
+                var height = ItemHeight + _yPadding;
+                if (!_items.Select((t, i) => (int) Math.Round(_yPadding / 2.0 + checked(i * (_pItemHeight + _yPadding))))
                         .Select(num4 => new Rectangle(rectangle.Left, rectangle.Top + num4, num, height))
                         .Any(rectangle2 =>
                             iX >= rectangle2.X && iY >= rectangle2.Y & iY <= rectangle2.Y + rectangle2.Height |
-                            Items.Count == 1))
+                            _items.Count == 1))
                 {
                     return 0;
                 }

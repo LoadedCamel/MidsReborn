@@ -28,7 +28,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ComboBox cbType2;
         private CheckBox chkMatching;
         private ImageButton chkOnTop;
-        private ctlMultiGraph Graph;
+        private CtlMultiGraph Graph;
         private float GraphMax;
         private GroupBox GroupBox1;
         private GroupBox GroupBox2;
