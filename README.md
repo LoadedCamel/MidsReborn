@@ -1,6 +1,3 @@
-#### Our Software Is
-<img src="https://user-images.githubusercontent.com/18664232/152843786-afbf3b7e-904f-47a5-8de0-676f9866471e.png" width="75" height="32">
-
 #### Description
 A character build planner for City of Heroes built upon Windows Forms using C# .NET6
 
