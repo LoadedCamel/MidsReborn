@@ -610,7 +610,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             var database = DatabaseAPI.Database;
             var psList = database.Powersets.ToList();
-            psList.Add(new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = psList.Count + 1 });
+            psList.Add(new Powerset(frmEditPowerset.MyPowerSet) { IsNew = true, nID = psList.Count + 1 });
             DatabaseAPI.Database.Powersets = psList.ToArray();
             UpdateLists();
             Sort(1);
@@ -698,7 +698,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 using var frmEditPowerset = new frmEditPowerset(ref powerset);
                 if (frmEditPowerset.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.myPS) { IsModified = true };
+                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.MyPowerSet) { IsModified = true };
                 if (DatabaseAPI.Database.Powersets[Powerset].FullName == fullName)
                     return;
                 BusyMsg("Re-Indexing...");

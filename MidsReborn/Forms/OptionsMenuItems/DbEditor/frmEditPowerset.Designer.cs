@@ -71,11 +71,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Label6 = new Label();
             Label7 = new Label();
             GroupBox5 = new GroupBox();
-            btnPaste = new Button();
-            btnCopy = new Button();
-            btnRemoveMutexSet = new Button();
-            btnAddMutexSet = new Button();
-            lvMutexSets = new ListBox();
+            label10 = new Label();
+            lbAssignedSets = new ListBox();
+            label9 = new Label();
+            label8 = new Label();
+            lbAvailbleSets = new ListBox();
             ((ISupportInitialize)picIcon).BeginInit();
             GroupBox1.SuspendLayout();
             GroupBox2.SuspendLayout();
@@ -461,65 +461,64 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox5
             // 
-            GroupBox5.Controls.Add(btnPaste);
-            GroupBox5.Controls.Add(btnCopy);
-            GroupBox5.Controls.Add(btnRemoveMutexSet);
-            GroupBox5.Controls.Add(btnAddMutexSet);
-            GroupBox5.Controls.Add(lvMutexSets);
+            GroupBox5.Controls.Add(label10);
+            GroupBox5.Controls.Add(lbAssignedSets);
+            GroupBox5.Controls.Add(label9);
+            GroupBox5.Controls.Add(label8);
+            GroupBox5.Controls.Add(lbAvailbleSets);
             GroupBox5.Location = new System.Drawing.Point(533, 14);
             GroupBox5.Name = "GroupBox5";
-            GroupBox5.Size = new System.Drawing.Size(253, 377);
+            GroupBox5.Size = new System.Drawing.Size(253, 643);
             GroupBox5.TabIndex = 32;
             GroupBox5.TabStop = false;
-            GroupBox5.Text = "Mutually Exclusive Sets";
+            GroupBox5.Text = "Mutual Exclusivity";
             // 
-            // btnPaste
+            // label10
             // 
-            btnPaste.Location = new System.Drawing.Point(142, 338);
-            btnPaste.Name = "btnPaste";
-            btnPaste.Size = new System.Drawing.Size(75, 24);
-            btnPaste.TabIndex = 115;
-            btnPaste.Text = "Paste";
-            btnPaste.UseVisualStyleBackColor = true;
-            btnPaste.Click += btnPaste_Click;
+            label10.Location = new System.Drawing.Point(10, 25);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(237, 47);
+            label10.TabIndex = 124;
+            label10.Text = "To assign or remove a Powerset simply double-click the set in the corresponding list.";
             // 
-            // btnCopy
+            // lbAssignedSets
             // 
-            btnCopy.Location = new System.Drawing.Point(40, 338);
-            btnCopy.Name = "btnCopy";
-            btnCopy.Size = new System.Drawing.Size(75, 24);
-            btnCopy.TabIndex = 114;
-            btnCopy.Text = "Copy All";
-            btnCopy.UseVisualStyleBackColor = true;
-            btnCopy.Click += btnCopy_Click;
+            lbAssignedSets.BackColor = System.Drawing.SystemColors.Info;
+            lbAssignedSets.FormattingEnabled = true;
+            lbAssignedSets.Location = new System.Drawing.Point(9, 380);
+            lbAssignedSets.Name = "lbAssignedSets";
+            lbAssignedSets.Size = new System.Drawing.Size(238, 238);
+            lbAssignedSets.TabIndex = 123;
+            lbAssignedSets.DoubleClick += lbAssignedSets_DoubleClick;
             // 
-            // btnRemoveMutexSet
+            // label9
             // 
-            btnRemoveMutexSet.Location = new System.Drawing.Point(142, 301);
-            btnRemoveMutexSet.Name = "btnRemoveMutexSet";
-            btnRemoveMutexSet.Size = new System.Drawing.Size(75, 24);
-            btnRemoveMutexSet.TabIndex = 113;
-            btnRemoveMutexSet.Text = "Remove";
-            btnRemoveMutexSet.UseVisualStyleBackColor = true;
-            btnRemoveMutexSet.Click += btnRemoveMutexSet_Click;
+            label9.AutoSize = true;
+            label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label9.Location = new System.Drawing.Point(10, 362);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(86, 15);
+            label9.TabIndex = 122;
+            label9.Text = "Sets Assigned:";
             // 
-            // btnAddMutexSet
+            // label8
             // 
-            btnAddMutexSet.Location = new System.Drawing.Point(40, 301);
-            btnAddMutexSet.Name = "btnAddMutexSet";
-            btnAddMutexSet.Size = new System.Drawing.Size(75, 24);
-            btnAddMutexSet.TabIndex = 112;
-            btnAddMutexSet.Text = "Add";
-            btnAddMutexSet.UseVisualStyleBackColor = true;
-            btnAddMutexSet.Click += btnAddMutexSet_Click;
+            label8.AutoSize = true;
+            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Location = new System.Drawing.Point(10, 83);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(87, 15);
+            label8.TabIndex = 121;
+            label8.Text = "Sets Available:";
             // 
-            // lvMutexSets
+            // lbAvailbleSets
             // 
-            lvMutexSets.Location = new System.Drawing.Point(9, 25);
-            lvMutexSets.Name = "lvMutexSets";
-            lvMutexSets.Size = new System.Drawing.Size(238, 264);
-            lvMutexSets.TabIndex = 111;
-            lvMutexSets.SelectedIndexChanged += lvMutexSets_SelectedIndexChanged;
+            lbAvailbleSets.FormattingEnabled = true;
+            lbAvailbleSets.Location = new System.Drawing.Point(9, 101);
+            lbAvailbleSets.Name = "lbAvailbleSets";
+            lbAvailbleSets.Size = new System.Drawing.Size(238, 238);
+            lbAvailbleSets.TabIndex = 117;
+            lbAvailbleSets.DoubleClick += lbAvailableSets_DoubleClick;
             // 
             // frmEditPowerset
             // 
@@ -556,6 +555,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             GroupBox4.ResumeLayout(false);
             gbLink.ResumeLayout(false);
             GroupBox5.ResumeLayout(false);
+            GroupBox5.PerformLayout();
             ResumeLayout(false);
         }
         #endregion
@@ -594,15 +594,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Label Label7;
         Label lblNameFull;
         Label lblNameUnique;
-        ListBox lvMutexSets;
         ListView lvPowers;
         PictureBox picIcon;
         TextBox txtDesc;
         TextBox txtName;
         TextBox txtNameSet;
-        private Button btnRemoveMutexSet;
-        private Button btnAddMutexSet;
-        private Button btnPaste;
-        private Button btnCopy;
+        private ListBox lbAvailbleSets;
+        private ComboBox cbMutexSetType;
+        private Button mutExlRem;
+        private Button mutExlAdd;
+        private Label label9;
+        private Label label8;
+        private Label label10;
+        private ListBox lbAssignedSets;
     }
 }
