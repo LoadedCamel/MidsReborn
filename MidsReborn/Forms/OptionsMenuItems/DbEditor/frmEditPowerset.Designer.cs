@@ -31,465 +31,532 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.cbAT = new System.Windows.Forms.ComboBox();
-            this.Label2 = new System.Windows.Forms.Label();
-            this.Label3 = new System.Windows.Forms.Label();
-            this.cbSetType = new System.Windows.Forms.ComboBox();
-            this.btnIcon = new System.Windows.Forms.Button();
-            this.picIcon = new System.Windows.Forms.PictureBox();
-            this.lvPowers = new System.Windows.Forms.ListView();
-            this.ColumnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.Label4 = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btnClearIcon = new System.Windows.Forms.Button();
-            this.ImagePicker = new System.Windows.Forms.OpenFileDialog();
-            this.lblNameUnique = new System.Windows.Forms.Label();
-            this.lblNameFull = new System.Windows.Forms.Label();
-            this.cbNameGroup = new System.Windows.Forms.ComboBox();
-            this.Label22 = new System.Windows.Forms.Label();
-            this.txtNameSet = new System.Windows.Forms.TextBox();
-            this.Label33 = new System.Windows.Forms.Label();
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
-            this.GroupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.GroupBox3 = new System.Windows.Forms.GroupBox();
-            this.txtDesc = new System.Windows.Forms.TextBox();
-            this.GroupBox4 = new System.Windows.Forms.GroupBox();
-            this.chkNoTrunk = new System.Windows.Forms.CheckBox();
-            this.cbTrunkSet = new System.Windows.Forms.ComboBox();
-            this.cbTrunkGroup = new System.Windows.Forms.ComboBox();
-            this.Label5 = new System.Windows.Forms.Label();
-            this.Label31 = new System.Windows.Forms.Label();
-            this.gbLink = new System.Windows.Forms.GroupBox();
-            this.chkNoLink = new System.Windows.Forms.CheckBox();
-            this.cbLinkSet = new System.Windows.Forms.ComboBox();
-            this.cbLinkGroup = new System.Windows.Forms.ComboBox();
-            this.Label6 = new System.Windows.Forms.Label();
-            this.Label7 = new System.Windows.Forms.Label();
-            this.GroupBox5 = new System.Windows.Forms.GroupBox();
-            this.lvMutexSets = new System.Windows.Forms.ListBox();
-            this.Label8 = new System.Windows.Forms.Label();
-            this.cbMutexGroup = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)this.picIcon).BeginInit();
-            this.GroupBox1.SuspendLayout();
-            this.GroupBox2.SuspendLayout();
-            this.GroupBox3.SuspendLayout();
-            this.GroupBox4.SuspendLayout();
-            this.gbLink.SuspendLayout();
-            this.GroupBox5.SuspendLayout();
-            this.SuspendLayout();
-
-            this.txtName.Location = new System.Drawing.Point(110, 16);
-            this.txtName.Name = "txtName";
-
-            this.txtName.Size = new System.Drawing.Size(196, 20);
-            this.txtName.TabIndex = 0;
-            this.txtName.Text = "TextBox1";
-            this.txtName.TextChanged += new System.EventHandler(txtName_TextChanged);
-
-            this.Label1.Location = new System.Drawing.Point(6, 16);
-            this.Label1.Name = "Label1";
-
-            this.Label1.Size = new System.Drawing.Size(100, 20);
-            this.Label1.TabIndex = 1;
-            this.Label1.Text = "Display Name:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.cbAT.Location = new System.Drawing.Point(403, 122);
-            this.cbAT.Name = "cbAT";
-
-            this.cbAT.Size = new System.Drawing.Size(124, 22);
-            this.cbAT.TabIndex = 2;
-            this.cbAT.SelectedIndexChanged += new System.EventHandler(cbAT_SelectedIndexChanged);
-
-            this.Label2.Location = new System.Drawing.Point(336, 122);
-            this.Label2.Name = "Label2";
-
-            this.Label2.Size = new System.Drawing.Size(63, 20);
-            this.Label2.TabIndex = 3;
-            this.Label2.Text = "Archetype:";
-            this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            this.Label3.Location = new System.Drawing.Point(336, 150);
-            this.Label3.Name = "Label3";
-
-            this.Label3.Size = new System.Drawing.Size(63, 20);
-            this.Label3.TabIndex = 5;
-            this.Label3.Text = "Set Type:";
-            this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbSetType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.cbSetType.Location = new System.Drawing.Point(403, 150);
-            this.cbSetType.Name = "cbSetType";
-
-            this.cbSetType.Size = new System.Drawing.Size(124, 22);
-            this.cbSetType.TabIndex = 4;
-            this.cbSetType.SelectedIndexChanged += new System.EventHandler(cbSetType_SelectedIndexChanged);
-
-            this.btnIcon.Location = new System.Drawing.Point(6, 52);
-            this.btnIcon.Name = "btnIcon";
-
-            this.btnIcon.Size = new System.Drawing.Size(179, 20);
-            this.btnIcon.TabIndex = 6;
-            this.btnIcon.Text = "Select Icon";
-            this.btnIcon.Click += new System.EventHandler(btnIcon_Click);
-            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.picIcon.Location = new System.Drawing.Point(85, 22);
-            this.picIcon.Name = "picIcon";
-
-            this.picIcon.Size = new System.Drawing.Size(20, 20);
-            this.picIcon.TabIndex = 7;
-            this.picIcon.TabStop = false;
-            this.lvPowers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[3]
-            {
-        this.ColumnHeader3,
-        this.ColumnHeader1,
-        this.ColumnHeader2
-            });
-            this.lvPowers.FullRowSelect = true;
-            this.lvPowers.HideSelection = false;
-
-            this.lvPowers.Location = new System.Drawing.Point(12, 448);
-            this.lvPowers.MultiSelect = false;
-            this.lvPowers.Name = "lvPowers";
-
-            this.lvPowers.Size = new System.Drawing.Size(515, 121);
-            this.lvPowers.TabIndex = 8;
-            this.lvPowers.UseCompatibleStateImageBehavior = false;
-            this.lvPowers.View = System.Windows.Forms.View.Details;
-            this.ColumnHeader3.Text = "Level";
-            this.ColumnHeader3.Width = 47;
-            this.ColumnHeader1.Text = "Power";
-            this.ColumnHeader1.Width = 124;
-            this.ColumnHeader2.Text = "Short Description";
-            this.ColumnHeader2.Width = 313;
-
-            this.Label4.Location = new System.Drawing.Point(9, 425);
-            this.Label4.Name = "Label4";
-
-            this.Label4.Size = new System.Drawing.Size(100, 20);
-            this.Label4.TabIndex = 9;
-            this.Label4.Text = "Powers:";
-            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-
-            this.btnClose.Location = new System.Drawing.Point(452, 575);
-            this.btnClose.Name = "btnClose";
-
-            this.btnClose.Size = new System.Drawing.Size(75, 36);
-            this.btnClose.TabIndex = 15;
-            this.btnClose.Text = "OK";
-            this.btnClose.Click += new System.EventHandler(btnClose_Click);
-
-            this.btnClearIcon.Location = new System.Drawing.Point(6, 76);
-            this.btnClearIcon.Name = "btnClearIcon";
-
-            this.btnClearIcon.Size = new System.Drawing.Size(179, 20);
-            this.btnClearIcon.TabIndex = 16;
-            this.btnClearIcon.Text = "Clear Icon";
-            this.btnClearIcon.Click += new System.EventHandler(btnClearIcon_Click);
-            this.ImagePicker.Filter = "PNG Images|*.png";
-            this.ImagePicker.Title = "Select Image File";
-
-            this.lblNameUnique.Location = new System.Drawing.Point(10, 131);
-            this.lblNameUnique.Name = "lblNameUnique";
-
-            this.lblNameUnique.Size = new System.Drawing.Size(296, 20);
-            this.lblNameUnique.TabIndex = 25;
-            this.lblNameUnique.Text = "This name is unique.";
-            this.lblNameUnique.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblNameFull.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.lblNameFull.Location = new System.Drawing.Point(13, 95);
-            this.lblNameFull.Name = "lblNameFull";
-
-            this.lblNameFull.Size = new System.Drawing.Size(293, 32);
-            this.lblNameFull.TabIndex = 24;
-            this.lblNameFull.Text = "Group_Name.Powerset_Name";
-            this.lblNameFull.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cbNameGroup.FormattingEnabled = true;
-
-            this.cbNameGroup.Location = new System.Drawing.Point(110, 44);
-            this.cbNameGroup.Name = "cbNameGroup";
-
-            this.cbNameGroup.Size = new System.Drawing.Size(196, 22);
-            this.cbNameGroup.TabIndex = 20;
-            this.cbNameGroup.TextChanged += this.cbNameGroup_TextChanged;
-            this.cbNameGroup.SelectedIndexChanged += this.cbNameGroup_SelectedIndexChanged;
-            this.cbNameGroup.Leave += this.cbNameGroup_Leave;
-
-            this.Label22.Location = new System.Drawing.Point(10, 44);
-            this.Label22.Name = "Label22";
-
-            this.Label22.Size = new System.Drawing.Size(96, 20);
-            this.Label22.TabIndex = 22;
-            this.Label22.Text = "Group:";
-            this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            this.txtNameSet.Location = new System.Drawing.Point(110, 72);
-            this.txtNameSet.Name = "txtNameSet";
-
-            this.txtNameSet.Size = new System.Drawing.Size(196, 20);
-            this.txtNameSet.TabIndex = 21;
-            this.txtNameSet.Text = "PowerName";
-            this.txtNameSet.TextChanged += this.txtNameSet_TextChanged;
-            this.txtNameSet.Leave += this.txtNameSet_Leave;
-
-
-            this.Label33.Location = new System.Drawing.Point(3, 72);
-            this.Label33.Name = "Label33";
-
-            this.Label33.Size = new System.Drawing.Size(103, 20);
-            this.Label33.TabIndex = 23;
-            this.Label33.Text = "Powerset Name:";
-            this.Label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.lblNameUnique);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.lblNameFull);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.cbNameGroup);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.Label22);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.txtNameSet);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.Label33);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.Label1);
-            this.GroupBox1.Controls.Add((System.Windows.Forms.Control)this.txtName);
-
-            this.GroupBox1.Location = new System.Drawing.Point(12, 12);
-            this.GroupBox1.Name = "GroupBox1";
-
-            this.GroupBox1.Size = new System.Drawing.Size(318, 160);
-            this.GroupBox1.TabIndex = 26;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Powerset Name";
-            this.GroupBox2.Controls.Add((System.Windows.Forms.Control)this.btnClearIcon);
-            this.GroupBox2.Controls.Add((System.Windows.Forms.Control)this.picIcon);
-            this.GroupBox2.Controls.Add((System.Windows.Forms.Control)this.btnIcon);
-
-            this.GroupBox2.Location = new System.Drawing.Point(336, 12);
-            this.GroupBox2.Name = "GroupBox2";
-
-            this.GroupBox2.Size = new System.Drawing.Size(191, 102);
-            this.GroupBox2.TabIndex = 27;
-            this.GroupBox2.TabStop = false;
-            this.GroupBox2.Text = "Icon";
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.OK;
-
-            this.btnCancel.Location = new System.Drawing.Point(371, 575);
-            this.btnCancel.Name = "btnCancel";
-
-            this.btnCancel.Size = new System.Drawing.Size(75, 36);
-            this.btnCancel.TabIndex = 28;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.Click += new System.EventHandler(btnCancel_Click);
-            this.GroupBox3.Controls.Add((System.Windows.Forms.Control)this.txtDesc);
-
-            this.GroupBox3.Location = new System.Drawing.Point(12, 178);
-            this.GroupBox3.Name = "GroupBox3";
-
-            this.GroupBox3.Size = new System.Drawing.Size(515, 80);
-            this.GroupBox3.TabIndex = 29;
-            this.GroupBox3.TabStop = false;
-            this.GroupBox3.Text = "Description";
-
-            this.txtDesc.Location = new System.Drawing.Point(6, 19);
-            this.txtDesc.Multiline = true;
-            this.txtDesc.Name = "txtDesc";
-            this.txtDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-
-            this.txtDesc.Size = new System.Drawing.Size(503, 55);
-            this.txtDesc.TabIndex = 1;
-            this.txtDesc.Text = "TextBox1";
-            this.txtDesc.TextChanged += new System.EventHandler(txtDesc_TextChanged);
-            this.GroupBox4.Controls.Add((System.Windows.Forms.Control)this.chkNoTrunk);
-            this.GroupBox4.Controls.Add((System.Windows.Forms.Control)this.cbTrunkSet);
-            this.GroupBox4.Controls.Add((System.Windows.Forms.Control)this.cbTrunkGroup);
-            this.GroupBox4.Controls.Add((System.Windows.Forms.Control)this.Label5);
-            this.GroupBox4.Controls.Add((System.Windows.Forms.Control)this.Label31);
-
-            this.GroupBox4.Location = new System.Drawing.Point(12, 264);
-            this.GroupBox4.Name = "GroupBox4";
-
-            this.GroupBox4.Size = new System.Drawing.Size(515, 75);
-            this.GroupBox4.TabIndex = 30;
-            this.GroupBox4.TabStop = false;
-            this.GroupBox4.Text = "Trunk Set:";
-
-            this.chkNoTrunk.Location = new System.Drawing.Point(279, 16);
-            this.chkNoTrunk.Name = "chkNoTrunk";
-
-            this.chkNoTrunk.Size = new System.Drawing.Size(210, 50);
-            this.chkNoTrunk.TabIndex = 17;
-            this.chkNoTrunk.Text = "This power has no Trunk set";
-            this.chkNoTrunk.UseVisualStyleBackColor = true;
-            this.chkNoTrunk.CheckedChanged += new System.EventHandler(chkNoTrunk_CheckedChanged);
-            this.cbTrunkSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTrunkSet.FormattingEnabled = true;
-
-            this.cbTrunkSet.Location = new System.Drawing.Point(68, 44);
-            this.cbTrunkSet.Name = "cbTrunkSet";
-
-            this.cbTrunkSet.Size = new System.Drawing.Size(196, 22);
-            this.cbTrunkSet.TabIndex = 14;
-            this.cbTrunkSet.SelectedIndexChanged += new System.EventHandler(cbTrunkSet_SelectedIndexChanged);
-            this.cbTrunkGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTrunkGroup.FormattingEnabled = true;
-
-            this.cbTrunkGroup.Location = new System.Drawing.Point(68, 16);
-            this.cbTrunkGroup.Name = "cbTrunkGroup";
-
-            this.cbTrunkGroup.Size = new System.Drawing.Size(196, 22);
-            this.cbTrunkGroup.TabIndex = 13;
-            this.cbTrunkGroup.SelectedIndexChanged += new System.EventHandler(cbTrunkGroup_SelectedIndexChanged);
-
-            this.Label5.Location = new System.Drawing.Point(10, 16);
-            this.Label5.Name = "Label5";
-
-            this.Label5.Size = new System.Drawing.Size(54, 20);
-            this.Label5.TabIndex = 15;
-            this.Label5.Text = "Group:";
-            this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            this.Label31.Location = new System.Drawing.Point(13, 44);
-            this.Label31.Name = "Label31";
-
-            this.Label31.Size = new System.Drawing.Size(49, 20);
-            this.Label31.TabIndex = 16;
-            this.Label31.Text = "Set:";
-            this.Label31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.gbLink.Controls.Add((System.Windows.Forms.Control)this.chkNoLink);
-            this.gbLink.Controls.Add((System.Windows.Forms.Control)this.cbLinkSet);
-            this.gbLink.Controls.Add((System.Windows.Forms.Control)this.cbLinkGroup);
-            this.gbLink.Controls.Add((System.Windows.Forms.Control)this.Label6);
-            this.gbLink.Controls.Add((System.Windows.Forms.Control)this.Label7);
-
-            this.gbLink.Location = new System.Drawing.Point(12, 345);
-            this.gbLink.Name = "gbLink";
-
-            this.gbLink.Size = new System.Drawing.Size(515, 75);
-            this.gbLink.TabIndex = 31;
-            this.gbLink.TabStop = false;
-            this.gbLink.Text = "Linked Secondary";
-
-            this.chkNoLink.Location = new System.Drawing.Point(279, 16);
-            this.chkNoLink.Name = "chkNoLink";
-
-            this.chkNoLink.Size = new System.Drawing.Size(210, 50);
-            this.chkNoLink.TabIndex = 17;
-            this.chkNoLink.Text = "No link";
-            this.chkNoLink.UseVisualStyleBackColor = true;
-            this.chkNoLink.CheckedChanged += new System.EventHandler(chkNoLink_CheckedChanged);
-            this.cbLinkSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbLinkSet.FormattingEnabled = true;
-
-            this.cbLinkSet.Location = new System.Drawing.Point(68, 44);
-            this.cbLinkSet.Name = "cbLinkSet";
-
-            this.cbLinkSet.Size = new System.Drawing.Size(196, 22);
-            this.cbLinkSet.TabIndex = 14;
-            this.cbLinkSet.SelectedIndexChanged += new System.EventHandler(cbLinkSet_SelectedIndexChanged);
-            this.cbLinkGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbLinkGroup.FormattingEnabled = true;
-
-            this.cbLinkGroup.Location = new System.Drawing.Point(68, 16);
-            this.cbLinkGroup.Name = "cbLinkGroup";
-
-            this.cbLinkGroup.Size = new System.Drawing.Size(196, 22);
-            this.cbLinkGroup.TabIndex = 13;
-            this.cbLinkGroup.SelectedIndexChanged += new System.EventHandler(cbLinkGroup_SelectedIndexChanged);
-
-            this.Label6.Location = new System.Drawing.Point(10, 16);
-            this.Label6.Name = "Label6";
-
-            this.Label6.Size = new System.Drawing.Size(54, 20);
-            this.Label6.TabIndex = 15;
-            this.Label6.Text = "Group:";
-            this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            this.Label7.Location = new System.Drawing.Point(13, 44);
-            this.Label7.Name = "Label7";
-
-            this.Label7.Size = new System.Drawing.Size(49, 20);
-            this.Label7.TabIndex = 16;
-            this.Label7.Text = "Set:";
-            this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.GroupBox5.Controls.Add((System.Windows.Forms.Control)this.lvMutexSets);
-            this.GroupBox5.Controls.Add((System.Windows.Forms.Control)this.Label8);
-            this.GroupBox5.Controls.Add((System.Windows.Forms.Control)this.cbMutexGroup);
-
-            this.GroupBox5.Location = new System.Drawing.Point(533, 12);
-            this.GroupBox5.Name = "GroupBox5";
-
-            this.GroupBox5.Size = new System.Drawing.Size(253, 327);
-            this.GroupBox5.TabIndex = 32;
-            this.GroupBox5.TabStop = false;
-            this.GroupBox5.Text = "Mutually Exclusive Sets";
-            this.lvMutexSets.ItemHeight = 14;
-
-            this.lvMutexSets.Location = new System.Drawing.Point(9, 72);
-            this.lvMutexSets.Name = "lvMutexSets";
-            this.lvMutexSets.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-
-            this.lvMutexSets.Size = new System.Drawing.Size(238, 242);
-            this.lvMutexSets.TabIndex = 111;
-            this.lvMutexSets.SelectedIndexChanged += new System.EventHandler(lvMutexSets_SelectedIndexChanged);
-
-            this.Label8.Location = new System.Drawing.Point(6, 16);
-            this.Label8.Name = "Label8";
-
-            this.Label8.Size = new System.Drawing.Size(100, 20);
-            this.Label8.TabIndex = 22;
-            this.Label8.Text = "Group (Only one):";
-            this.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbMutexGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMutexGroup.FormattingEnabled = true;
-
-            this.cbMutexGroup.Location = new System.Drawing.Point(9, 44);
-            this.cbMutexGroup.Name = "cbMutexGroup";
-
-            this.cbMutexGroup.Size = new System.Drawing.Size(238, 22);
-            this.cbMutexGroup.TabIndex = 21;
-            this.cbMutexGroup.SelectionChangeCommitted += new System.EventHandler(cbMutexGroup_SelectionChangeCommitted);
-
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-
-            this.ClientSize = new System.Drawing.Size(798, 621);
-            this.Controls.Add((System.Windows.Forms.Control)this.GroupBox5);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbLink);
-            this.Controls.Add((System.Windows.Forms.Control)this.GroupBox4);
-            this.Controls.Add((System.Windows.Forms.Control)this.GroupBox3);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnCancel);
-            this.Controls.Add((System.Windows.Forms.Control)this.GroupBox2);
-            this.Controls.Add((System.Windows.Forms.Control)this.GroupBox1);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnClose);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label4);
-            this.Controls.Add((System.Windows.Forms.Control)this.lvPowers);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label3);
-            this.Controls.Add((System.Windows.Forms.Control)this.cbSetType);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label2);
-            this.Controls.Add((System.Windows.Forms.Control)this.cbAT);
-            this.Font = new System.Drawing.Font("Segoe UI", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Edit Powerset (Group_Name.Set_Name)";
-            ((System.ComponentModel.ISupportInitialize)this.picIcon).EndInit();
-            this.GroupBox1.ResumeLayout(false);
-            this.GroupBox1.PerformLayout();
-            this.GroupBox2.ResumeLayout(false);
-            this.GroupBox3.ResumeLayout(false);
-            this.GroupBox3.PerformLayout();
-            this.GroupBox4.ResumeLayout(false);
-            this.gbLink.ResumeLayout(false);
-            this.GroupBox5.ResumeLayout(false);
-            this.ResumeLayout(false);
+            txtName = new TextBox();
+            Label1 = new Label();
+            cbAT = new ComboBox();
+            Label2 = new Label();
+            Label3 = new Label();
+            cbSetType = new ComboBox();
+            btnIcon = new Button();
+            picIcon = new PictureBox();
+            lvPowers = new ListView();
+            ColumnHeader3 = new ColumnHeader();
+            ColumnHeader1 = new ColumnHeader();
+            ColumnHeader2 = new ColumnHeader();
+            Label4 = new Label();
+            btnClose = new Button();
+            btnClearIcon = new Button();
+            ImagePicker = new OpenFileDialog();
+            lblNameUnique = new Label();
+            lblNameFull = new Label();
+            cbNameGroup = new ComboBox();
+            Label22 = new Label();
+            txtNameSet = new TextBox();
+            Label33 = new Label();
+            GroupBox1 = new GroupBox();
+            GroupBox2 = new GroupBox();
+            btnCancel = new Button();
+            GroupBox3 = new GroupBox();
+            txtDesc = new TextBox();
+            GroupBox4 = new GroupBox();
+            chkNoTrunk = new CheckBox();
+            cbTrunkSet = new ComboBox();
+            cbTrunkGroup = new ComboBox();
+            Label5 = new Label();
+            Label31 = new Label();
+            gbLink = new GroupBox();
+            chkNoLink = new CheckBox();
+            cbLinkSet = new ComboBox();
+            cbLinkGroup = new ComboBox();
+            Label6 = new Label();
+            Label7 = new Label();
+            GroupBox5 = new GroupBox();
+            btnPaste = new Button();
+            btnCopy = new Button();
+            btnRemoveMutexSet = new Button();
+            btnAddMutexSet = new Button();
+            lvMutexSets = new ListBox();
+            ((ISupportInitialize)picIcon).BeginInit();
+            GroupBox1.SuspendLayout();
+            GroupBox2.SuspendLayout();
+            GroupBox3.SuspendLayout();
+            GroupBox4.SuspendLayout();
+            gbLink.SuspendLayout();
+            GroupBox5.SuspendLayout();
+            SuspendLayout();
+            // 
+            // txtName
+            // 
+            txtName.Location = new System.Drawing.Point(110, 18);
+            txtName.Name = "txtName";
+            txtName.Size = new System.Drawing.Size(196, 22);
+            txtName.TabIndex = 0;
+            txtName.Text = "TextBox1";
+            txtName.TextChanged += txtName_TextChanged;
+            // 
+            // Label1
+            // 
+            Label1.Location = new System.Drawing.Point(6, 18);
+            Label1.Name = "Label1";
+            Label1.Size = new System.Drawing.Size(100, 24);
+            Label1.TabIndex = 1;
+            Label1.Text = "Display Name:";
+            Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cbAT
+            // 
+            cbAT.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbAT.Location = new System.Drawing.Point(403, 141);
+            cbAT.Name = "cbAT";
+            cbAT.Size = new System.Drawing.Size(124, 21);
+            cbAT.TabIndex = 2;
+            cbAT.SelectedIndexChanged += cbAT_SelectedIndexChanged;
+            // 
+            // Label2
+            // 
+            Label2.Location = new System.Drawing.Point(336, 141);
+            Label2.Name = "Label2";
+            Label2.Size = new System.Drawing.Size(63, 23);
+            Label2.TabIndex = 3;
+            Label2.Text = "Archetype:";
+            Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label3
+            // 
+            Label3.Location = new System.Drawing.Point(336, 173);
+            Label3.Name = "Label3";
+            Label3.Size = new System.Drawing.Size(63, 23);
+            Label3.TabIndex = 5;
+            Label3.Text = "Set Type:";
+            Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cbSetType
+            // 
+            cbSetType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSetType.Location = new System.Drawing.Point(403, 173);
+            cbSetType.Name = "cbSetType";
+            cbSetType.Size = new System.Drawing.Size(124, 21);
+            cbSetType.TabIndex = 4;
+            cbSetType.SelectedIndexChanged += cbSetType_SelectedIndexChanged;
+            // 
+            // btnIcon
+            // 
+            btnIcon.Location = new System.Drawing.Point(6, 60);
+            btnIcon.Name = "btnIcon";
+            btnIcon.Size = new System.Drawing.Size(179, 23);
+            btnIcon.TabIndex = 6;
+            btnIcon.Text = "Select Icon";
+            btnIcon.Click += btnIcon_Click;
+            // 
+            // picIcon
+            // 
+            picIcon.BorderStyle = BorderStyle.FixedSingle;
+            picIcon.Location = new System.Drawing.Point(85, 25);
+            picIcon.Name = "picIcon";
+            picIcon.Size = new System.Drawing.Size(20, 23);
+            picIcon.TabIndex = 7;
+            picIcon.TabStop = false;
+            // 
+            // lvPowers
+            // 
+            lvPowers.Columns.AddRange(new ColumnHeader[] { ColumnHeader3, ColumnHeader1, ColumnHeader2 });
+            lvPowers.FullRowSelect = true;
+            lvPowers.Location = new System.Drawing.Point(12, 517);
+            lvPowers.MultiSelect = false;
+            lvPowers.Name = "lvPowers";
+            lvPowers.Size = new System.Drawing.Size(515, 140);
+            lvPowers.TabIndex = 8;
+            lvPowers.UseCompatibleStateImageBehavior = false;
+            lvPowers.View = View.Details;
+            // 
+            // ColumnHeader3
+            // 
+            ColumnHeader3.Text = "Level";
+            ColumnHeader3.Width = 47;
+            // 
+            // ColumnHeader1
+            // 
+            ColumnHeader1.Text = "Power";
+            ColumnHeader1.Width = 124;
+            // 
+            // ColumnHeader2
+            // 
+            ColumnHeader2.Text = "Short Description";
+            ColumnHeader2.Width = 313;
+            // 
+            // Label4
+            // 
+            Label4.Location = new System.Drawing.Point(9, 490);
+            Label4.Name = "Label4";
+            Label4.Size = new System.Drawing.Size(100, 23);
+            Label4.TabIndex = 9;
+            Label4.Text = "Powers:";
+            Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnClose
+            // 
+            btnClose.DialogResult = DialogResult.OK;
+            btnClose.Location = new System.Drawing.Point(452, 663);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new System.Drawing.Size(75, 42);
+            btnClose.TabIndex = 15;
+            btnClose.Text = "OK";
+            btnClose.Click += btnClose_Click;
+            // 
+            // btnClearIcon
+            // 
+            btnClearIcon.Location = new System.Drawing.Point(6, 88);
+            btnClearIcon.Name = "btnClearIcon";
+            btnClearIcon.Size = new System.Drawing.Size(179, 23);
+            btnClearIcon.TabIndex = 16;
+            btnClearIcon.Text = "Clear Icon";
+            btnClearIcon.Click += btnClearIcon_Click;
+            // 
+            // ImagePicker
+            // 
+            ImagePicker.Filter = "PNG Images|*.png";
+            ImagePicker.Title = "Select Image File";
+            // 
+            // lblNameUnique
+            // 
+            lblNameUnique.Location = new System.Drawing.Point(10, 151);
+            lblNameUnique.Name = "lblNameUnique";
+            lblNameUnique.Size = new System.Drawing.Size(296, 23);
+            lblNameUnique.TabIndex = 25;
+            lblNameUnique.Text = "This name is unique.";
+            lblNameUnique.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblNameFull
+            // 
+            lblNameFull.BorderStyle = BorderStyle.FixedSingle;
+            lblNameFull.Location = new System.Drawing.Point(13, 110);
+            lblNameFull.Name = "lblNameFull";
+            lblNameFull.Size = new System.Drawing.Size(293, 37);
+            lblNameFull.TabIndex = 24;
+            lblNameFull.Text = "Group_Name.Powerset_Name";
+            lblNameFull.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbNameGroup
+            // 
+            cbNameGroup.FormattingEnabled = true;
+            cbNameGroup.Location = new System.Drawing.Point(110, 51);
+            cbNameGroup.Name = "cbNameGroup";
+            cbNameGroup.Size = new System.Drawing.Size(196, 21);
+            cbNameGroup.TabIndex = 20;
+            cbNameGroup.SelectedIndexChanged += cbNameGroup_SelectedIndexChanged;
+            cbNameGroup.TextChanged += cbNameGroup_TextChanged;
+            cbNameGroup.Leave += cbNameGroup_Leave;
+            // 
+            // Label22
+            // 
+            Label22.Location = new System.Drawing.Point(10, 51);
+            Label22.Name = "Label22";
+            Label22.Size = new System.Drawing.Size(96, 23);
+            Label22.TabIndex = 22;
+            Label22.Text = "Group:";
+            Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtNameSet
+            // 
+            txtNameSet.Location = new System.Drawing.Point(110, 83);
+            txtNameSet.Name = "txtNameSet";
+            txtNameSet.Size = new System.Drawing.Size(196, 22);
+            txtNameSet.TabIndex = 21;
+            txtNameSet.Text = "PowerName";
+            txtNameSet.TextChanged += txtNameSet_TextChanged;
+            txtNameSet.Leave += txtNameSet_Leave;
+            // 
+            // Label33
+            // 
+            Label33.Location = new System.Drawing.Point(3, 83);
+            Label33.Name = "Label33";
+            Label33.Size = new System.Drawing.Size(103, 23);
+            Label33.TabIndex = 23;
+            Label33.Text = "Powerset Name:";
+            Label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GroupBox1
+            // 
+            GroupBox1.Controls.Add(lblNameUnique);
+            GroupBox1.Controls.Add(lblNameFull);
+            GroupBox1.Controls.Add(cbNameGroup);
+            GroupBox1.Controls.Add(Label22);
+            GroupBox1.Controls.Add(txtNameSet);
+            GroupBox1.Controls.Add(Label33);
+            GroupBox1.Controls.Add(Label1);
+            GroupBox1.Controls.Add(txtName);
+            GroupBox1.Location = new System.Drawing.Point(12, 14);
+            GroupBox1.Name = "GroupBox1";
+            GroupBox1.Size = new System.Drawing.Size(318, 184);
+            GroupBox1.TabIndex = 26;
+            GroupBox1.TabStop = false;
+            GroupBox1.Text = "Powerset Name";
+            // 
+            // GroupBox2
+            // 
+            GroupBox2.Controls.Add(btnClearIcon);
+            GroupBox2.Controls.Add(picIcon);
+            GroupBox2.Controls.Add(btnIcon);
+            GroupBox2.Location = new System.Drawing.Point(336, 14);
+            GroupBox2.Name = "GroupBox2";
+            GroupBox2.Size = new System.Drawing.Size(191, 118);
+            GroupBox2.TabIndex = 27;
+            GroupBox2.TabStop = false;
+            GroupBox2.Text = "Icon";
+            // 
+            // btnCancel
+            // 
+            btnCancel.DialogResult = DialogResult.OK;
+            btnCancel.Location = new System.Drawing.Point(371, 663);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 42);
+            btnCancel.TabIndex = 28;
+            btnCancel.Text = "Cancel";
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // GroupBox3
+            // 
+            GroupBox3.Controls.Add(txtDesc);
+            GroupBox3.Location = new System.Drawing.Point(12, 205);
+            GroupBox3.Name = "GroupBox3";
+            GroupBox3.Size = new System.Drawing.Size(515, 93);
+            GroupBox3.TabIndex = 29;
+            GroupBox3.TabStop = false;
+            GroupBox3.Text = "Description";
+            // 
+            // txtDesc
+            // 
+            txtDesc.Location = new System.Drawing.Point(6, 22);
+            txtDesc.Multiline = true;
+            txtDesc.Name = "txtDesc";
+            txtDesc.ScrollBars = ScrollBars.Vertical;
+            txtDesc.Size = new System.Drawing.Size(503, 63);
+            txtDesc.TabIndex = 1;
+            txtDesc.Text = "TextBox1";
+            txtDesc.TextChanged += txtDesc_TextChanged;
+            // 
+            // GroupBox4
+            // 
+            GroupBox4.Controls.Add(chkNoTrunk);
+            GroupBox4.Controls.Add(cbTrunkSet);
+            GroupBox4.Controls.Add(cbTrunkGroup);
+            GroupBox4.Controls.Add(Label5);
+            GroupBox4.Controls.Add(Label31);
+            GroupBox4.Location = new System.Drawing.Point(12, 305);
+            GroupBox4.Name = "GroupBox4";
+            GroupBox4.Size = new System.Drawing.Size(515, 86);
+            GroupBox4.TabIndex = 30;
+            GroupBox4.TabStop = false;
+            GroupBox4.Text = "Trunk Set:";
+            // 
+            // chkNoTrunk
+            // 
+            chkNoTrunk.Location = new System.Drawing.Point(279, 18);
+            chkNoTrunk.Name = "chkNoTrunk";
+            chkNoTrunk.Size = new System.Drawing.Size(210, 58);
+            chkNoTrunk.TabIndex = 17;
+            chkNoTrunk.Text = "This power has no Trunk set";
+            chkNoTrunk.UseVisualStyleBackColor = true;
+            chkNoTrunk.CheckedChanged += chkNoTrunk_CheckedChanged;
+            // 
+            // cbTrunkSet
+            // 
+            cbTrunkSet.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTrunkSet.FormattingEnabled = true;
+            cbTrunkSet.Location = new System.Drawing.Point(68, 51);
+            cbTrunkSet.Name = "cbTrunkSet";
+            cbTrunkSet.Size = new System.Drawing.Size(196, 21);
+            cbTrunkSet.TabIndex = 14;
+            cbTrunkSet.SelectedIndexChanged += cbTrunkSet_SelectedIndexChanged;
+            // 
+            // cbTrunkGroup
+            // 
+            cbTrunkGroup.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTrunkGroup.FormattingEnabled = true;
+            cbTrunkGroup.Location = new System.Drawing.Point(68, 18);
+            cbTrunkGroup.Name = "cbTrunkGroup";
+            cbTrunkGroup.Size = new System.Drawing.Size(196, 21);
+            cbTrunkGroup.TabIndex = 13;
+            cbTrunkGroup.SelectedIndexChanged += cbTrunkGroup_SelectedIndexChanged;
+            // 
+            // Label5
+            // 
+            Label5.Location = new System.Drawing.Point(10, 18);
+            Label5.Name = "Label5";
+            Label5.Size = new System.Drawing.Size(54, 24);
+            Label5.TabIndex = 15;
+            Label5.Text = "Group:";
+            Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label31
+            // 
+            Label31.Location = new System.Drawing.Point(13, 51);
+            Label31.Name = "Label31";
+            Label31.Size = new System.Drawing.Size(49, 23);
+            Label31.TabIndex = 16;
+            Label31.Text = "Set:";
+            Label31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // gbLink
+            // 
+            gbLink.Controls.Add(chkNoLink);
+            gbLink.Controls.Add(cbLinkSet);
+            gbLink.Controls.Add(cbLinkGroup);
+            gbLink.Controls.Add(Label6);
+            gbLink.Controls.Add(Label7);
+            gbLink.Location = new System.Drawing.Point(12, 398);
+            gbLink.Name = "gbLink";
+            gbLink.Size = new System.Drawing.Size(515, 87);
+            gbLink.TabIndex = 31;
+            gbLink.TabStop = false;
+            gbLink.Text = "Linked Secondary";
+            // 
+            // chkNoLink
+            // 
+            chkNoLink.Location = new System.Drawing.Point(279, 18);
+            chkNoLink.Name = "chkNoLink";
+            chkNoLink.Size = new System.Drawing.Size(210, 58);
+            chkNoLink.TabIndex = 17;
+            chkNoLink.Text = "No link";
+            chkNoLink.UseVisualStyleBackColor = true;
+            chkNoLink.CheckedChanged += chkNoLink_CheckedChanged;
+            // 
+            // cbLinkSet
+            // 
+            cbLinkSet.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbLinkSet.FormattingEnabled = true;
+            cbLinkSet.Location = new System.Drawing.Point(68, 51);
+            cbLinkSet.Name = "cbLinkSet";
+            cbLinkSet.Size = new System.Drawing.Size(196, 21);
+            cbLinkSet.TabIndex = 14;
+            cbLinkSet.SelectedIndexChanged += cbLinkSet_SelectedIndexChanged;
+            // 
+            // cbLinkGroup
+            // 
+            cbLinkGroup.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbLinkGroup.FormattingEnabled = true;
+            cbLinkGroup.Location = new System.Drawing.Point(68, 18);
+            cbLinkGroup.Name = "cbLinkGroup";
+            cbLinkGroup.Size = new System.Drawing.Size(196, 21);
+            cbLinkGroup.TabIndex = 13;
+            cbLinkGroup.SelectedIndexChanged += cbLinkGroup_SelectedIndexChanged;
+            // 
+            // Label6
+            // 
+            Label6.Location = new System.Drawing.Point(10, 18);
+            Label6.Name = "Label6";
+            Label6.Size = new System.Drawing.Size(54, 24);
+            Label6.TabIndex = 15;
+            Label6.Text = "Group:";
+            Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Label7
+            // 
+            Label7.Location = new System.Drawing.Point(13, 51);
+            Label7.Name = "Label7";
+            Label7.Size = new System.Drawing.Size(49, 23);
+            Label7.TabIndex = 16;
+            Label7.Text = "Set:";
+            Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GroupBox5
+            // 
+            GroupBox5.Controls.Add(btnPaste);
+            GroupBox5.Controls.Add(btnCopy);
+            GroupBox5.Controls.Add(btnRemoveMutexSet);
+            GroupBox5.Controls.Add(btnAddMutexSet);
+            GroupBox5.Controls.Add(lvMutexSets);
+            GroupBox5.Location = new System.Drawing.Point(533, 14);
+            GroupBox5.Name = "GroupBox5";
+            GroupBox5.Size = new System.Drawing.Size(253, 377);
+            GroupBox5.TabIndex = 32;
+            GroupBox5.TabStop = false;
+            GroupBox5.Text = "Mutually Exclusive Sets";
+            // 
+            // btnPaste
+            // 
+            btnPaste.Location = new System.Drawing.Point(142, 338);
+            btnPaste.Name = "btnPaste";
+            btnPaste.Size = new System.Drawing.Size(75, 24);
+            btnPaste.TabIndex = 115;
+            btnPaste.Text = "Paste";
+            btnPaste.UseVisualStyleBackColor = true;
+            btnPaste.Click += btnPaste_Click;
+            // 
+            // btnCopy
+            // 
+            btnCopy.Location = new System.Drawing.Point(40, 338);
+            btnCopy.Name = "btnCopy";
+            btnCopy.Size = new System.Drawing.Size(75, 24);
+            btnCopy.TabIndex = 114;
+            btnCopy.Text = "Copy All";
+            btnCopy.UseVisualStyleBackColor = true;
+            btnCopy.Click += btnCopy_Click;
+            // 
+            // btnRemoveMutexSet
+            // 
+            btnRemoveMutexSet.Location = new System.Drawing.Point(142, 301);
+            btnRemoveMutexSet.Name = "btnRemoveMutexSet";
+            btnRemoveMutexSet.Size = new System.Drawing.Size(75, 24);
+            btnRemoveMutexSet.TabIndex = 113;
+            btnRemoveMutexSet.Text = "Remove";
+            btnRemoveMutexSet.UseVisualStyleBackColor = true;
+            btnRemoveMutexSet.Click += btnRemoveMutexSet_Click;
+            // 
+            // btnAddMutexSet
+            // 
+            btnAddMutexSet.Location = new System.Drawing.Point(40, 301);
+            btnAddMutexSet.Name = "btnAddMutexSet";
+            btnAddMutexSet.Size = new System.Drawing.Size(75, 24);
+            btnAddMutexSet.TabIndex = 112;
+            btnAddMutexSet.Text = "Add";
+            btnAddMutexSet.UseVisualStyleBackColor = true;
+            btnAddMutexSet.Click += btnAddMutexSet_Click;
+            // 
+            // lvMutexSets
+            // 
+            lvMutexSets.Location = new System.Drawing.Point(9, 25);
+            lvMutexSets.Name = "lvMutexSets";
+            lvMutexSets.Size = new System.Drawing.Size(238, 264);
+            lvMutexSets.TabIndex = 111;
+            lvMutexSets.SelectedIndexChanged += lvMutexSets_SelectedIndexChanged;
+            // 
+            // frmEditPowerset
+            // 
+            AutoScaleBaseSize = new System.Drawing.Size(5, 15);
+            ClientSize = new System.Drawing.Size(798, 720);
+            Controls.Add(GroupBox5);
+            Controls.Add(gbLink);
+            Controls.Add(GroupBox4);
+            Controls.Add(GroupBox3);
+            Controls.Add(btnCancel);
+            Controls.Add(GroupBox2);
+            Controls.Add(GroupBox1);
+            Controls.Add(btnClose);
+            Controls.Add(Label4);
+            Controls.Add(lvPowers);
+            Controls.Add(Label3);
+            Controls.Add(cbSetType);
+            Controls.Add(Label2);
+            Controls.Add(cbAT);
+            Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmEditPowerset";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Edit Powerset (Group_Name.Set_Name)";
+            ((ISupportInitialize)picIcon).EndInit();
+            GroupBox1.ResumeLayout(false);
+            GroupBox1.PerformLayout();
+            GroupBox2.ResumeLayout(false);
+            GroupBox3.ResumeLayout(false);
+            GroupBox3.PerformLayout();
+            GroupBox4.ResumeLayout(false);
+            gbLink.ResumeLayout(false);
+            GroupBox5.ResumeLayout(false);
+            ResumeLayout(false);
         }
         #endregion
         Button btnCancel;
@@ -499,7 +566,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         ComboBox cbAT;
         ComboBox cbLinkGroup;
         ComboBox cbLinkSet;
-        ComboBox cbMutexGroup;
         ComboBox cbNameGroup;
         ComboBox cbSetType;
         ComboBox cbTrunkGroup;
@@ -526,7 +592,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Label Label5;
         Label Label6;
         Label Label7;
-        Label Label8;
         Label lblNameFull;
         Label lblNameUnique;
         ListBox lvMutexSets;
@@ -535,5 +600,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         TextBox txtDesc;
         TextBox txtName;
         TextBox txtNameSet;
+        private Button btnRemoveMutexSet;
+        private Button btnAddMutexSet;
+        private Button btnPaste;
+        private Button btnCopy;
     }
 }

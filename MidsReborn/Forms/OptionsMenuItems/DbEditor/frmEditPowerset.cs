@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -182,7 +183,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading)
                 return;
             if (cbSetType.SelectedIndex > -1)
-                myPS.SetType = (Enums.ePowerSetType) cbSetType.SelectedIndex;
+                myPS.SetType = (Enums.ePowerSetType)cbSetType.SelectedIndex;
             if (myPS.SetType == Enums.ePowerSetType.Primary)
             {
                 gbLink.Enabled = true;
@@ -394,50 +395,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbSetType.Items.Clear();
             cbSetType.Items.AddRange(Enum.GetNames(ePowerSetType.GetType()));
             cbSetType.EndUpdate();
-            cbSetType.SelectedIndex = (int) myPS.SetType;
-            ListMutexGroups();
+            cbSetType.SelectedIndex = (int)myPS.SetType;
             ListMutexSets();
             Loading = false;
             DisplayNameData();
-        }
-
-        private void ListMutexGroups()
-        {
-            cbMutexGroup.BeginUpdate();
-            cbMutexGroup.Items.Clear();
-            foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
-            {
-                cbMutexGroup.Items.Add(key);
-            }
-
-            cbMutexGroup.EndUpdate();
-            if (myPS.nIDMutexSets.Length <= 0)
-            {
-                return;
-            }
-
-            var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[0]);
-            if (index > -1)
-            {
-                cbMutexGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
-            }
         }
 
         private void ListMutexSets()
         {
             lvMutexSets.BeginUpdate();
             lvMutexSets.Items.Clear();
-            if (cbMutexGroup.SelectedIndex > -1)
+            foreach (var m in myPS.UIDMutexSets)
             {
-                var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
-                for (var index1 = 0; index1 < numArray.Length; index1++)
-                {
-                    lvMutexSets.Items.Add(DatabaseAPI.Database.Powersets[numArray[index1]].FullName);
-                    if (myPS.nIDMutexSets.Any(t => numArray[index1] == t))
-                    {
-                        lvMutexSets.SetSelected(index1, true);
-                    }
-                }
+                lvMutexSets.Items.Add(m);
             }
 
             lvMutexSets.EndUpdate();
@@ -463,7 +433,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lvMutexSets_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading || cbMutexGroup.SelectedIndex < 0)
+            /*if (Loading || cbMutexGroup.SelectedIndex < 0)
             {
                 return;
             }
@@ -475,7 +445,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 myPS.UIDMutexSets[index] = DatabaseAPI.Database.Powersets[numArray[lvMutexSets.SelectedIndices[index]]].FullName;
                 myPS.nIDMutexSets[index] = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[index]);
-            }
+            }*/
         }
 
         private static bool PowersetFullNameIsUnique(string iFullName, int skipId = -1)
@@ -528,6 +498,160 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             BuildFullName();
+        }
+
+        private void btnAddMutexSet_Click(object sender, EventArgs e)
+        {
+            using var psSelector = new frmPowersetSelector();
+
+            var ret = psSelector.ShowDialog();
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            var uidMutexList = myPS.UIDMutexSets.ToList();
+            var nidMutexList = myPS.nIDMutexSets.ToList();
+
+            uidMutexList.Add(psSelector.UidSet);
+            nidMutexList.Add(psSelector.NidSet);
+
+            myPS.UIDMutexSets = uidMutexList.ToArray();
+            myPS.nIDMutexSets = nidMutexList.ToArray();
+
+            ListMutexSets();
+        }
+
+        private void btnRemoveMutexSet_Click(object sender, EventArgs e)
+        {
+            var uidMutexList = new List<string>();
+            var nidMutexList = new List<int>();
+
+            /*
+            myPS.UIDMutexSets = new string[lvMutexSets.SelectedIndices.Count];
+            myPS.nIDMutexSets = new int[lvMutexSets.SelectedIndices.Count];
+            var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, "-1", Enums.ePowerSetType.None);
+            for (var index = 0; index < lvMutexSets.SelectedIndices.Count; index++)
+            {
+                myPS.UIDMutexSets[index] = DatabaseAPI.Database.Powersets[numArray[lvMutexSets.SelectedIndices[index]]].FullName;
+                myPS.nIDMutexSets[index] = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[index]);
+            }
+            */
+
+            if (uidMutexList.Count <= 0)
+            {
+                return;
+            }
+
+            if (lvMutexSets.SelectedIndices.Count <= 0)
+            {
+                return;
+            }
+
+            var selectedItem = lvMutexSets.SelectedIndices[0];
+
+            for (var i = 0; i < myPS.UIDMutexSets.Length; i++)
+            {
+                if (i == selectedItem)
+                {
+                    continue;
+                }
+
+                uidMutexList.Add(myPS.UIDMutexSets[i]);
+                nidMutexList.Add(myPS.nIDMutexSets[i]);
+            }
+
+            myPS.UIDMutexSets = uidMutexList.ToArray();
+            myPS.nIDMutexSets = nidMutexList.ToArray();
+
+            ListMutexSets();
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(string.Join(", ", myPS.UIDMutexSets));
+        }
+
+        private void btnPaste_Click(object sender, EventArgs e)
+        {
+            if (!Clipboard.ContainsText())
+            {
+                return;
+            }
+
+            var items = Clipboard.GetText().Split(", ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var uidMutexList = new List<string>();
+            var nidMutexList = new List<int>();
+
+            if (myPS.UIDMutexSets.Length > 0)
+            {
+                var overwrite = MessageBox.Show(
+                    "Powerset already contains mutex entries.\r\nDo you want to overwrite the existing ones?",
+                    "Append mutex entries", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                switch (overwrite)
+                {
+                    case DialogResult.Yes:
+                        foreach (var item in items)
+                        {
+                            if (!DatabaseAPI.Database.Powersets.Any(e => e?.FullName == item))
+                            {
+                                continue;
+                            }
+
+                            uidMutexList.Add(item);
+                            nidMutexList.Add(DatabaseAPI.NidFromUidPowerset(item));
+                        }
+
+                        break;
+                    
+                    case DialogResult.No:
+                        foreach (var m in myPS.UIDMutexSets)
+                        {
+                            uidMutexList.Add(m);
+                            nidMutexList.Add(DatabaseAPI.NidFromUidPowerset(m));
+                        }
+
+                        foreach (var item in items)
+                        {
+                            if (!DatabaseAPI.Database.Powersets.Any(e => e?.FullName == item))
+                            {
+                                continue;
+                            }
+
+                            if (uidMutexList.Contains(item))
+                            {
+                                continue;
+                            }
+
+                            uidMutexList.Add(item);
+                            nidMutexList.Add(DatabaseAPI.NidFromUidPowerset(item));
+                        }
+
+                        break;
+
+                    default:
+                        return;
+                }
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    if (!DatabaseAPI.Database.Powersets.Any(e => e?.FullName == item))
+                    {
+                        continue;
+                    }
+
+                    uidMutexList.Add(item);
+                    nidMutexList.Add(DatabaseAPI.NidFromUidPowerset(item));
+                }
+            }
+
+            myPS.UIDMutexSets = uidMutexList.ToArray();
+            myPS.nIDMutexSets = nidMutexList.ToArray();
+
+            ListMutexSets();
         }
     }
 }
