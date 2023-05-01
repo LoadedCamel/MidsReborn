@@ -484,6 +484,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lbAssignedSets
             // 
             lbAssignedSets.BackColor = System.Drawing.SystemColors.Info;
+            lbAssignedSets.ForeColor = System.Drawing.Color.Black;
             lbAssignedSets.FormattingEnabled = true;
             lbAssignedSets.Location = new System.Drawing.Point(9, 380);
             lbAssignedSets.Name = "lbAssignedSets";
