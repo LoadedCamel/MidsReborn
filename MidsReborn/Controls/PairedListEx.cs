@@ -21,8 +21,8 @@ namespace Mids_Reborn.Controls
         private int _rows = 5;
         private Color _valueColor = Color.WhiteSmoke;
         private Color _itemColor = Color.Silver;
+        private int _hoverIndex = -1;
         private bool _setItemsBold;
-        private int _highlightedItem = -1;
         private List<Item>? _items;
 
         public delegate void ItemClickEventHandler(object? sender, Item item, MouseEventArgs e);
@@ -176,22 +176,9 @@ namespace Mids_Reborn.Controls
 
         private static void OnItemClick(object? sender, Item item, MouseEventArgs mouseEventArgs) { }
 
-        private void OnItemHover(object? sender, int index, Enums.ShortFX tagId, string tooltip = "")
-        {
-            if (index != _highlightedItem)
-            {
-                if (myTip.GetToolTip(this) == tooltip) return;
-                myTip.SetToolTip(this, tooltip);
-            }
+        private static void OnItemHover(object? sender, int index, Enums.ShortFX tagId, string tooltip = "") { }
 
-            _highlightedItem = index;
-        }
-
-        private void OnItemOut(object? sender)
-        {
-            myTip.SetToolTip(this, "");
-            _highlightedItem = -1;
-        }
+        private static void OnItemOut(object? sender) { }
 
         private void OnForeColorChanged(object? sender, EventArgs e)
         {
@@ -223,8 +210,6 @@ namespace Mids_Reborn.Controls
 
         private void OnMouseLeave(object? sender, EventArgs e)
         {
-            myTip.SetToolTip(this, "");
-            _highlightedItem = -1;
             if (UseHighlighting)
             {
                 Items?.ForEach(i => i.IsHighlightable = false);
@@ -240,7 +225,7 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            var hoveredItem = false;
+            var hoveredItem = -1;
             for (var i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];
@@ -249,6 +234,7 @@ namespace Mids_Reborn.Controls
                     if (UseHighlighting)
                     {
                         item.IsHighlightable = true;
+                        Invalidate();
                     }
 
                     if (item.ToolTip == null)
@@ -257,7 +243,7 @@ namespace Mids_Reborn.Controls
                     }
 
                     ItemHover?.Invoke(this, i, item.TagId, item.ToolTip);
-                    hoveredItem = true;
+                    hoveredItem = i;
                 }
                 else
                 {
@@ -265,19 +251,21 @@ namespace Mids_Reborn.Controls
                 }
             }
 
-            if (!hoveredItem)
+            if (_hoverIndex == hoveredItem)
             {
-                ItemOut?.Invoke(this);
+                return;
             }
 
-            if (UseHighlighting)
+            _hoverIndex = hoveredItem;
+            if (hoveredItem <= -1)
             {
-                Invalidate();
+                ItemOut?.Invoke(this);
             }
         }
 
         private void OnLoad(object? sender, EventArgs e)
         {
+            _hoverIndex = -1;
             Redraw();
         }
 
@@ -440,7 +428,7 @@ namespace Mids_Reborn.Controls
         {
             public string? Name { get; set; }
             public string? Value { get; set; }
-            public Enums.ShortFX TagId { get; set; }
+            public Enums.ShortFX TagId { get; }
             public string? ToolTip { get; set; }
             public bool UseAlternateColor { get; set; }
             public bool UseSpecialColor { get; set; }
