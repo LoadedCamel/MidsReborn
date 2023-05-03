@@ -1025,12 +1025,8 @@ namespace Mids_Reborn
                 }
             }
 
-            if (sn.StartsWith("DSyncO:"))
-            {
-                sn = sn[7..];
-            }
-
-            return sn;
+            // Parse D-Sync, Hamidon, Hydra, Titan enhancements
+            return Regex.Replace(sn, @"^(DSyncO|HO|HY|TN)\:", "");
         }
 
         public List<PowerEntry>? Parse()
