@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mids_Reborn.Core.Base.Display
+﻿namespace Mids_Reborn.Core.Base.Display
 {
     public class InherentDisplayItem
     {

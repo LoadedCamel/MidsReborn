@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {

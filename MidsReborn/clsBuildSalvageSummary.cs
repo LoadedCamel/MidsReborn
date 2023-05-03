@@ -4,9 +4,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
-using static Mids_Reborn.Core.Files.Headers;
 
 namespace Mids_Reborn
 {
