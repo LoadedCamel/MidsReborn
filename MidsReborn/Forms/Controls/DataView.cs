@@ -1272,7 +1272,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 var targetGraph = numArray1[dType] == 0 ? gDef1 : gDef2;
                 //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.#}%", displayStats.Defense(dType), 0, iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.#}%", Math.Max(0, displayStats.Defense(dType)), 0, iTip);
             }
 
             var maxValue1 = Math.Max(gDef1.GetMaxValue(), gDef2.GetMaxValue());
@@ -1312,7 +1312,7 @@ namespace Mids_Reborn.Forms.Controls
                     : $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({atResCap})";
 
                 var targetGraph = numArray2[dType] == 0 ? gRes1 : gRes2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.#}%", displayStats.DamageResistance(dType, false), displayStats.DamageResistance(dType, true), iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.#}%", Math.Max(0, displayStats.DamageResistance(dType, false)), Math.Max(0, displayStats.DamageResistance(dType, true)), iTip);
             }
 
             var maxValue2 = Math.Max(gRes1.GetMaxValue(), gRes2.GetMaxValue());
