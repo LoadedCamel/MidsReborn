@@ -26,7 +26,7 @@ namespace Mids_Reborn.Controls
         private List<Item>? _items;
 
         public delegate void ItemClickEventHandler(object? sender, Item item, MouseEventArgs e);
-        public delegate void ItemHoverEventHandler(object? sender, int index, Enums.ShortFX tagId, string tooltip = "");
+        public delegate void ItemHoverEventHandler(object? sender, int index, Enums.ShortFX tagId, string? tooltip = "");
         public delegate void ItemOutEventHandler(object? sender);
 
         public event ItemClickEventHandler? ItemClick;
@@ -176,7 +176,7 @@ namespace Mids_Reborn.Controls
 
         private static void OnItemClick(object? sender, Item item, MouseEventArgs mouseEventArgs) { }
 
-        private static void OnItemHover(object? sender, int index, Enums.ShortFX tagId, string tooltip = "") { }
+        private static void OnItemHover(object? sender, int index, Enums.ShortFX tagId, string? tooltip = "") { }
 
         private static void OnItemOut(object? sender) { }
 
@@ -242,7 +242,6 @@ namespace Mids_Reborn.Controls
                         continue;
                     }
 
-                    ItemHover?.Invoke(this, i, item.TagId, item.ToolTip);
                     hoveredItem = i;
                 }
                 else
@@ -260,7 +259,10 @@ namespace Mids_Reborn.Controls
             if (hoveredItem <= -1)
             {
                 ItemOut?.Invoke(this);
+                return;
             }
+
+            if (Items[hoveredItem].ToolTip != null) ItemHover?.Invoke(this, hoveredItem, Items[hoveredItem].TagId, Items[hoveredItem].ToolTip);
         }
 
         private void OnLoad(object? sender, EventArgs e)
