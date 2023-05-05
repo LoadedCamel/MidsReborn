@@ -269,6 +269,7 @@ namespace Mids_Reborn.Core.BuildFile
             {
                 return false;
             }
+            InherentPowers = new List<PowerEntry>();
 
             var atNiD = DatabaseAPI.NidFromUidClass(_instance.Class);
             var atOrigin = DatabaseAPI.NidFromUidOrigin(_instance.Origin, atNiD);
