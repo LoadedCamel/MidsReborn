@@ -699,7 +699,7 @@ namespace Mids_Reborn.Core
                 {
                     if (!silent)
                     {
-                        MessageBox.Show($"Error reading some power data, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                        MessageBox.Show($"Error reading some power data with the {DatabaseAPI.DatabaseName} database, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
                     }
 
                     return false;
