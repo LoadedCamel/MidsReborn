@@ -1407,7 +1407,7 @@ namespace Mids_Reborn.Forms
         {
             DataViewLocked = false;
             NewToon(true, true);
-            var ret = CharacterBuildFile.LoadImportData(response.ImportData);
+            var ret = response.ImportData != null && CharacterBuildFile.LoadImportData(response.ImportData);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
