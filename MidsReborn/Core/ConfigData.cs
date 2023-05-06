@@ -323,21 +323,30 @@ namespace Mids_Reborn.Core
 
         private void LoadOverrides()
         {
+            if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
+            {
+                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", "Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CompOverride = Array.Empty<Enums.CompOverride>();
+                SaveOverrides(Serializer.GetSerializer());
+
+                return;
+            }
+
             using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show("Overrides file was missing a header! Not loading powerset comparison overrides.");
+                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", "Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                return;
             }
-            else
+
+            CompOverride = new Enums.CompOverride[binaryReader.ReadInt32() + 1];
+            for (var index = 0; index < CompOverride.Length; index++)
             {
-                CompOverride = new Enums.CompOverride[binaryReader.ReadInt32() + 1];
-                for (var index = 0; index <= CompOverride.Length - 1; ++index)
-                {
-                    CompOverride[index].Powerset = binaryReader.ReadString();
-                    CompOverride[index].Power = binaryReader.ReadString();
-                    CompOverride[index].Override = binaryReader.ReadString();
-                }
+                CompOverride[index].Powerset = binaryReader.ReadString();
+                CompOverride[index].Power = binaryReader.ReadString();
+                CompOverride[index].Override = binaryReader.ReadString();
             }
         }
 

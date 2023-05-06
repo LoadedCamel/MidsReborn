@@ -9,9 +9,17 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public class DbUpdate
     {
+        public enum ManifestStatus
+        {
+            Unknown,
+            Failure,
+            Success
+        }
+
         public bool Mandatory { get; set; }
         public Version Version { get; set; } = new();
         public string ChangeLog { get; set; } = string.Empty;
+        public ManifestStatus Status { get; private set; } = ManifestStatus.Unknown;
 
         public DbUpdate()
         {
@@ -46,20 +54,33 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         }
                     }
                 }
+
+                Status = ManifestStatus.Success;
             }
-            catch (XmlException ex)
+            catch (ArgumentException) // May occur while parsing xml
             {
                 MessageBox.Show(
-                    $@"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}\r\n\r\n{ex.Message}",
-                    @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    $"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
+                    @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Status = ManifestStatus.Failure;
+            }
+            catch (XmlException)
+            {
+                MessageBox.Show(
+                    $"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
+                    @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Status = ManifestStatus.Failure;
             }
 
-            if (Version == null)
+            if (Version != null)
             {
-                MessageBox.Show(
-                    $@"Cannot fetch available DB version from manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
-                    @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            MessageBox.Show(
+                $"Cannot fetch available DB version from manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
+                @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Status = ManifestStatus.Failure;
         }
 
         public bool IsAvailable => Helpers.CompareVersions(Version, DatabaseAPI.Database.Version);

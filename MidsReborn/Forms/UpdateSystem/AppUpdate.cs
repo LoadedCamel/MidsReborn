@@ -8,9 +8,17 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public class AppUpdate
     {
+        public enum ManifestStatus
+        {
+            Unknown,
+            Failure,
+            Success
+        }
+
         public bool Mandatory { get; set; }
         public Version Version { get; set; } = new();
         public string ChangeLog { get; set; } = string.Empty;
+        public ManifestStatus Status { get; private set; } = ManifestStatus.Unknown;
 
         public AppUpdate()
         {
@@ -44,10 +52,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
                             break;
                         }
                     }
+
+                    Status = ManifestStatus.Success;
                 }
                 catch
                 {
-                    MessageBox.Show(@"An error occurred while attempting to read from the manifest.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"An error occurred while attempting to read from the manifest.\r\nURL: {MidsContext.Config.UpdatePath}", @"App Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Status = ManifestStatus.Failure;
                 }
             }
         }

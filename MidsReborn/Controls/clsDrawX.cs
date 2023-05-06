@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;

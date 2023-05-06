@@ -527,6 +527,11 @@ namespace Mids_Reborn.Core
                 iSet == ps?.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static IPowerset? GetPowersetByFullname(string name)
+        {
+            return Database.Powersets.FirstOrDefault(x => x != null && x.FullName.Equals(name));
+        }
+
         public static IPowerset? GetInherentPowerset()
         {
             return Database.Powersets.FirstOrDefault(ps => ps.SetType == Enums.ePowerSetType.Inherent);

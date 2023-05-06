@@ -31,503 +31,495 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lvPower = new System.Windows.Forms.ListView();
-            this.ColumnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader5 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader7 = new System.Windows.Forms.ColumnHeader();
-            this.lvSet = new System.Windows.Forms.ListView();
-            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader4 = new System.Windows.Forms.ColumnHeader();
-            this.ColumnHeader6 = new System.Windows.Forms.ColumnHeader();
-            this.ilPS = new System.Windows.Forms.ImageList(this.components);
-            this.lvGroup = new System.Windows.Forms.ListView();
-            this.ColumnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.ilAT = new System.Windows.Forms.ImageList(this.components);
-            this.cbFilter = new System.Windows.Forms.ComboBox();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.ilPower = new System.Windows.Forms.ImageList(this.components);
-            this.btnPowerUp = new System.Windows.Forms.Button();
-            this.btnPowerDown = new System.Windows.Forms.Button();
-            this.btnPowerAdd = new System.Windows.Forms.Button();
-            this.btnPowerDelete = new System.Windows.Forms.Button();
-            this.btnPowerClone = new System.Windows.Forms.Button();
-            this.btnPowerEdit = new System.Windows.Forms.Button();
-            this.btnSetEdit = new System.Windows.Forms.Button();
-            this.btnSetDelete = new System.Windows.Forms.Button();
-            this.btnSetAdd = new System.Windows.Forms.Button();
-            this.btnClassClone = new System.Windows.Forms.Button();
-            this.btnClassEdit = new System.Windows.Forms.Button();
-            this.btnClassDelete = new System.Windows.Forms.Button();
-            this.btnClassAdd = new System.Windows.Forms.Button();
-            this.pnlGroup = new System.Windows.Forms.Panel();
-            this.btnClassUp = new System.Windows.Forms.Button();
-            this.btnClassDown = new System.Windows.Forms.Button();
-            this.pnlSet = new System.Windows.Forms.Panel();
-            this.btnPSUp = new System.Windows.Forms.Button();
-            this.btnPSDown = new System.Windows.Forms.Button();
-            this.pnlPower = new System.Windows.Forms.Panel();
-            this.lblSet = new System.Windows.Forms.Label();
-            this.lblPower = new System.Windows.Forms.Label();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.Label2 = new System.Windows.Forms.Label();
-            this.btnManageHiddenPowers = new System.Windows.Forms.Button();
-            this.btnMassOp = new System.Windows.Forms.Button();
-            this.btnDbQueries = new System.Windows.Forms.Button();
-            this.pnlGroup.SuspendLayout();
-            this.pnlSet.SuspendLayout();
-            this.pnlPower.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            lvPower = new ListView();
+            ColumnHeader3 = new ColumnHeader();
+            ColumnHeader5 = new ColumnHeader();
+            ColumnHeader7 = new ColumnHeader();
+            lvSet = new ListView();
+            ColumnHeader1 = new ColumnHeader();
+            ColumnHeader4 = new ColumnHeader();
+            ColumnHeader6 = new ColumnHeader();
+            ilPS = new ImageList(components);
+            lvGroup = new ListView();
+            ColumnHeader2 = new ColumnHeader();
+            ilAT = new ImageList(components);
+            cbFilter = new ComboBox();
+            Label1 = new Label();
+            ilPower = new ImageList(components);
+            btnPowerUp = new Button();
+            btnPowerDown = new Button();
+            btnPowerAdd = new Button();
+            btnPowerDelete = new Button();
+            btnPowerClone = new Button();
+            btnPowerEdit = new Button();
+            btnSetEdit = new Button();
+            btnSetDelete = new Button();
+            btnSetAdd = new Button();
+            btnClassClone = new Button();
+            btnClassEdit = new Button();
+            btnClassDelete = new Button();
+            btnClassAdd = new Button();
+            pnlGroup = new Panel();
+            btnClassUp = new Button();
+            btnClassDown = new Button();
+            pnlSet = new Panel();
+            btnPSUp = new Button();
+            btnPSDown = new Button();
+            pnlPower = new Panel();
+            lblSet = new Label();
+            lblPower = new Label();
+            btnOK = new Button();
+            btnCancel = new Button();
+            Label2 = new Label();
+            btnManageHiddenPowers = new Button();
+            btnMassOp = new Button();
+            btnDbQueries = new Button();
+            pnlGroup.SuspendLayout();
+            pnlSet.SuspendLayout();
+            pnlPower.SuspendLayout();
+            SuspendLayout();
             // 
             // lvPower
             // 
-            this.lvPower.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lvPower.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeader3,
-            this.ColumnHeader5,
-            this.ColumnHeader7});
-            this.lvPower.FullRowSelect = true;
-            this.lvPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPower.Location = new System.Drawing.Point(802, 37);
-            this.lvPower.MultiSelect = false;
-            this.lvPower.Name = "lvPower";
-            this.lvPower.Size = new System.Drawing.Size(543, 429);
-            this.lvPower.TabIndex = 21;
-            this.lvPower.UseCompatibleStateImageBehavior = false;
-            this.lvPower.View = System.Windows.Forms.View.Details;
-            this.lvPower.SelectedIndexChanged += new System.EventHandler(this.lvPower_SelectedIndexChanged);
-            this.lvPower.DoubleClick += new System.EventHandler(this.lvPower_DoubleClick);
+            lvPower.BorderStyle = BorderStyle.FixedSingle;
+            lvPower.Columns.AddRange(new ColumnHeader[] { ColumnHeader3, ColumnHeader5, ColumnHeader7 });
+            lvPower.FullRowSelect = true;
+            lvPower.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvPower.Location = new System.Drawing.Point(802, 37);
+            lvPower.MultiSelect = false;
+            lvPower.Name = "lvPower";
+            lvPower.Size = new System.Drawing.Size(543, 429);
+            lvPower.TabIndex = 21;
+            lvPower.UseCompatibleStateImageBehavior = false;
+            lvPower.View = View.Details;
+            lvPower.SelectedIndexChanged += lvPower_SelectedIndexChanged;
+            lvPower.DoubleClick += lvPower_DoubleClick;
             // 
             // ColumnHeader3
             // 
-            this.ColumnHeader3.Text = "Power";
-            this.ColumnHeader3.Width = 291;
+            ColumnHeader3.Text = "Power";
+            ColumnHeader3.Width = 291;
             // 
             // ColumnHeader5
             // 
-            this.ColumnHeader5.Text = "Name";
-            this.ColumnHeader5.Width = 185;
+            ColumnHeader5.Text = "Name";
+            ColumnHeader5.Width = 185;
             // 
             // ColumnHeader7
             // 
-            this.ColumnHeader7.Text = "Level";
-            this.ColumnHeader7.Width = 63;
+            ColumnHeader7.Text = "Level";
+            ColumnHeader7.Width = 63;
             // 
             // lvSet
             // 
-            this.lvSet.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvSet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lvSet.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeader1,
-            this.ColumnHeader4,
-            this.ColumnHeader6});
-            this.lvSet.FullRowSelect = true;
-            this.lvSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSet.Location = new System.Drawing.Point(358, 37);
-            this.lvSet.MultiSelect = false;
-            this.lvSet.Name = "lvSet";
-            this.lvSet.Size = new System.Drawing.Size(434, 429);
-            this.lvSet.SmallImageList = this.ilPS;
-            this.lvSet.TabIndex = 20;
-            this.lvSet.UseCompatibleStateImageBehavior = false;
-            this.lvSet.View = System.Windows.Forms.View.Details;
-            this.lvSet.SelectedIndexChanged += new System.EventHandler(this.lvSet_SelectedIndexChanged);
-            this.lvSet.DoubleClick += new System.EventHandler(this.lvSet_DoubleClick);
+            lvSet.Activation = ItemActivation.OneClick;
+            lvSet.BorderStyle = BorderStyle.FixedSingle;
+            lvSet.Columns.AddRange(new ColumnHeader[] { ColumnHeader1, ColumnHeader4, ColumnHeader6 });
+            lvSet.FullRowSelect = true;
+            lvSet.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvSet.Location = new System.Drawing.Point(358, 37);
+            lvSet.MultiSelect = false;
+            lvSet.Name = "lvSet";
+            lvSet.Size = new System.Drawing.Size(434, 429);
+            lvSet.SmallImageList = ilPS;
+            lvSet.TabIndex = 20;
+            lvSet.UseCompatibleStateImageBehavior = false;
+            lvSet.View = View.Details;
+            lvSet.SelectedIndexChanged += lvSet_SelectedIndexChanged;
+            lvSet.DoubleClick += lvSet_DoubleClick;
             // 
             // ColumnHeader1
             // 
-            this.ColumnHeader1.Text = "Set";
-            this.ColumnHeader1.Width = 196;
+            ColumnHeader1.Text = "Set";
+            ColumnHeader1.Width = 196;
             // 
             // ColumnHeader4
             // 
-            this.ColumnHeader4.Text = "Name";
-            this.ColumnHeader4.Width = 174;
+            ColumnHeader4.Text = "Name";
+            ColumnHeader4.Width = 174;
             // 
             // ColumnHeader6
             // 
-            this.ColumnHeader6.Text = "Type";
+            ColumnHeader6.Text = "Type";
             // 
             // ilPS
             // 
-            this.ilPS.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilPS.ImageSize = new System.Drawing.Size(34, 18);
-            this.ilPS.TransparentColor = System.Drawing.Color.Transparent;
+            ilPS.ColorDepth = ColorDepth.Depth32Bit;
+            ilPS.ImageSize = new System.Drawing.Size(34, 18);
+            ilPS.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // lvGroup
             // 
-            this.lvGroup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lvGroup.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeader2});
-            this.lvGroup.FullRowSelect = true;
-            this.lvGroup.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvGroup.Location = new System.Drawing.Point(12, 37);
-            this.lvGroup.MultiSelect = false;
-            this.lvGroup.Name = "lvGroup";
-            this.lvGroup.Size = new System.Drawing.Size(340, 429);
-            this.lvGroup.SmallImageList = this.ilAT;
-            this.lvGroup.TabIndex = 19;
-            this.lvGroup.UseCompatibleStateImageBehavior = false;
-            this.lvGroup.View = System.Windows.Forms.View.Details;
-            this.lvGroup.SelectedIndexChanged += new System.EventHandler(this.lvGroup_SelectedIndexChanged);
-            this.lvGroup.DoubleClick += new System.EventHandler(this.lvGroup_DoubleClick);
+            lvGroup.BorderStyle = BorderStyle.FixedSingle;
+            lvGroup.Columns.AddRange(new ColumnHeader[] { ColumnHeader2 });
+            lvGroup.FullRowSelect = true;
+            lvGroup.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvGroup.Location = new System.Drawing.Point(12, 37);
+            lvGroup.MultiSelect = false;
+            lvGroup.Name = "lvGroup";
+            lvGroup.Size = new System.Drawing.Size(340, 429);
+            lvGroup.SmallImageList = ilAT;
+            lvGroup.TabIndex = 19;
+            lvGroup.UseCompatibleStateImageBehavior = false;
+            lvGroup.View = View.Details;
+            lvGroup.SelectedIndexChanged += lvGroup_SelectedIndexChanged;
+            lvGroup.DoubleClick += lvGroup_DoubleClick;
             // 
             // ColumnHeader2
             // 
-            this.ColumnHeader2.Text = "Group";
-            this.ColumnHeader2.Width = 207;
+            ColumnHeader2.Text = "Group";
+            ColumnHeader2.Width = 207;
             // 
             // ilAT
             // 
-            this.ilAT.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilAT.ImageSize = new System.Drawing.Size(16, 16);
-            this.ilAT.TransparentColor = System.Drawing.Color.Transparent;
+            ilAT.ColorDepth = ColorDepth.Depth32Bit;
+            ilAT.ImageSize = new System.Drawing.Size(16, 16);
+            ilAT.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // cbFilter
             // 
-            this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilter.FormattingEnabled = true;
-            this.cbFilter.Location = new System.Drawing.Point(86, 9);
-            this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(221, 22);
-            this.cbFilter.TabIndex = 22;
-            this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
+            cbFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbFilter.FormattingEnabled = true;
+            cbFilter.Location = new System.Drawing.Point(86, 9);
+            cbFilter.Name = "cbFilter";
+            cbFilter.Size = new System.Drawing.Size(221, 21);
+            cbFilter.TabIndex = 22;
+            cbFilter.SelectedIndexChanged += cbFilter_SelectedIndexChanged;
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(12, 9);
-            this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(68, 22);
-            this.Label1.TabIndex = 23;
-            this.Label1.Text = "Filter By:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label1.Location = new System.Drawing.Point(12, 9);
+            Label1.Name = "Label1";
+            Label1.Size = new System.Drawing.Size(68, 22);
+            Label1.TabIndex = 23;
+            Label1.Text = "Filter By:";
+            Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ilPower
             // 
-            this.ilPower.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilPower.ImageSize = new System.Drawing.Size(16, 16);
-            this.ilPower.TransparentColor = System.Drawing.Color.Transparent;
+            ilPower.ColorDepth = ColorDepth.Depth32Bit;
+            ilPower.ImageSize = new System.Drawing.Size(16, 16);
+            ilPower.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // btnPowerUp
             // 
-            this.btnPowerUp.Location = new System.Drawing.Point(3, 3);
-            this.btnPowerUp.Name = "btnPowerUp";
-            this.btnPowerUp.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerUp.TabIndex = 28;
-            this.btnPowerUp.Text = "Up";
-            this.btnPowerUp.UseVisualStyleBackColor = true;
-            this.btnPowerUp.Click += new System.EventHandler(this.btnPowerUp_Click);
+            btnPowerUp.Location = new System.Drawing.Point(3, 3);
+            btnPowerUp.Name = "btnPowerUp";
+            btnPowerUp.Size = new System.Drawing.Size(75, 23);
+            btnPowerUp.TabIndex = 28;
+            btnPowerUp.Text = "Up";
+            btnPowerUp.UseVisualStyleBackColor = true;
+            btnPowerUp.Click += btnPowerUp_Click;
             // 
             // btnPowerDown
             // 
-            this.btnPowerDown.Location = new System.Drawing.Point(3, 32);
-            this.btnPowerDown.Name = "btnPowerDown";
-            this.btnPowerDown.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerDown.TabIndex = 29;
-            this.btnPowerDown.Text = "Down";
-            this.btnPowerDown.UseVisualStyleBackColor = true;
-            this.btnPowerDown.Click += new System.EventHandler(this.btnPowerDown_Click);
+            btnPowerDown.Location = new System.Drawing.Point(3, 32);
+            btnPowerDown.Name = "btnPowerDown";
+            btnPowerDown.Size = new System.Drawing.Size(75, 23);
+            btnPowerDown.TabIndex = 29;
+            btnPowerDown.Text = "Down";
+            btnPowerDown.UseVisualStyleBackColor = true;
+            btnPowerDown.Click += btnPowerDown_Click;
             // 
             // btnPowerAdd
             // 
-            this.btnPowerAdd.Location = new System.Drawing.Point(463, 3);
-            this.btnPowerAdd.Name = "btnPowerAdd";
-            this.btnPowerAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerAdd.TabIndex = 30;
-            this.btnPowerAdd.Text = "Add";
-            this.btnPowerAdd.UseVisualStyleBackColor = true;
-            this.btnPowerAdd.Click += new System.EventHandler(this.btnPowerAdd_Click);
+            btnPowerAdd.Location = new System.Drawing.Point(463, 3);
+            btnPowerAdd.Name = "btnPowerAdd";
+            btnPowerAdd.Size = new System.Drawing.Size(75, 23);
+            btnPowerAdd.TabIndex = 30;
+            btnPowerAdd.Text = "Add";
+            btnPowerAdd.UseVisualStyleBackColor = true;
+            btnPowerAdd.Click += btnPowerAdd_Click;
             // 
             // btnPowerDelete
             // 
-            this.btnPowerDelete.Location = new System.Drawing.Point(382, 3);
-            this.btnPowerDelete.Name = "btnPowerDelete";
-            this.btnPowerDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerDelete.TabIndex = 31;
-            this.btnPowerDelete.Text = "Delete";
-            this.btnPowerDelete.UseVisualStyleBackColor = true;
-            this.btnPowerDelete.Click += new System.EventHandler(this.btnPowerDelete_Click);
+            btnPowerDelete.Location = new System.Drawing.Point(382, 3);
+            btnPowerDelete.Name = "btnPowerDelete";
+            btnPowerDelete.Size = new System.Drawing.Size(75, 23);
+            btnPowerDelete.TabIndex = 31;
+            btnPowerDelete.Text = "Delete";
+            btnPowerDelete.UseVisualStyleBackColor = true;
+            btnPowerDelete.Click += btnPowerDelete_Click;
             // 
             // btnPowerClone
             // 
-            this.btnPowerClone.Location = new System.Drawing.Point(301, 32);
-            this.btnPowerClone.Name = "btnPowerClone";
-            this.btnPowerClone.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerClone.TabIndex = 33;
-            this.btnPowerClone.Text = "Clone";
-            this.btnPowerClone.UseVisualStyleBackColor = true;
-            this.btnPowerClone.Click += new System.EventHandler(this.btnPowerClone_Click);
+            btnPowerClone.Location = new System.Drawing.Point(301, 32);
+            btnPowerClone.Name = "btnPowerClone";
+            btnPowerClone.Size = new System.Drawing.Size(75, 23);
+            btnPowerClone.TabIndex = 33;
+            btnPowerClone.Text = "Clone";
+            btnPowerClone.UseVisualStyleBackColor = true;
+            btnPowerClone.Click += btnPowerClone_Click;
             // 
             // btnPowerEdit
             // 
-            this.btnPowerEdit.Location = new System.Drawing.Point(301, 3);
-            this.btnPowerEdit.Name = "btnPowerEdit";
-            this.btnPowerEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnPowerEdit.TabIndex = 32;
-            this.btnPowerEdit.Text = "Edit";
-            this.btnPowerEdit.UseVisualStyleBackColor = true;
-            this.btnPowerEdit.Click += new System.EventHandler(this.btnPowerEdit_Click);
+            btnPowerEdit.Location = new System.Drawing.Point(301, 3);
+            btnPowerEdit.Name = "btnPowerEdit";
+            btnPowerEdit.Size = new System.Drawing.Size(75, 23);
+            btnPowerEdit.TabIndex = 32;
+            btnPowerEdit.Text = "Edit";
+            btnPowerEdit.UseVisualStyleBackColor = true;
+            btnPowerEdit.Click += btnPowerEdit_Click;
             // 
             // btnSetEdit
             // 
-            this.btnSetEdit.Location = new System.Drawing.Point(192, 3);
-            this.btnSetEdit.Name = "btnSetEdit";
-            this.btnSetEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnSetEdit.TabIndex = 40;
-            this.btnSetEdit.Text = "Edit";
-            this.btnSetEdit.UseVisualStyleBackColor = true;
-            this.btnSetEdit.Click += new System.EventHandler(this.btnSetEdit_Click);
+            btnSetEdit.Location = new System.Drawing.Point(192, 3);
+            btnSetEdit.Name = "btnSetEdit";
+            btnSetEdit.Size = new System.Drawing.Size(75, 23);
+            btnSetEdit.TabIndex = 40;
+            btnSetEdit.Text = "Edit";
+            btnSetEdit.UseVisualStyleBackColor = true;
+            btnSetEdit.Click += btnSetEdit_Click;
             // 
             // btnSetDelete
             // 
-            this.btnSetDelete.Location = new System.Drawing.Point(273, 3);
-            this.btnSetDelete.Name = "btnSetDelete";
-            this.btnSetDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnSetDelete.TabIndex = 39;
-            this.btnSetDelete.Text = "Delete";
-            this.btnSetDelete.UseVisualStyleBackColor = true;
-            this.btnSetDelete.Click += new System.EventHandler(this.btnSetDelete_Click);
+            btnSetDelete.Location = new System.Drawing.Point(273, 3);
+            btnSetDelete.Name = "btnSetDelete";
+            btnSetDelete.Size = new System.Drawing.Size(75, 23);
+            btnSetDelete.TabIndex = 39;
+            btnSetDelete.Text = "Delete";
+            btnSetDelete.UseVisualStyleBackColor = true;
+            btnSetDelete.Click += btnSetDelete_Click;
             // 
             // btnSetAdd
             // 
-            this.btnSetAdd.Location = new System.Drawing.Point(354, 3);
-            this.btnSetAdd.Name = "btnSetAdd";
-            this.btnSetAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnSetAdd.TabIndex = 38;
-            this.btnSetAdd.Text = "Add";
-            this.btnSetAdd.UseVisualStyleBackColor = true;
-            this.btnSetAdd.Click += new System.EventHandler(this.btnSetAdd_Click);
+            btnSetAdd.Location = new System.Drawing.Point(354, 3);
+            btnSetAdd.Name = "btnSetAdd";
+            btnSetAdd.Size = new System.Drawing.Size(75, 23);
+            btnSetAdd.TabIndex = 38;
+            btnSetAdd.Text = "Add";
+            btnSetAdd.UseVisualStyleBackColor = true;
+            btnSetAdd.Click += btnSetAdd_Click;
             // 
             // btnClassClone
             // 
-            this.btnClassClone.Location = new System.Drawing.Point(98, 32);
-            this.btnClassClone.Name = "btnClassClone";
-            this.btnClassClone.Size = new System.Drawing.Size(75, 23);
-            this.btnClassClone.TabIndex = 46;
-            this.btnClassClone.Text = "Clone";
-            this.btnClassClone.UseVisualStyleBackColor = true;
-            this.btnClassClone.Click += new System.EventHandler(this.btnClassClone_Click);
+            btnClassClone.Location = new System.Drawing.Point(98, 32);
+            btnClassClone.Name = "btnClassClone";
+            btnClassClone.Size = new System.Drawing.Size(75, 23);
+            btnClassClone.TabIndex = 46;
+            btnClassClone.Text = "Clone";
+            btnClassClone.UseVisualStyleBackColor = true;
+            btnClassClone.Click += btnClassClone_Click;
             // 
             // btnClassEdit
             // 
-            this.btnClassEdit.Location = new System.Drawing.Point(98, 3);
-            this.btnClassEdit.Name = "btnClassEdit";
-            this.btnClassEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnClassEdit.TabIndex = 45;
-            this.btnClassEdit.Text = "Edit";
-            this.btnClassEdit.UseVisualStyleBackColor = true;
-            this.btnClassEdit.Click += new System.EventHandler(this.btnClassEdit_Click);
+            btnClassEdit.Location = new System.Drawing.Point(98, 3);
+            btnClassEdit.Name = "btnClassEdit";
+            btnClassEdit.Size = new System.Drawing.Size(75, 23);
+            btnClassEdit.TabIndex = 45;
+            btnClassEdit.Text = "Edit";
+            btnClassEdit.UseVisualStyleBackColor = true;
+            btnClassEdit.Click += btnClassEdit_Click;
             // 
             // btnClassDelete
             // 
-            this.btnClassDelete.Location = new System.Drawing.Point(179, 3);
-            this.btnClassDelete.Name = "btnClassDelete";
-            this.btnClassDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnClassDelete.TabIndex = 44;
-            this.btnClassDelete.Text = "Delete";
-            this.btnClassDelete.UseVisualStyleBackColor = true;
-            this.btnClassDelete.Click += new System.EventHandler(this.btnClassDelete_Click);
+            btnClassDelete.Location = new System.Drawing.Point(179, 3);
+            btnClassDelete.Name = "btnClassDelete";
+            btnClassDelete.Size = new System.Drawing.Size(75, 23);
+            btnClassDelete.TabIndex = 44;
+            btnClassDelete.Text = "Delete";
+            btnClassDelete.UseVisualStyleBackColor = true;
+            btnClassDelete.Click += btnClassDelete_Click;
             // 
             // btnClassAdd
             // 
-            this.btnClassAdd.Location = new System.Drawing.Point(260, 3);
-            this.btnClassAdd.Name = "btnClassAdd";
-            this.btnClassAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnClassAdd.TabIndex = 43;
-            this.btnClassAdd.Text = "Add";
-            this.btnClassAdd.UseVisualStyleBackColor = true;
-            this.btnClassAdd.Click += new System.EventHandler(this.btnClassAdd_Click);
+            btnClassAdd.Location = new System.Drawing.Point(260, 3);
+            btnClassAdd.Name = "btnClassAdd";
+            btnClassAdd.Size = new System.Drawing.Size(75, 23);
+            btnClassAdd.TabIndex = 43;
+            btnClassAdd.Text = "Add";
+            btnClassAdd.UseVisualStyleBackColor = true;
+            btnClassAdd.Click += btnClassAdd_Click;
             // 
             // pnlGroup
             // 
-            this.pnlGroup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlGroup.Controls.Add(this.btnClassUp);
-            this.pnlGroup.Controls.Add(this.btnClassDown);
-            this.pnlGroup.Controls.Add(this.btnClassClone);
-            this.pnlGroup.Controls.Add(this.btnClassDelete);
-            this.pnlGroup.Controls.Add(this.btnClassAdd);
-            this.pnlGroup.Controls.Add(this.btnClassEdit);
-            this.pnlGroup.Location = new System.Drawing.Point(12, 497);
-            this.pnlGroup.Name = "pnlGroup";
-            this.pnlGroup.Size = new System.Drawing.Size(340, 68);
-            this.pnlGroup.TabIndex = 47;
+            pnlGroup.BorderStyle = BorderStyle.FixedSingle;
+            pnlGroup.Controls.Add(btnClassUp);
+            pnlGroup.Controls.Add(btnClassDown);
+            pnlGroup.Controls.Add(btnClassClone);
+            pnlGroup.Controls.Add(btnClassDelete);
+            pnlGroup.Controls.Add(btnClassAdd);
+            pnlGroup.Controls.Add(btnClassEdit);
+            pnlGroup.Location = new System.Drawing.Point(12, 497);
+            pnlGroup.Name = "pnlGroup";
+            pnlGroup.Size = new System.Drawing.Size(340, 68);
+            pnlGroup.TabIndex = 47;
             // 
             // btnClassUp
             // 
-            this.btnClassUp.Location = new System.Drawing.Point(3, 3);
-            this.btnClassUp.Name = "btnClassUp";
-            this.btnClassUp.Size = new System.Drawing.Size(64, 23);
-            this.btnClassUp.TabIndex = 47;
-            this.btnClassUp.Text = "Up";
-            this.btnClassUp.UseVisualStyleBackColor = true;
-            this.btnClassUp.Click += new System.EventHandler(this.btnClassUp_Click);
+            btnClassUp.Location = new System.Drawing.Point(3, 3);
+            btnClassUp.Name = "btnClassUp";
+            btnClassUp.Size = new System.Drawing.Size(64, 23);
+            btnClassUp.TabIndex = 47;
+            btnClassUp.Text = "Up";
+            btnClassUp.UseVisualStyleBackColor = true;
+            btnClassUp.Click += btnClassUp_Click;
             // 
             // btnClassDown
             // 
-            this.btnClassDown.Location = new System.Drawing.Point(3, 32);
-            this.btnClassDown.Name = "btnClassDown";
-            this.btnClassDown.Size = new System.Drawing.Size(64, 23);
-            this.btnClassDown.TabIndex = 48;
-            this.btnClassDown.Text = "Down";
-            this.btnClassDown.UseVisualStyleBackColor = true;
-            this.btnClassDown.Click += new System.EventHandler(this.btnClassDown_Click);
+            btnClassDown.Location = new System.Drawing.Point(3, 32);
+            btnClassDown.Name = "btnClassDown";
+            btnClassDown.Size = new System.Drawing.Size(64, 23);
+            btnClassDown.TabIndex = 48;
+            btnClassDown.Text = "Down";
+            btnClassDown.UseVisualStyleBackColor = true;
+            btnClassDown.Click += btnClassDown_Click;
             // 
             // pnlSet
             // 
-            this.pnlSet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlSet.Controls.Add(this.btnPSUp);
-            this.pnlSet.Controls.Add(this.btnPSDown);
-            this.pnlSet.Controls.Add(this.btnSetDelete);
-            this.pnlSet.Controls.Add(this.btnSetAdd);
-            this.pnlSet.Controls.Add(this.btnSetEdit);
-            this.pnlSet.Location = new System.Drawing.Point(358, 497);
-            this.pnlSet.Name = "pnlSet";
-            this.pnlSet.Size = new System.Drawing.Size(434, 68);
-            this.pnlSet.TabIndex = 48;
+            pnlSet.BorderStyle = BorderStyle.FixedSingle;
+            pnlSet.Controls.Add(btnPSUp);
+            pnlSet.Controls.Add(btnPSDown);
+            pnlSet.Controls.Add(btnSetDelete);
+            pnlSet.Controls.Add(btnSetAdd);
+            pnlSet.Controls.Add(btnSetEdit);
+            pnlSet.Location = new System.Drawing.Point(358, 497);
+            pnlSet.Name = "pnlSet";
+            pnlSet.Size = new System.Drawing.Size(434, 68);
+            pnlSet.TabIndex = 48;
             // 
             // btnPSUp
             // 
-            this.btnPSUp.Location = new System.Drawing.Point(3, 3);
-            this.btnPSUp.Name = "btnPSUp";
-            this.btnPSUp.Size = new System.Drawing.Size(75, 23);
-            this.btnPSUp.TabIndex = 41;
-            this.btnPSUp.Text = "Up";
-            this.btnPSUp.UseVisualStyleBackColor = true;
-            this.btnPSUp.Click += new System.EventHandler(this.btnPSUp_Click);
+            btnPSUp.Location = new System.Drawing.Point(3, 3);
+            btnPSUp.Name = "btnPSUp";
+            btnPSUp.Size = new System.Drawing.Size(75, 23);
+            btnPSUp.TabIndex = 41;
+            btnPSUp.Text = "Up";
+            btnPSUp.UseVisualStyleBackColor = true;
+            btnPSUp.Click += btnPSUp_Click;
             // 
             // btnPSDown
             // 
-            this.btnPSDown.Location = new System.Drawing.Point(3, 32);
-            this.btnPSDown.Name = "btnPSDown";
-            this.btnPSDown.Size = new System.Drawing.Size(75, 23);
-            this.btnPSDown.TabIndex = 42;
-            this.btnPSDown.Text = "Down";
-            this.btnPSDown.UseVisualStyleBackColor = true;
-            this.btnPSDown.Click += new System.EventHandler(this.btnPSDown_Click);
+            btnPSDown.Location = new System.Drawing.Point(3, 32);
+            btnPSDown.Name = "btnPSDown";
+            btnPSDown.Size = new System.Drawing.Size(75, 23);
+            btnPSDown.TabIndex = 42;
+            btnPSDown.Text = "Down";
+            btnPSDown.UseVisualStyleBackColor = true;
+            btnPSDown.Click += btnPSDown_Click;
             // 
             // pnlPower
             // 
-            this.pnlPower.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlPower.Controls.Add(this.btnPowerClone);
-            this.pnlPower.Controls.Add(this.btnPowerUp);
-            this.pnlPower.Controls.Add(this.btnPowerDown);
-            this.pnlPower.Controls.Add(this.btnPowerEdit);
-            this.pnlPower.Controls.Add(this.btnPowerDelete);
-            this.pnlPower.Controls.Add(this.btnPowerAdd);
-            this.pnlPower.Location = new System.Drawing.Point(798, 497);
-            this.pnlPower.Name = "pnlPower";
-            this.pnlPower.Size = new System.Drawing.Size(543, 68);
-            this.pnlPower.TabIndex = 49;
+            pnlPower.BorderStyle = BorderStyle.FixedSingle;
+            pnlPower.Controls.Add(btnPowerClone);
+            pnlPower.Controls.Add(btnPowerUp);
+            pnlPower.Controls.Add(btnPowerDown);
+            pnlPower.Controls.Add(btnPowerEdit);
+            pnlPower.Controls.Add(btnPowerDelete);
+            pnlPower.Controls.Add(btnPowerAdd);
+            pnlPower.Location = new System.Drawing.Point(798, 497);
+            pnlPower.Name = "pnlPower";
+            pnlPower.Size = new System.Drawing.Size(543, 68);
+            pnlPower.TabIndex = 49;
             // 
             // lblSet
             // 
-            this.lblSet.Location = new System.Drawing.Point(355, 469);
-            this.lblSet.Name = "lblSet";
-            this.lblSet.Size = new System.Drawing.Size(437, 24);
-            this.lblSet.TabIndex = 50;
-            this.lblSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblSet.Location = new System.Drawing.Point(355, 469);
+            lblSet.Name = "lblSet";
+            lblSet.Size = new System.Drawing.Size(437, 24);
+            lblSet.TabIndex = 50;
+            lblSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblPower
             // 
-            this.lblPower.Location = new System.Drawing.Point(799, 469);
-            this.lblPower.Name = "lblPower";
-            this.lblPower.Size = new System.Drawing.Size(542, 24);
-            this.lblPower.TabIndex = 51;
-            this.lblPower.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblPower.Location = new System.Drawing.Point(799, 469);
+            lblPower.Name = "lblPower";
+            lblPower.Size = new System.Drawing.Size(542, 24);
+            lblPower.TabIndex = 51;
+            lblPower.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(1209, 571);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(132, 32);
-            this.btnOK.TabIndex = 52;
-            this.btnOK.Text = "Save && Close";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.Location = new System.Drawing.Point(1209, 571);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new System.Drawing.Size(132, 32);
+            btnOK.TabIndex = 52;
+            btnOK.Text = "Save && Close";
+            btnOK.UseVisualStyleBackColor = true;
+            btnOK.Click += btnOK_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(1071, 571);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(132, 32);
-            this.btnCancel.TabIndex = 53;
-            this.btnCancel.Text = "Cancel && Discard";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.Location = new System.Drawing.Point(1071, 571);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(132, 32);
+            btnCancel.TabIndex = 53;
+            btnCancel.Text = "Cancel && Discard";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // Label2
             // 
-            this.Label2.Location = new System.Drawing.Point(313, 13);
-            this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(323, 16);
-            this.Label2.TabIndex = 54;
-            this.Label2.Text = "To edit Archetype Classes, change filtering to Classes";
+            Label2.Location = new System.Drawing.Point(313, 13);
+            Label2.Name = "Label2";
+            Label2.Size = new System.Drawing.Size(323, 16);
+            Label2.TabIndex = 54;
+            Label2.Text = "To edit Archetype Classes, change filtering to Classes";
             // 
             // btnManageHiddenPowers
             // 
-            this.btnManageHiddenPowers.Location = new System.Drawing.Point(660, 571);
-            this.btnManageHiddenPowers.Name = "btnManageHiddenPowers";
-            this.btnManageHiddenPowers.Size = new System.Drawing.Size(132, 32);
-            this.btnManageHiddenPowers.TabIndex = 55;
-            this.btnManageHiddenPowers.Text = "Manage Hidden Powers";
-            this.btnManageHiddenPowers.UseVisualStyleBackColor = true;
-            this.btnManageHiddenPowers.Click += new System.EventHandler(this.btnManageHiddenPowers_Click);
+            btnManageHiddenPowers.Location = new System.Drawing.Point(652, 571);
+            btnManageHiddenPowers.Name = "btnManageHiddenPowers";
+            btnManageHiddenPowers.Size = new System.Drawing.Size(140, 32);
+            btnManageHiddenPowers.TabIndex = 55;
+            btnManageHiddenPowers.Text = "Manage Hidden Powers";
+            btnManageHiddenPowers.UseVisualStyleBackColor = true;
+            btnManageHiddenPowers.Click += btnManageHiddenPowers_Click;
             // 
             // btnMassOp
             // 
-            this.btnMassOp.Location = new System.Drawing.Point(522, 571);
-            this.btnMassOp.Name = "btnMassOp";
-            this.btnMassOp.Size = new System.Drawing.Size(132, 32);
-            this.btnMassOp.TabIndex = 56;
-            this.btnMassOp.Text = "Mass op.";
-            this.btnMassOp.UseVisualStyleBackColor = true;
-            this.btnMassOp.Visible = false;
-            this.btnMassOp.Click += new System.EventHandler(this.btnMassOp_Click);
+            btnMassOp.Location = new System.Drawing.Point(514, 571);
+            btnMassOp.Name = "btnMassOp";
+            btnMassOp.Size = new System.Drawing.Size(132, 32);
+            btnMassOp.TabIndex = 56;
+            btnMassOp.Text = "Mass op.";
+            btnMassOp.UseVisualStyleBackColor = true;
+            btnMassOp.Visible = false;
+            btnMassOp.Click += btnMassOp_Click;
             // 
             // btnDbQueries
             // 
-            this.btnDbQueries.Location = new System.Drawing.Point(798, 571);
-            this.btnDbQueries.Name = "btnDbQueries";
-            this.btnDbQueries.Size = new System.Drawing.Size(132, 32);
-            this.btnDbQueries.TabIndex = 57;
-            this.btnDbQueries.Text = "DB Queries";
-            this.btnDbQueries.UseVisualStyleBackColor = true;
-            this.btnDbQueries.Click += new System.EventHandler(this.btnDbQueries_Click);
+            btnDbQueries.Location = new System.Drawing.Point(798, 571);
+            btnDbQueries.Name = "btnDbQueries";
+            btnDbQueries.Size = new System.Drawing.Size(132, 32);
+            btnDbQueries.TabIndex = 57;
+            btnDbQueries.Text = "DB Queries";
+            btnDbQueries.UseVisualStyleBackColor = true;
+            btnDbQueries.Click += btnDbQueries_Click;
             // 
             // frmPowerBrowser
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1356, 612);
-            this.Controls.Add(this.btnDbQueries);
-            this.Controls.Add(this.btnMassOp);
-            this.Controls.Add(this.btnManageHiddenPowers);
-            this.Controls.Add(this.Label2);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.lblPower);
-            this.Controls.Add(this.lblSet);
-            this.Controls.Add(this.Label1);
-            this.Controls.Add(this.cbFilter);
-            this.Controls.Add(this.lvPower);
-            this.Controls.Add(this.lvSet);
-            this.Controls.Add(this.lvGroup);
-            this.Controls.Add(this.pnlGroup);
-            this.Controls.Add(this.pnlSet);
-            this.Controls.Add(this.pnlPower);
-            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmPowerBrowser";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Power Database Browser";
-            this.pnlGroup.ResumeLayout(false);
-            this.pnlSet.ResumeLayout(false);
-            this.pnlPower.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleMode = AutoScaleMode.None;
+            ClientSize = new System.Drawing.Size(1356, 612);
+            Controls.Add(btnDbQueries);
+            Controls.Add(btnMassOp);
+            Controls.Add(btnManageHiddenPowers);
+            Controls.Add(Label2);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOK);
+            Controls.Add(lblPower);
+            Controls.Add(lblSet);
+            Controls.Add(Label1);
+            Controls.Add(cbFilter);
+            Controls.Add(lvPower);
+            Controls.Add(lvSet);
+            Controls.Add(lvGroup);
+            Controls.Add(pnlGroup);
+            Controls.Add(pnlSet);
+            Controls.Add(pnlPower);
+            Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmPowerBrowser";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Power Database Browser";
+            pnlGroup.ResumeLayout(false);
+            pnlSet.ResumeLayout(false);
+            pnlPower.ResumeLayout(false);
+            ResumeLayout(false);
         }
         #endregion
 

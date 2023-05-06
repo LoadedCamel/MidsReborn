@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mids_Reborn.Core;
+﻿using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.UIv2

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Mids_Reborn.Core.BuildFile.RestModels
+﻿namespace Mids_Reborn.Core.BuildFile.RestModels
 {
     public class ResponseModel
     {

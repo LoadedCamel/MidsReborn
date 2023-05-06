@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile.DataModels;
-using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
-using RestSharp;
 
 namespace Mids_Reborn.Core.BuildFile
 {
@@ -21,9 +18,11 @@ namespace Mids_Reborn.Core.BuildFile
 
         private static CharacterBuildFile? _instance;
         private static readonly object Mutex = new();
+
+        private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
-        private static CharacterBuildFile CreateInstance(Character characterData, bool refreshData = false)
+        private static CharacterBuildFile GetInstance(Character characterData, bool refreshData = false)
         {
             if (_instance != null && !refreshData) return _instance;
             lock (Mutex)
@@ -33,10 +32,9 @@ namespace Mids_Reborn.Core.BuildFile
             return _instance;
         }
 
-        public static CharacterBuildFile GetInstance()
+        private static CharacterBuildFile CreateInstance()
         {
-            if (_instance != null) return _instance;
-            throw new NullReferenceException("Instance was not initialized before access.");
+            return _instance = new CharacterBuildFile();
         }
 
         public MetaData? BuiltWith { get; set; }
@@ -44,7 +42,7 @@ namespace Mids_Reborn.Core.BuildFile
         public string Origin { get; set; }
         public string Alignment { get; set; }
         public string Name { get; set; }
-        public string? Comment { get; set; }
+        public string Comment { get; set; }
         public List<string> PowerSets { get; set; }
         public int LastPower { get; set; }
         public List<PowerData?> PowerEntries { get; set; }
@@ -264,12 +262,14 @@ namespace Mids_Reborn.Core.BuildFile
             }
         }
 
+
         private static bool LoadBuild()
         {
             if (_instance == null)
             {
                 return false;
             }
+            InherentPowers = new List<PowerEntry>();
 
             var atNiD = DatabaseAPI.NidFromUidClass(_instance.Class);
             var atOrigin = DatabaseAPI.NidFromUidOrigin(_instance.Origin, atNiD);
@@ -490,7 +490,7 @@ namespace Mids_Reborn.Core.BuildFile
                 return false;
             }
 
-            var instance = CreateInstance(MidsContext.Character, true);
+            var instance = GetInstance(MidsContext.Character, true);
             File.WriteAllText(fileName, JsonConvert.SerializeObject(instance, Formatting.Indented));
             return true;
         }
@@ -498,6 +498,7 @@ namespace Mids_Reborn.Core.BuildFile
         public static bool Load(string fileName)
         {
             var returnedVal = false;
+            _instance = CreateInstance();
             _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(File.ReadAllText(fileName));
             if (_instance == null) throw new NullReferenceException(nameof(_instance));
             var metaData = _instance.BuiltWith;

@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,31 +13,35 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPowerset : Form
     {
-        public readonly IPowerset? myPS;
-        private bool Loading;
+        public readonly IPowerset MyPowerSet;
+        private bool _loading;
+        private List<string>? _mutexUidSets;
+        private List<int>? _mutexNidSets;
 
 
-        public frmEditPowerset(ref IPowerset? iSet)
+        public frmEditPowerset(ref IPowerset iSet)
         {
             Load += frmEditPowerset_Load;
-            Loading = true;
+            _loading = true;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEditPowerset));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPowerset);
-            myPS = new Powerset(iSet);
+            MyPowerSet = new Powerset(iSet);
+            _mutexUidSets = MyPowerSet.UIDMutexSets.ToList();
+            _mutexNidSets = MyPowerSet.nIDMutexSets.ToList();
         }
 
-        private void AddListItem(int Index)
+        private void AddListItem(int index)
         {
             lvPowers.Items.Add(new ListViewItem(new[]
             {
-                Convert.ToString(DatabaseAPI.Database.Power[myPS.Power[Index]].Level, CultureInfo.InvariantCulture),
-                DatabaseAPI.Database.Power[myPS.Power[Index]].DisplayName,
-                DatabaseAPI.Database.Power[myPS.Power[Index]].DescShort
+                Convert.ToString(DatabaseAPI.Database.Power[MyPowerSet.Power[index]]?.Level,
+                    CultureInfo.InvariantCulture),
+                DatabaseAPI.Database.Power[MyPowerSet.Power[index]]?.DisplayName,
+                DatabaseAPI.Database.Power[MyPowerSet.Power[index]]?.DescShort
             }));
-            lvPowers.Items[Index].Selected = true;
-            lvPowers.Items[Index].EnsureVisible();
+            lvPowers.Items[index].Selected = true;
+            lvPowers.Items[index].EnsureVisible();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -48,11 +52,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnClearIcon_Click(object sender, EventArgs e)
         {
-            myPS.ImageName = "";
+            MyPowerSet.ImageName = "";
             DisplayIcon();
         }
 
-        private void frmEditPowerset_CancelClose(object sender, FormClosingEventArgs e)
+        private void frmEditPowerset_CancelClose(object? sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
         }
@@ -60,19 +64,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnClose_Click(object sender, EventArgs e)
         {
             FormClosing += frmEditPowerset_CancelClose;
-            lblNameFull.Text = $"{myPS.GroupName}.{myPS.SetName}";
-            if (myPS.GroupName == "" | myPS.SetName == "")
+            lblNameFull.Text = $"{MyPowerSet.GroupName}.{MyPowerSet.SetName}";
+            if (MyPowerSet.GroupName == "" | MyPowerSet.SetName == "")
             {
-                MessageBox.Show($"Powerset name '{myPS.FullName}' is invalid.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($"Powerset name '{MyPowerSet.FullName}' is invalid.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else if (!PowersetFullNameIsUnique(Convert.ToString(myPS.nID)))
+            else if (!PowersetFullNameIsUnique(Convert.ToString(MyPowerSet.nID)))
             {
-                MessageBox.Show($"Powerset name '{myPS.FullName}' already exists, please enter a unique name.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($"Powerset name '{MyPowerSet.FullName}' already exists, please enter a unique name.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
                 FormClosing -= frmEditPowerset_CancelClose;
-                myPS.IsModified = true;
+                MyPowerSet.IsModified = true;
                 DialogResult = DialogResult.OK;
                 Hide();
             }
@@ -80,10 +84,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnIcon_Click(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             ImagePicker.InitialDirectory = I9Gfx.GetDbPowerSetsPath();
-            ImagePicker.FileName = myPS.ImageName;
+            ImagePicker.FileName = MyPowerSet.ImageName;
             if (ImagePicker.ShowDialog(this) != DialogResult.OK) return;
 
             var imageFile = FileIO.StripPath(ImagePicker.FileName);
@@ -93,7 +97,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                myPS.ImageName = imageFile;
+                MyPowerSet.ImageName = imageFile;
                 DisplayIcon();
             }
         }
@@ -102,8 +106,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var str = $"{cbNameGroup.Text}.{txtNameSet.Text}";
             lblNameFull.Text = str;
-            myPS.FullName = str;
-            myPS.SetName = txtNameSet.Text;
+            MyPowerSet.FullName = str;
+            MyPowerSet.SetName = txtNameSet.Text;
             Text = $"Edit Powerset ({str})";
 
             return str;
@@ -111,79 +115,72 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbAT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             if (cbAT.SelectedIndex > -1)
             {
-                myPS.nArchetype = cbAT.SelectedIndex - 1;
-                myPS.ATClass = DatabaseAPI.UidFromNidClass(cbAT.SelectedIndex - 1);
+                MyPowerSet.nArchetype = cbAT.SelectedIndex - 1;
+                MyPowerSet.ATClass = DatabaseAPI.UidFromNidClass(cbAT.SelectedIndex - 1);
             }
             else
             {
-                myPS.nArchetype = -1;
+                MyPowerSet.nArchetype = -1;
             }
         }
 
         private void cbLinkGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             FillLinkSetCombo();
         }
 
         private void cbLinkSet_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             if (chkNoLink.Checked)
             {
-                myPS.UIDLinkSecondary = "";
-                myPS.nIDLinkSecondary = -1;
+                MyPowerSet.UIDLinkSecondary = "";
+                MyPowerSet.nIDLinkSecondary = -1;
             }
             else if (cbLinkSet.SelectedIndex > -1)
             {
                 var uidPowerset = cbLinkGroup.Text + "." + cbLinkSet.Text;
                 var num = DatabaseAPI.NidFromUidPowerset(uidPowerset);
-                myPS.UIDLinkSecondary = uidPowerset;
-                myPS.nIDLinkSecondary = num;
+                MyPowerSet.UIDLinkSecondary = uidPowerset;
+                MyPowerSet.nIDLinkSecondary = num;
             }
-        }
-
-        private void cbMutexGroup_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            ListMutexSets();
         }
 
         private void cbNameGroup_Leave(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             DisplayNameData();
         }
 
         private void cbNameGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             BuildFullName();
         }
 
         private void cbNameGroup_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             BuildFullName();
         }
 
         private void cbSetType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             if (cbSetType.SelectedIndex > -1)
-                myPS.SetType = (Enums.ePowerSetType) cbSetType.SelectedIndex;
-            if (myPS.SetType == Enums.ePowerSetType.Primary)
+                MyPowerSet.SetType = (Enums.ePowerSetType)cbSetType.SelectedIndex;
+            if (MyPowerSet.SetType == Enums.ePowerSetType.Primary)
             {
                 gbLink.Enabled = true;
             }
@@ -198,26 +195,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbTrunkGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             FillTrunkSetCombo();
         }
 
         private void cbTrunkSet_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
                 return;
             if (chkNoTrunk.Checked)
             {
-                myPS.UIDTrunkSet = "";
-                myPS.nIDTrunkSet = -1;
+                MyPowerSet.UIDTrunkSet = "";
+                MyPowerSet.nIDTrunkSet = -1;
             }
             else if (cbTrunkSet.SelectedIndex > -1)
             {
                 var uidPowerset = cbTrunkGroup.Text + "." + cbTrunkSet.Text;
                 var num = DatabaseAPI.NidFromUidPowerset(uidPowerset);
-                myPS.UIDTrunkSet = uidPowerset;
-                myPS.nIDTrunkSet = num;
+                MyPowerSet.UIDTrunkSet = uidPowerset;
+                MyPowerSet.nIDTrunkSet = num;
             }
         }
 
@@ -233,11 +230,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DisplayIcon()
         {
-            if (!string.IsNullOrEmpty(myPS.ImageName))
+            if (!string.IsNullOrEmpty(MyPowerSet.ImageName))
             {
-                using var extendedBitmap = new ExtendedBitmap(I9Gfx.GetPowersetsPath() + myPS.ImageName);
+                using var extendedBitmap = new ExtendedBitmap(I9Gfx.GetPowersetsPath() + MyPowerSet.ImageName);
                 picIcon.Image = new Bitmap(extendedBitmap.Bitmap);
-                btnIcon.Text = myPS.ImageName;
+                btnIcon.Text = MyPowerSet.ImageName;
             }
             else
             {
@@ -250,9 +247,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void DisplayNameData()
         {
             lblNameFull.Text = BuildFullName();
-            lblNameUnique.Text = string.IsNullOrEmpty(myPS.GroupName) | string.IsNullOrEmpty(myPS.SetName)
+            lblNameUnique.Text = string.IsNullOrEmpty(MyPowerSet.GroupName) | string.IsNullOrEmpty(MyPowerSet.SetName)
                 ? "This name is invalid."
-                : PowersetFullNameIsUnique(Convert.ToString(myPS.nID, CultureInfo.InvariantCulture))
+                : PowersetFullNameIsUnique(Convert.ToString(MyPowerSet.nID, CultureInfo.InvariantCulture))
                     ? "This name is unique."
                     : "This name is NOT unique.";
         }
@@ -267,12 +264,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             cbLinkGroup.EndUpdate();
-            if (myPS.UIDLinkSecondary == "")
+            if (MyPowerSet.UIDLinkSecondary == "")
             {
                 return;
             }
 
-            var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDLinkSecondary);
+            var index = DatabaseAPI.NidFromUidPowerset(MyPowerSet.UIDLinkSecondary);
             if (index > -1)
             {
                 cbLinkGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
@@ -285,7 +282,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbLinkSet.Items.Clear();
             if (cbLinkGroup.SelectedIndex > -1)
             {
-                var index1 = DatabaseAPI.NidFromUidPowerset(myPS.UIDLinkSecondary);
+                var index1 = DatabaseAPI.NidFromUidPowerset(MyPowerSet.UIDLinkSecondary);
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(cbLinkGroup.SelectedText);
                 for (var index2 = 0; index2 < indexesByGroupName.Length; index2++)
                 {
@@ -311,12 +308,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             cbTrunkGroup.EndUpdate();
-            if (myPS.UIDTrunkSet == "")
+            if (MyPowerSet.UIDTrunkSet == "")
             {
                 return;
             }
 
-            var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDTrunkSet);
+            var index = DatabaseAPI.NidFromUidPowerset(MyPowerSet.UIDTrunkSet);
             if (index > -1)
             {
                 cbTrunkGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
@@ -329,7 +326,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbTrunkSet.Items.Clear();
             if (cbTrunkGroup.SelectedIndex > -1)
             {
-                var index1 = DatabaseAPI.NidFromUidPowerset(myPS.UIDTrunkSet);
+                var index1 = DatabaseAPI.NidFromUidPowerset(MyPowerSet.UIDTrunkSet);
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(cbTrunkGroup.SelectedText);
                 for (var index2 = 0; index2 < indexesByGroupName.Length; index2++)
                 {
@@ -345,11 +342,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbTrunkSet.EndUpdate();
         }
 
-        private void frmEditPowerset_Load(object sender, EventArgs e)
+        private void frmEditPowerset_Load(object? sender, EventArgs e)
         {
             var ePowerSetType = Enums.ePowerSetType.None;
             ListPowers();
-            txtName.Text = myPS.DisplayName;
+            txtName.Text = MyPowerSet.DisplayName;
             cbNameGroup.BeginUpdate();
             cbNameGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
@@ -358,16 +355,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             cbNameGroup.EndUpdate();
-            cbNameGroup.Text = myPS.GroupName;
-            txtNameSet.Text = myPS.SetName;
-            txtDesc.Text = myPS.Description;
+            cbNameGroup.Text = MyPowerSet.GroupName;
+            txtNameSet.Text = MyPowerSet.SetName;
+            txtDesc.Text = MyPowerSet.Description;
             FillTrunkGroupCombo();
             FillTrunkSetCombo();
-            chkNoTrunk.Checked = myPS.UIDTrunkSet == "";
+            chkNoTrunk.Checked = MyPowerSet.UIDTrunkSet == "";
             FillLinkGroupCombo();
             FillLinkSetCombo();
-            chkNoLink.Checked = myPS.UIDLinkSecondary == "";
-            if (myPS.SetType == Enums.ePowerSetType.Primary)
+            chkNoLink.Checked = MyPowerSet.UIDLinkSecondary == "";
+            if (MyPowerSet.SetType == Enums.ePowerSetType.Primary)
             {
                 gbLink.Enabled = true;
             }
@@ -389,65 +386,109 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             cbAT.EndUpdate();
-            cbAT.SelectedIndex = myPS.nArchetype + 1;
+            cbAT.SelectedIndex = MyPowerSet.nArchetype + 1;
             cbSetType.BeginUpdate();
             cbSetType.Items.Clear();
             cbSetType.Items.AddRange(Enum.GetNames(ePowerSetType.GetType()));
             cbSetType.EndUpdate();
-            cbSetType.SelectedIndex = (int) myPS.SetType;
-            ListMutexGroups();
-            ListMutexSets();
-            Loading = false;
+            cbSetType.SelectedIndex = (int)MyPowerSet.SetType;
+            ListAvailableMutexSets();
+            ListCurrentMutexSets();
+            _loading = false;
             DisplayNameData();
         }
 
-        private void ListMutexGroups()
+        private void ListAvailableMutexSets()
         {
-            cbMutexGroup.BeginUpdate();
-            cbMutexGroup.Items.Clear();
-            foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            var mutexSets = MyPowerSet.UIDMutexSets.ToList();
+            var usedSets = mutexSets.Select(DatabaseAPI.GetPowersetByFullname).Where(set => set != null).Where(set => set != null).ToList();
+            IEnumerable<IPowerset?>? powerSets;
+            List<IPowerset?>? availableSets;
+            BindingSource? bindingSource;
+            switch (MyPowerSet.SetType)
             {
-                cbMutexGroup.Items.Add(key);
+                case Enums.ePowerSetType.Primary:
+                    powerSets = DatabaseAPI.Database.Powersets.Where(x => x?.ATClass == MyPowerSet.ATClass && x.SetType == Enums.ePowerSetType.Secondary);
+                    availableSets = powerSets.Except(usedSets).ToList();
+                    bindingSource = new BindingSource
+                    {
+                        DataSource = availableSets
+                    };
+                    lbAvailbleSets.DataSource = null;
+                    lbAvailbleSets.DisplayMember = "DisplayName";
+                    lbAvailbleSets.ValueMember = null;
+                    lbAvailbleSets.DataSource = bindingSource;
+                    lbAvailbleSets.Invalidate();
+                    break;
+                case Enums.ePowerSetType.Secondary:
+                    powerSets = DatabaseAPI.Database.Powersets.Where(x => x?.ATClass == MyPowerSet.ATClass && x.SetType == Enums.ePowerSetType.Primary);
+                    availableSets = powerSets.Except(usedSets).ToList();
+                    bindingSource = new BindingSource
+                    {
+                        DataSource = availableSets
+                    };
+                    lbAvailbleSets.DataSource = null;
+                    lbAvailbleSets.DisplayMember = "DisplayName";
+                    lbAvailbleSets.ValueMember = null;
+                    lbAvailbleSets.DataSource = bindingSource;
+                    lbAvailbleSets.Invalidate();
+                    break;
             }
 
-            cbMutexGroup.EndUpdate();
-            if (myPS.nIDMutexSets.Length <= 0)
-            {
-                return;
-            }
-
-            var index = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[0]);
-            if (index > -1)
-            {
-                cbMutexGroup.SelectedValue = DatabaseAPI.Database.Powersets[index].GroupName;
-            }
         }
 
-        private void ListMutexSets()
+        private void lbAvailableSets_DoubleClick(object sender, EventArgs e)
         {
-            lvMutexSets.BeginUpdate();
-            lvMutexSets.Items.Clear();
-            if (cbMutexGroup.SelectedIndex > -1)
+            if (lbAvailbleSets.SelectedItem == null) return;
+            var set = (IPowerset)lbAvailbleSets.SelectedItem;
+            if (_mutexUidSets != null && _mutexNidSets != null)
             {
-                var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
-                for (var index1 = 0; index1 < numArray.Length; index1++)
-                {
-                    lvMutexSets.Items.Add(DatabaseAPI.Database.Powersets[numArray[index1]].FullName);
-                    if (myPS.nIDMutexSets.Any(t => numArray[index1] == t))
-                    {
-                        lvMutexSets.SetSelected(index1, true);
-                    }
-                }
+                _mutexUidSets.Add(set.FullName);
+                _mutexNidSets.Add(set.nID);
+                MyPowerSet.UIDMutexSets = _mutexUidSets.ToArray();
+                MyPowerSet.nIDMutexSets = _mutexNidSets.ToArray();
             }
 
-            lvMutexSets.EndUpdate();
+            ListAvailableMutexSets();
+            ListCurrentMutexSets();
+        }
+
+        private void ListCurrentMutexSets()
+        {
+            var mutexSets = MyPowerSet.UIDMutexSets.ToList();
+            var usedSets = mutexSets.Select(DatabaseAPI.GetPowersetByFullname).Where(set => set != null).Where(set => set != null).ToList();
+            var bindingSource = new BindingSource
+            {
+                DataSource = usedSets
+            };
+            lbAssignedSets.DataSource = null;
+            lbAssignedSets.DisplayMember = "DisplayName";
+            lbAssignedSets.ValueMember = null;
+            lbAssignedSets.DataSource = bindingSource;
+            lbAssignedSets.Invalidate();
+        }
+
+        private void lbAssignedSets_DoubleClick(object sender, EventArgs e)
+        {
+            if (lbAssignedSets.SelectedItem == null) return;
+            var set = (IPowerset)lbAssignedSets.SelectedItem;
+            if (_mutexUidSets != null && _mutexNidSets != null)
+            {
+                _mutexUidSets.Remove(set.FullName);
+                _mutexNidSets.Remove(set.nID);
+                MyPowerSet.UIDMutexSets = _mutexUidSets.ToArray();
+                MyPowerSet.nIDMutexSets = _mutexNidSets.ToArray();
+            }
+
+            ListAvailableMutexSets();
+            ListCurrentMutexSets();
         }
 
         private void ListPowers()
         {
             lvPowers.BeginUpdate();
             lvPowers.Items.Clear();
-            for (var index = 0; index < myPS.Power.Length; index++)
+            for (var index = 0; index < MyPowerSet.Power.Length; index++)
             {
                 AddListItem(index);
             }
@@ -459,23 +500,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             lvPowers.EndUpdate();
-        }
-
-        private void lvMutexSets_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Loading || cbMutexGroup.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            myPS.UIDMutexSets = new string[lvMutexSets.SelectedIndices.Count];
-            myPS.nIDMutexSets = new int[lvMutexSets.SelectedIndices.Count];
-            var numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, "-1", Enums.ePowerSetType.None);
-            for (var index = 0; index < lvMutexSets.SelectedIndices.Count; index++)
-            {
-                myPS.UIDMutexSets[index] = DatabaseAPI.Database.Powersets[numArray[lvMutexSets.SelectedIndices[index]]].FullName;
-                myPS.nIDMutexSets[index] = DatabaseAPI.NidFromUidPowerset(myPS.UIDMutexSets[index]);
-            }
         }
 
         private static bool PowersetFullNameIsUnique(string iFullName, int skipId = -1)
@@ -492,27 +516,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtDesc_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
             {
                 return;
             }
 
-            myPS.Description = txtDesc.Text;
+            MyPowerSet.Description = txtDesc.Text;
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
             {
                 return;
             }
 
-            myPS.DisplayName = txtName.Text;
+            MyPowerSet.DisplayName = txtName.Text;
         }
 
         private void txtNameSet_Leave(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
             {
                 return;
             }
@@ -522,7 +546,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtNameSet_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (_loading)
             {
                 return;
             }

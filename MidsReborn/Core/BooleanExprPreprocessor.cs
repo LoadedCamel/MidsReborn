@@ -356,6 +356,11 @@ namespace Mids_Reborn.Core
             mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
             mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
 
+            if (string.IsNullOrWhiteSpace(prefixExpr))
+            {
+                return true;
+            }
+
             var ret = false;
             try
             {
@@ -406,6 +411,11 @@ namespace Mids_Reborn.Core
             mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
             mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
 
+            if (string.IsNullOrWhiteSpace(prefixExpr))
+            {
+                return true;
+            }
+
             var ret = false;
             try
             {
@@ -454,6 +464,11 @@ namespace Mids_Reborn.Core
 
             mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
             mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
+
+            if (string.IsNullOrWhiteSpace(prefixExpr))
+            {
+                return true;
+            }
 
             var ret = false;
             try

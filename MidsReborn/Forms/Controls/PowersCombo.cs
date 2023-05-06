@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using FontAwesome.Sharp;
 
 namespace Mids_Reborn.Forms.Controls
 {

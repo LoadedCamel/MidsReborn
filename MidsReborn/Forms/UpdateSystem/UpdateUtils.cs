@@ -47,7 +47,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
             _dbUpdate = new DbUpdate();
             _updates = new List<UpdateObject>();
 
-
             if (_appUpdate.IsAvailable)
             {
                 _updates.Add(new UpdateObject(UpdateTypes.Application, MidsContext.AppName, $"{MidsContext.Config?.UpdatePath}", _appUpdate.Version.ToString(), $"{AppContext.BaseDirectory}"));
@@ -60,9 +59,15 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
             if (_updates.Count <= 0)
             {
-                MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (_appUpdate.Status == AppUpdate.ManifestStatus.Success &
+                    _dbUpdate.Status == DbUpdate.ManifestStatus.Success)
+                {
+                    MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
                 return;
             }
+
             CreateTempFile();
             InitiateQuery(parent, _updates);
         }

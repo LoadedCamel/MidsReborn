@@ -1407,7 +1407,7 @@ namespace Mids_Reborn.Forms
         {
             DataViewLocked = false;
             NewToon(true, true);
-            var ret = CharacterBuildFile.LoadImportData(response.ImportData);
+            var ret = response.ImportData != null && CharacterBuildFile.LoadImportData(response.ImportData);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
@@ -6159,12 +6159,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             FloatTop(false);
             MidsContext.EnhCheckMode = false;
-            if (fRecipe != null && fRecipe.Visible)
+            if (fRecipe is {Visible: true})
             {
                 fRecipe.UpdateData();
             }
 
-            if (fSalvageHud != null && fSalvageHud.Visible)
+            if (fSalvageHud is {Visible: true})
             {
                 FloatBuildSalvageHud(false);
             }
@@ -6177,6 +6177,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 case var newBuild when DlgOpen.FileName.EndsWith(".mbd"):
                     LoadCharacterFile(newBuild);
+                    break;
+
+                default:
+                    if (DlgOpen.FileName.EndsWith(".txt"))
+                    {
+                        DoOpen(DlgOpen.FileName);
+                    }
+                    
                     break;
             }
             FloatTop(true);
@@ -7202,6 +7210,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             try
             {
                 var importHandle = new ImportFromBuildsave(buildString);
+                Debug.WriteLine($"GameImport({buildString})");
                 var listPowers = importHandle.Parse();
 
                 if (listPowers == null) return;

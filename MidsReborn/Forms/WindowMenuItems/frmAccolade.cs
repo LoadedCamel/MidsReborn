@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -11,7 +10,6 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems

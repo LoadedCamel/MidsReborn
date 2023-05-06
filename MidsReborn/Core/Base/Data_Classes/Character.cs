@@ -11,11 +11,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 {
     public class Character
     {
-        public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
         private Archetype? _archetype;
         private bool? _completeCache;
-        public Dictionary<string, int> SetSlotLoc = new Dictionary<string, int>();
-        public HashSet<string> setSlotted = new HashSet<string>();
         public event EventHandler<Enums.Alignment>? AlignmentChanged;
 
         internal Character()
@@ -27,7 +24,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Build = new Build(this, DatabaseAPI.Database.Levels);
+            Builds = new Build?[] { new Build(this, DatabaseAPI.Database.Levels) };
             PEnhancementsList = new List<string>();
             Reset();
         }
@@ -73,9 +70,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int RequestedLevel { get; set; }
 
-        private Build Build { get; set; }
+        private Build?[] Builds { get; }
 
-        public Build CurrentBuild => Build;
+        public Build? CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
 
         public Archetype? Archetype
         {
@@ -426,7 +423,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         protected void NewBuild()
         {
-            Build = new Build(this, DatabaseAPI.Database.Levels);
+            Builds[0] = new Build(this, DatabaseAPI.Database.Levels);
             AcceleratedActive = false;
             ActiveComboLevel = 0;
             DelayedActive = false;

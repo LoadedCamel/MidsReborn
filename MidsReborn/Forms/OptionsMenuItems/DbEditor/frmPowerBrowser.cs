@@ -69,33 +69,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", false, "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
-                    if (inputResult.OK)
                     {
-                        var iPsg = new PowersetGroup(inputResult.Text);
-                        DatabaseAPI.Database.PowersetGroups.Add(inputResult.Text, iPsg);
-                    }
+                        var inputResult = InputBox.Show($"Enter a name for the Powerset Group.\nNote: Upon adding a group you must add a set in order for it to be saved.", "New Powerset Group", false, "NewPowersetGroup", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                        if (inputResult.OK)
+                        {
+                            var iPsg = new PowersetGroup(inputResult.Text);
+                            DatabaseAPI.Database.PowersetGroups.Add(inputResult.Text, iPsg);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case 1:
-                {
-                    var iAt = new Archetype
                     {
-                        ClassName = "Class_New",
-                        DisplayName = "New Class"
-                    };
-                    using var frmEditArchetype = new frmEditArchetype(ref iAt);
-                    var num = (int)frmEditArchetype.ShowDialog();
-                    if (frmEditArchetype.DialogResult != DialogResult.OK)
-                        return;
-                    var classes = DatabaseAPI.Database.Classes.ToList();
-                    classes.Add(new Archetype(frmEditArchetype.MyAT) { IsNew = true });
-                    DatabaseAPI.Database.Classes = classes.ToArray();
-                    Sort(0);
-                    break;
-                }
+                        var iAt = new Archetype
+                        {
+                            ClassName = "Class_New",
+                            DisplayName = "New Class"
+                        };
+                        using var frmEditArchetype = new frmEditArchetype(ref iAt);
+                        var num = (int)frmEditArchetype.ShowDialog();
+                        if (frmEditArchetype.DialogResult != DialogResult.OK)
+                            return;
+                        var classes = DatabaseAPI.Database.Classes.ToList();
+                        classes.Add(new Archetype(frmEditArchetype.MyAT) { IsNew = true });
+                        DatabaseAPI.Database.Classes = classes.ToArray();
+                        Sort(0);
+                        break;
+                    }
             }
             UpdateLists(lvGroup.Items.Count - 1);
         }
@@ -133,57 +133,57 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    if (lvGroup.SelectedIndices.Count <= 0)
-                        return;
-                    var selectedGroup = lvGroup.SelectedItems[0].Text;
-                    DatabaseAPI.Database.PowersetGroups.Remove(selectedGroup);
-                    UpdateLists(lvGroup.Items.Count - 1);
-                    break;
-                }
+                    {
+                        if (lvGroup.SelectedIndices.Count <= 0)
+                            return;
+                        var selectedGroup = lvGroup.SelectedItems[0].Text;
+                        DatabaseAPI.Database.PowersetGroups.Remove(selectedGroup);
+                        UpdateLists(lvGroup.Items.Count - 1);
+                        break;
+                    }
                 case 1:
-                {
-                    if (lvGroup.SelectedIndices.Count <= 0)
-                        return;
-                    var index1 = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
-                    if (index1 < 0)
                     {
-                        MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
-                    else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length];
-                        var index2 = 0;
-                        var num3 = DatabaseAPI.Database.Classes.Length - 1;
-                        for (var index3 = 0; index3 <= num3; ++index3)
+                        if (lvGroup.SelectedIndices.Count <= 0)
+                            return;
+                        var index1 = DatabaseAPI.NidFromUidClass(lvGroup.SelectedItems[0].SubItems[0].Text);
+                        if (index1 < 0)
                         {
-                            if (index3 == index1)
-                                continue;
-                            archetypeArray[index2] = new Archetype(DatabaseAPI.Database.Classes[index3]);
-                            ++index2;
+                            MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        else if (MessageBox.Show($@"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            var archetypeArray = new Archetype?[DatabaseAPI.Database.Classes.Length];
+                            var index2 = 0;
+                            var num3 = DatabaseAPI.Database.Classes.Length - 1;
+                            for (var index3 = 0; index3 <= num3; ++index3)
+                            {
+                                if (index3 == index1)
+                                    continue;
+                                archetypeArray[index2] = new Archetype(DatabaseAPI.Database.Classes[index3]);
+                                ++index2;
+                            }
+
+                            DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 1];
+                            var num4 = DatabaseAPI.Database.Classes.Length - 1;
+                            for (var index3 = 0; index3 <= num4; ++index3)
+                                DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
+                            var group = 0;
+                            if (lvGroup.Items.Count > 0)
+                            {
+                                if (lvGroup.Items.Count > index1)
+                                    group = index1;
+                                else if (lvGroup.Items.Count == index1)
+                                    group = index1 - 1;
+                            }
+
+                            BusyMsg("Re-Indexing...");
+                            DatabaseAPI.MatchAllIDs();
+                            RefreshLists(group, 0, 0);
+                            BusyHide();
                         }
 
-                        DatabaseAPI.Database.Classes = new Archetype?[DatabaseAPI.Database.Classes.Length - 1];
-                        var num4 = DatabaseAPI.Database.Classes.Length - 1;
-                        for (var index3 = 0; index3 <= num4; ++index3)
-                            DatabaseAPI.Database.Classes[index3] = new Archetype(archetypeArray[index3]);
-                        var group = 0;
-                        if (lvGroup.Items.Count > 0)
-                        {
-                            if (lvGroup.Items.Count > index1)
-                                group = index1;
-                            else if (lvGroup.Items.Count == index1)
-                                group = index1 - 1;
-                        }
-
-                        BusyMsg("Re-Indexing...");
-                        DatabaseAPI.MatchAllIDs();
-                        RefreshLists(group, 0, 0);
-                        BusyHide();
+                        break;
                     }
-
-                    break;
-                }
             }
         }
 
@@ -234,20 +234,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (type)
             {
                 case 0:
-                {
-                    Array.Sort(DatabaseAPI.Database.Classes);
-                    break;
-                }
-                case 1:
-                {
-                    Array.Sort(DatabaseAPI.Database.Powersets);
-                    break;
-                }
-                case 2:
-                {
-                    Array.Sort(DatabaseAPI.Database.Power);
+                    {
+                        Array.Sort(DatabaseAPI.Database.Classes);
                         break;
-                }
+                    }
+                case 1:
+                    {
+                        Array.Sort(DatabaseAPI.Database.Powersets);
+                        break;
+                    }
+                case 2:
+                    {
+                        Array.Sort(DatabaseAPI.Database.Power);
+                        break;
+                    }
             }
             DatabaseAPI.MatchAllIDs();
             UpdateLists();
@@ -372,7 +372,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 newPower = frmEditPower.myPower;
                 powerList.Add(newPower);
                 DatabaseAPI.Database.Power = powerList.ToArray();
-                
+
                 //Add the power to the power set otherwise we'll get issues later when updating the UI.
                 if (newPower.PowerSetID > -1)
                 {
@@ -610,7 +610,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             var database = DatabaseAPI.Database;
             var psList = database.Powersets.ToList();
-            psList.Add(new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = psList.Count + 1 });
+            psList.Add(new Powerset(frmEditPowerset.MyPowerSet) { IsNew = true, nID = psList.Count + 1 });
             DatabaseAPI.Database.Powersets = psList.ToArray();
             UpdateLists();
             Sort(1);
@@ -698,7 +698,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 using var frmEditPowerset = new frmEditPowerset(ref powerset);
                 if (frmEditPowerset.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.myPS) { IsModified = true };
+                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.MyPowerSet) { IsModified = true };
                 if (DatabaseAPI.Database.Powersets[Powerset].FullName == fullName)
                     return;
                 BusyMsg("Re-Indexing...");
@@ -855,31 +855,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    foreach (Button btn in pnlGroup.Controls)
                     {
-                        if (buttons.Any(b => b == btn))
+                        foreach (Button btn in pnlGroup.Controls)
                         {
-                            btn.Enabled = false;
+                            if (buttons.Any(b => b == btn))
+                            {
+                                btn.Enabled = false;
+                            }
                         }
-                    }
 
-                    lvGroup.Sorting = SortOrder.Ascending;
-                    break;
-                }
+                        lvGroup.Sorting = SortOrder.Ascending;
+                        break;
+                    }
                 case 1:
-                {
-                    foreach (Button btn in pnlGroup.Controls)
                     {
-                        if (buttons.Any(b => b == btn))
+                        foreach (Button btn in pnlGroup.Controls)
                         {
-                            btn.Enabled = true;
+                            if (buttons.Any(b => b == btn))
+                            {
+                                btn.Enabled = true;
+                            }
                         }
-                    }
 
-                    lvGroup.Sorting = SortOrder.None;
-                    break;
-                }
+                        lvGroup.Sorting = SortOrder.None;
+                        break;
+                    }
             }
             UpdateLists();
         }
@@ -906,7 +906,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             btnDbQueries.Visible = MidsContext.Config.MasterMode;
             Text = $"Power Database Browser [{DatabaseAPI.DatabaseName} DB]";
-            _selected = new[] {0, 0, 0};
+            _selected = new[] { 0, 0, 0 };
 
             try
             {
@@ -1283,7 +1283,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 _selected[0] = lvGroup.SelectedIndices[0];
             }
-            
+
             List_Sets(0);
             Application.DoEvents();
             List_Powers(0);
@@ -1427,7 +1427,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnDbQueries_Click(object sender, EventArgs e)
         {
             using var f = new frmDbQueries();
-            
+
             f.ShowDialog();
         }
     }

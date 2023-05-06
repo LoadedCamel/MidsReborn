@@ -859,10 +859,7 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Chosen ||
-                    power.PowerSet.SetType != Enums.ePowerSetType.Inherent &&
-                    power.PowerSet.SetType != Enums.ePowerSetType.Primary &&
-                    power.PowerSet.SetType != Enums.ePowerSetType.Secondary)
+                if (power.Chosen || power.PowerSet.SetType != Enums.ePowerSetType.Inherent && power.PowerSet.SetType != Enums.ePowerSetType.Primary && power.PowerSet.SetType != Enums.ePowerSetType.Secondary && power.PowerSet.SetType != Enums.ePowerSetType.Pool)
                 {
                     continue;
                 }

@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
-using RestSharp.Authenticators.OAuth2;
-using RestSharp.Serializers.NewtonsoftJson;
 using static Mids_Reborn.Forms.DiscordSharing.Models;
 
 namespace Mids_Reborn.Forms.DiscordSharing

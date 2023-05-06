@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
