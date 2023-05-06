@@ -26,6 +26,9 @@
   <PropertyGroup>
     <StartupObject>Mids_Reborn.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+	<AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Update="Forms\Controls\ColorSlider.cs">
       <SubType>Component</SubType>
