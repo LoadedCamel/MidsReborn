@@ -637,6 +637,177 @@ namespace Mids_Reborn.Core
 
             cVectors.AddRange(vectors.Where((_, i) => !ignoredVectors.Contains(i)));
 
+            // Run pass 2 for multi-effect enhancements
+            return CompactVectorsList(cVectors);
+        }
+
+        private static List<string> CompactVectorsList(IReadOnlyList<string> vectors)
+        {
+            // Defense
+            var allDefensesEx = GetAllDefensesEx()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var allDefenses = GetAllDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var positionDefenses = GetPositionDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            var typedDefenses = GetTypedDefenses()
+                .ToDictionary(e => $"{e} Defense", _ => -1);
+
+            // Elusivity
+            var allElusivity = GetAllDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            var positionElusivity = GetPositionDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            var typedElusivity = GetTypedDefenses()
+                .ToDictionary(e => $"{e} Elusivity", _ => -1);
+
+            // Resistance
+            var allResistances = GetAllResistances()
+                .ToDictionary(e => $"{e} Resistance", _ => -1);
+
+            // Mez
+            var allMez = GetAllMez()
+                .ToDictionary(e => $"{e}", _ => -1);
+
+            var keyNameFound = "";
+            for (var i = 0; i < vectors.Count; i++)
+            {
+                if (allDefensesEx.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    allDefensesEx[keyNameFound] = i;
+                }
+
+                if (allDefenses.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    allDefenses[keyNameFound] = i;
+                }
+
+                if (positionDefenses.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    positionDefenses[keyNameFound] = i;
+                }
+
+                if (typedDefenses.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    typedDefenses[keyNameFound] = i;
+                }
+
+                //////////////////////
+
+                if (allElusivity.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    allElusivity[keyNameFound] = i;
+                }
+
+                if (positionElusivity.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    positionElusivity[keyNameFound] = i;
+                }
+
+                if (typedElusivity.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    typedElusivity[keyNameFound] = i;
+                }
+
+                //////////////////////
+
+                if (allResistances.ContainsKeyPrefix(vectors[i], ref keyNameFound))
+                {
+                    allResistances[keyNameFound] = i;
+                }
+
+                //////////////////////
+
+                if (allMez.ContainsKey(vectors[i]))
+                {
+                    allMez[vectors[i]] = i;
+                }
+            }
+
+            var ignoredVectors = new List<int>();
+            var cVectors = new List<string>();
+
+            // Defense, Enhancement(Defense)
+            if (allDefensesEx.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All)");
+                ignoredVectors.AddRangeUnique(allDefensesEx.Values.ToList());
+            }
+            else if (allDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All)");
+                ignoredVectors.AddRangeUnique(allDefenses.Values.ToList());
+            }
+            else if (positionDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All positions)");
+                ignoredVectors.AddRangeUnique(positionDefenses.Values.ToList());
+            }
+            else if (typedDefenses.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Defense(All types)");
+                ignoredVectors.AddRangeUnique(typedDefenses.Values.ToList());
+            }
+            else if (typedDefenses.Count(e => e.Value >= 0) == typedDefenses.Count - 1)
+            {
+                var diff = typedDefenses.Select(e => e.Key)
+                    .Except(vectors.Select(e => e.EndsWith(" Defense") ? e : $"{e} Defense")).First();
+                cVectors.Add($"Defense(All types but {diff.Replace(" Defense", "")})");
+                ignoredVectors.AddRangeUnique(typedDefenses.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
+            }
+
+            // Elusivity, Enhancement(Elusivity)
+            if (allElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All)");
+                ignoredVectors.AddRangeUnique(allElusivity.Values.ToList());
+            }
+            else if (positionElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All positions)");
+                ignoredVectors.AddRangeUnique(positionElusivity.Values.ToList());
+            }
+            else if (typedElusivity.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Elusivity(All types)");
+                ignoredVectors.AddRangeUnique(typedElusivity.Values.ToList());
+            }
+            else if (typedElusivity.Count(e => e.Value >= 0) == typedElusivity.Count - 1)
+            {
+                var diff = typedElusivity.Select(e => e.Key)
+                    .Except(vectors.Select(e => e.EndsWith(" Elusivity") ? e : $"{e} Elusivity")).First();
+                cVectors.Add($"Elusivity(All types but {diff.Replace(" Elusivity", "")})");
+                ignoredVectors.AddRangeUnique(typedElusivity.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
+            }
+
+            // Resistance, Enhancement(Resistance)
+            if (allResistances.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Resistance(All)");
+                ignoredVectors.AddRangeUnique(allResistances.Values.ToList());
+            }
+            else if (allResistances.Count(e => e.Value >= 0) == allResistances.Count - 1)
+            {
+                var diff = allResistances.Select(e => e.Key)
+                    .Except(vectors.Select(e => e.EndsWith(" Resistance") ? e : $"{e} Resistance")).First();
+                cVectors.Add($"Resistance(All but {diff.Replace(" Resistance", "")})");
+                ignoredVectors.AddRangeUnique(allResistances.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
+            }
+
+            // Mez, Enhancement(Mez)
+            if (allMez.All(e => e.Value >= 0))
+            {
+                cVectors.Add("Mez");
+                ignoredVectors.AddRangeUnique(allMez.Values.ToList());
+            }
+
+            cVectors.AddRange(vectors.Where((_, i) => !ignoredVectors.Contains(i)));
+
             return cVectors;
         }
 
@@ -763,7 +934,8 @@ namespace Mids_Reborn.Core
 
             return Regex.Replace(tip, @"(?<stat>[0-9A-Za-z\-]+)\(\k<stat>", "$1") // statName(statName (both same expression match)
                 .Replace("((", "(")
-                .Replace("))", ")");
+                .Replace("))", ")")
+                .Replace("None Defense", "Base Defense");
         }
 
         /// <summary>
