@@ -362,7 +362,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public float BuffedMag => Math_Mag > float.Epsilon ? Math_Mag : Mag;
+        public float BuffedMag => Math.Abs(Math_Mag) > float.Epsilon ? Math_Mag : Mag;
 
         public float MagPercent => !DisplayPercentage ? BuffedMag : BuffedMag * 100f;
 
