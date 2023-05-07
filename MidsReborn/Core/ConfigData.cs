@@ -73,6 +73,8 @@ namespace Mids_Reborn.Core
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
+            WarnOnOldAppMbd = true;
+            WarnOnOldDbMbd = true;
             InitializeComponent();
         }
 
