@@ -16,7 +16,21 @@ namespace Mids_Reborn.Forms.Controls
         private bool _moveExceptionRequested;
         private readonly string _sourceDirectory;
         private readonly string _destinationDirectory;
-        private readonly List<KeyValuePair<string, string>> _items = new();
+        private readonly List<Item> _items = new();
+
+        private struct Item
+        {
+            public string Source;
+            public string Directory;
+            public string Destination;
+
+            public Item(string source, string directory, string destination)
+            {
+                Source = source;
+                Directory = directory;
+                Destination = destination;
+            }
+        }
 
         public FileMover(string source, string destination)
         {
@@ -53,12 +67,13 @@ namespace Mids_Reborn.Forms.Controls
                 var dirInfo = fileInfo.Directory;
                 if (dirInfo == null) continue;
                 _items.Add(_sourceDirectory.Contains(dirInfo.Name)
-                    ? new KeyValuePair<string, string>(fileInfo.FullName,
-                        Path.Combine(_destinationDirectory, fileInfo.Name))
-                    : new KeyValuePair<string, string>(fileInfo.FullName,
+                    ? new Item(fileInfo.FullName, string.Empty, Path.Combine(_destinationDirectory, fileInfo.Name))
+                    : new Item(fileInfo.FullName, dirInfo.Name,
                         Path.Combine(_destinationDirectory, dirInfo.Name, fileInfo.Name)));
             }
         }
+
+        private bool DestinationHasStructure => _items.Any(x => !string.IsNullOrWhiteSpace(x.Directory));
 
         private void Start()
         {
@@ -67,14 +82,22 @@ namespace Mids_Reborn.Forms.Controls
 
         private void ProgressWorker_DoWork(object? sender, DoWorkEventArgs e)
         {
-            ctlProgressBar1.StatusText = @"Moving...";
+            if (DestinationHasStructure)
+            {
+                ctlProgressBar1.StatusText = @"Recreating Directory Structure...";
+                foreach (var path in from item in _items where !string.IsNullOrWhiteSpace(item.Directory) select Path.Combine(_destinationDirectory, item.Directory) into path where !Directory.Exists(path) select path)
+                {
+                    Directory.CreateDirectory(path);
+                }
+            }
+            ctlProgressBar1.StatusText = @"Moving Builds...";
             ctlProgressBar1.ItemCount = _items.Count;
             for (var itemIndex = 0; itemIndex < _items.Count; itemIndex++)
             {
                 var item = _items[itemIndex];
                 try
                 {
-                    File.Move(item.Key, item.Value);
+                    File.Move(item.Source, item.Destination);
                 }
                 catch (Exception)
                 {
