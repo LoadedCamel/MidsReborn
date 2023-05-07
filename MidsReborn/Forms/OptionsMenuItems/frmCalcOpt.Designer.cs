@@ -137,6 +137,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optEnh = new Label();
             Label4 = new Label();
             TabControl1 = new TabControl();
+            groupBox10 = new GroupBox();
+            cbWarnOldAppVersion = new CheckBox();
+            cbWarnOldDbVersion = new CheckBox();
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
@@ -163,12 +166,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox14.SuspendLayout();
             GroupBox3.SuspendLayout();
             TabControl1.SuspendLayout();
+            groupBox10.SuspendLayout();
             SuspendLayout();
             // 
             // btnOK
             // 
             btnOK.DialogResult = DialogResult.OK;
-            btnOK.Location = new System.Drawing.Point(504, 380);
+            btnOK.Location = new System.Drawing.Point(504, 399);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(75, 28);
             btnOK.TabIndex = 59;
@@ -178,7 +182,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(408, 380);
+            btnCancel.Location = new System.Drawing.Point(408, 399);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 28);
             btnCancel.TabIndex = 60;
@@ -187,7 +191,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkColorPrint
             // 
-            chkColorPrint.Location = new System.Drawing.Point(246, 387);
+            chkColorPrint.Location = new System.Drawing.Point(246, 406);
             chkColorPrint.Name = "chkColorPrint";
             chkColorPrint.Size = new System.Drawing.Size(156, 16);
             chkColorPrint.TabIndex = 2;
@@ -204,7 +208,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkIOEffects.Location = new System.Drawing.Point(11, 69);
             chkIOEffects.Name = "chkIOEffects";
-            chkIOEffects.Size = new System.Drawing.Size(169, 22);
+            chkIOEffects.Size = new System.Drawing.Size(208, 22);
             chkIOEffects.TabIndex = 63;
             chkIOEffects.Text = "Include Enhancement effects";
             myTip.SetToolTip(chkIOEffects, "Some enhancments have power effects, such as minor Psionic resistance. This effect can be added into the power.");
@@ -213,7 +217,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkSetBonus.Location = new System.Drawing.Point(11, 93);
             chkSetBonus.Name = "chkSetBonus";
-            chkSetBonus.Size = new System.Drawing.Size(169, 22);
+            chkSetBonus.Size = new System.Drawing.Size(208, 22);
             chkSetBonus.TabIndex = 64;
             chkSetBonus.Text = "Include Set Bonus effects\r\n";
             myTip.SetToolTip(chkSetBonus, "Add set bonus effects to the totals view.");
@@ -222,7 +226,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkUseArcanaTime.Location = new System.Drawing.Point(8, 320);
             chkUseArcanaTime.Name = "chkUseArcanaTime";
-            chkUseArcanaTime.Size = new System.Drawing.Size(204, 22);
+            chkUseArcanaTime.Size = new System.Drawing.Size(248, 22);
             chkUseArcanaTime.TabIndex = 66;
             chkUseArcanaTime.Text = "Use ArcanaTime for Animation Times";
             myTip.SetToolTip(chkUseArcanaTime, "Displays all cast times in ArcanaTime, the real time all animations take due to server clock ticks.");
@@ -234,7 +238,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TeamSize.Maximum = new decimal(new int[] { 8, 0, 0, 0 });
             TeamSize.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             TeamSize.Name = "TeamSize";
-            TeamSize.Size = new System.Drawing.Size(88, 20);
+            TeamSize.Size = new System.Drawing.Size(88, 22);
             TeamSize.TabIndex = 70;
             myTip.SetToolTip(TeamSize, "Sets the number of players on your team. (Depreciated: Use TeamMembers from main window.)");
             TeamSize.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -246,7 +250,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cbEnhLevel.Items.AddRange(new object[] { "None (Enh. has no effect)", "-3 Levels", "-2 Levels", "-1 Level", "Even Level", "+1 Level", "+2 Levels", "+3 Levels" });
             cbEnhLevel.Location = new System.Drawing.Point(9, 224);
             cbEnhLevel.Name = "cbEnhLevel";
-            cbEnhLevel.Size = new System.Drawing.Size(167, 22);
+            cbEnhLevel.Size = new System.Drawing.Size(167, 21);
             cbEnhLevel.TabIndex = 53;
             cbEnhLevel.Tag = "";
             myTip.SetToolTip(cbEnhLevel, "This is the relative level of the enhancements in relation to your own. ");
@@ -304,7 +308,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udIOLevel.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
             udIOLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
             udIOLevel.Name = "udIOLevel";
-            udIOLevel.Size = new System.Drawing.Size(72, 20);
+            udIOLevel.Size = new System.Drawing.Size(72, 22);
             udIOLevel.TabIndex = 57;
             myTip.SetToolTip(udIOLevel, "Inventions will be placed at this level by default. You can override the default by typing a level number in the picker.");
             udIOLevel.Value = new decimal(new int[] { 50, 0, 0, 0 });
@@ -351,7 +355,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkHighVis.Location = new System.Drawing.Point(280, 106);
             chkHighVis.Name = "chkHighVis";
-            chkHighVis.Size = new System.Drawing.Size(222, 20);
+            chkHighVis.Size = new System.Drawing.Size(246, 20);
             chkHighVis.TabIndex = 69;
             chkHighVis.Text = "Use High-Visiblity text on the build view";
             myTip.SetToolTip(chkHighVis, "Draw white text with a black outline on the build view (power bars on the right of the screen)");
@@ -362,13 +366,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
+            TabPage5.Controls.Add(groupBox10);
             TabPage5.Controls.Add(groupBox4);
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 23);
+            TabPage5.Location = new System.Drawing.Point(4, 22);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 345);
+            TabPage5.Size = new System.Drawing.Size(777, 367);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
@@ -393,7 +398,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
             SchemaStatus.Location = new System.Drawing.Point(252, 54);
             SchemaStatus.Name = "SchemaStatus";
-            SchemaStatus.Size = new System.Drawing.Size(69, 16);
+            SchemaStatus.Size = new System.Drawing.Size(71, 17);
             SchemaStatus.TabIndex = 71;
             SchemaStatus.Text = "WARNING";
             SchemaStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -466,7 +471,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkLoadLastFile.Location = new System.Drawing.Point(9, 72);
             chkLoadLastFile.Name = "chkLoadLastFile";
-            chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
+            chkLoadLastFile.Size = new System.Drawing.Size(205, 18);
             chkLoadLastFile.TabIndex = 61;
             chkLoadLastFile.Text = "Load last build on startup";
             // 
@@ -510,7 +515,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
             FileAssocStatus.Location = new System.Drawing.Point(252, 54);
             FileAssocStatus.Name = "FileAssocStatus";
-            FileAssocStatus.Size = new System.Drawing.Size(69, 16);
+            FileAssocStatus.Size = new System.Drawing.Size(71, 17);
             FileAssocStatus.TabIndex = 71;
             FileAssocStatus.Text = "WARNING";
             FileAssocStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -561,7 +566,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             Label34.Location = new System.Drawing.Point(6, 16);
             Label34.Name = "Label34";
-            Label34.Size = new System.Drawing.Size(486, 39);
+            Label34.Size = new System.Drawing.Size(501, 39);
             Label34.TabIndex = 5;
             Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when it starts. This feature requires an internet connection.";
             Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -570,7 +575,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkUpdates.Location = new System.Drawing.Point(552, 19);
             chkUpdates.Name = "chkUpdates";
-            chkUpdates.Size = new System.Drawing.Size(167, 24);
+            chkUpdates.Size = new System.Drawing.Size(203, 24);
             chkUpdates.TabIndex = 6;
             chkUpdates.Text = "Check for updates on startup";
             // 
@@ -581,9 +586,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage1.Controls.Add(cmbAction);
             TabPage1.Controls.Add(GroupBox9);
             TabPage1.Controls.Add(GroupBox7);
-            TabPage1.Location = new System.Drawing.Point(4, 24);
+            TabPage1.Location = new System.Drawing.Point(4, 22);
             TabPage1.Name = "TabPage1";
-            TabPage1.Size = new System.Drawing.Size(777, 344);
+            TabPage1.Size = new System.Drawing.Size(777, 346);
             TabPage1.TabIndex = 6;
             TabPage1.Text = "Drag & Drop";
             TabPage1.UseVisualStyleBackColor = true;
@@ -603,7 +608,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             Label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             Label10.Location = new System.Drawing.Point(19, 268);
             Label10.Name = "Label10";
-            Label10.Size = new System.Drawing.Size(285, 15);
+            Label10.Size = new System.Drawing.Size(278, 15);
             Label10.TabIndex = 3;
             Label10.Text = "Action to take whenever the above scenario occurs:";
             // 
@@ -613,7 +618,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cmbAction.FormattingEnabled = true;
             cmbAction.Location = new System.Drawing.Point(18, 293);
             cmbAction.Name = "cmbAction";
-            cmbAction.Size = new System.Drawing.Size(356, 22);
+            cmbAction.Size = new System.Drawing.Size(356, 21);
             cmbAction.TabIndex = 2;
             cmbAction.SelectedIndexChanged += cmbAction_SelectedIndexChanged;
             // 
@@ -647,11 +652,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // listScenarios
             // 
             listScenarios.FormattingEnabled = true;
-            listScenarios.ItemHeight = 14;
             listScenarios.Items.AddRange(new object[] { "Power is moved or swapped too low", "Power is moved too high (some powers will no longer fit)", "Power is moved or swapped higher than slots' levels", "Power is moved or swapped too high to have # slots", "Power being replaced is swapped too low", "Power being replaced is swapped higher than slots' levels", "Power being replaced is swapped too high to have # slots", "Power being shifted down cannot shift to the necessary level", "Power being shifted up has slots from lower levels", "Power being shifted up has impossible # of slots", "There is a gap in a group of powers that are being shifted", "A power placed at its minimum level is being shifted up", "The power in the destination slot is prevented from being shifted up", "Slot being level-swapped is too low for the destination power", "Slot being level-swapped is too low for the source power" });
             listScenarios.Location = new System.Drawing.Point(13, 19);
             listScenarios.Name = "listScenarios";
-            listScenarios.Size = new System.Drawing.Size(353, 116);
+            listScenarios.Size = new System.Drawing.Size(353, 108);
             listScenarios.TabIndex = 0;
             listScenarios.SelectedIndexChanged += listScenarios_SelectedIndexChanged;
             // 
@@ -664,9 +668,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage2.Controls.Add(GroupBox15);
             TabPage2.Controls.Add(GroupBox8);
             TabPage2.Controls.Add(GroupBox6);
-            TabPage2.Location = new System.Drawing.Point(4, 24);
+            TabPage2.Location = new System.Drawing.Point(4, 22);
             TabPage2.Name = "TabPage2";
-            TabPage2.Size = new System.Drawing.Size(777, 344);
+            TabPage2.Size = new System.Drawing.Size(777, 346);
             TabPage2.TabIndex = 1;
             TabPage2.Text = "Effects & Maths";
             TabPage2.UseVisualStyleBackColor = true;
@@ -698,7 +702,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             clbSuppression.FormattingEnabled = true;
             clbSuppression.Location = new System.Drawing.Point(9, 75);
             clbSuppression.Name = "clbSuppression";
-            clbSuppression.Size = new System.Drawing.Size(206, 229);
+            clbSuppression.Size = new System.Drawing.Size(206, 225);
             clbSuppression.TabIndex = 9;
             clbSuppression.SelectedIndexChanged += clbSuppression_SelectedIndexChanged;
             // 
@@ -745,9 +749,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // rbChanceIgnore
             // 
-            rbChanceIgnore.Location = new System.Drawing.Point(347, 156);
+            rbChanceIgnore.Location = new System.Drawing.Point(343, 156);
             rbChanceIgnore.Name = "rbChanceIgnore";
-            rbChanceIgnore.Size = new System.Drawing.Size(183, 20);
+            rbChanceIgnore.Size = new System.Drawing.Size(190, 20);
             rbChanceIgnore.TabIndex = 8;
             rbChanceIgnore.Text = "Minimum (Ignore Extra Damage)\r\n";
             // 
@@ -763,7 +767,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // rbChanceMax
             // 
-            rbChanceMax.Location = new System.Drawing.Point(180, 156);
+            rbChanceMax.Location = new System.Drawing.Point(176, 156);
             rbChanceMax.Name = "rbChanceMax";
             rbChanceMax.Size = new System.Drawing.Size(161, 20);
             rbChanceMax.TabIndex = 6;
@@ -827,18 +831,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage3.Controls.Add(GroupBox5);
             TabPage3.Controls.Add(GroupBox14);
             TabPage3.Controls.Add(GroupBox3);
-            TabPage3.Location = new System.Drawing.Point(4, 23);
+            TabPage3.Location = new System.Drawing.Point(4, 22);
             TabPage3.Name = "TabPage3";
-            TabPage3.Size = new System.Drawing.Size(777, 345);
+            TabPage3.Size = new System.Drawing.Size(777, 346);
             TabPage3.TabIndex = 2;
             TabPage3.Text = "Enhancements & View";
             TabPage3.UseVisualStyleBackColor = true;
             // 
             // chkShowSelfBuffsAny
             // 
-            chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 324);
+            chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 321);
             chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
-            chkShowSelfBuffsAny.Size = new System.Drawing.Size(190, 18);
+            chkShowSelfBuffsAny.Size = new System.Drawing.Size(259, 18);
             chkShowSelfBuffsAny.TabIndex = 80;
             chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
             chkShowSelfBuffsAny.Visible = false;
@@ -858,9 +862,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkOldStyle
             // 
-            chkOldStyle.Location = new System.Drawing.Point(11, 17);
+            chkOldStyle.Location = new System.Drawing.Point(8, 17);
             chkOldStyle.Name = "chkOldStyle";
-            chkOldStyle.Size = new System.Drawing.Size(88, 18);
+            chkOldStyle.Size = new System.Drawing.Size(96, 18);
             chkOldStyle.TabIndex = 80;
             chkOldStyle.Text = "Use old style";
             chkOldStyle.CheckedChanged += chkOldStyle_CheckedChanged;
@@ -872,7 +876,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cbTotalsWindowTitleOpt.Items.AddRange(new object[] { "Generic - Totals for Self", "Character name + Archetype + Powersets", "Build file name + Archetype + Powersets", "Character name + Build file name (fallback to generic if none)" });
             cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(199, 13);
             cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
-            cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 22);
+            cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 21);
             cbTotalsWindowTitleOpt.TabIndex = 1;
             // 
             // label2
@@ -880,24 +884,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             label2.AutoSize = true;
             label2.Location = new System.Drawing.Point(108, 18);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(85, 14);
+            label2.Size = new System.Drawing.Size(92, 13);
             label2.TabIndex = 0;
             label2.Text = "Show in titlebar:";
             // 
             // chkNoTips
             // 
-            chkNoTips.Location = new System.Drawing.Point(417, 304);
+            chkNoTips.Location = new System.Drawing.Point(507, 321);
             chkNoTips.Name = "chkNoTips";
-            chkNoTips.Size = new System.Drawing.Size(78, 18);
+            chkNoTips.Size = new System.Drawing.Size(98, 18);
             chkNoTips.TabIndex = 78;
             chkNoTips.Text = "No Tooltips";
             chkNoTips.Visible = false;
             // 
             // chkMiddle
             // 
-            chkMiddle.Location = new System.Drawing.Point(500, 304);
+            chkMiddle.Location = new System.Drawing.Point(507, 301);
             chkMiddle.Name = "chkMiddle";
-            chkMiddle.Size = new System.Drawing.Size(222, 18);
+            chkMiddle.Size = new System.Drawing.Size(262, 18);
             chkMiddle.TabIndex = 77;
             chkMiddle.Text = "Middle-Click repeats last enhancement";
             // 
@@ -951,7 +955,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udPowersSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
             udPowersSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
             udPowersSize.Name = "udPowersSize";
-            udPowersSize.Size = new System.Drawing.Size(52, 20);
+            udPowersSize.Size = new System.Drawing.Size(52, 22);
             udPowersSize.TabIndex = 83;
             udPowersSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
             // 
@@ -971,7 +975,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udPowSelectSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
             udPowSelectSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
             udPowSelectSize.Name = "udPowSelectSize";
-            udPowSelectSize.Size = new System.Drawing.Size(52, 20);
+            udPowSelectSize.Size = new System.Drawing.Size(52, 22);
             udPowSelectSize.TabIndex = 81;
             udPowSelectSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
             // 
@@ -988,7 +992,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
             chkShowAlphaPopup.Name = "chkShowAlphaPopup";
-            chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
+            chkShowAlphaPopup.Size = new System.Drawing.Size(246, 18);
             chkShowAlphaPopup.TabIndex = 79;
             chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
             // 
@@ -1054,7 +1058,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udStatSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
             udStatSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
             udStatSize.Name = "udStatSize";
-            udStatSize.Size = new System.Drawing.Size(52, 20);
+            udStatSize.Size = new System.Drawing.Size(52, 22);
             udStatSize.TabIndex = 1;
             udStatSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
             // 
@@ -1064,15 +1068,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             udRTFSize.Maximum = new decimal(new int[] { 14, 0, 0, 0 });
             udRTFSize.Minimum = new decimal(new int[] { 6, 0, 0, 0 });
             udRTFSize.Name = "udRTFSize";
-            udRTFSize.Size = new System.Drawing.Size(52, 20);
+            udRTFSize.Size = new System.Drawing.Size(52, 22);
             udRTFSize.TabIndex = 0;
             udRTFSize.Value = new decimal(new int[] { 825, 0, 0, 131072 });
             // 
             // chkIOPrintLevels
             // 
-            chkIOPrintLevels.Location = new System.Drawing.Point(194, 304);
+            chkIOPrintLevels.Location = new System.Drawing.Point(194, 301);
             chkIOPrintLevels.Name = "chkIOPrintLevels";
-            chkIOPrintLevels.Size = new System.Drawing.Size(221, 18);
+            chkIOPrintLevels.Size = new System.Drawing.Size(285, 18);
             chkIOPrintLevels.TabIndex = 75;
             chkIOPrintLevels.Text = "Display Invention levels in printed builds";
             // 
@@ -1094,7 +1098,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkEnableDmgGraph.AutoSize = true;
             chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
             chkEnableDmgGraph.Name = "chkEnableDmgGraph";
-            chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
+            chkEnableDmgGraph.Size = new System.Drawing.Size(141, 17);
             chkEnableDmgGraph.TabIndex = 6;
             chkEnableDmgGraph.Text = "Enable Damage Graph";
             chkEnableDmgGraph.UseVisualStyleBackColor = true;
@@ -1121,7 +1125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cbCurrency.FormattingEnabled = true;
             cbCurrency.Location = new System.Drawing.Point(9, 81);
             cbCurrency.Name = "cbCurrency";
-            cbCurrency.Size = new System.Drawing.Size(171, 22);
+            cbCurrency.Size = new System.Drawing.Size(171, 21);
             cbCurrency.TabIndex = 62;
             // 
             // label19
@@ -1129,7 +1133,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             label19.AutoSize = true;
             label19.Location = new System.Drawing.Point(5, 64);
             label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(103, 14);
+            label19.Size = new System.Drawing.Size(103, 13);
             label19.TabIndex = 61;
             label19.Text = "Preferred currency:";
             // 
@@ -1173,7 +1177,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             chkShowSOLevels.Location = new System.Drawing.Point(11, 257);
             chkShowSOLevels.Name = "chkShowSOLevels";
-            chkShowSOLevels.Size = new System.Drawing.Size(150, 23);
+            chkShowSOLevels.Size = new System.Drawing.Size(165, 23);
             chkShowSOLevels.TabIndex = 71;
             chkShowSOLevels.Text = "Display SO/HO Levels";
             chkShowSOLevels.UseVisualStyleBackColor = true;
@@ -1217,9 +1221,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabControl1.Location = new System.Drawing.Point(0, 0);
             TabControl1.Name = "TabControl1";
             TabControl1.SelectedIndex = 0;
-            TabControl1.Size = new System.Drawing.Size(785, 372);
+            TabControl1.Size = new System.Drawing.Size(785, 393);
             TabControl1.TabIndex = 0;
             TabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
+            // 
+            // groupBox10
+            // 
+            groupBox10.Controls.Add(cbWarnOldDbVersion);
+            groupBox10.Controls.Add(cbWarnOldAppVersion);
+            groupBox10.Location = new System.Drawing.Point(8, 295);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new System.Drawing.Size(761, 69);
+            groupBox10.TabIndex = 74;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "App/database version checks (new build format only)";
+            // 
+            // cbWarnOldAppVersion
+            // 
+            cbWarnOldAppVersion.AutoSize = true;
+            cbWarnOldAppVersion.Location = new System.Drawing.Point(43, 30);
+            cbWarnOldAppVersion.Name = "cbWarnOldAppVersion";
+            cbWarnOldAppVersion.Size = new System.Drawing.Size(296, 17);
+            cbWarnOldAppVersion.TabIndex = 0;
+            cbWarnOldAppVersion.Text = "Warn when build was made on an older app version";
+            cbWarnOldAppVersion.UseVisualStyleBackColor = true;
+            // 
+            // cbWarnOldDbVersion
+            // 
+            cbWarnOldDbVersion.AutoSize = true;
+            cbWarnOldDbVersion.Location = new System.Drawing.Point(396, 30);
+            cbWarnOldDbVersion.Name = "cbWarnOldDbVersion";
+            cbWarnOldDbVersion.Size = new System.Drawing.Size(323, 17);
+            cbWarnOldDbVersion.TabIndex = 1;
+            cbWarnOldDbVersion.Text = "Warn when build was made on an older database version";
+            cbWarnOldDbVersion.UseVisualStyleBackColor = true;
             // 
             // frmCalcOpt
             // 
@@ -1227,7 +1262,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             AutoScaleMode = AutoScaleMode.None;
             BackColor = System.Drawing.SystemColors.Control;
             CancelButton = btnCancel;
-            ClientSize = new System.Drawing.Size(785, 412);
+            ClientSize = new System.Drawing.Size(785, 434);
             Controls.Add(chkColorPrint);
             Controls.Add(TabControl1);
             Controls.Add(btnCancel);
@@ -1274,6 +1309,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox14.PerformLayout();
             GroupBox3.ResumeLayout(false);
             TabControl1.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
             ResumeLayout(false);
         }
         #endregion
@@ -1380,5 +1417,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label label6;
         private Label lblSchemaAssoc;
         private Label FileAssocStatus;
+        private GroupBox groupBox10;
+        private CheckBox cbWarnOldDbVersion;
+        private CheckBox cbWarnOldAppVersion;
     }
 }

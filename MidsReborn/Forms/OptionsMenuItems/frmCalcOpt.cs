@@ -287,6 +287,8 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
+            cbWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
+            cbWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
             ResumeLayout();
         }
 
@@ -438,25 +440,46 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
         {
             var config = MidsContext.Config;
             if (optSO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.SingleO;
+            }
             else if (optDO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.DualO;
+            }
             else if (optTO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.TrainingO;
+            }
+
             config.CalcEnhLevel = (Enums.eEnhRelative)cbEnhLevel.SelectedIndex;
             if (rbGraphTwoLine.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Both;
+            }
             else if (rbGraphStacked.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Stacked;
+            }
             else if (rbGraphSimple.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Simple;
+            }
+
             config.Inc.DisablePvE = !rbPvE.Checked;
             if (rbChanceAverage.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Average;
+            }
             else if (rbChanceMax.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Max;
+            }
             else if (rbChanceIgnore.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
+            }
+
             config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
@@ -500,6 +523,8 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 ++index;
             } while (index <= 19);
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
+            config.WarnOnOldAppMbd = cbWarnOldAppVersion.Checked;
+            config.WarnOnOldDbMbd = cbWarnOldDbVersion.Checked;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)

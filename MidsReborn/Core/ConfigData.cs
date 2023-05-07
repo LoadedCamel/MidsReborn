@@ -149,7 +149,8 @@ namespace Mids_Reborn.Core
         public bool MasterMode { get; set; }
         public bool IsLcAdmin { get; set; }
         public bool ShrinkFrmSets { get; set; }
-
+        public bool WarnOnOldAppMbd { get; set; }
+        public bool WarnOnOldDbMbd { get; set; }
 
         private string _buildsPath = Files.FDefaultBuildsPath;
 
