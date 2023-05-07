@@ -587,13 +587,10 @@ namespace Mids_Reborn.Core.BuildFile
                             return false;
                         }
 
-                        if (MidsContext.Config != null)
-                        {
-                            MidsContext.Config.LastFileName = fileName;
-                            MidsContext.Config.DataPath = selected;
-                            MidsContext.Config.SavePath = selected;
-                            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
-                        }
+                        MidsContext.Config.LastFileName = fileName;
+                        MidsContext.Config.DataPath = selected;
+                        MidsContext.Config.SavePath = selected;
+                        MidsContext.Config.SaveConfig(Serializer.GetSerializer());
                         Application.Restart();
                         break;
                     case DialogResult.No:
