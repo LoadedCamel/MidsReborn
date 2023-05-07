@@ -133,7 +133,6 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
 
             MainInstance = this;
-            if (MidsContext.Config is { CheckForUpdates: true }) UpdateUtils.CheckForUpdates(this);
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
@@ -282,6 +281,7 @@ namespace Mids_Reborn.Forms
             {
                 command_Load(ProcessedCommand);
             }
+            if (MidsContext.Config is { CheckForUpdates: true }) UpdateUtils.CheckForUpdates(this);
         }
 
         public bool PetWindowFlag { get; set; }
@@ -1607,7 +1607,7 @@ namespace Mids_Reborn.Forms
             return true;
         }
 
-        private void command_Load(string data)
+        private void command_Load(string? data)
         {
             FloatTop(false);
             FileModified = false;
