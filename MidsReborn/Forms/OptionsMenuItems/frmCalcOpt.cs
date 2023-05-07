@@ -86,7 +86,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 return;
             }
 
-            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath).ToList().Any();
+            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath, "*.*", SearchOption.AllDirectories).ToList().Any();
             if (!previousHasBuilds)
             {
                 return;
@@ -102,13 +102,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             var result = fMover.ShowDialog(this);
             if (result == DialogResult.Yes)
             {
-                Directory.Delete(priorPath, true);
-                MessageBox.Show(@"All items have been moved to the new location.", @"Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"All builds have been moved to the new location.", @"Move Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var dirResult = MessageBox.Show(@"Do you wish to delete the old directory?", @"Remove Prior Directory?", MessageBoxButtons.YesNo);
+                if (dirResult == DialogResult.Yes) Directory.Delete(priorPath, true);
             }
             else
             {
-                MessageBox.Show(@"Some items could not be moved to the new location.
-Please move these items manually.", @"Operation Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Some builds could not be moved to the new location.
+Please move these items manually.", @"Move Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
