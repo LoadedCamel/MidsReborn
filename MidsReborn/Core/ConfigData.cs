@@ -61,6 +61,7 @@ namespace Mids_Reborn.Core
 
         public ConfigData()
         {
+            CheckForUpdates = true;
             Authorized = false;
             Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
@@ -73,6 +74,8 @@ namespace Mids_Reborn.Core
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
+            WarnOnOldAppMbd = true;
+            WarnOnOldDbMbd = true;
             InitializeComponent();
         }
 
@@ -149,7 +152,8 @@ namespace Mids_Reborn.Core
         public bool MasterMode { get; set; }
         public bool IsLcAdmin { get; set; }
         public bool ShrinkFrmSets { get; set; }
-
+        public bool WarnOnOldAppMbd { get; set; }
+        public bool WarnOnOldDbMbd { get; set; }
 
         private string _buildsPath = Files.FDefaultBuildsPath;
 

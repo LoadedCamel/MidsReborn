@@ -90,7 +90,7 @@ namespace Mids_Reborn.Core.Utils
             var exclusionList = new List<string>();
             exclusionList = patchType switch
             {
-                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode" },
+                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode", ".pdb" },
                 EPatchType.Database => new List<string> { "Patches" },
                 _ => exclusionList
             };

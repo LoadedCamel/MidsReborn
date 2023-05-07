@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -504,23 +505,66 @@ namespace Mids_Reborn.Core.BuildFile
             var metaData = _instance.BuiltWith;
             if (metaData == null) throw new NullReferenceException(nameof(metaData));
 
-            // Compare App Version 
-            var appVerResult = Helpers.CompareVersions(MidsContext.AppFileVersion, metaData.Version);
-            if (appVerResult)
+
+            // Compare App Version if Enabled
+            if (MidsContext.Config.WarnOnOldAppMbd)
             {
-                var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
-                appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                var outDatedApp = Helpers.CompareVersions(MidsContext.AppFileVersion, metaData.Version);
+                var newerApp = Helpers.CompareVersions(metaData.Version, MidsContext.AppFileVersion);
+
+                if (outDatedApp)
+                {
+                    var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                }
+
+                if (newerApp)
+                {
+                    var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an newer version of {MidsContext.AppName}.\r\nIt is recommended that you update the application.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                }
             }
+
 
             var fileInfo = new FileInfo(fileName);
             if (DatabaseAPI.DatabaseName == metaData.Database)
             {
-                // Compare Database Version
-                var dbVerResult = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
-                if (dbVerResult)
+                // Compare Database Version if Enabled
+                if (MidsContext.Config.WarnOnOldDbMbd)
                 {
-                    var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nPlease update the database and try again.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
-                    dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                    
+                    var outDatedDb = Helpers.CompareVersions(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
+                    var newerDb = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
+
+                    if (outDatedDb)
+                    {
+                        var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nSome powers may have changed, you may need to rebuild some of it.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                        if (dbVerMsg.DialogResult == DialogResult.Yes)
+                        {
+                            returnedVal = LoadBuild();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (newerDb)
+                    {
+                        var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                        if (dbVerMsg.DialogResult == DialogResult.Yes)
+                        {
+                            returnedVal = LoadBuild();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (!outDatedDb && !newerDb) returnedVal = LoadBuild();
                 }
                 else
                 {
@@ -543,13 +587,10 @@ namespace Mids_Reborn.Core.BuildFile
                             return false;
                         }
 
-                        if (MidsContext.Config != null)
-                        {
-                            MidsContext.Config.LastFileName = fileName;
-                            MidsContext.Config.DataPath = selected;
-                            MidsContext.Config.SavePath = selected;
-                            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
-                        }
+                        MidsContext.Config.LastFileName = fileName;
+                        MidsContext.Config.DataPath = selected;
+                        MidsContext.Config.SavePath = selected;
+                        MidsContext.Config.SaveConfig(Serializer.GetSerializer());
                         Application.Restart();
                         break;
                     case DialogResult.No:

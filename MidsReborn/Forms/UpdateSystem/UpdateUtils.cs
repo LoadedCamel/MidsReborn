@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using Newtonsoft.Json;
 using Process = System.Diagnostics.Process;
 
@@ -59,13 +60,12 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
             if (_updates.Count <= 0)
             {
-                if (_appUpdate.Status == AppUpdate.ManifestStatus.Success &
-                    _dbUpdate.Status == DbUpdate.ManifestStatus.Success)
+                if (_appUpdate.Status == AppUpdate.ManifestStatus.Success & _dbUpdate.Status == DbUpdate.ManifestStatus.Success)
                 {
-                    MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
+                    updateMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                    return;
                 }
-
-                return;
             }
 
             CreateTempFile();

@@ -86,7 +86,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 return;
             }
 
-            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath).ToList().Any();
+            var previousHasBuilds = Directory.EnumerateFileSystemEntries(priorPath, "*.*", SearchOption.AllDirectories).ToList().Any();
             if (!previousHasBuilds)
             {
                 return;
@@ -102,13 +102,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             var result = fMover.ShowDialog(this);
             if (result == DialogResult.Yes)
             {
-                Directory.Delete(priorPath, true);
-                MessageBox.Show(@"All items have been moved to the new location.", @"Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"All builds have been moved to the new location.", @"Move Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var dirResult = MessageBox.Show(@"Do you wish to delete the old directory?", @"Remove Prior Directory?", MessageBoxButtons.YesNo);
+                if (dirResult == DialogResult.Yes) Directory.Delete(priorPath, true);
             }
             else
             {
-                MessageBox.Show(@"Some items could not be moved to the new location.
-Please move these items manually.", @"Operation Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Some builds could not be moved to the new location.
+Please move these items manually.", @"Move Completed With Exceptions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -141,7 +142,7 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
 
         private void frmCalcOpt_Load(object? sender, EventArgs e)
         {
-            setupScenarios();
+            SetupScenarios();
             SetControls();
             PopulateSuppression();
         }
@@ -287,10 +288,12 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
+            chkWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
+            chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
             ResumeLayout();
         }
 
-        private void setupScenarios()
+        private void SetupScenarios()
         {
             scenarioExample[0] = "Swap a travel power with a power taken at level 2.";
             scenActs[0] = new[]
@@ -438,25 +441,46 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
         {
             var config = MidsContext.Config;
             if (optSO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.SingleO;
+            }
             else if (optDO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.DualO;
+            }
             else if (optTO.Checked)
+            {
                 config.CalcEnhOrigin = Enums.eEnhGrade.TrainingO;
+            }
+
             config.CalcEnhLevel = (Enums.eEnhRelative)cbEnhLevel.SelectedIndex;
             if (rbGraphTwoLine.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Both;
+            }
             else if (rbGraphStacked.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Stacked;
+            }
             else if (rbGraphSimple.Checked)
+            {
                 config.DataGraphType = Enums.eDDGraph.Simple;
+            }
+
             config.Inc.DisablePvE = !rbPvE.Checked;
             if (rbChanceAverage.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Average;
+            }
             else if (rbChanceMax.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Max;
+            }
             else if (rbChanceIgnore.Checked)
+            {
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
+            }
+
             config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
@@ -500,6 +524,8 @@ Please move these items manually.", @"Operation Completed With Exceptions", Mess
                 ++index;
             } while (index <= 19);
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
+            config.WarnOnOldAppMbd = chkWarnOldAppVersion.Checked;
+            config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)

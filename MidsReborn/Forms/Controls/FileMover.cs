@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -14,7 +16,21 @@ namespace Mids_Reborn.Forms.Controls
         private bool _moveExceptionRequested;
         private readonly string _sourceDirectory;
         private readonly string _destinationDirectory;
-        private List<string> Items { get; set; }
+        private readonly List<Item> _items = new();
+
+        private struct Item
+        {
+            public string Source;
+            public string Directory;
+            public string Destination;
+
+            public Item(string source, string directory, string destination)
+            {
+                Source = source;
+                Directory = directory;
+                Destination = destination;
+            }
+        }
 
         public FileMover(string source, string destination)
         {
@@ -25,13 +41,13 @@ namespace Mids_Reborn.Forms.Controls
 
         }
 
-        private void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object? sender, EventArgs e)
         {
             CenterToParent();
             sourceLabel.Text = _sourceDirectory;
             destLabel.Text = _destinationDirectory;
-            Items = Directory.GetFiles(_sourceDirectory).ToList();
-            ctlProgressBar1.Maximum = Items.Count;
+            ExecuteDiscovery();
+            ctlProgressBar1.Maximum = _items.Count;
             ctlProgressBar1.Value = 0;
             ctlProgressBar1.Step = 1;
             _progressWorker.WorkerReportsProgress = true;
@@ -41,40 +57,65 @@ namespace Mids_Reborn.Forms.Controls
             Start();
         }
 
+        private void ExecuteDiscovery()
+        {
+            var files = Directory.GetFiles(_sourceDirectory, "*.*", SearchOption.AllDirectories).ToList();
+            foreach (var file in files)
+            {
+                var fileInfo = new FileInfo(file);
+                if (!fileInfo.Exists) continue;
+                var dirInfo = fileInfo.Directory;
+                if (dirInfo == null) continue;
+                _items.Add(_sourceDirectory.Contains(dirInfo.Name)
+                    ? new Item(fileInfo.FullName, string.Empty, Path.Combine(_destinationDirectory, fileInfo.Name))
+                    : new Item(fileInfo.FullName, dirInfo.Name,
+                        Path.Combine(_destinationDirectory, dirInfo.Name, fileInfo.Name)));
+            }
+        }
+
+        private bool DestinationHasStructure => _items.Any(x => !string.IsNullOrWhiteSpace(x.Directory));
+
         private void Start()
         {
             _progressWorker.RunWorkerAsync();
         }
 
-        private void ProgressWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void ProgressWorker_DoWork(object? sender, DoWorkEventArgs e)
         {
-            ctlProgressBar1.StatusText = @"Moving...";
-            ctlProgressBar1.ItemCount = Items.Count;
-            for (var index = 0; index < Items.Count; index++)
+            if (DestinationHasStructure)
             {
-                var item = Items[index];
-                var fInfo = new FileInfo(item);
+                ctlProgressBar1.StatusText = @"Recreating Directory Structure...";
+                foreach (var path in from item in _items where !string.IsNullOrWhiteSpace(item.Directory) select Path.Combine(_destinationDirectory, item.Directory) into path where !Directory.Exists(path) select path)
+                {
+                    Directory.CreateDirectory(path);
+                }
+            }
+            ctlProgressBar1.StatusText = @"Moving Builds...";
+            ctlProgressBar1.ItemCount = _items.Count;
+            for (var itemIndex = 0; itemIndex < _items.Count; itemIndex++)
+            {
+                var item = _items[itemIndex];
                 try
                 {
-                    File.Move(fInfo.FullName, Path.Combine(_destinationDirectory, fInfo.Name));
+                    File.Move(item.Source, item.Destination);
                 }
                 catch (Exception)
                 {
                     _moveExceptionRequested = true;
                 }
 
-                var percentage = (index * ctlProgressBar1.Maximum) / Items.Count;
+                var percentage = (itemIndex * ctlProgressBar1.Maximum) / _items.Count;
                 _progressWorker.ReportProgress(percentage);
                 Thread.Sleep(50);
             }
         }
 
-        private void ProgressWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void ProgressWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
             ctlProgressBar1.Value = e.ProgressPercentage;
         }
 
-        private void ProgressWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ProgressWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             ctlProgressBar1.StatusText = string.Empty;
             if (!_moveExceptionRequested)
