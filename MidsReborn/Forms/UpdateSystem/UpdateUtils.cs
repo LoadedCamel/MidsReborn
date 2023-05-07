@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
         }
 
-        public static void CheckForUpdates(frmMain parent)
+        public static void CheckForUpdates(frmMain parent, bool manual = false)
         {
             _appUpdate = new AppUpdate();
             _dbUpdate = new DbUpdate();
@@ -60,12 +60,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
             if (_updates.Count <= 0)
             {
-                if (_appUpdate.Status == AppUpdate.ManifestStatus.Success & _dbUpdate.Status == DbUpdate.ManifestStatus.Success)
-                {
-                    var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
-                    updateMsg.ShowDialog(Application.OpenForms["frmMain"]);
-                    return;
-                }
+                if (!manual) return;
+                if (!(_appUpdate.Status == AppUpdate.ManifestStatus.Success &
+                      _dbUpdate.Status == DbUpdate.ManifestStatus.Success)) return;
+                var updateMsg = new MessageBoxEx(@"Update Check",
+                    @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
+                updateMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                return;
             }
 
             CreateTempFile();

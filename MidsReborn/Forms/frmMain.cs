@@ -281,7 +281,11 @@ namespace Mids_Reborn.Forms
             {
                 command_Load(ProcessedCommand);
             }
-            if (MidsContext.Config is { CheckForUpdates: true }) UpdateUtils.CheckForUpdates(this);
+
+            if (MidsContext.Config!.CheckForUpdates)
+            {
+                UpdateUtils.CheckForUpdates(this);
+            }
         }
 
         public bool PetWindowFlag { get; set; }
@@ -359,7 +363,6 @@ namespace Mids_Reborn.Forms
 
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
-                    MidsContext.Config.CheckForUpdates = false;
                     //MessageBox.Show(("Welcome to Mids' Reborn : Hero Designer "
                     //+ MidsContext.AppVersion 
                     //+ "! Please check the Readme/Help for quick instructions.\r\n\r\nMids' Hero Designer is able to check for and download updates automatically when it starts.\r\nIt's recommended that you turn on automatic updating. Do you want to?\r\n\r\n(If you don't, you can manually check from the 'Updates' tab in the options.)"), MessageBoxButtons.YesNo | MessageBoxIcon.Question, "Welcome!") == DialogResult.Yes;
@@ -6476,8 +6479,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            //clsXMLUpdate.CheckUpdate(this);
-            UpdateUtils.CheckForUpdates(this);
+            UpdateUtils.CheckForUpdates(this, true);
         }
 
         private void tsViewSelected()
