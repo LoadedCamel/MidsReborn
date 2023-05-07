@@ -61,6 +61,7 @@ namespace Mids_Reborn.Core
 
         public ConfigData()
         {
+            CheckForUpdates = true;
             Authorized = false;
             Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
