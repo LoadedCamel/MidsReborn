@@ -56,6 +56,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cPicker = new ColorDialog();
             fbdSave = new FolderBrowserDialog();
             TabPage5 = new TabPage();
+            groupBox10 = new GroupBox();
+            chkWarnOldDbVersion = new CheckBox();
+            chkWarnOldAppVersion = new CheckBox();
             groupBox4 = new GroupBox();
             SchemaStatus = new Label();
             btnRepairSchemaAssoc = new Button();
@@ -137,12 +140,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optEnh = new Label();
             Label4 = new Label();
             TabControl1 = new TabControl();
-            groupBox10 = new GroupBox();
-            cbWarnOldAppVersion = new CheckBox();
-            cbWarnOldDbVersion = new CheckBox();
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
+            groupBox10.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox16.SuspendLayout();
             groupBox19.SuspendLayout();
@@ -166,7 +167,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox14.SuspendLayout();
             GroupBox3.SuspendLayout();
             TabControl1.SuspendLayout();
-            groupBox10.SuspendLayout();
             SuspendLayout();
             // 
             // btnOK
@@ -378,6 +378,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            groupBox10.Controls.Add(chkWarnOldDbVersion);
+            groupBox10.Controls.Add(chkWarnOldAppVersion);
+            groupBox10.Location = new System.Drawing.Point(8, 295);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new System.Drawing.Size(761, 69);
+            groupBox10.TabIndex = 74;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "App/database version checks (new build format only)";
+            // 
+            // chkWarnOldDbVersion
+            // 
+            chkWarnOldDbVersion.AutoSize = true;
+            chkWarnOldDbVersion.Location = new System.Drawing.Point(396, 30);
+            chkWarnOldDbVersion.Name = "chkWarnOldDbVersion";
+            chkWarnOldDbVersion.Size = new System.Drawing.Size(323, 17);
+            chkWarnOldDbVersion.TabIndex = 1;
+            chkWarnOldDbVersion.Text = "Warn when build was made on an older database version";
+            chkWarnOldDbVersion.UseVisualStyleBackColor = true;
+            // 
+            // chkWarnOldAppVersion
+            // 
+            chkWarnOldAppVersion.AutoSize = true;
+            chkWarnOldAppVersion.Location = new System.Drawing.Point(43, 30);
+            chkWarnOldAppVersion.Name = "chkWarnOldAppVersion";
+            chkWarnOldAppVersion.Size = new System.Drawing.Size(296, 17);
+            chkWarnOldAppVersion.TabIndex = 0;
+            chkWarnOldAppVersion.Text = "Warn when build was made on an older app version";
+            chkWarnOldAppVersion.UseVisualStyleBackColor = true;
+            // 
             // groupBox4
             // 
             groupBox4.Controls.Add(SchemaStatus);
@@ -586,9 +617,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage1.Controls.Add(cmbAction);
             TabPage1.Controls.Add(GroupBox9);
             TabPage1.Controls.Add(GroupBox7);
-            TabPage1.Location = new System.Drawing.Point(4, 22);
+            TabPage1.Location = new System.Drawing.Point(4, 24);
             TabPage1.Name = "TabPage1";
-            TabPage1.Size = new System.Drawing.Size(777, 346);
+            TabPage1.Size = new System.Drawing.Size(777, 365);
             TabPage1.TabIndex = 6;
             TabPage1.Text = "Drag & Drop";
             TabPage1.UseVisualStyleBackColor = true;
@@ -668,9 +699,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage2.Controls.Add(GroupBox15);
             TabPage2.Controls.Add(GroupBox8);
             TabPage2.Controls.Add(GroupBox6);
-            TabPage2.Location = new System.Drawing.Point(4, 22);
+            TabPage2.Location = new System.Drawing.Point(4, 24);
             TabPage2.Name = "TabPage2";
-            TabPage2.Size = new System.Drawing.Size(777, 346);
+            TabPage2.Size = new System.Drawing.Size(777, 365);
             TabPage2.TabIndex = 1;
             TabPage2.Text = "Effects & Maths";
             TabPage2.UseVisualStyleBackColor = true;
@@ -833,7 +864,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage3.Controls.Add(GroupBox3);
             TabPage3.Location = new System.Drawing.Point(4, 22);
             TabPage3.Name = "TabPage3";
-            TabPage3.Size = new System.Drawing.Size(777, 346);
+            TabPage3.Size = new System.Drawing.Size(777, 367);
             TabPage3.TabIndex = 2;
             TabPage3.Text = "Enhancements & View";
             TabPage3.UseVisualStyleBackColor = true;
@@ -1225,37 +1256,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabControl1.TabIndex = 0;
             TabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
             // 
-            // groupBox10
-            // 
-            groupBox10.Controls.Add(cbWarnOldDbVersion);
-            groupBox10.Controls.Add(cbWarnOldAppVersion);
-            groupBox10.Location = new System.Drawing.Point(8, 295);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new System.Drawing.Size(761, 69);
-            groupBox10.TabIndex = 74;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "App/database version checks (new build format only)";
-            // 
-            // cbWarnOldAppVersion
-            // 
-            cbWarnOldAppVersion.AutoSize = true;
-            cbWarnOldAppVersion.Location = new System.Drawing.Point(43, 30);
-            cbWarnOldAppVersion.Name = "cbWarnOldAppVersion";
-            cbWarnOldAppVersion.Size = new System.Drawing.Size(296, 17);
-            cbWarnOldAppVersion.TabIndex = 0;
-            cbWarnOldAppVersion.Text = "Warn when build was made on an older app version";
-            cbWarnOldAppVersion.UseVisualStyleBackColor = true;
-            // 
-            // cbWarnOldDbVersion
-            // 
-            cbWarnOldDbVersion.AutoSize = true;
-            cbWarnOldDbVersion.Location = new System.Drawing.Point(396, 30);
-            cbWarnOldDbVersion.Name = "cbWarnOldDbVersion";
-            cbWarnOldDbVersion.Size = new System.Drawing.Size(323, 17);
-            cbWarnOldDbVersion.TabIndex = 1;
-            cbWarnOldDbVersion.Text = "Warn when build was made on an older database version";
-            cbWarnOldDbVersion.UseVisualStyleBackColor = true;
-            // 
             // frmCalcOpt
             // 
             AcceptButton = btnOK;
@@ -1279,6 +1279,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupBox16.ResumeLayout(false);
@@ -1309,8 +1311,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox14.PerformLayout();
             GroupBox3.ResumeLayout(false);
             TabControl1.ResumeLayout(false);
-            groupBox10.ResumeLayout(false);
-            groupBox10.PerformLayout();
             ResumeLayout(false);
         }
         #endregion
@@ -1418,7 +1418,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label lblSchemaAssoc;
         private Label FileAssocStatus;
         private GroupBox groupBox10;
-        private CheckBox cbWarnOldDbVersion;
-        private CheckBox cbWarnOldAppVersion;
+        private CheckBox chkWarnOldDbVersion;
+        private CheckBox chkWarnOldAppVersion;
     }
 }

@@ -142,7 +142,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
         private void frmCalcOpt_Load(object? sender, EventArgs e)
         {
-            setupScenarios();
+            SetupScenarios();
             SetControls();
             PopulateSuppression();
         }
@@ -288,12 +288,12 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
-            cbWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
-            cbWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
+            chkWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
+            chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
             ResumeLayout();
         }
 
-        private void setupScenarios()
+        private void SetupScenarios()
         {
             scenarioExample[0] = "Swap a travel power with a power taken at level 2.";
             scenActs[0] = new[]
@@ -524,8 +524,8 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 ++index;
             } while (index <= 19);
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
-            config.WarnOnOldAppMbd = cbWarnOldAppVersion.Checked;
-            config.WarnOnOldDbMbd = cbWarnOldDbVersion.Checked;
+            config.WarnOnOldAppMbd = chkWarnOldAppVersion.Checked;
+            config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
