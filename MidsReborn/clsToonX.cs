@@ -2903,8 +2903,16 @@ namespace Mids_Reborn
                     }
                     else
                     {
+                        if (power.InherentType != Enums.eGridType.None)
+                        {
+                            return ListLabelV3.LlItemState.Enabled;
+                        }
+
                         message =
                             "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
+
+                        return ListLabelV3.LlItemState.Invalid;
+
                     }
 
                     return ListLabelV3.LlItemState.Invalid;
