@@ -65,7 +65,7 @@ namespace Mids_Reborn.Forms
             this.Margin = new System.Windows.Forms.Padding(55, 18, 55, 18);
             this.Name = "frmInitializing";
             this.Text = "frmInitializing";
-            this.TopMost = true;
+            this.TopMost = false;
             this.TransparencyKey = System.Drawing.Color.Black;
             this.ResumeLayout(false);
 
