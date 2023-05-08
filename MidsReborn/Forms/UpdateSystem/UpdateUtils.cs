@@ -53,7 +53,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 _updates.Add(new UpdateObject(UpdateTypes.Application, MidsContext.AppName, $"{MidsContext.Config?.UpdatePath}", _appUpdate.Version.ToString(), $"{AppContext.BaseDirectory}"));
             }
 
-            if (_dbUpdate.IsAvailable)
+            if (_dbUpdate is {Status: DbUpdate.ManifestStatus.Success, IsAvailable: true})
             {
                 _updates.Add(new UpdateObject(UpdateTypes.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", _dbUpdate.Version.ToString(), $"{Files.BaseDataPath}"));
             }
