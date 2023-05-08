@@ -500,8 +500,7 @@ namespace Mids_Reborn.Forms
             // DlgOpen
             // 
             this.DlgOpen.DefaultExt = "mbd";
-            this.DlgOpen.Filter =
-                "Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
+            this.DlgOpen.Filter = "All Supported Formats (*.mbd; *.mxd; *.txt)|*.mbd;*.mxd;*.txt|Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
             // 
             // DlgSave
             // 
