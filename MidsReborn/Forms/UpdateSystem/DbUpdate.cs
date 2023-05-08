@@ -18,14 +18,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public bool Mandatory { get; set; }
         public Version Version { get; set; } = new();
-        public string ChangeLog { get; set; } = string.Empty;
-        public ManifestStatus Status { get; private set; } = ManifestStatus.Unknown;
+        public ManifestStatus Status { get; private set; }
 
         public DbUpdate()
         {
             var settings = new XmlReaderSettings
             {
-                XmlResolver = null,
+                XmlResolver = new XmlUrlResolver(),
                 DtdProcessing = DtdProcessing.Ignore
             };
 
@@ -39,12 +38,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         case "db-version" or "version": // Rebirth
                         {
                             Version = Version.Parse(xmlReader.ReadElementContentAsString());
-                            break;
-                        }
-                        case "changelog":
-                        {
-                            ChangeLog = xmlReader.ReadElementContentAsString();
-                            if (MidsContext.Config != null) MidsContext.Config.DbChangeLog = ChangeLog;
                             break;
                         }
                         case "mandatory":

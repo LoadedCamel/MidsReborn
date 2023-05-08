@@ -50,8 +50,8 @@ namespace Mids_Reborn.Forms.Sharing
             outline = MidsContext.Character.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
             using var pen = new Pen(outline, 4);
 
-            // Measure Name for line height.
-            var textSize = Measured(MidsContext.Character.Name, TextFont);
+            // Measure random text w/font for line height.
+            var textSize = Measured("Some Random Text", TextFont);
 
             // Drawing
             _graphics.DrawRectangle(pen, 0, 0, 450, 250);

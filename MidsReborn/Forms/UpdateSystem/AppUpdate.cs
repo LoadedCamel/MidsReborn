@@ -24,7 +24,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             var settings = new XmlReaderSettings
             {
-                XmlResolver = null,
+                XmlResolver = new XmlUrlResolver(),
                 DtdProcessing = DtdProcessing.Ignore
             };
             if (MidsContext.Config == null) return;
@@ -38,12 +38,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         case "version":
                         {
                             Version = Version.Parse(xmlReader.ReadElementContentAsString());
-                            break;
-                        }
-                        case "changelog":
-                        {
-                            ChangeLog = xmlReader.ReadElementContentAsString();
-                            MidsContext.Config.AppChangeLog = ChangeLog;
                             break;
                         }
                         case "mandatory":
