@@ -7252,6 +7252,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (listPowers == null) return;
 
                 InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
+                LastFileName = "";
             }
             catch (Exception e)
             {
