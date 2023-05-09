@@ -17,7 +17,7 @@ namespace Mids_Reborn.Forms.Sharing
         private void LoadToClipboard(string? image, string? code)
         {
             var data = new DataObject();
-            data.SetData(DataFormats.UnicodeText, $"[img]{image}[/img]\n[url=\"mrb://{code}\"]View This Build In MRB[/url]");
+            data.SetData(DataFormats.UnicodeText, $"[img]{image}[/img]\n[url=\"https://mids.app/redirect/{code}\"]View This Build In MRB[/url]");
             Clipboard.SetDataObject(data, true);
         }
 
