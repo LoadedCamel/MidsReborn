@@ -1726,11 +1726,10 @@ namespace Mids_Reborn.Forms
         private bool DoSaveAs()
         {
             FloatTop(false);
-            FileInfo fileInfo;
             var saveFile = string.Empty;
             if (!string.IsNullOrWhiteSpace(LastFileName))
             {
-                fileInfo = new FileInfo(LastFileName);
+                var fileInfo = new FileInfo(LastFileName);
                 saveFile = fileInfo.Name.Replace(fileInfo.Extension, "");
                 DlgSave.InitialDirectory = fileInfo.Directory.FullName;
             }
@@ -1746,16 +1745,32 @@ namespace Mids_Reborn.Forms
             DlgSave.FileName = saveFile;
             if (DlgSave.ShowDialog() == DialogResult.OK)
             {
-                if (!CharacterBuildFile.Generate(DlgSave.FileName)) return false;
+                var buildFile = DlgSave.FileName;
+                if (buildFile.ToLowerInvariant().EndsWith(".mxd"))
+                {
+                    buildFile = Regex.Replace(buildFile, @"\.[mM][xX][dD]$", ".mbd");
+                }
+                else if (!buildFile.ToLowerInvariant().EndsWith(".mbd"))
+                {
+                    buildFile += ".mbd";
+                }
+
+                if (!CharacterBuildFile.Generate(buildFile))
+                {
+                    return false;
+                }
+
                 FileModified = false;
-                LastFileName = DlgSave.FileName;
-                MidsContext.Config.LastFileName = DlgSave.FileName;
+                LastFileName = buildFile;
+                MidsContext.Config.LastFileName = buildFile;
                 SetTitleBar();
                 FloatTop(true);
+                
                 return true;
             }
 
             FloatTop(true);
+            
             return false;
         }
 
