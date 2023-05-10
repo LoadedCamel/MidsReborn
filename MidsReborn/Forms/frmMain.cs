@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Forms.WindowMenuItems;
@@ -190,7 +191,7 @@ namespace Mids_Reborn.Forms
             ResizeControl(_pnlGfxOrigin, pnlGFX);
         }
 
-        private void OnShown(object? sender, EventArgs e)
+        private async void OnShown(object? sender, EventArgs e)
         {
             var comLoad = false;
             if (MidsContext.Config != null)
@@ -227,7 +228,7 @@ namespace Mids_Reborn.Forms
                             if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
                             {
                                 MidsContext.Config.DisableLoadLastFileOnStart = false;
-                                toonLoaded = RunSchemaCommands(CommandArgs[0]);
+                                toonLoaded = await RunSchemaCommands(CommandArgs[0]);
                                 comLoad = false;
                                 
                                 ProcessedFromCommand = true;
@@ -530,7 +531,7 @@ namespace Mids_Reborn.Forms
             MidsContext.Config.SaveConfig(Serializer.GetSerializer());
         }
 
-        private bool RunSchemaCommands(string url)
+        private async Task<bool> RunSchemaCommands(string url)
         {
             var returnData = false;
             var code = url.Replace("mrb://", "");
@@ -539,7 +540,7 @@ namespace Mids_Reborn.Forms
                 MaxTimeout = -1,
             };
             var client = new RestClient(options);
-            var response = client.GetJson<ImportModel>($"build/{code}");
+            var response = await client.GetJsonAsync<ImportModel>($"build/{code}");
             if (response != null)
             {
                returnData = DoLoadFromSchema(response);
