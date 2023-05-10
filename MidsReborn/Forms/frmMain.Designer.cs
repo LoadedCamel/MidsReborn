@@ -1447,8 +1447,8 @@ namespace Mids_Reborn.Forms
                 this.tsViewTotals,
                 this.ToolStripSeparator18,
                 this.tsRecipeViewer,
-                this.tsDPSCalc,
-                this.ToolStripSeparator19,
+                //this.tsDPSCalc,
+                //this.ToolStripSeparator19,
                 this.tsSetFind,
                 this.ToolStripSeparator21,
                 this.InGameRespecHelperToolStripMenuItem
