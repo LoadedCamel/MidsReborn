@@ -908,66 +908,109 @@ namespace Mids_Reborn.Core
         public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
         {
             if (nLevel < 0)
+            {
                 return false;
+            }
 
             var nIdSkip = -1;
-            if ((skipIdx > -1) & (skipIdx < Powers.Count))
+            if (skipIdx > -1 & skipIdx < Powers.Count)
+            {
                 nIdSkip = Powers[skipIdx].Power == null ? -1 : Powers[skipIdx].Power.PowerIndex;
+            }
+
             if (nLevel + 1 < power.Level)
+            {
                 return false;
-            if ((power.Requires.NClassName.Length == 0) & (power.Requires.NClassNameNot.Length == 0) &
-                (power.Requires.NPowerID.Length == 0) &
-                (power.Requires.NPowerIDNot.Length == 0))
+            }
+
+            if (power.Requires.NClassName.Length == 0 & power.Requires.NClassNameNot.Length == 0 &
+                power.Requires.NPowerID.Length == 0 &
+                power.Requires.NPowerIDNot.Length == 0)
+            {
                 return true;
+            }
 
             var valid = power.Requires.NClassName.Length == 0;
 
             foreach (var clsNameIdx in power.Requires.NClassName)
+            {
                 if (MidsContext.Character.Archetype.Idx == clsNameIdx)
+                {
                     valid = true;
+                }
+            }
 
-            if (power.Requires.NClassNameNot.Any(nclsnamenot => MidsContext.Character.Archetype.Idx == nclsnamenot)
-            ) return false;
+            if (power.Requires.NClassNameNot.Any(nClsNameNot => MidsContext.Character.Archetype.Idx == nClsNameNot))
+            {
+                return false;
+            }
 
             if (!valid)
+            {
                 return false;
+            }
 
             if (power.Requires.NPowerID.Length > 0)
+            {
                 valid = false;
+            }
+
             foreach (var numArray in power.Requires.NPowerID)
             {
                 var doubleValid = true;
                 foreach (var nIDPower in numArray)
                 {
-                    if (nIDPower <= -1)
-                        continue;
                     var index = -1;
-                    if (nIDPower != nIdSkip)
+                    if (nIDPower != nIdSkip & nIDPower >= 0)
+                    {
                         index = FindInToonHistory(nIDPower);
+                    }
+
                     if (index < 0)
+                    {
                         doubleValid = false;
+                    }
                     else if (Powers[index].Level > nLevel)
+                    {
                         doubleValid = false;
+                    }
                 }
 
                 if (!doubleValid)
+                {
                     continue;
+                }
+
                 valid = true;
                 break;
             }
 
             if (!valid)
+            {
                 return false;
+            }
+
             foreach (var numArray in power.Requires.NPowerIDNot)
+            {
                 foreach (var nIDPower in numArray)
                 {
-                    if (nIDPower <= -1) continue;
+                    if (nIDPower <= -1)
+                    {
+                        continue;
+                    }
+
                     var histIdx = -1;
                     if (nIDPower != nIdSkip)
+                    {
                         histIdx = FindInToonHistory(nIDPower);
+                    }
+
                     if (histIdx > -1)
+                    {
                         return false;
+                    }
                 }
+            }
 
             return true;
         }
