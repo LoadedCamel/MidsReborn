@@ -923,9 +923,7 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
-            if (power.Requires.NClassName.Length == 0 & power.Requires.NClassNameNot.Length == 0 &
-                power.Requires.NPowerID.Length == 0 &
-                power.Requires.NPowerIDNot.Length == 0)
+            if (power.Requires.NClassName.Length == 0 & power.Requires.NClassNameNot.Length == 0 & power.Requires.NPowerID.Length == 0 & power.Requires.NPowerIDNot.Length == 0)
             {
                 return true;
             }
@@ -958,19 +956,16 @@ namespace Mids_Reborn.Core
             foreach (var numArray in power.Requires.NPowerID)
             {
                 var doubleValid = true;
-                foreach (var nIDPower in numArray)
+                var powerIndex = -1;
+                foreach (var nIdPower in numArray)
                 {
-                    var index = -1;
-                    if (nIDPower != nIdSkip & nIDPower >= 0)
+                    if (nIdPower <= -1) continue;
+                    if (nIdPower != nIdSkip)
                     {
-                        index = FindInToonHistory(nIDPower);
+                        powerIndex = FindInToonHistory(nIdPower);
                     }
 
-                    if (index < 0)
-                    {
-                        doubleValid = false;
-                    }
-                    else if (Powers[index].Level > nLevel)
+                    if (powerIndex < 0 || Powers[powerIndex]?.Level > nLevel)
                     {
                         doubleValid = false;
                     }
@@ -992,17 +987,17 @@ namespace Mids_Reborn.Core
 
             foreach (var numArray in power.Requires.NPowerIDNot)
             {
-                foreach (var nIDPower in numArray)
+                foreach (var nIdPower in numArray)
                 {
-                    if (nIDPower <= -1)
+                    if (nIdPower <= -1)
                     {
                         continue;
                     }
 
                     var histIdx = -1;
-                    if (nIDPower != nIdSkip)
+                    if (nIdPower != nIdSkip)
                     {
-                        histIdx = FindInToonHistory(nIDPower);
+                        histIdx = FindInToonHistory(nIdPower);
                     }
 
                     if (histIdx > -1)
