@@ -384,21 +384,21 @@ namespace Mids_Reborn.Core.BuildFile
                         var flippedEnhData = slotEntry.FlippedEnhancement;
                         if (flippedEnhData != null)
                         {
-                            i9Enhancement.IOLevel = flippedEnhData.IoLevel;
-                            i9Enhancement.Obtained = flippedEnhData.Obtained;
+                            i9Flipped.IOLevel = flippedEnhData.IoLevel;
+                            i9Flipped.Obtained = flippedEnhData.Obtained;
                             if (!string.IsNullOrWhiteSpace(flippedEnhData.Enhancement))
                             {
-                                i9Enhancement.Enh = DatabaseAPI.GetEnhancementByName(flippedEnhData.Enhancement);
+                                i9Flipped.Enh = DatabaseAPI.GetEnhancementByName(flippedEnhData.Enhancement);
                             }
 
                             if (!string.IsNullOrWhiteSpace(flippedEnhData.Grade))
                             {
-                                i9Enhancement.Grade = Enum.Parse<Enums.eEnhGrade>(flippedEnhData.Grade);
+                                i9Flipped.Grade = Enum.Parse<Enums.eEnhGrade>(flippedEnhData.Grade);
                             }
 
                             if (!string.IsNullOrWhiteSpace(flippedEnhData.RelativeLevel))
                             {
-                                i9Enhancement.RelativeLevel =
+                                i9Flipped.RelativeLevel =
                                     Enum.Parse<Enums.eEnhRelative>(flippedEnhData.RelativeLevel);
                             }
                         }
