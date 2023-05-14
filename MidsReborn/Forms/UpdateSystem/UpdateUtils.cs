@@ -118,7 +118,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 WindowStyle = ProcessWindowStyle.Normal,
                 WorkingDirectory = Application.StartupPath,
                 FileName = @"MRBUpdater.exe",
-                Arguments = $"{file} {Environment.ProcessId}"
+                Arguments = $"\"{file}\" {Environment.ProcessId}"
             };
 
             Process.Start(startInfo);
