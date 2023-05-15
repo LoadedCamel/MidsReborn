@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
@@ -1496,6 +1497,19 @@ namespace Mids_Reborn.Core
         /// <param name="displayBlockFontSize">Display block font size</param>
         private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
         {
+            if (pBase != null)
+            {
+                if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate))
+                {
+                    pBase.AbsorbPetEffects();
+                }
+
+                if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.ExecutePower))
+                {
+                    pBase.ProcessExecutes();
+                }
+            }
+
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
