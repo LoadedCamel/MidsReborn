@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
@@ -1314,6 +1313,7 @@ namespace Mids_Reborn.Core
             float displayBlockFontSize)
         {
             var ret = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
+            var powerInBuild = MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
 
             foreach (var gre in groupedRankedEffects)
             {
@@ -1321,7 +1321,7 @@ namespace Mids_Reborn.Core
                 if (greIndex < 0) continue;
 
                 var rankedEffect = FastItemBuilder.GetRankedEffect(rankedEffects.ToArray(), greIndex, pBase, pEnh);
-                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], displayBlockFontSize);
+                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], powerInBuild, displayBlockFontSize);
 
                 ret.Add(new KeyValuePair<GroupedFx, PairedListEx.Item>(gre, rankedEffect));
             }
@@ -1494,22 +1494,10 @@ namespace Mids_Reborn.Core
         /// <param name="pEnh">Source power (enhanced)</param>
         /// <param name="gre">Associated grouped effect</param>
         /// <param name="effectIndex">Effect index in the enhanced power</param>
+        /// <param name="powerInBuild">True if power has been picked in build</param>
         /// <param name="displayBlockFontSize">Display block font size</param>
-        private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
+        private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, bool powerInBuild, float displayBlockFontSize)
         {
-            if (pBase != null)
-            {
-                if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate))
-                {
-                    pBase.AbsorbPetEffects();
-                }
-
-                if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.ExecutePower))
-                {
-                    pBase.ProcessExecutes();
-                }
-            }
-
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
@@ -1527,7 +1515,8 @@ namespace Mids_Reborn.Core
             rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &
                                           magDiff > float.Epsilon &
                                           (effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) &
-                                          effectSource.Buffable;
+                                          effectSource.Buffable &
+                                          powerInBuild;
 
             switch (effectType)
             {
@@ -1684,6 +1673,10 @@ namespace Mids_Reborn.Core
                         rankedEffect.Name = "Slow";
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
+                    else if (gre.IncludedEffects.Count > 1)
+                    {
+                        rankedEffect.Name = $"{(effectSource.Mag < 0 ? "-" : "")}Movement";
+                    }
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -1696,7 +1689,9 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Enhancement:
                 case Enums.eEffectType.ResEffect:
                     rankedEffect.Name = effectType == Enums.eEffectType.Enhancement & gre.ToWho == Enums.eToWho.Target & effectSource.Mag < 0
-                        ? "Debuff"
+                        ? gre.IncludedEffects.Count > 1
+                            ? "Debuff"
+                            : $"-{effectSource.ETModifies}"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.Value = effectSource.DisplayPercentage
@@ -1738,7 +1733,7 @@ namespace Mids_Reborn.Core
                         .Sum();
 
                     rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")} ({toWhoShort})";
-                    rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon && effectSource.Buffable;
+                    //rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon & effectSource.Buffable & powerInBuild;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects
