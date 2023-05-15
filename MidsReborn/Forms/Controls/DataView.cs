@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -823,8 +824,8 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs,
-                e => e.EffectType is not Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
-                         or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez ||
+                e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                         or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez) ||
                      e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                          {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
             foreach (var rex in rankedEffectsExt)
@@ -2862,6 +2863,8 @@ namespace Mids_Reborn.Forms.Controls
             {
                 return;
             }
+
+            Debug.WriteLine($"Item Clicked: ({item.Name}:{item.Value})\n\tEntTag Set?: {item.EntTag != null}");
 
             if (e.Button != MouseButtons.Left || e.Clicks != 1)
             {

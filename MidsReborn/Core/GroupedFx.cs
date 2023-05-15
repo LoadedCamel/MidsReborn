@@ -1326,9 +1326,7 @@ namespace Mids_Reborn.Core
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
         /// <param name="groupedRankedEffects">Raw grouped effects (use output from AssembleGroupedEffects)</param>
         /// <returns>Ranked effects matching grouped effects in the form of ItemPairs, with their associated grouped effect, and effect identifier</returns>
-        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(
-            List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects,
-            float displayBlockFontSize)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects, float displayBlockFontSize)
         {
             var ret = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
             var powerInBuild = MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
@@ -1365,7 +1363,7 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict, Func<FxId, bool> filterFunc)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>>? itemsDict, Func<FxId, bool> filterFunc)
         {
             if (itemsDict == null)
             {
@@ -1383,7 +1381,7 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="itemsDict">ItemPairs (use output from GenerateListItems)</param>
         /// <returns>Full list of ItemPairs</returns>
-        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict)
+        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>>? itemsDict)
         {
             if (itemsDict == null)
             {
@@ -1411,13 +1409,13 @@ namespace Mids_Reborn.Core
             var fxIdList = new List<FxId>();
             var effects = (IEffect[]) power.Effects.Clone();
             effects = effects.OrderBy(e => e.ToWho)
-                .Where(e => e.EffectType is not Enums.eEffectType.Null or Enums.eEffectType.NullBool
+                .Where(e => e.EffectType is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool
                                 or Enums.eEffectType.Meter or Enums.eEffectType.Damage or Enums.eEffectType.MaxFlySpeed
                                 or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.MaxRunSpeed
                                 or Enums.eEffectType.ExecutePower or Enums.eEffectType.RevokePower
                                 or Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.SetMode
-                                or Enums.eEffectType.SetCostume &&
-                            e.ETModifies is not Enums.eEffectType.Null or Enums.eEffectType.NullBool &&
+                                or Enums.eEffectType.SetCostume) &&
+                            e.ETModifies is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool) &&
                             e.ToWho != Enums.eToWho.Unspecified &&
                             Math.Abs(e.BuffedMag) >= float.Epsilon &&
                             (e.PvMode == Enums.ePvX.Any || (e.PvMode == Enums.ePvX.PvE && !MidsContext.Config.Inc.DisablePvE) || (e.PvMode == Enums.ePvX.PvP && MidsContext.Config.Inc.DisablePvE)) &&
@@ -1590,6 +1588,7 @@ namespace Mids_Reborn.Core
                             }
                         }
 
+                        rankedEffect.EntTag = DatabaseAPI.Database.Entities[effectSource.nSummon];
                         rankedEffect.ToolTip = entityTooltip;
                     }
                     else
