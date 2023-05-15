@@ -285,14 +285,14 @@ namespace Mids_Reborn.Core
             var returnedTypes = DatabaseAPI.RealmUsesToxicDefense switch
             {
                 false => from type in damageTypes
-                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
-                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
-                        or Enums.eDamage.Unique3 or Enums.eDamage.Toxic
+                    where type is not Enums.eDamage.AoE and not Enums.eDamage.Melee and not Enums.eDamage.Ranged
+                        and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
+                        and not Enums.eDamage.Unique3 and not Enums.eDamage.Toxic
                     select type,
                 true => from type in damageTypes
-                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
-                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
-                        or Enums.eDamage.Unique3
+                    where type is not Enums.eDamage.AoE and not Enums.eDamage.Melee and not Enums.eDamage.Ranged
+                        and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
+                        and not Enums.eDamage.Unique3
                     select type
             };
 
