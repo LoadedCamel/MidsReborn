@@ -48,7 +48,7 @@ namespace Mids_Reborn.Core
 
         }
 
-        public PetInfo(int idxPower, IPower basePower, List<IPower> powers)
+        public PetInfo(int idxPower, IPower basePower, List<IPower?> powers)
         {
             _powerEntryIndex = idxPower;
             _basePower = basePower;

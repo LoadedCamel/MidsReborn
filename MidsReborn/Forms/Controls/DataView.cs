@@ -2863,10 +2863,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 return;
             }
-
-            Debug.WriteLine($"Item Clicked: ({item.Name}:{item.Value})\n\tEntTag Set?: {item.EntTag != null}");
-
-            if (e.Button != MouseButtons.Left || e.Clicks != 1)
+            if (e.Button != MouseButtons.Right || e.Clicks != 1)
             {
                 return;
             }
@@ -2877,20 +2874,20 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var sets = item.EntTag.PowersetFullName.ToList();
-            var petPowers = new List<IPower>();
+            var petPowers = new List<IPower?>();
             foreach (var powersFound in sets.Select(powerSet => DatabaseAPI.GetPowersetByName(powerSet)?.Powers.ToList()).Where(powersFound => powersFound != null))
             {
-                petPowers.AddRange(powersFound);
+                if (powersFound != null) petPowers.AddRange(powersFound);
             }
 
-            PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
+            if (pBase != null) PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
 
 
             var powers = new HashSet<string>();
             foreach (var ps in sets)
             {
                 var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
-                var returnedPowers = powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
+                var returnedPowers = powerList?.SelectMany(p => p!.FullName, (power, c) => power!.FullName).ToHashSet();
                 if (returnedPowers == null)
                 {
                     continue;
