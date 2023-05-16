@@ -179,12 +179,12 @@ namespace Mids_Reborn.Forms.Controls
 
         public class PowerListTypeConverter<T> : TypeConverter
         {
-            public override bool GetPropertiesSupported(ITypeDescriptorContext context)
+            public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
             {
                 return true;
             }
 
-            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
             {
                 return TypeDescriptor.GetProperties(typeof(T));
             }
@@ -319,6 +319,7 @@ namespace Mids_Reborn.Forms.Controls
             _listPanel.ItemsUpdated += ListPanelOnItemsUpdated;
             _listPanel.MouseDown += ListPanelOnMouseDown;
             _listPanel.MouseMove += ListPanelOnMouseMove;
+            _listPanel.MeasureItem += ListPanelOnMeasureItem;
 
             Controls.Add(_listPanel);
             Controls.Add(_separatorPanel);
@@ -332,6 +333,13 @@ namespace Mids_Reborn.Forms.Controls
             TextOutline.PropertyChanged += TextOutlineOnPropertyChanged;
             //TypeChanged += OnTypeChanged;
             InitializeComponent();
+        }
+
+        private void ListPanelOnMeasureItem(object? sender, MeasureItemEventArgs e)
+        {
+            var measurement = TextRenderer.MeasureText(e.Graphics, Items[e.Index].Text, Font);
+            e.ItemHeight = measurement.Height;
+            e.ItemWidth = measurement.Width;
         }
 
         private void ListPanelOnMouseMove(object? sender, MouseEventArgs e)
@@ -382,13 +390,13 @@ namespace Mids_Reborn.Forms.Controls
             _outlinedLabel.Invalidate();
         }
 
-        private void OnTextChanged(object sender, string e)
+        private void OnTextChanged(object? sender, string e)
         {
             _outlinedLabel.Text = e;
             _outlinedLabel.Invalidate();
         }
 
-        private void ListPanelOnMouseDown(object sender, MouseEventArgs e)
+        private void ListPanelOnMouseDown(object? sender, MouseEventArgs e)
         {
             var index = _listPanel.IndexFromPoint(e.Location);
             if (index < 0) return;
