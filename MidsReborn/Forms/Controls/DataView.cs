@@ -2859,15 +2859,14 @@ namespace Mids_Reborn.Forms.Controls
 
         private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
             if (item == null)
             {
                 return;
             }
-            if (e.Button != MouseButtons.Right || e.Clicks != 1)
-            {
-                return;
-            }
-
             if (item.EntTag == null)
             {
                 return;

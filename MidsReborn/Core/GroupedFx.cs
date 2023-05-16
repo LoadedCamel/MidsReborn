@@ -1586,6 +1586,8 @@ namespace Mids_Reborn.Core
                                             : $" ({DatabaseAPI.Database.Power[p].DescShort})";
                                 }
                             }
+
+                            entityTooltip += "\r\n\r\nTo see the effects of these Powers, Left-Click on the Entity.";
                         }
 
                         rankedEffect.EntTag = DatabaseAPI.Database.Entities[effectSource.nSummon];
