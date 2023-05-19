@@ -216,30 +216,23 @@ namespace Mids_Reborn.Core
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false)
         {
             BonusItem[] bonusItemArray;
-            if (special)
-            {
-                bonusItemArray = SpecialBonus;
-            }
-            else
-            {
-                bonusItemArray = Bonus;
-            }
+            bonusItemArray = special ? SpecialBonus : Bonus;
 
             string str1;
-            if ((index < 0) | (index > bonusItemArray.Length - 1))
+            if (index < 0 | index > bonusItemArray.Length - 1)
             {
                 str1 = string.Empty;
             }
             else if (!string.IsNullOrEmpty(bonusItemArray[index].AltString))
             {
-                str1 = "+" + bonusItemArray[index].AltString;
+                str1 = $"+{bonusItemArray[index].AltString}";
             }
             else
             {
                 var effectList = new List<string>();
-                for (var index1 = 0; index1 <= bonusItemArray[index].Name.Length - 1; ++index1)
+                for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
                 {
-                    if ((bonusItemArray[index].Index[index1] < 0) | (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
+                    if (bonusItemArray[index].Index[index1] < 0 | bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1)
                     {
                         return string.Empty;
                     }
@@ -266,15 +259,9 @@ namespace Mids_Reborn.Core
                             continue;
                         }
 
-                        string str2;
-                        if (longForm)
-                        {
-                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true);
-                        }
-                        else
-                        {
-                            str2 = DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
-                        }
+                        var str2 = longForm
+                            ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true)
+                            : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
                         
 
                         if (effectList.Any(s => s == str2)) continue;

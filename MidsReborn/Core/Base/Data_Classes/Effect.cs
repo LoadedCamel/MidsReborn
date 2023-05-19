@@ -1136,7 +1136,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            if (!simple || Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Endurance)
+            if (!simple || Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Endurance && !(fromPopup && EffectType == Enums.eEffectType.Endurance && Aspect == Enums.eAspect.Max))
             {
                 sDuration = string.Empty;
                 var sForOver = EffectType switch

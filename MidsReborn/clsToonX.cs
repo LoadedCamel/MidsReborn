@@ -2276,29 +2276,29 @@ namespace Mids_Reborn
             popupData.Sections[index1].Add(power.DisplayName, PopUp.Colors.Title, 1.25f);
             if (power.PowerSetID > -1)
             {
-                popupData.Sections[index1].Add("Powerset: " + DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                popupData.Sections[index1].Add($"Powerset: {DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName}", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
             }
 
             if (hIDX > -1)
             {
                 if (CurrentBuild.Powers[hIDX].Chosen)
                 {
-                    popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                    popupData.Sections[index1].Add("Placed: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Available: Level {power.Level}", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Placed: Level {CurrentBuild.Powers[hIDX].Level + 1}", PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                 }
                 else
                 {
-                    popupData.Sections[index1].Add("Inherent: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Inherent: Level {CurrentBuild.Powers[hIDX].Level + 1}", PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                 }
             }
             else
             {
-                popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                popupData.Sections[index1].Add($"Available: Level {power.Level}", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
             }
 
             popupData.Sections[index1].Add(power.DescShort, PopUp.Colors.Text);
             var flag1 = false;
-            if ((hIDX < 0) & (pIDX > -1))
+            if (hIDX < 0 & pIDX > -1)
             {
                 if (DatabaseAPI.Database.Power[pIDX].NIDSubPower.Length > 0)
                 {
@@ -2307,12 +2307,11 @@ namespace Mids_Reborn
                     popupData.Sections[index1].Add("Powers:", PopUp.Colors.Title);
                     if (pIDX > -1)
                     {
-                        var num = DatabaseAPI.Database.Power[pIDX].NIDSubPower.Length - 1;
-                        for (var index2 = 0; index2 <= num; ++index2)
+                        foreach (var subPowerNid in DatabaseAPI.Database.Power[pIDX].NIDSubPower)
                         {
-                            if (DatabaseAPI.Database.Power[pIDX].NIDSubPower[index2] > -1)
+                            if (subPowerNid > -1)
                             {
-                                popupData.Sections[index1].Add(DatabaseAPI.Database.Power[DatabaseAPI.Database.Power[pIDX].NIDSubPower[index2]].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                                popupData.Sections[index1].Add(DatabaseAPI.Database.Power[subPowerNid].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                             }
                         }
                     }
@@ -2366,14 +2365,14 @@ namespace Mids_Reborn
                     }
                 }
 
-                for (var index2 = 0; index2 <= CurrentBuild.SetBonus.Count - 1; ++index2)
+                foreach (var sb in CurrentBuild.SetBonus)
                 {
-                    if (CurrentBuild.SetBonus[index2].PowerIndex != hIDX)
+                    if (sb.PowerIndex != hIDX)
                     {
                         continue;
                     }
 
-                    for (var senInfoIdx = 0; senInfoIdx <= CurrentBuild.SetBonus[index2].SetInfo.Length - 1; ++senInfoIdx)
+                    for (var senInfoIdx = 0; senInfoIdx < sb.SetInfo.Length; senInfoIdx++)
                     {
                         if (!flag1)
                         {
@@ -2382,12 +2381,12 @@ namespace Mids_Reborn
                             popupData.Sections[index1].Add("Active Enhancement Sets:", PopUp.Colors.Text);
                         }
 
-                        var setInfo = CurrentBuild.SetBonus[index2].SetInfo;
-                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
+                        var setInfo = sb.SetInfo;
+                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[senInfoIdx].SetIDX];
                         popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
-                        for (var bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
+                        for (var bonusIdx = 0; bonusIdx < enhancementSet.Bonus.Length; bonusIdx++)
                         {
-                            if ((setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted) & (((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
+                            if (setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted & (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))
                             {
                                 var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true);
                                 if (!string.IsNullOrWhiteSpace(enhString))
@@ -2397,9 +2396,9 @@ namespace Mids_Reborn
                             }
                         }
 
-                        for (var enhIdx = 0; enhIdx <= CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes.Length - 1; ++enhIdx)
+                        foreach (var enh in sb.SetInfo[senInfoIdx].EnhIndexes)
                         {
-                            var isSpecial = DatabaseAPI.IsSpecialEnh(CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes[enhIdx]);
+                            var isSpecial = DatabaseAPI.IsSpecialEnh(enh);
                             if (isSpecial > -1)
                             {
                                 popupData.Sections[index1].Add(enhancementSet.GetEffectString(isSpecial, true, true, true), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
