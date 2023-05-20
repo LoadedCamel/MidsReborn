@@ -402,7 +402,7 @@ namespace Mids_Reborn.Forms
                 switch (MidsContext.Config.FirstRun)
                 {
                     case true:
-                        MainModule.MidsController.SelectDatabase(_frmInitializing);
+                        MainModule.MidsController.SelectDefaultDatabase(_frmInitializing);
                         break;
                     default:
                         MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);

@@ -73,6 +73,7 @@ namespace Mids_Reborn.Forms
             webView21.Location = new System.Drawing.Point(0, 0);
             webView21.Name = "webView21";
             webView21.Size = new System.Drawing.Size(600, 447);
+            webView21.Source = new System.Uri("file://data\\blank.html", System.UriKind.Absolute);
             webView21.TabIndex = 0;
             webView21.ZoomFactor = 1D;
             // 

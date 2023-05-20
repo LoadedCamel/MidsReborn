@@ -3083,6 +3083,20 @@ namespace Mids_Reborn.Core
             SaveMainDatabase(serializer, MidsContext.Config.SavePath);
             SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
         }
+
+        public static Dictionary<string, string> GetInstalledDatabases()
+        {
+            var databases = new Dictionary<string, string>();
+            var foundDatabases = Directory.GetDirectories(Files.BaseDataPath).ToList();
+            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, Files.MxdbFileDb)));
+            foreach (var database in foundDatabases)
+            {
+                var dirInfo = new DirectoryInfo(database);
+                databases.Add(dirInfo.Name, database);
+            }
+
+            return databases;
+        }
     }
 
     public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract

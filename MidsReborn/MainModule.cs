@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -55,6 +56,21 @@ namespace Mids_Reborn
                 await Task.Delay(2000);
                 BusyHide();
                 Application.Restart();
+            }
+
+            public static void SelectDefaultDatabase(frmInitializing? iFrm)
+            {
+                var installedDatabases = DatabaseAPI.GetInstalledDatabases();
+                if (installedDatabases.Count == 0)
+                {
+                    MessageBox.Show(@"No databases were found. Please install a database.", @"No Databases Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                var defaultDatabase = installedDatabases.First(db => db.Key != "Generic");
+                MidsContext.Config.DataPath = defaultDatabase.Value;
+                MidsContext.Config.SavePath = defaultDatabase.Value;
+                LoadData(ref iFrm, MidsContext.Config.DataPath);
             }
 
             public static void SelectDatabase(frmInitializing? iFrm)
