@@ -303,7 +303,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (result != DialogResult.Yes) return;
             MidsContext.Config.DataPath = path;
             MidsContext.Config.SavePath = path;
-            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config.SaveConfig();
             using var iFrm = new frmBusy();
             _frmBusy = iFrm;
             _frmBusy.SetTitle(@"Changing Database");

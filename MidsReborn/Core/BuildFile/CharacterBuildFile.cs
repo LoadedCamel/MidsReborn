@@ -590,7 +590,7 @@ namespace Mids_Reborn.Core.BuildFile
                         MidsContext.Config.LastFileName = fileName;
                         MidsContext.Config.DataPath = selected;
                         MidsContext.Config.SavePath = selected;
-                        MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+                        MidsContext.Config.SaveConfig();
                         Application.Restart();
                         break;
                     case DialogResult.No:

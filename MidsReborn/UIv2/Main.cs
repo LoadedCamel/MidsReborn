@@ -79,7 +79,7 @@ namespace Mids_Reborn.UIv2
         public Main()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.DoubleBuffer|ControlStyles.ResizeRedraw, true);
-            ConfigData.Initialize(Serializer.GetSerializer());
+            ConfigData.Initialize();
             StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue);
             Load += Main_Load;
             InitializeComponent();

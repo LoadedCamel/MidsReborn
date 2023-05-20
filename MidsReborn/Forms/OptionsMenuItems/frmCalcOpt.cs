@@ -65,7 +65,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             DialogResult = DialogResult.OK;
             StoreControls();
             myParent.DoCalcOptUpdates();
-            MidsContext.Config!.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config!.SaveConfig();
             Hide();
         }
 

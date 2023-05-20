@@ -402,7 +402,7 @@
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="AppConfig.json">
+    <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

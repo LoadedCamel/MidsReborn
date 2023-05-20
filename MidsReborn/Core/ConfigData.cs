@@ -229,37 +229,17 @@ namespace Mids_Reborn.Core
             BuildsPath = Files.FDefaultBuildsPath;
         }
 
-        public static void Initialize(ISerialize serializer)
-        {
-            var fn = Files.GetConfigFilename();
-            
-            if (File.Exists(fn))
-            {
-                try
-                {
-                    var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
-                    Instance = value;
-                }
-                catch
-                {
-                    MessageBox.Show(@"Failed to read config file.");
-                }
-            }
-
-            Instance?.InitializeComponent();
-        }
-
         public static void Initialize(bool firstRun = false)
         {
             var serializer = Serializer.GetSerializer();
             if (firstRun)
             {
                 Instance = new ConfigData();
-                Instance.SaveConfig(serializer, "AppConfig.json");
+                Instance.SaveConfig();
                 Instance.InitializeComponent();
                 return;
             }
-            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText("AppConfig.json"));
+            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
             Instance.InitializeComponent();
         }
 
@@ -313,43 +293,20 @@ namespace Mids_Reborn.Core
             SaveRawMhd(serializer, this, iFilename, null);
         }
 
-        public void Save(ISerialize serializer, string iFilename)
+        private void Save(ISerialize serializer, string iFilename)
         {
             SaveRaw(serializer, iFilename);
         }
 
-        // poorly named
-        // saves both config.mhd, and compare.mhd
-        public void SaveConfig(ISerialize serializer)
-        {
-            try
-            {
-                Save(serializer, Files.GetConfigFilename());
-                SaveOverrides(serializer);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
-        }
-
         public void SaveConfig()
         {
+            if (!File.Exists(Files.FNameJsonConfig))
+            {
+                File.Create(Files.FNameJsonConfig);
+            }
             var serializer = Serializer.GetSerializer();
-            SaveConfig(serializer, "AppConfig.json");
-        }
-
-        private void SaveConfig(ISerialize serializer, string fileName)
-        {
-            try
-            {
-                Save(serializer, fileName);
-                SaveOverrides(serializer);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
+            Save(serializer, Files.FNameJsonConfig);
+            SaveOverrides(serializer);
         }
 
         private void LoadOverrides()

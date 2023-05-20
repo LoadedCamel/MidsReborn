@@ -117,11 +117,11 @@ namespace Mids_Reborn.Forms
         {
             get
             {
-                if (!File.Exists("AppConfig.json"))
+                if (!File.Exists(Files.FNameJsonConfig))
                 {
-                    File.Create("AppConfig.json");
+                    File.Create(Files.FNameJsonConfig);
                 }
-                var fileInfo = new FileInfo("AppConfig.json");
+                var fileInfo = new FileInfo(Files.FNameJsonConfig);
                 return fileInfo.Length <= 8;
             }
         }
@@ -568,7 +568,7 @@ namespace Mids_Reborn.Forms
 
             _loading = false;
             MidsContext.Config.FirstRun = false;
-            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config.SaveConfig();
         }
 
         private async Task<bool> RunSchemaCommands(string url)
@@ -2397,19 +2397,6 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Closed(object? sender, EventArgs e)
         {
-            if (MidsContext.Config.FirstRun)
-            {
-                MidsContext.Config.FirstRun = false;
-            }
-
-            // if (MidsContext.Config.MasterMode)
-            // {
-            //     if (ProcessedFromCommand && ProcessedCommand.Contains("master"))
-            //     {
-            //         MidsContext.Config.MasterMode = false;
-            //     }
-            // }
-
             switch (WindowState)
             {
                 case FormWindowState.Minimized:
@@ -6005,7 +5992,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var dbSelected = dbSelector.SelectedDatabase;
             MidsContext.Config.DataPath = dbSelected;
             MidsContext.Config.SavePath = dbSelected;
-            MidsContext.Config.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config.SaveConfig();
             using var iFrm = new frmBusy();
             _frmBusy = iFrm;
             _frmBusy.SetTitle(@"Changing Database");
@@ -6020,8 +6007,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var frmCalcOpt = new frmCalcOpt(ref iParent);
             if (frmCalcOpt.ShowDialog(this) == DialogResult.OK)
             {
-                var serializer = Serializer.GetSerializer();
-                MidsContext.Config.SaveConfig(serializer);
+                MidsContext.Config.SaveConfig();
                 UpdateControls();
                 UpdateOtherFormsFonts();
             }

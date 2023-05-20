@@ -26,7 +26,7 @@ namespace Mids_Reborn.Core
 
         public const string JsonFileModifiers = "AttribMod.json";
         public const string JsonFileTypeGrades = "TypeGrades.json";
-        private const string JsonFileConfig = "Config.json";
+        private const string JsonFileConfig = "appSettings.json";
 
         //public const string PatchRtf = "patch.rtf";
         private const string MxdbPowersReplTable = "PowersReplTable.mhd";
@@ -36,7 +36,7 @@ namespace Mids_Reborn.Core
         public const string BuildsFolder = "Hero & Villain Builds\\";
         
         public static string FileData = string.Empty;
-        private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
+        public static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, JsonFileConfig);
         public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
         private static string? FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
@@ -68,15 +68,6 @@ namespace Mids_Reborn.Core
             }
 
             return filePath;
-        }
-
-        public static string GetConfigFilename()
-        {
-            if (File.Exists(FNameJsonConfig)) return FNameJsonConfig;
-            MessageBox.Show(@"Config file doesn't exist, generating a new one.", @"Missing config file", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            File.WriteAllText(FNameJsonConfig, "");
-
-            return FNameJsonConfig;
         }
 
         public static class Headers

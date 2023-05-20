@@ -103,7 +103,7 @@ namespace Mids_Reborn.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            MidsContext.Config?.SaveConfig(Serializer.GetSerializer());
+            MidsContext.Config?.SaveConfig();
             DialogResult = DialogResult.OK;
             Hide();
         }
