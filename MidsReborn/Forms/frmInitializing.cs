@@ -44,7 +44,7 @@ namespace Mids_Reborn.Forms
         {
             SetTopMost(false);
             var html =
-                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-image: url('http://appassets.mrb/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: 100%;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
+                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-color: #000;\r\n  background-image: url('http://appassets.mrb/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: auto 100%;\r\n  background-position: center;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
             await webView21.EnsureCoreWebView2Async();
 
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb",
