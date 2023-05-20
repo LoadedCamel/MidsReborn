@@ -224,7 +224,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.MatchAllIDs();
             Task.Delay(1000).Wait();
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-            frmMain.MainInstance.UpdateTitle();
+            frmMain.MainInstance?.UpdateTitle();
             BusyHide();
             DialogResult = DialogResult.OK;
             Hide();

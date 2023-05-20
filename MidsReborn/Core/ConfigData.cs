@@ -54,16 +54,12 @@ namespace Mids_Reborn.Core
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-        public string? AppChangeLog { get; set; }
-        public string? DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
 
 
         public ConfigData()
         {
             CheckForUpdates = true;
-            Authorized = false;
-            Registered = false;
             DamageMath.Calculate = EDamageMath.Average;
             DamageMath.ReturnValue = EDamageReturn.Numeric;
             I9.DefaultIOLevel = 49;
@@ -90,12 +86,10 @@ namespace Mids_Reborn.Core
         public Rectangle Bounds { get; set; }
 
         public bool Authorized { get; set; }
-        public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }
 
         public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
 
-        public bool DoNotUpdateFileAssociation { get; set; }
         public int ExempHigh { get; set; } = 50;
         public int TeamSize { get; set; } = 1;
         public int ExempLow { get; set; } = 50;
@@ -110,7 +104,7 @@ namespace Mids_Reborn.Core
         public bool DisablePrintProfileEnh { get; set; }
         public string LastPrinter { get; set; } = string.Empty;
         public bool DisableLoadLastFileOnStart { get; set; }
-        public string LastFileName { get; set; } = string.Empty;
+        public string? LastFileName { get; set; } = string.Empty;
         public Enums.eEnhGrade CalcEnhOrigin { get; set; } = Enums.eEnhGrade.SingleO;
         public Enums.eEnhRelative CalcEnhLevel { get; set; } = Enums.eEnhRelative.Even;
         public Enums.eDDGraph DataGraphType { get; set; } = Enums.eDDGraph.Both;
@@ -125,7 +119,7 @@ namespace Mids_Reborn.Core
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
         public bool DisableExportHex { get; set; }
-        private static ConfigData? _current { get; set; }
+        private static ConfigData? Instance { get; set; } = null;
 
         public bool ExportBonusTotals { get; set; }
         public bool ExportBonusList { get; set; }
@@ -184,7 +178,7 @@ namespace Mids_Reborn.Core
                 {
                     if (!Directory.Exists(value))
                     {
-                        Directory.CreateDirectory(value);
+                        if (value != null) Directory.CreateDirectory(value);
                     }
                     _savePath = value;
                 }
@@ -205,11 +199,11 @@ namespace Mids_Reborn.Core
 
         public Point? EntityDetailsLocation { get; set; }
 
-        internal static ConfigData? Current
+        internal static ConfigData Current
         {
             get
             {
-                var configData = _current;
+                var configData = Instance;
                 return configData;
             }
         }
@@ -244,15 +238,29 @@ namespace Mids_Reborn.Core
                 try
                 {
                     var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
-                    _current = value;
+                    Instance = value;
                 }
                 catch
                 {
-                    MessageBox.Show("Failed to read config file.");
+                    MessageBox.Show(@"Failed to read config file.");
                 }
             }
 
-            _current?.InitializeComponent();
+            Instance?.InitializeComponent();
+        }
+
+        public static void Initialize(bool firstRun = false)
+        {
+            var serializer = Serializer.GetSerializer();
+            if (firstRun)
+            {
+                Instance = new ConfigData();
+                Instance.SaveConfig(serializer, "AppConfig.json");
+                Instance.InitializeComponent();
+                return;
+            }
+            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText("AppConfig.json"));
+            Instance.InitializeComponent();
         }
 
         private void InitializeComponent()
@@ -325,6 +333,25 @@ namespace Mids_Reborn.Core
             }
         }
 
+        public void SaveConfig()
+        {
+            var serializer = Serializer.GetSerializer();
+            SaveConfig(serializer, "AppConfig.json");
+        }
+
+        private void SaveConfig(ISerialize serializer, string fileName)
+        {
+            try
+            {
+                Save(serializer, fileName);
+                SaveOverrides(serializer);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+            }
+        }
+
         private void LoadOverrides()
         {
             if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
@@ -354,7 +381,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static RawSaveResult SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
+        public static RawSaveResult? SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
         {
             var rootDir = Path.GetDirectoryName(fn);
             var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
@@ -494,7 +521,7 @@ namespace Mids_Reborn.Core
             public Color ColorPowerHighlightVillain { get; set; }
             public Color ColorDamageBarBase { get; set; }
             public Color ColorDamageBarEnh { get; set; }
-            public List<Color> ColorList { get; set; }
+            public List<Color>? ColorList { get; set; }
             public bool PairedBold { get; set; }
             public float PairedBase { get; set; }
             public bool PowersSelectBold { get; set; }

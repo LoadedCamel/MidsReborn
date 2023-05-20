@@ -8,18 +8,17 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class PerPixelAlpha : Form
     {
-        public PerPixelAlpha()
+        protected PerPixelAlpha()
         {
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Load += Initializer_Load;
             InitializeComponent();
         }
-
-        private void Initializer_Load(object? sender, EventArgs e)
+        
+        public void SetTopMost(bool topMost)
         {
-            TopMost = true;
+            TopMost = topMost;
         }
 
         protected override CreateParams CreateParams
@@ -65,7 +64,7 @@ namespace Mids_Reborn.Forms.Controls
         /// transparent. When you only want to use per-pixel alpha values, set 
         /// the SourceConstantAlpha value to 255 (opaque).
         /// </param>
-        public void SelectBitmap(Bitmap bitmap, int opacity = 255)
+        protected void SelectBitmap(Bitmap bitmap, int opacity = 255)
         {
             // Does this bitmap contain an alpha channel?
             if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
@@ -114,7 +113,7 @@ namespace Mids_Reborn.Forms.Controls
             finally
             {
                 // Release device context.
-                ReleaseDC(IntPtr.Zero, screenDc);
+                _ = ReleaseDC(IntPtr.Zero, screenDc);
                 if (hBitmap != IntPtr.Zero)
                 {
                     SelectObject(memDc, hOldBitmap);

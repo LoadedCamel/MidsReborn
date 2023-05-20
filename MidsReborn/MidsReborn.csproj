@@ -125,6 +125,9 @@
     <Content Include="Fonts\NotoSans-ThinItalic.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\MRBLoading.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
 	<Content Include="Images\Unknown.png">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
@@ -360,9 +363,8 @@
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
       <Version>110.2.0</Version>
     </PackageReference>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
-    <PackageReference Include="SkiaSharp" Version="2.88.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.1" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.3" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
@@ -395,8 +397,14 @@
     <None Remove="Fonts\NotoSans-SemiBoldItalic.ttf" />
     <None Remove="Fonts\NotoSans-Thin.ttf" />
     <None Remove="Fonts\NotoSans-ThinItalic.ttf" />
+    <None Remove="Images\MRBLoading.gif" />
     <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="AppConfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>

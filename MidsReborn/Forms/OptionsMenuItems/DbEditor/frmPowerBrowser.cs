@@ -293,7 +293,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             //     DatabaseAPI.Database.Classes[index].Column = index;
             // }
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-            frmMain.MainInstance.UpdateTitle();
+            frmMain.MainInstance?.UpdateTitle();
             BusyHide();
             DialogResult = DialogResult.OK;
             Hide();

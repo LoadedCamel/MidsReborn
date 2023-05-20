@@ -54,7 +54,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label lblCountRecipe;
         private Label lblCountSalvage;
         private Label lblDate;
-        private frmBusy _frmBusy;
+        private frmBusy? _frmBusy;
 
         public frmDBEdit()
         {

@@ -92,6 +92,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.tsShareForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsImportShortCode = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
@@ -1310,12 +1311,14 @@ namespace Mids_Reborn.Forms
             this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsShareForum,
-                this.tsShareDiscord
+                this.tsShareDiscord,
+                this.ToolStripSeparator27,
+                this.tsImportShortCode
             });
             this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
             this.ShareToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
-            this.ShareToolStripMenuItem.Text = "&Share Build";
+            this.ShareToolStripMenuItem.Text = "&Build Sharing";
             //
             // ToolStripSeparator30
             //
@@ -1326,6 +1329,13 @@ namespace Mids_Reborn.Forms
             //
             this.ToolStripSeparator31.Name = "ToolStripSeparator31";
             this.ToolStripSeparator31.Size = new System.Drawing.Size(242, 6);
+            // 
+            // tsImportShortCode
+            //
+            this.tsImportShortCode.Name = "tsImportShortCode";
+            this.tsImportShortCode.Size = new System.Drawing.Size(240, 22);
+            this.tsImportShortCode.Text = "Import via ShortCode";
+            this.tsImportShortCode.Click += new System.EventHandler(this.tsImportShortCode_Click);
             // 
             // tsShareDiscord
             //
@@ -2456,6 +2466,7 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
         ToolStripMenuItem tsShareForum;
+        ToolStripMenuItem tsImportShortCode;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;

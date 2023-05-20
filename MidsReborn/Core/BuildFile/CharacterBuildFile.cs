@@ -480,7 +480,7 @@ namespace Mids_Reborn.Core.BuildFile
             return true;
         }
 
-        public static bool Generate(string fileName)
+        public static bool Generate(string? fileName)
         {
             if (MidsContext.Character.CurrentBuild == null) return false;
             var powerEntries = MidsContext.Character.CurrentBuild.Powers.GetRange(0, 24);
@@ -496,7 +496,7 @@ namespace Mids_Reborn.Core.BuildFile
             return true;
         }
 
-        public static bool Load(string fileName)
+        public static bool Load(string? fileName)
         {
             var returnedVal = false;
             _instance = CreateInstance();

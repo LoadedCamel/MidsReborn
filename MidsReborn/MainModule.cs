@@ -49,7 +49,7 @@ namespace Mids_Reborn
                 bFrm.SetMessage(sMessage);
             }
 
-            public static async Task ChangeDatabase(frmBusy iFrm)
+            public static async Task ChangeDatabase(frmBusy? iFrm)
             {
                 iFrm.SetMessage(@"Restarting with selected database.");
                 await Task.Delay(2000);
@@ -57,7 +57,7 @@ namespace Mids_Reborn
                 Application.Restart();
             }
 
-            public static void SelectDatabase(frmInitializing iFrm)
+            public static void SelectDatabase(frmInitializing? iFrm)
             {
                 using var dbSelector = new DatabaseSelector();
                 var result = dbSelector.ShowDialog();
@@ -72,13 +72,13 @@ namespace Mids_Reborn
                     dbSelected = Files.FDefaultPath;
                 }
 
-                if (MidsContext.Config == null) return;
+                
                 MidsContext.Config.DataPath = dbSelected;
                 MidsContext.Config.SavePath = dbSelected;
                 LoadData(ref iFrm, MidsContext.Config.DataPath);
             }
 
-            public static void LoadData(ref frmInitializing iFrm, string? path)
+            public static void LoadData(ref frmInitializing? iFrm, string? path)
             {
                 IsAppInitialized = true;
                 iFrm?.SetMessage("Initializing Data...");

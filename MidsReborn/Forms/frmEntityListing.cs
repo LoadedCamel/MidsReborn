@@ -143,7 +143,7 @@ namespace Mids_Reborn.Forms
             DatabaseAPI.MatchSummonIDs();
             var serializer = Serializer.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.SavePath);
-            frmMain.MainInstance.UpdateTitle();
+            frmMain.MainInstance?.UpdateTitle();
             Hide();
         }
 

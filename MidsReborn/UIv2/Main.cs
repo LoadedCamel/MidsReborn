@@ -101,13 +101,13 @@ namespace Mids_Reborn.UIv2
                 using var iFrm = new frmInitializing();
                 _frmInitializing = iFrm;
                 _frmInitializing.Show();
-                if (MidsContext.Config != null && !this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
+                if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
                     MidsContext.Config.CheckForUpdates = false;
                     MidsContext.Config.IsInitialized = true;
                 }
-                MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config?.DataPath);
-                _frmInitializing?.SetMessage("Setting up UI...");
+                //MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config?.DataPath);
+                //_frmInitializing?.SetMessage("Setting up UI...");
 
                 Show();
                 _frmInitializing?.Hide();
@@ -135,10 +135,10 @@ namespace Mids_Reborn.UIv2
         {
             switch (item.ItemState)
             {
-                case PowerList.ListPanel.ItemState.Enabled:
+                case PowerList.ItemState.Enabled:
                     PowerSelected?.Invoke(this, item.Power, true);
                     break;
-                case PowerList.ListPanel.ItemState.Selected:
+                case PowerList.ItemState.Selected:
                     PowerSelected?.Invoke(this, item.Power, false);
                     break;
             }
