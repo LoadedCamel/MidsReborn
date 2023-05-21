@@ -153,7 +153,6 @@ namespace Mids_Reborn.Forms
             EnhancingPower = -1;
             EnhPickerActive = false;
             PickerHID = -1;
-            LastFileName = string.Empty;
             FileModified = false;
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -1174,7 +1173,7 @@ namespace Mids_Reborn.Forms
                 case DialogResult.Cancel:
                     return true;
                 case DialogResult.Yes:
-                    num = doSave() ? 1 : 0;
+                    num = DoSave() ? 1 : 0;
                     break;
                 default:
                     num = 1;
@@ -1486,10 +1485,10 @@ namespace Mids_Reborn.Forms
             }
             DataViewLocked = false;
             NewToon(true, true);
-            LastFileName = fileName;
             if (CharacterBuildFile.Load(fileName))
             {
-                MidsContext.Config.LastFileName = LastFileName;
+                MidsContext.Config.LastFileName = fileName;
+                LastFileName = fileName;
             }
 
             FileModified = false;
@@ -1741,7 +1740,7 @@ namespace Mids_Reborn.Forms
             pnlGFX.Refresh();
         }
 
-        private bool doSave()
+        private bool DoSave()
         {
             if (string.IsNullOrEmpty(LastFileName))
             {
@@ -1757,6 +1756,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
             if (!CharacterBuildFile.Generate(LastFileName)) return false;
+            MidsContext.Config.LastFileName = LastFileName;
             FileModified = false;
             SetTitleBar();
             return true;
@@ -1765,7 +1765,7 @@ namespace Mids_Reborn.Forms
         private bool DoSaveAs()
         {
             FloatTop(false);
-            var saveFile = string.Empty;
+            string saveFile;
             if (!string.IsNullOrWhiteSpace(LastFileName))
             {
                 var fileInfo = new FileInfo(LastFileName);
@@ -5421,7 +5421,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var str1 = string.Empty;
             if (MainModule.MidsController.Toon != null & !ignoreBuildSource)
             {
-                if (LastFileName != string.Empty)
+                if (!string.IsNullOrWhiteSpace(LastFileName))
                 {
                     var fileInfo = new FileInfo(LastFileName);
                     var fileName = fileInfo.Name.Length > 255 ? "Build" : fileInfo.Name;
@@ -6129,9 +6129,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void tsImportShortCode_Click(object? sender, EventArgs e)
+        private async void tsImportShortCode_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!shortInput.OK) return;
+            var shortCode = shortInput.Text;
+            var options = new RestClientOptions("https://mids.app")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var response = await client.GetJsonAsync<ImportModel>($"build/{shortCode}");
+            if (response != null)
+            {
+                DoLoadFromSchema(response);
+            }
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)
@@ -6237,7 +6249,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFileSave_Click(object sender, EventArgs e)
         {
-            doSave();
+            DoSave();
         }
 
         private void tsFileSaveAs_Click(object sender, EventArgs e)
