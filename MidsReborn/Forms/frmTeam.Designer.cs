@@ -68,8 +68,6 @@ namespace Mids_Reborn.Forms
             tbTotalTeam = new TextBox();
             btnSave = new Controls.ImageButtonEx();
             btnCancel = new Controls.ImageButtonEx();
-            openFileDialog1 = new OpenFileDialog();
-            saveFileDialog1 = new SaveFileDialog();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)udWidow).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udSoldier).BeginInit();
@@ -666,10 +664,6 @@ namespace Mids_Reborn.Forms
             btnCancel.UseAlt = false;
             btnCancel.Click += btnCancel_Click;
             // 
-            // openFileDialog1
-            // 
-            openFileDialog1.FileName = "openFileDialog1";
-            // 
             // FrmTeam
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -748,7 +742,5 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.TextBox tbTotalTeam;
         private Controls.ImageButtonEx btnSave;
         private Controls.ImageButtonEx btnCancel;
-        private OpenFileDialog openFileDialog1;
-        private SaveFileDialog saveFileDialog1;
     }
 }
