@@ -43,7 +43,8 @@ namespace Mids_Reborn.Forms
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
-            var html = "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-image: url('http://appassets.mrb/images/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: 100%;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
+            var html =
+                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-color: #000;\r\n  background-image: url('http://appassets.mrb/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: auto 100%;\r\n  background-position: center;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
             webView21.CoreWebView2.NavigateToString(html);
