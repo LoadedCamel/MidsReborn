@@ -523,6 +523,7 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
+                WinApi.AnimateWindow(Handle, 1200, WinApi.AnimationFlags.Activate | WinApi.AnimationFlags.Blend);
                 Show();
                 Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
