@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
-using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
-using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
-using MRBResourceLib;
-using static Mids_Reborn.Core.Stats;
 
 namespace Mids_Reborn.Forms
 {
