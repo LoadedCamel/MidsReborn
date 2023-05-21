@@ -3117,6 +3117,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void llAncillary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             if (Item.ItemState == ListLabelV3.LlItemState.Heading)
             {
                 return;
@@ -3158,6 +3163,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void llPool0_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             if (Button == MouseButtons.Left)
             {
                 PowerPicked(Enums.PowersetType.Pool0, Item.NIdPower);
@@ -3165,7 +3175,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             else
             {
                 if (Button != MouseButtons.Right)
+                {
                     return;
+                }
+
                 Info_Power(Item.NIdPower, -1, false, true);
             }
 
@@ -3187,6 +3200,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void llPool1_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             if (Button == MouseButtons.Left)
             {
                 PowerPicked(Enums.PowersetType.Pool1, Item.NIdPower);
@@ -3194,7 +3212,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             else
             {
                 if (Button != MouseButtons.Right)
+                {
                     return;
+                }
+
                 Info_Power(Item.NIdPower, -1, false, true);
             }
 
@@ -3216,6 +3237,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void llPool2_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             if (Button == MouseButtons.Left)
             {
                 PowerPicked(Enums.PowersetType.Pool2, Item.NIdPower);
@@ -3223,7 +3249,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             else
             {
                 if (Button != MouseButtons.Right)
+                {
                     return;
+                }
+
                 Info_Power(Item.NIdPower, -1, false, true);
             }
 
@@ -3245,6 +3274,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void llPool3_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             if (Button == MouseButtons.Left)
             {
                 PowerPicked(Enums.PowersetType.Pool3, Item.NIdPower);
@@ -3252,7 +3286,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             else
             {
                 if (Button != MouseButtons.Right)
+                {
                     return;
+                }
+
                 Info_Power(Item.NIdPower, -1, false, true);
             }
 
@@ -3275,7 +3312,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void llPrimary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Item.ItemState == ListLabelV3.LlItemState.Heading)
+            {
                 return;
+            }
+
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             switch (Button)
             {
                 case MouseButtons.Left:
@@ -3307,7 +3352,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void llSecondary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Item.ItemState == ListLabelV3.LlItemState.Heading)
+            {
                 return;
+            }
+
+            if (MidsContext.EnhCheckMode)
+            {
+                return;
+            }
+
             switch (Button)
             {
                 case MouseButtons.Left:
