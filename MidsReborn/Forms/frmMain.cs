@@ -599,11 +599,13 @@ namespace Mids_Reborn.Forms
         {
             if (MidsContext.Character != null && MidsContext.Character.IsHero())
             {
-                StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
+                //StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
+                StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
             }
             else
             {
-                StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.White);
+                //StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
+                StylizeWindow(Handle, Color.FromArgb(100, 0, 0), Color.FromArgb(100, 0, 0), Color.WhiteSmoke);
             }
             var imageButtonExControls = Helpers.GetControlOfType<ImageButtonEx>(Controls);
             foreach (var ibEx in imageButtonExControls)
