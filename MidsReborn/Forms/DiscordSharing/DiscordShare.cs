@@ -158,7 +158,7 @@ namespace Mids_Reborn.Forms.DiscordSharing
                     {
                         await _dataStore.Repsert(_oAuth);
                         await _dataStore.Repsert(_discordUser);
-                        if (MidsContext.Config != null) MidsContext.Config.Authorized = true;
+                        MidsContext.Config.Authorized = true;
                         SetTabPage(1);
                     }
                     else

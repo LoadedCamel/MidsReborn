@@ -47,8 +47,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             myEntity.PAdd();
             PS_FillList();
-            lvPower.Items[lvPower.Items.Count - 1].Selected = true;
-            lvPower.Items[lvPower.Items.Count - 1].EnsureVisible();
+            lvPower.Items[^1].Selected = true;
+            lvPower.Items[^1].EnsureVisible();
         }
 
         private void btnPDelete_Click(object sender, EventArgs e)
@@ -109,8 +109,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             myEntity.UGAdd();
             UG_FillList();
-            lvUpgrade.Items[lvUpgrade.Items.Count - 1].Selected = true;
-            lvUpgrade.Items[lvUpgrade.Items.Count - 1].EnsureVisible();
+            lvUpgrade.Items[^1].Selected = true;
+            lvUpgrade.Items[^1].EnsureVisible();
         }
 
         private void btnUGDelete_Click(object sender, EventArgs e)
@@ -351,7 +351,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index <= num; ++index)
                 {
                     lvPSSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvPSSet.Items[lvPSSet.Items.Count - 1].Tag =
+                    lvPSSet.Items[^1].Tag =
                         DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
 
@@ -492,7 +492,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index <= num; ++index)
                 {
                     lvUGSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvUGSet.Items[lvUGSet.Items.Count - 1].Tag =
+                    lvUGSet.Items[^1].Tag =
                         DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
 

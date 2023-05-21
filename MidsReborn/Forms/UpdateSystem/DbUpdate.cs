@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
 using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.UpdateSystem

@@ -35,8 +35,6 @@ using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
-using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
-using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Mids_Reborn.Forms
@@ -94,8 +92,6 @@ namespace Mids_Reborn.Forms
         private const string UriScheme = "mrb";
         private frmInitializing? _frmInitializing;
         private frmBusy? _frmBusy;
-        internal OpenFileDialog? DlgOpen;
-        internal SaveFileDialog? DlgSave;
         private bool _exportDiscordInProgress;
         private bool _loading;
         private bool _gfxDrawing;
@@ -157,7 +153,6 @@ namespace Mids_Reborn.Forms
             EnhancingPower = -1;
             EnhPickerActive = false;
             PickerHID = -1;
-            LastFileName = string.Empty;
             FileModified = false;
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -398,15 +393,11 @@ namespace Mids_Reborn.Forms
             {
                 using var iFrm = new frmInitializing();
                 _frmInitializing = iFrm;
+                _frmInitializing.LoadingStarted += FrmInitializingOnLoadingStarted;
                 _frmInitializing.Show();
-                switch (MidsContext.Config.FirstRun)
+                while (!_frmInitializing.LoadingComplete)
                 {
-                    case true:
-                        MainModule.MidsController.SelectDatabase(_frmInitializing);
-                        break;
-                    default:
-                        MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
-                        break;
+                    Application.DoEvents();
                 }
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
@@ -531,10 +522,8 @@ namespace Mids_Reborn.Forms
                     false => ImageButtonEx.States.ToggledOff
                 };
 
-                Show();
-                //_frmInitializing?.Hide();
-                Task.Delay(8000);
                 _frmInitializing?.Close();
+                Show();
                 Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
@@ -555,8 +544,6 @@ namespace Mids_Reborn.Forms
                 MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
                 if (this.IsInDesignMode())
                     return;
-                /*if (MidsContext.Config.CheckForUpdates)
-                    clsXMLUpdate.CheckUpdate();*/
             }
             catch (Exception ex)
             {
@@ -569,6 +556,19 @@ namespace Mids_Reborn.Forms
             _loading = false;
             MidsContext.Config.FirstRun = false;
             MidsContext.Config.SaveConfig();
+        }
+
+        private void FrmInitializingOnLoadingStarted(object? sender, EventArgs e)
+        {
+            switch (MidsContext.Config.FirstRun)
+            {
+                case true:
+                    MainModule.MidsController.SelectDefaultDatabase(_frmInitializing);
+                    break;
+                default:
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
+                    break;
+            }
         }
 
         private async Task<bool> RunSchemaCommands(string url)
@@ -634,7 +634,6 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon == null)
                 return;
 
-            if (MidsContext.Config == null) return;
             switch (ibModeEx.ToggleState)
             {
                 case ImageButtonEx.States.ToggledOff:
@@ -663,7 +662,6 @@ namespace Mids_Reborn.Forms
 
         private void UpdateModeInfo()
         {
-            if (MidsContext.Config == null) return;
             switch (MidsContext.Config.BuildMode)
             {
                 case Enums.dmModes.LevelUp:
@@ -1177,7 +1175,7 @@ namespace Mids_Reborn.Forms
                 case DialogResult.Cancel:
                     return true;
                 case DialogResult.Yes:
-                    num = doSave() ? 1 : 0;
+                    num = DoSave() ? 1 : 0;
                     break;
                 default:
                     num = 1;
@@ -1434,26 +1432,26 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
+                    drawing.bxBuffer.Graphics?.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
                 if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) | (slot.Level >= MidsContext.Config.ForceLevel) | ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
                 {
                     rectangle2.Inflate(1, 1);
-                    drawing.bxBuffer.Graphics.FillEllipse(solidBrush, rectangle2);
+                    drawing.bxBuffer.Graphics?.FillEllipse(solidBrush, rectangle2);
                 }
 
                 if (!((myDataView == null) | (i9Slot1 == null) | (i9Slot2 == null)))
                 {
-                    myDataView.FlipStage(i, Enh1, Enh2, num2, powerEntry.NIDPower, i9Slot1.Grade, i9Slot2.Grade);
+                    myDataView?.FlipStage(i, Enh1, Enh2, num2, powerEntry.NIDPower, i9Slot1.Grade, i9Slot2.Grade);
                 }
             }
 
             rectangle1 = new Rectangle(point1.X - 1, point1.Y - 1, drawing.SzPower.Width + 1,
                 drawing.szSlot.Height + 1);
             drawing.Refresh(drawing.ScaleDown(rectangle1));
-            if (FlipSlotState[FlipSlotState.Length - 1] >= FlipSteps)
+            if (FlipSlotState[^1] >= FlipSteps)
                 EndFlip();
         }
 
@@ -1476,17 +1474,8 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
-            // MidsContext.Character?.ResetLevel();
-             PowerModified(false);
-            // UpdateControls(true);
-            // SetTitleBar();
-            //Application.DoEvents();
-            // GetBestDamageValues();
-            // UpdateColors();
-            // DoRedraw();
-            // FloatUpdate(true);
-            // Debug.WriteLine("Complete");
+            myDataView?.Clear();
+            PowerModified(false);
             return ret;
         }
 
@@ -1498,10 +1487,10 @@ namespace Mids_Reborn.Forms
             }
             DataViewLocked = false;
             NewToon(true, true);
-            LastFileName = fileName;
             if (CharacterBuildFile.Load(fileName))
             {
-                MidsContext.Config.LastFileName = LastFileName;
+                MidsContext.Config.LastFileName = fileName;
+                LastFileName = fileName;
             }
 
             FileModified = false;
@@ -1518,7 +1507,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
+            myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
             UpdateControls(true);
@@ -1549,14 +1538,14 @@ namespace Mids_Reborn.Forms
             {
                 NewToon();
                 LastFileName = "";
-                if (MidsContext.Config != null) MidsContext.Config.LastFileName = "";
+                MidsContext.Config.LastFileName = "";
             }
             else
             {
                 LastFileName = fName;
                 if (!fName.EndsWith("mids_build.mxd"))
                 {
-                    if (MidsContext.Config != null) MidsContext.Config.LastFileName = fName;
+                    MidsContext.Config.LastFileName = fName;
                 }
             }
 
@@ -1574,7 +1563,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
+            myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
             UpdateControls(true);
@@ -1753,7 +1742,7 @@ namespace Mids_Reborn.Forms
             pnlGFX.Refresh();
         }
 
-        private bool doSave()
+        private bool DoSave()
         {
             if (string.IsNullOrEmpty(LastFileName))
             {
@@ -1769,6 +1758,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
             if (!CharacterBuildFile.Generate(LastFileName)) return false;
+            MidsContext.Config.LastFileName = LastFileName;
             FileModified = false;
             SetTitleBar();
             return true;
@@ -1777,7 +1767,7 @@ namespace Mids_Reborn.Forms
         private bool DoSaveAs()
         {
             FloatTop(false);
-            var saveFile = string.Empty;
+            string saveFile;
             if (!string.IsNullOrWhiteSpace(LastFileName))
             {
                 var fileInfo = new FileInfo(LastFileName);
@@ -2797,42 +2787,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibPopupEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.DisableShowPopup = ibPopupEx.ToggleState switch
             {
-                MidsContext.Config.DisableShowPopup = ibPopupEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => true,
-                    ImageButtonEx.States.ToggledOn => false,
-                    _ => MidsContext.Config.DisableShowPopup
-                };
-            }
+                ImageButtonEx.States.ToggledOff => true,
+                ImageButtonEx.States.ToggledOn => false,
+                _ => MidsContext.Config.DisableShowPopup
+            };
         }
 
         private void ibPvXEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.Inc.DisablePvE = ibPvXEx.ToggleState switch
             {
-                MidsContext.Config.Inc.DisablePvE = ibPvXEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => false,
-                    ImageButtonEx.States.ToggledOn => true,
-                    _ => MidsContext.Config.Inc.DisablePvE
-                };
-            }
+                ImageButtonEx.States.ToggledOff => false,
+                ImageButtonEx.States.ToggledOn => true,
+                _ => MidsContext.Config.Inc.DisablePvE
+            };
+
             RefreshInfo();
         }
 
         private void ibRecipeEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.PopupRecipes = ibRecipeEx.ToggleState switch
             {
-                MidsContext.Config.PopupRecipes = ibRecipeEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => false,
-                    ImageButtonEx.States.ToggledOn => true,
-                    _ => MidsContext.Config.PopupRecipes
-                };
-            }
+                ImageButtonEx.States.ToggledOff => false,
+                ImageButtonEx.States.ToggledOn => true,
+                _ => MidsContext.Config.PopupRecipes
+            };
         }
 
         private void ibSetsEx_OnClick(object? sender, EventArgs e)
@@ -2849,10 +2831,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibSlotInfoEx_Onclick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowSlotsLeft = ibSlotInfoEx.ToggleState == ImageButtonEx.States.ToggledOff;
-            }
+            MidsContext.Config.ShowSlotsLeft = ibSlotInfoEx.ToggleState == ImageButtonEx.States.ToggledOff;
         }
 
         private void ibTotalsEx_OnClick(object? sender, EventArgs e)
@@ -3476,7 +3455,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null) return;
             if (EnemyRelativeToolStripComboBox.ComboBox == null) return;
             MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
             RefreshInfo();
@@ -3484,7 +3462,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibDynMode_Click(object? sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config == null) return;
+            if (MainModule.MidsController.Toon == null) return;
             if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp && !ibDynMode.Lock)
             {
                 ibDynMode.Lock = true;
@@ -3498,15 +3476,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             UpdateDmBuffer();
         }
-
-        // private void pbDynMode_Paint(object sender, PaintEventArgs e)
-        // {
-        //     if (dmBuffer == null)
-        //         UpdateDmBuffer();
-        //     if (dmBuffer == null)
-        //         return;
-        //     e.Graphics.DrawImage(dmBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
-        // }
 
         private void pnlGFX_DragDrop(object sender, DragEventArgs e)
         {
@@ -3905,7 +3874,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                         {
-                            if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
+                            if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -3919,7 +3888,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                     return;
                                 }
                             }
-                            else if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                            else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -3953,7 +3922,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                         }
 
-                        if (MidsContext.Config != null && (e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
+                        if ((e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
@@ -4136,8 +4105,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var (result, remember) = frmOptionListDlg.ShowWithOptions(true, defaultOpt ?? 1, descript, options);
             dragdropScenarioAction[index] = (short)result;
             if (remember != true) return remember;
-            if (MidsContext.Config != null)
-                MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
+            MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
             return remember;
         }
 
@@ -5455,7 +5423,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var str1 = string.Empty;
             if (MainModule.MidsController.Toon != null & !ignoreBuildSource)
             {
-                if (LastFileName != string.Empty)
+                if (!string.IsNullOrWhiteSpace(LastFileName))
                 {
                     var fileInfo = new FileInfo(LastFileName);
                     var fileName = fileInfo.Name.Length > 255 ? "Build" : fileInfo.Name;
@@ -6163,9 +6131,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void tsImportShortCode_Click(object? sender, EventArgs e)
+        private async void tsImportShortCode_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!shortInput.OK) return;
+            var shortCode = shortInput.Text;
+            var options = new RestClientOptions("https://mids.app")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var response = await client.GetJsonAsync<ImportModel>($"build/{shortCode}");
+            if (response != null)
+            {
+                DoLoadFromSchema(response);
+            }
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)
@@ -6271,7 +6251,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFileSave_Click(object sender, EventArgs e)
         {
-            doSave();
+            DoSave();
         }
 
         private void tsFileSaveAs_Click(object sender, EventArgs e)
@@ -6620,8 +6600,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-                MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
+            MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
             SetDamageMenuCheckMarks();
             DisplayFormatChanged();
         }
@@ -6633,7 +6612,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewDPS_New_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null) MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
+            MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
             SetDamageMenuCheckMarks();
             DisplayFormatChanged();
         }
@@ -6645,44 +6624,32 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewIOLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.I9.HideIOLevels = !MidsContext.Config.I9.HideIOLevels;
-                tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
-            }
+            MidsContext.Config.I9.HideIOLevels = !MidsContext.Config.I9.HideIOLevels;
+            tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
 
             DoRedraw();
         }
 
         private void tsViewSOLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowSoLevels = !MidsContext.Config.ShowSoLevels;
-                tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
-            }
-
+            MidsContext.Config.ShowSoLevels = !MidsContext.Config.ShowSoLevels;
+            tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
+            
             DoRedraw();
         }
 
         private void tsViewRelative_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowEnhRel = !MidsContext.Config.ShowEnhRel;
-                tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
-            }
-
+            MidsContext.Config.ShowEnhRel = !MidsContext.Config.ShowEnhRel;
+            tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
+            
             DoRedraw();
         }
 
         private void tsViewRelativeAsSigns_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowRelSymbols = !MidsContext.Config.ShowRelSymbols;
-                tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
-            }
+            MidsContext.Config.ShowRelSymbols = !MidsContext.Config.ShowRelSymbols;
+            tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
 
             DoRedraw();
         }
@@ -6701,16 +6668,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewSlotLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.ShowSlotLevels = !MidsContext.Config.ShowSlotLevels;
+            tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
+            ibSlotLevelsEx.ToggleState = MidsContext.Config.ShowSlotLevels switch
             {
-                MidsContext.Config.ShowSlotLevels = !MidsContext.Config.ShowSlotLevels;
-                tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
-                ibSlotLevelsEx.ToggleState = MidsContext.Config.ShowSlotLevels switch
-                {
-                    true => ImageButtonEx.States.ToggledOn,
-                    false => ImageButtonEx.States.ToggledOff
-                };
-            }
+                true => ImageButtonEx.States.ToggledOn,
+                false => ImageButtonEx.States.ToggledOff
+            };
 
             DoRedraw();
         }
@@ -6999,7 +6963,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateDmBuffer()
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config == null || MidsContext.Character == null) return;
+            if (MainModule.MidsController.Toon == null || MidsContext.Character == null) return;
 
             Enums.ePowerState powerState;
             string? text;
@@ -7173,16 +7137,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var noPrimary = false;
             if (llPrimary.Items.Length == 0)
                 noPrimary = true;
-            else if (llPrimary.Items[llPrimary.Items.Length - 1].NIdSet != (MidsContext.Character.Powersets[0] == null ? -1 : MidsContext.Character.Powersets[0].nID))
+            else if (llPrimary.Items[^1].NIdSet != (MidsContext.Character.Powersets[0] == null ? -1 : MidsContext.Character.Powersets[0].nID))
                 noPrimary = true;
             if (llSecondary.Items.Length == 0)
                 noPrimary = true;
-            else if (llSecondary.Items[llSecondary.Items.Length - 1].NIdSet != (MidsContext.Character.Powersets[1] == null ? -1 : MidsContext.Character.Powersets[1].nID))
+            else if (llSecondary.Items[^1].NIdSet != (MidsContext.Character.Powersets[1] == null ? -1 : MidsContext.Character.Powersets[1].nID))
                 noPrimary = true;
             var noAncillary = false;
             if (llAncillary.Items.Length == 0 || MidsContext.Character.Powersets[7] == null)
                 noAncillary = true;
-            else if (llAncillary.Items[llAncillary.Items.Length - 1].NIdSet != MidsContext.Character.Powersets[7].nID)
+            else if (llAncillary.Items[^1].NIdSet != MidsContext.Character.Powersets[7].nID)
                 noAncillary = true;
             if (noPrimary)
             {

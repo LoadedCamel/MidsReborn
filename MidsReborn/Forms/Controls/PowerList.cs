@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -12,8 +11,6 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
-using ComboBoxItem = System.Windows.Controls.ComboBoxItem;
-using VarEnum = System.Runtime.InteropServices.VarEnum;
 
 namespace Mids_Reborn.Forms.Controls
 {

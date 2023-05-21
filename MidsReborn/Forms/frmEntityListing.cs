@@ -48,7 +48,7 @@ namespace Mids_Reborn.Forms
             var summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1];
             Array.Copy(database.Entities, summonedEntityArray, DatabaseAPI.Database.Entities.Length);
             database.Entities = summonedEntityArray;
-            DatabaseAPI.Database.Entities[DatabaseAPI.Database.Entities.Length - 1] = new SummonedEntity(frmEntityEdit.myEntity, DatabaseAPI.Database.Entities.Length - 1);
+            DatabaseAPI.Database.Entities[^1] = new SummonedEntity(frmEntityEdit.myEntity, DatabaseAPI.Database.Entities.Length - 1);
             ListAddItem(DatabaseAPI.Database.Entities.Length - 1);
         }
 
@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms
             var summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1];
             Array.Copy(database.Entities, summonedEntityArray, DatabaseAPI.Database.Entities.Length);
             database.Entities = summonedEntityArray;
-            DatabaseAPI.Database.Entities[DatabaseAPI.Database.Entities.Length - 1] =
+            DatabaseAPI.Database.Entities[^1] =
                 new SummonedEntity(frmEntityEdit.myEntity);
             ListAddItem(DatabaseAPI.Database.Entities.Length - 1);
         }
@@ -216,8 +216,8 @@ namespace Mids_Reborn.Forms
                 Enum.GetName(DatabaseAPI.Database.Entities[Index].EntityType.GetType(),
                     DatabaseAPI.Database.Entities[Index].EntityType)
             }, Index));
-            lvEntity.Items[lvEntity.Items.Count - 1].Selected = true;
-            lvEntity.Items[lvEntity.Items.Count - 1].EnsureVisible();
+            lvEntity.Items[^1].Selected = true;
+            lvEntity.Items[^1].EnsureVisible();
         }
 
         private void ListUpdateItem(int Index)

@@ -23,7 +23,7 @@ namespace Mids_Reborn.Forms
         private void frmTeam_OnLoad(object? sender, EventArgs e)
         {
             Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
-            
+
             var charVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
             btnCancel.UseAlt = charVillain;
             btnSave.UseAlt = charVillain;
@@ -48,7 +48,7 @@ namespace Mids_Reborn.Forms
                     udSentGuard.Enabled = false;
                     break;
             }
-            if (MidsContext.Config is {TeamMembers.Count: > 0})
+            if (MidsContext.Config is { TeamMembers.Count: > 0 })
             {
                 foreach (var mVp in MidsContext.Config.TeamMembers)
                 {

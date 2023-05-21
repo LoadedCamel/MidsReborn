@@ -40,26 +40,26 @@ namespace Mids_Reborn.Core.Base.Display
             {
                 Content ??= Array.Empty<StringValue>();
                 Array.Resize(ref Content, Content.Length + 1);
-                Content[Content.Length - 1].Text = iText;
-                Content[Content.Length - 1].tColor = iColor;
-                Content[Content.Length - 1].tSize = iSize;
-                Content[Content.Length - 1].tFormat = iFormat;
-                Content[Content.Length - 1].tIndent = iIndent;
-                Content[Content.Length - 1].TextColumn = "";
-                Content[Content.Length - 1].tColorColumn = iColor;
+                Content[^1].Text = iText;
+                Content[^1].tColor = iColor;
+                Content[^1].tSize = iSize;
+                Content[^1].tFormat = iFormat;
+                Content[^1].tIndent = iIndent;
+                Content[^1].TextColumn = "";
+                Content[^1].tColorColumn = iColor;
             }
 
             public void Add(string iText, Color iColor, string iColumnText, Color iColumnColor, float iSize = 1f, FontStyle iFormat = FontStyle.Bold, int iIndent = 0)
             {
                 Content ??= Array.Empty<StringValue>();
                 Array.Resize(ref Content, Content.Length + 1);
-                Content[Content.Length - 1].Text = iText;
-                Content[Content.Length - 1].tColor = iColor;
-                Content[Content.Length - 1].tSize = iSize;
-                Content[Content.Length - 1].tFormat = iFormat;
-                Content[Content.Length - 1].tIndent = iIndent;
-                Content[Content.Length - 1].TextColumn = iColumnText;
-                Content[Content.Length - 1].tColorColumn = iColumnColor;
+                Content[^1].Text = iText;
+                Content[^1].tColor = iColor;
+                Content[^1].tSize = iSize;
+                Content[^1].tFormat = iFormat;
+                Content[^1].tIndent = iIndent;
+                Content[^1].TextColumn = iColumnText;
+                Content[^1].tColorColumn = iColumnColor;
             }
         }
 
@@ -101,7 +101,7 @@ namespace Mids_Reborn.Core.Base.Display
                     Content = Array.Empty<StringValue>()
                 };
                 Array.Resize(ref Sections, Sections.Length + 1);
-                Sections[Sections.Length - 1] = section;
+                Sections[^1] = section;
                 return Sections.Length - 1;
             }
 

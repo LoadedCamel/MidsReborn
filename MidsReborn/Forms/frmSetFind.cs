@@ -279,7 +279,7 @@ namespace Mids_Reborn.Forms
                     ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)}"
                     : "Special"
             }, nIDSet));
-            lvSet.Items[lvSet.Items.Count - 1].Tag = nIDSet;
+            lvSet.Items[^1].Tag = nIDSet;
         }
 
         private void FillEffectList()

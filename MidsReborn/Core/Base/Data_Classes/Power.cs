@@ -1036,8 +1036,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             for (var i = 0; i < weightedEffects.Count; i++)
             {
-                if (MidsContext.Config == null ||
-                    (MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
+                if ((MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
                     MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvE ||
                     !MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvP)
                 {
@@ -1174,7 +1173,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var effectsWeights = new int[Effects.Length];
             for (var index1 = 0; index1 < Effects.Length; index1++)
             {
-                if (MidsContext.Config != null && (MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
+                if ((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
                 {
                     effectsWeights[index1] = (int) (Effects[index1].EffectClass + 1);
                     if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
@@ -2126,7 +2125,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
                         Array.Resize(ref array, array.Length + 1);
-                        array[array.Length - 1] = index;
+                        array[^1] = index;
                     }
 
                     ++num1;
@@ -2186,7 +2185,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate && source.Effects[effectId].nSummon > -1)
                 {
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = effectId;
+                    array[^1] = effectId;
                 }
 
                 var num3 = num1 + 1;
@@ -2265,8 +2264,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         Array.Resize(ref array1, array1.Length + 1);
                         Array.Resize(ref array2, array2.Length + 1);
-                        array1[array1.Length - 1] = index;
-                        array2[array2.Length - 1] = Effects[index].nSummon;
+                        array1[^1] = index;
+                        array2[^1] = Effects[index].nSummon;
                     }
 
                     num2 = Effects.Length;
@@ -2643,14 +2642,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             if (iReq.Contains(oldValue2))
                             {
                                 Array.Resize(ref requirement2.ClassNameNot, requirement2.ClassNameNot.Length + 1);
-                                requirement2.ClassNameNot[requirement2.ClassNameNot.Length - 1] =
+                                requirement2.ClassNameNot[^1] =
                                     DatabaseAPI.Database.Classes[index2].ClassName;
                                 iReq = iReq.Replace(oldValue2, "true");
                             }
                             else if (iReq.Contains(oldValue1))
                             {
                                 Array.Resize(ref requirement2.ClassName, requirement2.ClassName.Length + 1);
-                                requirement2.ClassName[requirement2.ClassName.Length - 1] =
+                                requirement2.ClassName[^1] =
                                     DatabaseAPI.Database.Classes[index2].ClassName;
                                 iReq = iReq.Replace(oldValue1, "true");
                             }

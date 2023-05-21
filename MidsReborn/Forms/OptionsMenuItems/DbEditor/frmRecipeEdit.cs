@@ -297,12 +297,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             Array.Resize(ref _tempRecipes[RecipeID()].Item, _tempRecipes[RecipeID()].Item.Length + 1);
             //_tempRecipes[RecipeID()].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(_tempRecipes[RecipeID()].Item, new Recipe.RecipeEntry[_tempRecipes[RecipeID()].Item.Length + 1]);
-            _tempRecipes[RecipeID()].Item[_tempRecipes[RecipeID()].Item.Length - 1] = new Recipe.RecipeEntry(_tempRecipes[RecipeID()]
-                    .Item[_tempRecipes[RecipeID()].Item.Length - 2]);
-            ++_tempRecipes[RecipeID()].Item[_tempRecipes[RecipeID()].Item.Length - 1].Level;
-            _tempRecipes[RecipeID()].Item[_tempRecipes[RecipeID()].Item.Length - 1]
+            _tempRecipes[RecipeID()].Item[^1] = new Recipe.RecipeEntry(_tempRecipes[RecipeID()]
+                    .Item[^2]);
+            ++_tempRecipes[RecipeID()].Item[^1].Level;
+            _tempRecipes[RecipeID()].Item[^1]
                 .CraftCost = GetCostByLevel(_tempRecipes[RecipeID()]
-                .Item[_tempRecipes[RecipeID()].Item.Length - 1].Level);
+                .Item[^1].Level);
             ShowRecipeInfo(RecipeID());
             lstItems.SelectedIndex = lstItems.Items.Count - 1;
         }
@@ -348,8 +348,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     : -1;
             }
             udStaticIndex.Value = rIndex;
-            lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
-            lvDPA.Items[lvDPA.Items.Count - 1].EnsureVisible();
+            lvDPA.Items[^1].Selected = true;
+            lvDPA.Items[^1].EnsureVisible();
             cbRarity.SelectedIndex = 0;
             cbEnh.SelectedIndex = _noEnhancementIdx;
             lblEnh.Visible = false;
@@ -401,7 +401,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnRunSeq_Click(object sender, EventArgs e)
         {
-            var enhIdx = _tempRecipes[_tempRecipes.Length - 1].EnhIdx;
+            var enhIdx = _tempRecipes[^1].EnhIdx;
             for (var index = enhIdx + 1; index < _tempEnhancements.Length; index++)
             {
                 if (_tempEnhancements[index].TypeID != Enums.eType.SetO) continue;
@@ -415,8 +415,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 AddListItem(_tempRecipes.Length - 1);
             }
 
-            lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
-            lvDPA.Items[lvDPA.Items.Count - 1].EnsureVisible();
+            lvDPA.Items[^1].Selected = true;
+            lvDPA.Items[^1].EnsureVisible();
             cbEnh.Select();
         }
 
@@ -614,14 +614,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (_tempRecipes[rId].Item.Length < 1) return;
             if (_tempRecipes[rId].Item.Length > 53) return;
             
-            var num = _tempRecipes[rId].Item[_tempRecipes[rId].Item.Length - 1].Level + 1;
+            var num = _tempRecipes[rId].Item[^1].Level + 1;
             if (num >= nMax) return;
 
             var listItems = _tempRecipes[rId].Item.ToList();
             for (var index = num; index <= nMax; index++)
             {
-                listItems.Add(new Recipe.RecipeEntry(listItems[listItems.Count - 1]) {Level = index});
-                listItems[listItems.Count - 1].CraftCost = GetCostByLevel(index);
+                listItems.Add(new Recipe.RecipeEntry(listItems[^1]) {Level = index});
+                listItems[^1].CraftCost = GetCostByLevel(index);
             }
 
             _tempRecipes[rId].Item = listItems.ToArray();

@@ -2749,7 +2749,7 @@ namespace Mids_Reborn
                     sContent = new PopUp.StringValue[section.Content.Length + 1];
                     Array.Copy(section.Content, sContent, section.Content.Length);
                     section.Content = sContent;
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
+                    section.Content[^1] = BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
                 }
 
                 if (nDebuff[index] > 0.0)
@@ -2758,7 +2758,7 @@ namespace Mids_Reborn
                     sContent = new PopUp.StringValue[section.Content.Length + 1];
                     Array.Copy(section.Content, sContent, section.Content.Length);
                     section.Content = sContent;
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nDebuff, schedDebuff, Enum.GetName(eEnhance.GetType(), index) + " Debuff", afterED2);
+                    section.Content[^1] = BuildEDItem(index, nDebuff, schedDebuff, Enum.GetName(eEnhance.GetType(), index) + " Debuff", afterED2);
                 }
 
                 if (!(nAny[index] > 0.0))
@@ -2770,7 +2770,7 @@ namespace Mids_Reborn
                 sContent = new PopUp.StringValue[section.Content.Length + 1];
                 Array.Copy(section.Content, sContent, section.Content.Length);
                 section.Content = sContent;
-                section.Content[section.Content.Length - 1] = BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index), afterED3);
+                section.Content[^1] = BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index), afterED3);
             }
 
             for (var index = 0; index <= nMez.Length - 1; ++index)
@@ -2786,7 +2786,7 @@ namespace Mids_Reborn
                 section.Content = sContent;
                 if (section.Content != null)
                 {
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
+                    section.Content[^1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
                 }
             }
 

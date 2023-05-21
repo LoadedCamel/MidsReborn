@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -1029,7 +1028,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Elusivity",
                     Filter = e =>
-                        (MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE) &
+                        (MidsContext.Config.Inc.DisablePvE) &
                         e.EffectType == Enums.eEffectType.Elusivity,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 }

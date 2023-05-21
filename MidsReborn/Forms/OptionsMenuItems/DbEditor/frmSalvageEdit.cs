@@ -44,10 +44,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var salvageArray = Array.Empty<Salvage>();
             Array.Copy(database.Salvage, salvageArray, database.Salvage.Length + 1);
             database.Salvage = salvageArray;
-            DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
+            DatabaseAPI.Database.Salvage[^1] = new Salvage();
             AddListItem(DatabaseAPI.Database.Salvage.Length - 1);
-            lvSalvage.Items[lvSalvage.Items.Count - 1].Selected = true;
-            lvSalvage.Items[lvSalvage.Items.Count - 1].EnsureVisible();
+            lvSalvage.Items[^1].Selected = true;
+            lvSalvage.Items[^1].EnsureVisible();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -101,8 +101,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 var salvageArray = Array.Empty<Salvage>();
                 Array.Copy(database.Salvage, salvageArray, database.Salvage.Length + 1);
                 database.Salvage = salvageArray;
-                DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
-                var salvage = DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1];
+                DatabaseAPI.Database.Salvage[^1] = new Salvage();
+                var salvage = DatabaseAPI.Database.Salvage[^1];
                 if (!strArray2[0].StartsWith("S") & (strArray2[0].Length > 2))
                     strArray2[0] = strArray2[0].Substring(1);
                 salvage.InternalName = strArray2[0];

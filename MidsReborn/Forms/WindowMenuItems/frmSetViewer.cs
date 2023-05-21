@@ -1352,7 +1352,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 if (barValue < 0.75 * caps[i]) return caps[i];
             }
 
-            return caps[caps.Length - 1];
+            return caps[^1];
         }
 
         private void DrawBars()
