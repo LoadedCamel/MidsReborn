@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Forms.Controls;
+using static Mids_Reborn.Core.Utils.WinApi;
 
 namespace Mids_Reborn.Forms
 {
@@ -31,10 +32,16 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
             Load += FrmInitializing_Load;
             Shown += FrmInitializing_Shown;
+            Closing += FrmInitializing_Closing;
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;
             Activated += FrmInitializing_Activated;
+        }
+
+        private void FrmInitializing_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AnimateWindow(Handle, 500, AnimationFlags.Activate | AnimationFlags.Blend | AnimationFlags.Hide);
         }
 
         private void FrmInitializing_Shown(object? sender, EventArgs e)
