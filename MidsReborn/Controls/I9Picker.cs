@@ -69,6 +69,15 @@ namespace Mids_Reborn.Controls
 
         private Rectangle ButtonRectangle;
 
+        private enum ActiveZone
+        {
+            None,
+            EnhType,
+            Enhancement,
+            EnhancementSet,
+            CloseButton
+        }
+
         public I9Picker()
         {
             Load += I9PickerLoad;
@@ -93,7 +102,10 @@ namespace Mids_Reborn.Controls
             _cHighlight = Color.SlateBlue;
             _cSelected = Color.BlueViolet;
             _nPowerIdx = -1;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl |
+                ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
+                ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
         }
 
@@ -218,7 +230,8 @@ namespace Mids_Reborn.Controls
             _myBx.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
-        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
+        public override Font Font =>
+            new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         private void FullDraw(Point? mouseLocation = null)
         {
@@ -240,6 +253,20 @@ namespace Mids_Reborn.Controls
             }
 
             DrawLayerImages();
+
+            /*var zoneNames = Enum.GetValues(typeof(ActiveZone)).Cast<ActiveZone>().ToList();
+            var zoneColors = new[] {Color.LawnGreen, Color.Aqua, Color.OrangeRed, Color.Yellow};
+            var k = 0;
+            foreach (var z in zoneNames)
+            {
+                if (z == ActiveZone.None)
+                {
+                    continue;
+                }
+
+                _myBx.Graphics.DrawPath(new Pen(zoneColors[k++]), GetZonePath(z));
+            }*/
+
             var graphics = CreateGraphics();
             var clipRect = new Rectangle(0, 0, Width, Height);
             I9PickerPaint(this, new PaintEventArgs(graphics, clipRect));
@@ -248,7 +275,7 @@ namespace Mids_Reborn.Controls
         private void DrawLayerLowest(Point mouseLocation)
         {
             _myBx.Graphics.Clear(BackColor);
-            
+
             DrawBorder();
             DrawHeaderBox(mouseLocation);
             DrawLevelBox();
@@ -269,7 +296,7 @@ namespace Mids_Reborn.Controls
             using var font = new Font(Font, FontStyle.Bold);
             using var brush = new SolidBrush(Color.White);
             var buttonTextBrush = new SolidBrush(Color.Gainsboro);
-            using var highlightBrush = new SolidBrush(Color.FromArgb(123, 104, 237));
+            using var highlightBrush = new SolidBrush(_cHighlight);
             using var pen = new Pen(ForeColor);
             using var buttonFont = new Font(Fonts.Family("Noto Sans"), 8f, FontStyle.Bold, GraphicsUnit.Pixel);
             Rectangle iRect = default;
@@ -278,13 +305,15 @@ namespace Mids_Reborn.Controls
             checked
             {
                 iRect.Width = _nSize * 5 + _nPad * 4;
-                iRect.Height = (int)Math.Round(font.GetHeight(_myBx.Graphics));
+                iRect.Height = (int) Math.Round(font.GetHeight(_myBx.Graphics));
                 _headerHeight = iRect.Height + _nPad;
                 var layoutRectangle = new RectangleF(iRect.X, iRect.Y, iRect.Width, iRect.Height);
                 _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
                 var buttonSize = layoutRectangle.Height - 4;
-                var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize, layoutRectangle.Y + 2);
-                ButtonRectangle = new Rectangle(new Point((int)Math.Round(buttonLoc.X), (int)Math.Round(buttonLoc.Y)), new Size((int)Math.Round(buttonSize), (int)Math.Round(buttonSize)));
+                var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize,
+                    layoutRectangle.Y + 2);
+                ButtonRectangle = new Rectangle(new Point((int) Math.Round(buttonLoc.X), (int) Math.Round(buttonLoc.Y)),
+                    new Size((int) Math.Round(buttonSize), (int) Math.Round(buttonSize)));
                 if (!MidsContext.Config.CloseEnhSelectPopupByMove)
                 {
                     var hoveredButton = PointInRectangle(mouseLocation, ButtonRectangle);
@@ -294,7 +323,8 @@ namespace Mids_Reborn.Controls
                     }
 
                     _myBx.Graphics.DrawRectangle(pen, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
-                    _myBx.Graphics.DrawString("X", buttonFont, hoveredButton ? brush : buttonTextBrush, buttonLoc.X + 2, buttonLoc.Y);
+                    _myBx.Graphics.DrawString("X", buttonFont, hoveredButton ? brush : buttonTextBrush, buttonLoc.X + 2,
+                        buttonLoc.Y);
                 }
 
                 if (_nPowerIdx <= -1)
@@ -302,7 +332,8 @@ namespace Mids_Reborn.Controls
                     return;
                 }
 
-                _myBx.Graphics.DrawString($"Enhancing: {DatabaseAPI.Database.Power[_nPowerIdx].DisplayName}", font, brush, layoutRectangle);
+                _myBx.Graphics.DrawString($"Enhancing: {DatabaseAPI.Database.Power[_nPowerIdx].DisplayName}", font,
+                    brush, layoutRectangle);
             }
         }
 
@@ -384,7 +415,8 @@ namespace Mids_Reborn.Controls
             layoutRectangle2.Height = iRect.Height - layoutRectangle.Height;
             _myBx.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             var fontScale = 1f;
-            var num2 = checked((int)Math.Round(_myBx.Graphics.MeasureString(_hoverTitle, Font, (int)Math.Round(layoutRectangle.Width * 10f)).Width));
+            var num2 = checked((int) Math.Round(_myBx.Graphics
+                .MeasureString(_hoverTitle, Font, (int) Math.Round(layoutRectangle.Width * 10f)).Width));
             if (num2 > layoutRectangle.Width - 10f)
             {
                 fontScale = Math.Max(0.5f, (layoutRectangle.Width - 10f) / num2);
@@ -416,27 +448,28 @@ namespace Mids_Reborn.Controls
             var rectBounds = GetRectBounds(0, 0);
             checked
             {
-                srcRect.X = (int)eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30, GraphicsUnit.Pixel, _hDraw.pImageAttributes);
+                srcRect.X = (int) eType * _nSize;
+                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30,
+                    GraphicsUnit.Pixel, _hDraw.pImageAttributes);
 
                 eType = Enums.eType.Normal;
                 rectBounds = GetRectBounds(1, 0);
-                srcRect.X = (int)eType * _nSize;
+                srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
                 eType = Enums.eType.InventO;
                 rectBounds = GetRectBounds(2, 0);
-                srcRect.X = (int)eType * _nSize;
+                srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
                 eType = Enums.eType.SpecialO;
                 rectBounds = GetRectBounds(3, 0);
-                srcRect.X = (int)eType * _nSize;
+                srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
                 eType = Enums.eType.SetO;
                 rectBounds = GetRectBounds(4, 0);
-                srcRect.X = (int)eType * _nSize;
+                srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
             }
         }
@@ -453,18 +486,19 @@ namespace Mids_Reborn.Controls
                         for (var i = Ui.NoGrades.Length - 1; i >= 1; i += -1)
                         {
                             var srcRect = new Rectangle(Ui.NoGrades[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(4, num), I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade((Enums.eType)1, (Enums.eEnhGrade)i)), GraphicsUnit.Pixel);
-                            _myBx.Graphics.DrawImage(I9Gfx.EnhGrades.Bitmap, GetRectBounds(4, num), srcRect, GraphicsUnit.Pixel);
+                            _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(4, num),
+                                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade((Enums.eType) 1, (Enums.eEnhGrade) i)),
+                                GraphicsUnit.Pixel);
+                            _myBx.Graphics.DrawImage(I9Gfx.EnhGrades.Bitmap, GetRectBounds(4, num), srcRect,
+                                GraphicsUnit.Pixel);
                             num++;
                         }
 
-                        var num2 = 0;
-                        var num3 = Ui.No.Length - 1;
-                        for (var i = num2; i <= num3; i++)
+                        for (var i = 0; i < Ui.No.Length; i++)
                         {
                             var grade = Ui.View.GradeId switch
                             {
-                                Enums.eEnhGrade.TrainingO => (Origin.Grade)0,
+                                Enums.eEnhGrade.TrainingO => (Origin.Grade) 0,
                                 Enums.eEnhGrade.DualO => Origin.Grade.DualO,
                                 Enums.eEnhGrade.SingleO => Origin.Grade.SingleO,
                                 _ => Origin.Grade.SingleO
@@ -481,7 +515,8 @@ namespace Mids_Reborn.Controls
                         for (var i = 0; i <= Ui.Io.Length - 1; i++)
                         {
                             var graphics = _myBx.Graphics;
-                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.Io[i], (Origin.Grade)4);
+                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.Io[i],
+                                (Origin.Grade) 4);
                         }
 
                         break;
@@ -491,13 +526,15 @@ namespace Mids_Reborn.Controls
                         for (var i = 1; i <= Ui.SpecialTypes.Length - 1; i++)
                         {
                             var srcRect2 = new Rectangle(Ui.SpecialTypes[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.EnhSpecials.Bitmap, GetRectBounds(4, i), srcRect2, GraphicsUnit.Pixel);
+                            _myBx.Graphics.DrawImage(I9Gfx.EnhSpecials.Bitmap, GetRectBounds(4, i), srcRect2,
+                                GraphicsUnit.Pixel);
                         }
 
                         for (var i = 0; i <= Ui.SpecialO.Length - 1; i++)
                         {
                             var graphics = _myBx.Graphics;
-                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.SpecialO[i], (Origin.Grade)3);
+                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.SpecialO[i],
+                                (Origin.Grade) 3);
                         }
 
                         break;
@@ -507,7 +544,8 @@ namespace Mids_Reborn.Controls
                         for (var i = 0; i <= Ui.SetTypes.Length - 1; i++)
                         {
                             var srcRect3 = new Rectangle(Ui.SetTypes[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, GetRectBounds(4, i + 1), srcRect3, GraphicsUnit.Pixel);
+                            _myBx.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, GetRectBounds(4, i + 1), srcRect3,
+                                GraphicsUnit.Pixel);
                         }
 
                         if (Ui.View.SetId > -1)
@@ -557,7 +595,7 @@ namespace Mids_Reborn.Controls
 
                 var imageAttributes = new ImageAttributes();
                 imageAttributes.SetColorMatrix(colorMatrix);
-                
+
                 return imageAttributes;
             }
         }
@@ -571,10 +609,13 @@ namespace Mids_Reborn.Controls
                          .Length - 1;
                      i++)
                 {
-                    var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i];
+                    var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                        .Enhancements[i];
                     var grey = _mySlotted.Any(slotted => enh == slotted);
                     var graphics = _myBx.Graphics;
-                    I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i], (Origin.Grade)5, GreyItem(grey));
+                    I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
+                        DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
+                        (Origin.Grade) 5, GreyItem(grey));
                 }
             }
         }
@@ -608,17 +649,21 @@ namespace Mids_Reborn.Controls
                     return false;
                 }
 
-                if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length)
+                if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                        .Enhancements.Length)
                 {
                     return false;
                 }
 
-                if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId & Ui.Initial.PickerId == index)
+                if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId &
+                    Ui.Initial.PickerId == index)
                 {
                     return false;
                 }
 
-                return _mySlotted.Any(t => DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index] == t);
+                return _mySlotted.Any(t =>
+                    DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                        .Enhancements[index] == t);
             }
         }
 
@@ -639,10 +684,12 @@ namespace Mids_Reborn.Controls
                 for (var i = 0; i < Ui.Sets[Ui.View.SetTypeId].Length; i++)
                 {
                     var srcRect = new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
-                    
+                    _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect,
+                        GraphicsUnit.Pixel);
+
                     srcRect = new Rectangle(Ui.Sets[Ui.View.SetTypeId][i] * _nSize, 0, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
+                    _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect,
+                        GraphicsUnit.Pixel);
                 }
             }
         }
@@ -660,7 +707,7 @@ namespace Mids_Reborn.Controls
         private void DrawHighlights()
         {
             DrawHighlight(_hoverCell.X, _hoverCell.Y);
-            DrawSelected((int)Ui.View.TabId, 0);
+            DrawSelected((int) Ui.View.TabId, 0);
             switch (Ui.View.TabId)
             {
                 case Enums.eType.SetO:
@@ -674,15 +721,15 @@ namespace Mids_Reborn.Controls
                 }
                 case Enums.eType.Normal:
                 {
-                    if ((int)Ui.View.GradeId > -1)
+                    if ((int) Ui.View.GradeId > -1)
                     {
-                        DrawSelected(4, Reverse((int)Ui.View.GradeId));
+                        DrawSelected(4, Reverse((int) Ui.View.GradeId));
                     }
 
                     break;
                 }
-                case Enums.eType.SpecialO when (int)Ui.View.SpecialId > -1:
-                    DrawSelected(4, (int)Ui.View.SpecialId);
+                case Enums.eType.SpecialO when (int) Ui.View.SpecialId > -1:
+                    DrawSelected(4, (int) Ui.View.SpecialId);
                     break;
             }
 
@@ -691,16 +738,88 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.SetTypeId == Ui.View.SetTypeId) & (Ui.Initial.SetId == Ui.View.SetId) & (Ui.Initial.GradeId == Ui.View.GradeId) & (Ui.Initial.SpecialId == Ui.View.SpecialId))
+            if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.SetTypeId == Ui.View.SetTypeId) &
+                (Ui.Initial.SetId == Ui.View.SetId) & (Ui.Initial.GradeId == Ui.View.GradeId) &
+                (Ui.Initial.SpecialId == Ui.View.SpecialId))
             {
                 DrawSelected(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
                 DrawBox(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
             }
-            else if (Ui.Initial.TabId == Ui.View.TabId && Ui.Initial.SetTypeId == Ui.View.SetTypeId && Ui.View.SetId < 0)
+            else if (Ui.Initial.TabId == Ui.View.TabId && Ui.Initial.SetTypeId == Ui.View.SetTypeId &&
+                     Ui.View.SetId < 0)
             {
                 DrawSelected(IndexToXy(Ui.Initial.SetId).X, IndexToXy(Ui.Initial.SetId).Y);
                 DrawBox(IndexToXy(Ui.Initial.SetId).X, IndexToXy(Ui.Initial.SetId).Y);
             }
+        }
+
+        private GraphicsPath RectangleToPath(Rectangle rect)
+        {
+            var gp = new GraphicsPath();
+            gp.AddRectangle(rect);
+
+            return gp;
+        }
+
+        private GraphicsPath? GetZonePath(ActiveZone zone)
+        {
+            // Enh types
+            var rectBounds = GetRectBounds(0, 0);
+            var rectBounds2 = GetRectBounds(4, 0);
+            var enhTypesPath = new GraphicsPath();
+            enhTypesPath.AddRectangle(new Rectangle(rectBounds.Left, rectBounds.Top,
+                rectBounds2.Right - rectBounds.Left, rectBounds.Bottom - rectBounds.Top));
+
+            // Enhancement set
+            rectBounds = GetRectBounds(4, 1);
+            rectBounds.Height = _nSize * _rows + _nPad * (_rows - 1);
+            var enhSetsPath = new GraphicsPath();
+            enhSetsPath.AddRectangle(rectBounds);
+
+            // Enhancements
+            const int enhIconSize = 30;
+            const int enhPerRow = 4;
+            var enhPath = new GraphicsPath();
+            var nbEnh = Ui.View.TabId switch
+            {
+                Enums.eType.Normal => Ui.No.Length,
+                Enums.eType.InventO => Ui.Io.Length,
+                Enums.eType.SpecialO => Ui.SpecialO.Length,
+                Enums.eType.SetO => Ui.SetO.Length,
+            };
+
+            var enhFullRows = (int)Math.Floor(nbEnh / (decimal)enhPerRow);
+            var enhBoxRect = new Rectangle(_nPad, _headerHeight + _nPad * 2 + _nSize, _nSize * 4 + _nPad * 3, _nSize * _rows + _nPad * (_rows - 1));
+            if (enhFullRows > 0)
+            {
+                var rectRows = enhBoxRect with
+                {
+                    Height = enhIconSize * enhFullRows + _nPad * (enhFullRows - 1)
+                };
+                enhPath.AddRectangle(rectRows);
+
+                if (nbEnh % enhPerRow > 0)
+                {
+                    enhPath.AddRectangle(new Rectangle(enhBoxRect.X, rectRows.Bottom, enhIconSize * (nbEnh % enhPerRow) + _nPad * (nbEnh % enhPerRow - 1), enhIconSize + _nPad));
+                }
+            }
+            else
+            {
+                enhPath.AddRectangle(enhBoxRect with
+                {
+                    Width = enhIconSize * (nbEnh % enhPerRow) + _nPad * (nbEnh % enhPerRow - 1),
+                    Height = enhIconSize + _nPad
+                });
+            }
+
+            return zone switch
+            {
+                ActiveZone.CloseButton => RectangleToPath(ButtonRectangle),
+                ActiveZone.EnhType => enhTypesPath,
+                ActiveZone.EnhancementSet => enhSetsPath,
+                ActiveZone.Enhancement => enhPath,
+                _ => null
+            };
         }
 
         private void DrawTypeLine()
@@ -1194,6 +1313,11 @@ namespace Mids_Reborn.Controls
         {
             var location = new Point(e.X, e.Y);
             var cellXy = GetCellXy(location);
+            var zoneNames = Enum.GetValues(typeof(ActiveZone)).Cast<ActiveZone>().ToList();
+            var zones = zoneNames.Select(GetZonePath).ToList();
+            var k = 0;
+            var inZones = zones.ToDictionary(z => zoneNames[k++], z => z?.IsVisible(location) ?? false);
+            var inActiveZone = inZones.DefaultIfEmpty(new KeyValuePair<ActiveZone, bool>(ActiveZone.None, false)).FirstOrDefault(z => z.Value).Key;
             if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(location, ButtonRectangle))
             {
                 SetInfoStrings("Cancel", "Close Picker");
@@ -1202,7 +1326,7 @@ namespace Mids_Reborn.Controls
                 return;
             }
             
-            if (cellXy is {X: < 0, Y: < 0})
+            if (cellXy is {X: < 0, Y: < 0} && !inZones.Any(z => z.Value))
             {
                 SetInfoStrings("", "");
                 FullDraw();
