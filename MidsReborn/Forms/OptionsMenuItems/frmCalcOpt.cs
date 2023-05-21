@@ -152,7 +152,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
         {
             if (!MidsContext.Config.MasterMode)
             {
-                TabControl1.TabPages[TabControl1.TabPages.Count - 1].Enabled = false;
+                TabControl1.TabPages[^1].Enabled = false;
             }
         }
 

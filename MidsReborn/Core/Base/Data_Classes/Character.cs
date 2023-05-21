@@ -1305,7 +1305,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 List<Power> specialPowers = null;
                 if (enhancementSet.SpecialBonus.Length > 0)
                 {
-                    specialPowers = enhancementSet.SpecialBonus[enhancementSet.SpecialBonus.Length - 1].Index.Length switch
+                    specialPowers = enhancementSet.SpecialBonus[^1].Index.Length switch
                     {
                         0 => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 2, true),
                         _ => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 1, true)

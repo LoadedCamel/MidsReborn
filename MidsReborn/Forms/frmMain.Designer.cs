@@ -2,10 +2,14 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace Mids_Reborn.Forms
 {
@@ -500,11 +504,13 @@ namespace Mids_Reborn.Forms
             // 
             // DlgOpen
             // 
+            this.DlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgOpen.DefaultExt = "mbd";
             this.DlgOpen.Filter = "All Supported Formats (*.mbd; *.mxd; *.txt)|*.mbd;*.mxd;*.txt|Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd;*.txt)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
             // 
             // DlgSave
             // 
+            this.DlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgSave.DefaultExt = "mbd";
             this.DlgSave.Filter = "Character Builds (*.mbd)|*.mbd";
             // 
@@ -2618,5 +2624,7 @@ namespace Mids_Reborn.Forms
         public ImageButtonEx ibPrestigePowersEx;
         public ImageButtonEx ibIncarnatePowersEx;
         public ImageButtonEx ibTempPowersEx;
+        internal OpenFileDialog DlgOpen;
+        internal SaveFileDialog DlgSave;
     }
 }

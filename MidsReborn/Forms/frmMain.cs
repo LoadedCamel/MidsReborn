@@ -35,8 +35,6 @@ using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
-using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
-using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Mids_Reborn.Forms
@@ -94,8 +92,6 @@ namespace Mids_Reborn.Forms
         private const string UriScheme = "mrb";
         private frmInitializing? _frmInitializing;
         private frmBusy? _frmBusy;
-        internal OpenFileDialog? DlgOpen;
-        internal SaveFileDialog? DlgSave;
         private bool _exportDiscordInProgress;
         private bool _loading;
         private bool _gfxDrawing;
@@ -1435,26 +1431,26 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
+                    drawing.bxBuffer.Graphics?.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
                 if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) | (slot.Level >= MidsContext.Config.ForceLevel) | ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
                 {
                     rectangle2.Inflate(1, 1);
-                    drawing.bxBuffer.Graphics.FillEllipse(solidBrush, rectangle2);
+                    drawing.bxBuffer.Graphics?.FillEllipse(solidBrush, rectangle2);
                 }
 
                 if (!((myDataView == null) | (i9Slot1 == null) | (i9Slot2 == null)))
                 {
-                    myDataView.FlipStage(i, Enh1, Enh2, num2, powerEntry.NIDPower, i9Slot1.Grade, i9Slot2.Grade);
+                    myDataView?.FlipStage(i, Enh1, Enh2, num2, powerEntry.NIDPower, i9Slot1.Grade, i9Slot2.Grade);
                 }
             }
 
             rectangle1 = new Rectangle(point1.X - 1, point1.Y - 1, drawing.SzPower.Width + 1,
                 drawing.szSlot.Height + 1);
             drawing.Refresh(drawing.ScaleDown(rectangle1));
-            if (FlipSlotState[FlipSlotState.Length - 1] >= FlipSteps)
+            if (FlipSlotState[^1] >= FlipSteps)
                 EndFlip();
         }
 
@@ -1477,17 +1473,8 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
-            // MidsContext.Character?.ResetLevel();
-             PowerModified(false);
-            // UpdateControls(true);
-            // SetTitleBar();
-            //Application.DoEvents();
-            // GetBestDamageValues();
-            // UpdateColors();
-            // DoRedraw();
-            // FloatUpdate(true);
-            // Debug.WriteLine("Complete");
+            myDataView?.Clear();
+            PowerModified(false);
             return ret;
         }
 
@@ -1519,7 +1506,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
+            myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
             UpdateControls(true);
@@ -1575,7 +1562,7 @@ namespace Mids_Reborn.Forms
                     break;
             }
 
-            myDataView.Clear();
+            myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
             UpdateControls(true);
@@ -7136,16 +7123,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var noPrimary = false;
             if (llPrimary.Items.Length == 0)
                 noPrimary = true;
-            else if (llPrimary.Items[llPrimary.Items.Length - 1].NIdSet != (MidsContext.Character.Powersets[0] == null ? -1 : MidsContext.Character.Powersets[0].nID))
+            else if (llPrimary.Items[^1].NIdSet != (MidsContext.Character.Powersets[0] == null ? -1 : MidsContext.Character.Powersets[0].nID))
                 noPrimary = true;
             if (llSecondary.Items.Length == 0)
                 noPrimary = true;
-            else if (llSecondary.Items[llSecondary.Items.Length - 1].NIdSet != (MidsContext.Character.Powersets[1] == null ? -1 : MidsContext.Character.Powersets[1].nID))
+            else if (llSecondary.Items[^1].NIdSet != (MidsContext.Character.Powersets[1] == null ? -1 : MidsContext.Character.Powersets[1].nID))
                 noPrimary = true;
             var noAncillary = false;
             if (llAncillary.Items.Length == 0 || MidsContext.Character.Powersets[7] == null)
                 noAncillary = true;
-            else if (llAncillary.Items[llAncillary.Items.Length - 1].NIdSet != MidsContext.Character.Powersets[7].nID)
+            else if (llAncillary.Items[^1].NIdSet != MidsContext.Character.Powersets[7].nID)
                 noAncillary = true;
             if (noPrimary)
             {

@@ -2324,7 +2324,7 @@ namespace Mids_Reborn.Controls
             var inherentGrid = GetInherentGrid();
             checked
             {
-                var size = (Size)CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
+                var size = (Size)CRtoXY(inherentGrid[^1].Length - 1, inherentGrid.Length - 1);
                 if (size.Height > result.Height) result.Height = size.Height;
 
                 if (size.Width > result.Width) result.Width = size.Width;

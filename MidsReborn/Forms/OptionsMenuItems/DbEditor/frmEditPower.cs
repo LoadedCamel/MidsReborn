@@ -507,10 +507,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Array.Copy(power.UIDSubPower, strArray, power.UIDSubPower.Length + 1);
             //var strArray = (string[]) Utils.CopyArray(power.UIDSubPower, new string[myPower.UIDSubPower.Length + 1]);
             power.UIDSubPower = strArray;
-            myPower.UIDSubPower[myPower.UIDSubPower.Length - 1] = b;
+            myPower.UIDSubPower[^1] = b;
             SPFillList();
-            lvSPSelected.Items[lvSPSelected.Items.Count - 1].Selected = true;
-            lvSPSelected.Items[lvSPSelected.Items.Count - 1].EnsureVisible();
+            lvSPSelected.Items[^1].Selected = true;
+            lvSPSelected.Items[^1].EnsureVisible();
         }
 
         private void btnSPRemove_Click(object sender, EventArgs e)
@@ -544,8 +544,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             SPFillList();
             if (lvSPSelected.Items.Count <= 0)
                 return;
-            lvSPSelected.Items[lvSPSelected.Items.Count - 1].Selected = true;
-            lvSPSelected.Items[lvSPSelected.Items.Count - 1].EnsureVisible();
+            lvSPSelected.Items[^1].Selected = true;
+            lvSPSelected.Items[^1].EnsureVisible();
         }
 
         private void cbEffectArea_SelectedIndexChanged(object sender, EventArgs e)
@@ -1846,8 +1846,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][1] = "";
                 myPower.Requires.PowerIDNot = AddEmptyToJagged(myPower.Requires.PowerIDNot);
                 FillTab_Req();
-                lvPrListing.Items[lvPrListing.Items.Count - 1].Selected = true;
-                lvPrListing.Items[lvPrListing.Items.Count - 1].EnsureVisible();
+                lvPrListing.Items[^1].Selected = true;
+                lvPrListing.Items[^1].EnsureVisible();
             }
             else
             {
@@ -2089,7 +2089,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index <= num; ++index)
                 {
                     lvPrSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvPrSet.Items[lvPrSet.Items.Count - 1].Tag =
+                    lvPrSet.Items[^1].Tag =
                         DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
 
@@ -2233,7 +2233,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         if (DatabaseAPI.Database.Powersets[index1].Powers[index2].HiddenPower)
                             continue;
                         lvSPPower.Items.Add(DatabaseAPI.Database.Powersets[index1].Powers[index2].PowerName);
-                        lvSPPower.Items[lvSPPower.Items.Count - 1].Tag =
+                        lvSPPower.Items[^1].Tag =
                             DatabaseAPI.Database.Powersets[index1].Powers[index2].FullName;
                     }
                 }
@@ -2257,7 +2257,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index <= num; ++index)
                 {
                     lvSPSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvSPSet.Items[lvSPSet.Items.Count - 1].Tag =
+                    lvSPSet.Items[^1].Tag =
                         DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
 

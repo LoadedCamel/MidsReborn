@@ -1105,7 +1105,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                                 continue;
 
                             Array.Resize(ref iPowers1, iPowers1.Length + 1);
-                            iPowers1[iPowers1.Length - 1] = index;
+                            iPowers1[^1] = index;
                         }
 
                         displayFullName = true;

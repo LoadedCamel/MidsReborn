@@ -36,16 +36,16 @@ namespace Mids_Reborn.Core
         public void AddScheme()
         {
             Array.Resize(ref ColorSchemes, ColorSchemes.Length + 1);
-            ColorSchemes[ColorSchemes.Length - 1].SetDefault();
-            ColorSchemes[ColorSchemes.Length - 1].SchemeName = "New Colors";
+            ColorSchemes[^1].SetDefault();
+            ColorSchemes[^1].SchemeName = "New Colors";
         }
 
         public void AddCodes()
         {
             Array.Resize(ref FormatCode, FormatCode.Length + 1);
-            FormatCode[FormatCode.Length - 1].SetDefault();
-            FormatCode[FormatCode.Length - 1].Name = "New Format";
-            FormatCode[FormatCode.Length - 1].Notes = string.Empty;
+            FormatCode[^1].SetDefault();
+            FormatCode[^1].Name = "New Format";
+            FormatCode[^1].Notes = string.Empty;
         }
 
         public void RemoveScheme(int index)

@@ -117,7 +117,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lvPower.Items.Clear();
             lvPower.Sorting = SortOrder.None;
             lvPower.Items.Add(" - All Powers - ");
-            lvPower.Items[lvPower.Items.Count - 1].Tag = -1;
+            lvPower.Items[^1].Tag = -1;
             var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
             for (var powerLocation = 0; powerLocation <= num; ++powerLocation)
             {
@@ -155,7 +155,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                         (MidsContext.Character.CurrentBuild.Powers[powerLocation].Power.Effects[index]
                                              .Duration /
                                          float.Parse(damageData[2]));
-                    lvPower.Items[lvPower.Items.Count - 1].Tag = powerLocation;
+                    lvPower.Items[^1].Tag = powerLocation;
                     flag = true;
                 }
             }
@@ -292,7 +292,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 GlobalPowerList = new PowerList[globalPowerList.Length + 1];
                 for (var index = 0; index < globalPowerList.Length; ++index)
                     GlobalPowerList[index] = globalPowerList[index];
-                GlobalPowerList[GlobalPowerList.Length - 1].PowerName = e.Item.Text;
+                GlobalPowerList[^1].PowerName = e.Item.Text;
                 var text = !chkSortByLevel.Checked ? e.Item.Text : e.Item.Text.Split('-')[1];
                 if (tbDPSOutput.Text == "")
                 {
@@ -304,14 +304,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     tbDpsOutput.Text = tbDpsOutput.Text + " -->" + text;
                 }
 
-                GlobalPowerList[GlobalPowerList.Length - 1].Damage =
+                GlobalPowerList[^1].Damage =
                     !(e.Item.SubItems[2].Text != "-") ? 0.0f : float.Parse(e.Item.SubItems[2].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].Endurance = float.Parse(e.Item.SubItems[5].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].Recharge = float.Parse(e.Item.SubItems[3].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].DamageBuff = float.Parse(e.Item.SubItems[6].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].ResistanceDeBuff = float.Parse(e.Item.SubItems[7].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].Animation = float.Parse(e.Item.SubItems[4].Text);
-                GlobalPowerList[GlobalPowerList.Length - 1].RechargeTimer = 0.0f;
+                GlobalPowerList[^1].Endurance = float.Parse(e.Item.SubItems[5].Text);
+                GlobalPowerList[^1].Recharge = float.Parse(e.Item.SubItems[3].Text);
+                GlobalPowerList[^1].DamageBuff = float.Parse(e.Item.SubItems[6].Text);
+                GlobalPowerList[^1].ResistanceDeBuff = float.Parse(e.Item.SubItems[7].Text);
+                GlobalPowerList[^1].Animation = float.Parse(e.Item.SubItems[4].Text);
+                GlobalPowerList[^1].RechargeTimer = 0.0f;
             }
 
             CalculateDPS();
@@ -335,8 +335,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             Array.Resize(ref tl, tl.Length+1);
             //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
-            tl[tl.Length - 1].Count = 1;
-            tl[tl.Length - 1].Text = item;
+            tl[^1].Count = 1;
+            tl[^1].Text = item;
         }
 
         public void SetLocation()

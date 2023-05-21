@@ -38,16 +38,16 @@ namespace Mids_Reborn.Core
             {
                 ++SetInfo[index].SlottedCount;
                 Array.Resize(ref SetInfo[index].EnhIndexes, SetInfo[index].SlottedCount);
-                SetInfo[index].EnhIndexes[SetInfo[index].EnhIndexes.Length - 1] = iEnh.Enh;
+                SetInfo[index].EnhIndexes[^1] = iEnh.Enh;
             }
             else
             {
                 Array.Resize(ref SetInfo, SetInfo.Length + 1);
-                SetInfo[SetInfo.Length - 1].SetIDX = nIdSet;
-                SetInfo[SetInfo.Length - 1].SlottedCount = 1;
-                SetInfo[SetInfo.Length - 1].Powers = new int[0];
-                Array.Resize(ref SetInfo[SetInfo.Length - 1].EnhIndexes, SetInfo[SetInfo.Length - 1].SlottedCount);
-                SetInfo[SetInfo.Length - 1].EnhIndexes[SetInfo[SetInfo.Length - 1].EnhIndexes.Length - 1] = iEnh.Enh;
+                SetInfo[^1].SetIDX = nIdSet;
+                SetInfo[^1].SlottedCount = 1;
+                SetInfo[^1].Powers = new int[0];
+                Array.Resize(ref SetInfo[^1].EnhIndexes, SetInfo[^1].SlottedCount);
+                SetInfo[^1].EnhIndexes[^1] = iEnh.Enh;
             }
         }
 
@@ -92,7 +92,7 @@ namespace Mids_Reborn.Core
                             ++index3)
                         {
                             Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
-                            SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database
+                            SetInfo[index1].Powers[^1] = DatabaseAPI.Database
                                 .EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index[index3];
                         }
                     }
@@ -118,7 +118,7 @@ namespace Mids_Reborn.Core
                                 ++index4)
                             {
                                 Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
-                                SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database
+                                SetInfo[index1].Powers[^1] = DatabaseAPI.Database
                                     .EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index[index4];
                             }
                         }

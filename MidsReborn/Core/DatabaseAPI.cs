@@ -1189,7 +1189,7 @@ namespace Mids_Reborn.Core
                 if (Database.Power[index1].Requires.ReferencesPower(uidPower, uidNew))
                 {
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = Database.Power[index1].FullName + " (Requirement)";
+                    array[^1] = Database.Power[index1].FullName + " (Requirement)";
                 }
 
                 for (var index2 = 0; index2 <= Database.Power[index1].Effects.Length - 1; ++index2)
@@ -1198,7 +1198,7 @@ namespace Mids_Reborn.Core
                         continue;
                     Database.Power[index1].Effects[index2].Summon = uidNew;
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = Database.Power[index1].FullName + " (GrantPower)";
+                    array[^1] = Database.Power[index1].FullName + " (GrantPower)";
                 }
             }
 
@@ -2350,11 +2350,11 @@ namespace Mids_Reborn.Core
                     if (strArray[0] != "End")
                     {
                         Array.Resize(ref enhancementClasses, enhancementClasses.Length + 1);
-                        enhancementClasses[enhancementClasses.Length - 1].ID = int.Parse(strArray[0]);
-                        enhancementClasses[enhancementClasses.Length - 1].Name = strArray[1];
-                        enhancementClasses[enhancementClasses.Length - 1].ShortName = strArray[2];
-                        enhancementClasses[enhancementClasses.Length - 1].ClassID = strArray[3];
-                        enhancementClasses[enhancementClasses.Length - 1].Desc = strArray[4];
+                        enhancementClasses[^1].ID = int.Parse(strArray[0]);
+                        enhancementClasses[^1].Name = strArray[1];
+                        enhancementClasses[^1].ShortName = strArray[2];
+                        enhancementClasses[^1].ClassID = strArray[3];
+                        enhancementClasses[^1].Desc = strArray[4];
                     }
                     else
                     {
@@ -2996,7 +2996,7 @@ namespace Mids_Reborn.Core
                     Array.Resize(ref Database.EnhancementSets[index2].Enhancements,
                         Database.EnhancementSets[index2].Enhancements.Length + 1);
                     Database.EnhancementSets[index2]
-                        .Enhancements[Database.EnhancementSets[index2].Enhancements.Length - 1] = index1;
+                        .Enhancements[^1] = index1;
                 }
                 else
                 {

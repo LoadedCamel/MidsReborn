@@ -199,16 +199,16 @@ namespace Mids_Reborn.Core
             if (power1.StartsWith("!") & (power2.StartsWith("!") | string.IsNullOrEmpty(power2)))
             {
                 Array.Resize(ref PowerIDNot, PowerIDNot.Length + 1);
-                PowerIDNot[PowerIDNot.Length - 1] = new string[2];
-                PowerIDNot[PowerIDNot.Length - 1][0] = power1;
-                PowerIDNot[PowerIDNot.Length - 1][1] = power2;
+                PowerIDNot[^1] = new string[2];
+                PowerIDNot[^1][0] = power1;
+                PowerIDNot[^1][1] = power2;
             }
             else if (!power1.StartsWith("!") & (!power2.StartsWith("!") | string.IsNullOrEmpty(power2)))
             {
                 Array.Resize(ref PowerID, PowerID.Length + 1);
-                PowerID[PowerID.Length - 1] = new string[2];
-                PowerID[PowerID.Length - 1][0] = power1;
-                PowerID[PowerID.Length - 1][1] = power2;
+                PowerID[^1] = new string[2];
+                PowerID[^1][0] = power1;
+                PowerID[^1][1] = power2;
             }
             else
             {
