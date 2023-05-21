@@ -591,7 +591,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphHP.Draw();
 
             graphMovement.Clear();
-            var speedFormat = MidsContext.Config == null ? Enums.eSpeedMeasure.MilesPerHour : MidsContext.Config.SpeedFormat;
+            var speedFormat = MidsContext.Config.SpeedFormat;
             var rateDisp = "MPH";
             var lengthDisp = " m";
             switch (speedFormat)

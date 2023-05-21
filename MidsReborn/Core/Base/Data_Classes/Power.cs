@@ -1036,8 +1036,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             for (var i = 0; i < weightedEffects.Count; i++)
             {
-                if (MidsContext.Config == null ||
-                    (MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
+                if ((MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
                     MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvE ||
                     !MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvP)
                 {

@@ -27,7 +27,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 XmlResolver = new XmlUrlResolver(),
                 DtdProcessing = DtdProcessing.Ignore
             };
-            if (MidsContext.Config == null) return;
             using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
             while (xmlReader.Read())
             {

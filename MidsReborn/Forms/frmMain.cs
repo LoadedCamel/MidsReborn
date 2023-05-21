@@ -665,7 +665,6 @@ namespace Mids_Reborn.Forms
 
         private void UpdateModeInfo()
         {
-            if (MidsContext.Config == null) return;
             switch (MidsContext.Config.BuildMode)
             {
                 case Enums.dmModes.LevelUp:
@@ -3478,7 +3477,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null) return;
             if (EnemyRelativeToolStripComboBox.ComboBox == null) return;
             MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
             RefreshInfo();
@@ -3486,7 +3484,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibDynMode_Click(object? sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config == null) return;
+            if (MainModule.MidsController.Toon == null) return;
             if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp && !ibDynMode.Lock)
             {
                 ibDynMode.Lock = true;
@@ -7001,7 +6999,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateDmBuffer()
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config == null || MidsContext.Character == null) return;
+            if (MainModule.MidsController.Toon == null || MidsContext.Character == null) return;
 
             Enums.ePowerState powerState;
             string? text;

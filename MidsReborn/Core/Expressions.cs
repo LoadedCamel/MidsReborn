@@ -84,7 +84,7 @@ namespace Mids_Reborn.Core
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", $"{(MidsContext.Config == null ? 0 : MidsContext.Config.ScalingToHit)}"},
+                { "base.kToHit", $"{(MidsContext.Config.ScalingToHit)}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
                 { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"}
             };

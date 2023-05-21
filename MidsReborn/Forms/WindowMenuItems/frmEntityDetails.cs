@@ -112,7 +112,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void OnClosed(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null) return;
             MidsContext.Config.EntityDetailsLocation = Location;
         }
 
@@ -153,7 +152,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnTopMost.Visible = false;
             var owner = (frmMain)Owner;
 
-            if (MidsContext.Config == null || MidsContext.Config.EntityDetailsLocation == null)
+            if (MidsContext.Config.EntityDetailsLocation == null)
             {
                 Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
             }
