@@ -10,18 +10,22 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using FontStyle = System.Drawing.FontStyle;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace Mids_Reborn.Controls
 {
     public class I9Picker : UserControl
     {
         public delegate void EnhancementPickedEventHandler(I9Slot e);
+
+        public delegate void EnhancementSelectionCancelledEventHandler();
 
         public delegate void HoverEnhancementEventHandler(int e);
 
@@ -63,6 +67,7 @@ namespace Mids_Reborn.Controls
         private IEnhancement _selectedEnhancement;
         public CTracking Ui;
 
+        private Rectangle ButtonRectangle;
 
         public I9Picker()
         {
@@ -156,6 +161,7 @@ namespace Mids_Reborn.Controls
         }
 
         public event EnhancementPickedEventHandler EnhancementPicked;
+        public event EnhancementSelectionCancelledEventHandler EnhancementSelectionCancelled;
         public event HoverEnhancementEventHandler HoverEnhancement;
         public event HoverSetEventHandler HoverSet;
         public event MovedEventHandler Moved;
@@ -200,7 +206,7 @@ namespace Mids_Reborn.Controls
             {
                 _myBx = new ExtendedBitmap(Width, Height);
             }
-            else if ((_myBx.Size.Width != Width) | (_myBx.Size.Height != Height))
+            else if (_myBx.Size.Width != Width | _myBx.Size.Height != Height)
             {
                 _myBx = new ExtendedBitmap(Width, Height);
             }
@@ -214,10 +220,20 @@ namespace Mids_Reborn.Controls
 
         public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
-        private void FullDraw()
+        private void FullDraw(Point? mouseLocation = null)
         {
+            const int levelBoxHeight = 46;
+
+            // Ensure constant height of the level box line
+            var rectBounds = GetRectBounds(4, _rows + 1);
+            var h = Height - (rectBounds.Y + 2 + _nPad);
+            if (h < levelBoxHeight)
+            {
+                Height += levelBoxHeight - h;
+            }
+
             SetBxSize();
-            DrawLayerLowest();
+            DrawLayerLowest(mouseLocation ?? new Point(-1, -1));
             if (_hDraw == null)
             {
                 return;
@@ -229,11 +245,12 @@ namespace Mids_Reborn.Controls
             I9PickerPaint(this, new PaintEventArgs(graphics, clipRect));
         }
 
-        private void DrawLayerLowest()
+        private void DrawLayerLowest(Point mouseLocation)
         {
             _myBx.Graphics.Clear(BackColor);
+            
             DrawBorder();
-            DrawHeaderBox();
+            DrawHeaderBox(mouseLocation);
             DrawLevelBox();
             DrawHighlights();
             DrawTypeLine();
@@ -247,12 +264,14 @@ namespace Mids_Reborn.Controls
             DrawEnhImages();
         }
 
-        private void DrawHeaderBox()
+        private void DrawHeaderBox(Point mouseLocation)
         {
-            var font = new Font(Font, FontStyle.Bold);
-            var brush = new SolidBrush(Color.White);
-            var text = "";
-            var pen = new Pen(ForeColor);
+            using var font = new Font(Font, FontStyle.Bold);
+            using var brush = new SolidBrush(Color.White);
+            var buttonTextBrush = new SolidBrush(Color.Gainsboro);
+            using var highlightBrush = new SolidBrush(Color.FromArgb(123, 104, 237));
+            using var pen = new Pen(ForeColor);
+            using var buttonFont = new Font(Fonts.Family("Noto Sans"), 8f, FontStyle.Bold, GraphicsUnit.Pixel);
             Rectangle iRect = default;
             iRect.X = _nPad;
             iRect.Y = _nPad;
@@ -263,15 +282,27 @@ namespace Mids_Reborn.Controls
                 _headerHeight = iRect.Height + _nPad;
                 var layoutRectangle = new RectangleF(iRect.X, iRect.Y, iRect.Width, iRect.Height);
                 _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
-                if (_nPowerIdx > -1)
+                var buttonSize = layoutRectangle.Height - 4;
+                var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize, layoutRectangle.Y + 2);
+                ButtonRectangle = new Rectangle(new Point((int)Math.Round(buttonLoc.X), (int)Math.Round(buttonLoc.Y)), new Size((int)Math.Round(buttonSize), (int)Math.Round(buttonSize)));
+                if (!MidsContext.Config.CloseEnhSelectPopupByMove)
                 {
-                    text = "Enhancing: " + DatabaseAPI.Database.Power[_nPowerIdx].DisplayName;
+                    var hoveredButton = PointInRectangle(mouseLocation, ButtonRectangle);
+                    if (hoveredButton)
+                    {
+                        _myBx.Graphics.FillRectangle(highlightBrush, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
+                    }
+
+                    _myBx.Graphics.DrawRectangle(pen, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
+                    _myBx.Graphics.DrawString("X", buttonFont, hoveredButton ? brush : buttonTextBrush, buttonLoc.X + 2, buttonLoc.Y);
                 }
 
-                if (Operators.CompareString(text, "", false) != 0)
+                if (_nPowerIdx <= -1)
                 {
-                    _myBx.Graphics.DrawString(text, font, brush, layoutRectangle);
+                    return;
                 }
+
+                _myBx.Graphics.DrawString($"Enhancing: {DatabaseAPI.Database.Power[_nPowerIdx].DisplayName}", font, brush, layoutRectangle);
             }
         }
 
@@ -301,15 +332,9 @@ namespace Mids_Reborn.Controls
             rectBounds.Height = checked(Height - (rectBounds.Y + _nPad));
             brush = new SolidBrush(ForeColor);
             font = new Font(Fonts.Family("Noto Sans"), 19f, FontStyle.Bold, GraphicsUnit.Pixel);
-            string s;
-            if ((Ui.View.TabId == Enums.eType.InventO) | (Ui.View.TabId == Enums.eType.SetO))
-            {
-                s = Convert.ToString(Ui.View.IoLevel);
-            }
-            else
-            {
-                s = GetRelativeString(Ui.View.RelLevel);
-            }
+            var s = Ui.View.TabId == Enums.eType.InventO | Ui.View.TabId == Enums.eType.SetO
+                ? $"{Ui.View.IoLevel}"
+                : GetRelativeString(Ui.View.RelLevel);
 
             _myBx.Graphics.DrawString(s, font, brush, layoutRectangle, stringFormat);
         }
@@ -336,8 +361,8 @@ namespace Mids_Reborn.Controls
 
         private void DrawTextBox()
         {
-            var brush = new SolidBrush(Color.White);
-            var pen = new Pen(ForeColor);
+            using var brush = new SolidBrush(Color.White);
+            using var pen = new Pen(ForeColor);
             Rectangle iRect = default;
             iRect.X = _nPad;
             RectangleF layoutRectangle = default;
@@ -358,26 +383,21 @@ namespace Mids_Reborn.Controls
             layoutRectangle2.Width = iRect.Width;
             layoutRectangle2.Height = iRect.Height - layoutRectangle.Height;
             _myBx.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-            var num = 1f;
+            var fontScale = 1f;
             var num2 = checked((int)Math.Round(_myBx.Graphics.MeasureString(_hoverTitle, Font, (int)Math.Round(layoutRectangle.Width * 10f)).Width));
             if (num2 > layoutRectangle.Width - 10f)
             {
-                num = (layoutRectangle.Width - 10f) / num2;
+                fontScale = Math.Max(0.5f, (layoutRectangle.Width - 10f) / num2);
             }
 
-            if (num < 0.5)
-            {
-                num = 0.5f;
-            }
-
-            var font = new Font(Name, Font.Size * num, FontStyle.Bold, Font.Unit, 0);
+            using var font = new Font(Name, Font.Size * fontScale, FontStyle.Bold, Font.Unit, 0);
             _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
-            if (string.Compare(_hoverTitle, "", StringComparison.Ordinal) != 0)
+            if (!string.IsNullOrWhiteSpace(_hoverTitle))
             {
                 _myBx.Graphics.DrawString(_hoverTitle, font, brush, layoutRectangle);
             }
 
-            if (string.Compare(_hoverText, "", StringComparison.Ordinal) != 0)
+            if (!string.IsNullOrWhiteSpace(_hoverText))
             {
                 _myBx.Graphics.DrawString(_hoverText, Font, brush, layoutRectangle2);
             }
@@ -537,6 +557,7 @@ namespace Mids_Reborn.Controls
 
                 var imageAttributes = new ImageAttributes();
                 imageAttributes.SetColorMatrix(colorMatrix);
+                
                 return imageAttributes;
             }
         }
@@ -587,30 +608,17 @@ namespace Mids_Reborn.Controls
                     return false;
                 }
 
-                if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                        .Enhancements.Length)
+                if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length)
                 {
                     return false;
                 }
 
-                if ((Ui.Initial.SetTypeId == Ui.View.SetTypeId) & (Ui.Initial.SetId == Ui.View.SetId) &
-                    (Ui.Initial.PickerId == index))
+                if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId & Ui.Initial.PickerId == index)
                 {
                     return false;
                 }
 
-                var num = 0;
-                var num2 = _mySlotted.Length - 1;
-                for (var i = num; i <= num2; i++)
-                {
-                    if (DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                            .Enhancements[index] == _mySlotted[i])
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                return _mySlotted.Any(t => DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index] == t);
             }
         }
 
@@ -628,12 +636,11 @@ namespace Mids_Reborn.Controls
                     return;
                 }
 
-                var num = 0;
-                var num2 = Ui.Sets[Ui.View.SetTypeId].Length - 1;
-                for (var i = num; i <= num2; i++)
+                for (var i = 0; i < Ui.Sets[Ui.View.SetTypeId].Length; i++)
                 {
                     var srcRect = new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
                     _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
+                    
                     srcRect = new Rectangle(Ui.Sets[Ui.View.SetTypeId][i] * _nSize, 0, _nSize, _nSize);
                     _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
                 }
@@ -642,14 +649,10 @@ namespace Mids_Reborn.Controls
 
         private void DrawBorder()
         {
-            var pen = new Pen(ForeColor);
-            Rectangle rect = default;
-            rect.X = 0;
-            rect.Y = 0;
+            using var pen = new Pen(ForeColor);
             checked
             {
-                rect.Height = Height - 1;
-                rect.Width = Width - 1;
+                var rect = new Rectangle(new Point(1, 1), new Size(Width - 2, Height - 2));
                 _myBx.Graphics.DrawRectangle(pen, rect);
             }
         }
@@ -708,7 +711,7 @@ namespace Mids_Reborn.Controls
                 var ly1 = _headerHeight + _nPad + _nSize;
                 var y = ly1 + _nPad - 2;
                 var ly2 = (int)Math.Round(rectBounds.X + rectBounds.Width / 2.0);
-                var pen = new Pen(ForeColor);
+                using var pen = new Pen(ForeColor);
                 _myBx.Graphics.DrawLine(pen, ly2, ly1, ly2, y);
             }
         }
@@ -728,7 +731,7 @@ namespace Mids_Reborn.Controls
                 var rectangle = Ui.View.TabId switch
                 {
                     Enums.eType.Normal => GetRectBounds(4, Reverse((int)Ui.View.GradeId)),
-                    Enums.eType.SpecialO => GetRectBounds(4, (int)Ui.View.SpecialId),
+                    Enums.eType.SpecialO => GetRectBounds(4, Ui.View.SpecialId),
                     Enums.eType.SetO => GetRectBounds(4, Ui.View.SetTypeId + 1),
                     _ => default
                 };
@@ -736,7 +739,7 @@ namespace Mids_Reborn.Controls
                 var ly = (int)Math.Round(rectangle.Y + rectangle.Height / 2.0);
                 var x = rectangle.X - 2;
                 var x2 = rectangle.X - _nPad + 2;
-                var pen = new Pen(ForeColor);
+                using var pen = new Pen(ForeColor);
                 _myBx.Graphics.DrawLine(pen, x, ly, x2, ly);
             }
         }
@@ -751,7 +754,7 @@ namespace Mids_Reborn.Controls
 
         private void DrawEnhBoxSet()
         {
-            var pen = new Pen(ForeColor);
+            using var pen = new Pen(ForeColor);
             Rectangle iRect = default;
             iRect.X = _nPad;
             checked
@@ -766,7 +769,7 @@ namespace Mids_Reborn.Controls
         private void DrawSetBox()
         {
             var rectBounds = GetRectBounds(4, 1);
-            var pen = new Pen(ForeColor);
+            using var pen = new Pen(ForeColor);
             rectBounds.Height = checked(_nSize * _rows + _nPad * (_rows - 1));
             _myBx.Graphics.DrawRectangle(pen, Dilate(rectBounds));
         }
@@ -791,12 +794,12 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (!((x > -1) & (y > -1)))
+                if (!(x > -1 & y > -1))
                 {
                     return;
                 }
 
-                var pen = new Pen(ForeColor);
+                using var pen = new Pen(ForeColor);
                 var rectBounds = GetRectBounds(x, y);
                 rectBounds.X--;
                 rectBounds.Y--;
@@ -882,6 +885,13 @@ namespace Mids_Reborn.Controls
         private void I9PickerMouseDown(object sender, MouseEventArgs e)
         {
             var iPt = new Point(e.X, e.Y);
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(iPt, ButtonRectangle))
+            {
+                EnhancementSelectionCancelled?.Invoke();
+
+                return;
+            }
+
             var cellXy = GetCellXy(iPt);
             var cellIndex = GetCellIndex(cellXy);
             checked
@@ -1064,7 +1074,7 @@ namespace Mids_Reborn.Controls
             CheckAndFixIoLevel();
             checked
             {
-                if (((Ui.View.IoLevel != Ui.Initial.IoLevel) & (Ui.View.IoLevel != _userLevel)) | (_userLevel == -1) && !((Ui.View.TabId == Enums.eType.InventO) & (Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)))
+                if (Ui.View.IoLevel != Ui.Initial.IoLevel & Ui.View.IoLevel != _userLevel | _userLevel == -1 && !(Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
                 {
                     _levelCapped = true;
                 }
@@ -1132,9 +1142,9 @@ namespace Mids_Reborn.Controls
                         break;
                 }
 
-                if (((Ui.View.TabId == Enums.eType.SetO) | (Ui.View.TabId == Enums.eType.InventO)) & !_levelCapped)
+                if ((Ui.View.TabId == Enums.eType.SetO | Ui.View.TabId == Enums.eType.InventO) & !_levelCapped)
                 {
-                    if ((Ui.View.TabId == Enums.eType.InventO) & (Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
+                    if (Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)
                     {
                         LastLevel = _userLevel;
                     }
@@ -1184,7 +1194,24 @@ namespace Mids_Reborn.Controls
         {
             var location = new Point(e.X, e.Y);
             var cellXy = GetCellXy(location);
-            DoHover(cellXy);
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(location, ButtonRectangle))
+            {
+                SetInfoStrings("Cancel", "Close Picker");
+                FullDraw(location);
+
+                return;
+            }
+            
+            if (cellXy is {X: < 0, Y: < 0})
+            {
+                SetInfoStrings("", "");
+                FullDraw();
+            }
+            else
+            {
+                DoHover(cellXy);
+            }
+
             if (e.Button != MouseButtons.Left)
             {
                 return;
@@ -1197,6 +1224,12 @@ namespace Mids_Reborn.Controls
             var bounds = Bounds;
             Location = location2;
             Moved?.Invoke(Bounds, bounds);
+        }
+
+        private static bool PointInRectangle(Point point, Rectangle rect)
+        {
+            return point.X >= rect.X && point.X <= rect.X + rect.Width &&
+                   point.Y >= rect.Y && point.Y <= rect.Y + rect.Height;
         }
 
         private void DoHover(Point cell, bool alwaysUpdate = false)
@@ -1771,13 +1804,13 @@ namespace Mids_Reborn.Controls
 
         private void TimerReset()
         {
-            _timerLastKeypress = -1.0;
+            _timerLastKeypress = -1;
         }
 
         private void NumberPressed(int iNumber)
         {
             var timer = DateAndTime.Timer;
-            if (timer - _timerLastKeypress > 5.0)
+            if (timer - _timerLastKeypress > 5)
             {
                 Ui.View.IoLevel = iNumber;
                 _userLevel = Ui.View.IoLevel;
@@ -1785,8 +1818,7 @@ namespace Mids_Reborn.Controls
             }
             else
             {
-                var text = Convert.ToString(Ui.View.IoLevel);
-                text += Convert.ToString(iNumber);
+                var text = $"{Ui.View.IoLevel}{iNumber}";
                 checked
                 {
                     if (text.Length > 2)
@@ -1794,16 +1826,8 @@ namespace Mids_Reborn.Controls
                         text = text.Substring(text.Length - 2);
                     }
 
-                    var number = (int)Math.Round(Conversion.Val(text));
-                    if (number > 50)
-                    {
-                        number = 50;
-                    }
-
-                    if (number < 1)
-                    {
-                        number = 1;
-                    }
+                    var ret = float.TryParse(text, out var txtNum);
+                    var number = Math.Max(1, Math.Min(50, (int)Math.Round(!ret ? 0 : txtNum)));
 
                     Ui.View.IoLevel = number;
                     _userLevel = Ui.View.IoLevel;

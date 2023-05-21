@@ -72,6 +72,8 @@ namespace Mids_Reborn.Core
             ShowSelfBuffsAny = false;
             WarnOnOldAppMbd = true;
             WarnOnOldDbMbd = true;
+            DimWindowStyleColors = true;
+            CloseEnhSelectPopupByMove = true;
             InitializeComponent();
         }
 
@@ -148,6 +150,8 @@ namespace Mids_Reborn.Core
         public bool ShrinkFrmSets { get; set; }
         public bool WarnOnOldAppMbd { get; set; }
         public bool WarnOnOldDbMbd { get; set; }
+        public bool DimWindowStyleColors { get; set; }
+        public bool CloseEnhSelectPopupByMove { get; set; }
 
         private string _buildsPath = Files.FDefaultBuildsPath;
 

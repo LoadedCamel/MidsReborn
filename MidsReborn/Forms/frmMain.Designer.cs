@@ -2159,13 +2159,15 @@ namespace Mids_Reborn.Forms
             this.i9Picker.Size = new System.Drawing.Size(198, 235);
             this.i9Picker.TabIndex = 83;
             this.i9Picker.Visible = false;
-            this.i9Picker.EnhancementPicked +=
-                new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.EnhancementPicked += new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.EnhancementSelectionCancelled += new I9Picker.EnhancementSelectionCancelledEventHandler(this.I9Picker_EnhancementSelectionCancelled);
             this.i9Picker.HoverEnhancement += new I9Picker.HoverEnhancementEventHandler(this.I9Picker_HoverEnhancement);
             this.i9Picker.HoverSet += new I9Picker.HoverSetEventHandler(this.I9Picker_HoverSet);
             this.i9Picker.Moved += new I9Picker.MovedEventHandler(this.I9Picker_Moved);
             this.i9Picker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.I9Picker_MouseDown);
-            this.i9Picker.MouseLeave += new System.EventHandler(this.I9Picker_Hiding);
+            this.i9Picker.MouseEnter += new System.EventHandler(this.I9Picker_MouseEnter);
+            this.i9Picker.MouseLeave += new System.EventHandler(this.I9Picker_MouseLeave);
+            this.i9Picker.KeyDown += new KeyEventHandler(this.I9Picker_KeyDown);
             // 
             // I9Popup
             // 

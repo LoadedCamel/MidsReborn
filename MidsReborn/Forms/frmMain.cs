@@ -73,17 +73,17 @@ namespace Mids_Reborn.Forms
 
         private void StylizeWindow(IntPtr handle, Color borderColor, Color? captionColor = null, Color? textColor = null)
         {
-            var border = new int[] { int.Parse(GetRgb(borderColor), NumberStyles.HexNumber) };
+            var border = new[] { int.Parse(GetRgb(borderColor), NumberStyles.HexNumber) };
             _ = DwmSetWindowAttribute(handle, WindowAttribute.BorderColor, border, 4);
 
             if (captionColor != null)
             {
-                var caption = new int[] { int.Parse(GetRgb((Color)captionColor), NumberStyles.HexNumber) };
+                var caption = new[] { int.Parse(GetRgb((Color)captionColor), NumberStyles.HexNumber) };
                 _ = DwmSetWindowAttribute(handle, WindowAttribute.CaptionColor, caption, 4);
             }
 
             if (textColor == null) return;
-            var text = new int[] { int.Parse(GetRgb((Color)textColor), NumberStyles.HexNumber) };
+            var text = new[] { int.Parse(GetRgb((Color)textColor), NumberStyles.HexNumber) };
             _ = DwmSetWindowAttribute(handle, WindowAttribute.TextColor, text, 4);
         }
 
@@ -595,18 +595,36 @@ namespace Mids_Reborn.Forms
 
         //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
 
+        public void UpdateWindowStyle()
+        {
+            CharacterOnAlignmentChanged(null, MidsContext.Character == null ? Enums.Alignment.Hero : MidsContext.Character.Alignment);
+        }
+
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
             if (MidsContext.Character != null && MidsContext.Character.IsHero())
             {
-                //StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
-                StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
+                if (MidsContext.Config.DimWindowStyleColors)
+                {
+                    StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
+                }
+                else
+                {
+                    StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
+                }
             }
             else
             {
-                //StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
-                StylizeWindow(Handle, Color.FromArgb(100, 0, 0), Color.FromArgb(100, 0, 0), Color.WhiteSmoke);
+                if (MidsContext.Config.DimWindowStyleColors)
+                {
+                    StylizeWindow(Handle, Color.FromArgb(100, 0, 0), Color.FromArgb(100, 0, 0), Color.WhiteSmoke);
+                }
+                else
+                {
+                    StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
+                }
             }
+
             var imageButtonExControls = Helpers.GetControlOfType<ImageButtonEx>(Controls);
             foreach (var ibEx in imageButtonExControls)
             {
@@ -2654,6 +2672,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             drawing?.Refresh(bounds);
         }
 
+        private void I9Picker_EnhancementSelectionCancelled()
+        {
+            I9Picker.Visible = false;
+            HidePopup();
+            EnhancingSlot = -1;
+            EnhancingPower = -1;
+        }
+
         private void I9Picker_EnhancementPicked(I9Slot? e)
         {
             e.RelativeLevel = I9Picker.Ui.View.RelLevel;
@@ -2726,17 +2752,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void I9Picker_Hiding(object? sender, EventArgs e)
+        private void I9Picker_MouseEnter(object? sender, EventArgs e)
         {
+            if (I9Picker.Visible)
+            {
+                // Give focus to the control so when hitting ESC
+                // one doesn't have to click on the picker first.
+                I9Picker.Focus();
+            }
+        }
+
+        private void I9Picker_MouseLeave(object? sender, EventArgs e)
+        {
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove)
+            {
+                return;
+            }
+            
             // 10 000 ticks in a millisecond / 10 000 000 ticks in a second (1.10^7)
             // Ensure the picker doesn't close instantly.
             if (!I9Picker.Visible | DateTime.Now.Ticks - _popupLastOpenTime < 1e6)
+            {
                 return;
+            }
 
             I9Picker.Visible = false;
             HidePopup();
             EnhancingSlot = -1;
-            RefreshInfo();
+            //RefreshInfo();
         }
 
         private void I9Picker_HoverEnhancement(int e)
@@ -2775,7 +2818,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void I9Popup_MouseMove(object? sender, MouseEventArgs e)
         {
-            HidePopup();
+            if (MidsContext.Config.CloseEnhSelectPopupByMove)
+            {
+                HidePopup();
+            }
+        }
+
+        private void I9Picker_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove && e.KeyCode == Keys.Escape)
+            {
+                I9Picker.Visible = false;
+                HidePopup();
+                EnhancingSlot = -1;
+            }
         }
 
         private void ibTeamEx_OnClick(object? sender, EventArgs e)

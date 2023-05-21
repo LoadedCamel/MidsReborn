@@ -65,6 +65,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             DialogResult = DialogResult.OK;
             StoreControls();
             myParent.DoCalcOptUpdates();
+            myParent.UpdateWindowStyle();
             MidsContext.Config!.SaveConfig();
             Hide();
         }
@@ -291,6 +292,9 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             lblSaveFolder.Text = config.BuildsPath;
             chkWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
             chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
+            chkDimWindowBorders.Checked = config.DimWindowStyleColors;
+            rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
+            rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
             ResumeLayout();
         }
 
@@ -527,6 +531,8 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
             config.WarnOnOldAppMbd = chkWarnOldAppVersion.Checked;
             config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
+            config.DimWindowStyleColors = chkDimWindowBorders.Checked;
+            config.CloseEnhSelectPopupByMove = rbEnhPopupCloseStyle1.Checked;
         }
 
         private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
@@ -604,6 +610,16 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                         break;
                 }
             }
+        }
+
+        private void rbEnhPopupCloseStyle1_CheckedChanged(object sender, EventArgs e)
+        {
+            rbEnhPopupCloseStyle2.Checked = !rbEnhPopupCloseStyle1.Checked;
+        }
+
+        private void rbEnhPopupCloseStyle2_CheckedChanged(object sender, EventArgs e)
+        {
+            rbEnhPopupCloseStyle1.Checked = !rbEnhPopupCloseStyle2.Checked;
         }
     }
 }

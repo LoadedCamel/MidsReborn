@@ -79,6 +79,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             Label34 = new Label();
             chkUpdates = new CheckBox();
             TabPage1 = new TabPage();
+            label5 = new Label();
+            rbEnhPopupCloseStyle2 = new RadioButton();
+            rbEnhPopupCloseStyle1 = new RadioButton();
             Label15 = new Label();
             Label10 = new Label();
             cmbAction = new ComboBox();
@@ -111,6 +114,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkNoTips = new CheckBox();
             chkMiddle = new CheckBox();
             GroupBox17 = new GroupBox();
+            chkDimWindowBorders = new CheckBox();
             chkPowersBold = new CheckBox();
             chkPowSelBold = new CheckBox();
             udPowersSize = new NumericUpDown();
@@ -371,9 +375,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 22);
+            TabPage5.Location = new System.Drawing.Point(4, 25);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 367);
+            TabPage5.Size = new System.Drawing.Size(777, 364);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
@@ -612,17 +616,53 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage1
             // 
+            TabPage1.Controls.Add(label5);
+            TabPage1.Controls.Add(rbEnhPopupCloseStyle2);
+            TabPage1.Controls.Add(rbEnhPopupCloseStyle1);
             TabPage1.Controls.Add(Label15);
             TabPage1.Controls.Add(Label10);
             TabPage1.Controls.Add(cmbAction);
             TabPage1.Controls.Add(GroupBox9);
             TabPage1.Controls.Add(GroupBox7);
-            TabPage1.Location = new System.Drawing.Point(4, 24);
+            TabPage1.Location = new System.Drawing.Point(4, 22);
             TabPage1.Name = "TabPage1";
-            TabPage1.Size = new System.Drawing.Size(777, 365);
+            TabPage1.Size = new System.Drawing.Size(777, 367);
             TabPage1.TabIndex = 6;
             TabPage1.Text = "Drag & Drop";
             TabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(416, 270);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(215, 13);
+            label5.TabIndex = 7;
+            label5.Text = "Enhancement selection popup behavior:";
+            // 
+            // rbEnhPopupCloseStyle2
+            // 
+            rbEnhPopupCloseStyle2.AutoSize = true;
+            rbEnhPopupCloseStyle2.Location = new System.Drawing.Point(416, 317);
+            rbEnhPopupCloseStyle2.Name = "rbEnhPopupCloseStyle2";
+            rbEnhPopupCloseStyle2.Size = new System.Drawing.Size(92, 17);
+            rbEnhPopupCloseStyle2.TabIndex = 6;
+            rbEnhPopupCloseStyle2.TabStop = true;
+            rbEnhPopupCloseStyle2.Text = "Click to close";
+            rbEnhPopupCloseStyle2.UseVisualStyleBackColor = true;
+            rbEnhPopupCloseStyle2.CheckedChanged += rbEnhPopupCloseStyle2_CheckedChanged;
+            // 
+            // rbEnhPopupCloseStyle1
+            // 
+            rbEnhPopupCloseStyle1.AutoSize = true;
+            rbEnhPopupCloseStyle1.Location = new System.Drawing.Point(416, 294);
+            rbEnhPopupCloseStyle1.Name = "rbEnhPopupCloseStyle1";
+            rbEnhPopupCloseStyle1.Size = new System.Drawing.Size(221, 17);
+            rbEnhPopupCloseStyle1.TabIndex = 5;
+            rbEnhPopupCloseStyle1.TabStop = true;
+            rbEnhPopupCloseStyle1.Text = "Close when pointer goes out (default)";
+            rbEnhPopupCloseStyle1.UseVisualStyleBackColor = true;
+            rbEnhPopupCloseStyle1.CheckedChanged += rbEnhPopupCloseStyle1_CheckedChanged;
             // 
             // Label15
             // 
@@ -699,9 +739,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage2.Controls.Add(GroupBox15);
             TabPage2.Controls.Add(GroupBox8);
             TabPage2.Controls.Add(GroupBox6);
-            TabPage2.Location = new System.Drawing.Point(4, 24);
+            TabPage2.Location = new System.Drawing.Point(4, 25);
             TabPage2.Name = "TabPage2";
-            TabPage2.Size = new System.Drawing.Size(777, 365);
+            TabPage2.Size = new System.Drawing.Size(777, 364);
             TabPage2.TabIndex = 1;
             TabPage2.Text = "Effects & Maths";
             TabPage2.UseVisualStyleBackColor = true;
@@ -938,6 +978,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // GroupBox17
             // 
+            GroupBox17.Controls.Add(chkDimWindowBorders);
             GroupBox17.Controls.Add(chkPowersBold);
             GroupBox17.Controls.Add(chkPowSelBold);
             GroupBox17.Controls.Add(udPowersSize);
@@ -960,6 +1001,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox17.TabIndex = 76;
             GroupBox17.TabStop = false;
             GroupBox17.Text = "Font Size/Colors:";
+            // 
+            // chkDimWindowBorders
+            // 
+            chkDimWindowBorders.AutoSize = true;
+            chkDimWindowBorders.Location = new System.Drawing.Point(280, 52);
+            chkDimWindowBorders.Name = "chkDimWindowBorders";
+            chkDimWindowBorders.Size = new System.Drawing.Size(163, 30);
+            chkDimWindowBorders.TabIndex = 86;
+            chkDimWindowBorders.Text = "Dim window border colors\r\n(Better fit dark themes)";
+            chkDimWindowBorders.UseVisualStyleBackColor = true;
             // 
             // chkPowersBold
             // 
@@ -1021,7 +1072,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkShowAlphaPopup
             // 
-            chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
+            chkShowAlphaPopup.Location = new System.Drawing.Point(280, 85);
             chkShowAlphaPopup.Name = "chkShowAlphaPopup";
             chkShowAlphaPopup.Size = new System.Drawing.Size(246, 18);
             chkShowAlphaPopup.TabIndex = 79;
@@ -1056,7 +1107,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // btnFontColor
             // 
-            btnFontColor.Location = new System.Drawing.Point(280, 32);
+            btnFontColor.Location = new System.Drawing.Point(280, 20);
             btnFontColor.Name = "btnFontColor";
             btnFontColor.Size = new System.Drawing.Size(172, 27);
             btnFontColor.TabIndex = 61;
@@ -1420,5 +1471,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private GroupBox groupBox10;
         private CheckBox chkWarnOldDbVersion;
         private CheckBox chkWarnOldAppVersion;
+        private CheckBox chkDimWindowBorders;
+        private Label label5;
+        private RadioButton rbEnhPopupCloseStyle2;
+        private RadioButton rbEnhPopupCloseStyle1;
     }
 }
