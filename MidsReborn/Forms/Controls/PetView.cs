@@ -112,7 +112,7 @@ namespace Mids_Reborn.Forms.Controls
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if (enhancedPower != null && MidsContext.Config != null && enhancedPower.ToggleCost > 0 &
+                if (enhancedPower != null && enhancedPower.ToggleCost > 0 &
                     MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(_enhancedPower == null);
@@ -254,9 +254,8 @@ namespace Mids_Reborn.Forms.Controls
                         continue;
                     }
 
-                    if (MidsContext.Config != null &&
-                        (MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE ||
-                        !MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP))
+                    if ((MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE ||
+                         !MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP))
                     {
                         continue;
                     }
@@ -851,7 +850,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
 
                     var iTip = _enhancedPower.Effects[index].BuildEffectString();
-                    if (MidsContext.Config != null && (_basePower.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                    if ((_basePower.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     {
                         iValue = "(suppressed)";
                     }
@@ -882,7 +881,7 @@ namespace Mids_Reborn.Forms.Controls
                         basePower.Effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .Where(e =>
-                                MidsContext.Config != null && e.Value.EffectType == baseFx.EffectType &
+                                e.Value.EffectType == baseFx.EffectType &
                                 e.Value.DamageType == baseFx.DamageType &
                                 e.Value.MezType == baseFx.MezType &
                                 e.Value.ETModifies == baseFx.ETModifies &
@@ -899,7 +898,7 @@ namespace Mids_Reborn.Forms.Controls
                         basePower.Effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .Where(e =>
-                                MidsContext.Config != null && e.Value.EffectType == baseFx.EffectType &
+                                e.Value.EffectType == baseFx.EffectType &
                                 e.Value.DamageType == baseFx.DamageType &
                                 e.Value.MezType == baseFx.MezType &
                                 e.Value.ETModifies == baseFx.ETModifies &
@@ -925,7 +924,7 @@ namespace Mids_Reborn.Forms.Controls
                        basePower.Effects
                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                            .Where(e =>
-                               MidsContext.Config != null && effectTypes.Contains(e.Value.EffectType) &
+                               effectTypes.Contains(e.Value.EffectType) &
                                effectDmgTypes.Contains(e.Value.DamageType) &
                                effectEtModifies.Contains(e.Value.ETModifies) &
                                effectMezTypes.Contains(e.Value.MezType) &
@@ -942,7 +941,7 @@ namespace Mids_Reborn.Forms.Controls
                        basePower.Effects
                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                            .Where(e =>
-                               MidsContext.Config != null && effectTypes.Contains(e.Value.EffectType) &
+                               effectTypes.Contains(e.Value.EffectType) &
                                effectDmgTypes.Contains(e.Value.DamageType) &
                                effectEtModifies.Contains(e.Value.ETModifies) &
                                effectMezTypes.Contains(e.Value.MezType) &

@@ -1550,14 +1550,14 @@ namespace Mids_Reborn.Forms
             {
                 NewToon();
                 LastFileName = "";
-                if (MidsContext.Config != null) MidsContext.Config.LastFileName = "";
+                MidsContext.Config.LastFileName = "";
             }
             else
             {
                 LastFileName = fName;
                 if (!fName.EndsWith("mids_build.mxd"))
                 {
-                    if (MidsContext.Config != null) MidsContext.Config.LastFileName = fName;
+                    MidsContext.Config.LastFileName = fName;
                 }
             }
 
@@ -2798,42 +2798,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibPopupEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.DisableShowPopup = ibPopupEx.ToggleState switch
             {
-                MidsContext.Config.DisableShowPopup = ibPopupEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => true,
-                    ImageButtonEx.States.ToggledOn => false,
-                    _ => MidsContext.Config.DisableShowPopup
-                };
-            }
+                ImageButtonEx.States.ToggledOff => true,
+                ImageButtonEx.States.ToggledOn => false,
+                _ => MidsContext.Config.DisableShowPopup
+            };
         }
 
         private void ibPvXEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.Inc.DisablePvE = ibPvXEx.ToggleState switch
             {
-                MidsContext.Config.Inc.DisablePvE = ibPvXEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => false,
-                    ImageButtonEx.States.ToggledOn => true,
-                    _ => MidsContext.Config.Inc.DisablePvE
-                };
-            }
+                ImageButtonEx.States.ToggledOff => false,
+                ImageButtonEx.States.ToggledOn => true,
+                _ => MidsContext.Config.Inc.DisablePvE
+            };
+
             RefreshInfo();
         }
 
         private void ibRecipeEx_OnClick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.PopupRecipes = ibRecipeEx.ToggleState switch
             {
-                MidsContext.Config.PopupRecipes = ibRecipeEx.ToggleState switch
-                {
-                    ImageButtonEx.States.ToggledOff => false,
-                    ImageButtonEx.States.ToggledOn => true,
-                    _ => MidsContext.Config.PopupRecipes
-                };
-            }
+                ImageButtonEx.States.ToggledOff => false,
+                ImageButtonEx.States.ToggledOn => true,
+                _ => MidsContext.Config.PopupRecipes
+            };
         }
 
         private void ibSetsEx_OnClick(object? sender, EventArgs e)
@@ -2850,10 +2842,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibSlotInfoEx_Onclick(object? sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowSlotsLeft = ibSlotInfoEx.ToggleState == ImageButtonEx.States.ToggledOff;
-            }
+            MidsContext.Config.ShowSlotsLeft = ibSlotInfoEx.ToggleState == ImageButtonEx.States.ToggledOff;
         }
 
         private void ibTotalsEx_OnClick(object? sender, EventArgs e)
@@ -3499,15 +3488,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             UpdateDmBuffer();
         }
 
-        // private void pbDynMode_Paint(object sender, PaintEventArgs e)
-        // {
-        //     if (dmBuffer == null)
-        //         UpdateDmBuffer();
-        //     if (dmBuffer == null)
-        //         return;
-        //     e.Graphics.DrawImage(dmBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
-        // }
-
         private void pnlGFX_DragDrop(object sender, DragEventArgs e)
         {
             if (!sender.Equals(pnlGFX))
@@ -3905,7 +3885,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                         {
-                            if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
+                            if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -3919,7 +3899,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                     return;
                                 }
                             }
-                            else if (MidsContext.Config != null && (MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                            else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -3953,7 +3933,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                         }
 
-                        if (MidsContext.Config != null && (e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
+                        if ((e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
@@ -4136,8 +4116,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var (result, remember) = frmOptionListDlg.ShowWithOptions(true, defaultOpt ?? 1, descript, options);
             dragdropScenarioAction[index] = (short)result;
             if (remember != true) return remember;
-            if (MidsContext.Config != null)
-                MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
+            MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
             return remember;
         }
 
@@ -6620,8 +6599,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-                MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
+            MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
             SetDamageMenuCheckMarks();
             DisplayFormatChanged();
         }
@@ -6633,7 +6611,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewDPS_New_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null) MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
+            MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
             SetDamageMenuCheckMarks();
             DisplayFormatChanged();
         }
@@ -6645,44 +6623,32 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewIOLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.I9.HideIOLevels = !MidsContext.Config.I9.HideIOLevels;
-                tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
-            }
+            MidsContext.Config.I9.HideIOLevels = !MidsContext.Config.I9.HideIOLevels;
+            tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
 
             DoRedraw();
         }
 
         private void tsViewSOLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowSoLevels = !MidsContext.Config.ShowSoLevels;
-                tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
-            }
-
+            MidsContext.Config.ShowSoLevels = !MidsContext.Config.ShowSoLevels;
+            tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
+            
             DoRedraw();
         }
 
         private void tsViewRelative_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowEnhRel = !MidsContext.Config.ShowEnhRel;
-                tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
-            }
-
+            MidsContext.Config.ShowEnhRel = !MidsContext.Config.ShowEnhRel;
+            tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
+            
             DoRedraw();
         }
 
         private void tsViewRelativeAsSigns_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
-            {
-                MidsContext.Config.ShowRelSymbols = !MidsContext.Config.ShowRelSymbols;
-                tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
-            }
+            MidsContext.Config.ShowRelSymbols = !MidsContext.Config.ShowRelSymbols;
+            tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
 
             DoRedraw();
         }
@@ -6701,16 +6667,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewSlotLevels_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Config != null)
+            MidsContext.Config.ShowSlotLevels = !MidsContext.Config.ShowSlotLevels;
+            tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
+            ibSlotLevelsEx.ToggleState = MidsContext.Config.ShowSlotLevels switch
             {
-                MidsContext.Config.ShowSlotLevels = !MidsContext.Config.ShowSlotLevels;
-                tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
-                ibSlotLevelsEx.ToggleState = MidsContext.Config.ShowSlotLevels switch
-                {
-                    true => ImageButtonEx.States.ToggledOn,
-                    false => ImageButtonEx.States.ToggledOff
-                };
-            }
+                true => ImageButtonEx.States.ToggledOn,
+                false => ImageButtonEx.States.ToggledOff
+            };
 
             DoRedraw();
         }
