@@ -11,6 +11,7 @@ namespace Mids_Reborn.Forms
 {
     public sealed partial class frmInitializing : PerPixelAlpha, IMessager
     {
+        public event EventHandler? LoadingStarted;
         private const int BorderRadius = 20;
         private const int BorderSize = 2;
         private readonly Color _borderColor = Color.Black;
@@ -29,17 +30,23 @@ namespace Mids_Reborn.Forms
         {
             InitializeComponent();
             Load += FrmInitializing_Load;
+            Shown += FrmInitializing_Shown;
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;
             Activated += FrmInitializing_Activated;
         }
 
+        private void FrmInitializing_Shown(object? sender, EventArgs e)
+        {
+            LoadingStarted?.Invoke(this, e);
+        }
+
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
             var html =
-                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-color: #000;\r\n  background-image: url('http://appassets.mrb/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: auto 100%;\r\n  background-position: center;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
+                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-color: #000;\r\n  background-image: url('http://appassets.mrb/images/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: auto 100%;\r\n  background-position: center;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
             webView21.CoreWebView2.NavigateToString(html);
@@ -51,6 +58,8 @@ namespace Mids_Reborn.Forms
             get => base.Text;
             set => base.Text = value;
         }
+
+        public bool LoadingComplete { get; set; }
 
         public void SetMessage(string text)
         {

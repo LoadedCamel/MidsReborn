@@ -398,15 +398,11 @@ namespace Mids_Reborn.Forms
             {
                 using var iFrm = new frmInitializing();
                 _frmInitializing = iFrm;
+                _frmInitializing.LoadingStarted += FrmInitializingOnLoadingStarted;
                 _frmInitializing.Show();
-                switch (MidsContext.Config.FirstRun)
+                while (!_frmInitializing.LoadingComplete)
                 {
-                    case true:
-                        MainModule.MidsController.SelectDefaultDatabase(_frmInitializing);
-                        break;
-                    default:
-                        MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
-                        break;
+                    Application.DoEvents();
                 }
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
@@ -531,10 +527,8 @@ namespace Mids_Reborn.Forms
                     false => ImageButtonEx.States.ToggledOff
                 };
 
-                Show();
-                //_frmInitializing?.Hide();
-                Task.Delay(8000);
                 _frmInitializing?.Close();
+                Show();
                 Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
@@ -555,8 +549,6 @@ namespace Mids_Reborn.Forms
                 MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
                 if (this.IsInDesignMode())
                     return;
-                /*if (MidsContext.Config.CheckForUpdates)
-                    clsXMLUpdate.CheckUpdate();*/
             }
             catch (Exception ex)
             {
@@ -569,6 +561,19 @@ namespace Mids_Reborn.Forms
             _loading = false;
             MidsContext.Config.FirstRun = false;
             MidsContext.Config.SaveConfig();
+        }
+
+        private void FrmInitializingOnLoadingStarted(object? sender, EventArgs e)
+        {
+            switch (MidsContext.Config.FirstRun)
+            {
+                case true:
+                    MainModule.MidsController.SelectDefaultDatabase(_frmInitializing);
+                    break;
+                default:
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
+                    break;
+            }
         }
 
         private async Task<bool> RunSchemaCommands(string url)
@@ -632,7 +637,6 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon == null)
                 return;
 
-            if (MidsContext.Config == null) return;
             switch (ibModeEx.ToggleState)
             {
                 case ImageButtonEx.States.ToggledOff:
