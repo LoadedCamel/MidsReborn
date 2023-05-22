@@ -523,9 +523,7 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
-                WinApi.AnimateWindow(Handle, 1200, WinApi.AnimationFlags.Activate | WinApi.AnimationFlags.Blend);
-                Show();
-                Refresh();
+                //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -543,13 +541,26 @@ namespace Mids_Reborn.Forms
                 UpdatePoolsPanelSize();
                 InitializeDv();
                 MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
+                // Unnecessary?
+                if (MidsContext.Config.DimWindowStyleColors)
+                {
+                    StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
+                }
+                else
+                {
+                    StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
+                }
+                WinApi.AnimateWindow(Handle, 900, WinApi.AnimationFlags.Activate | WinApi.AnimationFlags.Blend);
+                Show();
                 if (this.IsInDesignMode())
+                {
                     return;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "An error has occurred when loading the main form. Error: " + ex.Message + "\r\n" + ex.StackTrace,
+                    $"An error has occurred when loading the main form. Error: {ex.Message}\r\n{ex.StackTrace}",
                     "OMIGODHAX");
                 throw;
             }

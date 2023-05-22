@@ -16,6 +16,7 @@ namespace Mids_Reborn.Forms
         private const int BorderRadius = 20;
         private const int BorderSize = 2;
         private readonly Color _borderColor = Color.Black;
+        private bool WebViewReady = false;
 
         protected override CreateParams CreateParams
         {
@@ -52,13 +53,45 @@ namespace Mids_Reborn.Forms
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
-            var html =
-                "<html>\r\n<head>\r\n<style>\r\nbody {\r\n  background-color: #000;\r\n  background-image: url('http://appassets.mrb/images/MRBLoading.gif');\r\n  background-repeat: no-repeat;\r\n  background-size: auto 100%;\r\n  background-position: center;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n</body>\r\n</html>";
+            var html = @"<!DOCTYPE html>
+<html>
+<head>
+<style type=""text/css"">
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+body {
+    background-image: url(""http://appassets.mrb/images/MRBLoading.gif"");
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    background-position: center;
+}
+
+div#message {
+    margin: 12px auto auto auto;
+    text-align: center;
+    color: #FC0;
+    font-family: Sans-Serif;
+    font-size: 11pt;
+    font-weight: bold;
+    text-shadow: 0 0 3px #000, 0 0 1px #000, 0 0 1px #000;
+    transition: all 0.5s ease-out;
+}
+</style>
+</head>
+<body>
+    <div id=""message""></div>
+</body>
+</html>";
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
             webView21.CoreWebView2.NavigateToString(html);
+            WebViewReady = true;
         }
-
 
         public sealed override string Text
         {
@@ -82,10 +115,22 @@ namespace Mids_Reborn.Forms
             else
             {
                 if (Label1.Text == text)
+                {
                     return;
+                }
+
                 Label1.Text = text;
                 Label1.Refresh();
-                Refresh();
+                if (!WebViewReady)
+                {
+                    return;
+                }
+
+                webView21.CoreWebView2.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
+messageDiv.style.opacity = 0;
+setTimeout(() => {{ messageDiv.textContent = ""{text.Replace("\"", "\\\"")}""; }}, 100);
+setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
+                //Refresh();
             }
         }
 
