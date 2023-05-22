@@ -523,7 +523,6 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
-                //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -541,17 +540,8 @@ namespace Mids_Reborn.Forms
                 UpdatePoolsPanelSize();
                 InitializeDv();
                 MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
-                // Unnecessary?
-                if (MidsContext.Config.DimWindowStyleColors)
-                {
-                    StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
-                }
-                else
-                {
-                    StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
-                }
-                WinApi.AnimateWindow(Handle, 900, WinApi.AnimationFlags.Activate | WinApi.AnimationFlags.Blend);
                 Show();
+                Refresh();
                 if (this.IsInDesignMode())
                 {
                     return;
@@ -7354,7 +7344,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             try
             {
                 var importHandle = new ImportFromBuildsave(buildString);
-                Debug.WriteLine($"GameImport({buildString})");
+                //Debug.WriteLine($"GameImport({buildString})");
                 var listPowers = importHandle.Parse();
 
                 if (listPowers == null) return;
@@ -7402,14 +7392,41 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo, bool addToAutoOpen = true)
+        private void InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersetsFull, RawCharacterInfo characterInfo, bool addToAutoOpen = true)
         {
+            var psFullNames = listPowersetsFull.Select(e => e.Contains(".")
+                    ? e
+                    : DatabaseAPI.GetPowersetByName(e, characterInfo.Archetype)?.FullName)
+                .Distinct()
+                .ToList();
+
+            listPowersetsFull = new UniqueList<string>();
+            foreach (var ps in psFullNames)
+            {
+                listPowersetsFull.Add(ps);
+            }
+
+            var listPowersets = new UniqueList<string>();
+            var trunkPowersets = listPowersetsFull
+                .Select(e => DatabaseAPI.GetPowersetByFullname(e) ?? null)
+                .Where(e => e is { SetType: Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary, nIDTrunkSet: > -1 })
+                .Select(e => DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName)
+                .ToList();
+
+            foreach (var ps in listPowersetsFull)
+            {
+                if (!trunkPowersets.Contains(ps))
+                {
+                    listPowersets.Add(ps);
+                }
+            }
+
             // Need to pad pools powers list so there are 4
             // So epic pools doesn't end up shown as a regular pool...
-            ImportBase.PadPowerPools(ref listPowersets);
             ImportBase.FilterVEATPools(ref listPowersets);
             ImportBase.FixUndetectedPowersets(ref listPowersets);
-            ImportBase.FinalizePowersetsList(ref listPowersets, listPowers);
+            ImportBase.FinalizePowersetsList(ref listPowersets, listPowers, trunkPowersets);
+            ImportBase.PadPowerPools(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -7468,7 +7485,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
             }
 
             FixStatIncludes();
@@ -7487,9 +7504,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var idx = -1;
             if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
             {
-                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
-                    .RequestedLevel);
-                if (idx < 0) idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
+                if (idx < 0)
+                {
+                    idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                }
             }
             else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
             {
@@ -7497,7 +7516,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 drawing.HighlightSlot(-1);
             }
 
-            if (MainModule.MidsController.Toon.Complete) drawing.HighlightSlot(-1);
+            if (MainModule.MidsController.Toon.Complete)
+            {
+                drawing.HighlightSlot(-1);
+            }
 
             if ((idx > -1) & (idx <= MidsContext.Character.CurrentBuild.Powers.Count))
             {

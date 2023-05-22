@@ -201,7 +201,7 @@ namespace Mids_Reborn
                             i9Slot.Grade = Enums.eEnhGrade.SingleO;
                             break;
                         case Enums.eType.InventO or Enums.eType.SetO:
-                            // Current enhancement level: //p.Slots[i].Level;
+                            // Current enhancement level: p.Slots[i].Level
                             // Set to maximum since attuned ones will give the lowest level possible.
                             i9Slot.IOLevel = DatabaseAPI.Database.Enhancements[i9Slot.Enh].LevelMax;
                             i9Slot.RelativeLevel = (Enums.eEnhRelative) (p.Slots[i].Boosters + 4);
@@ -211,7 +211,10 @@ namespace Mids_Reborn
                     powerEntry.Slots[i].Enhancement = i9Slot;
                 }
 
-                if (powerEntry.Slots.Length > 0) powerEntry.Slots[0].Level = powerEntry.Level;
+                if (powerEntry.Slots.Length > 0)
+                {
+                    powerEntry.Slots[0].Level = powerEntry.Level;
+                }
             }
 
             powerEntry.NIDPower = p.pData.PowerIndex;
@@ -230,7 +233,7 @@ namespace Mids_Reborn
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
             }
         }
 
@@ -319,6 +322,8 @@ namespace Mids_Reborn
             {
                 listPowersets.Add(dbPowerPools[i]);
             }
+
+            listPowersets.FromList(listPowersets.OrderBy(e => e.StartsWith("Epic.")).ToList());
         }
 
         public static void FilterVEATPools(ref UniqueList<string> listPowersets)
@@ -368,13 +373,13 @@ namespace Mids_Reborn
             ).ToList());
         }
 
-        public static void FinalizePowersetsList(ref UniqueList<string> listPowersets, List<PowerEntry> listPowers)
+        public static void FinalizePowersetsList(ref UniqueList<string> listPowersets, List<PowerEntry> listPowers, IReadOnlyList<string> trunkPowersets)
         {
             listPowersets.FromList(
                 listPowers
                     .Where(e => e.Power != null)
                     .Select(e => e.Power.GetPowerSet()?.FullName)
-                    .Where(e => !string.IsNullOrWhiteSpace(e) && e != "Inherent.Inherent" && e != "Inherent.Fitness")
+                    .Where(e => !string.IsNullOrWhiteSpace(e) && e != "Inherent.Inherent" && e != "Inherent.Fitness" && !trunkPowersets.Contains(e))
                     .Distinct()
                     .ToList()!);
         }
@@ -1042,7 +1047,7 @@ namespace Mids_Reborn
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
                 
                 return null;
             }
@@ -1142,6 +1147,16 @@ namespace Mids_Reborn
             FixUndetectedPowersets(ref powersetsFullNamesList);
             FinalizePowersetsList(ref powersetsFullNamesList);
 
+            var powersetsWithTrunks = new UniqueList<string>();
+            powersetsWithTrunks.AddRange(powersetsFullNamesList);
+            var trunkPowersets = powersetsFullNamesList
+                .Select(e => DatabaseAPI.GetPowersetByFullname(e) ?? null)
+                .Where(e => e is {SetType: Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary, nIDTrunkSet: > -1})
+                .Select(e => DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName)
+                .ToList();
+
+            powersetsWithTrunks.AddRange(trunkPowersets);
+
             // Powers
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
             var rMatches = r.Matches(cnt);
@@ -1155,7 +1170,7 @@ namespace Mids_Reborn
                     Level = Convert.ToInt32(mt.Groups[1].Value, null)
                 };
 
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsFullNamesList);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, archetype.Idx, powersetsWithTrunks);
                 p.Powerset = p.pData?.GetPowerSet();
                 p.FullName = p.pData == null ? string.Empty : p.pData.FullName;
                 p.Valid = CheckValid(p.pData);
@@ -1211,7 +1226,7 @@ namespace Mids_Reborn
 
                 if (!p.Valid) continue;
                 
-                if (CheckValid(p.Powerset))
+                if (CheckValid(p.Powerset) && !trunkPowersets.Contains(p.Powerset?.FullName ?? "--"))
                 {
                     PowerSets.Add(p.Powerset.FullName);
                 }

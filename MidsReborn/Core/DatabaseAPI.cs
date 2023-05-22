@@ -1104,6 +1104,15 @@ namespace Mids_Reborn.Core
             }
 
             var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            if (e >= 0)
+            {
+                return e;
+            }
+
+            // CaltoArm-+Def(Pets) through build recovery
+            iName = iName.Replace("[", "(").Replace("]", ")");
+            e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+
             return e >= 0
                 ? e
                 : GetEnhancementByShortName(iName);
