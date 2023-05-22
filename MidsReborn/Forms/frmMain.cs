@@ -31,6 +31,7 @@ using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
 using RestSharp;
+using static Mids_Reborn.Core.Utils.WinApi;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -41,8 +42,6 @@ namespace Mids_Reborn.Forms
 {
     public sealed partial class frmMain : Form
     {
-        #region Form Composting & Api Overrides
-
         protected override CreateParams CreateParams
         {
             get
@@ -54,40 +53,6 @@ namespace Mids_Reborn.Forms
                 return cp;
             }
         }
-
-        [DllImport("DwmApi")]
-        private static extern int DwmSetWindowAttribute(IntPtr hWnd, WindowAttribute attr, int[] attrValue, int attrSize);
-
-        public enum WindowAttribute : int
-        {
-            BorderColor = 34,
-            CaptionColor = 35,
-            TextColor = 36,
-            BorderThickness = 37
-        }
-
-        private static string GetRgb(Color color)
-        {
-            return $"{color.B:X2}{color.G:X2}{color.R:X2}";
-        }
-
-        private void StylizeWindow(IntPtr handle, Color borderColor, Color? captionColor = null, Color? textColor = null)
-        {
-            var border = new[] { int.Parse(GetRgb(borderColor), NumberStyles.HexNumber) };
-            _ = DwmSetWindowAttribute(handle, WindowAttribute.BorderColor, border, 4);
-
-            if (captionColor != null)
-            {
-                var caption = new[] { int.Parse(GetRgb((Color)captionColor), NumberStyles.HexNumber) };
-                _ = DwmSetWindowAttribute(handle, WindowAttribute.CaptionColor, caption, 4);
-            }
-
-            if (textColor == null) return;
-            var text = new[] { int.Parse(GetRgb((Color)textColor), NumberStyles.HexNumber) };
-            _ = DwmSetWindowAttribute(handle, WindowAttribute.TextColor, text, 4);
-        }
-
-        #endregion
 
         private const string UriScheme = "mrb";
         private frmInitializing? _frmInitializing;
@@ -414,6 +379,7 @@ namespace Mids_Reborn.Forms
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 NewToon();
+                MidsContext.Character!.AlignmentChanged += CharacterOnAlignmentChanged;
                 PowerModified(true);
 
                 var comboData = MidsContext.Config.RelativeScales;
@@ -523,25 +489,6 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
-                dvAnchored.SetScreenBounds(ClientRectangle);
-                var iLocation = new Point();
-                ref var local = ref iLocation;
-                var left = llPrimary.Left;
-                var top = llPrimary.Top;
-                var size1 = llPrimary.SizeNormal;
-                var height5 = size1.Height;
-                var y = top + height5 + 5;
-                local = new Point(left, y);
-                dvAnchored.SetLocation(iLocation, true);
-                PriSec_ExpandChanged(true);
-                _loading = false;
-                UpdateControls(true);
-                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
-                UpdatePoolsPanelSize();
-                InitializeDv();
-                MidsContext.Character.AlignmentChanged += CharacterOnAlignmentChanged;
-                Show();
-                Refresh();
                 if (this.IsInDesignMode())
                 {
                     return;
@@ -556,8 +503,6 @@ namespace Mids_Reborn.Forms
             }
 
             _loading = false;
-            MidsContext.Config.FirstRun = false;
-            MidsContext.Config.SaveConfig();
         }
 
         private void FrmInitializingOnLoadingStarted(object? sender, EventArgs e)
@@ -571,6 +516,29 @@ namespace Mids_Reborn.Forms
                     MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                     break;
             }
+            
+        }
+
+        private void PerformFinalSetup()
+        {
+            dvAnchored.SetScreenBounds(ClientRectangle);
+            var iLocation = new Point();
+            ref var local = ref iLocation;
+            var left = llPrimary.Left;
+            var top = llPrimary.Top;
+            var size1 = llPrimary.SizeNormal;
+            var height5 = size1.Height;
+            var y = top + height5 + 5;
+            local = new Point(left, y);
+            dvAnchored.SetLocation(iLocation, true);
+            PriSec_ExpandChanged(true);
+            _loading = false;
+            UpdateControls(true);
+            setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
+            UpdatePoolsPanelSize();
+            InitializeDv();
+            MidsContext.Config.FirstRun = false;
+            MidsContext.Config.SaveConfig();
         }
 
         private async Task<bool> RunSchemaCommands(string url)
