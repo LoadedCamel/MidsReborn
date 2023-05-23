@@ -53,7 +53,7 @@ namespace Mids_Reborn.Forms
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
-            var html = @"<!DOCTYPE html>
+            const string html = @"<!DOCTYPE html>
 <html>
 <head>
 <style type=""text/css"">
@@ -74,7 +74,7 @@ body {
 div#message {
     margin: 12px auto auto auto;
     text-align: center;
-    color: #FC0;
+    color: Gainsboro;
     font-family: Sans-Serif;
     font-size: 11pt;
     font-weight: bold;
