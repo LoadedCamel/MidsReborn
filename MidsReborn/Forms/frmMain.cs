@@ -6,7 +6,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -200,6 +199,8 @@ namespace Mids_Reborn.Forms
 
         private async void OnShown(object? sender, EventArgs e)
         {
+            PerformFinalSetup();
+
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
             var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
@@ -489,6 +490,7 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
+
                 if (this.IsInDesignMode())
                 {
                     return;
@@ -2939,7 +2941,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (!Lock & DataViewLocked)
             {
                 if (dvLastPower != powerIdx)
+                {
                     return;
+                }
+
                 Lock = true;
             }
 
@@ -2950,12 +2955,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var powIndex = -1;
             if (MainModule.MidsController.Toon.Locked)
             {
-                var num2 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
-                for (var index = 0; index <= num2; ++index)
+                for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index] == null) continue;
-                    if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
+                    if (MidsContext.Character.CurrentBuild.Powers[index] == null)
+                    {
                         continue;
+                    }
+
+                    if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
+                    {
+                        continue;
+                    }
+
                     powIndex = index;
                     break;
                 }
