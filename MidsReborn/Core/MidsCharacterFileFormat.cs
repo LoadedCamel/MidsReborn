@@ -489,10 +489,10 @@ namespace Mids_Reborn.Core
                         else
                         {
                             sidPower1 = r.ReadInt32();
-                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower1, charClass.ClassName);
+                            var newId = DatabaseAPI.Database.ReplTable?.FetchAlternate(sidPower1, charClass.ClassName);
                             if (newId >= 0)
                             {
-                                sidPower1 = newId;
+                                sidPower1 = (int)newId;
                             }
 
                             nId = DatabaseAPI.NidFromStaticIndexPower(sidPower1);
