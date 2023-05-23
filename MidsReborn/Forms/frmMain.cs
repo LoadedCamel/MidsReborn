@@ -7477,6 +7477,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MidsContext.Config.LastFileName = buildFile;
                 LastFileName = buildFile;
             }
+            else
+            {
+                MidsContext.Config.LastFileName = "";
+                LastFileName = "";
+            }
 
             SetTitleBar();
 
