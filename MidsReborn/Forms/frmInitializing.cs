@@ -16,7 +16,7 @@ namespace Mids_Reborn.Forms
         private const int BorderRadius = 20;
         private const int BorderSize = 2;
         private readonly Color _borderColor = Color.Black;
-        private bool WebViewReady = false;
+        private bool _webViewReady;
 
         protected override CreateParams CreateParams
         {
@@ -32,12 +32,19 @@ namespace Mids_Reborn.Forms
         {
             InitializeComponent();
             Load += FrmInitializing_Load;
-            Shown += FrmInitializing_Shown;
             Closing += FrmInitializing_Closing;
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;
             Activated += FrmInitializing_Activated;
+            webView21.NavigationCompleted += WebView21OnNavigationCompleted;
+        }
+        
+        private void WebView21OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (!e.IsSuccess) return;
+            _webViewReady = true;
+            LoadingStarted?.Invoke(this, e);
         }
 
         private void FrmInitializing_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -45,15 +52,15 @@ namespace Mids_Reborn.Forms
             AnimateWindow(Handle, 500, AnimationFlags.Activate | AnimationFlags.Blend | AnimationFlags.Hide);
         }
 
-        private void FrmInitializing_Shown(object? sender, EventArgs e)
-        {
-            LoadingStarted?.Invoke(this, e);
-        }
-
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
-            const string html = @"<!DOCTYPE html>
+            await webView21.EnsureCoreWebView2Async(null);
+            webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
+            webView21.CoreWebView2.NavigateToString(Html);
+        }
+
+        private const string Html = @"<!DOCTYPE html>
 <html>
 <head>
 <style type=""text/css"">
@@ -87,11 +94,6 @@ div#message {
     <div id=""message""></div>
 </body>
 </html>";
-            await webView21.EnsureCoreWebView2Async();
-            webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
-            webView21.CoreWebView2.NavigateToString(html);
-            WebViewReady = true;
-        }
 
         public sealed override string Text
         {
@@ -121,7 +123,7 @@ div#message {
 
                 Label1.Text = text;
                 Label1.Refresh();
-                if (!WebViewReady)
+                if (!_webViewReady)
                 {
                     return;
                 }

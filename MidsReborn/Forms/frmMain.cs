@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -199,8 +200,6 @@ namespace Mids_Reborn.Forms
 
         private async void OnShown(object? sender, EventArgs e)
         {
-            PerformFinalSetup();
-
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
             var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
@@ -489,8 +488,25 @@ namespace Mids_Reborn.Forms
                     false => ImageButtonEx.States.ToggledOff
                 };
 
+                Show();
+                _frmInitializing?.Hide();
                 _frmInitializing?.Close();
-
+                dvAnchored.SetScreenBounds(ClientRectangle);
+                var iLocation = new Point();
+                ref var local = ref iLocation;
+                var left = llPrimary.Left;
+                var top = llPrimary.Top;
+                var size1 = llPrimary.SizeNormal;
+                var height5 = size1.Height;
+                var y = top + height5 + 5;
+                local = new Point(left, y);
+                dvAnchored.SetLocation(iLocation, true);
+                PriSec_ExpandChanged(true);
+                _loading = false;
+                UpdateControls(true);
+                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
+                UpdatePoolsPanelSize();
+                InitializeDv();
                 if (this.IsInDesignMode())
                 {
                     return;
@@ -505,6 +521,8 @@ namespace Mids_Reborn.Forms
             }
 
             _loading = false;
+            MidsContext.Config.FirstRun = false;
+            MidsContext.Config.SaveConfig();
         }
 
         private void FrmInitializingOnLoadingStarted(object? sender, EventArgs e)
@@ -519,28 +537,6 @@ namespace Mids_Reborn.Forms
                     break;
             }
             
-        }
-
-        private void PerformFinalSetup()
-        {
-            dvAnchored.SetScreenBounds(ClientRectangle);
-            var iLocation = new Point();
-            ref var local = ref iLocation;
-            var left = llPrimary.Left;
-            var top = llPrimary.Top;
-            var size1 = llPrimary.SizeNormal;
-            var height5 = size1.Height;
-            var y = top + height5 + 5;
-            local = new Point(left, y);
-            dvAnchored.SetLocation(iLocation, true);
-            PriSec_ExpandChanged(true);
-            _loading = false;
-            UpdateControls(true);
-            setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
-            UpdatePoolsPanelSize();
-            InitializeDv();
-            MidsContext.Config.FirstRun = false;
-            MidsContext.Config.SaveConfig();
         }
 
         private async Task<bool> RunSchemaCommands(string url)
