@@ -200,7 +200,6 @@ namespace Mids_Reborn.Forms
 
         private async void OnShown(object? sender, EventArgs e)
         {
-            PerformFinalSetup();
             SetEnhCheckModePosition();
 
             var comLoad = false;
