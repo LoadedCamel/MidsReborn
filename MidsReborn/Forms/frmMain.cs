@@ -200,6 +200,7 @@ namespace Mids_Reborn.Forms
         private async void OnShown(object? sender, EventArgs e)
         {
             PerformFinalSetup();
+            SetEnhCheckModePosition();
 
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
@@ -382,6 +383,8 @@ namespace Mids_Reborn.Forms
                 NewToon();
                 MidsContext.Character!.AlignmentChanged += CharacterOnAlignmentChanged;
                 PowerModified(true);
+                
+                
 
                 var comboData = MidsContext.Config.RelativeScales;
                 if (EnemyRelativeToolStripComboBox.ComboBox != null)
@@ -490,7 +493,6 @@ namespace Mids_Reborn.Forms
                 };
 
                 _frmInitializing?.Close();
-
                 if (this.IsInDesignMode())
                 {
                     return;
@@ -901,12 +903,18 @@ namespace Mids_Reborn.Forms
             ShowPopup(-1, CbtAT.Value.SelectedItem.Idx, cbAT.Bounds);
         }
 
+        private void SetEnhCheckModePosition()
+        {
+            enhCheckMode.Location = enhCheckMode.Location with { Y = Math.Max(llPrimary.Top + llPrimary.SizeNormal.Height + 431, poolsPanel.Top + llAncillary.Top + llAncillary.SizeNormal.Height + 35) };
+        }
+
         private void cbAT_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate) return;
             NewToon(false);
             //SetFormHeight();
             //PerformAutoScale();
+            SetEnhCheckModePosition();
             SetAncilPoolHeight();
             GetBestDamageValues();
             if (!MidsContext.Config.UseOldTotalsWindow)
@@ -1560,6 +1568,7 @@ namespace Mids_Reborn.Forms
             SetTitleBar();
             Application.DoEvents();
             GetBestDamageValues();
+            SetEnhCheckModePosition();
             UpdateColors();
             FloatUpdate(true);
 
@@ -7483,6 +7492,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 LastFileName = "";
             }
 
+            SetEnhCheckModePosition();
             SetTitleBar();
 
             var idx = -1;
