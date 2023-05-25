@@ -1,14 +1,56 @@
-﻿using System.Drawing;
+﻿using Mids_Reborn.Core.Base.Master_Classes;
+using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
 {
     public sealed partial class EnhPicker : UserControl
     {
+        #region Designer Properties (HIDDEN)
+
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public override Image? BackgroundImage { get; set; } = null;
+
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public override ImageLayout BackgroundImageLayout { get; set; }
+
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public new BorderStyle BorderStyle { get; set; } = BorderStyle.None;
+
+        #endregion
+
+        #region Private Properties
+
+        private Color _borderColor = Color.FromArgb(12, 56, 100);
+
+        #endregion
+
+
         public override Font Font { get; set; } = new(@"Microsoft Sans Serif", 10.25f, FontStyle.Bold);
+
+        [Description("The border color of the component and it's cells.")]
+        [Category("Appearance")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public Color BorderColor
+        {
+            get => _borderColor;
+            set
+            {
+                _borderColor = value;
+            }
+        }
 
         internal class Cells
         {
@@ -22,26 +64,19 @@ namespace Mids_Reborn.Forms.Controls
 
         private Cells Cell { get; set; }
 
-        #region Flow Controls
-
-        internal FlowLayoutPanel? FlpEnhType { get; private set; }
-        internal FlowLayoutPanel? FlpEnhSubType { get; private set; }
-        internal FlowLayoutPanel? FlpEnhancements { get; private set; }
-
-        #endregion
-
         public EnhPicker()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             MinimumSize = new Size(300, 300);
             Cell = new Cells();
             InitializeComponent();
+
         }
-        
+
         private void DrawLayout(Graphics gfx)
         {
             var client = ClientRectangle;
-            using var pen = new Pen(Color.FromArgb(12,56,100), 2);
+            using var pen = new Pen(Color.FromArgb(12, 56, 100), 2);
             pen.Color = MidsContext.Character?.IsHero() switch
             {
                 false => Color.FromArgb(100, 0, 0),
@@ -49,7 +84,7 @@ namespace Mids_Reborn.Forms.Controls
             };
 
             var textMeasurement = gfx.MeasureString("Enhancement Picker", Font);
-            
+
             Cell.Title = new Rectangle(client.X + 2, client.Y - 2, client.Width - 4, (int)textMeasurement.Height + 15);
             Cell.EnhType = new Rectangle(client.X + 2, Cell.Title.Bottom, client.Width - 4, 46);
             Cell.EnhSubType = new Rectangle(client.Right - 48, Cell.EnhType.Bottom, 46, client.Height - 38);
@@ -58,11 +93,6 @@ namespace Mids_Reborn.Forms.Controls
             Cell.Level = new Rectangle(client.Right - 48, client.Bottom - 38, 46, client.Height - 2);
 
 
-            ControlPaint.DrawBorder(gfx, client,
-                pen.Color, 2, ButtonBorderStyle.Solid,
-                pen.Color, 2, ButtonBorderStyle.Solid,
-                pen.Color, 2, ButtonBorderStyle.Solid,
-                pen.Color, 2, ButtonBorderStyle.Solid);
             gfx.DrawRectangle(pen, Cell.Title);
             gfx.DrawRectangle(pen, Cell.EnhType);
             gfx.DrawRectangle(pen, Cell.EnhSubType);
@@ -85,43 +115,6 @@ namespace Mids_Reborn.Forms.Controls
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            DesignateFlows();
-        }
-
-        private void DesignateFlows()
-        {
-            FlpEnhType = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                FlowDirection = FlowDirection.LeftToRight,
-                Location = new Point(Cell.EnhType.X + 2, Cell.EnhType.Y + 2),
-                Name = "_flpEnhType",
-                Size = new Size(Cell.EnhType.Width - 4, Cell.EnhType.Height - 4),
-                TabIndex = 0
-            };
-
-            FlpEnhSubType = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                FlowDirection = FlowDirection.TopDown,
-                Location = new Point(Cell.EnhSubType.X + 2, Cell.EnhSubType.Y + 2),
-                Name = "_flpEnhSubType",
-                Size = new Size(Cell.EnhSubType.Width - 4, Cell.EnhSubType.Height - 4),
-                TabIndex = 1
-            };
-
-            FlpEnhancements = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                FlowDirection = FlowDirection.LeftToRight,
-                Location = new Point(Cell.Enhancements.X + 2, Cell.Enhancements.Y + 2),
-                Name = "_flpEnhancements",
-                Size = new Size(Cell.Enhancements.Width - 4, Cell.Enhancements.Height - 4),
-                TabIndex = 2
-            };
         }
     }
 }

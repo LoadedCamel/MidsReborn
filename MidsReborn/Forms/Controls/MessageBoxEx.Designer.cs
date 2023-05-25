@@ -1,4 +1,7 @@
-﻿namespace Mids_Reborn.Forms.Controls
+﻿using System.Reflection.PortableExecutable;
+using System.Windows.Controls;
+
+namespace Mids_Reborn.Forms.Controls
 {
     partial class MessageBoxEx
     {
@@ -154,10 +157,10 @@
             // 
             // titlePanel
             // 
-            this.titlePanel.BorderChosen = Mids_Reborn.Forms.Controls.BorderPanel.BorderToDraw.Bottom;
-            this.titlePanel.BorderColor = System.Drawing.Color.Snow;
-            this.titlePanel.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Inset;
-            this.titlePanel.BorderThickness = 2;
+            this.titlePanel.Border.Which = Mids_Reborn.Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.Bottom;
+            this.titlePanel.Border.Color = System.Drawing.Color.Snow;
+            this.titlePanel.Border.Style = System.Windows.Forms.ButtonBorderStyle.Inset;
+            this.titlePanel.Border.Thickness = 2;
             this.titlePanel.Controls.Add(this.titleText);
             this.titlePanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.titlePanel.Location = new System.Drawing.Point(0, 0);

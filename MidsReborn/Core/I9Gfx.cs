@@ -60,7 +60,10 @@ namespace Mids_Reborn.Core
             foreach (var file in files)
             {
                 var fInfo = new FileInfo(file);
-                retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory?.Name, Path = file, IsBase = true });
+                if (fInfo.Directory != null)
+                {
+                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = true });
+                }
             }
 
             return retList;
@@ -73,7 +76,10 @@ namespace Mids_Reborn.Core
             foreach (var file in files)
             {
                 var fInfo = new FileInfo(file);
-                retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory?.Name, Path = file, IsBase = false });
+                if (fInfo.Directory != null)
+                {
+                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = false });
+                }
             }
 
             return retList;

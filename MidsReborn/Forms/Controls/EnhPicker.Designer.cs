@@ -28,7 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnhPicker));
+            enhTypeImages = new System.Windows.Forms.ImageList(components);
             SuspendLayout();
+            // 
+            // enhTypeImages
+            // 
+            enhTypeImages.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            enhTypeImages.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("enhTypeImages.ImageStream");
+            enhTypeImages.TransparentColor = System.Drawing.Color.Transparent;
+            enhTypeImages.Images.SetKeyName(0, "None.png");
+            enhTypeImages.Images.SetKeyName(1, "Normal.png");
+            enhTypeImages.Images.SetKeyName(2, "InventO.png");
+            enhTypeImages.Images.SetKeyName(3, "HamiO.png");
+            enhTypeImages.Images.SetKeyName(4, "SetO.png");
             // 
             // EnhPicker
             // 
@@ -38,10 +52,12 @@
             BackColor = System.Drawing.Color.Gray;
             ForeColor = System.Drawing.Color.WhiteSmoke;
             Name = "EnhPicker";
-            Size = new System.Drawing.Size(325, 325);
+            Size = new System.Drawing.Size(336, 368);
             ResumeLayout(false);
         }
 
         #endregion
+
+        private System.Windows.Forms.ImageList enhTypeImages;
     }
 }

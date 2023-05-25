@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms.Controls
 {
-    internal class BorderPanel : Panel
+    internal class BorderFlow : FlowLayoutPanel
     {
         [Description("Sets the border for the control.")]
         [Category("Appearance")]
@@ -15,9 +15,9 @@ namespace Mids_Reborn.Forms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public PanelBorder Border { get; set; } = new();
+        public FlowBorder Border { get; set; } = new();
         
-        public BorderPanel()
+        public BorderFlow()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
         }
@@ -27,35 +27,35 @@ namespace Mids_Reborn.Forms.Controls
             base.OnPaintBackground(e);
             switch (Border.Which)
             {
-                case PanelBorder.BorderToDraw.All:
+                case FlowBorder.BorderToDraw.All:
                     ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
                         Border.Color, Border.Thickness, Border.Style,
                         Border.Color, Border.Thickness, Border.Style,
                         Border.Color, Border.Thickness, Border.Style,
                         Border.Color, Border.Thickness, Border.Style);
                     break;
-                case PanelBorder.BorderToDraw.Left:
+                case FlowBorder.BorderToDraw.Left:
                     ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
                         Border.Color, Border.Thickness, Border.Style,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Color.Empty, 0, ButtonBorderStyle.None);
                     break;
-                case PanelBorder.BorderToDraw.Top:
+                case FlowBorder.BorderToDraw.Top:
                     ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Border.Color, Border.Thickness, Border.Style,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Color.Empty, 0, ButtonBorderStyle.None);
                     break;
-                case PanelBorder.BorderToDraw.Right:
+                case FlowBorder.BorderToDraw.Right:
                     ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Border.Color, Border.Thickness, Border.Style,
                         Color.Empty, 0, ButtonBorderStyle.None);
                     break;
-                case PanelBorder.BorderToDraw.Bottom:
+                case FlowBorder.BorderToDraw.Bottom:
                     ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Color.Empty, 0, ButtonBorderStyle.None,
@@ -83,8 +83,8 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        [TypeConverter(typeof(BorderTypeConverter<PanelBorder>))]
-        internal class PanelBorder : INotifyPropertyChanged
+        [TypeConverter(typeof(BorderTypeConverter<FlowBorder>))]
+        internal class FlowBorder : INotifyPropertyChanged
         {
             public enum BorderToDraw
             {
