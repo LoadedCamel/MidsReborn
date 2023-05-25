@@ -38,7 +38,7 @@ namespace Mids_Reborn.Controls
         private const int IoMax = 50;
         private Color _cHighlight;
         private Color _cSelected;
-        private clsDrawX _hDraw;
+        private clsDrawX? _hDraw;
         private int _headerHeight;
         private Point _hoverCell;
         private string _hoverText;
@@ -67,7 +67,7 @@ namespace Mids_Reborn.Controls
         private IEnhancement _selectedEnhancement;
         public CTracking Ui;
 
-        private Rectangle ButtonRectangle;
+        private Rectangle _buttonRectangle;
 
         private enum ActiveZone
         {
@@ -102,6 +102,7 @@ namespace Mids_Reborn.Controls
             _cHighlight = Color.SlateBlue;
             _cSelected = Color.BlueViolet;
             _nPowerIdx = -1;
+            _myBx = new ExtendedBitmap(Width, Height);
             SetStyle(
                 ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl |
                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
@@ -214,11 +215,7 @@ namespace Mids_Reborn.Controls
 
         private void SetBxSize()
         {
-            if (_myBx == null)
-            {
-                _myBx = new ExtendedBitmap(Width, Height);
-            }
-            else if (_myBx.Size.Width != Width | _myBx.Size.Height != Height)
+            if (_myBx.Size.Width != Width | _myBx.Size.Height != Height)
             {
                 _myBx = new ExtendedBitmap(Width, Height);
             }
@@ -312,11 +309,11 @@ namespace Mids_Reborn.Controls
                 var buttonSize = layoutRectangle.Height - 4;
                 var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize,
                     layoutRectangle.Y + 2);
-                ButtonRectangle = new Rectangle(new Point((int) Math.Round(buttonLoc.X), (int) Math.Round(buttonLoc.Y)),
+                _buttonRectangle = new Rectangle(new Point((int) Math.Round(buttonLoc.X), (int) Math.Round(buttonLoc.Y)),
                     new Size((int) Math.Round(buttonSize), (int) Math.Round(buttonSize)));
                 if (!MidsContext.Config.CloseEnhSelectPopupByMove)
                 {
-                    var hoveredButton = PointInRectangle(mouseLocation, ButtonRectangle);
+                    var hoveredButton = PointInRectangle(mouseLocation, _buttonRectangle);
                     if (hoveredButton)
                     {
                         _myBx.Graphics.FillRectangle(highlightBrush, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
@@ -786,6 +783,8 @@ namespace Mids_Reborn.Controls
                 Enums.eType.InventO => Ui.Io.Length,
                 Enums.eType.SpecialO => Ui.SpecialO.Length,
                 Enums.eType.SetO => Ui.SetO.Length,
+                Enums.eType.None => 0,
+                _ => throw new ArgumentOutOfRangeException()
             };
 
             var enhFullRows = (int)Math.Floor(nbEnh / (decimal)enhPerRow);
@@ -814,7 +813,7 @@ namespace Mids_Reborn.Controls
 
             return zone switch
             {
-                ActiveZone.CloseButton => RectangleToPath(ButtonRectangle),
+                ActiveZone.CloseButton => RectangleToPath(_buttonRectangle),
                 ActiveZone.EnhType => enhTypesPath,
                 ActiveZone.EnhancementSet => enhSetsPath,
                 ActiveZone.Enhancement => enhPath,
@@ -1004,7 +1003,7 @@ namespace Mids_Reborn.Controls
         private void I9PickerMouseDown(object sender, MouseEventArgs e)
         {
             var iPt = new Point(e.X, e.Y);
-            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(iPt, ButtonRectangle))
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(iPt, _buttonRectangle))
             {
                 EnhancementSelectionCancelled?.Invoke();
 
@@ -1318,7 +1317,7 @@ namespace Mids_Reborn.Controls
             var k = 0;
             var inZones = zones.ToDictionary(z => zoneNames[k++], z => z?.IsVisible(location) ?? false);
             var inActiveZone = inZones.DefaultIfEmpty(new KeyValuePair<ActiveZone, bool>(ActiveZone.None, false)).FirstOrDefault(z => z.Value).Key;
-            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(location, ButtonRectangle))
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove && PointInRectangle(location, _buttonRectangle))
             {
                 SetInfoStrings("Cancel", "Close Picker");
                 FullDraw(location);
@@ -2070,7 +2069,7 @@ namespace Mids_Reborn.Controls
 
                 var specialOLimit = AllowPlusThreeSpecialO ? Enums.eEnhRelative.PlusThree : Enums.eEnhRelative.PlusTwo;
 
-                if (_selectedEnhancement != null && (DatabaseAPI.EnhHasCatalyst(_selectedEnhancement.UID) || DatabaseAPI.EnhIsNaturallyAttuned(Array.IndexOf(DatabaseAPI.Database.Enhancements, _selectedEnhancement))))
+                if ((DatabaseAPI.EnhHasCatalyst(_selectedEnhancement.UID) || DatabaseAPI.EnhIsNaturallyAttuned(Array.IndexOf(DatabaseAPI.Database.Enhancements, _selectedEnhancement))))
                 {
                     eEnhRelative = Enums.eEnhRelative.Even;
                 }
