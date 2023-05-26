@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -2673,7 +2672,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtVisualLocation_TextChanged(object sender, EventArgs e)
         {
-            Debug.WriteLine($"Updating: {Updating}, cbInherentType: {cbInherentType.SelectedIndex}");
+            //Debug.WriteLine($"Updating: {Updating}, cbInherentType: {cbInherentType.SelectedIndex}");
 
             if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
