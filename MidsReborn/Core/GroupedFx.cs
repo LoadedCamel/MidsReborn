@@ -1518,8 +1518,12 @@ namespace Mids_Reborn.Core
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = gre.GetTooltip(pEnh);
+            var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
+                (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
+                (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon;
             var magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
-                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0));
+                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)) > float.Epsilon |
+                          mezDurationDiff;
             var toWhoShort = effectSource.ToWho switch
             {
                 Enums.eToWho.Self => "Slf",
@@ -1529,8 +1533,8 @@ namespace Mids_Reborn.Core
 
             rankedEffect.UseUniqueColor = effectSource.isEnhancementEffect;
             rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &
-                                          magDiff > float.Epsilon &
-                                          (effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) &
+                                          magDiff &
+                                          ((effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) | mezDurationDiff) &
                                           effectSource.Buffable &
                                           powerInBuild;
 

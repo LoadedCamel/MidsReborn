@@ -778,23 +778,25 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Recharge", "Rchg"), pBase.RechargeTime, enhancedPower.RechargeTime, "s"));
             var s1 = 0f;
             var s2 = 0f;
+            var durationTip = "";
             var durationEffectId = pBase.GetDurationEffectID();
-            if (durationEffectId > -1)
+            if (durationEffectId > -1 && pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                pBase.Effects[durationEffectId].Duration <= 9999)
             {
-                if (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate &
-                    pBase.Effects[durationEffectId].Duration >= 9999)
-                {
-                    s1 = 0f;
-                    s2 = 0f;
-                }
-                else
-                {
-                    s1 = pBase.Effects[durationEffectId].Duration;
-                    s2 = enhancedPower.Effects[durationEffectId].Duration;
-                }
+                s1 = pBase.Effects[durationEffectId].Duration;
+                s2 = enhancedPower.Effects[durationEffectId].Duration;
+                durationTip = string.Join("\r\n", enhancedPower.Effects
+                    .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                                e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
+                                Math.Abs(e.Duration - s2) <= 0.1 &&
+                                e.PvMode == Enums.ePvX.Any |
+                                e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)
+                    .OrderBy(e => e.PvMode)
+                    .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
             }
 
-            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
+            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItemBuilder.Fi.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
