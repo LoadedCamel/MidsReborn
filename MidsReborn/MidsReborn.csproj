@@ -353,7 +353,6 @@
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.1774.30</Version>
     </PackageReference>
-    <PackageReference Include="Narochno.BBCode" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
