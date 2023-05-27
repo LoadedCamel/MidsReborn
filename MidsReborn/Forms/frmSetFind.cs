@@ -11,6 +11,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms
@@ -32,16 +33,13 @@ namespace Mids_Reborn.Forms
         }
 
         private readonly frmMain myParent;
-
-        private ImageButton ibClose;
-        private ImageButton ibTopmost;
         private ctlPopUp SetInfo;
 
         private List<Enums.eEffectType> DisallowedEffectTypes;
         private List<Enums.eEffectType> EnhancementOnlyEffectTypes;
         private List<Enums.eEffectType> HasSubsEffectTypes;
 
-        // Dictionary<fxIdentifier, Dictionary<effectMagString, List<KeyValuePair<setNID, BonusID>>>>
+        // Dictionary<fxIdentifier, Dictionary<effectMagString, List<KeyValuePair<setNID, bonusId>>>>
         private Dictionary<fxIdentifier, Dictionary<string, List<KeyValuePair<int, int>>>> EffectsMap;
 
         public frmSetFind(frmMain iParent)
@@ -51,20 +49,19 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetFind);
-            ibClose.ButtonClicked += ibClose_ButtonClicked;
-            ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
             myParent = iParent;
         }
 
         private void frmSetFind_Load(object sender, EventArgs e)
         {
+            ibKeepOnTop.ToggleState = ImageButtonEx.States.ToggledOn;
             //SetBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus").ToList();
             BuildEffectsMap();
 
             #region Effect filters lists
-            
+
             // Effects that are not part of set bonuses (or no one may care about)
-            DisallowedEffectTypes = new List<Enums.eEffectType>()
+            DisallowedEffectTypes = new List<Enums.eEffectType>
             {
                 Enums.eEffectType.None,
                 Enums.eEffectType.AddBehavior,
@@ -79,6 +76,7 @@ namespace Mids_Reborn.Forms
                 Enums.eEffectType.EntCreate,
                 Enums.eEffectType.EntCreate_x,
                 Enums.eEffectType.ExclusiveVisionPhase,
+                Enums.eEffectType.ExecutePower,
                 Enums.eEffectType.ForceMove,
                 Enums.eEffectType.Glide,
                 Enums.eEffectType.GlobalChanceMod,
@@ -136,20 +134,22 @@ namespace Mids_Reborn.Forms
             };
             #endregion
 
-            BackColor = myParent.BackColor;
-            SetImageButtonStyle(ibClose);
-            SetImageButtonStyle(ibTopmost);
             SetInfo.SetPopup(new PopUp.PopupData());
             FillImageList();
             FillEffectList();
             FillArchetypesList();
+            FillPrimaryPowersets();
+            FillSecondaryPowersets();
 
             cbArchetype.SelectedIndex = 0;
         }
 
         private void AddEffect(ref List<string> list, ref List<int> nIDList, string effect, int nID)
         {
-            if (list.Contains(effect)) return;
+            if (list.Contains(effect))
+            {
+                return;
+            }
 
             list.Add(effect);
             nIDList.Add(nID);
@@ -157,7 +157,10 @@ namespace Mids_Reborn.Forms
 
         private void AddEffect(ref Dictionary<string, int> list, string effect, int nID)
         {
-            if (list.ContainsKey(effect)) return;
+            if (list.ContainsKey(effect))
+            {
+                return;
+            }
 
             list.Add(effect, nID);
         }
@@ -269,17 +272,19 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        private void AddEnhancementSet(int nIDSet, int BonusID)
+        private void AddEnhancementSet(int nidSet, int bonusId)
         {
             lvSet.Items.Add(new ListViewItem(new[]
             {
-                DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName,
-                $"{DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1}", DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nIDSet].SetType).Name,
-                BonusID >= 0
-                    ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)}"
+                DatabaseAPI.Database.EnhancementSets[nidSet].DisplayName,
+                $"{DatabaseAPI.Database.EnhancementSets[nidSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nidSet].LevelMax + 1}", DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nidSet].SetType).Name,
+                bonusId >= 0
+                    ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nidSet, bonusId)}"
                     : "Special"
-            }, nIDSet));
-            lvSet.Items[^1].Tag = nIDSet;
+            }, nidSet));
+            lvSet.Items[^1].Tag = nidSet;
+            //lvSet.Items[^1].ImageIndex = nidSet;
+            lvSet.AddIconToSubItem(lvSet.Items.Count - 1, 0, nidSet);
         }
 
         private void FillEffectList()
@@ -314,11 +319,7 @@ namespace Mids_Reborn.Forms
 
         private void FillImageList()
         {
-            var imageSize1 = ilSets.ImageSize;
-            var width1 = imageSize1.Width;
-            imageSize1 = ilSets.ImageSize;
-            var height1 = imageSize1.Height;
-            using var extendedBitmap = new ExtendedBitmap(width1, height1);
+            using var extendedBitmap = new ExtendedBitmap(ilSets.ImageSize.Width, ilSets.ImageSize.Height);
             ilSets.Images.Clear();
             foreach (var set in DatabaseAPI.Database.EnhancementSets)
             {
@@ -331,13 +332,7 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    var images = ilSets.Images;
-                    var imageSize2 = ilSets.ImageSize;
-                    var width2 = imageSize2.Width;
-                    imageSize2 = ilSets.ImageSize;
-                    var height2 = imageSize2.Height;
-                    var bitmap = new Bitmap(width2, height2);
-                    images.Add(bitmap);
+                    ilSets.Images.Add(new Bitmap(ilSets.ImageSize.Width, ilSets.ImageSize.Height));
                 }
             }
         }
@@ -410,7 +405,6 @@ namespace Mids_Reborn.Forms
             };
         }
 
-
         private void FillMagList()
         {
             if (lvBonus.SelectedItems.Count < 1)
@@ -471,80 +465,66 @@ namespace Mids_Reborn.Forms
 
         private void FillSetList()
         {
-            if ((lvBonus.SelectedItems.Count < 1) | (lvMag.SelectedItems.Count < 1))
+            if (lvBonus.SelectedItems.Count < 1 | lvMag.SelectedItems.Count < 1)
             {
                 lvSet.Items.Clear();
+
+                return;
             }
-            else
+
+            lvSet.BeginUpdate();
+            lvSet.Items.Clear();
+            lvSet.SmallImageList = ilSets;
+            lvSet.ShowSubItemIcons();
+
+            var mag = lvMag.SelectedItems[0].Text == "All" | lvMag.SelectedItems[0].Text == "None"
+                ? ""
+                : lvMag.SelectedItems[0].Text;
+
+            var filterFxIdentifier = BuildFilterFxIdentifier();
+            if (EffectsMapContainsPartial(filterFxIdentifier))
             {
-                lvSet.BeginUpdate();
-                lvSet.Items.Clear();
+                var sets = mag == ""
+                    ? EffectsMap
+                        .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
+                                    (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
+                                    (e.Key.ETModifies == filterFxIdentifier.ETModifies | filterFxIdentifier.ETModifies == Enums.eEffectType.None & filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement) &
+                                    (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
+                                    (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None))
+                        .Select(e => e.Value
+                            .SelectMany(k => k.Value))
+                        .SelectMany(e => e)
+                        .ToList()
+                    : EffectsMap
+                        .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
+                                    (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
+                                    (e.Key.ETModifies == filterFxIdentifier.ETModifies | filterFxIdentifier.ETModifies == Enums.eEffectType.None & filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement) &
+                                    (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
+                                    (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None) &
+                                    e.Value.Keys.Contains(mag))
+                        .Select(e => e.Value
+                            .Where(k => k.Key == mag)
+                            .SelectMany(k => k.Value))
+                        .SelectMany(e => e)
+                        .ToList();
 
-                var mag = lvMag.SelectedItems[0].Text == "All" | lvMag.SelectedItems[0].Text == "None"
-                    ? ""
-                    : lvMag.SelectedItems[0].Text;
-
-                var filterFxIdentifier = BuildFilterFxIdentifier();
-                if (EffectsMapContainsPartial(filterFxIdentifier))
+                foreach (var set in sets)
                 {
-                    var sets = new List<KeyValuePair<int, int>>();
-                    if (mag == "")
-                    {
-                        sets = EffectsMap
-                            .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
-                                        (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
-                                        (e.Key.ETModifies == filterFxIdentifier.ETModifies | (filterFxIdentifier.ETModifies == Enums.eEffectType.None &
-                                          filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement)) &
-                                        (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
-                                        (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None))
-                            .Select(e => e.Value
-                                .SelectMany(k => k.Value))
-                            .SelectMany(e => e)
-                            .ToList();
-                    }
-                    else
-                    {
-                        sets = EffectsMap
-                            .Where(e => (e.Key.EffectType == filterFxIdentifier.EffectType | filterFxIdentifier.EffectType == Enums.eEffectType.None) &
-                                        (e.Key.DamageType == filterFxIdentifier.DamageType | filterFxIdentifier.DamageType == Enums.eDamage.None) &
-                                        (e.Key.ETModifies == filterFxIdentifier.ETModifies | (filterFxIdentifier.ETModifies == Enums.eEffectType.None &
-                                          filterFxIdentifier.EffectType != Enums.eEffectType.Enhancement)) &
-                                        (e.Key.MezType == filterFxIdentifier.MezType | filterFxIdentifier.MezType == Enums.eMez.None) &
-                                        (e.Key.SubMezType == filterFxIdentifier.SubMezType | filterFxIdentifier.SubMezType == Enums.eMez.None) &
-                                        e.Value.Keys.Contains(mag))
-                            .Select(e => e.Value
-                                .Where(k => k.Key == mag)
-                                .SelectMany(k => k.Value))
-                            .SelectMany(e => e)
-                            .ToList();
-                    }
-
-                    foreach (var set in sets)
-                    {
-                        AddEnhancementSet(set.Key, set.Value);
-                    }
+                    AddEnhancementSet(set.Key, set.Value);
                 }
-
-                if (lvSet.Items.Count > 0)
-                        lvSet.Items[0].Selected = true;
-                lvSet.EndUpdate();
             }
+
+            if (lvSet.Items.Count > 0)
+            {
+                lvSet.Items[0].Selected = true;
+            }
+
+            lvSet.EndUpdate();
         }
 
         private void frmSetFind_FormClosed(object sender, FormClosedEventArgs e)
         {
             myParent.FloatSetFinder(false);
-        }
-
-        private void SetImageButtonStyle(ImageButton ib)
-        {
-            ib.IA = myParent.Drawing.pImageAttributes;
-            ib.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ib.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
         }
 
         private void FillArchetypesList()
@@ -565,6 +545,66 @@ namespace Mids_Reborn.Forms
             }
 
             cbArchetype.EndUpdate();
+        }
+
+        private void FillPrimaryPowersets()
+        {
+            if (cbArchetype.SelectedIndex <= 0)
+            {
+                cbPrimary.BeginUpdate();
+                cbPrimary.Items.Clear();
+                cbPrimary.EndUpdate();
+
+                return;
+            }
+
+            var at = DatabaseAPI.Database.Classes
+                .First(at => at?.DisplayName == cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
+
+            var primaryPowersets = at.Primary
+                .Select(e => DatabaseAPI.Database.Powersets[e].DisplayName)
+                .OrderBy(e => e)
+                .ToList();
+
+            cbPrimary.BeginUpdate();
+            cbPrimary.Items.Clear();
+            cbPrimary.Items.Add("--All Primaries--");
+            foreach (var ps in primaryPowersets)
+            {
+                cbPrimary.Items.Add(ps);
+            }
+
+            cbPrimary.EndUpdate();
+        }
+
+        private void FillSecondaryPowersets()
+        {
+            if (cbArchetype.SelectedIndex <= 0)
+            {
+                cbSecondary.BeginUpdate();
+                cbSecondary.Items.Clear();
+                cbSecondary.EndUpdate();
+
+                return;
+            }
+
+            var at = DatabaseAPI.Database.Classes
+                .First(at => at?.DisplayName == cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
+
+            var secondaryPowersets = at.Secondary
+                .Select(e => DatabaseAPI.Database.Powersets[e].DisplayName)
+                .OrderBy(e => e)
+                .ToList();
+
+            cbSecondary.BeginUpdate();
+            cbSecondary.Items.Clear();
+            cbSecondary.Items.Add("--All Secondaries--");
+            foreach (var ps in secondaryPowersets)
+            {
+                cbSecondary.Items.Add(ps);
+            }
+
+            cbSecondary.EndUpdate();
         }
 
         private string GetPowerString(int nIDPower)
@@ -609,19 +649,6 @@ namespace Mids_Reborn.Forms
             return str1;
         }
 
-        private void ibClose_ButtonClicked()
-        {
-            Close();
-        }
-
-        private void ibTopmost_ButtonClicked()
-        {
-            TopMost = ibTopmost.Checked;
-            if (!TopMost)
-                return;
-            BringToFront();
-        }
-
         private void UpdateEffectSubAttribList(out bool hasSubs)
         {
             lvVector.BeginUpdate();
@@ -660,7 +687,7 @@ namespace Mids_Reborn.Forms
                     break;
 
                 case Enums.eEffectType.ResEffect:
-                    
+
                     vectorsList = Enum.GetNames(typeof(Enums.eEffectType))
                         .Where(v => !disallowedFxStrings.Contains(v) & !hasSubEffectsFxStrings.Contains(v))
                         .ToList();
@@ -678,7 +705,7 @@ namespace Mids_Reborn.Forms
 
                 default:
                     lvVector.Columns[0].Text = "";
-                    
+
                     break;
             }
 
@@ -765,7 +792,6 @@ namespace Mids_Reborn.Forms
                     power.PowerName.StartsWith("Black_Dwarf"));
         }
 
-
         private void FillMatchingPowers(int sIdx)
         {
             var enhSet = DatabaseAPI.Database.EnhancementSets[sIdx];
@@ -777,6 +803,9 @@ namespace Mids_Reborn.Forms
             var atClass = cbArchetype.SelectedIndex < 1
                 ? null
                 : DatabaseAPI.GetArchetypeByName(cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
+
+            var primaryPowersetFilter = cbPrimary.SelectedIndex < 1 ? null : cbPrimary.Items[cbPrimary.SelectedIndex].ToString();
+            var secondaryPowersetFilter = cbSecondary.SelectedIndex < 1 ? null : cbSecondary.Items[cbSecondary.SelectedIndex].ToString();
 
             var matchingPowers = DatabaseAPI.Database.Power
                 .Where(p => p.SetTypes.Contains(setGroup) &
@@ -794,15 +823,34 @@ namespace Mids_Reborn.Forms
                 return;
             }
 
-            var matchingPowersets = matchingPowers
-                .Select(p => p.GetPowerSet())
+            var matchingPowersets = true switch
+            {
+                _ when primaryPowersetFilter != null & secondaryPowersetFilter == null => DatabaseAPI.Database.Powersets
+                    .Where(e => e != null && (atClass == null | e.GetArchetypes().Contains(atClass?.ClassName ?? "--")) & e.SetType == Enums.ePowerSetType.Primary & e.DisplayName == primaryPowersetFilter)
+                    .Distinct()
+                    .ToList(),
+                _ when primaryPowersetFilter == null & secondaryPowersetFilter != null => DatabaseAPI.Database.Powersets
+                    .Where(e => e != null && (atClass == null | e.GetArchetypes().Contains(atClass?.ClassName ?? "--")) & e.SetType == Enums.ePowerSetType.Secondary & e.DisplayName == secondaryPowersetFilter)
+                    .Distinct()
+                    .ToList(),
+                _ when primaryPowersetFilter != null & secondaryPowersetFilter != null => DatabaseAPI.Database.Powersets
+                .Where(e => e != null && (atClass == null | e.GetArchetypes().Contains(atClass?.ClassName ?? "--")) & ((e.SetType == Enums.ePowerSetType.Primary & e.DisplayName == primaryPowersetFilter) | (e.SetType == Enums.ePowerSetType.Secondary & e.DisplayName == secondaryPowersetFilter)))
                 .Distinct()
+                .ToList(),
+                _ => DatabaseAPI.Database.Powersets
+                    .Where(e => e != null && (atClass == null | e.GetArchetypes().Contains(atClass?.ClassName ?? "--")))
+                    .Distinct()
+                    .ToList()
+            };
+
+            var matchingPowersetsNames = matchingPowersets
+                .Select(e => e?.FullName ?? "")
                 .ToList();
-            
+
             var matchingPowersetsIdx = matchingPowersets
                 .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
                 .ToList();
-            
+
             /*var matchingArchetypes = matchingPowers
                 .Select(p => DatabaseAPI.Database.Classes
                     .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
@@ -817,13 +865,13 @@ namespace Mids_Reborn.Forms
             var matchingArchetypes = DatabaseAPI.Database.Classes
                 .Where(at => at.Playable)
                 .ToList();
-            
+
             var matchingArchetypesIdx = matchingArchetypes
                 .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
                 .ToList();
 
-            var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(18, 16)};
-            for (var i = 0 ; i < matchingPowersets.Count ; i++)
+            var imgList = new ImageList { ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(18, 16) };
+            for (var i = 0; i < matchingPowersets.Count; i++)
             {
                 var idx = matchingPowersetsIdx[i];
                 var icon = new Bitmap(18, 16);
@@ -899,7 +947,7 @@ namespace Mids_Reborn.Forms
                 var allowedClasses = powerSetGroup == "Inherent" | powerSetGroup == "Epic" | powerSetGroup == "Pool"
                     ? new List<string>()
                     : powerSetData.GetArchetypes();
-                
+
                 var atClassFull = atClass == null
                     ? allowedClasses.Count > 0
                         ? DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
@@ -911,18 +959,40 @@ namespace Mids_Reborn.Forms
                         : null;
 
                 var allowedForClass = atClass == null || p.AllowedForClass(selectedClassIndex);
-                if (!allowedForClass) continue;
+                if (!allowedForClass)
+                {
+                    continue;
+                }
 
                 if (atClass != null & powerSetGroup == "Epic" & epicPowersets.Count > 0)
                 {
-                    if (!epicPowersets.Contains(powerSetData)) continue;
+                    if (!epicPowersets.Contains(powerSetData))
+                    {
+                        continue;
+                    }
                 }
 
                 if (atClassFull != null & atClass != null)
                 {
-                    if (atClassFull.ClassName != atClass.ClassName) continue;
-                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(p)) continue;
-                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(p)) continue;
+                    if (atClassFull.ClassName != atClass.ClassName)
+                    {
+                        continue;
+                    }
+
+                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(p))
+                    {
+                        continue;
+                    }
+
+                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(p))
+                    {
+                        continue;
+                    }
+                }
+
+                if (!matchingPowersetsNames.Contains(powerSetData.FullName))
+                {
+                    continue;
                 }
 
                 // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers,
@@ -953,7 +1023,10 @@ namespace Mids_Reborn.Forms
                 lvPowers.Items.Add(lvItem);
 
                 //lvPowers.AddIconToSubItem(lvRow, 0, atIconsDict[atIconKey]);
-                lvPowers.AddIconToSubItem(lvRow, 1, powerSetsIconsDict[powerSetData.FullName]);
+                if (powerSetsIconsDict.TryGetValue(powerSetData.FullName, out var psIcon))
+                {
+                    lvPowers.AddIconToSubItem(lvRow, 1, psIcon);
+                }
 
                 lvRow++;
             }
@@ -985,7 +1058,64 @@ namespace Mids_Reborn.Forms
 
         private void cbArchetype_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSet.SelectedItems.Count <= 0) return;
+            FillPrimaryPowersets();
+            FillSecondaryPowersets();
+
+            if (!cbPrimary.Visible && cbArchetype.SelectedIndex > 0)
+            {
+                cbPrimary.SelectedIndex = 0;
+            }
+
+            if (!cbSecondary.Visible && cbArchetype.SelectedIndex > 0)
+            {
+                cbSecondary.SelectedIndex = 0;
+            }
+
+            cbPrimary.Visible = cbArchetype.SelectedIndex > 0;
+            cbSecondary.Visible = cbArchetype.SelectedIndex > 0;
+
+            if (lvSet.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            FillMatchingPowers(sIdx);
+        }
+
+        private void ibClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ibKeepOnTop_Click(object sender, EventArgs e)
+        {
+            TopMost = ibKeepOnTop.ToggleState == ImageButtonEx.States.ToggledOn;
+            if (!TopMost)
+            {
+                return;
+            }
+
+            BringToFront();
+        }
+
+        private void cbPrimary_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvSet.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            FillMatchingPowers(sIdx);
+        }
+
+        private void cbSecondary_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvSet.SelectedItems.Count <= 0)
+            {
+                return;
+            }
 
             var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
             FillMatchingPowers(sIdx);
