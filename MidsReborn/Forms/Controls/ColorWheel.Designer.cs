@@ -43,8 +43,8 @@
             colorPicker.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             colorPicker.TabIndex = 0;
             colorPicker.TabStop = false;
-            colorPicker.MouseDown += colorPicker_MouseDown;
-            colorPicker.MouseMove += colorPicker_MouseMove;
+            colorPicker.MouseDown += ColorPicker_MouseDown;
+            colorPicker.MouseMove += ColorPicker_MouseMove;
             // 
             // colorPreview
             // 

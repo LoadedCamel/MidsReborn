@@ -6,6 +6,8 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class ColorWheel : UserControl
     {
+        public delegate void SelectionChangedHandler(object? sender, SelectedValues selected);
+        public event SelectionChangedHandler? SelectionChanged;
         public struct RgbValues
         {
             public int R { get; set; }
@@ -27,7 +29,7 @@ namespace Mids_Reborn.Forms.Controls
             public RgbValues Rgb => new(Color.R, Color.G, Color.B);
         }
 
-        public SelectedValues Selected { get; } = new();
+        private SelectedValues Selected { get; } = new();
 
         public ColorWheel()
         {
@@ -40,19 +42,20 @@ namespace Mids_Reborn.Forms.Controls
             colorSelection.BackColor = Selected.Color;
         }
 
-        private void colorPicker_MouseMove(object sender, MouseEventArgs e)
+        private void ColorPicker_MouseMove(object sender, MouseEventArgs e)
         {
             if (colorPicker.Image is not Bitmap pixelData) return;
             var colorData = pixelData.GetPixel(e.X, e.Y);
             colorPreview.BackColor = colorData;
         }
 
-        private void colorPicker_MouseDown(object sender, MouseEventArgs e)
+        private void ColorPicker_MouseDown(object sender, MouseEventArgs e)
         {
             if (colorPicker.Image is not Bitmap pixelData) return;
             var colorData = pixelData.GetPixel(e.X, e.Y);
             colorSelection.BackColor = colorData;
             Selected.Color = colorData;
+            SelectionChanged?.Invoke(this, Selected);
         }
     }
 }

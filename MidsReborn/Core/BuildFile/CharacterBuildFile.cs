@@ -22,7 +22,7 @@ namespace Mids_Reborn.Core.BuildFile
         private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
-        private static CharacterBuildFile GetInstance(Character characterData, bool refreshData = false)
+        public static CharacterBuildFile GetInstance(Character characterData, bool refreshData = false)
         {
             if (_instance != null && !refreshData) return _instance;
             lock (Mutex)
@@ -38,6 +38,7 @@ namespace Mids_Reborn.Core.BuildFile
         }
 
         public MetaData? BuiltWith { get; set; }
+        public string Level { get; set; }
         public string Class { get; set; }
         public string Origin { get; set; }
         public string Alignment { get; set; }
@@ -132,6 +133,7 @@ namespace Mids_Reborn.Core.BuildFile
             Class = string.Empty;
             Origin = string.Empty;
             Alignment = string.Empty;
+            Level = string.Empty;
             Name = string.Empty;
             Comment = string.Empty;
             PowerSets = new List<string>();
@@ -148,6 +150,7 @@ namespace Mids_Reborn.Core.BuildFile
             Origin = characterData.Archetype.Origin[characterData.Origin];
             Alignment = characterData.Alignment.ToString();
             Name = characterData.Name;
+            Level = characterData.Level.ToString();
             Comment = characterData.Comment;
             PowerSets = new List<string>();
             PowerEntries = new List<PowerData?>();
