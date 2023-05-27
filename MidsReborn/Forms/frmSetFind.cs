@@ -54,6 +54,11 @@ namespace Mids_Reborn.Forms
 
         private void frmSetFind_Load(object sender, EventArgs e)
         {
+            lvSet.EnableDoubleBuffer();
+            lvBonus.EnableDoubleBuffer();
+            lvMag.EnableDoubleBuffer();
+            lvPowers.EnableDoubleBuffer();
+            lvVector.EnableDoubleBuffer();
             ibKeepOnTop.ToggleState = ImageButtonEx.States.ToggledOn;
             //SetBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus").ToList();
             BuildEffectsMap();
@@ -274,17 +279,16 @@ namespace Mids_Reborn.Forms
 
         private void AddEnhancementSet(int nidSet, int bonusId)
         {
-            lvSet.Items.Add(new ListViewItem(new[]
-            {
-                DatabaseAPI.Database.EnhancementSets[nidSet].DisplayName,
-                $"{DatabaseAPI.Database.EnhancementSets[nidSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nidSet].LevelMax + 1}", DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nidSet].SetType).Name,
-                bonusId >= 0
-                    ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nidSet, bonusId)}"
-                    : "Special"
-            }, nidSet));
+            var items = new string[4];
+            items[0] = DatabaseAPI.Database.EnhancementSets[nidSet].DisplayName;
+            items[1] = $"{DatabaseAPI.Database.EnhancementSets[nidSet].LevelMin + 1} - {DatabaseAPI.Database.EnhancementSets[nidSet].LevelMax + 1}";
+            items[2] = DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[nidSet].SetType).Name;
+            items[3] = bonusId >= 0
+                ? $"{DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nidSet, bonusId)}"
+                : "Special";
+
+            lvSet.Items.Add(new ListViewItem(items, nidSet));
             lvSet.Items[^1].Tag = nidSet;
-            //lvSet.Items[^1].ImageIndex = nidSet;
-            lvSet.AddIconToSubItem(lvSet.Items.Count - 1, 0, nidSet);
         }
 
         private void FillEffectList()
@@ -317,9 +321,11 @@ namespace Mids_Reborn.Forms
             lvBonus.EndUpdate();
         }
 
-        private void FillImageList()
+        private async void FillImageList()
         {
-            using var extendedBitmap = new ExtendedBitmap(ilSets.ImageSize.Width, ilSets.ImageSize.Height);
+            await I9Gfx.LoadSets();
+            var imageSize1 = ilSets.ImageSize;
+            using var extendedBitmap = new ExtendedBitmap(imageSize1.Width, imageSize1.Height);
             ilSets.Images.Clear();
             foreach (var set in DatabaseAPI.Database.EnhancementSets)
             {
@@ -332,7 +338,10 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    ilSets.Images.Add(new Bitmap(ilSets.ImageSize.Width, ilSets.ImageSize.Height));
+                    var images = ilSets.Images;
+                    var imageSize2 = ilSets.ImageSize;
+                    var bitmap = new Bitmap(imageSize2.Width, imageSize2.Height);
+                    images.Add(bitmap);
                 }
             }
         }
