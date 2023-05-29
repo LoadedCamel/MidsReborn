@@ -24,6 +24,7 @@ using Mids_Reborn.Core.BuildFile.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
+using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.Sharing;
@@ -6214,6 +6215,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var export = new ForumExport();
                 export.BuildExport();
             }
+        }
+
+        private void ForumExport2_Click(object? sender, EventArgs e)
+        {
+            using var fe = new frmForumExport();
+            fe.ShowDialog(this);
         }
 
         private void tsShareDiscord_Click(object sender, EventArgs e)

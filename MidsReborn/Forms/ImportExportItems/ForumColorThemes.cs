@@ -5,10 +5,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
 {
     public enum TagsFormatType
     {
+        None,
         BBCode,
         HTML,
-        Markdown,
-        None
+        Markdown
     }
 
     public struct ForumColorTheme
@@ -133,13 +133,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     Levels = Color.FromArgb(0xff, 0x80, 0xff),
                     Slots = Color.FromArgb(0xff, 0xae, 0xff),
                     DarkTheme = true
-                },
+                }
             };
         }
 
         public static string ColorToHex(Color color, bool sharpPrefix=true)
         {
-            return $"{(sharpPrefix ? "#" : "")}{color.R:X2}{color.R:X2}{color.B:X2}";
+            return $"{(sharpPrefix ? "#" : "")}{color.R:X2}{color.G:X2}{color.B:X2}";
         }
     }
 }

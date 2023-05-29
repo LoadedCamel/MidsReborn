@@ -332,6 +332,7 @@
             ForeColor = System.Drawing.Color.WhiteSmoke;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Name = "frmForumExport";
+            ShowInTaskbar = false;
             Text = "Form1";
             Load += frmForumExport_Load;
             panel1.ResumeLayout(false);

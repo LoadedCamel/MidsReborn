@@ -96,6 +96,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.tsShareForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareForum2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImportShortCode = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
@@ -1318,6 +1319,7 @@ namespace Mids_Reborn.Forms
             {
                 this.tsShareForum,
                 this.tsShareDiscord,
+                this.tsShareForum2,
                 this.ToolStripSeparator27,
                 this.tsImportShortCode
             });
@@ -1356,6 +1358,13 @@ namespace Mids_Reborn.Forms
             this.tsShareForum.Size = new System.Drawing.Size(240, 22);
             this.tsShareForum.Text = "Via Forum Export";
             this.tsShareForum.Click += new System.EventHandler(this.ForumExport_Click);
+            // 
+            // tsShareForum2
+            //
+            this.tsShareForum2.Name = "tsShareForum2";
+            this.tsShareForum2.Size = new System.Drawing.Size(240, 22);
+            this.tsShareForum2.Text = "Via Forum Export (Alt)";
+            this.tsShareForum2.Click += new System.EventHandler(this.ForumExport2_Click);
             //
             // HelpToolStripMenuItem
             //
@@ -2474,6 +2483,7 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
         ToolStripMenuItem tsShareForum;
+        ToolStripMenuItem tsShareForum2;
         ToolStripMenuItem tsImportShortCode;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
