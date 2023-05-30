@@ -5524,7 +5524,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 {
                     var fileInfo = new FileInfo(LastFileName);
                     var fileName = fileInfo.Name.Length > 255 ? "Build" : fileInfo.Name;
-                    str1 = $"{fileName} - ";
+                    str1 = $"{fileName}{(FileModified ? " [Modified]" : "")} - ";
                     tsFileSave.Text = $"&Save '{(string.IsNullOrEmpty(fileInfo.Extension) ? fileName : fileName.Replace(fileInfo.Extension, ""))}'";
                 }
                 else
@@ -5543,10 +5543,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str2 = str2.Replace(nameof(hero), "Villain");
             }
 
-            //str2 += MainModule.MidsController.Toon?.Locked == true ? " [Locked]" : "";
-            str2 += FileModified ? " [Modified]" : "";
-
-                var adminStatus = MidsContext.Config.MasterMode
+            var adminStatus = MidsContext.Config.MasterMode
                 ? MidsContext.Config.IsLcAdmin
                     ? "LC Admin"
                     : "DB Admin"
