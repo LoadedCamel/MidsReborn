@@ -6,7 +6,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -5544,18 +5543,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str2 = str2.Replace(nameof(hero), "Villain");
             }
 
-            if (MidsContext.Config.MasterMode && !MidsContext.Config.IsLcAdmin)
-            {
-                Text = $@"{str2} (DB Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
-            else if (MidsContext.Config.MasterMode && MidsContext.Config.IsLcAdmin)
-            {
-                Text = $@"{str2} (LC Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
-            else
-            {
-                Text = $@"{str2} v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
+            //str2 += MainModule.MidsController.Toon?.Locked == true ? " [Locked]" : "";
+            str2 += FileModified ? " [Modified]" : "";
+
+                var adminStatus = MidsContext.Config.MasterMode
+                ? MidsContext.Config.IsLcAdmin
+                    ? "LC Admin"
+                    : "DB Admin"
+                : "";
+            Text = $@"{str2} {(adminStatus != "" ? $"({adminStatus}) " : "")}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
         }
 
         public void UpdateTitle()
