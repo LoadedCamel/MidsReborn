@@ -288,7 +288,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.MatchAllIDs();
 
             // Uncomment below to update AT modifier columns if necessary
-            // for (var index = 0; index < DatabaseAPI.Database.Classes.Length - 1; index++)
+            // for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             // {
             //     DatabaseAPI.Database.Classes[index].Column = index;
             // }
