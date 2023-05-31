@@ -57,7 +57,10 @@ namespace Mids_Reborn.Forms.Sharing
             _graphics.DrawRectangle(pen, 0, 0, 450, 250);
 
             // Insert Backdrop
-            _graphics.DrawImage(MidsContext.Character.IsHero() ? Image.FromFile("Images\\InfoBackDropH.png") : Image.FromFile("Images\\InfoBackDropV.png"), new RectangleF(0, 0, 450, 250));
+            var imgPath = Path.Combine(AppContext.BaseDirectory, "Images");
+            var bgImageFile = MidsContext.Character.IsHero() ? "InfoBackDropH.png" : "InfoBackDropV.png";
+            bgImageFile = Path.Combine(imgPath, bgImageFile);
+            _graphics.DrawImage(Image.FromFile(bgImageFile), new RectangleF(0, 0, 450, 250));
 
             // Insert Character Name & Level
             _graphics.DrawString($"Name: {MidsContext.Character.Name}", TextFont, foreground, new PointF(7, 7));
