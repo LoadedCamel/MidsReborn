@@ -70,23 +70,24 @@ namespace Mids_Reborn.Forms.Controls
         protected const int szPadding = 4;
         private readonly string[] Pages;
 
+        public bool MoveDisable;
+        public Rectangle SnapLocation;
+        public int TabPage;
+        public bool[]? TabsMask;
+
         private bool bFloating;
         private ExtendedBitmap bxFlip;
         private bool Compact;
         private int HistoryIDX;
         private bool Lock;
         private Point mouse_offset;
-        public bool MoveDisable;
         private IPower? pBase;
         private IPower? pEnh;
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private int pLastScaleVal;
         private Rectangle ScreenBounds;
-        public Rectangle SnapLocation;
-        public int TabPage;
         private bool VillainColor;
-        public bool[]? TabsMask;
         private List<GroupedFx> GroupedRankedEffects;
         private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
 

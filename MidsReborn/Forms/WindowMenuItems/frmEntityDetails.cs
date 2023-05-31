@@ -68,10 +68,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
         }
 
-        protected override CreateParams CreateParams 
-        {            
-            get {
-                var cp =  base.CreateParams;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
                 cp.ExStyle |= 0x00000020;
                 return cp;
             }
@@ -147,6 +148,32 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
+        private void SetTitleText(string text, bool adjustFontSize = true, float minFontSize = 9, float maxFontSize = 14.25f)
+        {
+            if (!adjustFontSize)
+            {
+                lblEntityName.Text = text;
+
+                return;
+            }
+
+            const float fontSizeIncrement = 0.5f;
+            for (var i = maxFontSize; i > minFontSize; i -= fontSizeIncrement)
+            {
+                var font = new Font("Segoe UI Variable Display", i, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
+                var textSize = TextRenderer.MeasureText(text, font);
+                if (textSize.Width > lblEntityName.Width - 3)
+                {
+                    continue;
+                }
+
+                lblEntityName.Font = font;
+                lblEntityName.Text = text;
+
+                return;
+            }
+        }
+
         private void frmEntityDetails_Load(object sender, EventArgs e)
         {
             btnTopMost.Visible = false;
@@ -178,20 +205,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //petView1.TabsMask = new[] {true, true, false, false};
             //petView1.BackColor = BackColor;
             //petView1.Refresh();
-            
+
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
-            
+
             _entityData = DatabaseAPI.Database.Entities
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(en => en?.UID == _entityUid);
-            
+
             _powersData = _powers
                 .Select(DatabaseAPI.GetPowerByFullName).Where(p => !p.DisplayName.Contains("Granter"))
                 .ToList();
 
-            lblEntityName.Text = _entityData == null
+            var entityName = _entityData == null
                 ? "Entity Details"
                 : $"Entity: {_entityData.DisplayName}";
+
+            SetTitleText(entityName);
 
             powersCombo1.DisplayMember = "DisplayName";
             powersCombo1.ValueMember = null;
@@ -271,7 +300,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
-           _petInfo.ExecuteUpdate();
+            _petInfo.ExecuteUpdate();
 
             //ListPowers();
             if (TopMost) BringToFront();

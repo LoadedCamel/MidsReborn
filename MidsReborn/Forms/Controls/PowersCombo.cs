@@ -357,10 +357,10 @@ namespace Mids_Reborn.Forms.Controls
 
         private void AdjustComboToFit()
         {
-            _comboBox.Width = Width;
+            _comboBox.Width = Width - 2;
             _comboBox.Location = new Point
             {
-                X = 0,
+                X = 1,
                 Y = _label.Bottom - _comboBox.Height
             };
         }
