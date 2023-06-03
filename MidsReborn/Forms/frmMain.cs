@@ -7448,6 +7448,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     if (pList.Length == 0) continue;
                     if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
 
+                    if (DatabaseAPI.Database.Power[pe.NIDPower].VariableEnabled)
+                    {
+                        var initialStacks = Math.Max(DatabaseAPI.Database.Power[pe.NIDPower].VariableMin,
+                            Math.Min(DatabaseAPI.Database.Power[pe.NIDPower].VariableMax,
+                                DatabaseAPI.Database.Power[pe.NIDPower].VariableStart));
+                        pe.VariableValue = initialStacks;
+                        pe.Power.Stacks = initialStacks;
+                    }
+
                     var p = pList.First();
                     while (pe.Slots.Length < p.Slots.Length)
                     {

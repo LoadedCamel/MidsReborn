@@ -366,7 +366,7 @@ namespace Mids_Reborn
 
         public static void FinalizePowersetsList(ref UniqueList<string> listPowersets)
         {
-            listPowersets.FromList(listPowersets.GetRange(0, 7));
+            listPowersets.FromList(listPowersets.GetRange(0, Math.Min(7, listPowersets.Count)));
             listPowersets.FromList(listPowersets.Select(e => e.Contains(".")
                 ? e
                 : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
