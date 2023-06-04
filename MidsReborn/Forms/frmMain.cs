@@ -7413,6 +7413,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ImportBase.FixUndetectedPowersets(ref listPowersets);
             ImportBase.FinalizePowersetsList(ref listPowersets, listPowers, trunkPowersets);
             ImportBase.PadPowerPools(ref listPowersets);
+            ImportBase.FilterTempPowersets(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -7425,11 +7426,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 for (var k = 0; k < listPowers.Count; k++)
                 {
-                    if (powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    if (powerEntryList[k].PowerSet?.FullName.Contains("Inherent") == true)
                     {
                         continue;
                     }
 
+                    // Incarnate, Temps, Accolades
+                    if (powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true ||
+                        powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true)
+                    {
+                        if (!MidsContext.Character.CurrentBuild.PowerUsed(powerEntryList[k].Power))
+                        {
+                            MidsContext.Character.CurrentBuild.AddPower(powerEntryList[k].Power, 49).StatInclude = true;
+                        }
+
+                        continue;
+                    }
+
+                    // Regular powers
                     PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
@@ -7443,10 +7457,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    if (pe.Power == null) continue; // Not picked power will be in the list, but not instanciated!
+                    if (pe.Power == null)
+                    {
+                        continue; // Not picked power will be in the list, but not instantiated!
+                    }
+
                     var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
-                    if (pList.Length == 0) continue;
-                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
+                    if (pList.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable)
+                    {
+                        continue;
+                    }
 
                     if (DatabaseAPI.Database.Power[pe.NIDPower].VariableEnabled)
                     {

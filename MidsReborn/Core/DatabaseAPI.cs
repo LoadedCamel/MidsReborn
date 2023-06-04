@@ -574,7 +574,9 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") | p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
+                                     p.GetPowerSet().nArchetype == -1);
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
@@ -583,7 +585,8 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") |
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") |
                                      (listPowersets.Contains(p.GetPowerSet().FullName) &&
                                       p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1));
         }

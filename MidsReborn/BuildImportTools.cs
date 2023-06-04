@@ -383,6 +383,13 @@ namespace Mids_Reborn
                     .Distinct()
                     .ToList()!);
         }
+
+        public static void FilterTempPowersets(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets
+                .Where(e => !e.StartsWith("Incarnate") & !e.StartsWith("Temporary_Powers"))
+                .ToList());
+        }
     }
     #endregion
 
@@ -1158,7 +1165,7 @@ namespace Mids_Reborn
             powersetsWithTrunks.AddRange(trunkPowersets);
 
             // Powers
-            r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
+            r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)(\t([^\r\n\t]+))?");
             var rMatches = r.Matches(cnt);
 
             foreach (Match mt in rMatches) // var mt is of type object?

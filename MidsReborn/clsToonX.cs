@@ -154,7 +154,7 @@ namespace Mids_Reborn
             }
             else
             {
-                if ((DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary) & !flag1 && (CurrentBuild.Powers[1].NIDPowerset < 0) & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
+                if (DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary & !flag1 && CurrentBuild.Powers[1].NIDPowerset < 0 & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
                 {
                     SetPower_NID(1, numArray[0]);
                 }

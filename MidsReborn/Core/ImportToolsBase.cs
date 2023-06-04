@@ -32,7 +32,7 @@ namespace Mids_Reborn.Core
         public string DisplayName;
         public string FullName;
         public int Level;
-        public IPower pData;
+        public IPower? pData;
         public IPowerset? Powerset;
         public List<RawEnhData> Slots;
         public bool Valid;
