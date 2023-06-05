@@ -134,13 +134,26 @@ namespace Mids_Reborn.Core
 
         public async Task RemoveSlotFromPowerEntry(int powerIdx, int slotIdx)
         {
-            if (powerIdx < 0 || slotIdx <= 0)  return;
+            if (powerIdx < 0 || slotIdx <= 0)
+            {
+                return;
+            }
+
             var power = Powers.FirstOrDefault(x => x != null && x.IDXPower == powerIdx);
-            if (power == null) return;
-            if (slotIdx > power.Slots.Length) return;
+            if (power == null)
+            {
+                return;
+            }
+
+            if (slotIdx >= power.Slots.Length)
+            {
+                return;
+            }
+
             var slots = power.Slots.ToList();
             slots.RemoveAt(slotIdx);
             power.Slots = slots.ToArray();
+
             await Task.CompletedTask;
         }
 
