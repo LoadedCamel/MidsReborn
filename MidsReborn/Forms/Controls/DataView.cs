@@ -2393,7 +2393,7 @@ namespace Mids_Reborn.Forms.Controls
             var rootPowerName = iHistoryIdx >= 0 && iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
                 ? MidsContext.Character.CurrentBuild.Powers[iHistoryIdx]?.Power?.FullName
                 : MidsContext.Character.CurrentBuild.Powers
-                    .Where(e => e.Power != null)
+                    .Where(e => e is {Power: not null})
                     .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
                     .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
                     .FirstOrDefault(e => e.Value.Any(fx =>
