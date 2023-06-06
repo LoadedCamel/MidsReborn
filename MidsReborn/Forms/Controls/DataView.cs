@@ -897,6 +897,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DisplayData(bool noLevel = false, int iEnhLevel = -1)
         {
+            if (IsDisposed)
+            {
+                // Occurs when trying to load a build made for a different database
+                // and auto switch
+                return;
+            }
+
             if (!MidsContext.Config.DisableDataDamageGraph)
             {
                 Info_Damage.GraphType = MidsContext.Config.DataGraphType;

@@ -880,7 +880,16 @@ namespace Mids_Reborn.Controls
             bxBuffer.Graphics?.Clear(BackColor);
             DrawPowers();
             var location = new Point(0, 0);
-            OutputUnscaled(ref bxBuffer, location);
+            try
+            {
+                OutputUnscaled(ref bxBuffer, location);
+            }
+            catch (Exception)
+            {
+                // Call will fail if loading a build made with a different database
+                // and auto switch
+            }
+
             GC.Collect();
         }
 
