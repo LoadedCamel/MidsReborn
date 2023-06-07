@@ -754,7 +754,7 @@ namespace Mids_Reborn
             Totals.BuffEndRdx = _selfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx];
             Totals.BuffHaste = _selfEnhance.Effect[(int)Enums.eStatType.Haste] + _selfBuffs.Effect[(int)Enums.eStatType.Haste];
             Totals.BuffToHit = _selfBuffs.Effect[(int)Enums.eStatType.ToHit];
-            Totals.Perception = (float) (Statistics.BasePerception * (1.0 + _selfBuffs.Effect[(int)Enums.eStatType.Perception]));
+            Totals.Perception = Statistics.BasePerception * (1 + _selfBuffs.Effect[(int)Enums.eStatType.Perception]);
             Totals.StealthPvE = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvE];
             Totals.StealthPvP = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvP];
             Totals.ThreatLevel = _selfBuffs.Effect[(int)Enums.eStatType.ThreatLevel];
@@ -780,7 +780,7 @@ namespace Mids_Reborn
             if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
                 Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
             
-            Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4.0);
+            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;
             
             Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
             if (!canFly)

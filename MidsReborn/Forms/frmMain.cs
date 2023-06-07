@@ -2706,8 +2706,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                 power.StatInclude = false;
                             }
                         }
-                        else if (!power.CanIncludeForStats())
+                        // Do not turn off StatInclude for clicks that don't have a green tick button
+                        else if (!power.CanIncludeForStats() & power.Power is not {PowerType: Enums.ePowerType.Click, ClickBuff: false})
                         {
+                            Debug.WriteLine($"Alert: power {power.Power?.FullName ?? "<null>"} will have StatInclude set to false!");
                             power.StatInclude = false;
                         }
 
