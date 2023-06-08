@@ -2669,7 +2669,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 HidePopup();
 
             var enhChanged = false;
-            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | (e.Enh < 0))
+            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | e.Enh < 0)
             {
                 //Code below triggers after an enhancement is added
                 var power = MidsContext.Character.CurrentBuild.Powers[EnhancingPower];
@@ -2693,24 +2693,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                     if (enhChanged)
                     {
-                        if (e.Enh > -1)
+                        // Do not turn off StatInclude for clicks that don't have a green tick button
+                        if (power.Power is {PowerType: Enums.ePowerType.Click, ClickBuff: false})
                         {
-                            // if (!hasProc && power.HasProc && ...) ??
-                            if (!hasProc && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 ||
-                                DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                            power.StatInclude = true;
+                        }
+                        else
+                        {
+                            if (e.Enh > -1)
                             {
-                                power.StatInclude = true;
+                                // if (!hasProc && power.HasProc && ...) ??
+                                if (!hasProc && DatabaseAPI.Database.Enhancements[e.Enh].Probability == 0 ||
+                                    DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                                {
+                                    power.StatInclude = true;
+                                }
+                                else if (!power.CanIncludeForStats())
+                                {
+                                    power.StatInclude = false;
+                                }
                             }
                             else if (!power.CanIncludeForStats())
                             {
                                 power.StatInclude = false;
                             }
-                        }
-                        // Do not turn off StatInclude for clicks that don't have a green tick button
-                        else if (!power.CanIncludeForStats() & power.Power is not {PowerType: Enums.ePowerType.Click, ClickBuff: false})
-                        {
-                            Debug.WriteLine($"Alert: power {power.Power?.FullName ?? "<null>"} will have StatInclude set to false!");
-                            power.StatInclude = false;
                         }
 
                         fRecipe?.RecalcSalvage();
