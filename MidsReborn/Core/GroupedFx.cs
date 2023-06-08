@@ -1528,8 +1528,8 @@ namespace Mids_Reborn.Core
                           mezDurationDiff;
             var toWhoShort = effectSource.ToWho switch
             {
-                Enums.eToWho.Self => "Slf",
-                Enums.eToWho.Target => "Tgt",
+                Enums.eToWho.Self => " (Slf)",
+                Enums.eToWho.Target => " (Tgt)",
                 _ => ""
             };
 
@@ -1546,8 +1546,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Endurance:
                     rankedEffect.Name = $"{effectType}";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
+                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -1684,8 +1684,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Translucency:
                     rankedEffect.Name = "Trnslcncy";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
+                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -1720,14 +1720,14 @@ namespace Mids_Reborn.Core
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
+                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.PerceptionRadius:
-                    rankedEffect.Name = $"Pceptn ({toWhoShort})";
+                    rankedEffect.Name = $"Pceptn{toWhoShort}";
                     rankedEffect.Value =
                         $"{(effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}%" : $"{effectSource.BuffedMag:###0.##}")} ({Statistics.BasePerception * effectSource.BuffedMag:###0.##}ft)";
 
@@ -1746,6 +1746,7 @@ namespace Mids_Reborn.Core
                         .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
                         .Sum();
 
+                    /*
                     var magSumBase = pBase.Effects
                         .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
                                      !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
@@ -1756,8 +1757,9 @@ namespace Mids_Reborn.Core
                                     effectSource.ETModifies == e.ETModifies)
                         .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
                         .Sum();
+                    */
 
-                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")} ({toWhoShort})";
+                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
                     //rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon & effectSource.Buffable & powerInBuild;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
