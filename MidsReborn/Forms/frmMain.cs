@@ -6209,13 +6209,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void ForumExport_Click(object? sender, EventArgs e)
         {
-            var preview = new InfoGraphicPreview();
-            var result = preview.ShowDialog(this);
-            if (result == DialogResult.Continue)
-            {
-                var export = new ForumExport();
-                export.BuildExport();
-            }
+            // var preview = new InfoGraphicPreview();
+            // var result = preview.ShowDialog(this);
+            // if (result == DialogResult.Continue)
+            // {
+            //     var export = new ForumExport();
+            //     export.BuildExport();
+            // }
         }
 
         private async void ShareInfoGraphic_Click(object? sender, EventArgs e)
