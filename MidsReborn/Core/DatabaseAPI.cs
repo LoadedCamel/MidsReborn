@@ -574,7 +574,9 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") | p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
+                                     p.GetPowerSet().nArchetype == -1);
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
@@ -583,7 +585,8 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") |
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") |
                                      (listPowersets.Contains(p.GetPowerSet().FullName) &&
                                       p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1));
         }
@@ -2782,7 +2785,7 @@ namespace Mids_Reborn.Core
         public static void MatchPowersetIDs()
 
         {
-            for (var index1 = 0; index1 <= Database.Powersets.Length - 1; ++index1)
+            for (var index1 = 0; index1 < Database.Powersets.Length; index1++)
             {
                 var powerset = Database.Powersets[index1];
                 powerset.nID = index1;
@@ -2808,15 +2811,21 @@ namespace Mids_Reborn.Core
         public static void MatchPowerIDs()
         {
             Database.MutexList = UidMutexAll();
-            for (var index = 0; index < Database.Power.Length; ++index)
+            for (var index = 0; index < Database.Power.Length; index++)
             {
                 var power1 = Database.Power[index];
                 if (string.IsNullOrEmpty(power1.FullName))
-                    power1.FullName = "Orphan." + power1.DisplayName.Replace(" ", "_");
+                {
+                    power1.FullName = $"Orphan.{power1.DisplayName.Replace(" ", "_")}";
+                }
+
                 power1.PowerIndex = index;
                 power1.PowerSetID = NidFromUidPowerset(power1.FullSetName);
                 if (power1.PowerSetID <= -1)
+                {
                     continue;
+                }
+
                 var ps = power1.GetPowerSet();
                 var length = ps.Powers.Length;
                 power1.PowerSetIndex = length;
@@ -2847,7 +2856,10 @@ namespace Mids_Reborn.Core
                 foreach (var effect in power.Effects)
                 {
                     if (flag)
+                    {
                         effect.buffMode = Enums.eBuffMode.Debuff;
+                    }
+
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.GrantPower:
@@ -2865,19 +2877,27 @@ namespace Mids_Reborn.Core
                 }
 
                 power.NGroupMembership = new int[power.GroupMembership.Length];
-                for (var index1 = 0; index1 < power.GroupMembership.Length; ++index1)
-                for (var index2 = 0; index2 < Database.MutexList.Length; ++index2)
+                for (var index1 = 0; index1 < power.GroupMembership.Length; index1++)
                 {
-                    if (!string.Equals(Database.MutexList[index2], power.GroupMembership[index1],
-                        StringComparison.OrdinalIgnoreCase))
-                        continue;
-                    power.NGroupMembership[index1] = index2;
-                    break;
+                    for (var index2 = 0; index2 < Database.MutexList.Length; index2++)
+                    {
+                        if (!string.Equals(Database.MutexList[index2], power.GroupMembership[index1],
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        power.NGroupMembership[index1] = index2;
+                        break;
+                    }
                 }
 
                 power.NIDSubPower = new int[power.UIDSubPower.Length];
-                for (var index = 0; index < power.UIDSubPower.Length; ++index)
+                for (var index = 0; index < power.UIDSubPower.Length; index++)
+                {
                     power.NIDSubPower[index] = NidFromUidPower(power.UIDSubPower[index]);
+                }
+
                 MatchRequirementId(power);
             }
         }
@@ -2888,76 +2908,96 @@ namespace Mids_Reborn.Core
             if (power.Requires.ClassName.Length > 0)
             {
                 power.Requires.NClassName = new int[power.Requires.ClassName.Length];
-                for (var index = 0; index < power.Requires.ClassName.Length; ++index)
+                for (var index = 0; index < power.Requires.ClassName.Length; index++)
+                {
                     power.Requires.NClassName[index] = NidFromUidClass(power.Requires.ClassName[index]);
+                }
             }
 
             if (power.Requires.ClassNameNot.Length > 0)
             {
                 power.Requires.NClassNameNot = new int[power.Requires.ClassNameNot.Length];
-                for (var index = 0; index < power.Requires.ClassNameNot.Length; ++index)
+                for (var index = 0; index < power.Requires.ClassNameNot.Length; index++)
+                {
                     power.Requires.NClassNameNot[index] = NidFromUidClass(power.Requires.ClassNameNot[index]);
+                }
             }
 
             if (power.Requires.PowerID.Length > 0)
             {
                 power.Requires.NPowerID = new int[power.Requires.PowerID.Length][];
-                for (var index1 = 0; index1 < power.Requires.PowerID.Length; ++index1)
+                for (var index1 = 0; index1 < power.Requires.PowerID.Length; index1++)
                 {
                     power.Requires.NPowerID[index1] = new int[power.Requires.PowerID[index1].Length];
-                    for (var index2 = 0; index2 < power.Requires.PowerID[index1].Length; ++index2)
+                    for (var index2 = 0; index2 < power.Requires.PowerID[index1].Length; index2++)
+                    {
                         power.Requires.NPowerID[index1][index2] =
                             !string.IsNullOrEmpty(power.Requires.PowerID[index1][index2])
                                 ? NidFromUidPower(power.Requires.PowerID[index1][index2])
                                 : -1;
+                    }
                 }
             }
 
             if (power.Requires.PowerIDNot.Length <= 0)
+            {
                 return;
+            }
+
             power.Requires.NPowerIDNot = new int[power.Requires.PowerIDNot.Length][];
-            for (var index1 = 0; index1 < power.Requires.PowerIDNot.Length; ++index1)
+            for (var index1 = 0; index1 < power.Requires.PowerIDNot.Length; index1++)
             {
                 power.Requires.NPowerIDNot[index1] = new int[power.Requires.PowerIDNot[index1].Length];
-                for (var index2 = 0; index2 < power.Requires.PowerIDNot[index1].Length; ++index2)
+                for (var index2 = 0; index2 < power.Requires.PowerIDNot[index1].Length; index2++)
+                {
                     power.Requires.NPowerIDNot[index1][index2] =
                         !string.IsNullOrEmpty(power.Requires.PowerIDNot[index1][index2])
                             ? NidFromUidPower(power.Requires.PowerIDNot[index1][index2])
                             : -1;
+                }
             }
         }
 
         public static void SetPowersetsFromGroups()
         {
-            for (var index1 = 0; index1 < Database.Classes.Length; ++index1)
+            for (var index1 = 0; index1 < Database.Classes.Length; index1++)
             {
                 var archetype = Database.Classes[index1];
                 var intList1 = new List<int>();
                 var intList2 = new List<int>();
                 var intList3 = new List<int>();
-                for (var index2 = 0; index2 < Database.Powersets.Length; ++index2)
+                for (var index2 = 0; index2 < Database.Powersets.Length; index2++)
                 {
                     var powerset = Database.Powersets[index2];
                     if (powerset.Powers.Length > 0)
+                    {
                         powerset.Powers[0].SortOverride = true;
+                    }
+
                     if (string.Equals(powerset.GroupName, archetype.PrimaryGroup, StringComparison.OrdinalIgnoreCase))
                     {
                         intList1.Add(index2);
                         if (powerset.nArchetype < 0)
+                        {
                             powerset.nArchetype = index1;
+                        }
                     }
 
                     if (string.Equals(powerset.GroupName, archetype.SecondaryGroup, StringComparison.OrdinalIgnoreCase))
                     {
                         intList2.Add(index2);
                         if (powerset.nArchetype < 0)
+                        {
                             powerset.nArchetype = index1;
+                        }
                     }
 
                     if (string.Equals(powerset.GroupName, archetype.EpicGroup, StringComparison.OrdinalIgnoreCase) &&
                         (powerset.nArchetype == index1 || powerset.Powers.Length > 0 &&
                             powerset.Powers[0].Requires.ClassOk(archetype.ClassName)))
+                    {
                         intList3.Add(index2);
+                    }
                 }
 
                 archetype.Primary = intList1.ToArray();
@@ -3059,36 +3099,61 @@ namespace Mids_Reborn.Core
         public static void AssignStaticIndexValues(ISerialize serializer, bool save)
         {
             var lastStaticPowerIdx = -2;
-            for (var index = 0; index <= Database.Power.Length - 1; ++index)
-                if (Database.Power[index].StaticIndex > -1 && Database.Power[index].StaticIndex > lastStaticPowerIdx)
-                    lastStaticPowerIdx = Database.Power[index].StaticIndex;
-            if (lastStaticPowerIdx < -1)
-                lastStaticPowerIdx = -1;
-            for (var index = 0; index <= Database.Power.Length - 1; ++index)
+            foreach (var p in Database.Power)
             {
-                if (Database.Power[index].StaticIndex >= 0)
+                if (p.StaticIndex > -1 && p.StaticIndex > lastStaticPowerIdx)
+                {
+                    lastStaticPowerIdx = p.StaticIndex;
+                }
+            }
+
+            if (lastStaticPowerIdx < -1)
+            {
+                lastStaticPowerIdx = -1;
+            }
+
+            foreach (var p in Database.Power)
+            {
+                if (p.StaticIndex >= 0)
+                {
                     continue;
+                }
+
                 ++lastStaticPowerIdx;
-                Database.Power[index].StaticIndex = lastStaticPowerIdx;
+                p.StaticIndex = lastStaticPowerIdx;
             }
 
             var lastStaticEnhIdx = -2;
-            for (var index = 1; index <= Database.Enhancements.Length - 1; ++index)
+            for (var index = 1; index < Database.Enhancements.Length; index++)
+            {
                 if (Database.Enhancements[index].StaticIndex > -1 &&
                     Database.Enhancements[index].StaticIndex > lastStaticEnhIdx)
+                {
                     lastStaticEnhIdx = Database.Enhancements[index].StaticIndex;
+                }
+            }
+
             if (lastStaticEnhIdx < -1)
+            {
                 lastStaticEnhIdx = -1;
-            for (var index = 1; index <= Database.Enhancements.Length - 1; ++index)
+            }
+
+            for (var index = 1; index < Database.Enhancements.Length; index++)
             {
                 if (Database.Enhancements[index].StaticIndex >= 1)
+                {
                     continue;
+                }
+
                 ++lastStaticEnhIdx;
                 Database.Enhancements[index].StaticIndex = lastStaticEnhIdx;
             }
 
             if (!save)
+            {
                 return;
+            }
+
             SaveMainDatabase(serializer, MidsContext.Config.SavePath);
             SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
         }

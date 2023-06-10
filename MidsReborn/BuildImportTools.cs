@@ -366,7 +366,7 @@ namespace Mids_Reborn
 
         public static void FinalizePowersetsList(ref UniqueList<string> listPowersets)
         {
-            listPowersets.FromList(listPowersets.GetRange(0, 7));
+            listPowersets.FromList(listPowersets.GetRange(0, Math.Min(7, listPowersets.Count)));
             listPowersets.FromList(listPowersets.Select(e => e.Contains(".")
                 ? e
                 : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
@@ -382,6 +382,13 @@ namespace Mids_Reborn
                     .Where(e => !string.IsNullOrWhiteSpace(e) && e != "Inherent.Inherent" && e != "Inherent.Fitness" && !trunkPowersets.Contains(e))
                     .Distinct()
                     .ToList()!);
+        }
+
+        public static void FilterTempPowersets(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets
+                .Where(e => !e.StartsWith("Incarnate") & !e.StartsWith("Temporary_Powers"))
+                .ToList());
         }
     }
     #endregion
@@ -1158,7 +1165,7 @@ namespace Mids_Reborn
             powersetsWithTrunks.AddRange(trunkPowersets);
 
             // Powers
-            r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
+            r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)(\t([^\r\n\t]+))?");
             var rMatches = r.Matches(cnt);
 
             foreach (Match mt in rMatches) // var mt is of type object?

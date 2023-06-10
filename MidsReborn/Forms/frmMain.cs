@@ -2669,7 +2669,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 HidePopup();
 
             var enhChanged = false;
-            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | (e.Enh < 0))
+            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | e.Enh < 0)
             {
                 //Code below triggers after an enhancement is added
                 var power = MidsContext.Character.CurrentBuild.Powers[EnhancingPower];
@@ -2693,22 +2693,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                     if (enhChanged)
                     {
-                        if (e.Enh > -1)
+                        // Do not turn off StatInclude for clicks that don't have a green tick button
+                        if (power.Power is {PowerType: Enums.ePowerType.Click, ClickBuff: false})
                         {
-                            // if (!hasProc && power.HasProc && ...) ??
-                            if (!hasProc && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 ||
-                                DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                            power.StatInclude = true;
+                        }
+                        else
+                        {
+                            if (e.Enh > -1)
                             {
-                                power.StatInclude = true;
+                                // if (!hasProc && power.HasProc && ...) ??
+                                if (!hasProc && DatabaseAPI.Database.Enhancements[e.Enh].Probability == 0 ||
+                                    DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                                {
+                                    power.StatInclude = true;
+                                }
+                                else if (!power.CanIncludeForStats())
+                                {
+                                    power.StatInclude = false;
+                                }
                             }
                             else if (!power.CanIncludeForStats())
                             {
                                 power.StatInclude = false;
                             }
-                        }
-                        else if (!power.CanIncludeForStats())
-                        {
-                            power.StatInclude = false;
                         }
 
                         fRecipe?.RecalcSalvage();
@@ -5524,7 +5532,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 {
                     var fileInfo = new FileInfo(LastFileName);
                     var fileName = fileInfo.Name.Length > 255 ? "Build" : fileInfo.Name;
-                    str1 = $"{fileName} - ";
+                    str1 = $"{fileName}{(FileModified ? " [Modified]" : "")} - ";
                     tsFileSave.Text = $"&Save '{(string.IsNullOrEmpty(fileInfo.Extension) ? fileName : fileName.Replace(fileInfo.Extension, ""))}'";
                 }
                 else
@@ -5543,18 +5551,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str2 = str2.Replace(nameof(hero), "Villain");
             }
 
-            if (MidsContext.Config.MasterMode && !MidsContext.Config.IsLcAdmin)
-            {
-                Text = $@"{str2} (DB Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
-            else if (MidsContext.Config.MasterMode && MidsContext.Config.IsLcAdmin)
-            {
-                Text = $@"{str2} (LC Admin) v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
-            else
-            {
-                Text = $@"{str2} v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
-            }
+            var adminStatus = MidsContext.Config.MasterMode
+                ? MidsContext.Config.IsLcAdmin
+                    ? "LC Admin"
+                    : "DB Admin"
+                : "";
+            Text = $@"{str2} {(adminStatus != "" ? $"({adminStatus}) " : "")}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
         }
 
         public void UpdateTitle()
@@ -7430,6 +7432,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ImportBase.FixUndetectedPowersets(ref listPowersets);
             ImportBase.FinalizePowersetsList(ref listPowersets, listPowers, trunkPowersets);
             ImportBase.PadPowerPools(ref listPowersets);
+            ImportBase.FilterTempPowersets(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -7442,11 +7445,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 for (var k = 0; k < listPowers.Count; k++)
                 {
-                    if (powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    if (powerEntryList[k].PowerSet?.FullName.Contains("Inherent") == true)
                     {
                         continue;
                     }
 
+                    // Incarnate, Temps, Accolades
+                    if (powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true ||
+                        powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true)
+                    {
+                        if (!MidsContext.Character.CurrentBuild.PowerUsed(powerEntryList[k].Power))
+                        {
+                            MidsContext.Character.CurrentBuild.AddPower(powerEntryList[k].Power, 49).StatInclude = true;
+                        }
+
+                        continue;
+                    }
+
+                    // Regular powers
                     PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
@@ -7460,10 +7476,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    if (pe.Power == null) continue; // Not picked power will be in the list, but not instanciated!
+                    if (pe.Power == null)
+                    {
+                        continue; // Not picked power will be in the list, but not instantiated!
+                    }
+
                     var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
-                    if (pList.Length == 0) continue;
-                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable) continue;
+                    if (pList.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable)
+                    {
+                        continue;
+                    }
+
+                    if (DatabaseAPI.Database.Power[pe.NIDPower].VariableEnabled)
+                    {
+                        var initialStacks = Math.Max(DatabaseAPI.Database.Power[pe.NIDPower].VariableMin,
+                            Math.Min(DatabaseAPI.Database.Power[pe.NIDPower].VariableMax,
+                                DatabaseAPI.Database.Power[pe.NIDPower].VariableStart));
+                        pe.VariableValue = initialStacks;
+                        pe.Power.Stacks = initialStacks;
+                    }
 
                     var p = pList.First();
                     while (pe.Slots.Length < p.Slots.Length)

@@ -70,23 +70,24 @@ namespace Mids_Reborn.Forms.Controls
         protected const int szPadding = 4;
         private readonly string[] Pages;
 
+        public bool MoveDisable;
+        public Rectangle SnapLocation;
+        public int TabPage;
+        public bool[]? TabsMask;
+
         private bool bFloating;
         private ExtendedBitmap bxFlip;
         private bool Compact;
         private int HistoryIDX;
         private bool Lock;
         private Point mouse_offset;
-        public bool MoveDisable;
         private IPower? pBase;
         private IPower? pEnh;
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private int pLastScaleVal;
         private Rectangle ScreenBounds;
-        public Rectangle SnapLocation;
-        public int TabPage;
         private bool VillainColor;
-        public bool[]? TabsMask;
         private List<GroupedFx> GroupedRankedEffects;
         private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
 
@@ -896,6 +897,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DisplayData(bool noLevel = false, int iEnhLevel = -1)
         {
+            if (IsDisposed)
+            {
+                // Occurs when trying to load a build made for a different database
+                // and auto switch
+                return;
+            }
+
             if (!MidsContext.Config.DisableDataDamageGraph)
             {
                 Info_Damage.GraphType = MidsContext.Config.DataGraphType;
@@ -2392,7 +2400,7 @@ namespace Mids_Reborn.Forms.Controls
             var rootPowerName = iHistoryIdx >= 0 && iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
                 ? MidsContext.Character.CurrentBuild.Powers[iHistoryIdx]?.Power?.FullName
                 : MidsContext.Character.CurrentBuild.Powers
-                    .Where(e => e.Power != null)
+                    .Where(e => e is {Power: not null})
                     .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
                     .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
                     .FirstOrDefault(e => e.Value.Any(fx =>

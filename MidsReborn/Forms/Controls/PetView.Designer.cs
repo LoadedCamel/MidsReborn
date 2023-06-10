@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 
@@ -32,290 +33,296 @@ namespace Mids_Reborn.Forms.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PetView));
-            this.info_Damage = new Mids_Reborn.Controls.ctlDamageDisplay();
-            this.lblDmg = new System.Windows.Forms.Label();
-            this.powerScaler = new Mids_Reborn.Controls.CtlMultiGraph();
-            this.info_TxtLarge = new System.Windows.Forms.RichTextBox();
-            this.info_TxtSmall = new System.Windows.Forms.RichTextBox();
-            this.info_Title = new Label();
-            this.infoTip = new System.Windows.Forms.ToolTip(this.components);
-            this.info_DataList = new Mids_Reborn.Controls.PairedListEx();
-            this.panelSeparator1 = new System.Windows.Forms.Panel();
-            this.panelSeparator2 = new System.Windows.Forms.Panel();
-            this.panelSeparator3 = new System.Windows.Forms.Panel();
-            this.panelSeparator4 = new System.Windows.Forms.Panel();
-            this.panelSeparator5 = new System.Windows.Forms.Panel();
-            this.panelSeparator6 = new System.Windows.Forms.Panel();
-            this.containerPanel = new System.Windows.Forms.Panel();
-            this.containerPanel.SuspendLayout();
-            this.SuspendLayout();
+            info_Damage = new ctlDamageDisplay();
+            lblDmg = new Label();
+            powerScaler = new CtlMultiGraph();
+            info_TxtLarge = new RichTextBox();
+            info_TxtSmall = new RichTextBox();
+            info_Title = new Label();
+            infoTip = new ToolTip(components);
+            info_DataList = new PairedListEx();
+            panelSeparator1 = new Panel();
+            panelSeparator2 = new Panel();
+            panelSeparator3 = new Panel();
+            panelSeparator4 = new Panel();
+            panelSeparator5 = new Panel();
+            panelSeparator6 = new Panel();
+            containerPanel = new Panel();
+            containerPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // info_Damage
             // 
-            this.info_Damage.BackColor = System.Drawing.Color.Black;
-            this.info_Damage.ColorBackEnd = System.Drawing.Color.Black;
-            this.info_Damage.ColorBackStart = System.Drawing.Color.Black;
-            this.info_Damage.ColorBaseEnd = System.Drawing.Color.Blue;
-            this.info_Damage.ColorBaseStart = System.Drawing.Color.DodgerBlue;
-            this.info_Damage.ColorEnhEnd = System.Drawing.Color.Goldenrod;
-            this.info_Damage.ColorEnhStart = System.Drawing.Color.Gold;
-            this.info_Damage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.info_Damage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.info_Damage.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.info_Damage.GraphType = Mids_Reborn.Core.Enums.eDDGraph.Both;
-            this.info_Damage.Location = new System.Drawing.Point(0, 402);
-            this.info_Damage.Name = "info_Damage";
-            this.info_Damage.nBaseVal = 100F;
-            this.info_Damage.nEnhVal = 150F;
-            this.info_Damage.nHighBase = 200F;
-            this.info_Damage.nHighEnh = 214F;
-            this.info_Damage.nMaxEnhVal = 207F;
-            this.info_Damage.PaddingH = 1;
-            this.info_Damage.PaddingV = 1;
-            this.info_Damage.Size = new System.Drawing.Size(436, 109);
-            this.info_Damage.Style = Mids_Reborn.Core.Enums.eDDStyle.TextUnderGraph;
-            this.info_Damage.TabIndex = 21;
-            this.info_Damage.TextAlign = Mids_Reborn.Core.Enums.eDDAlign.Center;
-            this.info_Damage.TextColor = System.Drawing.Color.WhiteSmoke;
+            info_Damage.BackColor = Color.Black;
+            info_Damage.ColorBackEnd = Color.Black;
+            info_Damage.ColorBackStart = Color.Black;
+            info_Damage.ColorBaseEnd = Color.Blue;
+            info_Damage.ColorBaseStart = Color.DodgerBlue;
+            info_Damage.ColorEnhEnd = Color.Goldenrod;
+            info_Damage.ColorEnhStart = Color.Gold;
+            info_Damage.Dock = DockStyle.Top;
+            info_Damage.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            info_Damage.ForeColor = Color.WhiteSmoke;
+            info_Damage.GraphType = Core.Enums.eDDGraph.Both;
+            info_Damage.Location = new Point(0, 402);
+            info_Damage.Name = "info_Damage";
+            info_Damage.nBaseVal = 100F;
+            info_Damage.nEnhVal = 150F;
+            info_Damage.nHighBase = 200F;
+            info_Damage.nHighEnh = 214F;
+            info_Damage.nMaxEnhVal = 207F;
+            info_Damage.PaddingH = 1;
+            info_Damage.PaddingV = 1;
+            info_Damage.Size = new Size(436, 109);
+            info_Damage.Style = Core.Enums.eDDStyle.TextUnderGraph;
+            info_Damage.TabIndex = 21;
+            info_Damage.TextAlign = Core.Enums.eDDAlign.Center;
+            info_Damage.TextColor = Color.WhiteSmoke;
             // 
             // lblDmg
             // 
-            this.lblDmg.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDmg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblDmg.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblDmg.Location = new System.Drawing.Point(0, 373);
-            this.lblDmg.Name = "lblDmg";
-            this.lblDmg.Size = new System.Drawing.Size(436, 26);
-            this.lblDmg.TabIndex = 22;
-            this.lblDmg.Text = "Damage (Blue = Base | Gold = Enhanced)";
-            this.lblDmg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblDmg.Dock = DockStyle.Top;
+            lblDmg.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDmg.ForeColor = Color.WhiteSmoke;
+            lblDmg.Location = new Point(0, 373);
+            lblDmg.Name = "lblDmg";
+            lblDmg.Size = new Size(436, 26);
+            lblDmg.TabIndex = 22;
+            lblDmg.Text = "Damage (Blue = Base | Gold = Enhanced)";
+            lblDmg.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // powerScaler
             // 
-            this.powerScaler.BackColor = System.Drawing.Color.Black;
-            this.powerScaler.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("powerScaler.BackgroundImage")));
-            this.powerScaler.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.powerScaler.BaseBarColors = null;
-            this.powerScaler.Border = true;
-            this.powerScaler.BorderColor = System.Drawing.Color.Black;
-            this.powerScaler.Clickable = true;
-            this.powerScaler.ColorAbsorbed = System.Drawing.Color.Gainsboro;
-            this.powerScaler.ColorBase = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
-            this.powerScaler.ColorEnh = System.Drawing.Color.Yellow;
-            this.powerScaler.ColorFadeEnd = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.powerScaler.ColorFadeStart = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(10)))), ((int)(((byte)(0)))));
-            this.powerScaler.ColorHighlight = System.Drawing.Color.Gray;
-            this.powerScaler.ColorLines = System.Drawing.Color.Black;
-            this.powerScaler.ColorMarkerInner = System.Drawing.Color.Red;
-            this.powerScaler.ColorMarkerOuter = System.Drawing.Color.Black;
-            this.powerScaler.ColorOvercap = System.Drawing.Color.Black;
-            this.powerScaler.DifferentiateColors = false;
-            this.powerScaler.Dock = System.Windows.Forms.DockStyle.Top;
-            this.powerScaler.DrawRuler = false;
-            this.powerScaler.Dual = false;
-            this.powerScaler.EnhBarColors = null;
-            this.powerScaler.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.powerScaler.ForcedMax = 0F;
-            this.powerScaler.ForeColor = System.Drawing.Color.Azure;
-            this.powerScaler.Highlight = false;
-            this.powerScaler.ItemFontSizeOverride = 0F;
-            this.powerScaler.ItemHeight = 12;
-            this.powerScaler.Lines = true;
-            this.powerScaler.Location = new System.Drawing.Point(0, 192);
-            this.powerScaler.MarkerValue = 0F;
-            this.powerScaler.Max = 100F;
-            this.powerScaler.MaxItems = 1;
-            this.powerScaler.Name = "powerScaler";
-            this.powerScaler.OuterBorder = true;
-            this.powerScaler.Overcap = false;
-            this.powerScaler.OvercapColors = null;
-            this.powerScaler.PaddingX = 2F;
-            this.powerScaler.PaddingY = 2F;
-            this.powerScaler.PerItemScales = null;
-            this.powerScaler.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
-            this.powerScaler.ScaleHeight = 32;
-            this.powerScaler.ScaleIndex = 8;
-            this.powerScaler.ShowScale = true;
-            this.powerScaler.Size = new System.Drawing.Size(436, 20);
-            this.powerScaler.Style = Mids_Reborn.Core.Enums.GraphStyle.baseOnly;
-            this.powerScaler.TabIndex = 72;
-            this.powerScaler.TextWidth = 100;
-            this.powerScaler.BarClick += new Mids_Reborn.Controls.CtlMultiGraph.BarClickEventHandler(this.powerScaler_BarClick);
+            powerScaler.BackColor = Color.Black;
+            powerScaler.BackgroundImage = (Image)resources.GetObject("powerScaler.BackgroundImage");
+            powerScaler.BackgroundImageLayout = ImageLayout.Stretch;
+            powerScaler.BaseBarColors = null;
+            powerScaler.Border = true;
+            powerScaler.BorderColor = Color.Black;
+            powerScaler.Clickable = true;
+            powerScaler.ColorAbsorbed = Color.Gainsboro;
+            powerScaler.ColorBase = Color.FromArgb(64, 255, 64);
+            powerScaler.ColorEnh = Color.Yellow;
+            powerScaler.ColorFadeEnd = Color.FromArgb(0, 192, 0);
+            powerScaler.ColorFadeStart = Color.FromArgb(0, 10, 0);
+            powerScaler.ColorHighlight = Color.Gray;
+            powerScaler.ColorLines = Color.Black;
+            powerScaler.ColorMarkerInner = Color.Red;
+            powerScaler.ColorMarkerOuter = Color.Black;
+            powerScaler.ColorOvercap = Color.Black;
+            powerScaler.DifferentiateColors = false;
+            powerScaler.Dock = DockStyle.Top;
+            powerScaler.DrawRuler = false;
+            powerScaler.Dual = false;
+            powerScaler.EnhBarColors = null;
+            powerScaler.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            powerScaler.ForcedMax = 0F;
+            powerScaler.ForeColor = Color.Azure;
+            powerScaler.Highlight = false;
+            powerScaler.ItemFontSizeOverride = 0F;
+            powerScaler.ItemHeight = 12;
+            powerScaler.Lines = true;
+            powerScaler.Location = new Point(0, 192);
+            powerScaler.MarkerValue = 0F;
+            powerScaler.Max = 100F;
+            powerScaler.MaxItems = 1;
+            powerScaler.Name = "powerScaler";
+            powerScaler.OuterBorder = true;
+            powerScaler.Overcap = false;
+            powerScaler.OvercapColors = null;
+            powerScaler.PaddingX = 2F;
+            powerScaler.PaddingY = 2F;
+            powerScaler.PerItemScales = null;
+            powerScaler.RulerPos = CtlMultiGraph.RulerPosition.Top;
+            powerScaler.ScaleHeight = 32;
+            powerScaler.ScaleIndex = 8;
+            powerScaler.ShowScale = true;
+            powerScaler.Size = new Size(436, 20);
+            powerScaler.Style = Core.Enums.GraphStyle.baseOnly;
+            powerScaler.TabIndex = 72;
+            powerScaler.TextWidth = 100;
+            powerScaler.BarClick += powerScaler_BarClick;
             // 
             // info_TxtLarge
             // 
-            this.info_TxtLarge.BackColor = System.Drawing.Color.Black;
-            this.info_TxtLarge.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.info_TxtLarge.Dock = System.Windows.Forms.DockStyle.Top;
-            this.info_TxtLarge.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.info_TxtLarge.ForeColor = System.Drawing.Color.Black;
-            this.info_TxtLarge.Location = new System.Drawing.Point(0, 88);
-            this.info_TxtLarge.Name = "info_TxtLarge";
-            this.info_TxtLarge.ReadOnly = true;
-            this.info_TxtLarge.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.info_TxtLarge.Size = new System.Drawing.Size(436, 101);
-            this.info_TxtLarge.TabIndex = 73;
-            this.info_TxtLarge.Text = "info_Rich";
+            info_TxtLarge.BackColor = Color.Black;
+            info_TxtLarge.BorderStyle = BorderStyle.None;
+            info_TxtLarge.Dock = DockStyle.Top;
+            info_TxtLarge.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            info_TxtLarge.ForeColor = Color.Black;
+            info_TxtLarge.Location = new Point(0, 88);
+            info_TxtLarge.Name = "info_TxtLarge";
+            info_TxtLarge.ReadOnly = true;
+            info_TxtLarge.ScrollBars = RichTextBoxScrollBars.Vertical;
+            info_TxtLarge.Size = new Size(436, 101);
+            info_TxtLarge.TabIndex = 73;
+            info_TxtLarge.Text = "info_Rich";
             // 
             // info_TxtSmall
             // 
-            this.info_TxtSmall.BackColor = System.Drawing.Color.Black;
-            this.info_TxtSmall.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.info_TxtSmall.Dock = System.Windows.Forms.DockStyle.Top;
-            this.info_TxtSmall.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.info_TxtSmall.ForeColor = System.Drawing.Color.Black;
-            this.info_TxtSmall.Location = new System.Drawing.Point(0, 42);
-            this.info_TxtSmall.Name = "info_TxtSmall";
-            this.info_TxtSmall.ReadOnly = true;
-            this.info_TxtSmall.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.info_TxtSmall.Size = new System.Drawing.Size(436, 43);
-            this.info_TxtSmall.TabIndex = 74;
-            this.info_TxtSmall.Text = "info_Rich";
+            info_TxtSmall.BackColor = Color.Black;
+            info_TxtSmall.BorderStyle = BorderStyle.None;
+            info_TxtSmall.Dock = DockStyle.Top;
+            info_TxtSmall.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            info_TxtSmall.ForeColor = Color.Black;
+            info_TxtSmall.Location = new Point(0, 42);
+            info_TxtSmall.Name = "info_TxtSmall";
+            info_TxtSmall.ReadOnly = true;
+            info_TxtSmall.ScrollBars = RichTextBoxScrollBars.None;
+            info_TxtSmall.Size = new Size(436, 43);
+            info_TxtSmall.TabIndex = 74;
+            info_TxtSmall.Text = "info_Rich";
             // 
             // info_Title
             // 
-            this.info_Title.BackColor = System.Drawing.Color.Black;
-            this.info_Title.Dock = System.Windows.Forms.DockStyle.Top;
-            this.info_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.info_Title.ForeColor = System.Drawing.Color.White;
-            this.info_Title.Text = "Title";
-            this.info_Title.Location = new System.Drawing.Point(0, 0);
-            this.info_Title.Name = "info_Title";
-            this.info_Title.Size = new System.Drawing.Size(436, 39);
-            this.info_Title.TabIndex = 75;
-            this.info_Title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            info_Title.BackColor = Color.Black;
+            info_Title.Dock = DockStyle.Top;
+            info_Title.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            info_Title.ForeColor = Color.White;
+            info_Title.Location = new Point(0, 0);
+            info_Title.Name = "info_Title";
+            info_Title.Size = new Size(436, 39);
+            info_Title.TabIndex = 75;
+            info_Title.Text = "Title";
+            info_Title.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // infoTip
+            // 
+            infoTip.AutoPopDelay = 15000;
+            infoTip.InitialDelay = 350;
+            infoTip.ReshowDelay = 100;
             // 
             // info_DataList
             // 
-            this.info_DataList.AutoScroll = true;
-            this.info_DataList.Columns = 2;
-            this.info_DataList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.info_DataList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.info_DataList.HighlightColor = System.Drawing.Color.CornflowerBlue;
-            this.info_DataList.HighlightTextColor = System.Drawing.Color.Black;
-            this.info_DataList.ItemColor = System.Drawing.Color.Silver;
-            this.info_DataList.Location = new System.Drawing.Point(0, 215);
-            this.info_DataList.Name = "info_DataList";
-            this.info_DataList.Rows = 5;
-            this.info_DataList.Size = new System.Drawing.Size(436, 155);
-            this.info_DataList.TabIndex = 79;
-            this.info_DataList.UseHighlighting = true;
-            this.info_DataList.ValueAlternateColor = System.Drawing.Color.Chartreuse;
-            this.info_DataList.ValueColor = System.Drawing.Color.Azure;
-            this.info_DataList.ValueConditionColor = System.Drawing.Color.Firebrick;
-            this.info_DataList.ValueSpecialColor = System.Drawing.Color.SlateBlue;
+            info_DataList.AutoScroll = true;
+            info_DataList.Columns = 2;
+            info_DataList.Dock = DockStyle.Top;
+            info_DataList.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            info_DataList.HighlightColor = Color.CornflowerBlue;
+            info_DataList.HighlightTextColor = Color.Black;
+            info_DataList.ItemColor = Color.Silver;
+            info_DataList.Location = new Point(0, 215);
+            info_DataList.Name = "info_DataList";
+            info_DataList.Rows = 5;
+            info_DataList.SetItemsBold = false;
+            info_DataList.Size = new Size(436, 155);
+            info_DataList.TabIndex = 79;
+            info_DataList.UseHighlighting = true;
+            info_DataList.ValueAlternateColor = Color.Chartreuse;
+            info_DataList.ValueColor = Color.Azure;
+            info_DataList.ValueConditionColor = Color.Firebrick;
+            info_DataList.ValueSpecialColor = Color.SlateBlue;
             // 
             // panelSeparator1
             // 
-            this.panelSeparator1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator1.Location = new System.Drawing.Point(0, 39);
-            this.panelSeparator1.Name = "panelSeparator1";
-            this.panelSeparator1.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator1.TabIndex = 83;
+            panelSeparator1.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator1.Dock = DockStyle.Top;
+            panelSeparator1.ForeColor = Color.WhiteSmoke;
+            panelSeparator1.Location = new Point(0, 39);
+            panelSeparator1.Name = "panelSeparator1";
+            panelSeparator1.Size = new Size(436, 3);
+            panelSeparator1.TabIndex = 83;
             // 
             // panelSeparator2
             // 
-            this.panelSeparator2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator2.Location = new System.Drawing.Point(0, 85);
-            this.panelSeparator2.Name = "panelSeparator2";
-            this.panelSeparator2.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator2.TabIndex = 82;
+            panelSeparator2.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator2.Dock = DockStyle.Top;
+            panelSeparator2.ForeColor = Color.WhiteSmoke;
+            panelSeparator2.Location = new Point(0, 85);
+            panelSeparator2.Name = "panelSeparator2";
+            panelSeparator2.Size = new Size(436, 3);
+            panelSeparator2.TabIndex = 82;
             // 
             // panelSeparator3
             // 
-            this.panelSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator3.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator3.Location = new System.Drawing.Point(0, 189);
-            this.panelSeparator3.Name = "panelSeparator3";
-            this.panelSeparator3.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator3.TabIndex = 81;
+            panelSeparator3.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator3.Dock = DockStyle.Top;
+            panelSeparator3.ForeColor = Color.WhiteSmoke;
+            panelSeparator3.Location = new Point(0, 189);
+            panelSeparator3.Name = "panelSeparator3";
+            panelSeparator3.Size = new Size(436, 3);
+            panelSeparator3.TabIndex = 81;
             // 
             // panelSeparator4
             // 
-            this.panelSeparator4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator4.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator4.Location = new System.Drawing.Point(0, 212);
-            this.panelSeparator4.Name = "panelSeparator4";
-            this.panelSeparator4.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator4.TabIndex = 80;
+            panelSeparator4.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator4.Dock = DockStyle.Top;
+            panelSeparator4.ForeColor = Color.WhiteSmoke;
+            panelSeparator4.Location = new Point(0, 212);
+            panelSeparator4.Name = "panelSeparator4";
+            panelSeparator4.Size = new Size(436, 3);
+            panelSeparator4.TabIndex = 80;
             // 
             // panelSeparator5
             // 
-            this.panelSeparator5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator5.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator5.Location = new System.Drawing.Point(0, 370);
-            this.panelSeparator5.Name = "panelSeparator5";
-            this.panelSeparator5.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator5.TabIndex = 23;
+            panelSeparator5.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator5.Dock = DockStyle.Top;
+            panelSeparator5.ForeColor = Color.WhiteSmoke;
+            panelSeparator5.Location = new Point(0, 370);
+            panelSeparator5.Name = "panelSeparator5";
+            panelSeparator5.Size = new Size(436, 3);
+            panelSeparator5.TabIndex = 23;
             // 
             // panelSeparator6
             // 
-            this.panelSeparator6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(33)))), ((int)(((byte)(59)))));
-            this.panelSeparator6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSeparator6.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.panelSeparator6.Location = new System.Drawing.Point(0, 399);
-            this.panelSeparator6.Name = "panelSeparator6";
-            this.panelSeparator6.Size = new System.Drawing.Size(436, 3);
-            this.panelSeparator6.TabIndex = 22;
+            panelSeparator6.BackColor = Color.FromArgb(7, 33, 59);
+            panelSeparator6.Dock = DockStyle.Top;
+            panelSeparator6.ForeColor = Color.WhiteSmoke;
+            panelSeparator6.Location = new Point(0, 399);
+            panelSeparator6.Name = "panelSeparator6";
+            panelSeparator6.Size = new Size(436, 3);
+            panelSeparator6.TabIndex = 22;
             // 
             // containerPanel
             // 
-            this.containerPanel.BackColor = System.Drawing.Color.Black;
-            this.containerPanel.Controls.Add(this.info_Damage);
-            this.containerPanel.Controls.Add(this.panelSeparator6);
-            this.containerPanel.Controls.Add(this.lblDmg);
-            this.containerPanel.Controls.Add(this.panelSeparator5);
-            this.containerPanel.Controls.Add(this.info_DataList);
-            this.containerPanel.Controls.Add(this.panelSeparator4);
-            this.containerPanel.Controls.Add(this.powerScaler);
-            this.containerPanel.Controls.Add(this.panelSeparator3);
-            this.containerPanel.Controls.Add(this.info_TxtLarge);
-            this.containerPanel.Controls.Add(this.panelSeparator2);
-            this.containerPanel.Controls.Add(this.info_TxtSmall);
-            this.containerPanel.Controls.Add(this.panelSeparator1);
-            this.containerPanel.Controls.Add(this.info_Title);
-            this.containerPanel.Location = new System.Drawing.Point(3, 3);
-            this.containerPanel.Name = "containerPanel";
-            this.containerPanel.Size = new System.Drawing.Size(436, 513);
-            this.containerPanel.TabIndex = 0;
+            containerPanel.BackColor = Color.Black;
+            containerPanel.Controls.Add(info_Damage);
+            containerPanel.Controls.Add(panelSeparator6);
+            containerPanel.Controls.Add(lblDmg);
+            containerPanel.Controls.Add(panelSeparator5);
+            containerPanel.Controls.Add(info_DataList);
+            containerPanel.Controls.Add(panelSeparator4);
+            containerPanel.Controls.Add(powerScaler);
+            containerPanel.Controls.Add(panelSeparator3);
+            containerPanel.Controls.Add(info_TxtLarge);
+            containerPanel.Controls.Add(panelSeparator2);
+            containerPanel.Controls.Add(info_TxtSmall);
+            containerPanel.Controls.Add(panelSeparator1);
+            containerPanel.Controls.Add(info_Title);
+            containerPanel.Location = new Point(3, 3);
+            containerPanel.Name = "containerPanel";
+            containerPanel.Size = new Size(436, 513);
+            containerPanel.TabIndex = 0;
             // 
             // PetView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(100)))));
-            this.Controls.Add(this.containerPanel);
-            this.Name = "PetView";
-            this.Size = new System.Drawing.Size(442, 519);
-            this.containerPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = Color.FromArgb(12, 56, 100);
+            Controls.Add(containerPanel);
+            Name = "PetView";
+            Size = new Size(442, 519);
+            containerPanel.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
-        internal Mids_Reborn.Controls.ctlDamageDisplay info_Damage;
-        private System.Windows.Forms.Label lblDmg;
-        private Mids_Reborn.Controls.CtlMultiGraph powerScaler;
-        internal System.Windows.Forms.RichTextBox info_TxtLarge;
-        private System.Windows.Forms.RichTextBox info_TxtSmall;
+        internal ctlDamageDisplay info_Damage;
+        private Label lblDmg;
+        private CtlMultiGraph powerScaler;
+        internal RichTextBox info_TxtLarge;
+        private RichTextBox info_TxtSmall;
         private Label info_Title;
-        private System.Windows.Forms.ToolTip infoTip;
-        internal System.Windows.Forms.Panel panelSeparator1;
-        internal System.Windows.Forms.Panel panelSeparator2;
-        internal System.Windows.Forms.Panel panelSeparator3;
-        internal System.Windows.Forms.Panel panelSeparator4;
-        internal System.Windows.Forms.Panel panelSeparator5;
-        internal System.Windows.Forms.Panel panelSeparator6;
-        private System.Windows.Forms.Panel containerPanel;
+        public ToolTip infoTip;
+        internal Panel panelSeparator1;
+        internal Panel panelSeparator2;
+        internal Panel panelSeparator3;
+        internal Panel panelSeparator4;
+        internal Panel panelSeparator5;
+        internal Panel panelSeparator6;
+        private Panel containerPanel;
         private PairedListEx info_DataList;
     }
 }

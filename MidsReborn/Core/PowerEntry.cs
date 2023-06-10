@@ -241,24 +241,24 @@ namespace Mids_Reborn.Core
 
         public bool CanIncludeForStats()
         {
-            if (NIDPowerset > -1 & IDXPower > -1)
+            if (NIDPowerset <= -1)
             {
-                switch (DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower].PowerType)
-                {
-                    case Enums.ePowerType.Auto_:
-                        return true;
-                    case Enums.ePowerType.Click:
-                        if (DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower].ClickBuff)
-                        {
-                            return true;
-                        }
-                        break;
-                    case Enums.ePowerType.Toggle:
-                        return true;
-                }
+                return false;
             }
 
-            return false;
+            if (IDXPower <= 1)
+            {
+                return false;
+            }
+
+            var power = DatabaseAPI.Database.Powersets[NIDPowerset]?.Powers[IDXPower];
+            return power?.PowerType switch
+            {
+                Enums.ePowerType.Auto_ => true,
+                Enums.ePowerType.Click when power.ClickBuff => true,
+                Enums.ePowerType.Toggle => true,
+                _ => false
+            };
         }
 
         public void CheckVariableBounds()

@@ -296,7 +296,8 @@ namespace Mids_Reborn.Controls
             checked
             {
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-                    if (MidsContext.Character.CanPlaceSlot & (Highlight == i))
+                {
+                    if (MidsContext.Character.CanPlaceSlot & Highlight == i)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers = currentBuild.Powers;
@@ -312,7 +313,7 @@ namespace Mids_Reborn.Controls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[i] = value;
                     }
-                    else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
+                    else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Power != null && MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName == "Incarnate" | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers3 = currentBuild.Powers;
@@ -320,6 +321,7 @@ namespace Mids_Reborn.Controls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[i] = value;
                     }
+                }
 
                 Application.DoEvents();
                 DrawSplit();
@@ -878,7 +880,16 @@ namespace Mids_Reborn.Controls
             bxBuffer.Graphics?.Clear(BackColor);
             DrawPowers();
             var location = new Point(0, 0);
-            OutputUnscaled(ref bxBuffer, location);
+            try
+            {
+                OutputUnscaled(ref bxBuffer, location);
+            }
+            catch (Exception)
+            {
+                // Call will fail if loading a build made with a different database
+                // and auto switch
+            }
+
             GC.Collect();
         }
 
