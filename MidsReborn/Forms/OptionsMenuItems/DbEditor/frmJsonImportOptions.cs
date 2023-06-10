@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmJsonImportOptions : Form
     {

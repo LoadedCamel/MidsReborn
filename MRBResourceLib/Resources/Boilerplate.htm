@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>{title}</title>
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+        body {
+            background-color: black;
+            color: whitesmoke;
+        }
+
+        * {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 1em;
+        }
+
+        .sectionBlock {
+            border: 0.125em solid inherit;
+            border-radius: 0.3125em;
+            -moz-border-radius: 0.3125em;
+            -webkit-border-radius: 0.3125em;
+            font-size: 0.8em;
+            line-height: 100%;
+            cursor: default;
+            max-width: 100%;
+            margin-left: 0.625em;
+            display: block;
+        }
+
+            .sectionBlock h2 {
+                color: orange;
+                padding-top: 0.625em;
+                padding-bottom: 0.3125em;
+                padding-left: 0.625em;
+                font-weight: bold;
+                font-size: 1.6em;
+            }
+
+            .sectionBlock a.build:link, a.build:visited {
+                border: 0.125em solid inherit;
+                border-radius: 0.5em;
+                -moz-border-radius: 0.5em;
+                -webkit-border-radius: 0.5em;
+                background-color: #303c7a;
+                color: whitesmoke;
+                padding: 0.4em 0.8em;
+                font-size: 1.2em;
+                font-weight: bold;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                float: right;
+                margin-right: 2em;
+            }
+
+            .sectionBlock a.build:hover {
+                background-color: #5564ad;
+                color: black;
+            }
+
+            .sectionBlock a.build:active {
+                background-color: #5564ad;
+                color: gold;
+            }
+
+            .sectionBlock h2.header {
+                border-bottom: 0.125em solid #808080;
+                padding-bottom: 0.625em;
+            }
+
+            .sectionBlock h3 {
+                font-weight: bold;
+                font-size: 1em;
+            }
+            
+            .sectionBlock h3.header {
+                color: orange;
+                font-size: 1.4em;
+            }
+
+            .sectionBlock h3.generated {
+                font-size: 0.8em;
+                text-align: right;
+            }
+
+            .sectionBlock h3.info {
+                color: #ff4a47;
+            }
+
+            .sectionBlock h3.inherent {
+                color: #a9c3d9;
+            }
+
+            .sectionBlock ul {
+                font-size: 0.8em;
+                font-weight: bold;
+                list-style-type: none;
+                white-space: nowrap;
+            }
+            
+            .sectionBlock ul li {
+                color: whitesmoke;
+            }
+
+                .sectionBlock ul li::marker {
+                    content: "• ";
+                    color: #88e371;
+                }
+
+            .sectionBlock ul li.power {
+                color: orange;
+            }
+
+                .sectionBlock ul li.power::marker {
+                    color: #71b0e3;
+                }
+
+
+            .sectionBlock table {
+                display: flex;
+                flex-direction: column;
+                font-size: 0.8em;
+                font-weight: bold;
+                border-collapse: separate;
+                border-spacing: 0.625em;
+                white-space: nowrap;
+                width: 100%;
+            }
+
+            .sectionBlock tr {
+                width: 0.625em;
+            }
+
+            .sectionBlock th {
+                color: #809aed;
+                font-size: 1.3em;
+                text-decoration: underline;
+                text-align: left;
+                padding-bottom: 0.5em;
+                height: 5%;
+                width: 0.0625em;
+            }
+
+            .sectionBlock td {
+                text-align: left;
+                padding-right: 1.5625em;
+                margin: 0;
+                height: 5%;
+                width: 0.0625em;
+            }
+
+            .sectionBlock td:last-child {
+                width: 1%;
+            }
+
+        /* Extra small devices (phones, 600px and down) */
+        @media only screen and (max-width: 600px) {
+            .sectionBlock {
+                font-size: 1em;
+            }
+
+                .sectionBlock ul {
+                    white-space: normal;
+                }
+
+                .sectionBlock table {
+                    overflow-x: auto;
+                }
+        }
+
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 600px) {
+            .sectionBlock {
+                font-size: 1em;
+            }
+
+                .sectionBlock ul {
+                    white-space: normal;
+                }
+
+                .sectionBlock table {
+                    overflow-x: auto;
+                }
+        }
+
+        /* Medium devices (landscape tablets, 768px and up) */
+        @media only screen and (min-width: 768px) {
+            .sectionBlock {
+                font-size: 1em;
+            }
+                .sectionBlock ul {
+                    white-space: normal;
+                }
+
+                .sectionBlock table {
+                    overflow-x: auto;
+                }
+        }
+
+        /* Large devices (laptops/desktops, 992px and up) */
+        @media only screen and (min-width: 992px) {
+            .sectionBlock {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Extra large devices (large laptops and desktops, 1200px and up) */
+        @media only screen and (min-width: 1200px) {
+            .sectionBlock {
+                font-size: 1.2em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sectionBlock">
+        {heading}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {character-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        <h2 class="header">Character Stats</h2>
+        <table>
+            <tr>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {power-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {inherent-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {incarnate-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {accolade-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {setBonus-details}
+    </div>
+    <br />
+    <div class="sectionBlock">
+        {breakdown-details}
+    </div>
+</body>
+</html>

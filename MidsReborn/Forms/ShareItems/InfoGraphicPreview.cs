@@ -2,12 +2,15 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
 
-namespace Mids_Reborn.Forms.Sharing
+namespace Mids_Reborn.Forms.ShareItems
 {
-    public partial class InfographicPreview : Form
+    public partial class InfoGraphicPreview : Form
     {
-        public InfographicPreview()
+        public Image? Image;
+
+        public InfoGraphicPreview()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             InitializeComponent();
@@ -16,10 +19,15 @@ namespace Mids_Reborn.Forms.Sharing
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            var imageBytes = Convert.FromBase64String(InfoGraphic.Generate());
-            using var stream = new MemoryStream(imageBytes);
+            var gfxBytes = InfoGraphic.Generate();
+            using var stream = new MemoryStream(gfxBytes);
             var image = Image.FromStream(stream);
             pictureBox1.Image = image;
+        }
+
+        private void On_Continue(object sender, EventArgs e)
+        {
+            Image = pictureBox1.Image;
         }
     }
 }

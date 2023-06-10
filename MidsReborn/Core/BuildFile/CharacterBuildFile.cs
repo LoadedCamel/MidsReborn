@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -9,17 +10,14 @@ using Mids_Reborn.Core.BuildFile.DataModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
 namespace Mids_Reborn.Core.BuildFile
 {
     public class CharacterBuildFile
     {
-
         private static CharacterBuildFile? _instance;
         private static readonly object Mutex = new();
 
-        private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
         public static CharacterBuildFile GetInstance(Character characterData, bool refreshData = false)
@@ -37,15 +35,25 @@ namespace Mids_Reborn.Core.BuildFile
             return _instance = new CharacterBuildFile();
         }
 
+        [JsonProperty]
         public MetaData? BuiltWith { get; set; }
+        [JsonProperty]
         public string Level { get; set; }
+        [JsonProperty]
         public string Class { get; set; }
+        [JsonProperty]
         public string Origin { get; set; }
+        [JsonProperty]
         public string Alignment { get; set; }
+        [JsonProperty]
         public string Name { get; set; }
-        public string Comment { get; set; }
+        [JsonProperty]
+        public string? Comment { get; set; }
+        [JsonProperty]
         public List<string> PowerSets { get; set; }
+        [JsonProperty]
         public int LastPower { get; set; }
+        [JsonProperty]
         public List<PowerData?> PowerEntries { get; set; }
 
         private static IEnumerable<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
@@ -117,11 +125,12 @@ namespace Mids_Reborn.Core.BuildFile
             return outList;
         }
 
-        public CharacterBuildFile(string @class, string origin, string alignment, string name, string? comment, List<string> powerSets, List<PowerData?> powerEntries)
+        public CharacterBuildFile(string @class, string origin, string alignment, string level, string name, string? comment, List<string> powerSets, List<PowerData?> powerEntries)
         {
             Class = @class;
             Origin = origin;
             Alignment = alignment;
+            Level = level;
             Name = name;
             Comment = comment;
             PowerSets = powerSets;
@@ -484,7 +493,8 @@ namespace Mids_Reborn.Core.BuildFile
 
         public static bool Generate(string? fileName)
         {
-            if (MidsContext.Character.CurrentBuild == null) return false;
+            if (string.IsNullOrWhiteSpace(fileName)) return false;
+            if (MidsContext.Character?.CurrentBuild == null) return false;
             var powerEntries = MidsContext.Character.CurrentBuild.Powers.GetRange(0, 24);
             if (powerEntries.All(x => x?.Power == null))
             {
@@ -500,6 +510,7 @@ namespace Mids_Reborn.Core.BuildFile
 
         public static bool Load(string? fileName)
         {
+            if (string.IsNullOrWhiteSpace(fileName)) return false;
             var returnedVal = false;
             _instance = CreateInstance();
             _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(File.ReadAllText(fileName));
@@ -602,39 +613,25 @@ namespace Mids_Reborn.Core.BuildFile
             return returnedVal;
         }
 
-        private static byte[] CreateDataStream()
-        {
-            _instance ??= new CharacterBuildFile(MidsContext.Character);
-            using var stream = new MemoryStream();
-            using var writer = new BsonDataWriter(stream);
-            var serializer = new JsonSerializer();
-            serializer.Serialize(writer, _instance);
-            return stream.ToArray();
-        }
-
         public static string GenerateShareData()
         {
-            var buffer = CreateDataStream();
-            var compressed = Compression.Compress(buffer);
-            var hex = Convert.ToHexString(compressed);
-            var shared = $"HEX;{hex};MBD";
-            return shared;
+            _instance ??= new CharacterBuildFile(MidsContext.Character);
+            var serialized = JsonConvert.SerializeObject(_instance, Formatting.None);
+            var iBytes = Encoding.UTF8.GetBytes(serialized);
+            var output = Compression.CompressToBase64(iBytes);
+            return output;
         }
 
         private static bool ReadShareData(string data)
         {
             if (string.IsNullOrWhiteSpace(data)) return false;
-            if (!data.StartsWith("HEX;") && !data.EndsWith(";MBD")) return false;
-            data = data.Replace("HEX;", string.Empty).Replace(";MBD", string.Empty);
-            var compressed = Convert.FromHexString(data);
-            var decompressed = Compression.Decompress(compressed);
-            using var stream = new MemoryStream(decompressed);
+            if (!Helpers.ValidShareData(data)) return false;
+            var decompressed = Compression.DecompressFromBase64(data);
+            var decodedJson = Encoding.UTF8.GetString(decompressed);
             try
             {
-                using var reader = new BsonDataReader(stream);
-                var serializer = new JsonSerializer();
                 _instance ??= new CharacterBuildFile();
-                _instance = serializer.Deserialize<CharacterBuildFile>(reader);
+                _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(decodedJson);
             }
             catch (Exception ex)
             {

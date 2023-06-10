@@ -6,9 +6,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core;
 
-namespace mrbBase
+namespace Mids_Reborn.Core.Base
 {
     public class CrypticReplTable
     {

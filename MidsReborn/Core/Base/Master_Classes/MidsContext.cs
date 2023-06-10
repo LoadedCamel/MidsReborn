@@ -21,13 +21,13 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         public const int MathLevelBase = 49;
         public const int MathLevelExemp = -1;
 
-        public static bool EnhCheckMode = false;
+        internal static bool EnhCheckMode = false;
 
         //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
-        public static Archetype? Archetype;
-        public static Character? Character;
-        public static Build Build;
+        internal static Archetype? Archetype;
+        internal static Character? Character;
+        internal static Build? Build;
 
         public static ConfigData Config => ConfigData.Current;
     }

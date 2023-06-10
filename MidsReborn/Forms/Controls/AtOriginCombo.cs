@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 
-namespace Mids_Reborn.Controls
+namespace Mids_Reborn.Forms.Controls
 {
     public partial class AtOriginCombo : ComboBox
     {

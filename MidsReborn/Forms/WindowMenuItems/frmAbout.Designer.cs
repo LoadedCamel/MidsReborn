@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using Mids_Reborn.Controls;
-
-namespace Forms.WindowMenuItems
+﻿namespace Mids_Reborn.Forms.WindowMenuItems
 {
     partial class frmAbout
     {

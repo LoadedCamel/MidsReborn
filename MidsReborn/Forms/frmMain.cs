@@ -6,28 +6,27 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Forms.WindowMenuItems;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
-using Mids_Reborn.Core.BuildFile.RestModels;
+using Mids_Reborn.Core.ShareSystem;
+using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.DiscordSharing;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
-using Mids_Reborn.Forms.Sharing;
+using Mids_Reborn.Forms.ShareItems;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
@@ -6208,13 +6207,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void ForumExport_Click(object? sender, EventArgs e)
         {
-            var preview = new InfographicPreview();
+            var preview = new InfoGraphicPreview();
             var result = preview.ShowDialog(this);
             if (result == DialogResult.Continue)
             {
                 var export = new ForumExport();
                 export.BuildExport();
             }
+        }
+
+        private async void ShareInfoGraphic_Click(object? sender, EventArgs e)
+        {
+            var preview = new InfoGraphicPreview();
+            var result = preview.ShowDialog(this);
+            if (result != DialogResult.Continue) return;
+            if (preview.Image == null) return;
+            Clipboard.SetImage(preview.Image);
+            var msgBox = new MessageBoxEx("The InfoGraphic has been placed in your clipboard, you may now paste it where you wish.", MessageBoxEx.MessageBoxButtons.Okay);
+            msgBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
 
         private void ForumExport2_Click(object? sender, EventArgs e)

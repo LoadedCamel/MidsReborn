@@ -95,7 +95,8 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShareForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShareInfoGraphicMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsCopyInfoGraphic = new System.Windows.Forms.ToolStripMenuItem();
             this.tsShareForum2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImportShortCode = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1317,10 +1318,10 @@ namespace Mids_Reborn.Forms
             //
             this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
-                this.tsShareForum,
                 this.tsShareDiscord,
                 this.tsShareForum2,
                 this.ToolStripSeparator27,
+                this.ShareInfoGraphicMenuItem,
                 this.tsImportShortCode
             });
             this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -1352,12 +1353,22 @@ namespace Mids_Reborn.Forms
             this.tsShareDiscord.Text = "Via Discord";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             // 
-            // tsShareForum
+            // ShareInfoGraphicMenuItem
             //
-            this.tsShareForum.Name = "tsShareForum";
-            this.tsShareForum.Size = new System.Drawing.Size(240, 22);
-            this.tsShareForum.Text = "Via Forum Export";
-            this.tsShareForum.Click += new System.EventHandler(this.ForumExport_Click);
+            this.ShareInfoGraphicMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.tsCopyInfoGraphic
+            });
+            this.ShareInfoGraphicMenuItem.Name = "ShareInfoGraphicMenuItem";
+            this.ShareInfoGraphicMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.ShareInfoGraphicMenuItem.Text = "InfoGraphic";
+            //
+            // tsCopyInfoGraphic
+            //
+            this.tsCopyInfoGraphic.Name = "tsCopyInfoGraphic";
+            this.tsCopyInfoGraphic.Size = new System.Drawing.Size(240, 22);
+            this.tsCopyInfoGraphic.Text = "Copy to Clipboard";
+            this.tsCopyInfoGraphic.Click += new System.EventHandler(this.ShareInfoGraphic_Click);
             // 
             // tsShareForum2
             //
@@ -2482,7 +2493,8 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
-        ToolStripMenuItem tsShareForum;
+        ToolStripMenuItem ShareInfoGraphicMenuItem;
+        private ToolStripMenuItem tsCopyInfoGraphic;
         ToolStripMenuItem tsShareForum2;
         ToolStripMenuItem tsImportShortCode;
         ToolStripMenuItem tsFileNew;

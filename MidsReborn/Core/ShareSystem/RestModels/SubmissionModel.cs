@@ -1,4 +1,4 @@
-﻿namespace Mids_Reborn.Core.BuildFile.RestModels
+﻿namespace Mids_Reborn.Core.ShareSystem.RestModels
 {
     internal class SubmissionModel
     {

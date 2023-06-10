@@ -1,10 +1,17 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using Mids_Reborn.Core.Base.Master_Classes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using WebMarkupMin.Core;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -63,6 +70,153 @@ namespace Mids_Reborn.Core.Utils
             imgAtt.SetWrapMode(WrapMode.TileFlipXY);
             gfx.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, imgAtt);
             return destImage;
+        }
+
+        public static bool ValidShareData(string shareData)
+        {
+            shareData = shareData.Trim();
+            return shareData.Length % 4 == 0 && Regex.IsMatch(shareData, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+        }
+
+        internal struct Stat
+        {
+            public string Type { get; set; }
+            public string Percentage { get; set; }
+            public string? Hex { get; set; }
+            public string? ExtraData { get; set; }
+
+            public Stat(string type, string percentage, string? extraData = null, string? hexColor = null)
+            {
+                Type = type;
+                Percentage = percentage;
+                ExtraData = extraData;
+                Hex = hexColor;
+            }
+        }
+
+        private static readonly Enums.eEffectType[] DebuffEffectTypes =
+        {
+            Enums.eEffectType.Defense,
+            Enums.eEffectType.Endurance,
+            Enums.eEffectType.Recovery,
+            Enums.eEffectType.PerceptionRadius,
+            Enums.eEffectType.ToHit,
+            Enums.eEffectType.RechargeTime,
+            Enums.eEffectType.SpeedRunning,
+            Enums.eEffectType.Regeneration
+        };
+
+        private static void ValidDamageTypes(out Dictionary<string, int> validDamageTypes, int statType = 0)
+        {
+            var allTypes = Enum.GetValues(typeof(Enums.eDamage)).Cast<Enums.eDamage>().ToList();
+            var excludedTypes = statType switch
+            {
+                1 => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.None,
+                    Enums.eDamage.Special,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE,
+                    Enums.eDamage.Unique1,
+                    Enums.eDamage.Unique2,
+                    Enums.eDamage.Unique3
+                },
+                _ => new List<Enums.eDamage>
+                {
+                    Enums.eDamage.None,
+                    DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
+                    Enums.eDamage.Special,
+                    Enums.eDamage.Unique1,
+                    Enums.eDamage.Unique2,
+                    Enums.eDamage.Unique3
+                }
+            };
+
+            var damageTypes = allTypes.Except(excludedTypes).ToList();
+            validDamageTypes = damageTypes.ToDictionary(damageType => damageType.ToString(), damageType => (int)Enum.Parse<Enums.eDamage>(damageType.ToString()));
+        }
+
+        public static Dictionary<string, List<Stat>> GeneratedStatData(bool infoGraphic = false)
+        {
+            var stats = new Dictionary<string, List<Stat>>();
+            var totalStat = MidsContext.Character?.Totals;
+            var displayStat = MidsContext.Character?.DisplayStats;
+            ValidDamageTypes(out var defTypes);
+            ValidDamageTypes(out var resTypes, 1);
+            List<string> debuffTypes;
+            if (!infoGraphic)
+                debuffTypes = new List<string>
+                    { "Defense", "Endurance", "Recovery", "Perception", "ToHit", "Recharge", "Movement", "Regeneration" };
+            else
+                debuffTypes = new List<string>
+                {
+                    "Defense", "Endurance", "Recovery", "Perception", "ToHit", "Recharge", "Movement", "Regen"
+                };
+
+            var statList = (from defType in defTypes let multiplied = totalStat.Def[defType.Value] * 100f let percentage = $"{Convert.ToDecimal(multiplied):0.##}%" select new Stat(defType.Key, percentage, null, "#a954d1")).ToList();
+            stats.Add("Defense", statList);
+            statList = (from resType in resTypes let multiplied = totalStat.Res[resType.Value] * 100f let percentage = $"{Convert.ToDecimal(multiplied):0.##}%" select new Stat(resType.Key, percentage, null, "#54b0d1")).ToList();
+            stats.Add("Resistance", statList);
+            if (!infoGraphic)
+            {
+                statList = new List<Stat>
+                {
+                    new("Max HP", $"{Convert.ToDecimal(displayStat?.HealthHitpointsPercentage):0.##}%",
+                        $" ({Convert.ToDecimal(displayStat?.HealthHitpointsNumeric(false)):0.##} HP)", "#79d154"),
+                    new("Regeneration", $"{Convert.ToDecimal(displayStat?.HealthRegenPercent(false)):0.##}%",
+                        $" ({Convert.ToDecimal(displayStat?.HealthRegenHPPerSec):0.##}/s)", "#79d154"),
+                    new("Max End", $"{Convert.ToDecimal(totalStat?.EndMax + 100f):0.##}%", null, "#549dd1"),
+                    new("Recovery", $"{displayStat?.EnduranceRecoveryPercentage(false):###0}%",
+                        $" ({Convert.ToDecimal(displayStat?.EnduranceRecoveryNumeric):0.##}/s)", "#549dd1"),
+                    new("End Usage", $"{Convert.ToDecimal(displayStat?.EnduranceUsage):0.##}/s", null, "#549dd1")
+                };
+            }
+            else
+            {
+                statList = new List<Stat>
+                {
+                    new("Max HP", $"{Convert.ToDecimal(displayStat?.HealthHitpointsNumeric(false)):0.##}"),
+                    new("Regen", $"{Convert.ToDecimal(displayStat?.HealthRegenPercent(false)):0.##}%"),
+                    new("↑ HP/s", $"{Convert.ToDecimal(displayStat?.HealthRegenHPPerSec):0.##}/s"),
+                    new("Max End", $"{Convert.ToDecimal(totalStat?.EndMax + 100f):0.##}%"), 
+                    new("Recovery", $"{displayStat?.EnduranceRecoveryPercentage(false):###0}%"),
+                    new("↑ End/s", $"{Convert.ToDecimal(displayStat?.EnduranceRecoveryNumeric):0.##}/s"),
+                    new("End Usage", $"{Convert.ToDecimal(displayStat?.EnduranceUsage):0.##}/s")
+                };
+            }
+
+            stats.Add("Sustain", statList);
+            if (!infoGraphic)
+            {
+                statList = new List<Stat>
+                {
+                    new("Haste", $"{Convert.ToDecimal(totalStat?.BuffHaste * 100f):0.##}%", null, "#d18254"),
+                    new("Damage", $"{Convert.ToDecimal(totalStat?.BuffDam * 100f):0.##}%", null, "#d16054"),
+                    new("To Hit", $"{Convert.ToDecimal(totalStat?.BuffToHit * 100f):0.##}%", null, "#d1be54"),
+                    new("Accuracy", $"{Convert.ToDecimal(totalStat?.BuffAcc * 100f):0.##}%", null, "#d1be54"),
+                    new("End Reduction", $"{Convert.ToDecimal(totalStat?.BuffEndRdx * 100f):0.##}%", null, "#549dd1")
+
+                };
+            }
+            else
+            {
+                statList = new List<Stat>
+                {
+                    new("Haste", $"{Convert.ToDecimal(totalStat?.BuffHaste * 100f):0.##}%"),
+                    new("Damage", $"{Convert.ToDecimal(totalStat?.BuffDam * 100f):0.##}%"),
+                    new("To Hit", $"{Convert.ToDecimal(totalStat?.BuffToHit * 100f):0.##}%"),
+                    new("Accuracy", $"{Convert.ToDecimal(totalStat?.BuffAcc * 100f):0.##}%"),
+                    new("End Redux", $"{Convert.ToDecimal(totalStat?.BuffEndRdx * 100f):0.##}%")
+
+                };
+            }
+
+            stats.Add("Offense", statList);
+            statList = DebuffEffectTypes.Select(t => totalStat?.DebuffRes[(int)t]).Select(notMultiplied => $"{Convert.ToDecimal(notMultiplied):0.##}%").Select((percentage, index) => new Stat(debuffTypes[index], percentage, null, "#8e54d1")).ToList();
+            stats.Add(!infoGraphic ? "Debuff Resistance" : "Debuff Resist", statList);
+
+            return stats;
         }
     }
 }
