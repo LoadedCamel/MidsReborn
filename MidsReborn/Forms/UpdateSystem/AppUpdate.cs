@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -27,7 +29,21 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 XmlResolver = new XmlUrlResolver(),
                 DtdProcessing = DtdProcessing.Ignore
             };
-            using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
+
+            XmlReader xmlReader;
+            
+            try
+            {
+                xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
+            }
+            catch (HttpRequestException ex)
+            {
+                using var msgBox = new MessageBoxEx($"Cannot check for application updates.\r\n{(ex.StatusCode != null ? $"Error {ex.StatusCode} - " : "")}{ex.Message}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                msgBox.ShowDialog();
+
+                return;
+            }
+
             while (xmlReader.Read())
             {
                 try
@@ -46,11 +62,14 @@ namespace Mids_Reborn.Forms.UpdateSystem
                         }
                     }
 
+                    xmlReader.Close();
                     Status = ManifestStatus.Success;
                 }
                 catch
                 {
-                    MessageBox.Show($"An error occurred while attempting to read from the manifest.\r\nURL: {MidsContext.Config.UpdatePath}", @"App Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    using var msgBox = new MessageBoxEx($"An error occurred while attempting to read from the manifest.\r\nURL: {MidsContext.Config.UpdatePath}", @"App Update Error", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    msgBox.ShowDialog();
+
                     Status = ManifestStatus.Failure;
                 }
             }

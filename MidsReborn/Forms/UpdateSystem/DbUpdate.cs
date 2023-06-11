@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -34,7 +36,20 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 DtdProcessing = DtdProcessing.Ignore
             };
 
-            using var xmlReader = XmlReader.Create(DatabaseAPI.ServerData.ManifestUri, settings);
+            XmlReader xmlReader;
+
+            try
+            {
+                xmlReader = XmlReader.Create(DatabaseAPI.ServerData.ManifestUri, settings);
+            }
+            catch (HttpRequestException ex)
+            {
+                using var msgBox = new MessageBoxEx($"Cannot check for {DatabaseAPI.DatabaseName} database updates.\r\n{(ex.StatusCode != null ? $"Error {ex.StatusCode} - " : "")}{ex.Message}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                msgBox.ShowDialog();
+
+                return;
+            }
+
             try
             {
                 while (xmlReader.Read())
@@ -54,20 +69,25 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     }
                 }
 
+                xmlReader.Close();
                 Status = ManifestStatus.Success;
             }
             catch (ArgumentException) // May occur while parsing xml
             {
-                MessageBox.Show(
+                using var msgBox = new MessageBoxEx(
                     $"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
-                    @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                msgBox.ShowDialog();
+
                 Status = ManifestStatus.Failure;
             }
             catch (XmlException)
             {
-                MessageBox.Show(
+                using var msgBox = new MessageBoxEx(
                     $"An error occurred while attempting to read from the manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
-                    @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                msgBox.ShowDialog();
+                
                 Status = ManifestStatus.Failure;
             }
 
@@ -76,9 +96,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 return;
             }
 
-            MessageBox.Show(
+            using var msgBox2 = new MessageBoxEx(
                 $"Cannot fetch available DB version from manifest.\r\nURL: {(string.IsNullOrWhiteSpace(DatabaseAPI.ServerData.ManifestUri) ? "(none)" : DatabaseAPI.ServerData.ManifestUri)}",
-                @"DB Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+            msgBox2.ShowDialog();
+
             Status = ManifestStatus.Failure;
         }
 
