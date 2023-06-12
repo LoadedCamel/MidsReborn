@@ -825,11 +825,20 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].Probability < 1));
             }
 
-            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs,
-                e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
-                         or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez) ||
-                     e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
-                         {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
+            var rankedEffectsExt = MidsContext.Config?.Inc.DisablePvE == false
+                ? GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                    e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                             or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer) ||
+                         e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport})
+                : GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                    e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                             or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
+                             or Enums.eEffectType.DesignerStatus) ||
+                         e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
+
             foreach (var rex in rankedEffectsExt)
             {
                 info_DataList.AddItem(rex.Value);
@@ -840,16 +849,13 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             info_DataList.Redraw();
-            var str1 = "Damage";
-            switch (MidsContext.Config.DamageMath.ReturnValue)
+
+            var str1 = "Damage" + MidsContext.Config.DamageMath.ReturnValue switch
             {
-                case ConfigData.EDamageReturn.DPS:
-                    str1 += " Per Second";
-                    break;
-                case ConfigData.EDamageReturn.DPA:
-                    str1 += " Per Animation Second";
-                    break;
-            }
+                ConfigData.EDamageReturn.DPS => " Per Second",
+                ConfigData.EDamageReturn.DPA => " Per Animation Second",
+                _ => ""
+            };
 
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
             {
