@@ -17,19 +17,17 @@ namespace Mids_Reborn.Core
         private static Graphics? _graphics;
         private static readonly Font FooterFont = new("Arial", 8f, FontStyle.Bold);
         private static readonly Font HeaderFont = new("Arial Black", 12f, FontStyle.Bold);
-        private static readonly Font StatHeaderFont = new("Arial Black", 11f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
+        private static readonly Font StatHeaderFont = new("Arial Black", 11.25f, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
         private static readonly Font StatFont = new("Arial", 9f, FontStyle.Bold, GraphicsUnit.Point);
 
-        public static byte[] Generate()
+        public static byte[] Generate(bool useAltBg = false)
         {
             // Disposable Stream for output
             using var stream = new MemoryStream();
 
             // Disposable Brushes
-            using var background = new SolidBrush(Color.FromArgb(44, 47, 51));
+            //using var background = new SolidBrush(Color.FromArgb(44, 47, 51));
             using var foreground = new SolidBrush(Color.WhiteSmoke);
-
-            // Non-Disposable Brushes
 
             // Graphics Setup and Vars
             using var tmp = new Bitmap(650, 400, PixelFormat.Format32bppArgb);
@@ -42,7 +40,19 @@ namespace Mids_Reborn.Core
             _graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             _graphics.Clear(Color.FromArgb(44, 47, 51));
 
-            // Conditional Variables and Disposables
+            // Insert Backdrop
+            switch (useAltBg)
+            {
+                case false:
+                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    break;
+                case true:
+                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropH2.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropV2.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    break;
+            }
+            
+
+            // Outline Brush and Disposable Pen
             var outline = MidsContext.Character!.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
             using var pen = new Pen(outline, 4);
 
@@ -52,9 +62,6 @@ namespace Mids_Reborn.Core
             // Drawing
             var clientRectangle = new Rectangle(0, 0, tmp.Width, tmp.Height);
             _graphics.DrawRectangle(pen, clientRectangle);
-
-            // Insert Backdrop
-            _graphics.DrawImage(MidsContext.Character.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
 
             // Insert Character Name & Level
             var name = $"Name: {MidsContext.Character.Name}";
@@ -87,29 +94,51 @@ namespace Mids_Reborn.Core
 
             for (var cIndex = 0; cIndex < statData.Count; cIndex++)
             {
+                var statOutPen = new Pen(Color.Black, 3) { LineJoin = LineJoin.Round };
+                var sFormat = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Near,
+                    Trimming = StringTrimming.None
+                };
                 var stat = statData.ElementAt(cIndex);
-                var headerRect = new Rectangle((int)(rect.Left + columnSpacing * cIndex + columnWidth * cIndex), rect.Top + 7, (int)columnWidth, rect.Height);
+                var headerRect = new Rectangle((int)(rect.Left + columnSpacing * cIndex + columnWidth * cIndex) - 8, rect.Top + 7, (int)columnWidth, rect.Height);
                 headerBrush = stat.Key switch
                 {
                     "Defense" => BrushFromHex("#b877dd"),
-                    "Resistance" => BrushFromHex("#77c4dd"),
-                    "Sustain" => BrushFromHex("#7679dc"),
+                    "Resistance" => BrushFromHex("#e8a080"),
+                    "Sustain" => BrushFromHex("#65d6bf"),
                     "Offense" => BrushFromHex("#d87474"),
                     "Debuff Resist" => BrushFromHex("#d7c574"),
                     _ => headerBrush
                 };
-                _graphics.DrawString(stat.Key, StatHeaderFont, headerBrush, headerRect);
+                var headerPath = new GraphicsPath();
+                headerPath.AddString(stat.Key, StatHeaderFont.FontFamily, (int)StatHeaderFont.Style, StatHeaderFont.Size + 3f, headerRect, sFormat);
+                _graphics.DrawPath(statOutPen, headerPath);
+                _graphics.FillPath(headerBrush, headerPath);
 
                 for (var rIndex = 0; rIndex < stat.Value.Count; rIndex++)
                 {
                     var point = new Point((int)(rect.Left + columnSpacing * cIndex + columnWidth * cIndex), (int)(headerRect.Top + rowSpacing * rIndex + columnHeight * rIndex));
-                    var statBrush = new SolidBrush(Color.WhiteSmoke);
-                    var statRect = new Rectangle(point.X, point.Y + 24, (int)columnWidth, (int)columnHeight);
-                    _graphics.DrawString($"{stat.Value[rIndex].Type}:", StatFont, statBrush, statRect);
+                    var statBrush = BrushFromHex("#ffffff");
+                    var statRect = new Rectangle(point.X -4, point.Y + 24, (int)columnWidth, (int)columnHeight);
+                    var statPath = new GraphicsPath();
+                    statPath.AddString($"{stat.Value[rIndex].Type}: ", StatFont.FontFamily, (int)StatFont.Style, StatFont.Size + 4f, statRect, null);
+                    _graphics.DrawPath(statOutPen, statPath);
+                    _graphics.FillPath(statBrush, statPath);
                     var typeSize = Measured(stat.Value[rIndex].Type, StatFont);
-                    statBrush = BrushFromHex("#bdddc1");
-                    statRect = new Rectangle((int)(statRect.Left + typeSize.Width + 2), statRect.Top, (int)(statRect.Width - typeSize.Width - 2), statRect.Height);
-                    _graphics.DrawString($"{stat.Value[rIndex].Percentage}", StatFont, statBrush, statRect);
+                    var valueBrush = BrushFromHex("#a1d96a");
+                    statRect = new Rectangle((int)(statRect.Left + typeSize.Width), statRect.Top, (int)(statRect.Width - typeSize.Width - 2), statRect.Height);
+                    var valPath = new GraphicsPath();
+                    sFormat = new StringFormat
+                    {
+                        Alignment = StringAlignment.Far,
+                        LineAlignment = StringAlignment.Near,
+                        Trimming = StringTrimming.None
+                    };
+                    valPath.AddString($"{stat.Value[rIndex].Percentage}", StatFont.FontFamily, (int)StatFont.Style, StatFont.Size + 4f, statRect, sFormat);
+                    _graphics.DrawPath(statOutPen, valPath);
+                    _graphics.FillPath(valueBrush, valPath);
                 }
             }
 
@@ -131,9 +160,9 @@ namespace Mids_Reborn.Core
             return imageBytes;
         }
 
-        public static string GenerateImageData()
+        public static string GenerateImageData(bool useAltBg = false)
         {
-            var imgBytes = Generate();
+            var imgBytes = Generate(useAltBg);
             var compressed = Compression.CompressToBase64(imgBytes);
             return compressed;
         }

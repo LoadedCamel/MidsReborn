@@ -1,6 +1,6 @@
 ﻿namespace Mids_Reborn.Core.ShareSystem.RestModels
 {
-    public abstract class ResponseModel
+    public class ResponseModel
     {
         public string? Status { get; set; }
         public string? ErrorMessage { get; set; }

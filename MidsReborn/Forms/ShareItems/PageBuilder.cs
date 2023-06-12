@@ -55,7 +55,7 @@ namespace Mids_Reborn.Forms.ShareItems
         {
             GenerateHtml(HtmlBoilerPlate, dataLink, inclIncarnate, inclAccolade, inclSetBonus, inclBreakdown, out var generatedHtml);
             var bytes = Encoding.UTF8.GetBytes(generatedHtml);
-            var compressedBase = Compression.CompressToBase64Url(bytes);
+            var compressedBase = Compression.CompressToBase64(bytes);
             return compressedBase;
         }
 
