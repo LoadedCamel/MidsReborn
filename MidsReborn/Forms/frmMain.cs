@@ -6251,13 +6251,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
             if (!shortInput.OK) return;
-            var shortCode = shortInput.Text;
-            var options = new RestClientOptions("https://mids.app")
-            {
-                MaxTimeout = -1,
-            };
-            var client = new RestClient(options);
-            var response = await client.GetJsonAsync<ImportModel>($"build/{shortCode}");
+            var response = await ShareClient.GetBuild(shortInput.Text);
             if (response != null)
             {
                 DoLoadFromSchema(response);
