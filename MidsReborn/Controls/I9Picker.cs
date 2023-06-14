@@ -27,11 +27,17 @@ namespace Mids_Reborn.Controls
 
         public delegate void EnhancementSelectionCancelledEventHandler();
 
-        public delegate void HoverEnhancementEventHandler(int e);
+        public delegate void HoverEnhancementEventHandler(int e, EnhUniqueStatus? enhUniqueStatus);
 
         public delegate void HoverSetEventHandler(int e);
 
         public delegate void MovedEventHandler(Rectangle oldBounds, Rectangle newBounds);
+
+        public struct EnhUniqueStatus
+        {
+            public bool InMain;
+            public bool InAlternate;
+        }
 
         private const bool AllowPlusThreeSpecialO = true;
 
@@ -68,6 +74,8 @@ namespace Mids_Reborn.Controls
         public CTracking Ui;
 
         private Rectangle _buttonRectangle;
+
+        private List<EnhUniqueStatus?> _enhUniqueStatus = null;
 
         private enum ActiveZone
         {
@@ -475,12 +483,13 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
+                _enhUniqueStatus = new List<EnhUniqueStatus?>();
                 switch (Ui.View.TabId)
                 {
                     case Enums.eType.Normal:
                     {
                         var num = 1;
-                        for (var i = Ui.NoGrades.Length - 1; i >= 1; i += -1)
+                        for (var i = Ui.NoGrades.Length - 1; i >= 1; i -= 1)
                         {
                             var srcRect = new Rectangle(Ui.NoGrades[i] * _nSize, 0, _nSize, _nSize);
                             _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(4, num),
@@ -509,7 +518,7 @@ namespace Mids_Reborn.Controls
                     }
                     case Enums.eType.InventO:
                     {
-                        for (var i = 0; i <= Ui.Io.Length - 1; i++)
+                        for (var i = 0; i < Ui.Io.Length; i++)
                         {
                             var graphics = _myBx.Graphics;
                             I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.Io[i],
@@ -520,14 +529,14 @@ namespace Mids_Reborn.Controls
                     }
                     case Enums.eType.SpecialO:
                     {
-                        for (var i = 1; i <= Ui.SpecialTypes.Length - 1; i++)
+                        for (var i = 1; i < Ui.SpecialTypes.Length; i++)
                         {
                             var srcRect2 = new Rectangle(Ui.SpecialTypes[i] * _nSize, 0, _nSize, _nSize);
                             _myBx.Graphics.DrawImage(I9Gfx.EnhSpecials.Bitmap, GetRectBounds(4, i), srcRect2,
                                 GraphicsUnit.Pixel);
                         }
 
-                        for (var i = 0; i <= Ui.SpecialO.Length - 1; i++)
+                        for (var i = 0; i < Ui.SpecialO.Length; i++)
                         {
                             var graphics = _myBx.Graphics;
                             I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.SpecialO[i],
@@ -538,7 +547,7 @@ namespace Mids_Reborn.Controls
                     }
                     case Enums.eType.SetO:
                     {
-                        for (var i = 0; i <= Ui.SetTypes.Length - 1; i++)
+                        for (var i = 0; i < Ui.SetTypes.Length; i++)
                         {
                             var srcRect3 = new Rectangle(Ui.SetTypes[i] * _nSize, 0, _nSize, _nSize);
                             _myBx.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, GetRectBounds(4, i + 1), srcRect3,
@@ -601,14 +610,27 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                for (var i = 0;
-                     i <= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
-                         .Length - 1;
-                     i++)
+                for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length; i++)
                 {
-                    var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                        .Enhancements[i];
-                    var grey = _mySlotted.Any(slotted => enh == slotted);
+                    var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i];
+                    var enhData = DatabaseAPI.Database.Enhancements[enh];
+                    _enhUniqueStatus.Add(!enhData.Unique
+                        ? null
+                        : new EnhUniqueStatus
+                        {
+                            InMain = _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                                .Powers
+                                .Where(e => e is {Power.Slottable: true})
+                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh)),
+                            InAlternate = _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                                .Powers
+                                .Where(e => e is { Power.Slottable: true })
+                                .Any(f => f.Slots.Any(g => g.FlippedEnhancement.Enh == enh))
+                        });
+                    var grey = _mySlotted.All(slotted => enh != slotted) && enhData.Unique &&
+                               (_enhUniqueStatus[i] == null
+                                   ? false
+                                   : _enhUniqueStatus[i].Value.InMain);
                     var graphics = _myBx.Graphics;
                     I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
                         DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
@@ -619,49 +641,46 @@ namespace Mids_Reborn.Controls
 
         private bool IsPlaced(int index)
         {
-            checked
+            if (Ui.View.TabId != Enums.eType.SetO)
             {
-                if (Ui.View.TabId != Enums.eType.SetO)
-                {
-                    return false;
-                }
-
-                if (Ui.View.SetId < 0)
-                {
-                    return false;
-                }
-
-                if (Ui.View.SetTypeId >= Ui.Sets.Length)
-                {
-                    return false;
-                }
-
-                if (Ui.View.SetId >= Ui.Sets[Ui.View.SetTypeId].Length)
-                {
-                    return false;
-                }
-
-                if (Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId] >= DatabaseAPI.Database.EnhancementSets.Count)
-                {
-                    return false;
-                }
-
-                if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                        .Enhancements.Length)
-                {
-                    return false;
-                }
-
-                if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId &
-                    Ui.Initial.PickerId == index)
-                {
-                    return false;
-                }
-
-                return _mySlotted.Any(t =>
-                    DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                        .Enhancements[index] == t);
+                return false;
             }
+
+            if (Ui.View.SetId < 0)
+            {
+                return false;
+            }
+
+            if (Ui.View.SetTypeId >= Ui.Sets.Length)
+            {
+                return false;
+            }
+
+            if (Ui.View.SetId >= Ui.Sets[Ui.View.SetTypeId].Length)
+            {
+                return false;
+            }
+
+            if (Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId] >= DatabaseAPI.Database.EnhancementSets.Count)
+            {
+                return false;
+            }
+
+            if (index >= DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                    .Enhancements.Length)
+            {
+                return false;
+            }
+
+            if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId &
+                Ui.Initial.PickerId == index)
+            {
+                return false;
+            }
+
+            return _mySlotted.Any(t =>
+                DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                    .Enhancements[index] == t);
         }
 
         private void DisplaySetImages()
@@ -1126,7 +1145,11 @@ namespace Mids_Reborn.Controls
                     }
                     else if (CellEnhSelect(cellIndex))
                     {
-                        DoEnhancementPicked(cellIndex);
+                        var enhValid = DoEnhancementPicked(cellIndex);
+                        if (!enhValid)
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -1186,7 +1209,7 @@ namespace Mids_Reborn.Controls
             return (cellIdx > -1) & (cellIdx < array.Length);
         }
 
-        private void DoEnhancementPicked(int index)
+        private bool DoEnhancementPicked(int index)
         {
             var i9Slot = (I9Slot)_mySlot.Clone();
             CheckAndFixIoLevel();
@@ -1220,10 +1243,22 @@ namespace Mids_Reborn.Controls
                     case Enums.eType.SetO:
                         if (IsPlaced(index))
                         {
-                            return;
+                            return true;
                         }
 
                         i9Slot.Enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index];
+                        if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].Unique)
+                        {
+                            var uniqueSlotted = MidsContext.Character.CurrentBuild.Powers
+                                .Where(e => e is {Power.Slottable: true})
+                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == i9Slot.Enh));
+
+                            if (uniqueSlotted)
+                            {
+                                return false;
+                            }
+                        }
+
                         i9Slot.IOLevel = Ui.View.IoLevel - 1;
                         if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].GetPower() is { } power)
                         {
@@ -1277,12 +1312,14 @@ namespace Mids_Reborn.Controls
                 }
 
                 EnhancementPicked?.Invoke(i9Slot);
+
+                return true;
             }
         }
 
-        private void RaiseHoverEnhancement(int e)
+        private void RaiseHoverEnhancement(int e, EnhUniqueStatus? enhUniqueStatus)
         {
-            HoverEnhancement?.Invoke(e);
+            HoverEnhancement?.Invoke(e, enhUniqueStatus);
         }
 
         private void RaiseHoverSet(int e)
@@ -1437,17 +1474,11 @@ namespace Mids_Reborn.Controls
                     else if (CellSetSelect(cellIndex))
                     {
                         var tId = Ui.Sets[Ui.View.SetTypeId][cellIndex];
-                        string str;
-                        if (DatabaseAPI.Database.EnhancementSets[tId].LevelMin == DatabaseAPI.Database.EnhancementSets[tId].LevelMax)
-                        {
-                            str = " (" + Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1) + ")";
-                        }
-                        else
-                        {
-                            str = string.Concat(" (", Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1), "-", Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMax + 1), ")");
-                        }
+                        var str = DatabaseAPI.Database.EnhancementSets[tId].LevelMin == DatabaseAPI.Database.EnhancementSets[tId].LevelMax
+                            ? $" ({DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1})"
+                            : $" ({DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1}-{DatabaseAPI.Database.EnhancementSets[tId].LevelMax + 1})";
 
-                        SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[tId].SetType).ShortName);
+                        SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, $"Type: {DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[tId].SetType).ShortName}");
                         //SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + setTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[tId].SetType]);
                         if ((cell.X != _hoverCell.X) | (cell.Y != _hoverCell.Y) || alwaysUpdate)
                         {
@@ -1507,7 +1538,7 @@ namespace Mids_Reborn.Controls
 
                         if (cell.X != _hoverCell.X || cell.Y != _hoverCell.Y || alwaysUpdate)
                         {
-                            RaiseHoverEnhancement(tId);
+                            RaiseHoverEnhancement(tId, _enhUniqueStatus != null && _enhUniqueStatus.Count > cellIndex ? _enhUniqueStatus[cellIndex] : null);
                         }
 
                         hlOk = true;
@@ -1533,8 +1564,8 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                for (var i = 0; i <= Ui.SetTypes.Length - 1; i++)
-                for (var j = 0; j <= Ui.Sets[i].Length - 1; j++)
+                for (var i = 0; i < Ui.SetTypes.Length; i++)
+                for (var j = 0; j < Ui.Sets[i].Length; j++)
                 {
                     if (Ui.Sets[i][j] == iId)
                     {
@@ -1552,8 +1583,7 @@ namespace Mids_Reborn.Controls
             var num = 0;
             checked
             {
-                var num2 = DatabaseAPI.Database.EnhancementSets.Count - 1;
-                for (var i = num; i <= num2; i++)
+                for (var i = num; i < DatabaseAPI.Database.EnhancementSets.Count; i++)
                 {
                     if (DatabaseAPI.Database.EnhancementSets[i].SetType == iSetType)
                     {

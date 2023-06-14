@@ -2769,7 +2769,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             //RefreshInfo();
         }
 
-        private void I9Picker_HoverEnhancement(int e)
+        private void I9Picker_HoverEnhancement(int e, I9Picker.EnhUniqueStatus? enhUniqueStatus)
         {
             var i9Slot = new I9Slot
             {
@@ -2779,7 +2779,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 RelativeLevel = I9Picker.Ui.View.RelLevel
             };
             myDataView.SetEnhancementPicker(i9Slot);
-            ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot);
+            ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot, -1, VerticalAlignment.Top, enhUniqueStatus);
         }
 
         private void I9Picker_HoverSet(int e)
@@ -5661,7 +5661,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -5674,7 +5674,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var picker = false;
                 var powerListing = false;
                 var bounds = I9Popup.Bounds;
-                if ((hIdx < 0) & (pIdx > -1))
+                if (hIdx < 0 & pIdx > -1)
                 {
                     hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
                 }
@@ -5685,13 +5685,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
                 }
 
-                if (!((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                if (!(I9Popup.hIDX != hIdx | I9Popup.eIDX != sIdx | I9Popup.pIDX != pIdx | I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1))
                 {
                     return;
                 }
 
                 var rectangle = new Rectangle();
-                if ((hIdx > -1) & (sIdx < 0) & (pIdx < 0) & (eSlot == null) & (setIdx < 0))
+                if (hIdx > -1 & sIdx < 0 & pIdx < 0 & eSlot == null & setIdx < 0)
                 {
                     rectangle = drawing.PowerBoundsUnScaled(hIdx);
                     var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
@@ -5722,7 +5722,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     flag = true;
                     powerListing = true;
                 }
-                else if ((eSlot != null) & (setIdx < 0))
+                else if (eSlot != null & setIdx < 0)
                 {
                     rectangle = rBounds;
                     iPopup = Character.PopEnhInfo(eSlot, -1, powerEntry);
@@ -5737,9 +5737,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     picker = true;
                 }
 
-                if (flag & (iPopup.Sections != null))
+                if (flag & iPopup.Sections != null)
                 {
-                    if ((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1))
+                    if (I9Popup.hIDX != hIdx | I9Popup.eIDX != sIdx | I9Popup.pIDX != pIdx | I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1)
                     {
                         if (!picker & !powerListing)
                         {
@@ -5748,7 +5748,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
                         }
 
-                        I9Popup.SetPopup(iPopup);
+                        I9Popup.SetPopup(iPopup, enhUniqueStatus);
                         if (vAlign == VerticalAlignment.Bottom)
                         {
                             rectangle.Y -= rectangle.Height;
