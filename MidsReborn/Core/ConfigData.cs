@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Mids_Reborn.Core
 {
@@ -45,7 +49,18 @@ namespace Mids_Reborn.Core
             CharNameBuildFile
         }
 
+        public enum AutoUpdType
+        {
+            None,
+            Disabled,
+            Delay,
+            Startup
+        }
+
         private const string OverrideNames = "Mids Reborn Comparison Overrides";
+
+        public bool FirstRun { get; set; }
+        public AutoUpdate AutomaticUpdates { get; set; }
 
         public readonly short[] DragDropScenarioAction =
         {
@@ -53,13 +68,11 @@ namespace Mids_Reborn.Core
         };
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-        public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
         public bool CoDEffectFormat = false;
-
 
         public ConfigData()
         {
-            CheckForUpdates = true;
+            AutomaticUpdates = new AutoUpdate(AutoUpdType.Delay);
             DamageMath.Calculate = EDamageMath.Average;
             DamageMath.ReturnValue = EDamageReturn.Numeric;
             I9.DefaultIOLevel = 49;
@@ -127,7 +140,6 @@ namespace Mids_Reborn.Core
         public bool ExportBonusList { get; set; }
         public bool NoToolTips { get; set; }
         public bool DataDamageGraphPercentageOnly { get; private set; }
-        public bool CheckForUpdates { get; set; }
         public Enums.eVisibleSize DvState { get; set; }
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
@@ -192,8 +204,7 @@ namespace Mids_Reborn.Core
                 }
             }
         }
-
-        public bool FirstRun { get; set; }
+        public string? UpdatePath { get; private set; }
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
@@ -249,10 +260,7 @@ namespace Mids_Reborn.Core
 
         private void InitializeComponent()
         {
-            if (string.IsNullOrWhiteSpace(UpdatePath))
-            {
-                UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-            }
+            UpdatePath = Debugger.IsAttached ? "https://midsreborn.com/mids_updates/app-test/update_manifest.xml" : "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
             if (string.IsNullOrWhiteSpace(DataPath))
             {
@@ -419,6 +427,20 @@ namespace Mids_Reborn.Core
                 binaryWriter.Write(CompOverride[index].Powerset);
                 binaryWriter.Write(CompOverride[index].Power);
                 binaryWriter.Write(CompOverride[index].Override);
+            }
+        }
+
+        public class AutoUpdate
+        {
+            public bool Enabled => Type is AutoUpdType.Delay or AutoUpdType.Startup;
+            public AutoUpdType Type { get; set; }
+            public int Delay { get; set; }
+            public DateTime? LastChecked { get; set; }
+
+            public AutoUpdate(AutoUpdType type, int delay = 3)
+            {
+                Type = type;
+                Delay = delay;
             }
         }
 

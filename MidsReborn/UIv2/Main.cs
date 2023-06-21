@@ -103,7 +103,6 @@ namespace Mids_Reborn.UIv2
                 _frmInitializing.Show();
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
-                    MidsContext.Config.CheckForUpdates = false;
                     MidsContext.Config.IsInitialized = true;
                 }
                 //MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config?.DataPath);

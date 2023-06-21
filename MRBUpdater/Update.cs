@@ -66,10 +66,10 @@ namespace MRBUpdater
                     lblStatus.Text = @"Downloading Update(s)...";
                     var item = _downloadQueue.Dequeue();
                     var lastSeg = new Uri(item.Uri).Segments.Last();
-                    var updFile = new Uri($"{item.Uri.Replace(lastSeg, $"{item.Version}.mru")}");
-                    PackedUpdate = Path.Combine(Path.GetTempPath(), $"{item.Version}.mru");
+                    var updFile = new Uri($"{item.Uri.Replace(lastSeg, $"{item.UpdateFile}")}");
+                    PackedUpdate = Path.Combine(Path.GetTempPath(), $"{item.UpdateFile}");
                     ExtractPath = item.ExtractTo;
-                    lblFileName.Text = $@"{item.Version}.mru";
+                    lblFileName.Text = $@"{item.UpdateFile}";
                     await client.DownloadFileTaskAsync(updFile, PackedUpdate);
                 }
                 else

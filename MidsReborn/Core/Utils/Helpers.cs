@@ -1,17 +1,12 @@
-﻿using HtmlAgilityPack;
-using Mids_Reborn.Core.Base.Master_Classes;
+﻿using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WebMarkupMin.Core;
-using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -134,7 +129,8 @@ namespace Mids_Reborn.Core.Utils
             };
 
             var damageTypes = allTypes.Except(excludedTypes).ToList();
-            validDamageTypes = damageTypes.ToDictionary(damageType => damageType.ToString(), damageType => (int)Enum.Parse<Enums.eDamage>(damageType.ToString()));
+            validDamageTypes = damageTypes.ToDictionary(damageType => damageType.ToString(),
+                damageType => (int)Enum.Parse<Enums.eDamage>(damageType.ToString()));
         }
 
         public static Dictionary<string, List<Stat>> GeneratedStatData(bool infoGraphic = false)
@@ -147,16 +143,24 @@ namespace Mids_Reborn.Core.Utils
             List<string> debuffTypes;
             if (!infoGraphic)
                 debuffTypes = new List<string>
-                    { "Defense", "Endurance", "Recovery", "Perception", "ToHit", "Recharge", "Movement", "Regeneration" };
+                {
+                    "Defense", "Endurance", "Recovery", "Perception", "ToHit", "Recharge", "Movement", "Regeneration"
+                };
             else
                 debuffTypes = new List<string>
                 {
                     "Defense", "Endurance", "Recovery", "Perception", "ToHit", "Recharge", "Movement", "Regen"
                 };
 
-            var statList = (from defType in defTypes let multiplied = totalStat.Def[defType.Value] * 100f let percentage = $"{Convert.ToDecimal(multiplied):0.##}%" select new Stat(defType.Key, percentage, null, "#a954d1")).ToList();
+            var statList = (from defType in defTypes
+                let multiplied = totalStat.Def[defType.Value] * 100f
+                let percentage = $"{Convert.ToDecimal(multiplied):0.##}%"
+                select new Stat(defType.Key, percentage, null, "#a954d1")).ToList();
             stats.Add("Defense", statList);
-            statList = (from resType in resTypes let multiplied = totalStat.Res[resType.Value] * 100f let percentage = $"{Convert.ToDecimal(multiplied):0.##}%" select new Stat(resType.Key, percentage, null, "#54b0d1")).ToList();
+            statList = (from resType in resTypes
+                let multiplied = totalStat.Res[resType.Value] * 100f
+                let percentage = $"{Convert.ToDecimal(multiplied):0.##}%"
+                select new Stat(resType.Key, percentage, null, "#54b0d1")).ToList();
             stats.Add("Resistance", statList);
             if (!infoGraphic)
             {
@@ -179,7 +183,7 @@ namespace Mids_Reborn.Core.Utils
                     new("Max HP", $"{Convert.ToDecimal(displayStat?.HealthHitpointsNumeric(false)):0.##}"),
                     new("Regen", $"{Convert.ToDecimal(displayStat?.HealthRegenPercent(false)):0.##}%"),
                     new("↑ HP/s", $"{Convert.ToDecimal(displayStat?.HealthRegenHPPerSec):0.##}/s"),
-                    new("Max End", $"{Convert.ToDecimal(totalStat?.EndMax + 100f):0.##}%"), 
+                    new("Max End", $"{Convert.ToDecimal(totalStat?.EndMax + 100f):0.##}%"),
                     new("Recovery", $"{displayStat?.EnduranceRecoveryPercentage(false):###0}%"),
                     new("↑ End/s", $"{Convert.ToDecimal(displayStat?.EnduranceRecoveryNumeric):0.##}/s"),
                     new("End Usage", $"{Convert.ToDecimal(displayStat?.EnduranceUsage):0.##}/s")
@@ -213,7 +217,9 @@ namespace Mids_Reborn.Core.Utils
             }
 
             stats.Add("Offense", statList);
-            statList = DebuffEffectTypes.Select(t => totalStat?.DebuffRes[(int)t]).Select(notMultiplied => $"{Convert.ToDecimal(notMultiplied):0.##}%").Select((percentage, index) => new Stat(debuffTypes[index], percentage, null, "#8e54d1")).ToList();
+            statList = DebuffEffectTypes.Select(t => totalStat?.DebuffRes[(int)t])
+                .Select(notMultiplied => $"{Convert.ToDecimal(notMultiplied):0.##}%").Select((percentage, index) =>
+                    new Stat(debuffTypes[index], percentage, null, "#8e54d1")).ToList();
             stats.Add(!infoGraphic ? "Debuff Resistance" : "Debuff Resist", statList);
 
             return stats;

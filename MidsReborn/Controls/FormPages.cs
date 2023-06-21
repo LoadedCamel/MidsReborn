@@ -5,12 +5,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Controls
 {
     public partial class FormPages : UserControl
     {
-        public event EventHandler<int> SelectedPageChanged;
+        public event EventHandler<int>? SelectedPageChanged;
         private int _pageIndex;
 
         [Editor("System.ComponentModel.Design.CollectionEditor, System.Design", typeof(UITypeEditor))]
@@ -26,14 +27,16 @@ namespace Mids_Reborn.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [SettingsBindable(true)]
-        [DefaultValue(0)]
+        [DefaultValue(1)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int SelectedPage
         {
             get => _pageIndex;
             set
             {
-                _pageIndex = value;
+                if (value < 0) _pageIndex = 1;
+                else if (value > Pages.Count) _pageIndex = 1;
+                else _pageIndex = value;
                 SelectedPageChanged?.Invoke(this, _pageIndex);
             }
         }
@@ -42,7 +45,8 @@ namespace Mids_Reborn.Controls
         {
             InitializeComponent();
             BorderStyle = BorderStyle.FixedSingle;
-            Pages = new ObservableCollection<Page>();
+            Pages = new ObservableCollection<Page>{new() {Name = "page1"}};
+            _pageIndex = 1;
             Pages.CollectionChanged += PagesOnCollectionChanged;
             SelectedPageChanged += OnSelectedPageChanged;
         }
@@ -52,7 +56,6 @@ namespace Mids_Reborn.Controls
             for (var index = 0; index < Pages.Count; index++)
             {
                 var page = Pages[index];
-                if (page == null) continue;
                 page.Visible = index == pageIndex - 1;
             }
         }

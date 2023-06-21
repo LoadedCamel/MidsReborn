@@ -9,6 +9,12 @@ namespace Mids_Reborn.Forms.Controls
 {
     internal class BorderPanel : Panel
     {
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Bindable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        internal new BorderStyle BorderStyle { get; set; }
+
         [Description("Sets the border for the control.")]
         [Category("Appearance")]
         [Browsable(true)]
