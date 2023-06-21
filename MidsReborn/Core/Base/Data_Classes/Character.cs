@@ -1256,7 +1256,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var num = 0;
             if (power != null)
             {
-                for (var index = 0; index <= power.Slots.Length - 1; ++index)
+                for (var index = 0; index < power.Slots.Length; index++)
                 {
                     if (power.Slots[index].Enhancement.Enh > -1 &&
                         DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].nIDSet == sIdx)
@@ -1272,7 +1272,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
+            for (var index = 0; index < enhancementSet.Bonus.Length; index++)
             {
                 var effectString = enhancementSet.GetEffectString(index, false, true, true, true);
                 if (string.IsNullOrEmpty(effectString))
@@ -1285,21 +1285,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effectString += " [PvP]";
                 }
 
-                if ((num >= enhancementSet.Bonus[index].Slotted) & (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)))
+                if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
                 {
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }
                 else if (power == null)
                 {
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }
                 else
                 {
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled, 0.9f);
+                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Disabled, 0.9f);
                 }
             }
 
-            for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
+            for (var index = 0; index < enhancementSet.SpecialBonus.Length; index++)
             {
                 var checkStatus = false;
                 List<Power> specialPowers = null;
@@ -1316,6 +1316,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     if (specialPowers[0].FullName.Contains("Skin") || specialPowers[0].FullName.Contains("Aegis")) checkStatus = true;
                 }
+
                 var effectString = enhancementSet.GetEffectString(index, true, true, true, true, checkStatus);
                 if (string.IsNullOrEmpty(effectString))
                 {
@@ -1336,15 +1337,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (flag)
                 {
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
+                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }
                 else if (power == null)
                 {
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
+                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }
                 else
                 {
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Disabled, 0.9f);
+                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Disabled, 0.9f);
                 }
             }
 
