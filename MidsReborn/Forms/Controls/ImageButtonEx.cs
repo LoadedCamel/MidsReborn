@@ -709,9 +709,6 @@ namespace Mids_Reborn.Forms.Controls
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            // Clear graphics with transparency
-            //e.Graphics.Clear(Color.Transparent);
-
             // Assign variable to be used in drawing operations (some may be wrapped in using statements)
             var rect = ClientRectangle with { X = 0, Y = 0 };
             var rectPen = new Pen(Color.Cyan, 1f);
