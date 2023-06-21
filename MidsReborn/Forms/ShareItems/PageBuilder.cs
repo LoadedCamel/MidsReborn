@@ -3,9 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using HtmlAgilityPack;
 using Mids_Reborn.Core.Utils;
@@ -13,7 +11,6 @@ using Mids_Reborn.Forms.Controls;
 using WebMarkupMin.Core;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 using Mids_Reborn.Core;
-using Mids_Reborn.Core.ShareSystem;
 
 namespace Mids_Reborn.Forms.ShareItems
 {
