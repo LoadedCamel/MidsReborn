@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -11,6 +10,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
     public partial class frmForumExport : Form
     {
         private List<ForumColorTheme> ForumThemes;
+        private ForumColorTheme CustomColorTheme;
+        private bool CustomThemeEnabled;
         private Dictionary<string, TagsFormatType> FormatTypes;
         private ForumColorsHex ThemeColorsHex;
 
@@ -18,6 +19,54 @@ namespace Mids_Reborn.Forms.ImportExportItems
         {
             SetStyle(ControlStyles.DoubleBuffer, true);
             InitializeComponent();
+        }
+
+        private void frmForumExport_Load(object sender, EventArgs e)
+        {
+            FormatTypes = new Dictionary<string, TagsFormatType>
+            {
+                {"HTML" , TagsFormatType.HTML},
+                {"BBCode", TagsFormatType.BBCode},
+                {"Markdown", TagsFormatType.Markdown},
+                {"No Codes", TagsFormatType.None}
+            };
+
+            ForumThemes = ForumColorThemes.GetThemes();
+            var themeNames = ForumThemes.Select(e => e.Name).ToList();
+
+            lbColorTheme.BeginUpdate();
+            lbColorTheme.Items.Clear();
+            foreach (var th in themeNames)
+            {
+                lbColorTheme.Items.Add(th);
+            }
+
+            lbColorTheme.EndUpdate();
+            lbColorTheme.SetSelected(0, true);
+
+            lbFormatCodeType.BeginUpdate();
+            lbFormatCodeType.Items.Clear();
+            foreach (var type in FormatTypes)
+            {
+                lbFormatCodeType.Items.Add(type.Key);
+            }
+
+            lbFormatCodeType.EndUpdate();
+            lbFormatCodeType.SetSelected(0, true);
+
+            rbAllThemes.Checked = true;
+
+            CustomColorTheme = new ForumColorTheme
+            {
+                Name = "Custom",
+                DarkTheme = ForumThemes[0].DarkTheme,
+                Text = ForumThemes[0].Text,
+                Headings = ForumThemes[0].Headings,
+                Levels = ForumThemes[0].Levels,
+                Slots = ForumThemes[0].Slots
+            };
+
+            CustomThemeEnabled = false;
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -28,8 +77,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             var formatType = lbFormatCodeType.SelectedIndex >= 0
                 ? FormatTypes[lbFormatCodeType.Items[lbFormatCodeType.SelectedIndex].ToString()]
                 : TagsFormatType.None;
-            var themes = ForumColorThemes.GetThemes();
-            var activeTheme = themes.First(e => e.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
+            var activeTheme = CustomThemeEnabled
+                ? CustomColorTheme
+                : ForumThemes.First(e => e.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
             var tg = new TagGenerator(formatType, activeTheme);
 
             var txt = tg.Header($"{(string.IsNullOrWhiteSpace(MidsContext.Character.Name) ? "" : $"{MidsContext.Character.Name} - ")}{MidsContext.Character.Powersets[0]?.DisplayName} / {MidsContext.Character.Powersets[1]?.DisplayName} {MidsContext.Character.Alignment} {MidsContext.Character.Archetype.DisplayName}");
@@ -237,7 +287,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 return;
             }
 
-            var theme = ForumThemes.First(e => e.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex].ToString());
+            var theme = lbColorTheme.SelectedIndex == lbColorTheme.Items.Count - 1
+                ? CustomColorTheme
+                : ForumThemes.First(e => e.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex].ToString());
+
+            CustomThemeEnabled = lbColorTheme.SelectedIndex == lbColorTheme.Items.Count - 1;
+            chkCustomThemeDark.Visible = CustomThemeEnabled;
+
             ThemeColorsHex = new ForumColorsHex
             {
                 Text = ForumColorThemes.ColorToHex(theme.Text),
@@ -266,6 +322,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 lbColorTheme.Items.Add(theme.Name);
             }
 
+            lbColorTheme.Items.Add("Custom");
+
             lbColorTheme.EndUpdate();
             lbColorTheme.SetSelected(0, true);
         }
@@ -284,6 +342,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 lbColorTheme.Items.Add(theme.Name);
             }
 
+            lbColorTheme.Items.Add("Custom");
+
             lbColorTheme.EndUpdate();
             lbColorTheme.SetSelected(0, true);
         }
@@ -297,44 +357,103 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 lbColorTheme.Items.Add(theme.Name);
             }
 
+            lbColorTheme.Items.Add("Custom");
+
             lbColorTheme.EndUpdate();
             lbColorTheme.SetSelected(0, true);
         }
 
-        private void frmForumExport_Load(object sender, EventArgs e)
+        private void panelColorTitle_Click(object sender, EventArgs e)
         {
-            FormatTypes = new Dictionary<string, TagsFormatType>
+            if (!CustomThemeEnabled)
             {
-                {"HTML" , TagsFormatType.HTML},
-                {"BBCode", TagsFormatType.BBCode},
-                {"Markdown", TagsFormatType.Markdown},
-                {"No Codes", TagsFormatType.None}
-            };
-
-            ForumThemes = ForumColorThemes.GetThemes();
-            var themeNames = ForumThemes.Select(e => e.Name).ToList();
-
-            lbColorTheme.BeginUpdate();
-            lbColorTheme.Items.Clear();
-            foreach (var th in themeNames)
-            {
-                lbColorTheme.Items.Add(th);
+                return;
             }
 
-            lbColorTheme.EndUpdate();
-            lbColorTheme.SetSelected(0, true);
+            var activeTheme = CustomThemeEnabled
+                ? CustomColorTheme
+                : ForumThemes.First(x => x.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
 
-            lbFormatCodeType.BeginUpdate();
-            lbFormatCodeType.Items.Clear();
-            foreach (var type in FormatTypes)
+            using var colorSelector = new ColorSelector(activeTheme.Text);
+            var ret = colorSelector.ShowDialog(this);
+            if (ret != DialogResult.OK)
             {
-                lbFormatCodeType.Items.Add(type.Key);
+                return;
             }
 
-            lbFormatCodeType.EndUpdate();
-            lbFormatCodeType.SetSelected(0, true);
+            panelColorTitle.BackColor = colorSelector.SelectedColor;
+            CustomColorTheme.Text = colorSelector.SelectedColor;
+        }
 
-            rbAllThemes.Checked = true;
+        private void panelColorHeadings_Click(object sender, EventArgs e)
+        {
+            if (!CustomThemeEnabled)
+            {
+                return;
+            }
+
+            var activeTheme = CustomThemeEnabled
+                ? CustomColorTheme
+                : ForumThemes.First(x => x.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
+
+            using var colorSelector = new ColorSelector(activeTheme.Headings);
+            var ret = colorSelector.ShowDialog(this);
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            panelColorHeadings.BackColor = colorSelector.SelectedColor;
+            CustomColorTheme.Headings = colorSelector.SelectedColor;
+        }
+
+        private void panelColorLevels_Click(object sender, EventArgs e)
+        {
+            if (!CustomThemeEnabled)
+            {
+                return;
+            }
+
+            var activeTheme = CustomThemeEnabled
+                ? CustomColorTheme
+                : ForumThemes.First(x => x.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
+
+            using var colorSelector = new ColorSelector(activeTheme.Levels);
+            var ret = colorSelector.ShowDialog(this);
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            panelColorLevels.BackColor = colorSelector.SelectedColor;
+            CustomColorTheme.Levels = colorSelector.SelectedColor;
+        }
+
+        private void panelColorSlots_Click(object sender, EventArgs e)
+        {
+            if (!CustomThemeEnabled)
+            {
+                return;
+            }
+
+            var activeTheme = CustomThemeEnabled
+                ? CustomColorTheme
+                : ForumThemes.First(x => x.Name == lbColorTheme.Items[lbColorTheme.SelectedIndex >= 0 ? lbColorTheme.SelectedIndex : 0].ToString());
+
+            using var colorSelector = new ColorSelector(activeTheme.Slots);
+            var ret = colorSelector.ShowDialog(this);
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            panelColorSlots.BackColor = colorSelector.SelectedColor;
+            CustomColorTheme.Slots = colorSelector.SelectedColor;
+        }
+
+        private void chkCustomThemeDark_CheckedChanged(object sender, EventArgs e)
+        {
+            CustomColorTheme.DarkTheme = chkCustomThemeDark.Checked;
         }
     }
 }

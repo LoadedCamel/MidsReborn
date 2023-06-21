@@ -11,7 +11,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         Markdown
     }
 
-    public struct ForumColorTheme
+    public class ForumColorTheme
     {
         public string Name;
         public Color Text;

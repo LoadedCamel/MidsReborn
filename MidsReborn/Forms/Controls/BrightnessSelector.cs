@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -8,8 +7,8 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class BrightnessSelector : UserControl
     {
-        private delegate void PositionChangedHandler(object? sender, float percentage);
-        private event PositionChangedHandler? PositionChanged;
+        public delegate void PositionChangedHandler(object? sender, float percentage);
+        public event PositionChangedHandler? PositionChanged;
 
         public int CursorWidth { get; set; } = 8;
         public Color CursorColor { get; set; } = Color.FromArgb(85, 170, 255);
@@ -65,7 +64,6 @@ namespace Mids_Reborn.Forms.Controls
         private void OnPositionChanged(object? sender, float percentage)
         {
             Brightness = percentage;
-            Debug.WriteLine(Brightness);
             Invalidate();
         }
 
@@ -88,16 +86,14 @@ namespace Mids_Reborn.Forms.Controls
             CursorPosition = e.Y;
         }
 
-        private static float  PointToPercentage(int y, int height)
+        private static float PointToPercentage(int y, int height)
         {
-            var percentage = (float)y / height * 100.0;
-            return (float)percentage;
+            return (float)y / height * 100f;
         }
 
         private static int PercentageToPoint(float percentage, int height)
         {
-            var pointY = (int)(percentage * height / 100.0);
-            return pointY;
+            return (int)(percentage * height / 100.0);
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)

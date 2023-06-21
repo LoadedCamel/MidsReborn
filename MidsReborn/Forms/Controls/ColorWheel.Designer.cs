@@ -65,7 +65,7 @@
             colorSelection.Size = new System.Drawing.Size(146, 35);
             colorSelection.TabIndex = 2;
             // 
-            // brightnessSelector1
+            // brightnessSelector
             // 
             brightnessSelector.BackColor = System.Drawing.Color.Transparent;
             brightnessSelector.CursorColor = System.Drawing.Color.FromArgb(85, 170, 255);
@@ -77,6 +77,7 @@
             brightnessSelector.Name = "brightnessSelector";
             brightnessSelector.Size = new System.Drawing.Size(40, 300);
             brightnessSelector.TabIndex = 3;
+            brightnessSelector.PositionChanged += brightnessSelector_PositionChanged;
             // 
             // ColorWheel
             // 
