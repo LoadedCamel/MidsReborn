@@ -27,10 +27,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void ColorSelector_Load(object sender, EventArgs e)
         {
-            btnOk.BackColor = BackColor;
             btnOk.UseAlt = MidsContext.Character?.IsVillain == true;
-
-            btnCancel.BackColor = BackColor;
             btnCancel.UseAlt = MidsContext.Character?.IsVillain == true;
 
             SelectedColor = InitialColor;

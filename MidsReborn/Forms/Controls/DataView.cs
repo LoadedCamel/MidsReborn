@@ -797,7 +797,19 @@ namespace Mids_Reborn.Forms.Controls
                     .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
             }
 
-            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
+            var validMez = durationEffectId > -1 &&
+                           pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
+                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Afraid &
+                           !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
+                              pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
+                             pBase.Effects[durationEffectId].Mag < 0);
+
+            if (validMez)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
+            }
+
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItemBuilder.Fi.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
@@ -806,12 +818,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItemBuilder.Fi.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItemBuilder.Fi.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
-            if (durationEffectId > -1 &&
-                pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
-                pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
-                !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
-                   pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
-                  pBase.Effects[durationEffectId].Mag < 0))
+            if (validMez)
             {
                 info_DataList.AddItem(new PairedListEx.Item("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
@@ -830,14 +837,14 @@ namespace Mids_Reborn.Forms.Controls
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer) ||
-                         e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
-                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport})
+                         (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus) ||
-                         e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
-                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
+                         (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
             foreach (var rex in rankedEffectsExt)
             {
