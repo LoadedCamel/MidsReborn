@@ -74,10 +74,14 @@ namespace MRBResourceLib {
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///&lt;head&gt;
-        ///    &lt;title&gt;{title}&lt;/title&gt;
-        ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-        ///    &lt;style&gt;
+        ///&lt;title&gt;{title}&lt;/title&gt;
+        ///&lt;meta name=&quot;twitter:title&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:description&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:image&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot;&gt;
+        ///&lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///&lt;style&gt;
         ///        body {
         ///            background-color: black;
         ///            color: whitesmoke;
@@ -85,15 +89,7 @@ namespace MRBResourceLib {
         ///
         ///        * {
         ///            font-family: Helvetica, Arial, sans-serif;
-        ///        }
-        ///
-        ///        .header {
-        ///            border-top: 2px solid #808080;
-        ///        }
-        ///
-        ///        .sectionBlock {
-        ///            border: 2px solid inherit;
-        ///            bo [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Boilerplate {
             get {
@@ -147,6 +143,16 @@ namespace MRBResourceLib {
         public static System.Drawing.Bitmap enhData {
             get {
                 object obj = ResourceManager.GetObject("enhData", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap gradientBar {
+            get {
+                object obj = ResourceManager.GetObject("gradientBar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -277,6 +283,16 @@ namespace MRBResourceLib {
         public static System.Drawing.Bitmap PictureBox1_Image {
             get {
                 object obj = ResourceManager.GetObject("PictureBox1_Image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap selector {
+            get {
+                object obj = ResourceManager.GetObject("selector", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

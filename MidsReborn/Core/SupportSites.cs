@@ -2,20 +2,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Mids_Reborn.Forms.UpdateSystem
+namespace Mids_Reborn.Core
 {
-    public class clsXMLUpdate
+    public abstract class SupportSites
     {
-        public bool RestartNeeded = false;
-
         public static void SupportServer()
         {
-            LaunchBrowser("https://discord.gg/eAUuNQ3nxk");
-        }
-
-        public static void DownloadFromDomain()
-        {
-            LaunchBrowser("https://midsreborn.com/download/MRB_Setup.msi");
+            LaunchBrowser("https://discord.gg/mids-reborn-593336669004890113");
         }
 
         public static void KoFi()
@@ -36,11 +29,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
         public static void CoinBase()
         {
             LaunchBrowser("https://commerce.coinbase.com/checkout/804803e4-9b18-4f18-9f6b-413856dda262");
-        }
-
-        public static void GoToForums()
-        {
-            LaunchBrowser("https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/");
         }
 
         private static void LaunchBrowser(string iUri)

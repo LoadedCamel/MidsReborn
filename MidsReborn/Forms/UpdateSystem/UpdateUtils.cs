@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.Forms.UpdateSystem.Models;
 using Newtonsoft.Json;
 using Process = System.Diagnostics.Process;
 
@@ -13,84 +18,77 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public static class UpdateUtils
     {
-        private static AppUpdate? _appUpdate;
-        private static DbUpdate? _dbUpdate;
-        private static List<UpdateObject>? _updates;
+        private static readonly List<UpdateObject> Updates = new();
         private static string? _tempFile;
 
-        public enum UpdateTypes
+        private static void CheckForApp()
         {
-            Application,
-            Database
-        }
-
-        public struct UpdateObject
-        {
-            public UpdateTypes Type { get; set; }
-            public string Name { get; set; }
-            public string Uri { get; set; }
-            public string Version { get; set; }
-            public string ExtractTo { get; set; }
-
-            public UpdateObject(UpdateTypes type, string name, string uri, string ver, string extract)
+            var serializer = new XmlSerializer(typeof(UpdateResponse));
+            try
             {
-                Type = type;
-                Name = name;
-                Uri = uri;
-                Version = ver;
-                ExtractTo = extract;
+                var reader = new XmlTextReader(MidsContext.Config.UpdatePath!);
+                if (serializer.Deserialize(reader) is not UpdateResponse updateResponse)
+                {
+                    return;
+                }
+
+                var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), MidsContext.AppFileVersion);
+                if (!isAvailable) return;
+                Updates.Add(new UpdateObject(PatchType.Application, MidsContext.AppName, $"{MidsContext.Config.UpdatePath}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{AppContext.BaseDirectory}"));
+            }
+            catch
+            {
+                // ignored
             }
         }
 
-        public static void CheckForUpdates(frmMain parent, bool manual = false)
+        private static void CheckForDatabase()
         {
-            _appUpdate = new AppUpdate();
-            _dbUpdate = new DbUpdate();
-            _updates = new List<UpdateObject>();
-
-            if (_appUpdate.IsAvailable)
+            var serializer = new XmlSerializer(typeof(UpdateResponse));
+            try
             {
-                _updates.Add(new UpdateObject(UpdateTypes.Application, MidsContext.AppName, $"{MidsContext.Config?.UpdatePath}", _appUpdate.Version.ToString(), $"{AppContext.BaseDirectory}"));
+                var reader = new XmlTextReader(DatabaseAPI.ServerData.ManifestUri);
+                if (serializer.Deserialize(reader) is not UpdateResponse updateResponse)
+                {
+                    return;
+                }
+
+                var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), DatabaseAPI.Database.Version);
+                if (!isAvailable) return;
+                Updates.Add(new UpdateObject(PatchType.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{Files.BaseDataPath}"));
             }
-
-            if (_dbUpdate is {Status: DbUpdate.ManifestStatus.Success, IsAvailable: true})
+            catch
             {
-                _updates.Add(new UpdateObject(UpdateTypes.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", _dbUpdate.Version.ToString(), $"{Files.BaseDataPath}"));
+                // ignored
             }
-
-            if (_updates.Count <= 0)
+        }
+        
+        public static void CheckForUpdates(IWin32Window parent, bool checkDelay = false)
+        {
+            if (checkDelay)
             {
-                if (!manual) return;
-                if (!(_appUpdate.Status == AppUpdate.ManifestStatus.Success &
-                      _dbUpdate.Status == DbUpdate.ManifestStatus.Success)) return;
-                var updateMsg = new MessageBoxEx(@"Update Check",
-                    @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
-                updateMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                if (!DelayCheckAvailable) return;
+            }
+            CheckForApp();
+            CheckForDatabase();
+            MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow;
+
+            if (!Updates.Any())
+            {
+                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
+                updateMsg.ShowDialog(parent);
                 return;
             }
 
-            CreateTempFile();
-            InitiateQuery(parent, _updates);
+            _tempFile = Path.GetTempFileName();
+            File.WriteAllText(_tempFile, JsonConvert.SerializeObject(Updates));
+            InitiateQuery(parent);
         }
 
-        private static void CreateTempFile()
+        private static void InitiateQuery(IWin32Window parent)
         {
-            _tempFile = string.Empty;
-            try
-            {
-                _tempFile = Path.GetTempFileName();
-                File.WriteAllText(_tempFile, JsonConvert.SerializeObject(_updates));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(@"Error while creating the temporary update file: " + e.Message);
-            }
-        }
-
-        private static void InitiateQuery(frmMain iParent, List<UpdateObject> updates)
-        {
-            var result = new UpdateQuery(iParent, updates);
-            result.ShowDialog();
+            var result = new UpdateQuery(Updates);
+            result.ShowDialog(parent);
             switch (result.DialogResult)
             {
                 case DialogResult.Abort:
@@ -122,6 +120,17 @@ namespace Mids_Reborn.Forms.UpdateSystem
             };
 
             Process.Start(startInfo);
+        }
+
+        private static bool DelayCheckAvailable
+        {
+            get
+            {
+                var delay = MidsContext.Config.AutomaticUpdates.Delay;
+                var lastChecked = MidsContext.Config.AutomaticUpdates.LastChecked;
+                if (lastChecked == null) return true;
+                return DateTime.Compare(DateTime.UtcNow, lastChecked.Value.AddDays(delay)) > 0;
+            }
         }
     }
 }

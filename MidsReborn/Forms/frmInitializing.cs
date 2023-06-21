@@ -30,9 +30,9 @@ namespace Mids_Reborn.Forms
 
         public frmInitializing()
         {
-            InitializeComponent();
             Load += FrmInitializing_Load;
             Closing += FrmInitializing_Closing;
+            InitializeComponent();
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;

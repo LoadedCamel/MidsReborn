@@ -22,7 +22,6 @@ using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
-using Mids_Reborn.Forms.DiscordSharing;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
@@ -293,9 +292,15 @@ namespace Mids_Reborn.Forms
                 command_Load(ProcessedCommand);
             }
 
-            if (MidsContext.Config!.CheckForUpdates)
+            if (!MidsContext.Config.AutomaticUpdates.Enabled) return;
+            switch (MidsContext.Config.AutomaticUpdates.Type)
             {
-                UpdateUtils.CheckForUpdates(this);
+                case ConfigData.AutoUpdType.Startup:
+                    UpdateUtils.CheckForUpdates(this);
+                    break;
+                case ConfigData.AutoUpdType.Delay:
+                    UpdateUtils.CheckForUpdates(this, true);
+                    break;
             }
         }
 
@@ -6097,22 +6102,22 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsKoFi_Click(object? sender, EventArgs e)
         {
-            clsXMLUpdate.KoFi();
+            SupportSites.KoFi();
         }
 
         private void tsPatreon_Click(object? sender, EventArgs e)
         {
-            clsXMLUpdate.Patreon();
+            SupportSites.Patreon();
         }
 
         private void tsCoinbase_Click(object? sender, EventArgs e)
         {
-            clsXMLUpdate.CoinBase();
+            SupportSites.CoinBase();
         }
 
         private void tsSupport_Click(object sender, EventArgs e)
         {
-            clsXMLUpdate.SupportServer();
+            SupportSites.SupportServer();
         }
 
         private void tsAbout_Click(object sender, EventArgs e)
@@ -6239,7 +6244,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             try
             {
-                new DiscordShare().ShowDialog();
+                //new DiscordShare().ShowDialog();
             }
             catch (Exception ex)
             {
@@ -6614,19 +6619,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatSetFinder(true);
         }
 
-        private void tsForumLink(object sender, EventArgs e)
-        {
-            clsXMLUpdate.GoToForums();
-        }
-
         private void Github_Link(object? sender, EventArgs e)
         {
-            clsXMLUpdate.GoToGitHub();
+            SupportSites.GoToGitHub();
         }
 
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            UpdateUtils.CheckForUpdates(this, true);
+            UpdateUtils.CheckForUpdates(this);
         }
 
         private void tsViewSelected()

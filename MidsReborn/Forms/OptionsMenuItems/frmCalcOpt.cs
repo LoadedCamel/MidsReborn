@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -21,6 +24,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private readonly string[] scenarioExample;
 
         private bool fcNoUpdate;
+        private readonly IEnumerable<RadioButton> _updRadios;
+
+        private ConfigData.AutoUpdType _autoUpdType = MidsContext.Config.AutomaticUpdates.Type;
+
+        private ConfigData.AutoUpdType AutoUpdate
+        {
+            get => _autoUpdType;
+            set
+            {
+                _autoUpdType = value;
+                tbUpdDelayDays.Enabled = _autoUpdType == ConfigData.AutoUpdType.Delay;
+            }
+        }
 
         public frmCalcOpt(ref frmMain iParent)
         {
@@ -31,12 +47,41 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             scenActs = new string[20][];
             defActs = new short[20];
             InitializeComponent();
+            _updRadios = GroupBox1.Controls.OfType<RadioButton>();
             Name = nameof(frmCalcOpt);
             optTO.Image = Resources.optTO_Image;
             optDO.Image = Resources.optDO_Image;
             optSO.Image = Resources.optSO_Image;
             Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
+        }
+
+        private void BindAndDefaultUpdRadios()
+        {
+            foreach (var radio in _updRadios)
+            {
+                radio.Tag = radio.Name switch
+                {
+                    "rbUpdDisabled" => ConfigData.AutoUpdType.Disabled,
+                    "rbUpdStartup" => ConfigData.AutoUpdType.Startup,
+                    "rbUpdDelay" => ConfigData.AutoUpdType.Delay,
+                    _ => radio.Tag
+                };
+                radio.CheckedChanged += UpdRadioOnCheckedChanged;
+                if ((ConfigData.AutoUpdType)radio.Tag == MidsContext.Config.AutomaticUpdates.Type)
+                {
+                    radio.Checked = true;
+                }
+            }
+
+
+        }
+
+        private void UpdRadioOnCheckedChanged(object? sender, EventArgs e)
+        {
+            if (sender is not RadioButton selected) return;
+            AutoUpdate = (ConfigData.AutoUpdType)selected.Tag;
+            if (AutoUpdate is ConfigData.AutoUpdType.Startup or ConfigData.AutoUpdType.Disabled) tbUpdDelayDays.Text = @"0";
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -242,8 +287,8 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             rbChanceAverage.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Average;
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
-
-            chkUpdates.Checked = config.CheckForUpdates;
+            BindAndDefaultUpdRadios();
+            AutoUpdate = config.AutomaticUpdates.Type;
             chkShowSOLevels.Checked = config.ShowSoLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
             rbGraphTwoLine.Enabled = chkEnableDmgGraph.Checked;
@@ -487,7 +532,9 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             }
 
             config.DisableVillainColors = false;
-            config.CheckForUpdates = chkUpdates.Checked;
+            config.AutomaticUpdates.Type = AutoUpdate;
+            config.AutomaticUpdates.Delay = Convert.ToInt32(tbUpdDelayDays.Text);
+            //config.CheckForUpdates = chkUpdateStartup.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
             config.I9.IgnoreEnhFX = !chkIOEffects.Checked;
             config.I9.IgnoreSetBonusFX = !chkSetBonus.Checked;
@@ -620,6 +667,15 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
         private void rbEnhPopupCloseStyle2_CheckedChanged(object sender, EventArgs e)
         {
             rbEnhPopupCloseStyle1.Checked = !rbEnhPopupCloseStyle2.Checked;
+        }
+
+        private void TbUpdDelayDaysOnTextChanged(object? sender, EventArgs e)
+        {
+            if (sender is not TextBox textBox) return;
+            if (!textBox.Text.All(char.IsDigit))
+            {
+                textBox.Text = "3";
+            };
         }
     }
 }

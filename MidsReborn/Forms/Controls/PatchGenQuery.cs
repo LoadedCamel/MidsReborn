@@ -17,7 +17,7 @@ namespace Mids_Reborn.Forms.Controls
             btnCancel.Text = cancelText;
         }
 
-        private void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object? sender, EventArgs e)
         {
             CenterToParent();
         }

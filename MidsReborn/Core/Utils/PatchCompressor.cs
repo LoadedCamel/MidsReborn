@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -23,7 +26,7 @@ namespace Mids_Reborn.Core.Utils
         public static PatchCompressor AppPatchCompressor { get; } = new(EPatchType.Application);
         public static PatchCompressor DbPatchCompressor { get; } = new(EPatchType.Database);
 
-        public enum EPatchType
+        private enum EPatchType
         {
             Application,
             Database
@@ -32,8 +35,6 @@ namespace Mids_Reborn.Core.Utils
         private EPatchType PatchType { get; set; }
 
         private const string PatchFolderName = @"Patches";
-        private const string HashFileName = @"FileHash.json";
-        public bool Generating { get; private set; }
 
         private string TopLevelFolder
         {
@@ -50,14 +51,44 @@ namespace Mids_Reborn.Core.Utils
             }
         }
 
+        private string PatchVersion
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => $"{MidsContext.AssemblyFileVersion}",
+                    EPatchType.Database => $"{DatabaseAPI.Database.Version}",
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string PatchDir
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "App"),
+                    EPatchType.Database => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "Db"),
+                    _ => string.Empty
+                };
+                if (!Directory.Exists(value)) Directory.CreateDirectory(value);
+                return value;
+            }
+        }
+
         private string PatchPath
         {
             get
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => Path.Combine(AppContext.BaseDirectory, PatchFolderName),
-                    EPatchType.Database => Path.Combine(MidsContext.Config.DataPath, PatchFolderName),
+                    EPatchType.Application => AppContext.BaseDirectory,
+                    EPatchType.Database => MidsContext.Config.DataPath!,
                     _ => string.Empty
                 };
 
@@ -71,8 +102,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => Path.Combine(PatchPath, $"{MidsContext.AssemblyFileVersion}.mru"),
-                    EPatchType.Database => Path.Combine(PatchPath, $"{DatabaseAPI.Database.Version}.mru"),
+                    EPatchType.Application => Path.Combine(PatchDir, PatchName),
+                    EPatchType.Database => Path.Combine(PatchDir, PatchName),
                     _ => string.Empty
                 };
 
@@ -80,36 +111,74 @@ namespace Mids_Reborn.Core.Utils
             }
         }
 
-        private string HashFile => Path.Combine(PatchPath, HashFileName);
-        
-        private IEnumerable<FileData> CompileList(string? path, EPatchType patchType)
+        private string PatchName
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => $"{MidsContext.AppName.Replace("' ", string.Empty)}-{MidsContext.AssemblyFileVersion}-cumulative.mru".ToLower(),
+                    EPatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}-cumulative.mru".ToLower(),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string HashFile
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => Path.Combine(PatchDir, HashName),
+                    EPatchType.Database => Path.Combine(PatchDir, HashName),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private string HashName
+        {
+            get
+            {
+                var value = PatchType switch
+                {
+                    EPatchType.Application => $"{MidsContext.AppName.Replace("' ", string.Empty)}-{MidsContext.AssemblyFileVersion}.hash".ToLower(),
+                    EPatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}.hash".ToLower(),
+                    _ => string.Empty
+                };
+
+                return value;
+            }
+        }
+
+        private List<FileData> CompileList()
         {
             var files = new List<string>();
-            List<FileHash>? hashes = null;
+            var hashes = new List<FileHash>();
             var fileQueue = new List<FileData>();
             var exclusionList = new List<string>();
-            exclusionList = patchType switch
+            exclusionList = PatchType switch
             {
-                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode", ".pdb" },
+                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode", ".pdb", "deps.json", "MidsReborn.exe.WebView2" },
                 EPatchType.Database => new List<string> { "Patches" },
                 _ => exclusionList
             };
 
-            files = patchType switch
+            files = PatchType switch
             {
-                EPatchType.Application => Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
+                EPatchType.Application => Directory.GetFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
-                EPatchType.Database => Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
+                EPatchType.Database => Directory.GetFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
                 _ => files
             };
-
-            if (File.Exists(Path.Combine(PatchPath, HashFile)))
-            {
-                hashes = JsonConvert.DeserializeObject<List<FileHash>>(File.ReadAllText(HashFile));
-            }
 
             foreach (var file in files)
             {
@@ -120,69 +189,43 @@ namespace Mids_Reborn.Core.Utils
                     .Replace(TopLevelFolder.Remove(TopLevelFolder.Length - 1, 1), string.Empty);
                 var data = File.ReadAllBytes(file);
                 if (directory == null) continue;
-                var newFile = new FileHash(directory, fileInfo.Name, FileHash.ComputeHash(file));
-                if (hashes != null)
-                {
-                    var priorFile = hashes.FirstOrDefault(x => x.FileName == name && x.Directory == directory);
-                    if (priorFile != null)
-                    {
-                        var hashCompareResult = FileHash.Compare(newFile.Hash, priorFile.Hash);
-                        if (hashCompareResult) continue;
-                        hashes.First(x => x.FileName == newFile.FileName).Hash = newFile.Hash;
-                        fileQueue.Add(new FileData { FileName = name, Data = data, Path = directory });
-                    }
-                    else
-                    {
-                        hashes.Add(newFile);
-                        fileQueue.Add(new FileData { FileName = name, Data = data, Path = directory });
-                    }
-                }
-                else
-                {
-                    hashes = new List<FileHash> { newFile };
-                    fileQueue.Add(new FileData { FileName = name, Data = data, Path = directory });
-                }
+                var hashedFile = new FileHash(directory, name, FileHash.ComputeHash(file));
+                hashes.Add(hashedFile);
+                fileQueue.Add(new FileData { FileName = name, Data = data, Path = directory });
+                
             }
-
             File.WriteAllText(HashFile, JsonConvert.SerializeObject(hashes, Formatting.Indented));
             return fileQueue;
         }
 
-        public async Task<bool> CreatePatchFile(string? path, EPatchType patchType)
+        public async Task<bool> CreatePatchFile()
         {
+            CleanPrevious();
             var completionSource = new TaskCompletionSource<bool>();
-            Generating = true;
-            var compressedData = CompressData(path, patchType);
+            var hashedFiles = CompileList();
+            var compressedData = CompressData(hashedFiles);
             if (compressedData == null) 
             {
                 completionSource.TrySetResult(false);
             }
             else
             {
-                DeletePriorPatch(path);
                 var generated = GenerateFile(compressedData);
+                if (generated) GenerateManifest();
                 completionSource.TrySetResult(generated);
-                Generating = false;
                 return await completionSource.Task;
             }
 
-            Generating = false;
             return await completionSource.Task;
         }
 
-        private byte[]? CompressData(string? path, EPatchType patchType)
+        private static byte[]? CompressData(List<FileData> hashedFiles)
         {
             byte[]? outData;
             MemoryStream patchStream;
             BinaryWriter writer;
             try
             {
-                if (!Directory.Exists(PatchPath))
-                {
-                    Directory.CreateDirectory(PatchPath);
-                }
-
-
                 patchStream = new MemoryStream();
                 writer = new BinaryWriter(patchStream);
             }
@@ -194,10 +237,9 @@ namespace Mids_Reborn.Core.Utils
 
             try
             {
-                var files = CompileList(path, patchType).ToList();
                 writer.Write("Mids Reborn Patch Data");
-                writer.Write(files.Count);
-                foreach (var file in files)
+                writer.Write(hashedFiles.Count);
+                foreach (var file in hashedFiles)
                 {
                     writer.Write(file.Data.Length);
                     writer.Write(file.FileName);
@@ -221,14 +263,29 @@ namespace Mids_Reborn.Core.Utils
             return outData;
         }
 
-        private void DeletePriorPatch(string? path)
+        private void CleanPrevious()
         {
-            var filesToRemove = Directory.GetFiles(PatchPath, "*.mru").ToList();
-            if (!filesToRemove.Any()) return;
-            foreach (var file in filesToRemove)
+            string[] extensions = { ".mru", ".hash" };
+            var files = Directory.GetFiles(PatchDir).Where(file => extensions.Any(file.EndsWith));
+            foreach (var file in files)
             {
                 File.Delete(file);
             }
+        }
+
+        private void GenerateManifest()
+        {
+            using var writer = new XmlTextWriter(Path.Combine(PatchDir, "update_manifest.xml"), Encoding.UTF8);
+            writer.WriteStartDocument();
+            writer.Formatting = System.Xml.Formatting.Indented;
+            writer.Indentation = 2;
+            writer.WriteStartElement("manifest");
+            writer.WriteStartElement("version");
+            writer.WriteString(PatchVersion);
+            writer.WriteEndElement();
+            writer.WriteStartElement("file");
+            writer.WriteString(PatchName);
+            writer.WriteEndElement();
         }
 
         private bool GenerateFile(byte[] byteArray)

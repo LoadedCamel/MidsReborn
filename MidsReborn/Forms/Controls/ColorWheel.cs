@@ -46,15 +46,17 @@ namespace Mids_Reborn.Forms.Controls
         {
             if (colorPicker.Image is not Bitmap pixelData) return;
             var colorData = pixelData.GetPixel(e.X, e.Y);
-            colorPreview.BackColor = colorData;
+            var adjustedColor = ControlPaint.Dark(colorData, (float)brightnessSelector.Brightness / 100f);
+            colorPreview.BackColor = adjustedColor;
         }
 
         private void ColorPicker_MouseDown(object sender, MouseEventArgs e)
         {
             if (colorPicker.Image is not Bitmap pixelData) return;
             var colorData = pixelData.GetPixel(e.X, e.Y);
-            colorSelection.BackColor = colorData;
-            Selected.Color = colorData;
+            var adjustedColor = ControlPaint.Dark(colorData, (float)brightnessSelector.Brightness / 100f);
+            colorSelection.BackColor = adjustedColor;
+            Selected.Color = adjustedColor;
             SelectionChanged?.Invoke(this, Selected);
         }
     }

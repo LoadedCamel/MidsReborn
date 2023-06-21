@@ -1,6 +1,9 @@
-﻿namespace Mids_Reborn.Controls
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Mids_Reborn.Forms.Controls
 {
-    partial class Page
+    partial class BrightnessSelector
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,8 +31,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            SuspendLayout();
+            // 
+            // BrightnessSelector
+            // 
+            BackColor = System.Drawing.Color.Transparent;
+            DoubleBuffered = true;
+            ForeColor = System.Drawing.Color.White;
+            Name = "BrightnessSelector";
+            Size = new System.Drawing.Size(40, 300);
+            MaximumSize = new Size(40, 300);
+            MinimumSize = new Size(40, 300);
+            ResumeLayout(false);
         }
 
         #endregion
