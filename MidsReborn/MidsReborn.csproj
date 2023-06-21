@@ -344,12 +344,11 @@
     <PackageReference Include="Jace4fc" Version="1.0.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1823.32</Version>
+      <Version>1.0.1905-prerelease</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
     <PackageReference Include="RestSharp">
       <Version>110.2.0</Version>
     </PackageReference>
@@ -402,6 +401,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+    <WV2WinRTVerbosity>low</WV2WinRTVerbosity>
   </PropertyGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -423,13 +423,11 @@
 		<ItemGroup>
 			<FilesToDelete Include="$(Main)*Wpf.dll" />
 		</ItemGroup>
-		<Message Text="Deleting Files @(FilesToDelete)"/>
+		<Message Text="Deleting Files @(FilesToDelete)" />
 		<Delete Files="@(FilesToDelete)">
-			<Output 
-				TaskParameter="DeletedFiles"
-			    ItemName="FilesDeleted"/>
+			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
 		</Delete>
-		<Message Text="Files deleted: @(FilesDeleted)"/>
+		<Message Text="Files deleted: @(FilesDeleted)" />
 	</Target>
 
 	<Target Name="DeleteFoldersAfterBuild" AfterTargets="DeleteFilesAfterBuild">

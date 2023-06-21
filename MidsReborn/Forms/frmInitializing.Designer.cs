@@ -36,9 +36,9 @@ namespace Mids_Reborn.Forms
             Label1 = new TransparentLabel();
             tmrOp = new Timer(components);
             panel1 = new Panel();
-            webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView2 = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1.SuspendLayout();
-            ((ISupportInitialize)webView21).BeginInit();
+            ((ISupportInitialize)webView2).BeginInit();
             SuspendLayout();
             // 
             // Label1
@@ -57,7 +57,7 @@ namespace Mids_Reborn.Forms
             // 
             // panel1
             // 
-            panel1.Controls.Add(webView21);
+            panel1.Controls.Add(webView2);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
@@ -66,16 +66,16 @@ namespace Mids_Reborn.Forms
             // 
             // webView21
             // 
-            webView21.AllowExternalDrop = true;
-            webView21.CreationProperties = null;
-            webView21.DefaultBackgroundColor = System.Drawing.Color.White;
-            webView21.Dock = DockStyle.Fill;
-            webView21.Location = new System.Drawing.Point(0, 0);
-            webView21.Name = "webView21";
-            webView21.Size = new System.Drawing.Size(600, 447);
-            webView21.Source = new System.Uri("file://data\\blank.html", System.UriKind.Absolute);
-            webView21.TabIndex = 0;
-            webView21.ZoomFactor = 1D;
+            webView2.AllowExternalDrop = true;
+            webView2.CreationProperties = null;
+            webView2.DefaultBackgroundColor = System.Drawing.Color.Black;
+            webView2.Dock = DockStyle.Fill;
+            webView2.Location = new System.Drawing.Point(0, 0);
+            webView2.Name = "webView2";
+            webView2.Size = new System.Drawing.Size(600, 447);
+            webView2.Source = new System.Uri("file://data\\blank.html", System.UriKind.Absolute);
+            webView2.TabIndex = 0;
+            webView2.ZoomFactor = 1D;
             // 
             // frmInitializing
             // 
@@ -90,11 +90,10 @@ namespace Mids_Reborn.Forms
             DoubleBuffered = true;
             Margin = new Padding(55, 18, 55, 18);
             Name = "frmInitializing";
-            Text = "frmInitializing";
             TopMost = true;
             TransparencyKey = System.Drawing.Color.Transparent;
             panel1.ResumeLayout(false);
-            ((ISupportInitialize)webView21).EndInit();
+            ((ISupportInitialize)webView2).EndInit();
             ResumeLayout(false);
         }
 
@@ -102,6 +101,6 @@ namespace Mids_Reborn.Forms
         private TransparentLabel Label1;
         private Timer tmrOp;
         private Panel panel1;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2;
     }
 }

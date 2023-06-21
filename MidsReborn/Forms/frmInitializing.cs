@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
@@ -31,33 +32,36 @@ namespace Mids_Reborn.Forms
         public frmInitializing()
         {
             Load += FrmInitializing_Load;
-            Closing += FrmInitializing_Closing;
             InitializeComponent();
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;
-            Activated += FrmInitializing_Activated;
-            webView21.NavigationCompleted += WebView21OnNavigationCompleted;
-        }
-        
-        private void WebView21OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
-        {
-            if (!e.IsSuccess) return;
-            _webViewReady = true;
-            LoadingStarted?.Invoke(this, e);
-        }
-
-        private void FrmInitializing_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
-        {
-            AnimateWindow(Handle, 500, AnimationFlags.Activate | AnimationFlags.Blend | AnimationFlags.Hide);
         }
 
         private async void FrmInitializing_Load(object? sender, EventArgs e)
         {
             SetTopMost(false);
-            await webView21.EnsureCoreWebView2Async(null);
-            webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
-            webView21.CoreWebView2.NavigateToString(Html);
+            webView2.CoreWebView2InitializationCompleted += OnInitializationCompleted;
+            webView2.NavigationCompleted += OnNavigationCompleted;
+            await InitializeAsync();
+        }
+
+        private void OnInitializationCompleted(object? sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            webView2.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
+        }
+
+        private async Task InitializeAsync()
+        {
+            await webView2.EnsureCoreWebView2Async(null);
+            webView2.CoreWebView2.NavigateToString(Html);
+        }
+
+        private void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (!e.IsSuccess) return;
+            _webViewReady = true;
+            LoadingStarted?.Invoke(this, e);
         }
 
         private const string Html = @"<!DOCTYPE html>
@@ -95,12 +99,6 @@ div#message {
 </body>
 </html>";
 
-        public sealed override string Text
-        {
-            get => base.Text;
-            set => base.Text = value;
-        }
-
         public bool LoadingComplete { get; set; }
 
         public void SetMessage(string text)
@@ -128,7 +126,7 @@ div#message {
                     return;
                 }
 
-                webView21.CoreWebView2.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
+                webView2.CoreWebView2.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
 messageDiv.style.opacity = 0;
 setTimeout(() => {{ messageDiv.textContent = ""{text.Replace("\"", "\\\"")}""; }}, 100);
 setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
@@ -258,11 +256,6 @@ setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
         {
             OnPaint(e);
             ControlRegionAndBorder(panel1, BorderRadius - BorderSize / 2f, e.Graphics, _borderColor);
-        }
-
-        private void FrmInitializing_Activated(object? sender, EventArgs e)
-        {
-            Invalidate();
         }
     }
 
