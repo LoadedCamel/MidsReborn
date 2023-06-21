@@ -44,6 +44,8 @@ namespace Mids_Reborn.Controls
 
         private Font pFont;
 
+        private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
+
         public ctlPopUp()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
@@ -202,9 +204,10 @@ namespace Mids_Reborn.Controls
             myBX.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
-        public void SetPopup(PopUp.PopupData iPopup)
+        public void SetPopup(PopUp.PopupData iPopup, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
         {
             pData = iPopup;
+            _enhUniqueStatus = enhUniqueStatus;
             Draw();
         }
 
@@ -243,58 +246,55 @@ namespace Mids_Reborn.Controls
                 stringFormat.LineAlignment = StringAlignment.Near;
                 stringFormat.Alignment = StringAlignment.Near;
                 stringFormat.Trimming = StringTrimming.None;
-                var num3 = 0;
-                var num4 = pData.Sections.Length - 1;
+
                 var maxPos = -1;
-                for (var i = num3; i <= num4; i++)
+                foreach (var section in pData.Sections)
                 {
-                    if (pData.Sections[i].Content == null)
+                    if (section.Content == null)
                     {
                         continue;
                     }
 
-                    var num5 = 0;
-                    var num6 = pData.Sections[i].Content.Length - 1;
-                    for (var j = num5; j <= num6; j++)
+                    for (var j = 0; j < section.Content.Length; j++)
                     {
                         unchecked
                         {
-                            var layoutRectangle = new RectangleF(pInternalPadding + pData.Sections[i].Content[j].tIndent * Font.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + pData.Sections[i].Content[j].tIndent * Font.Size), myBX.Size.Height);
-                            if (pData.Sections[i].Content[j].HasColumn)
+                            var layoutRectangle = new RectangleF(pInternalPadding + section.Content[j].tIndent * Font.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + section.Content[j].tIndent * Font.Size), myBX.Size.Height);
+                            if (section.Content[j].HasColumn)
                             {
                                 stringFormat.FormatFlags |= StringFormatFlags.NoWrap;
                             }
 
-                            var sizeF = myBX.Graphics.MeasureString(Operators.CompareString(pData.Sections[i].Content[j].Text, "", false) == 0
-                                    ? "Null String"
-                                    : pData.Sections[i].Content[j].Text, pFont, layoutRectangle.Size, stringFormat);
+                            var sizeF = myBX.Graphics.MeasureString(string.IsNullOrWhiteSpace(section.Content[j].Text)
+                                ? "Null String"
+                                : section.Content[j].Text, pFont, layoutRectangle.Size, stringFormat);
 
-                            var contentTextSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].Text, pFont);
-                            if (maxPos == -1) maxPos = contentTextSize.Width;
-                            else maxPos = Math.Max(maxPos, contentTextSize.Width);
-                            var brush = new SolidBrush(pData.Sections[i].Content[j].tColor);
-                            layoutRectangle.Height = sizeF.Height + 1f;
-                            layoutRectangle = new RectangleF(layoutRectangle.X, layoutRectangle.Y - pScroll, layoutRectangle.Width, layoutRectangle.Height);
-                            myBX.Graphics.DrawString(pData.Sections[i].Content[j].Text, pFont, brush, layoutRectangle, stringFormat);
-                            if (pData.Sections[i].Content[j].HasColumn)
+                            var contentTextSize = TextRenderer.MeasureText(myBX.Graphics, section.Content[j].Text, pFont);
+                            maxPos = maxPos == -1
+                                ? contentTextSize.Width
+                                : Math.Max(maxPos, contentTextSize.Width);
+                            var brush = new SolidBrush(section.Content[j].tColor);
+                            layoutRectangle.Height = sizeF.Height + 1;
+                            layoutRectangle = layoutRectangle with {Y = layoutRectangle.Y - pScroll};
+                            myBX.Graphics.DrawString(section.Content[j].Text, pFont, brush, layoutRectangle, stringFormat);
+                            if (section.Content[j].HasColumn)
                             {
                                 if (pRightAlignColumn)
                                 {
                                     stringFormat.Alignment = StringAlignment.Far;
                                 }
 
-
-                                var columnStringSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].TextColumn, pFont);
+                                //var columnStringSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].TextColumn, pFont);
                                 //layoutRectangle.X = (maxPos/2 - columnStringSize.Width) + checked(Width - columnStringSize.Width * 2);
                                 layoutRectangle.X = pInternalPadding + checked(Width - pInternalPadding * 2) * pColumnPosition;
                                 layoutRectangle.Width = Width - (pInternalPadding + layoutRectangle.X);
-                                brush = new SolidBrush(pData.Sections[i].Content[j].tColorColumn);
-                                myBX.Graphics.DrawString(pData.Sections[i].Content[j].TextColumn, pFont, brush, layoutRectangle, stringFormat);
+                                brush = new SolidBrush(section.Content[j].tColorColumn);
+                                myBX.Graphics.DrawString(section.Content[j].TextColumn, pFont, brush, layoutRectangle, stringFormat);
                                 stringFormat.FormatFlags = StringFormatFlags.NoClip;
                             }
 
                             stringFormat.Alignment = StringAlignment.Near;
-                            num += sizeF.Height + 1f;
+                            num += sizeF.Height + 1;
                         }
                     }
 
@@ -305,6 +305,14 @@ namespace Mids_Reborn.Controls
                 lHeight = num;
                 pColumnPosition = num2;
                 pRightAlignColumn = flag;
+
+                if (_enhUniqueStatus != null && _enhUniqueStatus.Value.InMain | _enhUniqueStatus.Value.InAlternate)
+                {
+                    var brush = new SolidBrush(_enhUniqueStatus.Value.InMain ? Color.Cyan : Color.MediumPurple);
+                    var enhUsedText = _enhUniqueStatus.Value.InMain ? "[Used]" : "[In Alternate]";
+                    var enhUsedSize = myBX.Graphics.MeasureString(enhUsedText, pFont);
+                    myBX.Graphics.DrawString(enhUsedText, pFont, brush, new PointF(Width - pInternalPadding - enhUsedSize.Width, pInternalPadding), new StringFormat(StringFormatFlags.NoClip));
+                }
             }
         }
 

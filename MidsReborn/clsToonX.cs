@@ -1856,7 +1856,13 @@ namespace Mids_Reborn
         {
             if (basePowerHistoryIdx < 0)
             {
-                return null;
+                // If root power is not picked in build, get unbuffed powers data from the db directly.
+                var powersList = powers
+                    .Select(e => DatabaseAPI.Database.Power.DefaultIfEmpty(new Power { StaticIndex = -1 }).FirstOrDefault(f => f?.StaticIndex == e.StaticIndex))
+                    .Cast<IPower>()
+                    .ToList();
+
+                return new KeyValuePair<List<IPower>, List<IPower>>(powersList.Clone(), powersList.Clone());
             }
 
             var mathPowers = new List<IPower>();
