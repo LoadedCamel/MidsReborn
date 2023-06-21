@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
 

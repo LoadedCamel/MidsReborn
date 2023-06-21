@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mids_Reborn.Core.Utils
+﻿namespace Mids_Reborn.Core.Utils
 {
     public struct TypeGrade
     {

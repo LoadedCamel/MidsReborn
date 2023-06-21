@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mids_Reborn.Core.ShareSystem.RestModels
+﻿namespace Mids_Reborn.Core.ShareSystem.RestModels
 {
     internal class UpdateModel
     {

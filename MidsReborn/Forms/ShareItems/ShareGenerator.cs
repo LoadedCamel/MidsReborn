@@ -1,5 +1,4 @@
-﻿using System.Security.RightsManagement;
-using Mids_Reborn.Core;
+﻿using Mids_Reborn.Core;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
