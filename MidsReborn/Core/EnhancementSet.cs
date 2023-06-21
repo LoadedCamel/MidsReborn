@@ -213,7 +213,7 @@ namespace Mids_Reborn.Core
             return ret;
         }
 
-        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false)
+        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
         {
             BonusItem[] bonusItemArray;
             bonusItemArray = special ? SpecialBonus : Bonus;
@@ -243,12 +243,19 @@ namespace Mids_Reborn.Core
                     {
                         effectList.Add(empty2);
                     }
+
+                    var fxFilter = effectsFilter ?? new List<Enums.eEffectType>{ Enums.eEffectType.Null, Enums.eEffectType.NullBool, Enums.eEffectType.DesignerStatus };
                     for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
                     {
-                        var flag = false;
-                        for (var index3 = 0; index3 < returnMask.Length; index3++)
+                        if (fxFilter.Contains(DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].EffectType))
                         {
-                            if (index2 == returnMask[index3])
+                            continue;
+                        }
+
+                        var flag = false;
+                        foreach (var m in returnMask)
+                        {
+                            if (index2 == m)
                             {
                                 flag = true;
                             }
