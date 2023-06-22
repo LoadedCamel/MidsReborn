@@ -7343,7 +7343,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             try
             {
                 var importHandle = new ImportFromBuildsave(buildString);
-                //Debug.WriteLine($"GameImport({buildString})");
                 var listPowers = importHandle.Parse();
 
                 if (listPowers == null) return;
