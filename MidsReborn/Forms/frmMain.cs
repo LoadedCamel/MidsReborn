@@ -7348,7 +7348,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
             }
             catch (Exception e)
             {
@@ -7365,7 +7365,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
             }
             catch (Exception e)
             {

@@ -414,6 +414,8 @@ namespace Mids_Reborn
                 "peacebringer_defensive.luminous_aura.quantum_acceleration" => "Peacebringer_Defensive.Luminous_Aura.Quantum_Maneuvers",
                 "dominator_control.illusion_control.invisibility" => "Dominator_Control.Illusion_Control.Superior_Invisibility",
                 "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
+                "blaster_support.tactical_arrow.quickness" => "Blaster_Support.Tactical_Arrow.Gymnastics",
+                "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
                 _ => fullName
             };
         }
