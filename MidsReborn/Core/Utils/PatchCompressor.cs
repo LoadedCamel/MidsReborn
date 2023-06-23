@@ -164,17 +164,17 @@ namespace Mids_Reborn.Core.Utils
             var exclusionList = new List<string>();
             exclusionList = PatchType switch
             {
-                EPatchType.Application => new List<string> { "Patches", "Data", "Updater", "ICSharpCode", ".pdb", "deps.json", "MidsReborn.exe.WebView2" },
+                EPatchType.Application => new List<string> { "Patches", "Data", ".pdb", "deps.json", "MidsReborn.exe.WebView2" },
                 EPatchType.Database => new List<string> { "Patches" },
                 _ => exclusionList
             };
 
             files = PatchType switch
             {
-                EPatchType.Application => Directory.GetFiles(PatchPath, "*.*", SearchOption.AllDirectories)
+                EPatchType.Application => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
-                EPatchType.Database => Directory.GetFiles(PatchPath, "*.*", SearchOption.AllDirectories)
+                EPatchType.Database => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
                 _ => files

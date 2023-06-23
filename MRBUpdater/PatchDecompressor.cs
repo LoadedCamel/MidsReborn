@@ -33,7 +33,8 @@ namespace MRBUpdater
                 {
                     if (!Directory.Exists(patchPath)) Directory.CreateDirectory(patchPath);
                     fileInfo.Directory?.Create();
-                    await File.WriteAllBytesAsync(fileInfo.FullName, patchedFile.Data);
+                    var updFile = $"{fileInfo.FullName}.upd";
+                    await File.WriteAllBytesAsync(updFile, patchedFile.Data);
                     await Task.Delay(50);
                     ProgressUpdate?.Invoke(this, new ProgressEventArgs(patchedFile.FileName, index, decompressedData.Count));
                     Completed?.Invoke(this, index == decompressedData.Count);

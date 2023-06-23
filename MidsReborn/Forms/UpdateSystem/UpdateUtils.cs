@@ -18,7 +18,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public static class UpdateUtils
     {
-        private static readonly List<UpdateObject> Updates = new();
+        private static readonly List<UpdateDetails> Updates = new();
         private static string? _tempFile;
 
         private static void CheckForApp()
@@ -34,7 +34,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
                 var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), MidsContext.AppFileVersion);
                 if (!isAvailable) return;
-                Updates.Add(new UpdateObject(PatchType.Application, MidsContext.AppName, $"{MidsContext.Config.UpdatePath}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{AppContext.BaseDirectory}"));
+                Updates.Add(new UpdateDetails(PatchType.Application, MidsContext.AppName, $"{MidsContext.Config.UpdatePath}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{AppContext.BaseDirectory}"));
             }
             catch
             {
@@ -55,7 +55,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
                 var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), DatabaseAPI.Database.Version);
                 if (!isAvailable) return;
-                Updates.Add(new UpdateObject(PatchType.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{Files.BaseDataPath}"));
+                Updates.Add(new UpdateDetails(PatchType.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{Files.BaseDataPath}"));
             }
             catch
             {

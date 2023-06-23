@@ -35,7 +35,7 @@
         Success
     }
 
-    public struct UpdateObject
+    public struct UpdateDetails
     {
         public PatchType Type { get; set; }
         public string Name { get; set; }
@@ -44,7 +44,7 @@
         public string File { get; set; }
         public string ExtractTo { get; set; }
 
-        public UpdateObject(PatchType type, string name, string uri, string ver, string file, string extract)
+        public UpdateDetails(PatchType type, string name, string uri, string ver, string file, string extract)
         {
             Type = type;
             Name = name;

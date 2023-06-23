@@ -1,4 +1,10 @@
-﻿namespace MRBUpdater
+﻿using System.CodeDom.Compiler;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.CSharp;
+
+namespace MRBUpdater
 {
     internal static class Utils
     {
@@ -16,7 +22,7 @@
 
             public string Version { get; set; }
 
-            public string UpdateFile { get; set; }
+            public string File { get; set; }
 
             public string ExtractTo { get; set; }
         }

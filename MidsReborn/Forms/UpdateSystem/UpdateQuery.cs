@@ -8,10 +8,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public partial class UpdateQuery : Form
     {
-        private List<string> Updates { get; set; } = new();
-        public UpdateQuery(List<UpdateObject> updates)
+        private List<string> Updates { get; set; }
+        public UpdateQuery(List<UpdateDetails> updates)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            Updates = new List<string>();
             foreach (var update in updates)
             {
                 switch (update.Type)
