@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core
 {
@@ -58,14 +59,9 @@ namespace Mids_Reborn.Core
 
         public static string SelectDataFileSave(string iDataFile, string? iPath = "")
         {
-            var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+            var filePath = Path.Combine((!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData) ?? throw new InvalidOperationException(), iDataFile);
             if (!Debugger.IsAttached) return filePath;
-            filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..", RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
-            if (!Directory.Exists(FileIO.StripFileName(filePath)))
-            {
-                Directory.CreateDirectory(FileIO.StripFileName(filePath));
-            }
-
+            filePath = Path.Combine(Helpers.GetPathInDebug(), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile);
             return filePath;
         }
 

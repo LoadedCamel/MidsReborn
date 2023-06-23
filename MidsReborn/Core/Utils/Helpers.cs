@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -223,6 +225,18 @@ namespace Mids_Reborn.Core.Utils
             stats.Add(!infoGraphic ? "Debuff Resistance" : "Debuff Resist", statList);
 
             return stats;
+        }
+
+        /// <summary>
+        /// Gets the project path
+        /// Note: When calling do not pass anything to method
+        /// </summary>
+        internal static string GetPathInDebug([CallerFilePath] string? callPath = null)
+        {
+            var path = callPath ?? string.Empty;
+            var fileInfo = new FileInfo(path);
+            var toRem = Path.Combine(fileInfo.Directory!.Name, fileInfo.Name);
+            return path.Replace(toRem, string.Empty);
         }
     }
 }
