@@ -85,11 +85,11 @@ namespace MRBUpdater
             await Task.Delay(50);
             if (e.ProgressPercentage > 99)
             {
-                ctlProgressBar1.Value = e.ProgressPercentage - 1;
+                progressBar.Value = e.ProgressPercentage - 1;
             }
             else
             {
-                ctlProgressBar1.Value = e.ProgressPercentage;
+                progressBar.Value = e.ProgressPercentage;
             }
         }
 
@@ -113,7 +113,7 @@ namespace MRBUpdater
                 while (_installQueue.Count > 0)
                 {
                     _installDetails = _installQueue.Dequeue();
-                    ctlProgressBar1.Value = 0;
+                    progressBar.Value = 0;
                     lblStatus.Text = @"Installing Update(s)...";
                     _patchDecompressor = new PatchDecompressor();
                     _decompressedData = PatchDecompressor.DecompressData(_installDetails.File);
@@ -152,12 +152,12 @@ namespace MRBUpdater
         {
             lblFileName.Text = e.Name;
             await Task.Delay(250);
-            ctlProgressBar1.Value = e.PercentComplete;
+            progressBar.Value = e.PercentComplete;
         }
 
         private async Task UpdaterFinished()
         {
-            ctlProgressBar1.Value = 100;
+            progressBar.Value = 100;
             lblStatus.Text = @"Update Complete!";
             File.Delete(TempFile);
             await Task.Delay(250);
