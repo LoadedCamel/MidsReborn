@@ -56,6 +56,13 @@ namespace Mids_Reborn.Core
             Startup
         }
 
+        public enum Modes
+        {
+            User,
+            DbAdmin,
+            AppAdmin
+        }
+
         private const string OverrideNames = "Mids Reborn Comparison Overrides";
 
         public bool FirstRun { get; set; }
@@ -86,6 +93,7 @@ namespace Mids_Reborn.Core
             WarnOnOldDbMbd = true;
             DimWindowStyleColors = true;
             CloseEnhSelectPopupByMove = true;
+            Mode = Modes.User;
             InitializeComponent();
         }
 
@@ -156,8 +164,22 @@ namespace Mids_Reborn.Core
         public bool ShoppingListIncludesRecipes { get; set; }
         public bool ExportChunkOnly { get; set; }
         public bool LongExport { get; set; }
-        public bool MasterMode { get; set; }
-        public bool IsLcAdmin { get; set; }
+
+        internal bool MasterMode
+        {
+            get
+            {
+                var mode = Mode switch
+                {
+                    Modes.User => false,
+                    Modes.DbAdmin => true,
+                    Modes.AppAdmin => true,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return mode;
+            }
+        }
+        public Modes Mode { get; set; }
         public bool ShrinkFrmSets { get; set; }
         public bool WarnOnOldAppMbd { get; set; }
         public bool WarnOnOldDbMbd { get; set; }
@@ -195,6 +217,7 @@ namespace Mids_Reborn.Core
                     {
                         if (value != null) Directory.CreateDirectory(value);
                     }
+
                     _savePath = value;
                 }
                 else
@@ -203,6 +226,7 @@ namespace Mids_Reborn.Core
                 }
             }
         }
+
         public string? UpdatePath { get; private set; }
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
@@ -253,13 +277,16 @@ namespace Mids_Reborn.Core
                 Instance.InitializeComponent();
                 return;
             }
+
             Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
             Instance.InitializeComponent();
         }
 
         private void InitializeComponent()
         {
-            UpdatePath = Debugger.IsAttached ? "https://midsreborn.com/mids_updates/app-test/update_manifest.xml" : "https://midsreborn.com/mids_updates/app/update_manifest.xml";
+            UpdatePath = Debugger.IsAttached
+                ? "https://midsreborn.com/mids_updates/app-test/update_manifest.xml"
+                : "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
             if (string.IsNullOrWhiteSpace(DataPath))
             {
@@ -298,7 +325,7 @@ namespace Mids_Reborn.Core
 
             return fntSize;
         }
-        
+
         private void SaveRaw(ISerialize serializer, string iFilename)
         {
             SaveRawMhd(serializer, this, iFilename, null);
@@ -315,6 +342,7 @@ namespace Mids_Reborn.Core
             {
                 File.Create(Files.FNameJsonConfig);
             }
+
             var serializer = Serializer.GetSerializer();
             Save(serializer, Files.FNameJsonConfig);
             SaveOverrides(serializer);
@@ -324,18 +352,22 @@ namespace Mids_Reborn.Core
         {
             if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", "Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...",
+                    "Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CompOverride = Array.Empty<Enums.CompOverride>();
                 SaveOverrides(Serializer.GetSerializer());
 
                 return;
             }
 
-            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath),
+                FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", "Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    $"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.",
+                    "Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }
@@ -352,7 +384,8 @@ namespace Mids_Reborn.Core
         public static RawSaveResult? SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
         {
             var rootDir = Path.GetDirectoryName(fn);
-            var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
+            var targetFile = Path.Combine(rootDir ?? ".",
+                $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
             if (!File.Exists(targetFile)) File.WriteAllText(targetFile, string.Empty);
 
             var rng = RandomNumberGenerator.Create();
@@ -395,7 +428,7 @@ namespace Mids_Reborn.Core
                 MessageBox.Show(
                     $"Failed to save to {serializer.Extension.ToUpperInvariant()}: {ex.Message}\r\n\r\nFile: {targetFile}\r\nTemp file: {tempFile}",
                     "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
                 return null;
             }
 

@@ -18,6 +18,8 @@ namespace Mids_Reborn.Core.Utils
 {
     public class PatchCompressor
     {
+        public delegate void ProgressChangedHandler(object? sender, ProgressEventArgs e);
+        public event ProgressChangedHandler? ProgressChanged;
         private PatchCompressor(EPatchType patchType)
         {
             PatchType = patchType;
@@ -203,14 +205,14 @@ namespace Mids_Reborn.Core.Utils
             CleanPrevious();
             var completionSource = new TaskCompletionSource<bool>();
             var hashedFiles = CompileList();
-            var compressedData = CompressData(hashedFiles);
+            var compressedData = await CompressedFileData(hashedFiles);
             if (compressedData == null) 
             {
                 completionSource.TrySetResult(false);
             }
             else
             {
-                var generated = GenerateFile(compressedData);
+                var generated = await GenerateCompressedFile(compressedData);
                 if (generated) GenerateManifest();
                 completionSource.TrySetResult(generated);
                 return await completionSource.Task;
@@ -219,48 +221,66 @@ namespace Mids_Reborn.Core.Utils
             return await completionSource.Task;
         }
 
-        private static byte[]? CompressData(List<FileData> hashedFiles)
+        private async Task<byte[]?> CompressedFileData(List<FileData> hashedFiles)
         {
             byte[]? outData;
-            MemoryStream patchStream;
-            BinaryWriter writer;
-            try
-            {
-                patchStream = new MemoryStream();
-                writer = new BinaryWriter(patchStream);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Failed to create patch container: " + ex.Message);
-                return null;
-            }
+            await using var patchStream = new MemoryStream();
+            await using var writer = new BinaryWriter(patchStream);
 
             try
             {
                 writer.Write("Mids Reborn Patch Data");
                 writer.Write(hashedFiles.Count);
-                foreach (var file in hashedFiles)
+                for (var index = 0; index < hashedFiles.Count; index++)
                 {
+                    var file = hashedFiles[index];
                     writer.Write(file.Data.Length);
                     writer.Write(file.FileName);
-                    Debug.WriteLine($"Adding {file.FileName} to patch");
                     writer.Write(file.Path);
                     writer.Write(file.Data);
+                    await Task.Delay(50);
+                    ProgressChanged?.Invoke(this, new ProgressEventArgs($"Adding To Patch Container: {file.FileName}", index,hashedFiles.Count));
                 }
 
-                writer.Close();
                 outData = patchStream.ToArray();
-                patchStream.Close();
             }
             catch (Exception e)
             {
-                writer.Close();
-                patchStream.Close();
-                MessageBox.Show($@"Message: {e.Message}\r\nTrace: {e.StackTrace}");
+                MessageBox.Show($"Message: {e.Message}\r\n\r\nTrace: {e.StackTrace}");
                 return null;
             }
 
             return outData;
+        }
+
+        private async Task<bool> GenerateCompressedFile(byte[] byteArray)
+        {
+            await using var fileStream = new ProgressFileStream(PatchFile, FileMode.Create);
+            await using var compressionStream = new DeflaterOutputStream(fileStream, new Deflater(9));
+            const int chunkSize = 1024;
+            try
+            {
+                ProgressChanged?.Invoke(this, new ProgressEventArgs($"Generating Patch From Container: {PatchName}", 0, byteArray.Length));
+                await Task.Delay(50);
+                for (var index = 0; index < byteArray.Length; index += chunkSize)
+                {
+                    var chunk = Math.Min(chunkSize, byteArray.Length - index);
+                    await fileStream.WriteAsync(byteArray, index, chunk);
+                    ProgressChanged?.Invoke(this, new ProgressEventArgs($"Generating Patch From Container: {PatchName}", fileStream.Progress, byteArray.Length));
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(@"Patch generation failed: " + e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        private async void FileStreamOnProgressChanged(object sender, ProgressEventArgs e)
+        {
+            await Task.Delay(50);
+            ProgressChanged?.Invoke(this, new ProgressEventArgs($"Generating Patch From Container: {PatchName}", e.Processed, e.Total));
         }
 
         private void CleanPrevious()
@@ -286,38 +306,6 @@ namespace Mids_Reborn.Core.Utils
             writer.WriteStartElement("file");
             writer.WriteString(PatchName);
             writer.WriteEndElement();
-        }
-
-        private bool GenerateFile(byte[] byteArray)
-        {
-            FileStream fileStream;
-            DeflaterOutputStream outputStream;
-            try
-            {
-                fileStream = new FileStream(PatchFile, FileMode.Create);
-                outputStream = new DeflaterOutputStream(fileStream, new Deflater(9));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(@"Patch generation failed: " + e.Message);
-                return false;
-            }
-
-            try
-            {
-                outputStream.Write(byteArray, 0, byteArray.Length);
-                outputStream.Close();
-                fileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                outputStream.Close();
-                fileStream.Close();
-                MessageBox.Show($@"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                return false;
-            }
-
-            return true;
         }
     }
 }

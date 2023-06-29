@@ -1186,7 +1186,7 @@ namespace Mids_Reborn.Forms
             return num == 0;
         }
 
-        private bool ComboCheckAT(Archetype[] playableClasses)
+        private bool ComboCheckAT(Archetype?[] playableClasses)
         {
             var cbtAT = CbtAT.Value;
             if (cbtAT.Count != playableClasses.Length) return true;
@@ -2417,33 +2417,31 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void frmMain_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)) && !(e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.L)))
+            if (ModifierKeys == (Keys.Control | Keys.Alt | Keys.Shift))
             {
-                return;
-            }
-
-            if (e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.A) && !MidsContext.Config.IsLcAdmin)
-            {
-                MidsContext.Config.MasterMode = MidsContext.Config.MasterMode switch
+                MidsContext.Config.Mode = e.KeyCode switch
                 {
-                    false => true,
-                    true => false
+                    Keys.A => MidsContext.Config.Mode switch
+                    {
+                        ConfigData.Modes.User => ConfigData.Modes.DbAdmin,
+                        ConfigData.Modes.AppAdmin => ConfigData.Modes.DbAdmin,
+                        ConfigData.Modes.DbAdmin => ConfigData.Modes.User,
+                        _ => throw new ArgumentOutOfRangeException(nameof(ConfigData.Modes))
+                    },
+                    Keys.S => MidsContext.Config.Mode switch
+                    {
+                        ConfigData.Modes.User => ConfigData.Modes.AppAdmin,
+                        ConfigData.Modes.DbAdmin => ConfigData.Modes.AppAdmin,
+                        ConfigData.Modes.AppAdmin => ConfigData.Modes.User,
+                        _ => throw new ArgumentOutOfRangeException(nameof(ConfigData.Modes))
+                    },
+                    _ => MidsContext.Config.Mode
                 };
             }
 
-            if (e.Control & e.Alt & e.Shift & (e.KeyCode == Keys.L))
-            {
-                MidsContext.Config.MasterMode = MidsContext.Config.MasterMode switch
-                {
-                    false => true,
-                    true => false
-                };
-                MidsContext.Config.IsLcAdmin = MidsContext.Config.MasterMode;
-            }
-            
             ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
-            SetTitleBar(MainModule.MidsController.Toon.IsHero());
+            SetTitleBar(MainModule.MidsController.Toon!.IsHero());
         }
 
         private void frmMain_MouseWheel(object? sender, MouseEventArgs e)
@@ -2572,7 +2570,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return -1;
         }
 
-        private bool GetPlayableClasses(Archetype a)
+        private bool GetPlayableClasses(Archetype? a)
         {
             return a.Playable;
         }
@@ -5556,12 +5554,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str2 = str2.Replace(nameof(hero), "Villain");
             }
 
-            var adminStatus = MidsContext.Config.MasterMode
-                ? MidsContext.Config.IsLcAdmin
-                    ? "LC Admin"
-                    : "DB Admin"
-                : "";
-            Text = $@"{str2} {(adminStatus != "" ? $"({adminStatus}) " : "")}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+            var userMode = MidsContext.Config.Mode switch
+            {
+                ConfigData.Modes.User => "",
+                ConfigData.Modes.DbAdmin => "(DB Admin) ",
+                ConfigData.Modes.AppAdmin => "(App Admin) ",
+                _ => throw new ArgumentOutOfRangeException(nameof(MidsContext.Config.Mode))
+            };
+
+            Text = $@"{str2} {userMode}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
         }
 
         public void UpdateTitle()

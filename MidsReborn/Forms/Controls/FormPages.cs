@@ -42,12 +42,21 @@ namespace Mids_Reborn.Forms.Controls
         {
             InitializeComponent();
             BorderStyle = BorderStyle.FixedSingle;
-            Pages = new ObservableCollection<Page>();
+            Resize += OnResize;
+            Pages = new ObservableCollection<Page?>();
             Pages.CollectionChanged += PagesOnCollectionChanged;
             SelectedPageChanged += OnSelectedPageChanged;
         }
 
-        private void OnSelectedPageChanged(object sender, int pageIndex)
+        private void OnResize(object? sender, EventArgs e)
+        {
+            foreach (var page in Pages)
+            {
+                if (page != null) page.Size = ClientRectangle.Size;
+            }
+        }
+
+        private void OnSelectedPageChanged(object? sender, int pageIndex)
         {
             for (var index = 0; index < Pages.Count; index++)
             {
@@ -57,7 +66,7 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private void PagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void PagesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
