@@ -266,7 +266,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void frmEditPower_CancelClose(object sender, FormClosingEventArgs e)
+        private void frmEditPower_CancelClose(object? sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
         }
@@ -330,15 +330,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     var ps = myPower.GetPowerSet()?.FullName ?? "---";
                     var inherentSlotPowers1 = DatabaseAPI.Database.Power
                         .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } && e.DisplayLocation == myPower.DisplayLocation && e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName == ps)
-                        .OrderBy(e => e.DisplayName)
-                        .Select(e => $"- {e.DisplayName}")
+                        .OrderBy(e => e?.DisplayName)
+                        .Select(e => $"- {e?.DisplayName}")
                         .ToList();
 
 
                     var inherentSlotPowers2 = DatabaseAPI.Database.Power
                         .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } && e.DisplayLocation == myPower.DisplayLocation && e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName != ps)
-                        .OrderBy(e => e.DisplayName)
-                        .Select(e => $"- {e.DisplayName} ({e.GetPowerSet()?.FullName ?? "No powerset"})")
+                        .OrderBy(e => e?.DisplayName)
+                        .Select(e => $"- {e?.DisplayName} ({e?.GetPowerSet()?.FullName ?? "No powerset"})")
                         .ToList();
 
                     if (inherentSlotPowers1.Count > 0 | inherentSlotPowers2.Count > 0)

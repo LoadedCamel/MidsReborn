@@ -282,7 +282,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 power.BaseRechargeTime = power.RechargeTime;
             }
 
-            Array.Sort(DatabaseAPI.Database.Power);
+            //Array.Sort(DatabaseAPI.Database.Power);
             var serializer = Serializer.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.MatchAllIDs();
