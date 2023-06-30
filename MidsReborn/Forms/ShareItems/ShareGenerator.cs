@@ -1,4 +1,5 @@
-﻿using Mids_Reborn.Core;
+﻿using System.Linq;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
@@ -12,7 +13,18 @@ namespace Mids_Reborn.Forms.ShareItems
 {
     internal static class ShareGenerator
     {
-        internal static async void ShareBuild(bool useAltGfx = false, bool bbCode = false)
+        internal static void ShareBuildDataChunk()
+        {
+            var buildData = CharacterBuildFile.GenerateShareData();
+            var chunks = buildData.Chunk(72);
+            var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{chunk}\n");
+            var data = new DataObject(dataChunk);
+            Clipboard.SetDataObject(data, true);
+            var messageBox = new MessageBoxEx("The data chunk has been copied to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+            messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+        }
+
+        internal static async void ShareBuildLinkImage(bool useAltGfx = false, bool bbCode = false)
         {
             var buildData = CharacterBuildFile.GenerateShareData();
             var imageData = InfoGraphic.GenerateImageData(useAltGfx);
@@ -21,16 +33,18 @@ namespace Mids_Reborn.Forms.ShareItems
             var submission = new SubmissionModel(id, buildData, imageData);
             var subResponse = await ShareClient.Submit(submission);
             if (subResponse == null) return;
-            var dataObject = new DataObject();
+            var data = new DataObject();
             switch (bbCode)
             {
                 case false:
+                    data.SetData(DataFormats.UnicodeText, $"{subResponse.ImageUrl}\n{subResponse.BuildUrl}");
                     break;
                 case true:
-                    var data = new DataObject();
                     data.SetData(DataFormats.UnicodeText, $"[img]{subResponse.ImageUrl}[/img]\n[url=\"{subResponse.BuildUrl}\"]View This Build In MRB[/url]");
                     break;
             }
+
+            Clipboard.SetDataObject(data, true);
             var messageBox = new MessageBoxEx("Submission Complete, the links have been copied to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
@@ -60,7 +74,7 @@ namespace Mids_Reborn.Forms.ShareItems
             var dataObject = new DataObject();
             dataObject.SetData(DataFormats.StringFormat, $"{updateResponse.PageUrl}");
             Clipboard.SetDataObject(dataObject, true);
-            var msgBox = new MessageBoxEx("Your mobile friendly link has been added to your clipboard.\r\nYou may now paste it on the forum of your choice.", MessageBoxEx.MessageBoxButtons.Okay);
+            var msgBox = new MessageBoxEx("Your mobile friendly link has been added to your clipboard.\r\nYou may now paste it on the medium of your choice.", MessageBoxEx.MessageBoxButtons.Okay);
             msgBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
     }
