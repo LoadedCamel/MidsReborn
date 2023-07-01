@@ -1,11 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.Zip;
+using System.Collections;
+using System.Linq;
+using System.Threading;
 
 namespace Mids_Reborn.Core.Utils
 {
+    public delegate void CompressionProgressEventHandler(ProgressEventArgs e);
+    public delegate void StreamProgressEventHandler(ProgressEventArgs e);
+
     internal static class Compression
     {
+        public static event CompressionProgressEventHandler? CompressionProgress;
+        public static event StreamProgressEventHandler? StreamProgress;
+
+        public static async Task CompressToArchive(string filePath, IDictionary<string, byte[]> fileDictionary, CancellationToken cancellationToken = default)
+        {
+            const int chunkSize = 1024;
+            var totalBytes = fileDictionary.Values.Sum(byteArray => byteArray.Length);
+            await using var fileStream = new ProgressFileStream(filePath, FileMode.Create);
+            await using var compressionStream = new ProgressZipStream(fileStream);
+            compressionStream.SetLevel(9);
+            compressionStream.UseZip64 = UseZip64.Dynamic;
+            foreach (var vp in fileDictionary)
+            {
+                var zipEntry = new ZipEntry(vp.Key)
+                {
+                    DateTime = DateTime.UtcNow,
+                    Size = vp.Value.Length
+                };
+                CompressionProgress?.Invoke(new ProgressEventArgs(0, vp.Value.Length));
+                await compressionStream.PutNextEntryAsync(zipEntry, cancellationToken);
+                for (var index = 0; index < vp.Value.Length; index += chunkSize)
+                {
+                    var chunk = Math.Min(chunkSize, vp.Value.Length - index);
+                    await compressionStream.WriteAsync(vp.Value, index, chunk, cancellationToken);
+                    CompressionProgress?.Invoke(new ProgressEventArgs(compressionStream.Progress, vp.Value.Length));
+                    StreamProgress?.Invoke(new ProgressEventArgs(fileStream.Progress, totalBytes));
+                }
+            }
+        }
+
         public static byte[] Compress(byte[] sourceBytes)
         {
             using var stream = new MemoryStream();

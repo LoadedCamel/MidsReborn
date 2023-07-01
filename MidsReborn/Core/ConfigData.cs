@@ -76,7 +76,7 @@ namespace Mids_Reborn.Core
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public bool CoDEffectFormat = false;
 
-        public ConfigData()
+        private ConfigData()
         {
             AutomaticUpdates = new AutoUpdate(AutoUpdType.Delay);
             DamageMath.Calculate = EDamageMath.Average;
@@ -242,7 +242,7 @@ namespace Mids_Reborn.Core
             get
             {
                 var configData = Instance;
-                return configData;
+                return configData!;
             }
         }
 

@@ -265,7 +265,7 @@ namespace Mids_Reborn.Core.Utils
                 for (var index = 0; index < byteArray.Length; index += chunkSize)
                 {
                     var chunk = Math.Min(chunkSize, byteArray.Length - index);
-                    await fileStream.WriteAsync(byteArray, index, chunk);
+                    await compressionStream.WriteAsync(byteArray, index, chunk);
                     ProgressChanged?.Invoke(this, new ProgressEventArgs($"Generating Patch From Container: {PatchName}", fileStream.Progress, byteArray.Length));
                 }
             }
