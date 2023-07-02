@@ -1493,6 +1493,12 @@ namespace Mids_Reborn.Forms
                 MidsContext.Config.LastFileName = fileName;
                 LastFileName = fileName;
             }
+            else
+            {
+                MidsContext.Config.LastFileName = string.Empty;
+                LastFileName = string.Empty;
+                return false;
+            }
 
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
@@ -6237,7 +6243,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ForumExport2_Click(object? sender, EventArgs e)
         {
-            using var fe = new frmForumExport();
+            using var fe = new  frmForumExport();
             fe.ShowDialog(this);
         }
 

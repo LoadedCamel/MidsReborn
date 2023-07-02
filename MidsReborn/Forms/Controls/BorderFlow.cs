@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -70,20 +71,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Border Properties
 
-        public class BorderTypeConverter<T> : TypeConverter
-        {
-            public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
-            {
-                return true;
-            }
-
-            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
-            {
-                return TypeDescriptor.GetProperties(typeof(T));
-            }
-        }
-
-        [TypeConverter(typeof(BorderTypeConverter<FlowBorder>))]
+        [TypeConverter(typeof(MrbTypeConverter<FlowBorder>))]
         internal class FlowBorder : INotifyPropertyChanged
         {
             public enum BorderToDraw

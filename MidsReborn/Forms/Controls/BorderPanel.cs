@@ -13,7 +13,7 @@ namespace Mids_Reborn.Forms.Controls
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Bindable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        internal new BorderStyle BorderStyle { get; set; }
+        public new FormBorderStyle BorderStyle { get; set; }
 
         [Description("Sets the border for the control.")]
         [Category("Appearance")]
