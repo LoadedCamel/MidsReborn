@@ -33,323 +33,342 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCompare));
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblKeyColor1 = new System.Windows.Forms.Label();
-            this.cbSet1 = new System.Windows.Forms.ComboBox();
-            this.cbType1 = new System.Windows.Forms.ComboBox();
-            this.cbAT1 = new System.Windows.Forms.ComboBox();
-            this.GroupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblKeyColor2 = new System.Windows.Forms.Label();
-            this.cbSet2 = new System.Windows.Forms.ComboBox();
-            this.cbType2 = new System.Windows.Forms.ComboBox();
-            this.cbAT2 = new System.Windows.Forms.ComboBox();
-            this.lblScale = new System.Windows.Forms.Label();
-            this.tbScaleX = new System.Windows.Forms.TrackBar();
-            this.chkMatching = new System.Windows.Forms.CheckBox();
-            this.tTip = new System.Windows.Forms.ToolTip(this.components);
-            this.btnTweakMatch = new System.Windows.Forms.Button();
-            this.chkOnTop = new Mids_Reborn.Controls.ImageButton();
-            this.btnClose = new Mids_Reborn.Controls.ImageButton();
-            this.Graph = new Mids_Reborn.Controls.CtlMultiGraph();
-            this.GroupBox4 = new System.Windows.Forms.GroupBox();
-            this.lstDisplay = new System.Windows.Forms.ListBox();
-            this.GroupBox1.SuspendLayout();
-            this.GroupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
-            this.GroupBox4.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(frmCompare));
+            GroupBox1 = new System.Windows.Forms.GroupBox();
+            lblKeyColor1 = new System.Windows.Forms.Label();
+            cbSet1 = new System.Windows.Forms.ComboBox();
+            cbType1 = new System.Windows.Forms.ComboBox();
+            cbAT1 = new System.Windows.Forms.ComboBox();
+            GroupBox2 = new System.Windows.Forms.GroupBox();
+            lblKeyColor2 = new System.Windows.Forms.Label();
+            cbSet2 = new System.Windows.Forms.ComboBox();
+            cbType2 = new System.Windows.Forms.ComboBox();
+            cbAT2 = new System.Windows.Forms.ComboBox();
+            lblScale = new System.Windows.Forms.Label();
+            tbScaleX = new System.Windows.Forms.TrackBar();
+            chkMatching = new System.Windows.Forms.CheckBox();
+            tTip = new System.Windows.Forms.ToolTip(components);
+            btnTweakMatch = new System.Windows.Forms.Button();
+            Graph = new CtlMultiGraph();
+            GroupBox4 = new System.Windows.Forms.GroupBox();
+            lstDisplay = new System.Windows.Forms.ListBox();
+            ibExKeepOnTop = new Controls.ImageButtonEx();
+            ibExClose = new Controls.ImageButtonEx();
+            GroupBox1.SuspendLayout();
+            GroupBox2.SuspendLayout();
+            ((ISupportInitialize)tbScaleX).BeginInit();
+            GroupBox4.SuspendLayout();
+            SuspendLayout();
             // 
             // GroupBox1
             // 
-            this.GroupBox1.Controls.Add(this.lblKeyColor1);
-            this.GroupBox1.Controls.Add(this.cbSet1);
-            this.GroupBox1.Controls.Add(this.cbType1);
-            this.GroupBox1.Controls.Add(this.cbAT1);
-            this.GroupBox1.ForeColor = System.Drawing.Color.White;
-            this.GroupBox1.Location = new System.Drawing.Point(4, 4);
-            this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(144, 116);
-            this.GroupBox1.TabIndex = 2;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Powerset 1:";
+            GroupBox1.Controls.Add(lblKeyColor1);
+            GroupBox1.Controls.Add(cbSet1);
+            GroupBox1.Controls.Add(cbType1);
+            GroupBox1.Controls.Add(cbAT1);
+            GroupBox1.ForeColor = System.Drawing.Color.White;
+            GroupBox1.Location = new System.Drawing.Point(4, 4);
+            GroupBox1.Name = "GroupBox1";
+            GroupBox1.Size = new System.Drawing.Size(144, 116);
+            GroupBox1.TabIndex = 2;
+            GroupBox1.TabStop = false;
+            GroupBox1.Text = "Powerset 1:";
             // 
             // lblKeyColor1
             // 
-            this.lblKeyColor1.BackColor = System.Drawing.Color.Blue;
-            this.lblKeyColor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKeyColor1.Location = new System.Drawing.Point(8, 20);
-            this.lblKeyColor1.Name = "lblKeyColor1";
-            this.lblKeyColor1.Size = new System.Drawing.Size(132, 16);
-            this.lblKeyColor1.TabIndex = 3;
+            lblKeyColor1.BackColor = System.Drawing.Color.Blue;
+            lblKeyColor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblKeyColor1.Location = new System.Drawing.Point(8, 20);
+            lblKeyColor1.Name = "lblKeyColor1";
+            lblKeyColor1.Size = new System.Drawing.Size(132, 16);
+            lblKeyColor1.TabIndex = 3;
             // 
             // cbSet1
             // 
-            this.cbSet1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSet1.Location = new System.Drawing.Point(8, 88);
-            this.cbSet1.Name = "cbSet1";
-            this.cbSet1.Size = new System.Drawing.Size(132, 22);
-            this.cbSet1.TabIndex = 2;
-            this.cbSet1.SelectedIndexChanged += new System.EventHandler(this.cbSet1_SelectedIndexChanged);
+            cbSet1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbSet1.Location = new System.Drawing.Point(8, 88);
+            cbSet1.Name = "cbSet1";
+            cbSet1.Size = new System.Drawing.Size(132, 21);
+            cbSet1.TabIndex = 2;
+            cbSet1.SelectedIndexChanged += cbSet1_SelectedIndexChanged;
             // 
             // cbType1
             // 
-            this.cbType1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbType1.Location = new System.Drawing.Point(8, 64);
-            this.cbType1.Name = "cbType1";
-            this.cbType1.Size = new System.Drawing.Size(132, 22);
-            this.cbType1.TabIndex = 1;
-            this.cbType1.SelectedIndexChanged += new System.EventHandler(this.cbType1_SelectedIndexChanged);
+            cbType1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbType1.Location = new System.Drawing.Point(8, 64);
+            cbType1.Name = "cbType1";
+            cbType1.Size = new System.Drawing.Size(132, 21);
+            cbType1.TabIndex = 1;
+            cbType1.SelectedIndexChanged += cbType1_SelectedIndexChanged;
             // 
             // cbAT1
             // 
-            this.cbAT1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAT1.Location = new System.Drawing.Point(8, 40);
-            this.cbAT1.Name = "cbAT1";
-            this.cbAT1.Size = new System.Drawing.Size(132, 22);
-            this.cbAT1.TabIndex = 0;
-            this.cbAT1.SelectedIndexChanged += new System.EventHandler(this.cbAT1_SelectedIndexChanged);
+            cbAT1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbAT1.Location = new System.Drawing.Point(8, 40);
+            cbAT1.Name = "cbAT1";
+            cbAT1.Size = new System.Drawing.Size(132, 21);
+            cbAT1.TabIndex = 0;
+            cbAT1.SelectedIndexChanged += cbAT1_SelectedIndexChanged;
             // 
             // GroupBox2
             // 
-            this.GroupBox2.Controls.Add(this.lblKeyColor2);
-            this.GroupBox2.Controls.Add(this.cbSet2);
-            this.GroupBox2.Controls.Add(this.cbType2);
-            this.GroupBox2.Controls.Add(this.cbAT2);
-            this.GroupBox2.ForeColor = System.Drawing.Color.White;
-            this.GroupBox2.Location = new System.Drawing.Point(4, 126);
-            this.GroupBox2.Name = "GroupBox2";
-            this.GroupBox2.Size = new System.Drawing.Size(144, 116);
-            this.GroupBox2.TabIndex = 3;
-            this.GroupBox2.TabStop = false;
-            this.GroupBox2.Text = "Powerset 2:";
+            GroupBox2.Controls.Add(lblKeyColor2);
+            GroupBox2.Controls.Add(cbSet2);
+            GroupBox2.Controls.Add(cbType2);
+            GroupBox2.Controls.Add(cbAT2);
+            GroupBox2.ForeColor = System.Drawing.Color.White;
+            GroupBox2.Location = new System.Drawing.Point(4, 126);
+            GroupBox2.Name = "GroupBox2";
+            GroupBox2.Size = new System.Drawing.Size(144, 116);
+            GroupBox2.TabIndex = 3;
+            GroupBox2.TabStop = false;
+            GroupBox2.Text = "Powerset 2:";
             // 
             // lblKeyColor2
             // 
-            this.lblKeyColor2.BackColor = System.Drawing.Color.Yellow;
-            this.lblKeyColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKeyColor2.Location = new System.Drawing.Point(8, 20);
-            this.lblKeyColor2.Name = "lblKeyColor2";
-            this.lblKeyColor2.Size = new System.Drawing.Size(132, 16);
-            this.lblKeyColor2.TabIndex = 3;
+            lblKeyColor2.BackColor = System.Drawing.Color.Yellow;
+            lblKeyColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblKeyColor2.Location = new System.Drawing.Point(8, 20);
+            lblKeyColor2.Name = "lblKeyColor2";
+            lblKeyColor2.Size = new System.Drawing.Size(132, 16);
+            lblKeyColor2.TabIndex = 3;
             // 
             // cbSet2
             // 
-            this.cbSet2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSet2.Location = new System.Drawing.Point(8, 88);
-            this.cbSet2.Name = "cbSet2";
-            this.cbSet2.Size = new System.Drawing.Size(132, 22);
-            this.cbSet2.TabIndex = 2;
-            this.cbSet2.SelectedIndexChanged += new System.EventHandler(this.cbSet2_SelectedIndexChanged);
+            cbSet2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbSet2.Location = new System.Drawing.Point(8, 88);
+            cbSet2.Name = "cbSet2";
+            cbSet2.Size = new System.Drawing.Size(132, 21);
+            cbSet2.TabIndex = 2;
+            cbSet2.SelectedIndexChanged += cbSet2_SelectedIndexChanged;
             // 
             // cbType2
             // 
-            this.cbType2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbType2.Location = new System.Drawing.Point(8, 64);
-            this.cbType2.Name = "cbType2";
-            this.cbType2.Size = new System.Drawing.Size(132, 22);
-            this.cbType2.TabIndex = 1;
-            this.cbType2.SelectedIndexChanged += new System.EventHandler(this.cbType2_SelectedIndexChanged);
+            cbType2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbType2.Location = new System.Drawing.Point(8, 64);
+            cbType2.Name = "cbType2";
+            cbType2.Size = new System.Drawing.Size(132, 21);
+            cbType2.TabIndex = 1;
+            cbType2.SelectedIndexChanged += cbType2_SelectedIndexChanged;
             // 
             // cbAT2
             // 
-            this.cbAT2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAT2.Location = new System.Drawing.Point(8, 40);
-            this.cbAT2.Name = "cbAT2";
-            this.cbAT2.Size = new System.Drawing.Size(132, 22);
-            this.cbAT2.TabIndex = 0;
-            this.cbAT2.SelectedIndexChanged += new System.EventHandler(this.cbAT2_SelectedIndexChanged);
+            cbAT2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbAT2.Location = new System.Drawing.Point(8, 40);
+            cbAT2.Name = "cbAT2";
+            cbAT2.Size = new System.Drawing.Size(132, 21);
+            cbAT2.TabIndex = 0;
+            cbAT2.SelectedIndexChanged += cbAT2_SelectedIndexChanged;
             // 
             // lblScale
             // 
-            this.lblScale.Location = new System.Drawing.Point(312, 500);
-            this.lblScale.Name = "lblScale";
-            this.lblScale.Size = new System.Drawing.Size(108, 20);
-            this.lblScale.TabIndex = 9;
-            this.lblScale.Text = "Scale: 100%";
-            this.lblScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblScale.Location = new System.Drawing.Point(312, 500);
+            lblScale.Name = "lblScale";
+            lblScale.Size = new System.Drawing.Size(108, 20);
+            lblScale.TabIndex = 9;
+            lblScale.Text = "Scale: 100%";
+            lblScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tbScaleX
             // 
-            this.tbScaleX.LargeChange = 1;
-            this.tbScaleX.Location = new System.Drawing.Point(184, 476);
-            this.tbScaleX.Minimum = 1;
-            this.tbScaleX.Name = "tbScaleX";
-            this.tbScaleX.Size = new System.Drawing.Size(340, 45);
-            this.tbScaleX.TabIndex = 8;
-            this.tbScaleX.TickFrequency = 10;
-            this.tbScaleX.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.tbScaleX.Value = 10;
-            this.tbScaleX.Scroll += new System.EventHandler(this.tbScaleX_Scroll);
+            tbScaleX.LargeChange = 1;
+            tbScaleX.Location = new System.Drawing.Point(184, 476);
+            tbScaleX.Minimum = 1;
+            tbScaleX.Name = "tbScaleX";
+            tbScaleX.Size = new System.Drawing.Size(340, 45);
+            tbScaleX.TabIndex = 8;
+            tbScaleX.TickFrequency = 10;
+            tbScaleX.TickStyle = System.Windows.Forms.TickStyle.None;
+            tbScaleX.Value = 10;
+            tbScaleX.Scroll += tbScaleX_Scroll;
             // 
             // chkMatching
             // 
-            this.chkMatching.Location = new System.Drawing.Point(8, 508);
-            this.chkMatching.Name = "chkMatching";
-            this.chkMatching.Size = new System.Drawing.Size(116, 20);
-            this.chkMatching.TabIndex = 11;
-            this.chkMatching.Text = "Attempt Matching";
-            this.chkMatching.CheckedChanged += new System.EventHandler(this.chkMatching_CheckedChanged);
+            chkMatching.Location = new System.Drawing.Point(8, 508);
+            chkMatching.Name = "chkMatching";
+            chkMatching.Size = new System.Drawing.Size(144, 20);
+            chkMatching.TabIndex = 11;
+            chkMatching.Text = "Attempt Matching";
+            chkMatching.CheckedChanged += chkMatching_CheckedChanged;
             // 
             // tTip
             // 
-            this.tTip.AutoPopDelay = 10000;
-            this.tTip.InitialDelay = 500;
-            this.tTip.ReshowDelay = 100;
+            tTip.AutoPopDelay = 10000;
+            tTip.InitialDelay = 500;
+            tTip.ReshowDelay = 100;
             // 
             // btnTweakMatch
             // 
-            this.btnTweakMatch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.btnTweakMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnTweakMatch.ForeColor = System.Drawing.Color.Black;
-            this.btnTweakMatch.Location = new System.Drawing.Point(130, 508);
-            this.btnTweakMatch.Name = "btnTweakMatch";
-            this.btnTweakMatch.Size = new System.Drawing.Size(60, 20);
-            this.btnTweakMatch.TabIndex = 12;
-            this.btnTweakMatch.Text = "Tweak";
-            this.tTip.SetToolTip(this.btnTweakMatch, "Modify the data used to perform power matching");
-            this.btnTweakMatch.UseVisualStyleBackColor = true;
-            this.btnTweakMatch.Visible = false;
-            this.btnTweakMatch.Click += new System.EventHandler(this.btnTweakMatch_Click);
-            // 
-            // chkOnTop
-            // 
-            this.chkOnTop.Checked = true;
-            this.chkOnTop.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.chkOnTop.Location = new System.Drawing.Point(530, 476);
-            this.chkOnTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.chkOnTop.Name = "chkOnTop";
-            this.chkOnTop.Size = new System.Drawing.Size(105, 22);
-            this.chkOnTop.TabIndex = 15;
-            this.chkOnTop.TextOff = "Keep On Top";
-            this.chkOnTop.TextOn = "Keep On Top";
-            this.chkOnTop.Toggle = true;
-            this.chkOnTop.ButtonClicked += new Mids_Reborn.Controls.ImageButton.ButtonClickedEventHandler(this.chkOnTop_CheckedChanged);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Checked = false;
-            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnClose.Location = new System.Drawing.Point(530, 504);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(105, 22);
-            this.btnClose.TabIndex = 14;
-            this.btnClose.TextOff = "Close";
-            this.btnClose.TextOn = "Close";
-            this.btnClose.Toggle = false;
-            this.btnClose.ButtonClicked += new Mids_Reborn.Controls.ImageButton.ButtonClickedEventHandler(this.btnClose_ButtonClicked);
+            btnTweakMatch.BackColor = System.Drawing.Color.FromArgb(128, 128, 255);
+            btnTweakMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnTweakMatch.ForeColor = System.Drawing.SystemColors.ControlText;
+            btnTweakMatch.Location = new System.Drawing.Point(172, 507);
+            btnTweakMatch.Name = "btnTweakMatch";
+            btnTweakMatch.Size = new System.Drawing.Size(60, 20);
+            btnTweakMatch.TabIndex = 12;
+            btnTweakMatch.Text = "Tweak";
+            tTip.SetToolTip(btnTweakMatch, "Modify the data used to perform power matching");
+            btnTweakMatch.UseVisualStyleBackColor = true;
+            btnTweakMatch.Visible = false;
+            btnTweakMatch.Click += btnTweakMatch_Click;
             // 
             // Graph
             // 
-            this.Graph.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.Graph.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Graph.BackgroundImage")));
-            this.Graph.BaseBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.BaseBarColors")));
-            this.Graph.Border = false;
-            this.Graph.BorderColor = System.Drawing.Color.Black;
-            this.Graph.Clickable = false;
-            this.Graph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
-            this.Graph.ColorBase = System.Drawing.Color.Blue;
-            this.Graph.ColorEnh = System.Drawing.Color.Yellow;
-            this.Graph.ColorFadeEnd = System.Drawing.Color.DarkRed;
-            this.Graph.ColorFadeStart = System.Drawing.Color.Black;
-            this.Graph.ColorHighlight = System.Drawing.Color.White;
-            this.Graph.ColorLines = System.Drawing.Color.Black;
-            this.Graph.ColorMarkerInner = System.Drawing.Color.Black;
-            this.Graph.ColorMarkerOuter = System.Drawing.Color.Yellow;
-            this.Graph.ColorOvercap = System.Drawing.Color.Black;
-            this.Graph.DifferentiateColors = false;
-            this.Graph.DrawRuler = true;
-            this.Graph.Dual = true;
-            this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
-            this.Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Graph.ForcedMax = 0F;
-            this.Graph.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.Graph.Highlight = true;
-            this.Graph.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.Graph.ItemFontSizeOverride = 10F;
-            this.Graph.ItemHeight = 26;
-            this.Graph.Lines = true;
-            this.Graph.Location = new System.Drawing.Point(152, 4);
-            this.Graph.MarkerValue = 0F;
-            this.Graph.Max = 100F;
-            this.Graph.MaxItems = 60;
-            this.Graph.Name = "Graph";
-            this.Graph.OuterBorder = false;
-            this.Graph.Overcap = false;
-            this.Graph.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.OvercapColors")));
-            this.Graph.PaddingX = 2F;
-            this.Graph.PaddingY = 6F;
-            this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
-            this.Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
-            this.Graph.ScaleHeight = 16;
-            this.Graph.ScaleIndex = 8;
-            this.Graph.ShowScale = false;
-            this.Graph.Size = new System.Drawing.Size(484, 468);
-            this.Graph.Style = Mids_Reborn.Core.Enums.GraphStyle.Twin;
-            this.Graph.TabIndex = 1;
-            this.Graph.TextWidth = 120;
-            this.Graph.Load += new System.EventHandler(this.Graph_Load);
+            Graph.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            Graph.BackgroundImage = (System.Drawing.Image)resources.GetObject("Graph.BackgroundImage");
+            Graph.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.BaseBarColors");
+            Graph.Border = false;
+            Graph.BorderColor = System.Drawing.Color.Black;
+            Graph.Clickable = false;
+            Graph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
+            Graph.ColorBase = System.Drawing.Color.Blue;
+            Graph.ColorEnh = System.Drawing.Color.Yellow;
+            Graph.ColorFadeEnd = System.Drawing.Color.DarkRed;
+            Graph.ColorFadeStart = System.Drawing.Color.Black;
+            Graph.ColorHighlight = System.Drawing.Color.White;
+            Graph.ColorLines = System.Drawing.Color.Black;
+            Graph.ColorMarkerInner = System.Drawing.Color.Black;
+            Graph.ColorMarkerOuter = System.Drawing.Color.Yellow;
+            Graph.ColorOvercap = System.Drawing.Color.Black;
+            Graph.DifferentiateColors = false;
+            Graph.DrawRuler = true;
+            Graph.Dual = true;
+            Graph.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.EnhBarColors");
+            Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Graph.ForcedMax = 0F;
+            Graph.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            Graph.Highlight = true;
+            Graph.ImeMode = System.Windows.Forms.ImeMode.Off;
+            Graph.ItemFontSizeOverride = 10F;
+            Graph.ItemHeight = 26;
+            Graph.Lines = true;
+            Graph.Location = new System.Drawing.Point(152, 4);
+            Graph.MarkerValue = 0F;
+            Graph.Max = 100F;
+            Graph.MaxItems = 60;
+            Graph.Name = "Graph";
+            Graph.OuterBorder = false;
+            Graph.Overcap = false;
+            Graph.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.OvercapColors");
+            Graph.PaddingX = 2F;
+            Graph.PaddingY = 6F;
+            Graph.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("Graph.PerItemScales");
+            Graph.RulerPos = CtlMultiGraph.RulerPosition.Top;
+            Graph.ScaleHeight = 16;
+            Graph.ScaleIndex = 8;
+            Graph.ShowScale = false;
+            Graph.Size = new System.Drawing.Size(484, 468);
+            Graph.Style = Enums.GraphStyle.Twin;
+            Graph.TabIndex = 1;
+            Graph.TextWidth = 120;
+            Graph.Load += Graph_Load;
             // 
             // GroupBox4
             // 
-            this.GroupBox4.Controls.Add(this.lstDisplay);
-            this.GroupBox4.ForeColor = System.Drawing.Color.White;
-            this.GroupBox4.Location = new System.Drawing.Point(8, 248);
-            this.GroupBox4.Name = "GroupBox4";
-            this.GroupBox4.Size = new System.Drawing.Size(144, 254);
-            this.GroupBox4.TabIndex = 16;
-            this.GroupBox4.TabStop = false;
-            this.GroupBox4.Text = "Display:";
+            GroupBox4.Controls.Add(lstDisplay);
+            GroupBox4.ForeColor = System.Drawing.Color.White;
+            GroupBox4.Location = new System.Drawing.Point(8, 248);
+            GroupBox4.Name = "GroupBox4";
+            GroupBox4.Size = new System.Drawing.Size(144, 254);
+            GroupBox4.TabIndex = 16;
+            GroupBox4.TabStop = false;
+            GroupBox4.Text = "Display:";
             // 
             // lstDisplay
             // 
-            this.lstDisplay.FormattingEnabled = true;
-            this.lstDisplay.ItemHeight = 14;
-            this.lstDisplay.Location = new System.Drawing.Point(6, 19);
-            this.lstDisplay.Name = "lstDisplay";
-            this.lstDisplay.Size = new System.Drawing.Size(130, 228);
-            this.lstDisplay.TabIndex = 0;
-            this.lstDisplay.SelectedIndexChanged += new System.EventHandler(this.lstDisplay_SelectedIndexChanged);
+            lstDisplay.FormattingEnabled = true;
+            lstDisplay.Location = new System.Drawing.Point(6, 19);
+            lstDisplay.Name = "lstDisplay";
+            lstDisplay.Size = new System.Drawing.Size(130, 225);
+            lstDisplay.TabIndex = 0;
+            lstDisplay.SelectedIndexChanged += lstDisplay_SelectedIndexChanged;
+            // 
+            // ibExKeepOnTop
+            // 
+            ibExKeepOnTop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            ibExKeepOnTop.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            ibExKeepOnTop.CurrentText = "Keep on Top";
+            ibExKeepOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibExKeepOnTop.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibExKeepOnTop.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibExKeepOnTop.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibExKeepOnTop.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibExKeepOnTop.Location = new System.Drawing.Point(530, 476);
+            ibExKeepOnTop.Lock = false;
+            ibExKeepOnTop.Name = "ibExKeepOnTop";
+            ibExKeepOnTop.Size = new System.Drawing.Size(105, 22);
+            ibExKeepOnTop.TabIndex = 17;
+            ibExKeepOnTop.Text = "Keep on Top";
+            ibExKeepOnTop.TextOutline.Color = System.Drawing.Color.Black;
+            ibExKeepOnTop.TextOutline.Width = 2;
+            ibExKeepOnTop.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            ibExKeepOnTop.ToggleText.Indeterminate = "Indeterminate State";
+            ibExKeepOnTop.ToggleText.ToggledOff = "To Top";
+            ibExKeepOnTop.ToggleText.ToggledOn = "Keep on Top";
+            ibExKeepOnTop.UseAlt = false;
+            ibExKeepOnTop.Click += ibExKeepOnTop_Click;
+            // 
+            // ibExClose
+            // 
+            ibExClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            ibExClose.CurrentText = "Close";
+            ibExClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibExClose.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibExClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibExClose.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibExClose.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibExClose.Location = new System.Drawing.Point(530, 504);
+            ibExClose.Lock = false;
+            ibExClose.Name = "ibExClose";
+            ibExClose.Size = new System.Drawing.Size(105, 22);
+            ibExClose.TabIndex = 18;
+            ibExClose.Text = "Close";
+            ibExClose.TextOutline.Color = System.Drawing.Color.Black;
+            ibExClose.TextOutline.Width = 2;
+            ibExClose.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            ibExClose.ToggleText.Indeterminate = "Indeterminate State";
+            ibExClose.ToggleText.ToggledOff = "Close";
+            ibExClose.ToggleText.ToggledOn = "Close";
+            ibExClose.UseAlt = false;
+            ibExClose.Click += ibExClose_Click;
             // 
             // frmCompare
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(640, 532);
-            this.Controls.Add(this.GroupBox4);
-            this.Controls.Add(this.chkOnTop);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnTweakMatch);
-            this.Controls.Add(this.chkMatching);
-            this.Controls.Add(this.lblScale);
-            this.Controls.Add(this.tbScaleX);
-            this.Controls.Add(this.GroupBox2);
-            this.Controls.Add(this.GroupBox1);
-            this.Controls.Add(this.Graph);
-            this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmCompare";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Powerset Comparison";
-            this.TopMost = true;
-            this.GroupBox1.ResumeLayout(false);
-            this.GroupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).EndInit();
-            this.GroupBox4.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            ClientSize = new System.Drawing.Size(640, 532);
+            Controls.Add(ibExClose);
+            Controls.Add(ibExKeepOnTop);
+            Controls.Add(GroupBox4);
+            Controls.Add(btnTweakMatch);
+            Controls.Add(chkMatching);
+            Controls.Add(lblScale);
+            Controls.Add(tbScaleX);
+            Controls.Add(GroupBox2);
+            Controls.Add(GroupBox1);
+            Controls.Add(Graph);
+            Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            ForeColor = System.Drawing.Color.White;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            KeyPreview = true;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmCompare";
+            StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            Text = "Powerset Comparison";
+            TopMost = true;
+            GroupBox1.ResumeLayout(false);
+            GroupBox2.ResumeLayout(false);
+            ((ISupportInitialize)tbScaleX).EndInit();
+            GroupBox4.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
-    #endregion
+        #endregion
+
+        private Controls.ImageButtonEx ibExKeepOnTop;
+        private Controls.ImageButtonEx ibExClose;
     }
 
 
