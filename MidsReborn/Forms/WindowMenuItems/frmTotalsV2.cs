@@ -236,22 +236,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 case Enums.Alignment.Vigilante:
                 case Enums.Alignment.Resistance:
 
-                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
-                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
-                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
-                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
+                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.HeroActiveTabColor;
+                    ctlTotalsTabStrip1.StripLineColor = _tabColors.HeroBorderColor;
+                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.HeroInactiveHoveredTabColor;
                     ibTopMost.UseAlt = false;
                     ibClose.UseAlt = false;
 
                     break;
 
                 default:
-                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.VillainInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
-                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
-                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
-                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
+                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.VillainActiveTabColor;
+                    ctlTotalsTabStrip1.StripLineColor = _tabColors.VillainBorderColor;
+                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.VillainInactiveHoveredTabColor;
                     ibTopMost.UseAlt = true;
                     ibClose.UseAlt = true;
 
@@ -276,7 +276,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ctlTotalsTabStrip1.AddItem(h);
             }
 
-            ctlTotalsTabStrip1.Redraw();
+            ctlTotalsTabStrip1.Invalidate();
 
             //panel1.Size = new Size(561, 697);
             //panel2.Location = new Point(0, 684);
@@ -300,21 +300,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 case Enums.Alignment.Vigilante:
                 case Enums.Alignment.Resistance:
 
-                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.HeroInactiveTabColor;
+                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
-                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.HeroActiveTabColor;
-                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.HeroBorderColor;
-                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.HeroInactiveHoveredTabColor;
+                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.HeroActiveTabColor;
+                    ctlTotalsTabStrip1.StripLineColor = _tabColors.HeroBorderColor;
+                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.HeroInactiveHoveredTabColor;
                     ibTopMost.UseAlt = false;
                     ibClose.UseAlt = false;
                     break;
 
                 default:
-                    ctlTotalsTabStrip1.ColorInactiveTab = _tabColors.VillainInactiveTabColor;
+                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.VillainInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
-                    ctlTotalsTabStrip1.ColorActiveTab = _tabColors.VillainActiveTabColor;
-                    ctlTotalsTabStrip1.ColorStripLine = _tabColors.VillainBorderColor;
-                    ctlTotalsTabStrip1.ColorInactiveHoveredTab = _tabColors.VillainInactiveHoveredTabColor;
+                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.VillainActiveTabColor;
+                    ctlTotalsTabStrip1.StripLineColor = _tabColors.VillainBorderColor;
+                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.VillainInactiveHoveredTabColor;
                     ibTopMost.UseAlt = true;
                     ibClose.UseAlt = true;
                     break;
@@ -372,7 +372,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             ibClose.Location = ibClose.Location with { X = Width - pbCloseLocationXPad };
 
             // Prevent duplicate headers display (tiling) when stretching window horizontally
-            ctlTotalsTabStrip1.Redraw();
+            ctlTotalsTabStrip1.Invalidate();
         }
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)

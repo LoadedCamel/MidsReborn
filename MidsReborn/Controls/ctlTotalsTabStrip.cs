@@ -1,125 +1,128 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Windows.Forms;
-using Mids_Reborn.Controls.Extensions;
-using Mids_Reborn.Core;
-using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 
 namespace Mids_Reborn.Controls
 {
-    public partial class ctlTotalsTabStrip : UserControl
+    public partial class ctlTotalsTabStrip : UserControl, INotifyPropertyChanged
     {
+        #region Events
         public delegate void TabClickEventHandler(int index);
-        public event TabClickEventHandler TabClick;
+        public event TabClickEventHandler? TabClick;
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        private Color _ActiveTabColor;
-        private Color _InactiveTabColor;
-        private Color _InactiveHoveredTabColor;
-        private Color _StripLineColor;
-        private bool _OutlineText = true;
-        private int _ItemPadding = 18;
+        #region Private properties
         private int _SelectedItem;
         private int _HighlightedItem = -1;
         private List<float> ItemStops = new();
+        #endregion
 
-        public Color ColorActiveTab
-        {
-            get => _ActiveTabColor;
-            set
-            {
-                _ActiveTabColor = value;
+        #region Public properties/enabled in designer
+        /// <summary>
+        /// Background color for currently active tab
+        /// </summary>
+        [Category("Appearance")]
+        public Color ActiveTabColor { get; set; } = Color.Goldenrod;
+        
+        /// <summary>
+        /// Background color for inactive tabs
+        /// </summary>
+        [Category("Appearance")]
+        public Color InactiveTabColor { get; set; } = Color.FromArgb(30, 85, 130);
 
-                Draw();
-            }
-        }
+        /// <summary>
+        /// Background color for inactive, hovered tabs
+        /// </summary>
+        [Category("Appearance")]
+        public Color InactiveHoveredTabColor { get; set; } = Color.FromArgb(43, 122, 187);
 
-        public Color ColorInactiveTab
-        {
-            get => _InactiveTabColor;
-            set
-            {
-                _InactiveTabColor = value;
+        /// <summary>
+        /// Dimmed background color for the unused portion of the strip
+        /// </summary>
+        [Category("Appearance")]
+        public Color DimmedBackgroundColor { get; set; } = Color.FromArgb(21, 61, 93);
 
-                Draw();
-            }
-        }
+        /// <summary>
+        /// Color of the bottom strip line
+        /// </summary>
+        [Category("Appearance")]
+        public Color StripLineColor { get; set; } = Color.Goldenrod;
 
-        public Color ColorInactiveHoveredTab
-        {
-            get => _InactiveHoveredTabColor;
-            set
-            {
-                _InactiveHoveredTabColor = value;
+        /// <summary>
+        /// Allow to outline items text
+        /// </summary>
+        [Category("Layout")]
+        public bool OutlineText { get; set; } = true;
 
-                Draw();
-            }
-        }
+        /// <summary>
+        /// Item padding
+        /// </summary>
+        [Category("Layout")]
+        public int ItemPadding { get; set; } = 18;
 
-        public Color ColorStripLine
-        {
-            get => _StripLineColor;
-            set
-            {
-                _StripLineColor = value;
+        /// <summary>
+        /// Use a dimmed background color to fill the unused portion of the strip
+        /// </summary>
+        [Category("Layout")]
+        public bool UseDimmedBackground { get; set; } = false;
+        
+        /// <summary>
+        /// Items texts
+        /// </summary>
+        [Category("Data")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [Editor("System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version = 2.0.0.0, Culture = neutral, PublicKeyToken = b03f5f7f11d50a3a", typeof(UITypeEditor))]
+        public List<string> Items { get; set; } = new();
+        #endregion
 
-                Draw();
-            }
-        }
-
-        public bool OutlineText
-        {
-            get => _OutlineText;
-            set
-            {
-                _OutlineText = value;
-
-                Draw();
-            }
-        }
-
-        public int ItemPadding
-        {
-            get => _ItemPadding;
-            set
-            {
-                _ItemPadding = value;
-
-                Draw();
-            }
-        }
-
-        public List<string> Items = new();
-
-        public ctlTotalsTabStrip()
-        {
-            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
-
-            InitializeComponent();
-        }
-
+        #region Items handling
+        /// <summary>
+        /// Add a single item to the collection
+        /// </summary>
+        /// <param name="item"></param>
         public void AddItem(string item)
         {
             Items.Add(item);
         }
 
+        /// <summary>
+        /// Add multiple items to the collection
+        /// </summary>
+        /// <param name="items">List/Array of items</param>
         public void AddItemsRange(IList<string> items)
         {
             Items.AddRange(items);
         }
 
+        /// <summary>
+        /// Purges all items from collection
+        /// </summary>
         public void ClearItems()
         {
             Items = new List<string>();
         }
+        #endregion
 
-        public void Redraw()
+        public ctlTotalsTabStrip()
         {
-            Draw();
+            SetStyle(ControlStyles.Opaque | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
+            InitializeComponent();
+
+            PropertyChanged += OnPropertyChanged;
         }
 
-        private void Draw()
+        #region Event handlers
+        public void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // Need to filter on property name ?
+            Refresh();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
         {
             // Parent is minimized,
             // any draw operation will fail
@@ -128,87 +131,120 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            using var s = SKSurface.Create(new SKImageInfo(Width, Height));
-            const float fontSize = 15;
+            const float fontSize = 14;
 
-            var textRect = new SKRect();
-            using var textPaint = new SKPaint
-            {
-                IsAntialias = true,
-                Color = ForeColor.ToSKColor(),
-                TextSize = fontSize
-            };
+            e.Graphics.Clear(UseDimmedBackground ? DimmedBackgroundColor : InactiveTabColor);
+            using var activeTabBrush = new SolidBrush(ActiveTabColor);
+            using var inactiveTabBrush = new SolidBrush(InactiveTabColor);
+            using var inactiveHoveredBrush = new SolidBrush(InactiveHoveredTabColor);
+            using var dimmedBrush = new SolidBrush(DimmedBackgroundColor);
+            using var stripPen = new Pen(StripLineColor);
+            using var textFont = new Font(new FontFamily("Segoe UI"), fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
-            using var stripPaint = new SKPaint
-            {
-                IsAntialias = true,
-                Color = ForeColor.ToSKColor(),
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = 1,
-                StrokeCap = SKStrokeCap.Butt
-            };
-
-            using var activeTabPaint = new SKPaint
-            {
-                Color = _ActiveTabColor.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
-
-            using var inactiveTabPaint = new SKPaint
-            {
-                Color = _InactiveTabColor.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
-
-            using var inactiveHoveredTabPaint = new SKPaint
-            {
-                Color = _InactiveHoveredTabColor.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
-
-            s.Canvas.Clear(_InactiveTabColor.ToSKColor());
-            
-            // If initial x position is set to zero, a 1px bar of highlighted color appear on the right on load.
-            var x = 1f;
+            var x = 1;
             for (var i = 0; i < Items.Count; i++)
             {
-                var item = Items[i];
-                textPaint.MeasureText(item, ref textRect);
-                var cellRect = new SKRect(x, 0, x + textRect.Width + 2 * _ItemPadding, Height - 1);
+                var itemTextSize = TextRenderer.MeasureText(Items[i], textFont);
+                var cellRect = new Rectangle(x, 0, itemTextSize.Width + 2 * ItemPadding, Height - 1);
 
                 if (i == _SelectedItem)
                 {
-                    s.Canvas.DrawRect(cellRect, activeTabPaint);
+                    e.Graphics.FillRectangle(activeTabBrush, cellRect);
                 }
                 else if (i == _HighlightedItem)
                 {
-                    s.Canvas.DrawRect(cellRect, inactiveHoveredTabPaint);
+                    e.Graphics.FillRectangle(inactiveHoveredBrush, cellRect);
                 }
                 else
                 {
-                    s.Canvas.DrawRect(cellRect, inactiveTabPaint);
+                    e.Graphics.FillRectangle(inactiveTabBrush, cellRect);
                 }
 
-                x += _ItemPadding;
+                x += ItemPadding;
                 if (OutlineText)
                 {
-                    
-                    s.Canvas.DrawOutlineText(Items[i], cellRect, ForeColor.ToSKColor(), Enums.eHTextAlign.Center, Enums.eVTextAlign.Middle, 255, fontSize);
+                    DrawOutlineText(e.Graphics, cellRect, Color.Black, Color.WhiteSmoke, textFont, Items[i], TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
                 }
                 else
                 {
-                    s.Canvas.DrawTextShort(Items[i], fontSize, x, Height / 2f + 4, textPaint);
+                    TextRenderer.DrawText(e.Graphics, Items[i], textFont, cellRect, Color.WhiteSmoke, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
                 }
 
-                x += textRect.Width + _ItemPadding;
+                x += itemTextSize.Width + ItemPadding;
 
                 ItemStops.Add(x);
             }
 
-            s.Canvas.DrawRect(x, 0, Width, Height - 1, inactiveTabPaint);
-            s.Canvas.DrawLine(0, Height, Width, Height, stripPaint);
+            e.Graphics.FillRectangle(UseDimmedBackground ? dimmedBrush : inactiveTabBrush, new Rectangle(x, 0, Width, Height - 1));
+            e.Graphics.DrawLine(stripPen, new Point(0, Height), new Point(Width, Height));
+        }
 
-            BackgroundImage = s.Snapshot().ToBitmap();
+        private void ctlTotalsTabStrip_MouseClick(object sender, MouseEventArgs e)
+        {
+            _HighlightedItem = GetHighlightedItem(e.X, e.Y);
+            if (_HighlightedItem <= -1)
+            {
+                return;
+            }
+
+            _SelectedItem = _HighlightedItem;
+            Invalidate();
+            TabClick?.Invoke(_HighlightedItem);
+        }
+
+        private void ctlTotalsTabStrip_MouseMove(object sender, MouseEventArgs e)
+        {
+            var highlightedItem = GetHighlightedItem(e.X, e.Y);
+
+            if (highlightedItem == _HighlightedItem)
+            {
+                return;
+            }
+
+            _HighlightedItem = highlightedItem;
+            Invalidate();
+        }
+
+        private void ctlTotalsTabStrip_MouseLeave(object sender, EventArgs e)
+        {
+            _HighlightedItem = -1;
+
+            Invalidate();
+        }
+
+        private void ctlTotalsTabStrip_Load(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+        #endregion
+
+        #region Utility methods
+        private void DrawOutlineText(Graphics g, Rectangle bounds, Color outlineColor, Color textColor, Font font, string text, TextFormatFlags formatFlags)
+        {
+            // Possibly slow - needs improvement.
+
+            // W E N S
+            bounds.Offset(-1, 0);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(2, 0);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(-1, -1);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(0, 2);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+
+            // NW NE SW SE
+            bounds.Offset(-1, -2);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(2, 0);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(-2, 2);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+            bounds.Offset(2, 0);
+            TextRenderer.DrawText(g, text, font, bounds, outlineColor, formatFlags);
+
+            bounds.Offset(-1, -1);
+            TextRenderer.DrawText(g, text, font, bounds, textColor, formatFlags);
         }
 
         private int GetHighlightedItem(int mx, int my)
@@ -225,43 +261,6 @@ namespace Mids_Reborn.Controls
 
             return -1;
         }
-
-        private void ctlTotalsTabStrip_MouseClick(object sender, MouseEventArgs e)
-        {
-            _HighlightedItem = GetHighlightedItem(e.X, e.Y);
-            if (_HighlightedItem <= -1)
-            {
-                return;
-            }
-
-            _SelectedItem = _HighlightedItem;
-            Draw();
-            TabClick?.Invoke(_HighlightedItem);
-        }
-
-        private void ctlTotalsTabStrip_MouseMove(object sender, MouseEventArgs e)
-        {
-            var highlightedItem = GetHighlightedItem(e.X, e.Y);
-
-            if (highlightedItem == _HighlightedItem)
-            {
-                return;
-            }
-
-            _HighlightedItem = highlightedItem;
-            Draw();
-        }
-
-        private void ctlTotalsTabStrip_MouseLeave(object sender, EventArgs e)
-        {
-            _HighlightedItem = -1;
-
-            Draw();
-        }
-
-        private void ctlTotalsTabStrip_Load(object sender, EventArgs e)
-        {
-            Draw();
-        }
+        #endregion
     }
 }

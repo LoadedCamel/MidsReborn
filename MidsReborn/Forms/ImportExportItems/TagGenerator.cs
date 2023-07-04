@@ -156,7 +156,7 @@ ul li::before {{
             return FormatType switch
             {
                 TagsFormatType.BBCode => $"[color=\"{ForumColorThemes.ColorToHex(color)}\"]",
-                TagsFormatType.HTML or TagsFormatType.Markdown => $"<span style=\"color: {ForumColorThemes.ColorToHex(color)};\">",
+                TagsFormatType.HTML or TagsFormatType.MarkdownHTML => $"<span style=\"color: {ForumColorThemes.ColorToHex(color)};\">",
                 _ => ""
             };
         }
@@ -166,7 +166,7 @@ ul li::before {{
             return FormatType switch
             {
                 TagsFormatType.BBCode => "[/color]",
-                TagsFormatType.HTML or TagsFormatType.Markdown => "</span>",
+                TagsFormatType.HTML or TagsFormatType.MarkdownHTML => "</span>",
                 _ => ""
             };
         }

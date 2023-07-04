@@ -7,8 +7,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
     {
         None,
         BBCode,
-        HTML,
-        Markdown
+        MarkdownHTML,
+        Markdown,
+        HTML
     }
 
     public class ForumColorTheme

@@ -1172,10 +1172,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ctlTotalsTabStrip1
             // 
             this.ctlTotalsTabStrip1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ctlTotalsTabStrip1.BackgroundImage")));
-            this.ctlTotalsTabStrip1.ColorActiveTab = System.Drawing.Color.Goldenrod;
-            this.ctlTotalsTabStrip1.ColorInactiveHoveredTab = System.Drawing.Color.FromArgb(43, 122, 187);
-            this.ctlTotalsTabStrip1.ColorInactiveTab = System.Drawing.Color.FromArgb(30, 85, 130);
-            this.ctlTotalsTabStrip1.ColorStripLine = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.ActiveTabColor = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.InactiveHoveredTabColor = System.Drawing.Color.FromArgb(43, 122, 187);
+            this.ctlTotalsTabStrip1.InactiveTabColor = System.Drawing.Color.FromArgb(30, 85, 130);
+            this.ctlTotalsTabStrip1.StripLineColor = System.Drawing.Color.Goldenrod;
             this.ctlTotalsTabStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctlTotalsTabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.ctlTotalsTabStrip1.ItemPadding = 18;
@@ -1185,6 +1185,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(2267, 24);
             this.ctlTotalsTabStrip1.TabIndex = 106;
             this.ctlTotalsTabStrip1.TabClick += new Mids_Reborn.Controls.ctlTotalsTabStrip.TabClickEventHandler(this.ctlTotalsTabStrip1_TabClick);
+            this.ctlTotalsTabStrip1.UseDimmedBackground = false;
             // 
             // frmTotalsV2
             // 
