@@ -85,10 +85,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnIcon_Click(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             ImagePicker.InitialDirectory = I9Gfx.GetDbPowerSetsPath();
             ImagePicker.FileName = MyPowerSet.ImageName;
-            if (ImagePicker.ShowDialog(this) != DialogResult.OK) return;
+            if (ImagePicker.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
 
             var imageFile = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(Path.Combine(I9Gfx.GetDbPowerSetsPath(), imageFile)))
@@ -203,7 +209,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbTrunkSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             if (chkNoTrunk.Checked)
             {
                 MyPowerSet.UIDTrunkSet = "";
@@ -211,7 +220,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else if (cbTrunkSet.SelectedIndex > -1)
             {
-                var uidPowerset = cbTrunkGroup.Text + "." + cbTrunkSet.Text;
+                var uidPowerset = $"{cbTrunkGroup.Text}.{cbTrunkSet.Text}";
                 var num = DatabaseAPI.NidFromUidPowerset(uidPowerset);
                 MyPowerSet.UIDTrunkSet = uidPowerset;
                 MyPowerSet.nIDTrunkSet = num;
@@ -220,19 +229,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void chkNoLink_CheckedChanged(object sender, EventArgs e)
         {
-            cbLinkSet_SelectedIndexChanged(this, new EventArgs());
+            cbLinkSet_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void chkNoTrunk_CheckedChanged(object sender, EventArgs e)
         {
-            cbTrunkSet_SelectedIndexChanged(this, new EventArgs());
+            cbTrunkSet_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void DisplayIcon()
         {
-            if (!string.IsNullOrEmpty(MyPowerSet.ImageName))
+            var imageName = File.Exists(I9Gfx.GetPowersetsPath() + MyPowerSet.ImageName)
+                ? I9Gfx.GetPowersetsPath() + MyPowerSet.ImageName
+                : Path.Combine(I9Gfx.GetDbPowerSetsPath(), MyPowerSet.ImageName);
+            var imageExists = File.Exists(I9Gfx.GetPowersetsPath() + MyPowerSet.ImageName) || File.Exists(Path.Combine(I9Gfx.GetDbPowerSetsPath(), MyPowerSet.ImageName));
+
+            if (!string.IsNullOrEmpty(MyPowerSet.ImageName) & imageExists)
             {
-                using var extendedBitmap = new ExtendedBitmap(I9Gfx.GetPowersetsPath() + MyPowerSet.ImageName);
+                using var extendedBitmap = new ExtendedBitmap(imageName);
                 picIcon.Image = new Bitmap(extendedBitmap.Bitmap);
                 btnIcon.Text = MyPowerSet.ImageName;
             }
@@ -344,7 +358,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmEditPowerset_Load(object? sender, EventArgs e)
         {
-            var ePowerSetType = Enums.ePowerSetType.None;
             ListPowers();
             txtName.Text = MyPowerSet.DisplayName;
             cbNameGroup.BeginUpdate();
@@ -389,7 +402,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAT.SelectedIndex = MyPowerSet.nArchetype + 1;
             cbSetType.BeginUpdate();
             cbSetType.Items.Clear();
-            cbSetType.Items.AddRange(Enum.GetNames(ePowerSetType.GetType()));
+            cbSetType.Items.AddRange(typeof(Enums.ePowerSetType).GetEnumNames());
             cbSetType.EndUpdate();
             cbSetType.SelectedIndex = (int)MyPowerSet.SetType;
             ListAvailableMutexSets();
