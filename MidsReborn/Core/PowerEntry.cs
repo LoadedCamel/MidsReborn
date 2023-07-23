@@ -246,7 +246,7 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
-            if (IDXPower <= 1)
+            if (IDXPower <= -1)
             {
                 return false;
             }
@@ -263,7 +263,7 @@ namespace Mids_Reborn.Core
 
         public void CheckVariableBounds()
         {
-            if (Power == null || !Power.VariableEnabled)
+            if (Power is not { VariableEnabled: true })
             {
                 VariableValue = 0;
             }
