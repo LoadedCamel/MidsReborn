@@ -934,6 +934,11 @@ namespace Mids_Reborn.Core
                         $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType})",
                         $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
 
+                Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
+                    .Replace(" in ", " after ")
+                    .Replace(" to Self", "")
+                    .Replace(" to Target", ""),
+
                 _ => baseEffectString
             };
 
@@ -1549,6 +1554,13 @@ namespace Mids_Reborn.Core
                         ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
                         : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
 
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
+                case Enums.eEffectType.SilentKill when effectSource.ToWho == Enums.eToWho.Self:
+                    rankedEffect.Name = "Lifespan";
+                    rankedEffect.Value = $"{Math.Max(effectSource.Duration, Math.Max(effectSource.DelayedTime, effectSource.Absorbed_Duration)):####0.##} s";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
