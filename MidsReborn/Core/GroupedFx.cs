@@ -88,10 +88,11 @@ namespace Mids_Reborn.Core
             public Enums.ePvX PvMode;
             public int SummonId;
             public float Duration;
+            public bool IgnoreScaling;
 
             public override string ToString()
             {
-                return $"<FxId> {{Type: {EffectType}, Modifies: {ETModifies}, Mez: {MezType}, Damage: {DamageType}, ToWho: {ToWho}, PvMode: {PvMode}}}";
+                return $"<FxId> {{Type: {EffectType}, Modifies: {ETModifies}, Mez: {MezType}, Damage: {DamageType}, ToWho: {ToWho}, PvMode: {PvMode}, IgnoreScaling: {IgnoreScaling}}}";
             }
         }
 
@@ -111,6 +112,7 @@ namespace Mids_Reborn.Core
         public Enums.eDamage DamageType => FxIdentifier.DamageType;
         public Enums.eToWho ToWho => FxIdentifier.ToWho;
         public Enums.ePvX PvMode => FxIdentifier.PvMode;
+        public bool IgnoreScaling => FxIdentifier.IgnoreScaling;
         public bool EnhancementEffect => IsEnhancement;
 
         /// <summary>
@@ -179,7 +181,8 @@ namespace Mids_Reborn.Core
                 ETModifies = effect.ETModifies,
                 MezType = effect.MezType,
                 ToWho = effect.ToWho,
-                PvMode = effect.PvMode
+                PvMode = effect.PvMode,
+                IgnoreScaling = effect.IgnoreScaling
             };
             Mag = effect.BuffedMag;
             Alias = "";
@@ -972,7 +975,8 @@ namespace Mids_Reborn.Core
                                 e.Value.nSummon == fxIdentifier.SummonId && e.Value.ToWho == fxIdentifier.ToWho &&
                                 (Math.Abs(e.Value.Duration - fxIdentifier.Duration) < float.Epsilon || fxIdentifier.Duration == 0) &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode)
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -984,7 +988,8 @@ namespace Mids_Reborn.Core
                                 or Enums.eEffectType.SpeedRunning && e.Value.ToWho == fxIdentifier.ToWho &&
                             Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                             e.Value.isEnhancementEffect == enhancementEffect &&
-                            e.Value.PvMode == fxIdentifier.PvMode)
+                            e.Value.PvMode == fxIdentifier.PvMode &&
+                            e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                         .Select(e => e.Key)
                         .ToList(),
 
@@ -996,7 +1001,8 @@ namespace Mids_Reborn.Core
                                 e.Value.ETModifies == fxIdentifier.ETModifies && e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode)
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1007,7 +1013,8 @@ namespace Mids_Reborn.Core
                                 e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode)
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1018,7 +1025,8 @@ namespace Mids_Reborn.Core
                                     e.Value.ToWho == fxIdentifier.ToWho &&
                                     Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                     e.Value.isEnhancementEffect == enhancementEffect &&
-                                    e.Value.PvMode == fxIdentifier.PvMode)
+                                    e.Value.PvMode == fxIdentifier.PvMode &&
+                                    e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                         .Select(e => e.Key)
                         .ToList(),
 
@@ -1027,7 +1035,8 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                 e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode)
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1037,7 +1046,8 @@ namespace Mids_Reborn.Core
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                 e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode)
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1138,7 +1148,8 @@ namespace Mids_Reborn.Core
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = power.Effects[re].nSummon,
                                 Duration = 0, //power.Effects[re].Duration
-                                PvMode = power.Effects[re].PvMode
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
@@ -1155,7 +1166,8 @@ namespace Mids_Reborn.Core
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = power.Effects[re].nSummon,
                                     Duration = 0, //power.Effects[re].Duration
-                                    PvMode = power.Effects[re].PvMode
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
                                 },
                                 power.Effects[re].BuffedMag,
                                 "Summon",
@@ -1177,13 +1189,14 @@ namespace Mids_Reborn.Core
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
                                 Duration = 0,
-                                PvMode = power.Effects[re].PvMode
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
                         
                         ignoredEffects.AddRangeUnique(similarFxIds);
-                        
+
                         groupedRankedEffects.Add(
                             new GroupedFx(new FxId
                                 {
@@ -1194,8 +1207,9 @@ namespace Mids_Reborn.Core
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
                                     Duration = 0,
-                                    PvMode = power.Effects[re].PvMode
-                            },
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                                },
                                 power.Effects[re].BuffedMag,
                                 "Slow",
                                 similarFxIds,
@@ -1218,7 +1232,8 @@ namespace Mids_Reborn.Core
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
                                 Duration = 0,
-                                PvMode = power.Effects[re].PvMode
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
@@ -1235,8 +1250,9 @@ namespace Mids_Reborn.Core
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
                                     Duration = 0,
-                                    PvMode = power.Effects[re].PvMode
-                                },
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                            },
                                 power.Effects[re].BuffedMag,
                                 isDefiance ? "Defiance" : $"{power.Effects[re].EffectType}",
                                 similarFxIds,
@@ -1262,6 +1278,7 @@ namespace Mids_Reborn.Core
                                 SummonId = -1,
                                 Duration = 0,
                                 PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             },
                             power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
@@ -1279,7 +1296,8 @@ namespace Mids_Reborn.Core
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
                                     Duration = 0,
-                                    PvMode = power.Effects[re].PvMode
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
                                 },
                                 power.Effects[re].BuffedMag,
                                 power.Effects[re].EffectType == Enums.eEffectType.Enhancement
