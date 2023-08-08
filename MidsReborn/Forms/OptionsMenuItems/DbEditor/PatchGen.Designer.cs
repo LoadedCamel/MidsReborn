@@ -1,4 +1,7 @@
-﻿namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
+﻿using MetaControls;
+using Mids_Reborn.Controls;
+
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     partial class PatchGen
     {
@@ -28,17 +31,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            formPages1 = new Controls.FormPages();
-            page1 = new Controls.Page();
+            formPages1 = new FormPages();
+            page1 = new Page();
             label = new System.Windows.Forms.Label();
             btnCancel = new System.Windows.Forms.Button();
             btnDbGen = new System.Windows.Forms.Button();
             btnAppGen = new System.Windows.Forms.Button();
-            page2 = new Controls.Page();
+            page2 = new Page();
             label2 = new System.Windows.Forms.Label();
             btnCancel2 = new System.Windows.Forms.Button();
             btnDbGen2 = new System.Windows.Forms.Button();
-            page3 = new Controls.Page();
+            page3 = new Page();
             label3 = new System.Windows.Forms.Label();
             processLabel = new System.Windows.Forms.Label();
             progressBar = new Controls.ProgressBarEx();
@@ -60,7 +63,7 @@
             formPages1.Pages.Add(page1);
             formPages1.Pages.Add(page2);
             formPages1.Pages.Add(page3);
-            formPages1.SelectedPage = 1;
+            formPages1.SelectedIndex = 0;
             formPages1.Size = new System.Drawing.Size(517, 106);
             formPages1.TabIndex = 0;
             // 
@@ -248,10 +251,10 @@
 
         #endregion
 
-        private Controls.FormPages formPages1;
-        private Controls.Page page1;
-        private Controls.Page page2;
-        private Controls.Page page3;
+        private FormPages formPages1;
+        private Page page1;
+        private Page page2;
+        private Page page3;
         private System.Windows.Forms.Button btnAppGen;
         private System.Windows.Forms.Button btnDbGen;
         private System.Windows.Forms.Button btnCancel;

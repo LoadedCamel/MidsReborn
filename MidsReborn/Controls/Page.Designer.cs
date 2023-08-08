@@ -1,6 +1,6 @@
-﻿namespace Mids_Reborn.Forms.Controls
+﻿namespace Mids_Reborn.Controls
 {
-    partial class FormPages
+    sealed partial class Page
     {
         /// <summary> 
         /// Required designer variable.

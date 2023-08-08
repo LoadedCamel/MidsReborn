@@ -1,43 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Mids_Reborn.Forms.ImportExportItems
+namespace Mids_Reborn.Core
 {
-    public enum TagsFormatType
+    internal class ForumExport
     {
-        None,
-        BBCode,
-        MarkdownHTML,
-        Markdown,
-        HTML
-    }
-
-    public class ForumColorTheme
-    {
-        public string? Name;
-        public Color Text;
-        public Color Headings;
-        public Color Levels;
-        public Color Slots;
-        public bool DarkTheme;
-    }
-
-    public struct ForumColorsHex
-    {
-        public string Text;
-        public string Headings;
-        public string Levels;
-        public string Slots;
-    }
-
-    public static class ForumColorThemes
-    {
-        public static List<ForumColorTheme> GetThemes()
+        public struct ColorTheme
         {
-            return new List<ForumColorTheme>
+            public string? Name { get; set; }
+            public Color Text { get; set; }
+            public Color Headings { get; set; }
+            public Color Levels { get; set; }
+            public Color Slots { get; set; }
+            public bool DarkTheme { get; set; }
+        }
+
+        public List<ColorTheme>? ColorThemes { get; set; }
+
+        public ForumExport()
+        {
+            Reset();
+        }
+
+        private void Reset()
+        {
+            ColorThemes ??= new List<ColorTheme>
             {
-                new()
+                new ColorTheme
                 {
                     Name = "Navy",
                     Text = Color.FromArgb(0x00, 0x00, 0xcd),
@@ -47,7 +36,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = false
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Light Blue",
                     Text = Color.FromArgb(0xb1, 0xc9, 0xf5),
@@ -57,7 +46,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = true
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Purple",
                     Text = Color.FromArgb(0x80, 0x00, 0x80),
@@ -67,7 +56,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = false
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Light Purple",
                     Text = Color.FromArgb(0xcf, 0xb3, 0xff),
@@ -77,7 +66,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = true
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Orange",
                     Text = Color.FromArgb(0xff, 0x8c, 0x00),
@@ -87,7 +76,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = false
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Olive Drab",
                     Text = Color.FromArgb(0x55, 0x6b, 0x2f),
@@ -97,7 +86,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = false
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Reds",
                     Text = Color.FromArgb(0x80, 0x00, 0x00),
@@ -107,7 +96,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = false
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Light Reds",
                     Text = Color.FromArgb(0xff, 0x6a, 0x6a),
@@ -117,7 +106,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = true
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Fruit Salad",
                     Text = Color.FromArgb(0xff, 0xa5, 0x00),
@@ -127,7 +116,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     DarkTheme = true
                 },
 
-                new()
+                new ColorTheme
                 {
                     Name = "Pink",
                     Text = Color.FromArgb(0xff, 0x80, 0xc0),
@@ -139,9 +128,22 @@ namespace Mids_Reborn.Forms.ImportExportItems
             };
         }
 
-        public static string ColorToHex(Color color, bool sharpPrefix=true)
+        public void Add(string name, bool isDarkTheme = false)
         {
-            return $"{(sharpPrefix ? "#" : "")}{color.R:X2}{color.G:X2}{color.B:X2}";
+            ColorThemes?.Add(new ColorTheme
+            {
+                Name = name,
+                Text = Color.Empty,
+                Headings = Color.Empty,
+                Levels = Color.Empty,
+                Slots = Color.Empty,
+                DarkTheme = isDarkTheme
+            });
+        }
+
+        public void Remove(int index)
+        {
+            ColorThemes?.RemoveAt(index);
         }
     }
 }

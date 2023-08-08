@@ -3090,39 +3090,6 @@ namespace Mids_Reborn
             return flag;
         }
 
-        public bool Save(string iFileName)
-        {
-            Archetype ??= DatabaseAPI.Database.Classes[0];
-            if (Origin > Archetype.Origin.Length - 1)
-                Origin = Archetype.Origin.Length - 1;
-            var saveText = MidsCharacterFileFormat.MxDBuildSaveString(true, false);
-            if (string.IsNullOrWhiteSpace(saveText))
-            {
-                MessageBox.Show(@"Save failed - save function returned empty data.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            var str2 = new clsOutput
-            {
-                Plain = true, idFormat = 0
-            }.Build("", false) + "\r\n\r\n";
-            StreamWriter streamWriter;
-            try
-            {
-                streamWriter = new StreamWriter(iFileName, false);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            streamWriter.Write(str2);
-            streamWriter.Write(saveText);
-            streamWriter.Close();
-            return true;
-        }
-
         private void SetPower_NID(int Index, int nIDPower)
         {
             if ((Index < 0) | (Index >= CurrentBuild.Powers.Count))

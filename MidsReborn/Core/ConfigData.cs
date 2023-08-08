@@ -536,7 +536,6 @@ namespace Mids_Reborn.Core
             public Color ColorPowerHighlightVillain { get; set; }
             public Color ColorDamageBarBase { get; set; }
             public Color ColorDamageBarEnh { get; set; }
-            public List<Color>? ColorList { get; set; }
             public bool PairedBold { get; set; }
             public float PairedBase { get; set; }
             public bool PowersSelectBold { get; set; }
@@ -568,7 +567,6 @@ namespace Mids_Reborn.Core
                 ColorPowerHighlightVillain = iFs.ColorPowerHighlightVillain;
                 ColorDamageBarBase = iFs.ColorDamageBarBase;
                 ColorDamageBarEnh = iFs.ColorDamageBarEnh;
-                ColorList = iFs.ColorList;
                 PairedBold = iFs.PairedBold;
                 PairedBase = iFs.PairedBase;
                 PowersSelectBase = iFs.PowersSelectBase;
@@ -645,11 +643,6 @@ namespace Mids_Reborn.Core
                 ColorPowerHighlightVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerHighlightVillain);
                 ColorDamageBarBase = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarBase);
                 ColorDamageBarEnh = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarEnh);
-                ColorList = new List<Color>
-                {
-                    ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
-                    ColorPowerTakenDarkVillain, ColorPowerHighlightVillain
-                };
                 PairedBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PairedBase);
                 PairedBold = false;
                 // Zed: With Tahoma, spaces tend to be munched if PowersSelectBase is at 8.25

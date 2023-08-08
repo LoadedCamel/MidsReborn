@@ -31,6 +31,7 @@
             colorWheel1 = new Controls.ColorWheel();
             btnOk = new Controls.ImageButtonEx();
             btnCancel = new Controls.ImageButtonEx();
+            borderPanel1 = new Controls.BorderPanel();
             SuspendLayout();
             // 
             // colorWheel1
@@ -94,15 +95,28 @@
             btnCancel.UseAlt = false;
             btnCancel.Click += btnCancel_Click;
             // 
+            // borderPanel1
+            // 
+            borderPanel1.Border.Color = System.Drawing.Color.Silver;
+            borderPanel1.Border.Style = System.Windows.Forms.ButtonBorderStyle.Solid;
+            borderPanel1.Border.Thickness = 2;
+            borderPanel1.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
+            borderPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            borderPanel1.Location = new System.Drawing.Point(0, 0);
+            borderPanel1.Name = "borderPanel1";
+            borderPanel1.Size = new System.Drawing.Size(358, 411);
+            borderPanel1.TabIndex = 3;
+            // 
             // ColorSelector
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.FromArgb(27, 27, 27);
+            BackColor = System.Drawing.Color.FromArgb(32, 32, 32);
             ClientSize = new System.Drawing.Size(358, 411);
             Controls.Add(btnCancel);
             Controls.Add(btnOk);
             Controls.Add(colorWheel1);
+            Controls.Add(borderPanel1);
             DoubleBuffered = true;
             ForeColor = System.Drawing.Color.WhiteSmoke;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -123,5 +137,6 @@
         private Controls.ColorWheel colorWheel1;
         private Controls.ImageButtonEx btnOk;
         private Controls.ImageButtonEx btnCancel;
+        private Controls.BorderPanel borderPanel1;
     }
 }

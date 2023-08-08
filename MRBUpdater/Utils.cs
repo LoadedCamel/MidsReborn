@@ -1,10 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CSharp;
-
-namespace MRBUpdater
+﻿namespace MRBUpdater
 {
     internal static class Utils
     {

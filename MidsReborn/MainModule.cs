@@ -161,7 +161,7 @@ namespace Mids_Reborn
                 iFrm?.SetMessage("Loading Graphics...");
                 LoadGraphics(path).GetAwaiter().GetResult();
 
-                MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                //MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
                 if (iFrm != null)
                 {
                     DatabaseAPI.MatchAllIDs(iFrm);
@@ -229,7 +229,7 @@ namespace Mids_Reborn
 
                 LoadGraphics(path).GetAwaiter().GetResult();
 
-                MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                //MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
                 DatabaseAPI.MatchIds();
                 DatabaseAPI.AssignSetBonusIndexes();
                 DatabaseAPI.AssignRecipeIDs();

@@ -1,8 +1,9 @@
-﻿using Mids_Reborn.Controls;
+﻿using MetaControls;
+using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
-    partial class frmForumExport
+    partial class ShareMenu
     {
         /// <summary>
         /// Required designer variable.
@@ -64,7 +65,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             panelColorTitle = new System.Windows.Forms.Panel();
             lbColorTheme = new System.Windows.Forms.ListBox();
             label1 = new System.Windows.Forms.Label();
-            tabStrip1 = new Mids_Reborn.Controls.ctlTotalsTabStrip();
+            navStrip1 = new NavStrip();
             formPages1.SuspendLayout();
             page1.SuspendLayout();
             page2.SuspendLayout();
@@ -80,7 +81,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             formPages1.Pages.Add(page1);
             formPages1.Pages.Add(page2);
             formPages1.SelectedIndex = 0;
-            formPages1.Size = new System.Drawing.Size(776, 349);
+            formPages1.Size = new System.Drawing.Size(776, 356);
             formPages1.TabIndex = 45;
             // 
             // page1
@@ -88,6 +89,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             page1.Anchor = System.Windows.Forms.AnchorStyles.None;
             page1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            page1.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             page1.Controls.Add(label9);
             page1.Controls.Add(cbHtmlIncludeExtras);
             page1.Controls.Add(cbHtmlIncludeInc);
@@ -96,19 +98,21 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page1.Controls.Add(ibExCancelHtml);
             page1.Controls.Add(ibExExportHtml);
             page1.Dock = System.Windows.Forms.DockStyle.Fill;
+            page1.ForeColor = System.Drawing.Color.WhiteSmoke;
             page1.Location = new System.Drawing.Point(0, 0);
             page1.Name = "page1";
-            page1.Size = new System.Drawing.Size(774, 347);
+            page1.Size = new System.Drawing.Size(774, 354);
             page1.TabIndex = 0;
+            page1.Title = "Mobile Friendly (Link)";
             // 
             // label9
             // 
-            label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            label9.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             label9.Location = new System.Drawing.Point(10, 12);
             label9.Name = "label9";
             label9.Size = new System.Drawing.Size(758, 51);
             label9.TabIndex = 50;
-            label9.Text = "HTML: Character data with optional extras will be exported to a multi-column card to summarize build statistics.\r\nThe output will be copied into the clipboard.";
+            label9.Text = "Generates a link from character data with optional extras that are exported to a multi-column card to summarize build statistics.\r\nThe output will be copied into the clipboard.";
             // 
             // cbHtmlIncludeExtras
             // 
@@ -146,18 +150,18 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI Variable Display", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label8.Location = new System.Drawing.Point(20, 110);
             label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(91, 16);
+            label8.Size = new System.Drawing.Size(99, 19);
             label8.TabIndex = 46;
-            label8.Text = "Export options:";
+            label8.Text = "Extra options:";
             // 
             // ibExCancelHtml
             // 
             ibExCancelHtml.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             ibExCancelHtml.CurrentText = "Cancel";
-            ibExCancelHtml.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibExCancelHtml.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             ibExCancelHtml.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibExCancelHtml.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibExCancelHtml.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -180,8 +184,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // ibExExportHtml
             // 
             ibExExportHtml.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            ibExExportHtml.CurrentText = "Export";
-            ibExExportHtml.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibExExportHtml.CurrentText = "Generate";
+            ibExExportHtml.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             ibExExportHtml.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibExExportHtml.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibExExportHtml.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -191,7 +195,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             ibExExportHtml.Name = "ibExExportHtml";
             ibExExportHtml.Size = new System.Drawing.Size(100, 28);
             ibExExportHtml.TabIndex = 44;
-            ibExExportHtml.Text = "Export";
+            ibExExportHtml.Text = "Generate";
             ibExExportHtml.TextOutline.Color = System.Drawing.Color.Black;
             ibExExportHtml.TextOutline.Width = 2;
             ibExExportHtml.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
@@ -206,6 +210,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page2.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             page2.Anchor = System.Windows.Forms.AnchorStyles.None;
             page2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            page2.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             page2.Controls.Add(label11);
             page2.Controls.Add(label10);
             page2.Controls.Add(chkCustomThemeDark);
@@ -231,10 +236,12 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page2.Controls.Add(lbColorTheme);
             page2.Controls.Add(label1);
             page2.Dock = System.Windows.Forms.DockStyle.Fill;
+            page2.ForeColor = System.Drawing.Color.WhiteSmoke;
             page2.Location = new System.Drawing.Point(0, 0);
             page2.Name = "page2";
-            page2.Size = new System.Drawing.Size(774, 347);
+            page2.Size = new System.Drawing.Size(774, 354);
             page2.TabIndex = 1;
+            page2.Title = "Forum Formats (Text)";
             // 
             // label11
             // 
@@ -248,12 +255,12 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // label10
             // 
-            label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            label10.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             label10.Location = new System.Drawing.Point(10, 12);
             label10.Name = "label10";
             label10.Size = new System.Drawing.Size(746, 52);
             label10.TabIndex = 67;
-            label10.Text = "Export to a compatible output format including {formats}.\r\nThe output will be copied into the clipboard.";
+            label10.Text = "Exports character data and optional extras to a compatible output format including {formats}.\r\nThe output will be copied into the clipboard.";
             // 
             // chkCustomThemeDark
             // 
@@ -300,10 +307,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI Variable Display", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label7.Location = new System.Drawing.Point(21, 253);
             label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(91, 16);
+            label7.Size = new System.Drawing.Size(109, 19);
             label7.TabIndex = 62;
             label7.Text = "Export options:";
             // 
@@ -311,7 +318,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             btnCancel.CurrentText = "Cancel";
-            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             btnCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             btnCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             btnCancel.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -335,7 +342,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             btnExport.CurrentText = "Export";
-            btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             btnExport.Images.Background = MRBResourceLib.Resources.HeroButton;
             btnExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             btnExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -510,41 +517,37 @@ namespace Mids_Reborn.Forms.ImportExportItems
             label1.TabIndex = 45;
             label1.Text = "Color Theme:";
             // 
-            // tabStrip1
+            // navStrip1
             // 
-            tabStrip1.ActiveTabColor = System.Drawing.Color.Goldenrod;
-            tabStrip1.BackColor = System.Drawing.Color.Black;
-            tabStrip1.DimmedBackgroundColor = System.Drawing.Color.FromArgb(21, 61, 93);
-            tabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            tabStrip1.InactiveHoveredTabColor = System.Drawing.Color.FromArgb(43, 122, 187);
-            tabStrip1.InactiveTabColor = System.Drawing.Color.FromArgb(30, 85, 130);
-            tabStrip1.ItemPadding = 27;
-            tabStrip1.Items.Add("HTML");
-            tabStrip1.Items.Add("Other Formats");
-            tabStrip1.Location = new System.Drawing.Point(14, 12);
-            tabStrip1.Name = "tabStrip1";
-            tabStrip1.OutlineText = true;
-            tabStrip1.Size = new System.Drawing.Size(774, 32);
-            tabStrip1.StripLineColor = System.Drawing.Color.Goldenrod;
-            tabStrip1.TabIndex = 46;
-            tabStrip1.UseDimmedBackground = true;
-            tabStrip1.TabClick += tabStrip1_TabClick;
+            navStrip1.ActiveTabColor = System.Drawing.Color.Goldenrod;
+            navStrip1.DataSource = formPages1;
+            navStrip1.DimmedColor = System.Drawing.Color.FromArgb(21, 61, 93);
+            navStrip1.DisabledTabColor = System.Drawing.Color.DarkGray;
+            navStrip1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            navStrip1.InactiveTabColor = System.Drawing.Color.FromArgb(30, 85, 130);
+            navStrip1.InactiveTabHoverColor = System.Drawing.Color.FromArgb(43, 122, 187);
+            navStrip1.Location = new System.Drawing.Point(14, 15);
+            navStrip1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            navStrip1.Name = "navStrip1";
+            navStrip1.OutlineColor = System.Drawing.Color.Black;
+            navStrip1.Size = new System.Drawing.Size(774, 45);
+            navStrip1.TabIndex = 46;
             // 
-            // frmForumExport
+            // ShareMenu
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(802, 425);
-            Controls.Add(tabStrip1);
+            ClientSize = new System.Drawing.Size(802, 430);
+            Controls.Add(navStrip1);
             Controls.Add(formPages1);
             DoubleBuffered = true;
             ForeColor = System.Drawing.Color.WhiteSmoke;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            Name = "frmForumExport";
+            Name = "ShareMenu";
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "Forum export";
+            Text = "Share Menu";
             Load += frmForumExport_Load;
             formPages1.ResumeLayout(false);
             page1.ResumeLayout(false);
@@ -559,7 +562,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private FormPages formPages1;
         private Page page1;
         private Page page2;
-        private Mids_Reborn.Controls.ctlTotalsTabStrip tabStrip1;
+        private ctlTotalsTabStrip tabStrip1;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox cbHtmlIncludeExtras;
         private System.Windows.Forms.CheckBox cbHtmlIncludeInc;
@@ -591,5 +594,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private System.Windows.Forms.ListBox lbColorTheme;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label11;
+        private NavStrip navStrip1;
     }
 }
