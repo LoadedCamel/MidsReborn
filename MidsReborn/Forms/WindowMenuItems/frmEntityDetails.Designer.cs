@@ -33,6 +33,7 @@
             lblEntityName = new System.Windows.Forms.Label();
             petView1 = new Controls.PetView();
             powersCombo1 = new Controls.PowersCombo();
+            cbPowerInclude = new System.Windows.Forms.CheckBox();
             SuspendLayout();
             // 
             // btnTopMost
@@ -122,12 +123,25 @@
             powersCombo1.Size = new System.Drawing.Size(171, 34);
             powersCombo1.TabIndex = 6;
             // 
+            // cbPowerInclude
+            // 
+            cbPowerInclude.AutoSize = true;
+            cbPowerInclude.ForeColor = System.Drawing.Color.WhiteSmoke;
+            cbPowerInclude.Location = new System.Drawing.Point(13, 580);
+            cbPowerInclude.Name = "cbPowerInclude";
+            cbPowerInclude.Size = new System.Drawing.Size(134, 19);
+            cbPowerInclude.TabIndex = 7;
+            cbPowerInclude.Text = "Show power in build";
+            cbPowerInclude.UseVisualStyleBackColor = true;
+            cbPowerInclude.CheckedChanged += cbPowerInclude_CheckedChanged;
+            // 
             // FrmEntityDetails
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(466, 614);
+            Controls.Add(cbPowerInclude);
             Controls.Add(powersCombo1);
             Controls.Add(petView1);
             Controls.Add(lblEntityName);
@@ -144,6 +158,7 @@
             TopMost = true;
             Load += frmEntityDetails_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -152,5 +167,6 @@
         private System.Windows.Forms.Label lblEntityName;
         private Controls.PetView petView1;
         private Controls.PowersCombo powersCombo1;
+        private System.Windows.Forms.CheckBox cbPowerInclude;
     }
 }

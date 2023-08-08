@@ -1882,12 +1882,18 @@ namespace Mids_Reborn.Forms
             if (FrmEntityDetails is not {Visible: true})
             {
                 FrmEntityDetails = new FrmEntityDetails(entityUid, powers, petInfo);
+                FrmEntityDetails.PowerIncludeChanged += FrmEntityDetails_PowerIncludeChanged;
                 FrmEntityDetails.Show(this);
             }
             else if (FrmEntityDetails.Visible)
             {
                 FrmEntityDetails.UpdateData(entityUid, powers);
             }
+        }
+
+        private void FrmEntityDetails_PowerIncludeChanged(IPower power)
+        {
+            PowerModified(true);
         }
 
         private bool EditAccoladesOrTemps(int hIDPower)
@@ -4466,7 +4472,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MainModule.MidsController.Toon.BuildPower(nIDPowerset, nIDPower);
             PowerModified(true);
             //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-            DoRedraw();
+            //DoRedraw();
         }
 
         private void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)

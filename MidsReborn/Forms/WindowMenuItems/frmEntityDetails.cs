@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
@@ -12,6 +14,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class FrmEntityDetails : Form
     {
+        public delegate void PowerIncludeChangedEventHandler(IPower power);
+        public event PowerIncludeChangedEventHandler PowerIncludeChanged;
+
         private const int WM_NCHITTEST = 0x84;
         private const int HTCLIENT = 0x1;
         private const int HTCAPTION = 0x2;
@@ -244,6 +249,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return;
             }
 
+            cbPowerInclude.Visible = power.ClickBuff | power.PowerType == Enums.ePowerType.Toggle;
+            cbPowerInclude.Checked = MidsContext.Character.CurrentBuild.PowerUsed(power);
+
             if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
 
@@ -316,6 +324,38 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnTopMost.UseAlt = charVillain;
             btnClose.UseAlt = charVillain;
             petView1.UseAlt = charVillain;
+        }
+
+        // Bug: DisplayLocation increases + 1 on every use
+        // Bug (CurrentBuild.AddPower): power modifications are ignored and have to be set on the resulting PowerEntry after the call
+        // Bug: Power can be toggled but it doesn't do anything in totals
+        // Bug: Entity name is appended on every use and change every occurrence of the power (entity details, dataview, database editor...)
+        // To be improved: checkbox responsiveness is very slow (1-2s freeze delay)
+        private void cbPowerInclude_CheckedChanged(object sender, EventArgs e)
+        {
+            var power = new Power((IPower)powersCombo1.Items[powersCombo1.SelectedIndex]);
+
+            if (MidsContext.Character?.CurrentBuild?.PowerUsed(power) == false)
+            {
+                var pe = MidsContext.Character.CurrentBuild.AddPower(power, 49);
+                pe.StatInclude = true; // Toggle on
+                pe.Power.IncludeFlag = true; // Show in inherents
+                pe.Power.InherentType = Enums.eGridType.Pet;
+                pe.Power.DisplayName += _entityData == null
+                    ? ""
+                    : $" ({_entityData.DisplayName})";
+                pe.Power.DisplayLocation = (int)MidsContext.Character?.CurrentBuild?.Powers // Pick first available index on the inherents grid
+                    .Where(e => e?.Power is { IncludeFlag: true })
+                    .Select(e => e?.Power?.DisplayLocation)
+                    .Max() + 1;
+                //Debug.WriteLine($"- IncludeFlag: {pe.Power.IncludeFlag}, DisplayLocation: {pe.Power.DisplayLocation}, NIDPower: {pe.NIDPower}, NIDPowerset: {pe.NIDPowerset}");
+            }
+            else
+            {
+                MidsContext.Character?.CurrentBuild?.RemovePower(power);
+            }
+
+            PowerIncludeChanged?.Invoke(power);
         }
     }
 }

@@ -836,13 +836,14 @@ namespace Mids_Reborn.Forms.Controls
                 ? GroupedFx.FilterListItemsExt(EffectsItemPairs,
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
-                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer) ||
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
+                             or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
-                             or Enums.eEffectType.DesignerStatus) ||
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 

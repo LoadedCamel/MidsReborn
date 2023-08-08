@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -299,27 +300,21 @@ namespace Mids_Reborn.Controls
                 {
                     if (MidsContext.Character.CanPlaceSlot & Highlight == i)
                     {
-                        var currentBuild = MidsContext.Character.CurrentBuild;
-                        var powers = currentBuild.Powers;
-                        var value = powers[i];
+                        var value = MidsContext.Character.CurrentBuild.Powers[i];
                         DrawPowerSlot(ref value, true);
-                        currentBuild.Powers[i] = value;
+                        MidsContext.Character.CurrentBuild.Powers[i] = value;
                     }
                     else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Chosen)
                     {
-                        var currentBuild = MidsContext.Character.CurrentBuild;
-                        var powers2 = currentBuild.Powers;
-                        var value = powers2[i];
+                        var value = MidsContext.Character.CurrentBuild.Powers[i];
                         DrawPowerSlot(ref value);
-                        currentBuild.Powers[i] = value;
+                        MidsContext.Character.CurrentBuild.Powers[i] = value;
                     }
                     else if (MidsContext.Character.CurrentBuild.Powers[i] != null && MidsContext.Character.CurrentBuild.Powers[i].Power != null && MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName == "Incarnate" | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
-                        var currentBuild = MidsContext.Character.CurrentBuild;
-                        var powers3 = currentBuild.Powers;
-                        var value = powers3[i];
+                        var value = MidsContext.Character.CurrentBuild.Powers[i];
                         DrawPowerSlot(ref value);
-                        currentBuild.Powers[i] = value;
+                        MidsContext.Character.CurrentBuild.Powers[i] = value;
                     }
                 }
 
