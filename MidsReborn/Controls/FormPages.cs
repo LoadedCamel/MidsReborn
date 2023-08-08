@@ -1,99 +1,229 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Design;
 using System.Windows.Forms;
-using Mids_Reborn.Forms.Controls;
+using MetaControls;
+using MetaControls.Designer;
 
 namespace Mids_Reborn.Controls
 {
+    [Designer(typeof(FormPagesDesigner))]
     public partial class FormPages : UserControl
     {
-        public event EventHandler<int>? SelectedPageChanged;
-        private int _pageIndex;
+        #region Events
 
-        [Editor("System.ComponentModel.Design.CollectionEditor, System.Design", typeof(UITypeEditor))]
+        public delegate void SelectedIndexChangedHandler(object? sender, int pageIndex);
+
+        [Category("Behavior")]
+        [Description("Occurs when the SelectedIndex value changes.")]
+        public event SelectedIndexChangedHandler? SelectedIndexChanged;
+
+        #endregion
+
+        private int _selectedPageIndex = -1;
+
         [Category("Behavior")]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ObservableCollection<Page> Pages { get; set; }
+        public BindingList<Page> Pages { get; set; }
 
+        /// <summary>
+        /// Gets or Sets the index of the currently selected page, if set to -1 then no page is selected.
+        /// </summary>
         [Category("Behavior")]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        [Bindable(true)]
         [SettingsBindable(true)]
-        [DefaultValue(1)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public int SelectedPage
+        public int SelectedIndex
         {
-            get => _pageIndex;
+            get => _selectedPageIndex;
             set
             {
-                if (value < 0) _pageIndex = 1;
-                else if (value > Pages.Count) _pageIndex = 1;
-                else _pageIndex = value;
-                SelectedPageChanged?.Invoke(this, _pageIndex);
+                if (value < -1)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+
+                if (value != -1 && value >= Pages.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _selectedPageIndex = value;
+                SelectedIndexChanged?.Invoke(this, _selectedPageIndex);
+            }
+        }
+
+        /// <summary>
+        /// Gets or Sets the currently selected page.
+        /// </summary>
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Page? SelectedPage
+        {
+            get
+            {
+                var index = _selectedPageIndex;
+                return index == -1 ? null : Pages[index];
+            }
+            set
+            {
+                var index = FindPage(value);
+                _selectedPageIndex = index;
             }
         }
 
         public FormPages()
         {
             InitializeComponent();
-            BorderStyle = BorderStyle.FixedSingle;
-            Pages = new ObservableCollection<Page>{new() {Name = "page1"}};
-            _pageIndex = 1;
-            Pages.CollectionChanged += PagesOnCollectionChanged;
-            SelectedPageChanged += OnSelectedPageChanged;
+            Load += OnLoad;
+            Pages = new BindingList<Page>();
+            Pages.ListChanged += PagesOnListChanged;
+            SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
-        private void OnSelectedPageChanged(object? sender, int pageIndex)
+        #region Navigational Methods
+
+        /// <summary>
+        /// Moves to the page specified by its index.
+        /// </summary>
+        public void NavigateTo(int index)
         {
-            for (var index = 0; index < Pages.Count; index++)
+            if (index < 0 || index > Pages.Count - 1) return;
+            if (Pages[index].Visible) return;
+            SelectedIndex = index;
+            // for (var i = 0; i < Pages.Count - 1; i++)
+            // {
+            //     if (i == index)
+            //     {
+            //         SelectedIndex = i;
+            //     }
+            // }
+        }
+
+        /// <summary>
+        /// Moves to the next page.
+        /// </summary>
+        public void NavigateForward()
+        {
+            if (_selectedPageIndex < 0 || _selectedPageIndex >= Pages.Count - 1) return;
+            SelectedIndex++;
+        }
+
+        /// <summary>
+        /// Moves to the previous page.
+        /// </summary>
+        public void NavigateBackward()
+        {
+            if (_selectedPageIndex <= 0) return;
+            SelectedIndex--;
+        }
+
+        #endregion
+
+
+        private int FindPage(Page? page)
+        {
+            if (Pages.Count == 0) return -1;
+            for (var i = 0; i < Pages.Count; i++)
             {
-                var page = Pages[index];
-                page.Visible = index == pageIndex - 1;
+                if (Pages[i].Equals(page))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private void OnSelectedIndexChanged(object? sender, int pageIndex)
+        {
+            if (Pages.Count <= 0) return;
+            if (pageIndex <= -1) return;
+            for (var index = 0; index < Pages.Count - 1; index++)
+            {
+                Pages[index].Visible = index == pageIndex;
             }
         }
 
-        private void PagesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnCreateControl()
         {
-            switch (e.Action)
+            base.OnCreateControl();
+            foreach (var page in Pages)
             {
-                case NotifyCollectionChangedAction.Add when e.NewItems != null:
-                {
-                    foreach (Page page in e.NewItems)
+                page.Size = ClientRectangle.Size;
+                page.Dock = DockStyle.Fill;
+            }
+        }
+
+        protected override void OnControlRemoved(ControlEventArgs e)
+        {
+            base.OnControlRemoved(e);
+            if (e.Control is not Page page) return;
+            if (SelectedPage == page)
+            {
+                SelectedPage = Pages.Count > 0 ? Pages[^1] : null;
+            }
+            if (Pages.Contains(page))
+            {
+                Pages.Remove(page);
+            }
+        }
+
+        private void OnLoad(object? sender, EventArgs e)
+        {
+            foreach (var page in Pages)
+            {
+                page.Location = ClientRectangle.Location;
+                page.Size = ClientRectangle.Size;
+                page.Dock = DockStyle.Fill;
+            }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            foreach (var page in Pages)
+            {
+                page.Location = ClientRectangle.Location;
+                page.Size = ClientRectangle.Size;
+                page.Dock = DockStyle.Fill;
+            }
+        }
+
+        private void PagesOnListChanged(object? sender, ListChangedEventArgs e)
+        {
+            switch (e.ListChangedType)
+            {
+                case ListChangedType.ItemAdded:
+                    var page = Pages[e.NewIndex];
+                    page.Location = ClientRectangle.Location;
+                    page.Size = ClientRectangle.Size;
+                    page.Dock = DockStyle.Fill;
+                    Controls.Add(page);
+                    if (Pages.Count < 2)
                     {
-                        if (Controls.Contains(page)) return;
-                        page.Location = new Point(3, 3);
-                        page.Size = ClientRectangle.Size;
-                        page.Dock = DockStyle.Fill;
-                        Controls.Add(page);
-                        Controls.SetChildIndex(page, e.NewStartingIndex);
-                        page.Visible = e.NewStartingIndex == 0;
+                        SelectedPage = page;
+                    }
+                    break;
+                case ListChangedType.ItemDeleted:
+                    if (e.NewIndex < Controls.Count && Controls[e.NewIndex] is Page pageToRemove)
+                    {
+                        if (SelectedPage == pageToRemove)
+                        {
+                            SelectedPage = Pages.Count > 0 ? Pages[^1] : null;
+                        }
+
+                        Controls.Remove(pageToRemove);
                     }
 
                     break;
-                }
-                case NotifyCollectionChangedAction.Remove when e.OldItems != null:
-                {
-                    Controls.RemoveAt(e.OldStartingIndex);
+                case ListChangedType.ItemMoved:
                     break;
-                }
-                case NotifyCollectionChangedAction.Replace:
+                case ListChangedType.ItemChanged:
                     break;
-                case NotifyCollectionChangedAction.Move:
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
-
     }
 }

@@ -20,17 +20,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void OnLoad(object? sender, EventArgs e)
         {
             CenterToParent();
-            formPages1.SelectedPage = MidsContext.Config.Mode switch
+            formPages1.SelectedIndex = MidsContext.Config.Mode switch
             {
-                ConfigData.Modes.AppAdmin => 1,
-                ConfigData.Modes.DbAdmin => 2,
-                _ => formPages1.SelectedPage
+                ConfigData.Modes.AppAdmin => 0,
+                ConfigData.Modes.DbAdmin => 1,
+                _ => formPages1.SelectedIndex
             };
         }
 
         private async void App_Click(object? sender, EventArgs e)
         {
-            formPages1.SelectedPage = 3;
+            formPages1.SelectedIndex = 2;
             _compressor = PatchCompressor.AppPatchCompressor;
             _compressor.ProgressChanged += CompressorOnProgressChanged;
             await Task.Delay(100);
@@ -39,7 +39,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private async void Database_Click(object? sender, EventArgs e)
         {
-            formPages1.SelectedPage = 3;
+            formPages1.SelectedIndex = 2;
             _compressor = PatchCompressor.DbPatchCompressor;
             _compressor.ProgressChanged += CompressorOnProgressChanged;
             await Task.Delay(100);

@@ -1,6 +1,6 @@
-﻿namespace Mids_Reborn.Forms.Controls
+﻿namespace Mids_Reborn.Controls
 {
-    partial class Page
+    partial class NavStrip
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,6 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Size = new System.Drawing.Size(400, 50);
         }
 
         #endregion

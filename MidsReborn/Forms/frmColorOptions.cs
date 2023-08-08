@@ -24,7 +24,7 @@ namespace Mids_Reborn.Forms
             _myFs.Assign(MidsContext.Config.RtFont);
         }
 
-        private void ColorOptions_OnLoad(object sender, EventArgs e)
+        private void ColorOptions_OnLoad(object? sender, EventArgs e)
         {
             updateColors();
         }
@@ -241,12 +241,17 @@ namespace Mids_Reborn.Forms
                                RTF.Color(RTF.ElementID.Enhancement) + "Enhanced value" + RTF.Crlf() +
                                RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") +
                                RTF.Color(RTF.ElementID.Invention) + "Invention Effect" + RTF.Crlf() + RTF.EndRTF();
-            _myFs.ColorList = new List<Color>
+            // _myFs.ColorList = new List<Color>
+            // {
+            //     _myFs.ColorPowerTakenHero, _myFs.ColorPowerTakenDarkHero, _myFs.ColorPowerHighlightHero,
+            //     _myFs.ColorPowerTakenVillain, _myFs.ColorPowerTakenDarkVillain, _myFs.ColorPowerHighlightVillain
+            // };
+            var colorList = new List<Color>
             {
                 _myFs.ColorPowerTakenHero, _myFs.ColorPowerTakenDarkHero, _myFs.ColorPowerHighlightHero,
                 _myFs.ColorPowerTakenVillain, _myFs.ColorPowerTakenDarkVillain, _myFs.ColorPowerHighlightVillain
             };
-            ctlColorList1.Colors = _myFs.ColorList;
+            ctlColorList1.Colors = colorList;
             ctlColorList1.Items.Clear();
             var powerColors = new List<string>
             {

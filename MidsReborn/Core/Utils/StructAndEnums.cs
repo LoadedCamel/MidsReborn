@@ -1,4 +1,7 @@
-﻿namespace Mids_Reborn.Core.Utils
+﻿using System;
+using System.Drawing;
+
+namespace Mids_Reborn.Core.Utils
 {
     public struct TypeGrade
     {
@@ -53,5 +56,20 @@
             File = file;
             ExtractTo = extract;
         }
+    }
+
+    [Flags]
+    public enum NavItemState
+    {
+        Active = 0,
+        Disabled = 1,
+        Inactive = 2,
+    }
+
+    [Flags]
+    public enum NavLayout
+    {
+        Horizontal = 0,
+        Vertical = 1
     }
 }

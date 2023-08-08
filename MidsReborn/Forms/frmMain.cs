@@ -6243,7 +6243,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ForumExport2_Click(object? sender, EventArgs e)
         {
-            using var fe = new  frmForumExport();
+            using var fe = new  ShareMenu();
             fe.ShowDialog(this);
         }
 

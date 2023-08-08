@@ -51,7 +51,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             StylizeWindow(Handle, Color.Black, Color.Black, Color.WhiteSmoke);
             Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
 
-            formPages1.SelectedPage = 1;
+            formPages1.SelectedIndex = 0;
 
             var formatsListStr = string.Join(", ", FormatTypes.Keys.Select(e => e == "No Codes" ? "Plain Text" : e));
             var place = formatsListStr.LastIndexOf(", ");
@@ -490,7 +490,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void tabStrip1_TabClick(int index)
         {
-            formPages1.SelectedPage = index + 1;
+            formPages1.SelectedIndex = index;
         }
 
         private void cbHtmlIncludeAcc_CheckedChanged(object sender, EventArgs e)

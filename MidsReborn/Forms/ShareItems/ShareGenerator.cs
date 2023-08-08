@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.ShareItems
             var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{chunk}\n");
             var data = new DataObject(dataChunk);
             Clipboard.SetDataObject(data, true);
-            var messageBox = new MessageBoxEx("The data chunk has been copied to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+            var messageBox = new MessageBoxEx("The data chunk has been added to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
 
@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.ShareItems
             }
 
             Clipboard.SetDataObject(data, true);
-            var messageBox = new MessageBoxEx("Submission Complete, the links have been copied to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+            var messageBox = new MessageBoxEx("Submission Complete, the links have been added to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
 
@@ -74,7 +74,7 @@ namespace Mids_Reborn.Forms.ShareItems
             var dataObject = new DataObject();
             dataObject.SetData(DataFormats.StringFormat, $"{updateResponse.PageUrl}");
             Clipboard.SetDataObject(dataObject, true);
-            var msgBox = new MessageBoxEx("Your mobile friendly link has been added to your clipboard.\r\nYou may now paste it on the medium of your choice.", MessageBoxEx.MessageBoxButtons.Okay);
+            var msgBox = new MessageBoxEx("Your mobile friendly link has been added to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay);
             msgBox.ShowDialog(Application.OpenForms["frmMain"]);
         }
     }

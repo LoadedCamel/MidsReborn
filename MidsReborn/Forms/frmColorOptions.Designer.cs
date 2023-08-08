@@ -605,6 +605,7 @@ namespace Mids_Reborn.Forms
             this.ctlColorList1.Location = new System.Drawing.Point(277, 264);
             this.ctlColorList1.Name = "ctlColorList1";
             this.ctlColorList1.Size = new System.Drawing.Size(204, 186);
+            this.ctlColorList1.SelectionMode = SelectionMode.None;
             this.ctlColorList1.TabIndex = 14;
             // 
             // label20
