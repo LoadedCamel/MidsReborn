@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -21,6 +20,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private const int HTCLIENT = 0x1;
         private const int HTCAPTION = 0x2;
         private const int WM_NCLBUTTONDBLCLK = 0x00A3;
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+
+        [DllImport("User32.dll")]
+        public static extern bool ReleaseCapture();
+
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         private string _entityUid;
         private List<string> _powers;
@@ -98,24 +104,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 message.Result = (IntPtr)HTCAPTION;
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            using var pen = new Pen(Color.Silver, 1);
-            var strokeOffset = Convert.ToInt32(Math.Ceiling(pen.Width));
-            var cornerRadius = 10;
-            var bounds = Rectangle.Inflate(e.ClipRectangle, -strokeOffset, -strokeOffset);
-            pen.EndCap = pen.StartCap = LineCap.Round;
-            using var path = new GraphicsPath();
-            path.AddArc(bounds.X, bounds.Y, cornerRadius, cornerRadius, 180, 90);
-            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y, cornerRadius, cornerRadius, 270, 90);
-            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 0, 90);
-            path.AddArc(bounds.X, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 90, 90);
-            path.CloseAllFigures();
-
-            e.Graphics.FillPath(new SolidBrush(Color.FromArgb(75, BackColor)), path);
-            e.Graphics.DrawPath(pen, path);
-        }
-
         private void OnClosed(object? sender, EventArgs e)
         {
             MidsContext.Config.EntityDetailsLocation = Location;
@@ -181,17 +169,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmEntityDetails_Load(object sender, EventArgs e)
         {
-            btnTopMost.Visible = false;
             var owner = (frmMain)Owner;
 
-            if (MidsContext.Config.EntityDetailsLocation == null)
-            {
-                Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
-            }
-            else
-            {
-                Location = (Point)MidsContext.Config.EntityDetailsLocation;
-            }
+            Location = MidsContext.Config.EntityDetailsLocation == null
+                ? new Point(owner.Location.X + 10, owner.Bottom - Height - 10)
+                : (Point)MidsContext.Config.EntityDetailsLocation;
 
             switch (TopMost)
             {
@@ -328,7 +310,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         // Bug: DisplayLocation increases + 1 on every use
         // Bug (CurrentBuild.AddPower): power modifications are ignored and have to be set on the resulting PowerEntry after the call
-        // Bug: Power can be toggled but it doesn't do anything in totals
         // Bug: Entity name is appended on every use and change every occurrence of the power (entity details, dataview, database editor...)
         // To be improved: checkbox responsiveness is very slow (1-2s freeze delay)
         private void cbPowerInclude_CheckedChanged(object sender, EventArgs e)
@@ -356,6 +337,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             PowerIncludeChanged?.Invoke(power);
+        }
+
+        private void borderPanel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            ReleaseCapture();
+            SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
         }
     }
 }

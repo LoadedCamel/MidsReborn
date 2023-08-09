@@ -34,6 +34,8 @@
             petView1 = new Controls.PetView();
             powersCombo1 = new Controls.PowersCombo();
             cbPowerInclude = new System.Windows.Forms.CheckBox();
+            borderPanel1 = new Controls.BorderPanel();
+            borderPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // btnTopMost
@@ -135,18 +137,31 @@
             cbPowerInclude.UseVisualStyleBackColor = true;
             cbPowerInclude.CheckedChanged += cbPowerInclude_CheckedChanged;
             // 
+            // borderPanel1
+            // 
+            borderPanel1.Border.Color = System.Drawing.Color.Silver;
+            borderPanel1.Border.Style = System.Windows.Forms.ButtonBorderStyle.Solid;
+            borderPanel1.Border.Thickness = 1;
+            borderPanel1.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
+            borderPanel1.Controls.Add(cbPowerInclude);
+            borderPanel1.Controls.Add(powersCombo1);
+            borderPanel1.Controls.Add(petView1);
+            borderPanel1.Controls.Add(lblEntityName);
+            borderPanel1.Controls.Add(btnClose);
+            borderPanel1.Controls.Add(btnTopMost);
+            borderPanel1.Location = new System.Drawing.Point(3, 3);
+            borderPanel1.Name = "borderPanel1";
+            borderPanel1.Size = new System.Drawing.Size(460, 608);
+            borderPanel1.TabIndex = 8;
+            borderPanel1.MouseDown += borderPanel1_MouseDown;
+            // 
             // FrmEntityDetails
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(466, 614);
-            Controls.Add(cbPowerInclude);
-            Controls.Add(powersCombo1);
-            Controls.Add(petView1);
-            Controls.Add(lblEntityName);
-            Controls.Add(btnClose);
-            Controls.Add(btnTopMost);
+            Controls.Add(borderPanel1);
             DoubleBuffered = true;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Margin = new System.Windows.Forms.Padding(41, 18, 41, 18);
@@ -157,8 +172,9 @@
             Text = "Entity Details";
             TopMost = true;
             Load += frmEntityDetails_Load;
+            borderPanel1.ResumeLayout(false);
+            borderPanel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -168,5 +184,6 @@
         private Controls.PetView petView1;
         private Controls.PowersCombo powersCombo1;
         private System.Windows.Forms.CheckBox cbPowerInclude;
+        private Controls.BorderPanel borderPanel1;
     }
 }

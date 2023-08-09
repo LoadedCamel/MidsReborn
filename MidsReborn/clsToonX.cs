@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -687,11 +686,6 @@ namespace Mids_Reborn
                             }
                         }
                     }
-                }
-
-                if (tPwr.DisplayName.Contains("(Protector Bot)"))
-                {
-                    Debug.WriteLine($"{tPwr.DisplayName} defense: [{string.Join(", ", nBuffs.Defense)}]");
                 }
             }
         }
