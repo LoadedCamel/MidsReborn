@@ -96,6 +96,17 @@ namespace Mids_Reborn.Core
             }
         }
 
+        public struct EnhancedMagSum
+        {
+            public float Base;
+            public float Enhanced;
+
+            public override string ToString()
+            {
+                return $"<EnhancedMagSum> {{Base: {Base}, Enhanced: {Enhanced}}}";
+            }
+        }
+
         private FxId FxIdentifier;
         private Enums.eSpecialCase SpecialCase;
         private float Mag;
@@ -220,6 +231,17 @@ namespace Mids_Reborn.Core
         public IEffect GetEffectAt(IPower power, int index = 0)
         {
             return power.Effects[IncludedEffects[index]];
+        }
+
+        /// <summary>
+        /// Get mathing effect from an effect index (in power effects)
+        /// </summary>
+        /// <param name="power">Source power</param>
+        /// <param name="index">Effect index</param>
+        /// <returns>Matching effect from source power</returns>
+        private IEffect GetPowerEffectAt(IPower power, int index = 0)
+        {
+            return power.Effects[index];
         }
 
         /// <summary>
@@ -1345,7 +1367,20 @@ namespace Mids_Reborn.Core
                 groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
             }
 
-            return groupedRankedEffects2;
+            // Pass 3: generate aggregated GroupedFx, recalc mag sum
+            
+            var greAggregated = Aggregate(groupedRankedEffects2);
+            foreach (var gre in greAggregated)
+            {
+                if (!gre.IsAggregated)
+                {
+                    continue;
+                }
+
+                gre.Mag = gre.GetMagSum(power);
+            }
+
+            return greAggregated;
         }
 
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
@@ -1529,6 +1564,117 @@ namespace Mids_Reborn.Core
             return string.Join(", ", effectShorts);
         }
 
+        /// <summary>
+        /// Get the total magnitude of a grouped effect.
+        /// If all values are negative sum up everything.
+        /// If some are positive, ignore the negative ones.
+        /// This overload will return magnitude sum based on base and enhanced powers.
+        /// </summary>
+        /// <param name="pBase">Base power</param>
+        /// <param name="pEnh">Enhanced power</param>
+        /// <returns>Magnitude sum for this grouped effect based on both base and enhanced power as an EnhancedMagSum struct.</returns>
+        public EnhancedMagSum GetMagSum(IPower pBase, IPower pEnh)
+        {
+            var allNegBase = IncludedEffects
+                .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                .All(e => e < 0);
+
+            var allNegEnh = IncludedEffects
+                .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                .All(e => e < 0);
+
+            return new EnhancedMagSum
+            {
+                Base = allNegBase
+                    ? IncludedEffects
+                        .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                        .Sum()
+                    : IncludedEffects
+                        .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                        .Where(e => e > 0)
+                        .Sum(),
+                Enhanced = allNegEnh
+                    ? IncludedEffects
+                        .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                        .Sum()
+                    : IncludedEffects
+                        .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                        .Where(e => e > 0)
+                        .Sum()
+            };
+        }
+
+        /// <summary>
+        /// Get the total magnitude of a grouped effect.
+        /// If all values are negative sum up everything.
+        /// If some are positive, ignore the negative ones.
+        /// This overload will return magnitude sum based on a single power.
+        /// </summary>
+        /// <remarks>This is intended to be used with the enhanced power as a shortcut.</remarks>
+        /// <param name="power">Source power</param>
+        /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
+        public float GetMagSum(IPower power)
+        {
+            var allNegEnh = IncludedEffects
+                .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                .All(e => e < 0);
+
+            return allNegEnh
+                ? IncludedEffects
+                    .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                    .Sum()
+                : IncludedEffects
+                    .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                    .Where(e => e > 0)
+                    .Sum();
+        }
+        
+        /// <summary>
+        /// Create an aggregated list of GroupedFx from multiple similar ones.
+        /// </summary>
+        /// <param name="greList">Source list of grouped effects</param>
+        /// <returns>List of merged grouped effects. Those created this way will have IsAggregated = true</returns>
+        public static List<GroupedFx> Aggregate(List<GroupedFx> greList)
+        {
+            var ret = new List<GroupedFx>();
+            var excludedGre = new List<int>();
+
+            for (var i = 0; i < greList.Count; i++)
+            {
+                if (excludedGre.Contains(i))
+                {
+                    continue;
+                }
+
+                excludedGre.Add(i);
+                var includedGre = new List<int> {i};
+                for (var j = 0; j < greList.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
+                    if (excludedGre.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier))
+                    {
+                        continue;
+                    }
+
+                    includedGre.Add(j);
+                    excludedGre.Add(j);
+                }
+
+                ret.Add(new GroupedFx(greList[i].FxIdentifier, includedGre.Select(e => greList[e]).ToList()));
+            }
+
+            return ret;
+        }
+
         /// <summary>Post-processing of a ranked effect to fine-tune display</summary>
         /// <param name="rankedEffect">Base ranked effect (as ref)</param>
         /// <param name="pBase">Source power (base)</param>
@@ -1543,6 +1689,7 @@ namespace Mids_Reborn.Core
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = gre.GetTooltip(pEnh);
+            var magSum = gre.GetMagSum(pEnh);
             var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
                 (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
                 (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon;
@@ -1569,8 +1716,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Endurance:
                     rankedEffect.Name = $"{effectType}";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
-                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
+                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
+                        : $"{magSum:###0.##}{toWhoShort}";
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -1583,7 +1730,7 @@ namespace Mids_Reborn.Core
 
                     break;
 
-                case Enums.eEffectType.EntCreate: // when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
+                case Enums.eEffectType.EntCreate: // when !power.AbsorbSummonEffects | !power.AbsorbSummonAttributes:
                     rankedEffect.Name = "Summon";
                     rankedEffect.Value = effectSource.nSummon > -1
                         ? DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName
@@ -1677,6 +1824,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
+                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%";
                     rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
@@ -1743,12 +1891,16 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MezResist:
                 case Enums.eEffectType.Enhancement:
                 case Enums.eEffectType.ResEffect:
-                    rankedEffect.Name = effectType == Enums.eEffectType.Enhancement & gre.ToWho == Enums.eToWho.Target & effectSource.Mag < 0
+                    rankedEffect.Name = effectType == Enums.eEffectType.Enhancement
                         ? gre.IncludedEffects.Count > 1
-                            ? "Debuff"
-                            : $"-{effectSource.ETModifies}"
-                        : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
+                            ? effectSource.Mag < 0
+                                ? "Debuff"
+                                : "Enhancement"
+                            : $"{(effectSource.Mag < 0 ? "-" : "+")}{effectSource.ETModifies}"
+                        : FastItemBuilder.Str.ShortStr(displayBlockFontSize,
+                            Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
+
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
                         : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
@@ -1758,38 +1910,20 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.PerceptionRadius:
                     rankedEffect.Name = $"Pceptn{toWhoShort}";
-                    rankedEffect.Value =
-                        $"{(effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}%" : $"{effectSource.BuffedMag:###0.##}")} ({Statistics.BasePerception * effectSource.BuffedMag:###0.##}ft)";
+                    rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{magSum * 100:###0.##}%" : $"{magSum:###0.##}")} ({Statistics.BasePerception * magSum:###0.##}ft)";
+
+                    break;
+
+                case Enums.eEffectType.ToHit:
+                case Enums.eEffectType.Heal:
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%";
 
                     break;
 
                 default:
                     var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
-                    var magSumEnh = pEnh.Effects
-                        .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                     !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                     e.PvMode == Enums.ePvX.Any) &
-                                    effectSource.ToWho == e.ToWho &
-                                    effectSource.EffectType == e.EffectType &
-                                    effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
-                        .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                        .Sum();
 
-                    /*
-                    var magSumBase = pBase.Effects
-                        .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                     !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                     e.PvMode == Enums.ePvX.Any) &
-                                    effectSource.ToWho == e.ToWho &
-                                    effectSource.EffectType == e.EffectType &
-                                    effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
-                        .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                        .Sum();
-                    */
-
-                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
+                    rankedEffect.Value = $"{magSum:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
                     //rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon & effectSource.Buffable & powerInBuild;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
@@ -1801,7 +1935,9 @@ namespace Mids_Reborn.Core
                                     effectSource.ToWho == e.ToWho &
                                     effectSource.EffectType == e.EffectType &
                                     effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
+                                    effectSource.ETModifies == e.ETModifies &
+                                    (effectSource.PvMode == e.PvMode | e.PvMode == Enums.ePvX.Any) &
+                                    effectSource.IgnoreScaling == e.IgnoreScaling)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
 
                     break;
