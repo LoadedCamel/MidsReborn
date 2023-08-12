@@ -21,9 +21,9 @@ namespace Mids_Reborn.Core
         public const string MxdbFileOverrides = "Compare.mhd";
         public const string MxdbFileModifiers = "AttribMod.mhd";
         public const string MxdbFileEffectIds = "GlobalMods.mhd";
-        public const string MxdbFileSd = "SData.mhd";
         public const string MxdbFileGraphics = "I9.mhd";
 
+        public const string ServerDataFile = "SData.json";
         public const string JsonFileModifiers = "AttribMod.json";
         public const string JsonFileTypeGrades = "TypeGrades.json";
         private const string JsonFileConfig = "appSettings.json";

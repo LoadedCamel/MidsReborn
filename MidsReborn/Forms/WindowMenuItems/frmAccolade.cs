@@ -28,7 +28,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ListLabelV3 llRight;
         private Panel Panel1;
 
-        private frmIncarnate.CustomPanel Panel2;
+        private FrmIncarnate.CustomPanel Panel2;
 
         private ctlPopUp PopInfo;
 

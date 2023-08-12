@@ -2907,7 +2907,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (flag)
             {
                 var iParent = this;
-                fIncarnate = new frmIncarnate(ref iParent);
+                fIncarnate = new FrmIncarnate(ref iParent);
             }
 
             if (fIncarnate is { Visible: false })
@@ -6267,13 +6267,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void tsImportShortCode_Click(object? sender, EventArgs e)
         {
-            var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (!shortInput.OK) return;
-            var response = await ShareClient.GetBuild(shortInput.Text);
-            if (response != null)
-            {
-                DoLoadFromSchema(response);
-            }
+            // MessageBox.Show("test");
+            // var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            // if (!shortInput.OK) return;
+            // var response = await ShareClient.GetBuild(shortInput.Text);
+            // if (response != null)
+            // {
+            //     DoLoadFromSchema(response);
+            // }
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)
@@ -7202,16 +7203,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                     }
 
-                    var num1 = fIncarnate.LLLeft.Items.Length - 1;
+                    var num1 = fIncarnate.LlLeft.Items.Length - 1;
                     for (var index = 0; index <= num1; ++index)
-                        fIncarnate.LLLeft.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-                    var num2 = fIncarnate.LLRight.Items.Length - 1;
+                        fIncarnate.LlLeft.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
+                    var num2 = fIncarnate.LlRight.Items.Length - 1;
                     for (var index = 0; index <= num2; ++index)
-                        fIncarnate.LLRight.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-                    fIncarnate.LLLeft.SuspendRedraw = false;
-                    fIncarnate.LLRight.SuspendRedraw = false;
-                    fIncarnate.LLLeft.Refresh();
-                    fIncarnate.LLRight.Refresh();
+                        fIncarnate.LlRight.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
+                    fIncarnate.LlLeft.SuspendRedraw = false;
+                    fIncarnate.LlRight.SuspendRedraw = false;
+                    fIncarnate.LlLeft.Refresh();
+                    fIncarnate.LlRight.Refresh();
                 }
             }
 
@@ -7673,7 +7674,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private frmCompare? fGraphCompare;
         private frmStats? fGraphStats;
         private bool FileModified { get; set; }
-        private frmIncarnate? fIncarnate;
+        private FrmIncarnate? fIncarnate;
         private frmMMPowers? fMMPets;
         private frmPrestige? fPrestige;
         private bool FlipActive;

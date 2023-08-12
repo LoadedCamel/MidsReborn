@@ -170,8 +170,8 @@ namespace Mids_Reborn.Forms.Controls
             // InputBox
             // 
             AcceptButton = buttonOK;
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             CancelButton = buttonCancel;
             ClientSize = new Size(492, 95);

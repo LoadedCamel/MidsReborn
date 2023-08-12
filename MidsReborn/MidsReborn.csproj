@@ -73,6 +73,9 @@
     <Content Include="Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\Rebirth\SData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Fonts\NotoSans-Black.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -373,6 +376,7 @@
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Data\Rebirth\SData.json" />
     <None Remove="Fonts\NotoSans-Black.ttf" />
     <None Remove="Fonts\NotoSans-BlackItalic.ttf" />
     <None Remove="Fonts\NotoSans-Bold.ttf" />
