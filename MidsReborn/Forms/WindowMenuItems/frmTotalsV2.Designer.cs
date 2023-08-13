@@ -474,6 +474,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "MPH";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton2
             // 
@@ -487,6 +488,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "KPH";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton3
             // 
@@ -500,6 +502,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "Feet/Sec";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton4
             // 
@@ -513,6 +516,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton4.TabStop = true;
             this.radioButton4.Text = "Meters/Sec";
             this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // graphThreat
             // 
@@ -731,7 +735,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.Lines = true;
             this.graphToHit.Location = new System.Drawing.Point(12, 409);
             this.graphToHit.MarkerValue = 0F;
-            this.graphToHit.Max = 100F;
+            this.graphToHit.Max = 250F;
             this.graphToHit.MaxItems = 1;
             this.graphToHit.Name = "graphToHit";
             this.graphToHit.OuterBorder = true;

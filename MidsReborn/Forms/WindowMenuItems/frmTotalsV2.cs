@@ -437,6 +437,138 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
+        private void UpdateMovementData()
+        {
+            const int graphBottomMargin = 8;
+            var displayStats = MidsContext.Character.DisplayStats;
+            var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
+            var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
+
+            graphMovement.Clear();
+
+            var runSpdBase = displayStats.Speed(Statistics.BaseRunSpeed, MidsContext.Config.SpeedFormat);
+            var runSpdValue = displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false);
+            var runSpdUncapped = displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, true);
+            graphMovement.AddItemPair("Run Speed",
+                $"{runSpdValue:##0.##} {movementUnitSpeed}",
+                Math.Max(0, runSpdBase),
+                Math.Max(0, runSpdValue),
+                Math.Max(0, runSpdUncapped),
+                (runSpdUncapped > runSpdValue & runSpdValue > 0
+                    ? $"{runSpdUncapped:##0.##} {movementUnitSpeed} Run Speed, capped at {runSpdValue:##0.##} {movementUnitSpeed}"
+                    : $"{runSpdValue:##0.##} {movementUnitSpeed} Run Speed"
+                ) +
+                (runSpdBase > 0
+                    ? $"\r\nBase: {runSpdBase:##0.##} {movementUnitSpeed}"
+                    : "")
+
+                );
+
+            var jumpSpdBase = displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond);
+            var jumpSpdValue = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false);
+            var jumpSpdUncapped = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, true);
+            graphMovement.AddItemPair("Jump Speed",
+                $"{jumpSpdValue:##0.##} {movementUnitSpeed}",
+                Math.Max(0, jumpSpdBase),
+                Math.Max(0, jumpSpdValue),
+                Math.Max(0, jumpSpdUncapped),
+                (jumpSpdUncapped > jumpSpdValue & jumpSpdValue > 0
+                    ? $"{jumpSpdUncapped:##0.##} {movementUnitSpeed} Jump Speed, capped at {jumpSpdValue:##0.##} {movementUnitSpeed}"
+                    : $"{jumpSpdValue:##0.##} {movementUnitSpeed} Jump Speed"
+                ) +
+                (jumpSpdBase > 0
+                    ? $"\r\nBase: {jumpSpdBase:##0.##} {movementUnitSpeed}"
+                    : "")
+
+
+                );
+
+            var jumpHeightBase = displayStats.Distance(Statistics.BaseJumpHeight, MidsContext.Config.SpeedFormat);
+            var jumpHeightValue = displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat);
+            graphMovement.AddItemPair("Jump Height",
+                $"{jumpHeightValue:##0.##} {movementUnitDistance}",
+                Math.Max(0, jumpHeightBase),
+                Math.Max(0, jumpHeightValue),
+                $"{jumpHeightValue:##0.##} {movementUnitDistance} Jump Height" +
+                (jumpHeightBase > 0
+                    ? $"\r\nBase: {jumpHeightBase:##0.##} {movementUnitDistance}"
+                    : "")
+
+                );
+
+            var flySpeedValue = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false);
+            var flySpeedBase = flySpeedValue == 0
+                ? 0
+                : displayStats.Speed(Statistics.BaseFlySpeed, MidsContext.Config.SpeedFormat);
+            var flySpeedUncapped = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, true);
+            graphMovement.AddItemPair("Fly Speed",
+                $"{flySpeedValue:##0.##} {movementUnitSpeed}",
+                Math.Max(0, flySpeedBase),
+                Math.Max(0, flySpeedValue),
+                Math.Max(0, flySpeedUncapped),
+                (flySpeedUncapped > flySpeedValue & flySpeedValue > 0
+                    ? $"{flySpeedUncapped:##0.##} {movementUnitSpeed} Fly Speed, capped at {flySpeedValue:##0.##} {movementUnitSpeed}"
+                    : $"{flySpeedValue:##0.##} {movementUnitSpeed} Fly Speed"
+                ) +
+                (flySpeedBase > 0
+                    ? $"\r\nBase: {flySpeedBase:##0.##} {movementUnitSpeed}"
+                    : ""));
+
+            graphMovement.Size = graphMovement.Size with { Height = Math.Max(graphMovement.Size.Height, graphMovement.ContentHeight + graphBottomMargin) };
+            graphMovement.Draw();
+        }
+
+        private void UpdatePerceptionData()
+        {
+            const int graphBottomMargin = 8;
+            var displayStats = MidsContext.Character.DisplayStats;
+            var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
+
+            graphPerception.Clear();
+            graphPerception.AddItemPair("PvE",
+                $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat):###0.##} {movementUnitDistance}",
+                0,
+                displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat),
+                GenericDataTooltip3(displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat), 0, displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat), "Stealth (PvE)", "", movementUnitDistance));
+
+            graphPerception.AddItemPair("PvP",
+                $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat):###0.##} {movementUnitDistance}",
+                0,
+                displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat),
+                GenericDataTooltip3(displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat), 0, displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat), "Stealth (PvP)", "", movementUnitDistance));
+
+            graphPerception.AddItemPair("Perception",
+                $"{displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat):###0.##} {movementUnitDistance}",
+                displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat),
+                displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat),
+                displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat),
+                GenericDataTooltip3(displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat), displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat), displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat), "Perception", "", movementUnitDistance)
+            );
+
+            graphPerception.Size = graphPerception.Size with { Height = Math.Max(graphPerception.Size.Height, graphPerception.ContentHeight + graphBottomMargin) };
+            graphPerception.Draw();
+        }
+
+        private void rbUnits_CheckChanged(object sender, EventArgs e)
+        {
+            var target = (RadioButton) sender;
+            if (!target.Checked)
+            {
+                return;
+            }
+
+            MidsContext.Config.SpeedFormat = target.Name switch
+            {
+                "radioButton2" => Enums.eSpeedMeasure.KilometersPerHour,
+                "radioButton3" => Enums.eSpeedMeasure.FeetPerSecond,
+                "radioButton4" => Enums.eSpeedMeasure.MetersPerSecond,
+                _ => Enums.eSpeedMeasure.MilesPerHour
+            };
+
+            UpdateMovementData();
+            UpdatePerceptionData();
+        }
+
         #region ImageButtonEx buttons handlers
 
         private void IbCloseClick(object sender, EventArgs e)
@@ -497,6 +629,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             const int graphBottomMargin = 8;
             var displayStats = MidsContext.Character.DisplayStats;
             var atName = MidsContext.Character.Archetype.DisplayName;
+
+            var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
+            //var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
 
             var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
             var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));
@@ -638,106 +773,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphEnd.Size = graphEnd.Size with {Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + graphBottomMargin)};
             graphEnd.Draw();
 
-            graphMovement.Clear();
-            var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
-            var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
+            ///////////////////////////////
 
-            var runSpdBase = displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond);
-            var runSpdValue = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            var runSpdUncapped = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
-            graphMovement.AddItemPair("Run Speed",
-                $"{runSpdValue:##0.##} mph",
-                Math.Max(0, runSpdBase),
-                Math.Max(0, runSpdValue),
-                Math.Max(0, runSpdUncapped),
-                (runSpdUncapped > runSpdValue & runSpdValue > 0
-                    ? $"{runSpdUncapped:##0.##} {movementUnitSpeed} Run Speed, capped at {runSpdValue:##0.##} {movementUnitSpeed}"
-                    : $"{runSpdValue:##0.##} {movementUnitSpeed} Run Speed"
-                ) +
-                (runSpdBase > 0
-                    ? $"\r\nBase: {runSpdBase:##0.##} {movementUnitSpeed}"
-                    : "")
-                
-                );
-
-            var jumpSpdBase = displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond);
-            var jumpSpdValue = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            var jumpSpdUncapped = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
-            graphMovement.AddItemPair("Jump Speed",
-                $"{jumpSpdValue:##0.##} mph",
-                Math.Max(0, jumpSpdBase),
-                Math.Max(0, jumpSpdValue),
-                Math.Max(0, jumpSpdUncapped),
-                (jumpSpdUncapped > jumpSpdValue & jumpSpdValue > 0
-                    ? $"{jumpSpdUncapped:##0.##} {movementUnitSpeed} Jump Speed, capped at {jumpSpdValue:##0.##} {movementUnitSpeed}"
-                    : $"{jumpSpdValue:##0.##} {movementUnitSpeed} Jump Speed"
-                ) +
-                (jumpSpdBase > 0
-                    ? $"\r\nBase: {jumpSpdBase:##0.##} {movementUnitSpeed}"
-                    : "")
-                
-                
-                );
-
-            var jumpHeightBase = displayStats.Distance(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond);
-            var jumpHeightValue = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
-            graphMovement.AddItemPair("Jump Height",
-                $"{jumpHeightValue:##0.##} ft",
-                Math.Max(0, jumpHeightBase),
-                Math.Max(0, jumpHeightValue),
-                $"{jumpHeightValue:##0.##} {movementUnitDistance} Jump Height" +
-                (jumpHeightBase > 0
-                    ? $"\r\nBase: {jumpHeightBase:##0.##} {movementUnitDistance}"
-                    : "")
-                
-                );
-
-            var flySpeedValue = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            var flySpeedBase = flySpeedValue == 0
-                ? 0
-                : displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour);
-            var flySpeedUncapped = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
-            graphMovement.AddItemPair("Fly Speed",
-                $"{flySpeedValue:##0.##} mph",
-                Math.Max(0, flySpeedBase),
-                Math.Max(0, flySpeedValue),
-                Math.Max(0, flySpeedUncapped),
-                (flySpeedUncapped > flySpeedValue & flySpeedValue > 0
-                    ? $"{flySpeedUncapped:##0.##} {movementUnitSpeed} Fly Speed, capped at {flySpeedValue:##0.##} {movementUnitSpeed}"
-                    : $"{flySpeedValue:##0.##} {movementUnitSpeed} Fly Speed"
-                ) +
-                (flySpeedBase > 0
-                    ? $"\r\nBase: {flySpeedBase:##0.##} {movementUnitSpeed}"
-                    : ""));
-
-            graphMovement.Size = graphMovement.Size with { Height = Math.Max(graphMovement.Size.Height, graphMovement.ContentHeight + graphBottomMargin)};
-            graphMovement.Draw();
+            UpdateMovementData();
 
             ///////////////////////////////
 
-            graphPerception.Clear();
-            graphPerception.AddItemPair("PvE",
-                $"{MidsContext.Character.Totals.StealthPvE:###0.##} ft",
-                0,
-                MidsContext.Character.Totals.StealthPvE,
-                GenericDataTooltip3(displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat), 0, displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat), "Stealth (PvE)", "", movementUnitDistance));
-
-            graphPerception.AddItemPair("PvP",
-                $"{MidsContext.Character.Totals.StealthPvP:###0.##} ft",
-                0,
-                MidsContext.Character.Totals.StealthPvP,
-                GenericDataTooltip3(displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat), 0, displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat), "Stealth (PvP)", "", movementUnitDistance));
-
-            graphPerception.AddItemPair("Perception",
-                $"{displayStats.Perception(false):###0.##} ft",
-                Statistics.BasePerception,
-                displayStats.Perception(false),
-                displayStats.Perception(true),
-                GenericDataTooltip3(displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat), displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat), displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat), "Perception", "", movementUnitDistance)
-                );
-
-            graphPerception.Size = graphPerception.Size with { Height = Math.Max(graphPerception.Size.Height, graphPerception.ContentHeight + graphBottomMargin)};
-            graphPerception.Draw();
+            UpdatePerceptionData();
 
             ///////////////////////////////
 
