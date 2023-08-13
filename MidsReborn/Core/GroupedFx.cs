@@ -1620,7 +1620,8 @@ namespace Mids_Reborn.Core
                 .All(e => e < 0);
 
             if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
-                or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez)
+                or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez
+                or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement)
             {
                 return GetEffectAt(power).BuffedMag;
             }
