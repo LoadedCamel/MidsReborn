@@ -95,6 +95,7 @@ namespace Mids_Reborn.Core
             Pet,
             Temp
         }
+
         public enum eAlphaOrder
         {
             Boost,
@@ -171,6 +172,20 @@ namespace Mids_Reborn.Core
             Partial_Radial_Graft,
             Core_Embodiment,
             Radial_Embodiment
+        }
+
+        public enum eGenesisOrder
+        {
+            Genesis,
+            Core_Genesis,
+            Radial_Genesis,
+            Total_Core_Genesis,
+            Partial_Core_Genesis,
+            Total_Radial_Genesis,
+            Partial_Radial_Genesis,
+            Core_Flawless_Genesis,
+            Radial_Flawless_Genesis
+
         }
 
         public enum eCSVImport_Damage

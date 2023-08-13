@@ -80,8 +80,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             formPages1.Name = "formPages1";
             formPages1.Pages.Add(page1);
             formPages1.Pages.Add(page2);
-            formPages1.SelectedIndex = 0;
-            formPages1.Size = new System.Drawing.Size(776, 356);
+            formPages1.SelectedIndex = 1;
+            formPages1.Size = new System.Drawing.Size(776, 393);
             formPages1.TabIndex = 45;
             // 
             // page1
@@ -101,7 +101,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page1.ForeColor = System.Drawing.Color.WhiteSmoke;
             page1.Location = new System.Drawing.Point(0, 0);
             page1.Name = "page1";
-            page1.Size = new System.Drawing.Size(774, 354);
+            page1.Size = new System.Drawing.Size(774, 391);
             page1.TabIndex = 0;
             page1.Title = "Mobile Friendly (Link)";
             // 
@@ -239,7 +239,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             page2.ForeColor = System.Drawing.Color.WhiteSmoke;
             page2.Location = new System.Drawing.Point(0, 0);
             page2.Name = "page2";
-            page2.Size = new System.Drawing.Size(774, 354);
+            page2.Size = new System.Drawing.Size(774, 391);
             page2.TabIndex = 1;
             page2.Title = "Forum Formats (Text)";
             // 
@@ -368,7 +368,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             lbFormatCodeType.ForeColor = System.Drawing.Color.WhiteSmoke;
             lbFormatCodeType.FormattingEnabled = true;
             lbFormatCodeType.ItemHeight = 15;
-            lbFormatCodeType.Location = new System.Drawing.Point(442, 93);
+            lbFormatCodeType.Location = new System.Drawing.Point(442, 83);
             lbFormatCodeType.Name = "lbFormatCodeType";
             lbFormatCodeType.Size = new System.Drawing.Size(314, 139);
             lbFormatCodeType.TabIndex = 59;
@@ -501,7 +501,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             lbColorTheme.ForeColor = System.Drawing.Color.WhiteSmoke;
             lbColorTheme.FormattingEnabled = true;
             lbColorTheme.ItemHeight = 15;
-            lbColorTheme.Location = new System.Drawing.Point(17, 93);
+            lbColorTheme.Location = new System.Drawing.Point(17, 83);
             lbColorTheme.Name = "lbColorTheme";
             lbColorTheme.Size = new System.Drawing.Size(199, 139);
             lbColorTheme.TabIndex = 46;
@@ -538,7 +538,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(802, 430);
+            ClientSize = new System.Drawing.Size(802, 467);
             Controls.Add(navStrip1);
             Controls.Add(formPages1);
             DoubleBuffered = true;

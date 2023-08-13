@@ -31,180 +31,179 @@ namespace Mids_Reborn.Forms.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainPanel = new System.Windows.Forms.Panel();
-            this.messageText = new System.Windows.Forms.Label();
-            this.spacer = new System.Windows.Forms.Panel();
-            this.buttonPanel = new System.Windows.Forms.Panel();
-            this.btnOkay = new System.Windows.Forms.Button();
-            this.spacerButton = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.iconImage = new System.Windows.Forms.PictureBox();
-            this.titlePanel = new Mids_Reborn.Forms.Controls.BorderPanel();
-            this.titleText = new System.Windows.Forms.Label();
-            this.mainPanel.SuspendLayout();
-            this.buttonPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.iconImage)).BeginInit();
-            this.titlePanel.SuspendLayout();
-            this.SuspendLayout();
+            mainPanel = new System.Windows.Forms.Panel();
+            messageText = new System.Windows.Forms.Label();
+            spacer = new System.Windows.Forms.Panel();
+            buttonPanel = new System.Windows.Forms.Panel();
+            btnOkay = new System.Windows.Forms.Button();
+            spacerButton = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            iconImage = new System.Windows.Forms.PictureBox();
+            titlePanel = new BorderPanel();
+            titleText = new System.Windows.Forms.Label();
+            mainPanel.SuspendLayout();
+            buttonPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)iconImage).BeginInit();
+            titlePanel.SuspendLayout();
+            SuspendLayout();
             // 
             // mainPanel
             // 
-            this.mainPanel.AutoSize = true;
-            this.mainPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.mainPanel.Controls.Add(this.messageText);
-            this.mainPanel.Controls.Add(this.spacer);
-            this.mainPanel.Controls.Add(this.buttonPanel);
-            this.mainPanel.Controls.Add(this.iconImage);
-            this.mainPanel.Controls.Add(this.titlePanel);
-            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanel.Location = new System.Drawing.Point(0, 0);
-            this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(420, 150);
-            this.mainPanel.TabIndex = 0;
+            mainPanel.AutoSize = true;
+            mainPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            mainPanel.Controls.Add(messageText);
+            mainPanel.Controls.Add(spacer);
+            mainPanel.Controls.Add(buttonPanel);
+            mainPanel.Controls.Add(iconImage);
+            mainPanel.Controls.Add(titlePanel);
+            mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainPanel.Location = new System.Drawing.Point(0, 0);
+            mainPanel.Name = "mainPanel";
+            mainPanel.Size = new System.Drawing.Size(420, 150);
+            mainPanel.TabIndex = 0;
             // 
             // messageText
             // 
-            this.messageText.AutoSize = true;
-            this.messageText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.messageText.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.messageText.Location = new System.Drawing.Point(100, 22);
-            this.messageText.Name = "messageText";
-            this.messageText.Size = new System.Drawing.Size(154, 17);
-            this.messageText.TabIndex = 4;
-            this.messageText.Text = "Message Text Goes Here";
-            this.messageText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            messageText.AutoSize = true;
+            messageText.Dock = System.Windows.Forms.DockStyle.Fill;
+            messageText.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            messageText.Location = new System.Drawing.Point(100, 22);
+            messageText.Name = "messageText";
+            messageText.Size = new System.Drawing.Size(154, 17);
+            messageText.TabIndex = 4;
+            messageText.Text = "Message Text Goes Here";
+            messageText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // spacer
             // 
-            this.spacer.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.spacer.Location = new System.Drawing.Point(100, 104);
-            this.spacer.Name = "spacer";
-            this.spacer.Size = new System.Drawing.Size(316, 10);
-            this.spacer.TabIndex = 8;
+            spacer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            spacer.Location = new System.Drawing.Point(100, 104);
+            spacer.Name = "spacer";
+            spacer.Size = new System.Drawing.Size(316, 10);
+            spacer.TabIndex = 8;
             // 
             // buttonPanel
             // 
-            this.buttonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonPanel.Controls.Add(this.btnOkay);
-            this.buttonPanel.Controls.Add(this.spacerButton);
-            this.buttonPanel.Controls.Add(this.btnCancel);
-            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.buttonPanel.Location = new System.Drawing.Point(100, 114);
-            this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(316, 32);
-            this.buttonPanel.TabIndex = 6;
+            buttonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            buttonPanel.Controls.Add(btnOkay);
+            buttonPanel.Controls.Add(spacerButton);
+            buttonPanel.Controls.Add(btnCancel);
+            buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            buttonPanel.Location = new System.Drawing.Point(100, 114);
+            buttonPanel.Name = "buttonPanel";
+            buttonPanel.Size = new System.Drawing.Size(316, 32);
+            buttonPanel.TabIndex = 6;
             // 
             // btnOkay
             // 
-            this.btnOkay.AutoSize = true;
-            this.btnOkay.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnOkay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(135)))), ((int)(((byte)(255)))));
-            this.btnOkay.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOkay.Location = new System.Drawing.Point(157, 0);
-            this.btnOkay.Name = "btnOkay";
-            this.btnOkay.Size = new System.Drawing.Size(53, 32);
-            this.btnOkay.TabIndex = 2;
-            this.btnOkay.Text = "Okay";
-            this.btnOkay.UseVisualStyleBackColor = false;
-            this.btnOkay.Click += new System.EventHandler(this.BtnOkay_Click);
+            btnOkay.AutoSize = true;
+            btnOkay.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            btnOkay.BackColor = System.Drawing.Color.FromArgb(13, 135, 255);
+            btnOkay.Dock = System.Windows.Forms.DockStyle.Right;
+            btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnOkay.Location = new System.Drawing.Point(157, 0);
+            btnOkay.Name = "btnOkay";
+            btnOkay.Size = new System.Drawing.Size(53, 32);
+            btnOkay.TabIndex = 2;
+            btnOkay.Text = "Okay";
+            btnOkay.UseVisualStyleBackColor = false;
+            btnOkay.Click += BtnOkay_Click;
             // 
             // spacerButton
             // 
-            this.spacerButton.AutoSize = true;
-            this.spacerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.spacerButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(47)))), ((int)(((byte)(51)))));
-            this.spacerButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.spacerButton.Enabled = false;
-            this.spacerButton.FlatAppearance.BorderSize = 0;
-            this.spacerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.spacerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.spacerButton.Location = new System.Drawing.Point(210, 0);
-            this.spacerButton.Name = "spacerButton";
-            this.spacerButton.Size = new System.Drawing.Size(41, 32);
-            this.spacerButton.TabIndex = 4;
-            this.spacerButton.Text = "      ";
-            this.spacerButton.UseVisualStyleBackColor = false;
-            this.spacerButton.Visible = false;
+            spacerButton.AutoSize = true;
+            spacerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            spacerButton.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
+            spacerButton.Dock = System.Windows.Forms.DockStyle.Right;
+            spacerButton.Enabled = false;
+            spacerButton.FlatAppearance.BorderSize = 0;
+            spacerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            spacerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            spacerButton.Location = new System.Drawing.Point(210, 0);
+            spacerButton.Name = "spacerButton";
+            spacerButton.Size = new System.Drawing.Size(41, 32);
+            spacerButton.TabIndex = 4;
+            spacerButton.Text = "      ";
+            spacerButton.UseVisualStyleBackColor = false;
+            spacerButton.Visible = false;
             // 
             // btnCancel
             // 
-            this.btnCancel.AutoSize = true;
-            this.btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnCancel.Location = new System.Drawing.Point(251, 0);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(65, 32);
-            this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
+            btnCancel.AutoSize = true;
+            btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnCancel.Location = new System.Drawing.Point(251, 0);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(65, 32);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Click += BtnCancel_Click;
             // 
             // iconImage
             // 
-            this.iconImage.Dock = System.Windows.Forms.DockStyle.Left;
-            this.iconImage.Location = new System.Drawing.Point(0, 22);
-            this.iconImage.Name = "iconImage";
-            this.iconImage.Size = new System.Drawing.Size(100, 124);
-            this.iconImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.iconImage.TabIndex = 7;
-            this.iconImage.TabStop = false;
+            iconImage.Dock = System.Windows.Forms.DockStyle.Left;
+            iconImage.Location = new System.Drawing.Point(0, 22);
+            iconImage.Name = "iconImage";
+            iconImage.Size = new System.Drawing.Size(100, 124);
+            iconImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            iconImage.TabIndex = 7;
+            iconImage.TabStop = false;
             // 
             // titlePanel
             // 
-            this.titlePanel.Border.Which = Mids_Reborn.Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.Bottom;
-            this.titlePanel.Border.Color = System.Drawing.Color.Snow;
-            this.titlePanel.Border.Style = System.Windows.Forms.ButtonBorderStyle.Inset;
-            this.titlePanel.Border.Thickness = 2;
-            this.titlePanel.Controls.Add(this.titleText);
-            this.titlePanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.titlePanel.Location = new System.Drawing.Point(0, 0);
-            this.titlePanel.Name = "titlePanel";
-            this.titlePanel.Size = new System.Drawing.Size(416, 22);
-            this.titlePanel.TabIndex = 10;
+            titlePanel.Border.Color = System.Drawing.Color.Snow;
+            titlePanel.Border.Style = System.Windows.Forms.ButtonBorderStyle.Inset;
+            titlePanel.Border.Thickness = 2;
+            titlePanel.Border.Which = BorderPanel.PanelBorder.BorderToDraw.Bottom;
+            titlePanel.Controls.Add(titleText);
+            titlePanel.Dock = System.Windows.Forms.DockStyle.Top;
+            titlePanel.Location = new System.Drawing.Point(0, 0);
+            titlePanel.Name = "titlePanel";
+            titlePanel.Size = new System.Drawing.Size(416, 22);
+            titlePanel.TabIndex = 10;
             // 
             // titleText
             // 
-            this.titleText.AutoSize = true;
-            this.titleText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.titleText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.titleText.Location = new System.Drawing.Point(0, 0);
-            this.titleText.Name = "titleText";
-            this.titleText.Size = new System.Drawing.Size(76, 17);
-            this.titleText.TabIndex = 0;
-            this.titleText.Text = "Title Text";
-            this.titleText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            titleText.AutoSize = true;
+            titleText.Dock = System.Windows.Forms.DockStyle.Fill;
+            titleText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            titleText.Location = new System.Drawing.Point(0, 0);
+            titleText.Name = "titleText";
+            titleText.Size = new System.Drawing.Size(76, 17);
+            titleText.TabIndex = 0;
+            titleText.Text = "Title Text";
+            titleText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MessageBoxEx
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(47)))), ((int)(((byte)(51)))));
-            this.ClientSize = new System.Drawing.Size(420, 150);
-            this.Controls.Add(this.mainPanel);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ForeColor = System.Drawing.Color.Azure;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "MessageBoxEx";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "MessageBoxEx";
-            this.mainPanel.ResumeLayout(false);
-            this.mainPanel.PerformLayout();
-            this.buttonPanel.ResumeLayout(false);
-            this.buttonPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.iconImage)).EndInit();
-            this.titlePanel.ResumeLayout(false);
-            this.titlePanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoSize = true;
+            AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
+            ClientSize = new System.Drawing.Size(420, 150);
+            Controls.Add(mainPanel);
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ForeColor = System.Drawing.Color.Azure;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            Name = "MessageBoxEx";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "MessageBoxEx";
+            mainPanel.ResumeLayout(false);
+            mainPanel.PerformLayout();
+            buttonPanel.ResumeLayout(false);
+            buttonPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)iconImage).EndInit();
+            titlePanel.ResumeLayout(false);
+            titlePanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         private System.Windows.Forms.Panel mainPanel;

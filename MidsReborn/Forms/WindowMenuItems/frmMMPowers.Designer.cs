@@ -41,7 +41,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.PopInfo = new ctlPopUp();
             this.lblLock = new System.Windows.Forms.Label();
             this.ibClose = new ImageButtonEx();
-            this.Panel2 = new frmIncarnate.CustomPanel();
+            this.Panel2 = new FrmIncarnate.CustomPanel();
             this.llRight = new ListLabelV3();
             this.llLeft = new ListLabelV3();
             this.Panel1.SuspendLayout();

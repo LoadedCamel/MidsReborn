@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -9,34 +10,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmServerData : Form
     {
+        private readonly ServerData _serverData;
+
         public frmServerData()
         {
+            _serverData = DatabaseAPI.ServerData;
             Load += frmServerData_OnLoad;
             InitializeComponent();
             Icon = Resources.MRB_Icon_Concept;
         }
 
-        private void frmServerData_OnLoad(object sender, EventArgs e)
+        private void frmServerData_OnLoad(object? sender, EventArgs e)
         {
-            var serverData = DatabaseAPI.ServerData;
-            udBaseFlySpeed.Value = Convert.ToDecimal(serverData.BaseFlySpeed);
-            udBaseJumpSpeed.Value = Convert.ToDecimal(serverData.BaseJumpSpeed);
-            udBaseJumpHeight.Value = Convert.ToDecimal(serverData.BaseJumpHeight);
-            udBaseRunSpeed.Value = Convert.ToDecimal(serverData.BaseRunSpeed);
-            udBasePerception.Value = Convert.ToDecimal(serverData.BasePerception);
-            udBaseToHit.Value = new decimal(serverData.BaseToHit * 100f);
-            udMaxFlySpeed.Value = Convert.ToDecimal(serverData.MaxFlySpeed);
-            udMaxJumpSpeed.Value = Convert.ToDecimal(serverData.MaxJumpSpeed);
-            udMaxRunSpeed.Value = Convert.ToDecimal(serverData.MaxRunSpeed);
-            udMaxSlots.Value = serverData.MaxSlots;
-            chkEnableInhSlot.Checked = serverData.EnableInherentSlotting;
-            udHealthSlots.Value = serverData.HealthSlots;
-            udHealthFirst.Value = serverData.HealthSlot1Level;
-            udHealthSecond.Value = serverData.HealthSlot2Level;
-            udStaminaSlots.Value = serverData.StaminaSlots;
-            udStaminaFirst.Value = serverData.StaminaSlot1Level;
-            udStaminaSecond.Value = serverData.StaminaSlot2Level;
-            tbManifestUrl.Text = serverData.ManifestUri;
+            udBaseFlySpeed.Value = Convert.ToDecimal(_serverData.BaseFlySpeed);
+            udBaseJumpSpeed.Value = Convert.ToDecimal(_serverData.BaseJumpSpeed);
+            udBaseJumpHeight.Value = Convert.ToDecimal(_serverData.BaseJumpHeight);
+            udBaseRunSpeed.Value = Convert.ToDecimal(_serverData.BaseRunSpeed);
+            udBasePerception.Value = Convert.ToDecimal(_serverData.BasePerception);
+            udBaseToHit.Value = new decimal(_serverData.BaseToHit * 100f);
+            udMaxFlySpeed.Value = Convert.ToDecimal(_serverData.MaxFlySpeed);
+            udMaxJumpSpeed.Value = Convert.ToDecimal(_serverData.MaxJumpSpeed);
+            udMaxRunSpeed.Value = Convert.ToDecimal(_serverData.MaxRunSpeed);
+            udMaxSlots.Value = _serverData.MaxSlots;
+            chkEnableInhSlot.Checked = _serverData.EnableInherentSlotting;
+            udHealthSlots.Value = _serverData.HealthSlots;
+            udHealthFirst.Value = _serverData.HealthSlot1Level;
+            udHealthSecond.Value = _serverData.HealthSlot2Level;
+            udStaminaSlots.Value = _serverData.StaminaSlots;
+            udStaminaFirst.Value = _serverData.StaminaSlot1Level;
+            udStaminaSecond.Value = _serverData.StaminaSlot2Level;
+            tbManifestUrl.Text = _serverData.ManifestUri;
+            foreach (var chkBox in groupBox2.Controls.OfType<CheckBox>())
+            {
+                chkBox.Checked = _serverData.EnabledIncarnates[chkBox.Text];
+            }
         }
 
         private static void validate_Url(object sender, InputBoxValidatingArgs e)
@@ -68,7 +75,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnSetManifest_Click(object sender, EventArgs e)
         {
-            var loadingText = DatabaseAPI.ServerData.ManifestUri ?? "Enter the URL here";
+            var loadingText = DatabaseAPI.ServerData.ManifestUri;
+            if (DatabaseAPI.DatabaseName != "Homecoming" && DatabaseAPI.ServerData.ManifestUri.Contains("https://midsreborn.com"))
+            {
+                DatabaseAPI.ServerData.ManifestUri = "";
+                loadingText = "Enter URL Here";
+            }
             var iResult = InputBox.Show("Enter your XML manifest URL", "Set Database Manifest URL", false, loadingText, InputBox.InputBoxIcon.Info, validate_Url);
             if (!iResult.OK) return;
             DatabaseAPI.ServerData.ManifestUri = iResult.Text == "Enter the URL here" ? "" : iResult.Text;
@@ -84,23 +96,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void StoreData()
         {
-            var serverData = DatabaseAPI.ServerData;
-            serverData.BaseFlySpeed = Convert.ToSingle(udBaseFlySpeed.Value);
-            serverData.BaseJumpSpeed = Convert.ToSingle(udBaseJumpSpeed.Value);
-            serverData.BaseJumpHeight = Convert.ToSingle(udBaseJumpHeight.Value);
-            serverData.BaseRunSpeed = Convert.ToSingle(udBaseRunSpeed.Value);
-            serverData.BasePerception = Convert.ToSingle(udBasePerception.Value);
-            serverData.BaseToHit = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
-            serverData.MaxFlySpeed = Convert.ToSingle(udMaxFlySpeed.Value);
-            serverData.MaxJumpSpeed = Convert.ToSingle(udMaxJumpSpeed.Value);
-            serverData.MaxRunSpeed = Convert.ToSingle(udMaxRunSpeed.Value);
-            serverData.MaxSlots = Convert.ToInt32(udMaxSlots.Value);
-            serverData.HealthSlots = Convert.ToInt32(udHealthSlots.Value);
-            serverData.HealthSlot1Level = Convert.ToInt32(udHealthFirst.Value);
-            serverData.HealthSlot2Level = Convert.ToInt32(udHealthSecond.Value);
-            serverData.StaminaSlots = Convert.ToInt32(udStaminaSlots.Value);
-            serverData.StaminaSlot1Level = Convert.ToInt32(udStaminaFirst.Value);
-            serverData.StaminaSlot2Level = Convert.ToInt32(udStaminaSecond.Value);
+            _serverData.BaseFlySpeed = Convert.ToSingle(udBaseFlySpeed.Value);
+            _serverData.BaseJumpSpeed = Convert.ToSingle(udBaseJumpSpeed.Value);
+            _serverData.BaseJumpHeight = Convert.ToSingle(udBaseJumpHeight.Value);
+            _serverData.BaseRunSpeed = Convert.ToSingle(udBaseRunSpeed.Value);
+            _serverData.BasePerception = Convert.ToSingle(udBasePerception.Value);
+            _serverData.BaseToHit = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
+            _serverData.MaxFlySpeed = Convert.ToSingle(udMaxFlySpeed.Value);
+            _serverData.MaxJumpSpeed = Convert.ToSingle(udMaxJumpSpeed.Value);
+            _serverData.MaxRunSpeed = Convert.ToSingle(udMaxRunSpeed.Value);
+            _serverData.MaxSlots = Convert.ToInt32(udMaxSlots.Value);
+            _serverData.HealthSlots = Convert.ToInt32(udHealthSlots.Value);
+            _serverData.HealthSlot1Level = Convert.ToInt32(udHealthFirst.Value);
+            _serverData.HealthSlot2Level = Convert.ToInt32(udHealthSecond.Value);
+            _serverData.StaminaSlots = Convert.ToInt32(udStaminaSlots.Value);
+            _serverData.StaminaSlot1Level = Convert.ToInt32(udStaminaFirst.Value);
+            _serverData.StaminaSlot2Level = Convert.ToInt32(udStaminaSecond.Value);
+            foreach (var chkBox in groupBox2.Controls.OfType<CheckBox>())
+            {
+                _serverData.EnabledIncarnates[chkBox.Text] = chkBox.Checked;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
