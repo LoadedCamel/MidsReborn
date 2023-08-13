@@ -1368,7 +1368,7 @@ namespace Mids_Reborn.Core
             }
 
             // Pass 3: generate aggregated GroupedFx, recalc mag sum
-            
+
             var greAggregated = Aggregate(groupedRankedEffects2);
             foreach (var gre in greAggregated)
             {
@@ -1618,6 +1618,12 @@ namespace Mids_Reborn.Core
             var allNegEnh = IncludedEffects
                 .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                 .All(e => e < 0);
+
+            if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
+                or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez)
+            {
+                return GetEffectAt(power).BuffedMag;
+            }
 
             return allNegEnh
                 ? IncludedEffects
