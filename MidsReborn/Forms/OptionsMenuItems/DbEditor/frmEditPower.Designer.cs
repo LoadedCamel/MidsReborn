@@ -1426,7 +1426,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Label9.Name = "Label9";
             Label9.Size = new System.Drawing.Size(104, 23);
             Label9.TabIndex = 11;
-            Label9.Text = "Interruptable Time:";
+            Label9.Text = "Interrupt Time:";
             Label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtInterrupt
@@ -1512,9 +1512,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             tpEffects.Controls.Add(lvFX);
             tpEffects.Controls.Add(pnlFX);
-            tpEffects.Location = new System.Drawing.Point(4, 25);
+            tpEffects.Location = new System.Drawing.Point(4, 24);
             tpEffects.Name = "tpEffects";
-            tpEffects.Size = new System.Drawing.Size(832, 410);
+            tpEffects.Size = new System.Drawing.Size(832, 411);
             tpEffects.TabIndex = 1;
             tpEffects.Text = "Effects";
             tpEffects.UseVisualStyleBackColor = true;
@@ -1626,9 +1626,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpEnh.Controls.Add(chkPRFrontLoad);
             tpEnh.Controls.Add(pbEnhancementList);
             tpEnh.Controls.Add(lblEnhName);
-            tpEnh.Location = new System.Drawing.Point(4, 25);
+            tpEnh.Location = new System.Drawing.Point(4, 24);
             tpEnh.Name = "tpEnh";
-            tpEnh.Size = new System.Drawing.Size(832, 410);
+            tpEnh.Size = new System.Drawing.Size(832, 411);
             tpEnh.TabIndex = 9;
             tpEnh.Text = "Enhancements";
             tpEnh.UseVisualStyleBackColor = true;
@@ -1707,9 +1707,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpSets.Controls.Add(lblInvSet);
             tpSets.Controls.Add(pbInvSetList);
             tpSets.Controls.Add(pbInvSetUsed);
-            tpSets.Location = new System.Drawing.Point(4, 25);
+            tpSets.Location = new System.Drawing.Point(4, 24);
             tpSets.Name = "tpSets";
-            tpSets.Size = new System.Drawing.Size(832, 410);
+            tpSets.Size = new System.Drawing.Size(832, 411);
             tpSets.TabIndex = 5;
             tpSets.Text = "Invention Set Types";
             tpSets.UseVisualStyleBackColor = true;
@@ -1760,9 +1760,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpPreReq.Controls.Add(GroupBox11);
             tpPreReq.Controls.Add(GroupBox10);
             tpPreReq.Controls.Add(GroupBox8);
-            tpPreReq.Location = new System.Drawing.Point(4, 25);
+            tpPreReq.Location = new System.Drawing.Point(4, 24);
             tpPreReq.Name = "tpPreReq";
-            tpPreReq.Size = new System.Drawing.Size(832, 410);
+            tpPreReq.Size = new System.Drawing.Size(832, 411);
             tpPreReq.TabIndex = 4;
             tpPreReq.Text = "Requirements";
             tpPreReq.UseVisualStyleBackColor = true;
@@ -2004,10 +2004,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpSpecialEnh.Controls.Add(Label30);
             tpSpecialEnh.Controls.Add(lvDisablePass4);
             tpSpecialEnh.Controls.Add(lvDisablePass1);
-            tpSpecialEnh.Location = new System.Drawing.Point(4, 25);
+            tpSpecialEnh.Location = new System.Drawing.Point(4, 24);
             tpSpecialEnh.Name = "tpSpecialEnh";
             tpSpecialEnh.Padding = new Padding(3);
-            tpSpecialEnh.Size = new System.Drawing.Size(832, 410);
+            tpSpecialEnh.Size = new System.Drawing.Size(832, 411);
             tpSpecialEnh.TabIndex = 7;
             tpSpecialEnh.Text = "Enhancement Disabling";
             tpSpecialEnh.UseVisualStyleBackColor = true;
@@ -2051,9 +2051,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpMutex.Controls.Add(GroupBox2);
             tpMutex.Controls.Add(chkMutexAuto);
             tpMutex.Controls.Add(chkMutexSkip);
-            tpMutex.Location = new System.Drawing.Point(4, 25);
+            tpMutex.Location = new System.Drawing.Point(4, 24);
             tpMutex.Name = "tpMutex";
-            tpMutex.Size = new System.Drawing.Size(832, 410);
+            tpMutex.Size = new System.Drawing.Size(832, 411);
             tpMutex.TabIndex = 8;
             tpMutex.Text = "Mutal Exclusivity";
             tpMutex.UseVisualStyleBackColor = true;
@@ -2115,9 +2115,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpSubPower.Controls.Add(lvSPPower);
             tpSubPower.Controls.Add(lvSPSet);
             tpSubPower.Controls.Add(lvSPGroup);
-            tpSubPower.Location = new System.Drawing.Point(4, 25);
+            tpSubPower.Location = new System.Drawing.Point(4, 24);
             tpSubPower.Name = "tpSubPower";
-            tpSubPower.Size = new System.Drawing.Size(832, 410);
+            tpSubPower.Size = new System.Drawing.Size(832, 411);
             tpSubPower.TabIndex = 10;
             tpSubPower.Text = "Sub-Powers";
             tpSubPower.UseVisualStyleBackColor = true;

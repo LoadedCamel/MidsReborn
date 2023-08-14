@@ -2536,7 +2536,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtInterrupt_Leave(object sender, EventArgs e)
         {
             txtInterrupt_TextChanged(null, EventArgs.Empty);
-            
+
             if (Updating)
             {
                 return;
