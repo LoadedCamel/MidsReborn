@@ -135,8 +135,8 @@ namespace Mids_Reborn.Forms
             LlRight.ScrollBarColor = System.Drawing.Color.Red;
             LlRight.ScrollBarWidth = 11;
             LlRight.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            LlRight.Size = new System.Drawing.Size(330, 429);
-            LlRight.SizeNormal = new System.Drawing.Size(330, 140);
+            LlRight.Size = new System.Drawing.Size(320, 429);
+            LlRight.SizeNormal = new System.Drawing.Size(320, 140);
             LlRight.SuspendRedraw = false;
             LlRight.TabIndex = 109;
             LlRight.MouseEnter += llRight_MouseEnter;
@@ -150,7 +150,7 @@ namespace Mids_Reborn.Forms
             LlLeft.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             LlLeft.HighVis = true;
             LlLeft.HoverColor = System.Drawing.Color.WhiteSmoke;
-            LlLeft.Location = new System.Drawing.Point(0, 0);
+            LlLeft.Location = new System.Drawing.Point(12, 0);
             LlLeft.MaxHeight = 900;
             LlLeft.Name = "LlLeft";
             LlLeft.PaddingX = 2;
@@ -159,8 +159,8 @@ namespace Mids_Reborn.Forms
             LlLeft.ScrollBarColor = System.Drawing.Color.Red;
             LlLeft.ScrollBarWidth = 11;
             LlLeft.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            LlLeft.Size = new System.Drawing.Size(330, 429);
-            LlLeft.SizeNormal = new System.Drawing.Size(330, 140);
+            LlLeft.Size = new System.Drawing.Size(320, 429);
+            LlLeft.SizeNormal = new System.Drawing.Size(320, 140);
             LlLeft.SuspendRedraw = false;
             LlLeft.TabIndex = 108;
             LlLeft.ItemClick += llLeft_ItemClick;

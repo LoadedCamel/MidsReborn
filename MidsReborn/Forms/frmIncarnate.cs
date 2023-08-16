@@ -175,8 +175,8 @@ namespace Mids_Reborn.Forms
 
             LlLeft.SuspendRedraw = false;
             LlRight.SuspendRedraw = false;
-            LlLeft.Refresh();
-            LlRight.Refresh();
+            LlLeft.Invalidate();
+            LlRight.Invalidate();
         }
 
         private static IEnumerable<IPower?> ParseIncarnate(List<IPower?> powerList, string order, string name)
@@ -313,16 +313,16 @@ namespace Mids_Reborn.Forms
 
         private void alphaBtn_ButtonClicked()
         {
-            var alphaBtn = this._alphaBtn;
+            var alphaBtn = _alphaBtn;
             SetPowerSet("Alpha", ref alphaBtn);
-            this._alphaBtn = alphaBtn;
+            _alphaBtn = alphaBtn;
         }
 
         private void destinyBtn_ButtonClicked()
         {
-            var destinyBtn = this._destinyBtn;
+            var destinyBtn = _destinyBtn;
             SetPowerSet("Destiny", ref destinyBtn);
-            this._destinyBtn = destinyBtn;
+            _destinyBtn = destinyBtn;
         }
 
         private void GenesisButton_ButtonClicked()
@@ -334,31 +334,31 @@ namespace Mids_Reborn.Forms
 
         private void hybridBtn_ButtonClicked()
         {
-            var hybridBtn = this._hybridBtn;
+            var hybridBtn = _hybridBtn;
             SetPowerSet("Hybrid", ref hybridBtn);
-            this._hybridBtn = hybridBtn;
+            _hybridBtn = hybridBtn;
         }
 
         [DebuggerStepThrough]
         private void interfaceBtn_ButtonClicked()
         {
-            var interfaceBtn = this._interfaceBtn;
+            var interfaceBtn = _interfaceBtn;
             SetPowerSet("Interface", ref interfaceBtn);
-            this._interfaceBtn = interfaceBtn;
+            _interfaceBtn = interfaceBtn;
         }
 
         private void judgementBtn_ButtonClicked()
         {
-            var judgementBtn = this._judgementBtn;
+            var judgementBtn = _judgementBtn;
             SetPowerSet("Judgement", ref judgementBtn);
-            this._judgementBtn = judgementBtn;
+            _judgementBtn = judgementBtn;
         }
 
         private void loreBtn_ButtonClicked()
         {
-            var loreBtn = this._loreBtn;
+            var loreBtn = _loreBtn;
             SetPowerSet("Lore", ref loreBtn);
-            this._loreBtn = loreBtn;
+            _loreBtn = loreBtn;
         }
 
         private void lblLock_Click(object? sender, EventArgs e)
@@ -418,8 +418,8 @@ namespace Mids_Reborn.Forms
                 item.ItemState = ListLabelV3.LlItemState.Selected;
             }
 
-            LlLeft.Refresh();
-            LlRight.Refresh();
+            LlLeft.Invalidate();
+            LlRight.Invalidate();
             _myParent.PowerModified(true);
             _myParent.DoRefresh();
         }
@@ -496,8 +496,8 @@ namespace Mids_Reborn.Forms
                     item.ItemState = ListLabelV3.LlItemState.Selected;
                 }
 
-                LlLeft.Refresh();
-                LlRight.Refresh();
+                LlLeft.Invalidate();
+                LlRight.Invalidate();
                 _myParent.PowerModified(unused || hasChanges);
                 _myParent.DoRefresh();
             }
