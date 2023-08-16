@@ -7346,7 +7346,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
             }
             catch (Exception e)
             {
@@ -7363,7 +7363,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
             }
             catch (Exception e)
             {
@@ -7380,7 +7380,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (listPowers == null) return;
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(), false);
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
                 LastFileName = "";
             }
             catch (Exception e)
@@ -7389,9 +7389,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersetsFull, RawCharacterInfo characterInfo, bool addToAutoOpen = true)
+        private void InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersetsFull, RawCharacterInfo characterInfo, bool addToAutoOpen = false)
         {
-            var psFullNames = listPowersetsFull.Select(e => e.Contains(".")
+            var buildMode = MidsContext.Config.BuildMode;
+
+            if (buildMode == Enums.dmModes.LevelUp)
+            {
+                MidsContext.Config.BuildMode = Enums.dmModes.Respec;
+            }
+
+            var psFullNames = listPowersetsFull.Select(e => e.Contains('.')
                     ? e
                     : DatabaseAPI.GetPowersetByName(e, characterInfo.Archetype)?.FullName)
                 .Distinct()
@@ -7460,6 +7467,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             catch (Exception ex)
             {
+                MidsContext.Config.BuildMode = buildMode;
                 MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
             }
 
@@ -7516,6 +7524,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             catch (Exception ex)
             {
+                MidsContext.Config.BuildMode = buildMode;
                 MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
             }
 
@@ -7581,6 +7590,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(false);
             DoRedraw();
+
+            MidsContext.Config.BuildMode = buildMode;
 
             // Update slots counter... maybe.
             // Turns out all this block is not needed. (I think)
