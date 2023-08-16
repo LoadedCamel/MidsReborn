@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using MetaControls.Converters;
+using Mids_Reborn.Controls.Converters;
 
-namespace MetaControls
+namespace Mids_Reborn.Controls
 {
     #region FormPages
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using MetaControls.Designer;
+using FormPagesDesigner = Mids_Reborn.Controls.Designer.FormPagesDesigner;
 
 namespace MetaControls.Converters
 {

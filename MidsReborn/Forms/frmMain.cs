@@ -25,7 +25,6 @@ using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
-using Mids_Reborn.Forms.ShareItems;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
@@ -6225,32 +6224,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
             OnGradePick(Enums.eEnhGrade.TrainingO);
         }
 
-        private async void ForumExport_Click(object? sender, EventArgs e)
+        private void ShareMenu_Click(object? sender, EventArgs e)
         {
-            // var preview = new InfoGraphicPreview();
-            // var result = preview.ShowDialog(this);
-            // if (result == DialogResult.Continue)
-            // {
-            //     var export = new ForumExport();
-            //     export.BuildExport();
-            // }
-        }
-
-        private async void ShareInfoGraphic_Click(object? sender, EventArgs e)
-        {
-            var preview = new InfoGraphicPreview();
-            var result = preview.ShowDialog(this);
-            if (result != DialogResult.Continue) return;
-            if (preview.Image == null) return;
-            Clipboard.SetImage(preview.Image);
-            var msgBox = new MessageBoxEx("The InfoGraphic has been placed in your clipboard, you may now paste it where you wish.", MessageBoxEx.MessageBoxButtons.Okay);
-            msgBox.ShowDialog(Application.OpenForms["frmMain"]);
-        }
-
-        private void ForumExport2_Click(object? sender, EventArgs e)
-        {
-            using var fe = new  ShareMenu();
-            fe.ShowDialog(this);
+            if (MidsContext.Character.CurrentBuild.PowersPlaced <= 0)
+            {
+                var errorMsg = new MessageBoxEx("Share Protection Activated", "You cannot access the Share Menu at this time as there is not any build data to share.\r\nPlease either start creating a build or load one prior to accessing the menu.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Protected, true);
+                errorMsg.ShowDialog(this);
+            }
+            else
+            {
+                using var fe = new ShareMenu();
+                fe.ShowDialog(this);
+            }
         }
 
         private void tsShareDiscord_Click(object sender, EventArgs e)

@@ -118,6 +118,35 @@ namespace MRBResourceLib {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///&lt;title&gt;{title}&lt;/title&gt;
+        ///&lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///&lt;style&gt;
+        ///        body {
+        ///            background-color: black;
+        ///            color: whitesmoke;
+        ///        }
+        ///
+        ///        * {
+        ///            font-family: Helvetica, Arial, sans-serif;
+        ///            font-size: 1em;
+        ///        }
+        ///
+        ///        .sectionBlock {
+        ///            border: 0.125em solid inherit;
+        ///            border-radius: 0.3125em;
+        ///            -moz-border-radius: 0.3 [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string DummyBoilerPlate {
+            get {
+                return ResourceManager.GetString("DummyBoilerPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap EnhancementBooster {

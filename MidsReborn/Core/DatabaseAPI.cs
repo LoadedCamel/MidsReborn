@@ -162,8 +162,8 @@ namespace Mids_Reborn.Core
             Database.PowersetGroups = new Dictionary<string, PowersetGroup>();
             foreach (var powerset in Database.Powersets)
             {
-                if (string.IsNullOrEmpty(powerset.GroupName))
-                    continue;
+                if (powerset is null) continue;
+                if (string.IsNullOrEmpty(powerset.GroupName)) continue;
                 if (!Database.PowersetGroups.TryGetValue(powerset.GroupName, out var powersetGroup))
                 {
                     powersetGroup = new PowersetGroup(powerset.GroupName);

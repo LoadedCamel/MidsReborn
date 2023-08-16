@@ -95,10 +95,8 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
-            this.ShareInfoGraphicMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsCopyInfoGraphic = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShareForum2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsImportShortCode = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsImportDataChunk = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
@@ -1319,10 +1317,9 @@ namespace Mids_Reborn.Forms
             this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsShareDiscord,
-                this.tsShareForum2,
+                this.tsShareMenu,
                 this.ToolStripSeparator27,
-                this.ShareInfoGraphicMenuItem,
-                this.tsImportShortCode
+                this.tsImportDataChunk
             });
             this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
@@ -1341,10 +1338,10 @@ namespace Mids_Reborn.Forms
             // 
             // tsImportShortCode
             //
-            this.tsImportShortCode.Name = "tsImportShortCode";
-            this.tsImportShortCode.Size = new System.Drawing.Size(240, 22);
-            this.tsImportShortCode.Text = "Import via ShortCode";
-            this.tsImportShortCode.Click += new System.EventHandler(this.tsImportShortCode_Click);
+            this.tsImportDataChunk.Name = "tsImportDataChunk";
+            this.tsImportDataChunk.Size = new System.Drawing.Size(240, 22);
+            this.tsImportDataChunk.Text = "Import via DataChunk";
+            this.tsImportDataChunk.Click += new System.EventHandler(this.tsImportShortCode_Click);
             // 
             // tsShareDiscord
             //
@@ -1353,29 +1350,12 @@ namespace Mids_Reborn.Forms
             this.tsShareDiscord.Text = "Via Discord";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             // 
-            // ShareInfoGraphicMenuItem
-            //
-            this.ShareInfoGraphicMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
-            {
-                this.tsCopyInfoGraphic
-            });
-            this.ShareInfoGraphicMenuItem.Name = "ShareInfoGraphicMenuItem";
-            this.ShareInfoGraphicMenuItem.Size = new System.Drawing.Size(240, 22);
-            this.ShareInfoGraphicMenuItem.Text = "InfoGraphic";
-            //
-            // tsCopyInfoGraphic
-            //
-            this.tsCopyInfoGraphic.Name = "tsCopyInfoGraphic";
-            this.tsCopyInfoGraphic.Size = new System.Drawing.Size(240, 22);
-            this.tsCopyInfoGraphic.Text = "Copy to Clipboard";
-            this.tsCopyInfoGraphic.Click += new System.EventHandler(this.ShareInfoGraphic_Click);
-            // 
             // tsShareForum2
             //
-            this.tsShareForum2.Name = "tsShareForum2";
-            this.tsShareForum2.Size = new System.Drawing.Size(240, 22);
-            this.tsShareForum2.Text = "Via Forum Export (Alt)";
-            this.tsShareForum2.Click += new System.EventHandler(this.ForumExport2_Click);
+            this.tsShareMenu.Name = "tsShareMenu";
+            this.tsShareMenu.Size = new System.Drawing.Size(240, 22);
+            this.tsShareMenu.Text = "Open Share Menu";
+            this.tsShareMenu.Click += new System.EventHandler(this.ShareMenu_Click);
             //
             // HelpToolStripMenuItem
             //
@@ -2493,10 +2473,8 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
-        ToolStripMenuItem ShareInfoGraphicMenuItem;
-        private ToolStripMenuItem tsCopyInfoGraphic;
-        ToolStripMenuItem tsShareForum2;
-        ToolStripMenuItem tsImportShortCode;
+        ToolStripMenuItem tsShareMenu;
+        ToolStripMenuItem tsImportDataChunk;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;

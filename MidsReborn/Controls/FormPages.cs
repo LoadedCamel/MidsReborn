@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using MetaControls;
-using MetaControls.Designer;
+using Mids_Reborn.Controls.Designer;
 
 namespace Mids_Reborn.Controls
 {

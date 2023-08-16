@@ -5,9 +5,8 @@ using System.Windows.Forms;
 using MetaControls.Converters;
 using Microsoft.DotNet.DesignTools.Designers;
 using Microsoft.DotNet.DesignTools.Designers.Actions;
-using Mids_Reborn.Controls;
 
-namespace MetaControls.Designer
+namespace Mids_Reborn.Controls.Designer
 {
     internal partial class FormPagesDesigner
     {
@@ -137,7 +136,7 @@ namespace MetaControls.Designer
             {
                 if (Component == null) return;
                 var property = TypeDescriptor.GetProperties(Component)[propertyName];
-                var typeDescriptor = new TypeDescriptorContext(Component, property);
+                var typeDescriptor = new FormPagesDesigner.TypeDescriptorContext(Component, property);
 
                 var editor = (UITypeEditor)property?.GetEditor(typeof(UITypeEditor))!;
                 var value = property?.GetValue(Component);

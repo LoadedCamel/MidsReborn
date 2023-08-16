@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 
-namespace MetaControls.Converters
+namespace Mids_Reborn.Controls.Converters
 {
     public class GenericTypeConverter<T> : TypeConverter
     {

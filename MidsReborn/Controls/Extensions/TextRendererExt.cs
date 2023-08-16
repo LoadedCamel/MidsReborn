@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace MetaControls.Extensions
+namespace Mids_Reborn.Controls.Extensions
 {
     internal static class TextRendererExt
     {

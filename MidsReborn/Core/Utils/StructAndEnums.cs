@@ -72,4 +72,20 @@ namespace Mids_Reborn.Core.Utils
         Horizontal = 0,
         Vertical = 1
     }
+
+    public enum ThemeFilter
+    {
+        Any,
+        Light,
+        Dark,
+    }
+
+    public enum ExportFormatType
+    {
+        None,
+        BbCode,
+        MarkdownHtml,
+        Markdown,
+        Html
+    }
 }

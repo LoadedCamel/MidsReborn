@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using MetaControls.Extensions;
+using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls

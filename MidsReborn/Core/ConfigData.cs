@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -85,7 +86,6 @@ namespace Mids_Reborn.Core
             TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
             RtFont.SetDefault();
             Tips = new Tips();
-            Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
@@ -107,7 +107,6 @@ namespace Mids_Reborn.Core
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
 
-        public bool Authorized { get; set; }
         public bool UseOldTotalsWindow { get; set; }
 
         public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
@@ -116,8 +115,6 @@ namespace Mids_Reborn.Core
         public int TeamSize { get; set; } = 1;
         public int ExempLow { get; set; } = 50;
         public int ForceLevel { get; set; } = 50;
-        public int ExportScheme { get; set; } = 1;
-        public int ExportTarget { get; set; } = 1;
         public bool DisableDataDamageGraph { get; private set; }
         public bool DisableVillainColors { get; set; }
         public bool IsInitialized { get; set; }
@@ -140,17 +137,13 @@ namespace Mids_Reborn.Core
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
-        public bool DisableExportHex { get; set; }
         private static ConfigData? Instance { get; set; } = null;
-
-        public bool ExportBonusTotals { get; set; }
-        public bool ExportBonusList { get; set; }
         public bool NoToolTips { get; set; }
         public bool DataDamageGraphPercentageOnly { get; private set; }
         public Enums.eVisibleSize DvState { get; set; }
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
-        public ExportConfig Export { get; }
+        public ShareConfig ShareConfig { get; set; } = new();
         public bool PrintInColor { get; set; }
         public bool PrintHistory { get; set; }
         public bool SaveFolderChecked { get; set; }
@@ -162,8 +155,6 @@ namespace Mids_Reborn.Core
         public Tips Tips { get; set; }
         public bool PopupRecipes { get; set; }
         public bool ShoppingListIncludesRecipes { get; set; }
-        public bool ExportChunkOnly { get; set; }
-        public bool LongExport { get; set; }
 
         internal bool MasterMode
         {

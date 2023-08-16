@@ -19,89 +19,25 @@ namespace Mids_Reborn.Forms
     public partial class FrmIncarnate : Form
     {
         private readonly ImageButton[] _buttonArray;
-        private readonly frmMain _myParent;
-        private ImageButton _alphaBtn;
-
-        private ImageButton _destinyBtn;
-
-        private ImageButton _genesisButton;
-
-        private ImageButton _hybridBtn;
-
-        private ImageButton _ibClose;
-
-        private ImageButton _interfaceBtn;
-
-        private ImageButton _judgementBtn;
-
-        private Label _lblLock;
-
-        internal ListLabelV3 LlLeft;
-
-        internal ListLabelV3 LlRight;
-
+        private readonly frmMain? _myParent;
         private bool _locked;
-
-        private ImageButton _loreBtn;
-        private IPower?[] _myPowers;
-
-        private ImageButton _omegaButton;
-        private Panel? _panel1;
-        private CustomPanel? _panel2;
-
-        private ctlPopUp _popInfo;
-
-        private ImageButton _stanceButton;
-
-        private ImageButton _vitaeButton;
-
-        private VScrollBar _vScrollBar1;
+        private IPower?[]? _myPowers;
 
         public FrmIncarnate(ref frmMain iParent)
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
-            CenterToParent();
-            Location = new Point(Location.X, Location.Y - 100);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            Icon = Resources.MRB_Icon_Concept;
+            _myParent = iParent;
             Load += frmIncarnate_Load;
+            FormClosing += FrmIncarnate_FormClosing;
             _myPowers = Array.Empty<IPower>();
             _locked = false;
             _buttonArray = new ImageButton[10];
+            _myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate)?.Powers;
             InitializeComponent();
-            _genesisButton!.ButtonClicked += GenesisButton_ButtonClicked;
-            _omegaButton!.ButtonClicked += OmegaButton_ButtonClicked;
-
             // PopInfo events
             _popInfo!.MouseWheel += PopInfo_MouseWheel;
             _popInfo.MouseEnter += PopInfo_MouseEnter;
-
-            _stanceButton!.ButtonClicked += StanceButton_ButtonClicked;
-            _vScrollBar1!.Scroll += VScrollBar1_Scroll;
-            _vitaeButton!.ButtonClicked += VitaeButton_ButtonClicked;
-            _alphaBtn!.ButtonClicked += alphaBtn_ButtonClicked;
-            _destinyBtn!.ButtonClicked += destinyBtn_ButtonClicked;
-            _hybridBtn!.ButtonClicked += hybridBtn_ButtonClicked;
-            _ibClose!.ButtonClicked += ibClose_ButtonClicked;
-            _interfaceBtn!.ButtonClicked += interfaceBtn_ButtonClicked;
-            _judgementBtn!.ButtonClicked += judgementBtn_ButtonClicked;
-            _lblLock!.Click += lblLock_Click;
-
-            // llLeft events
-            LlLeft!.ItemClick += llLeft_ItemClick;
-            LlLeft.MouseEnter += llLeft_MouseEnter;
-            LlLeft.ItemHover += llLeft_ItemHover;
-
-
-            // llRight events
-            LlRight!.MouseEnter += llRight_MouseEnter;
-            LlRight.ItemHover += llRight_ItemHover;
-            LlRight.ItemClick += llRight_ItemClick;
-
-            _loreBtn!.ButtonClicked += loreBtn_ButtonClicked;
-            Name = nameof(FrmIncarnate);
-            Icon = Resources.MRB_Icon_Concept;
-            _myParent = iParent;
-            _myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate)?.Powers;
-            FormClosing += FrmIncarnate_FormClosing;
         }
 
         private void FrmIncarnate_FormClosing(object? sender, FormClosingEventArgs e)
@@ -310,8 +246,13 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmIncarnate_Load(object? sender, EventArgs e)
-
         {
+            if (_myParent != null)
+            {
+                var x = _myParent.Left + (_myParent.Width - Width) / 2;
+                var y = _myParent.Top + (_myParent.Height - Height) / 2;
+                Location = new Point(x, y);
+            }
             _buttonArray[0] = _alphaBtn;
             _buttonArray[1] = _destinyBtn;
             _buttonArray[2] = _hybridBtn;
@@ -776,7 +717,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void StanceButton_ButtonClicked()
-
         {
             var stanceButton = _stanceButton;
             SetPowerSet("Stance", ref stanceButton);

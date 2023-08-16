@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using Microsoft.DotNet.DesignTools.Designers.Actions;
-using Microsoft.DotNet.DesignTools.Designers;
-using System;
+﻿using System;
+using System.Collections;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
-using Mids_Reborn.Controls;
+using Microsoft.DotNet.DesignTools.Designers;
+using Microsoft.DotNet.DesignTools.Designers.Actions;
 
-namespace MetaControls.Designer
+namespace Mids_Reborn.Controls.Designer
 {
     internal partial class FormPagesDesigner : ParentControlDesigner
     {

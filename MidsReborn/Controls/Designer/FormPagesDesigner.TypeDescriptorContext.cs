@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace MetaControls.Designer
+namespace Mids_Reborn.Controls.Designer
 {
     internal partial class FormPagesDesigner
     {

@@ -1,38 +1,40 @@
 ﻿using System;
 using System.Drawing;
+using Mids_Reborn.Core.Base.Extensions;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
     public class TagGenerator
     {
-        private TagsFormatType FormatType;
-        private ForumColorTheme ActiveTheme;
+        private readonly ExportFormatType _formatType;
+        private readonly ColorTheme _activeTheme;
 
-        public TagGenerator(TagsFormatType formatType, ForumColorTheme activeTheme)
+        public TagGenerator(ExportFormatType formatType, ColorTheme activeTheme)
         {
-            FormatType = formatType;
-            ActiveTheme = activeTheme;
+            _formatType = formatType;
+            _activeTheme = activeTheme;
         }
 
         public string Header(string title, bool fullPage = true)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.HTML when fullPage => @$"<!DOCTYPE html>
+                ExportFormatType.Html when fullPage => @$"<!DOCTYPE html>
 <html>
 <head>
 <meta name=""viewport"" content=""width=device-width, initial-scale=1"" />
 <title>{title}</title>
 <style type=""text/css"">
 html, body {{
-  background-color: {(ActiveTheme.DarkTheme ? "#000" : "#FFF")};
-  color: {ForumColorThemes.ColorToHex(ActiveTheme.Text)};
+  background-color: {(_activeTheme.DarkTheme ? "#000" : "#FFF")};
+  color: {_activeTheme.Title.ToHex()};
   font-family: 'Segoe UI', 'Microsoft Sans Serif', sans-serif;
   font-size: 10pt;
 }}
 
 hr {{
-  border-top: 1px solid {ForumColorThemes.ColorToHex(ActiveTheme.Text)};
+  border-top: 1px solid {_activeTheme.Title.ToHex()};
 }}
 
 ul {{
@@ -41,7 +43,7 @@ ul {{
 
 ul li::before {{
   content: ""\2022"";
-  color: {ForumColorThemes.ColorToHex(ActiveTheme.Text)};
+  color: {_activeTheme.Title.ToHex()};
   font-weight: bold;
   font-size: 12pt;
   display: inline-block; 
@@ -58,9 +60,9 @@ ul li::before {{
 
         public string Footer(bool fullPage = true)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.HTML when fullPage => @"
+                ExportFormatType.Html when fullPage => @"
 </body>
 </html>",
                 _ => ""
@@ -69,15 +71,15 @@ ul li::before {{
 
         public string Size(int size, bool close = false)
         {
-            switch (FormatType)
+            switch (_formatType)
             {
-                case TagsFormatType.Markdown:
+                case ExportFormatType.Markdown:
                     return close ? "\r\n" : new string('#', Math.Max(1, Math.Min(6, 7 - size))) + " ";
 
-                case TagsFormatType.BBCode:
+                case ExportFormatType.BbCode:
                     return close ? "[/size]" : $"[size=\"{size}\"]";
 
-                case TagsFormatType.HTML:
+                case ExportFormatType.Html:
                     var htmlSize = size switch
                     {
                         1 => 5,
@@ -103,11 +105,11 @@ ul li::before {{
 
         public string Bold(bool close = false)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.Markdown => "**",
-                TagsFormatType.BBCode => close ? "[/b]" : "[b]",
-                TagsFormatType.HTML => close ? "</strong>" : "<strong>",
+                ExportFormatType.Markdown => "**",
+                ExportFormatType.BbCode => close ? "[/b]" : "[b]",
+                ExportFormatType.Html => close ? "</strong>" : "<strong>",
                 _ => ""
             };
         }
@@ -119,11 +121,11 @@ ul li::before {{
 
         public string Italic(bool close = false)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.Markdown => "*",
-                TagsFormatType.BBCode => close ? "[/i]" : "[i]",
-                TagsFormatType.HTML => close ? "</em>" : "<em>",
+                ExportFormatType.Markdown => "*",
+                ExportFormatType.BbCode => close ? "[/i]" : "[i]",
+                ExportFormatType.Html => close ? "</em>" : "<em>",
                 _ => ""
             };
         }
@@ -135,11 +137,11 @@ ul li::before {{
 
         public string Underline(bool close = false)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.BBCode => close ? "[/u]" : "[u]",
-                TagsFormatType.HTML => close ? "</span>" : "<span style=\"text-decoration: underline;\">",
-                TagsFormatType.Markdown => "__",
+                ExportFormatType.BbCode => close ? "[/u]" : "[u]",
+                ExportFormatType.Html => close ? "</span>" : "<span style=\"text-decoration: underline;\">",
+                ExportFormatType.Markdown => "__",
                 _ => ""
             };
         }
@@ -149,24 +151,24 @@ ul li::before {{
             return $"{Underline()}{text}{Underline(true)}";
         }
 
-        // Markdown supports inline HTML color tags.
+        // Markdown supports inline Html color tags.
         // See https://stackoverflow.com/a/35485694
         public string Color(Color color)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.BBCode => $"[color=\"{ForumColorThemes.ColorToHex(color)}\"]",
-                TagsFormatType.HTML or TagsFormatType.MarkdownHTML => $"<span style=\"color: {ForumColorThemes.ColorToHex(color)};\">",
+                ExportFormatType.BbCode => $"[color=\"{color.ToHex()}\"]",
+                ExportFormatType.Html or ExportFormatType.MarkdownHtml => $"<span style=\"color: {color.ToHex()};\">",
                 _ => ""
             };
         }
 
         public string Color()
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.BBCode => "[/color]",
-                TagsFormatType.HTML or TagsFormatType.MarkdownHTML => "</span>",
+                ExportFormatType.BbCode => "[/color]",
+                ExportFormatType.Html or ExportFormatType.MarkdownHtml => "</span>",
                 _ => ""
             };
         }
@@ -178,10 +180,10 @@ ul li::before {{
 
         public string List(bool close = false)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.BBCode => close ? "[/list]" : "[list]",
-                TagsFormatType.HTML => close ? "</ul>\r\n" : "<ul>",
+                ExportFormatType.BbCode => close ? "[/list]" : "[list]",
+                ExportFormatType.Html => close ? "</ul>\r\n" : "<ul>",
                 _ => ""
             };
         }
@@ -193,11 +195,11 @@ ul li::before {{
 
         public string ListItem(bool close = false)
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.BBCode => close ? "\r\n" : "[*] ",
-                TagsFormatType.HTML => close ? "</li>\r\n" : "<li>",
-                TagsFormatType.Markdown => close ? "\r\n" : "- ",
+                ExportFormatType.BbCode => close ? "\r\n" : "[*] ",
+                ExportFormatType.Html => close ? "</li>\r\n" : "<li>",
+                ExportFormatType.Markdown => close ? "\r\n" : "- ",
                 _ => ""
             };
         }
@@ -209,20 +211,22 @@ ul li::before {{
 
         public string BlankLine()
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.HTML => "<br />\r\n",
+                ExportFormatType.Html => "<br />\r\n",
                 _ => "\r\n"
             };
         }
 
         public string SeparatorLine()
         {
-            return FormatType switch
+            return _formatType switch
             {
-                TagsFormatType.HTML => "<br /><hr /><br />\r\n",
-                TagsFormatType.BBCode => "\r\n──────────────────────────────\r\n", // U+2500 Box Drawings Light Horizontal
-                TagsFormatType.Markdown => "\r\n\r\n----\r\n\r\n"
+                ExportFormatType.Html or ExportFormatType.MarkdownHtml => "<br /><hr /><br />\r\n",
+                ExportFormatType.BbCode => "\r\n──────────────────────────────\r\n", // U+2500 Box Drawings Light Horizontal
+                ExportFormatType.Markdown => "\r\n\r\n----\r\n\r\n",
+                ExportFormatType.None => "\r\n──────────────────────────────\r\n",
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
     }
