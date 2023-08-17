@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Utils;
 
@@ -225,8 +226,16 @@ ul li::before {{
                 ExportFormatType.Html or ExportFormatType.MarkdownHtml => "<br /><hr /><br />\r\n",
                 ExportFormatType.BbCode => "\r\n──────────────────────────────\r\n", // U+2500 Box Drawings Light Horizontal
                 ExportFormatType.Markdown => "\r\n\r\n----\r\n\r\n",
-                ExportFormatType.None => "\r\n──────────────────────────────\r\n",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => "\r\n──────────────────────────────\r\n"
+            };
+        }
+
+        public string Indent(int indent = 2)
+        {
+            return _formatType switch
+            {
+                ExportFormatType.Html => string.Concat(Enumerable.Repeat("&nbsp;", indent)),
+                _ => new string(' ', indent)
             };
         }
     }

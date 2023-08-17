@@ -15,220 +15,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmSetViewer : Form
     {
-        #region FXIdentifier sub-class
-        private class FXIdentifierKey
-        {
-            public Enums.eEffectType EffectType { get; set; }
-            public Enums.eMez MezType { get; set; }
-            public Enums.eDamage DamageType { get; set; }
-            public Enums.eEffectType TargetEffectType { get; set; }
-
-            public Enums.eFXGroup L1Group
-            {
-                get
-                {
-                    if (EffectType == Enums.eEffectType.Damage |
-                        EffectType == Enums.eEffectType.DamageBuff |
-                        EffectType == Enums.eEffectType.Accuracy |
-                        EffectType == Enums.eEffectType.ToHit |
-                        EffectType == Enums.eEffectType.RechargeTime |
-                        EffectType == Enums.eEffectType.Range |
-                        EffectType == Enums.eEffectType.Enhancement &
-                        (TargetEffectType == Enums.eEffectType.RechargeTime |
-                         TargetEffectType == Enums.eEffectType.Accuracy))
-                    {
-                        return Enums.eFXGroup.Offense;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Regeneration |
-                        EffectType == Enums.eEffectType.HitPoints |
-                        EffectType == Enums.eEffectType.Absorb |
-                        EffectType == Enums.eEffectType.Recovery |
-                        EffectType == Enums.eEffectType.Endurance |
-                        EffectType == Enums.eEffectType.EnduranceDiscount)
-                    {
-                        return Enums.eFXGroup.Survival;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Mez |
-                        EffectType == Enums.eEffectType.MezResist |
-                        EffectType == Enums.eEffectType.Slow |
-                        EffectType == Enums.eEffectType.ResEffect |
-                        (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.None & MezType != Enums.eMez.None))
-                    {
-                        return Enums.eFXGroup.StatusEffects;
-                    }
-
-                    if (EffectType == Enums.eEffectType.SpeedRunning |
-                        EffectType == Enums.eEffectType.MaxRunSpeed |
-                        EffectType == Enums.eEffectType.SpeedJumping |
-                        EffectType == Enums.eEffectType.JumpHeight |
-                        EffectType == Enums.eEffectType.MaxJumpSpeed |
-                        EffectType == Enums.eEffectType.SpeedFlying |
-                        EffectType == Enums.eEffectType.MaxFlySpeed)
-                    {
-                        return Enums.eFXGroup.Movement;
-                    }
-
-                    if (EffectType == Enums.eEffectType.StealthRadius |
-                        EffectType == Enums.eEffectType.StealthRadiusPlayer |
-                        EffectType == Enums.eEffectType.PerceptionRadius)
-                    {
-                        return Enums.eFXGroup.Perception;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Resistance |
-                        EffectType == Enums.eEffectType.Defense |
-                        EffectType == Enums.eEffectType.Elusivity)
-                    {
-                        return Enums.eFXGroup.Defense;
-                    }
-
-                    return Enums.eFXGroup.Misc;
-                }
-            }
-
-            public Enums.eFXSubGroup L2Group
-            {
-                get
-                {
-                    if (EffectType == Enums.eEffectType.DamageBuff)
-                    {
-                        return Enums.eFXSubGroup.DamageAll;
-                    }
-
-                    if (EffectType == Enums.eEffectType.MezResist &
-                        (MezType == Enums.eMez.Sleep |
-                         MezType == Enums.eMez.Stunned |
-                         MezType == Enums.eMez.Held |
-                         MezType == Enums.eMez.Immobilized |
-                         MezType == Enums.eMez.Confused |
-                         MezType == Enums.eMez.Terrorized))
-                    {
-                        return Enums.eFXSubGroup.MezResistAll;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Defense &
-                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
-                    {
-                        return Enums.eFXSubGroup.SmashLethalDefense;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Defense &
-                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
-                    {
-                        return Enums.eFXSubGroup.FireColdDefense;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Defense &
-                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
-                    {
-                        return Enums.eFXSubGroup.EnergyNegativeDefense;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Resistance &
-                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
-                    {
-                        return Enums.eFXSubGroup.SmashLethalResistance;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Resistance &
-                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
-                    {
-                        return Enums.eFXSubGroup.FireColdResistance;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Resistance &
-                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
-                    {
-                        return Enums.eFXSubGroup.EnergyNegativeResistance;
-                    }
-
-                    if (EffectType == Enums.eEffectType.MezResist &
-                        (TargetEffectType == Enums.eEffectType.SpeedRunning |
-                         TargetEffectType == Enums.eEffectType.SpeedJumping |
-                         TargetEffectType == Enums.eEffectType.SpeedFlying |
-                         TargetEffectType == Enums.eEffectType.RechargeTime))
-                    {
-                        return Enums.eFXSubGroup.SlowResistance;
-                    }
-
-                    if (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.Slow) // ???
-                    {
-                        return Enums.eFXSubGroup.SlowBuffs;
-                    }
-
-                    if (EffectType == Enums.eEffectType.MezResist &
-                        (MezType == Enums.eMez.Knockback | MezType == Enums.eMez.Knockup))
-                    {
-                        return Enums.eFXSubGroup.KnockResistance;
-                    }
-
-                    return Enums.eFXSubGroup.NoGroup;
-                }
-            }
-
-            public string L2GroupText()
-            {
-                return L2Group switch
-                {
-                    Enums.eFXSubGroup.DamageAll => "Damage(All)",
-                    Enums.eFXSubGroup.MezResistAll => "MezResist(All)",
-                    Enums.eFXSubGroup.SmashLethalDefense => "S/L Defense",
-                    Enums.eFXSubGroup.FireColdDefense => "Fire/Cold Defense",
-                    Enums.eFXSubGroup.EnergyNegativeDefense => "Energy/Negative Defense",
-                    Enums.eFXSubGroup.SmashLethalResistance => "S/L Resistance",
-                    Enums.eFXSubGroup.FireColdResistance => "Fire/Cold Resistance",
-                    Enums.eFXSubGroup.EnergyNegativeResistance => "Energy/Negative Resistance",
-                    Enums.eFXSubGroup.SlowResistance => "Slow Resistance",
-                    Enums.eFXSubGroup.SlowBuffs => "Slows",
-                    Enums.eFXSubGroup.KnockProtection => "Knock Protection",
-                    Enums.eFXSubGroup.KnockResistance => "Knock Resistance",
-                    Enums.eFXSubGroup.Jump => "Jump",
-                    _ => "No group"
-                };
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is FXIdentifierKey o)
-                {
-                    return (EffectType == o.EffectType &
-                            MezType == o.MezType &
-                            DamageType == o.DamageType &
-                            TargetEffectType == o.TargetEffectType);
-                }
-
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                return EffectType.GetHashCode() ^ MezType.GetHashCode() ^ DamageType.GetHashCode() ^ TargetEffectType.GetHashCode();
-            }
-        }
-        #endregion
-
-        #region FXSourceData sub-class
-        private class FXSourceData
-        {
-            private IEffect _fx;
-            public IEffect Fx
-            {
-                get => _fx;
-                set => _fx = (IEffect) value.Clone();
-            }
-            public float Mag { get; set; }
-            public string EnhSet { get; set; }
-            public string Power { get; set; }
-            public Enums.ePvX PvMode { get; set; }
-            public bool IsFromEnh { get; set; }
-            public Enums.eEntity AffectedEntity { get; set; }
-            public Enums.eEntity EntitiesAutoHit { get; set; }
-            public IEnhancement Enhancement { get; set; }
-        }
-        #endregion
-
         #region Coord2D sub-class
         private class Coord2D
         {
@@ -280,7 +66,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         #region OverlayText sub-class
         private static class OverlayText
         {
-            public static string Vector(FXIdentifierKey idk, bool shortText=false)
+            public static string Vector(Build.FXIdentifierKey idk, bool shortText=false)
             {
                 var v = (idk.EffectType == Enums.eEffectType.Enhancement & idk.MezType == Enums.eMez.None & idk.TargetEffectType != Enums.eEffectType.SpeedRunning
                         ? idk.TargetEffectType
@@ -297,7 +83,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return Regex.Replace(v, @"Endurance\b", "Max End");
             }
 
-            public static string MezType(FXIdentifierKey idk, bool shortText=false)
+            public static string MezType(Build.FXIdentifierKey idk, bool shortText=false)
             {
                 var m = "";
                 if (shortText)
@@ -362,7 +148,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return m;
             }
 
-            public static string TargetEffect(FXIdentifierKey idk, bool shortText=false)
+            public static string TargetEffect(Build.FXIdentifierKey idk, bool shortText=false)
             {
                 if (idk.EffectType == Enums.eEffectType.ResEffect |
                     (idk.EffectType == Enums.eEffectType.Enhancement & 
@@ -385,7 +171,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return "";
             }
 
-            public static string DamageType(FXIdentifierKey idk, bool shortText=false)
+            public static string DamageType(Build.FXIdentifierKey idk, bool shortText=false)
             {
                 if (!(idk.EffectType == Enums.eEffectType.Resistance | idk.EffectType == Enums.eEffectType.Defense) |
                     idk.DamageType == Enums.eDamage.None)
@@ -410,19 +196,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     };
             }
 
-            public static bool HasPercentage(FXIdentifierKey idk)
+            public static bool HasPercentage(Build.FXIdentifierKey idk)
             {
                 return idk.EffectType != Enums.eEffectType.HitPoints & idk.EffectType != Enums.eEffectType.Endurance;
             }
 
-            public static bool HasPlusSign(FXIdentifierKey idk)
+            public static bool HasPlusSign(Build.FXIdentifierKey idk)
             {
                 return idk.EffectType == Enums.eEffectType.SpeedRunning ||
                        idk.EffectType == Enums.eEffectType.SpeedJumping ||
                        idk.EffectType == Enums.eEffectType.SpeedFlying;
             }
 
-            public static string ShortLabel(FXIdentifierKey idk)
+            public static string ShortLabel(Build.FXIdentifierKey idk)
             {
                 var overlayVector = Vector(idk, true);
                 var overlayMezType = MezType(idk, true);
@@ -459,7 +245,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private RichTextBox rtxtFX;
         private RichTextBox rtxtInfo;
 
-        private Dictionary<string, FXIdentifierKey> BarsFX;
+        private Dictionary<string, Build.FXIdentifierKey> BarsFX;
         private readonly Dictionary<string, Dictionary<string, Coord2D[]>> ShrinkExpandItemsPos;
         private readonly List<BarSettings> EffectListOrder;
 
@@ -474,7 +260,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetViewer);
             myParent = iParent;
-            BarsFX = new Dictionary<string, FXIdentifierKey>();
+            BarsFX = new Dictionary<string, Build.FXIdentifierKey>();
 
             #region Shrunk/expanded control positions and sizes
             ShrinkExpandItemsPos = new Dictionary<string, Dictionary<string, Coord2D[]>>();
@@ -598,7 +384,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             EffectListOrder = EffectListOrder
                 .AsEnumerable()
-                .OrderBy(e => (int)new FXIdentifierKey
+                .OrderBy(e => (int)new Build.FXIdentifierKey
                 {
                     EffectType = e.EffectType,
                     TargetEffectType = e.TargetEffectType,
@@ -716,121 +502,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             FillEffectView();
-        }
-
-        private Dictionary<FXIdentifierKey, List<FXSourceData>> GetEffectSources()
-        {
-            var ret = new Dictionary<FXIdentifierKey, List<FXSourceData>>();
-            
-            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
-            {
-                for (var i = 0; i < s.SetInfo.Length; i++)
-                {
-                    if (s.SetInfo[i].Powers.Length <= 0) continue;
-
-                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX];
-                    var sourcePower = DatabaseAPI.Database
-                        .Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset]
-                        .Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower];
-                    var powerName = sourcePower.DisplayName;
-
-                    for (var j = 0; j < enhancementSet.Bonus.Length; j++)
-                    {
-                        var pvMode = enhancementSet.Bonus[j].PvMode;
-                        if (!((s.SetInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
-                              ((pvMode == Enums.ePvX.Any) |
-                               ((pvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
-                               ((pvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
-                            continue;
-
-                        var setEffectsData = enhancementSet.GetEffectDetailedData2(j, false);
-                        var setLinkedPowers = enhancementSet.GetEnhancementSetLinkedPowers(j, false);
-
-                        foreach (var e in setEffectsData)
-                        {
-                            var p = setLinkedPowers.First(pw => pw.FullName == e.Key);
-                            foreach (var fx in e.Value)
-                            {
-                                var identKey = new FXIdentifierKey
-                                {
-                                    EffectType = fx.EffectType,
-                                    MezType = fx.MezType,
-                                    DamageType = fx.DamageType,
-                                    TargetEffectType = fx.ETModifies,
-                                };
-
-                                if (!ret.ContainsKey(identKey))
-                                {
-                                    ret.Add(identKey, new List<FXSourceData>());
-                                }
-
-                                ret[identKey].Add(new FXSourceData
-                                {
-                                    Fx = fx,
-                                    Mag = fx.Mag,
-                                    EnhSet = enhancementSet.DisplayName,
-                                    Power = powerName,
-                                    PvMode = pvMode,
-                                    IsFromEnh = false,
-                                    AffectedEntity = p.EntitiesAffected,
-                                    EntitiesAutoHit = p.EntitiesAutoHit
-                                });
-                            }
-                        }
-                    }
-
-                    foreach (var si in s.SetInfo[i].EnhIndexes)
-                    {
-                        var specialEnhIdx = DatabaseAPI.IsSpecialEnh(si);
-                        if (specialEnhIdx <= -1) continue;
-                        
-                        var enhEffectsData = enhancementSet.GetEffectDetailedData2(specialEnhIdx, true);
-                        var setLinkedPowers = enhancementSet.GetEnhancementSetLinkedPowers(specialEnhIdx, true);
-                        foreach (var e in enhEffectsData)
-                        {
-                            var p = setLinkedPowers.First(pw => pw.FullName == e.Key);
-                            foreach (var fx in e.Value)
-                            {
-                                var identKey = new FXIdentifierKey
-                                {
-                                    EffectType = fx.EffectType,
-                                    MezType = fx.MezType,
-                                    DamageType = fx.DamageType,
-                                    TargetEffectType = fx.ETModifies
-                                };
-
-                                if (!ret.ContainsKey(identKey)) ret.Add(identKey, new List<FXSourceData>());
-                                ret[identKey].Add(new FXSourceData
-                                {
-                                    Fx = fx,
-                                    Mag = fx.Mag,
-                                    EnhSet = enhancementSet.DisplayName,
-                                    Power = powerName,
-                                    PvMode = Enums.ePvX.Any,
-                                    IsFromEnh = true,
-                                    AffectedEntity = p.EntitiesAffected,
-                                    EntitiesAutoHit = p.EntitiesAutoHit,
-                                    Enhancement = DatabaseAPI.Database.Enhancements[si]
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (var fxListSub in ret)
-            {
-                // Sort each type of buff, biggest one first
-                fxListSub.Value.Sort((a, b) => -a.Mag.CompareTo(b.Mag));
-            }
-
-            // Sort groups by effect type, mez type, damage type and target effect type (e.g. for enhancement(something) )
-            ret = ret
-                .OrderBy(pair =>
-                    $"{pair.Key.EffectType}{(int)pair.Key.MezType:0:000}{(int)pair.Key.DamageType:0:000}{(int)pair.Key.TargetEffectType:0:000}")
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            return ret;
         }
 
         private void FillEffectView(bool getDetails = false)
@@ -974,7 +645,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                var effectSources = GetEffectSources();
+                var effectSources = MidsContext.Character.CurrentBuild.GetEffectSources();
                 var pickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
                 foreach (var fxGroup in effectSources)
                 {
@@ -1132,7 +803,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             var barData = BarsFX[bar.Name];
             var barValues = bar.GetValues();
-            var sEffects = GetEffectSources();
+            var sEffects = MidsContext.Character.CurrentBuild.GetEffectSources();
             var overlayVector = OverlayText.Vector(barData);
             var overlayDmgType = OverlayText.DamageType(barData);
             var overlayMezType = OverlayText.MezType(barData);
@@ -1328,9 +999,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 TotalsColor = totalsColor;
             }
 
-            public FXIdentifierKey GetIdentifierKey()
+            public Build.FXIdentifierKey GetIdentifierKey()
             {
-                return new FXIdentifierKey
+                return new Build.FXIdentifierKey
                 {
                     EffectType = EffectType,
                     DamageType = DamageType,
@@ -1371,7 +1042,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             panelBars.Controls.Clear();
             foreach (var st in EffectListOrder)
             {
-                var fxId = new FXIdentifierKey
+                var fxId = new Build.FXIdentifierKey
                 {
                     EffectType = st.EffectType,
                     TargetEffectType = st.TargetEffectType,
@@ -1538,7 +1209,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 barLabel.Text = OverlayText.ShortLabel(idk);
                 panelBars.Controls.Add(bar);
                 panelBars.Controls.Add(barLabel);
-                BarsFX.Add(bar.Name, new FXIdentifierKey
+                BarsFX.Add(bar.Name, new Build.FXIdentifierKey
                 {
                     EffectType = st.EffectType,
                     TargetEffectType = st.TargetEffectType,

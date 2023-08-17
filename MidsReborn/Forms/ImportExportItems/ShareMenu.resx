@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Generates a mobile friendly page link using character data and optional extras that are then exported to a multi-column card to summarize build and statistics. The output will be copied into the clipboard.</value>
-  </data>
   <data name="label10.Text" xml:space="preserve">
     <value>Generates a build summary from character data and optional extras into a compatible format (including {formats}) that can be used for forum posts on various types of forums. The output will be copied into the clipboard.</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Generates a mobile friendly page link using character data and optional extras that are then exported to a multi-column card to summarize build and statistics. The output will be copied into the clipboard.</value>
   </data>
 </root>

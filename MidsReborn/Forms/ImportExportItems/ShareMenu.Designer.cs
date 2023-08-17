@@ -74,6 +74,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             label13 = new System.Windows.Forms.Label();
             igPictureBox = new System.Windows.Forms.PictureBox();
             mobileFriendly = new Page();
+            label14 = new System.Windows.Forms.Label();
             borderPanel1 = new BorderPanel();
             previewLabel = new System.Windows.Forms.Label();
             webViewPreview = new Microsoft.Web.WebView2.WinForms.WebView2();
@@ -86,7 +87,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
             mbfCancel = new ImageButtonEx();
             mbfExport = new ImageButtonEx();
             navStrip1 = new NavStrip();
-            label14 = new System.Windows.Forms.Label();
             formPages1.SuspendLayout();
             buildData.SuspendLayout();
             forumFormats.SuspendLayout();
@@ -110,7 +110,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             formPages1.Pages.Add(forumFormats);
             formPages1.Pages.Add(infoGraphic);
             formPages1.Pages.Add(mobileFriendly);
-            formPages1.SelectedIndex = 3;
+            formPages1.SelectedIndex = 0;
             formPages1.Size = new System.Drawing.Size(776, 393);
             formPages1.TabIndex = 45;
             // 
@@ -135,7 +135,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // bdCancel
             // 
             bdCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            bdCancel.CurrentText = "Cancel";
+            bdCancel.CurrentText = "Close";
             bdCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             bdCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             bdCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -146,7 +146,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             bdCancel.Name = "bdCancel";
             bdCancel.Size = new System.Drawing.Size(100, 28);
             bdCancel.TabIndex = 70;
-            bdCancel.Text = "Cancel";
+            bdCancel.Text = "Close";
             bdCancel.TextOutline.Color = System.Drawing.Color.Black;
             bdCancel.TextOutline.Width = 3;
             bdCancel.ToggleState = ImageButtonEx.States.ToggledOff;
@@ -191,7 +191,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // bdChunkBox
             // 
-            bdChunkBox.BackColor = System.Drawing.Color.Gainsboro;
+            bdChunkBox.BackColor = System.Drawing.Color.FromArgb(20, 20, 20);
+            bdChunkBox.ForeColor = System.Drawing.Color.WhiteSmoke;
             bdChunkBox.Location = new System.Drawing.Point(10, 52);
             bdChunkBox.Multiline = true;
             bdChunkBox.Name = "bdChunkBox";
@@ -358,7 +359,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // ffCancel
             // 
             ffCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            ffCancel.CurrentText = "Cancel";
+            ffCancel.CurrentText = "Close";
             ffCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             ffCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             ffCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -369,7 +370,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             ffCancel.Name = "ffCancel";
             ffCancel.Size = new System.Drawing.Size(100, 28);
             ffCancel.TabIndex = 61;
-            ffCancel.Text = "Cancel";
+            ffCancel.Text = "Close";
             ffCancel.TextOutline.Color = System.Drawing.Color.Black;
             ffCancel.TextOutline.Width = 3;
             ffCancel.ToggleState = ImageButtonEx.States.ToggledOff;
@@ -590,7 +591,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // igCancel
             // 
             igCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            igCancel.CurrentText = "Cancel";
+            igCancel.CurrentText = "Close";
             igCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             igCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             igCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -601,7 +602,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             igCancel.Name = "igCancel";
             igCancel.Size = new System.Drawing.Size(100, 28);
             igCancel.TabIndex = 72;
-            igCancel.Text = "Cancel";
+            igCancel.Text = "Close";
             igCancel.TextOutline.Color = System.Drawing.Color.Black;
             igCancel.TextOutline.Width = 3;
             igCancel.ToggleState = ImageButtonEx.States.ToggledOff;
@@ -675,6 +676,17 @@ namespace Mids_Reborn.Forms.ImportExportItems
             mobileFriendly.Size = new System.Drawing.Size(774, 391);
             mobileFriendly.TabIndex = 0;
             mobileFriendly.Title = "Mobile Friendly (Link)";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label14.ForeColor = System.Drawing.Color.DimGray;
+            label14.Location = new System.Drawing.Point(3, 370);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(173, 21);
+            label14.TabIndex = 55;
+            label14.Text = "Experimental Feature";
             // 
             // borderPanel1
             // 
@@ -779,7 +791,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // mbfCancel
             // 
             mbfCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            mbfCancel.CurrentText = "Cancel";
+            mbfCancel.CurrentText = "Close";
             mbfCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             mbfCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             mbfCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -790,7 +802,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             mbfCancel.Name = "mbfCancel";
             mbfCancel.Size = new System.Drawing.Size(100, 28);
             mbfCancel.TabIndex = 45;
-            mbfCancel.Text = "Cancel";
+            mbfCancel.Text = "Close";
             mbfCancel.TextOutline.Color = System.Drawing.Color.Black;
             mbfCancel.TextOutline.Width = 3;
             mbfCancel.ToggleState = ImageButtonEx.States.ToggledOff;
@@ -839,17 +851,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
             navStrip1.OutlineColor = System.Drawing.Color.Black;
             navStrip1.Size = new System.Drawing.Size(775, 38);
             navStrip1.TabIndex = 46;
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label14.ForeColor = System.Drawing.Color.DimGray;
-            label14.Location = new System.Drawing.Point(3, 370);
-            label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(169, 21);
-            label14.TabIndex = 55;
-            label14.Text = "Experimental Feature";
             // 
             // ShareMenu
             // 
