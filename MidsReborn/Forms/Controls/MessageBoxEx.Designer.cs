@@ -193,6 +193,7 @@ namespace Mids_Reborn.Forms.Controls
             ForeColor = System.Drawing.Color.Azure;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Name = "MessageBoxEx";
+            ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "MessageBoxEx";
             mainPanel.ResumeLayout(false);

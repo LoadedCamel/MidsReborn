@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Utils;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -36,20 +37,60 @@ html, body {{
 
 hr {{
   border-top: 1px solid {_activeTheme.Title.ToHex()};
+  border-bottom: none;
 }}
 
 ul {{
-  list-style: none;
+  list-style-type: none;
+  list-style-position: inside;
+  margin-top: 0;
+  margin-bottom: 0;
 }}
 
-ul li::before {{
+ul:not([class*=""noBullet""]) li::before {{
   content: ""\2022"";
   color: {_activeTheme.Title.ToHex()};
   font-weight: bold;
   font-size: 12pt;
-  display: inline-block; 
+  display: inline-block;
   width: 1em;
   margin-left: -1em;
+}}
+
+ul[class*=""indent""] {{
+  padding-left: 0;
+}}
+
+ul.indent1 li {{
+  padding-left: 0.25em;
+}}
+
+ul.indent2 li {{
+  padding-left: 0.5em;
+}}
+
+ul.indent3 li {{
+  padding-left: 0.75em;
+}}
+
+ul.indent4 li {{
+  padding-left: 1em;
+}}
+
+ul.indent5 li {{
+  padding-left: 1.25em;
+}}
+
+ul.indent6 li {{
+  padding-left: 1.5em;
+}}
+
+ul.indent7 li {{
+  padding-left: 1.75em;
+}}
+
+ul.indent8 li {{
+  padding-left: 2em;
 }}
 </style>
 </head>
@@ -185,6 +226,32 @@ ul li::before {{
             {
                 ExportFormatType.BbCode => close ? "[/list]" : "[list]",
                 ExportFormatType.Html => close ? "</ul>\r\n" : "<ul>",
+                _ => ""
+            };
+        }
+
+        public string List(bool showBullets, int indent)
+        {
+            var indentClass = indent switch
+            {
+                <= 0 => "",
+                >= 1 and <= 8 => $"indent{indent}",
+                _ => "indent8"
+            };
+
+            var bulletClass = showBullets
+                ? ""
+                : "noBullets";
+
+            var ulClass = $"{bulletClass} {indentClass}".Trim();
+            ulClass = indentClass == "" & bulletClass == ""
+                ? ""
+                : $" class=\"{ulClass}\"";
+
+            return _formatType switch
+            {
+                ExportFormatType.BbCode => "[list]",
+                ExportFormatType.Html => $"<ul{ulClass}>",
                 _ => ""
             };
         }

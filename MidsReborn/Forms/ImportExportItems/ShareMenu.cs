@@ -242,7 +242,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         messageBox.ShowDialog(this);
                         break;
                     case "ffExport":
-                        var exportData = Export_Data(_share.ForumFormat.InclAccolades, _share.ForumFormat.InclIncarnates, _share.ForumFormat.InclBonusBreakdown);
+                        var exportData = ExportData(_share.ForumFormat.InclAccolades, _share.ForumFormat.InclIncarnates, _share.ForumFormat.InclBonusBreakdown);
                         data = new DataObject(exportData);
                         Clipboard.SetDataObject(data, true);
                         messageBox = new MessageBoxEx("Export Result", "The Forum data has been placed in your clipboard.", MessageBoxEx.MessageBoxButtons.Okay);
@@ -262,11 +262,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
             }
         }
 
-        private string Export_Data(bool inclAccolade, bool inclIncarnate, bool inclBonusBreakdown)
+        private string ExportData(bool inclAccolade, bool inclIncarnate, bool inclBonusBreakdown)
         {
             var formatType = _share.ForumFormat.SelectedFormatCode!.Type;
             var activeTheme = _share.ForumFormat.SelectedTheme!;
-            var longFormat = inclBonusBreakdown; // Need to add in portion that uses this to display Set Bonus Totals and the Breakdown
             var tg = new TagGenerator(formatType, activeTheme);
 
             var txt = tg.Header($"{(string.IsNullOrWhiteSpace(MidsContext.Character.Name) ? "" : $"{MidsContext.Character.Name} - ")}{MidsContext.Character.Powersets[0]?.DisplayName} / {MidsContext.Character.Powersets[1]?.DisplayName} {MidsContext.Character.Alignment} {MidsContext.Character.Archetype.DisplayName}");
@@ -276,10 +275,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 : $"{appVersionChunks[0]}.{appVersionChunks[1]}.{appVersionChunks[2]} rev. {appVersionChunks[3]}";
 
             txt += tg.Size(6,
-                tg.Bold(tg.Color(activeTheme.Title,
+                tg.Bold(tg.Color(activeTheme.Headings,
                     $"{(string.IsNullOrWhiteSpace(MidsContext.Character.Name) ? "" : $"{MidsContext.Character.Name} - ")}{MidsContext.Character.Alignment} {MidsContext.Character.Archetype.DisplayName}")));
             txt += tg.BlankLine();
-            txt += tg.Size(4, tg.Color(activeTheme.Title, tg.Italic($"Build plan made with {MidsContext.AppName} v{appVersion}")));
+            txt += tg.Size(4, tg.Color(activeTheme.Levels, tg.Italic($"Build plan made with {MidsContext.AppName} v{appVersion}")));
 
             txt += tg.SeparatorLine();
 
@@ -304,9 +303,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             }
 
             txt += tg.List(true);
-            txt += tg.SeparatorLine();
+            txt += tg.BlankLine() + tg.SeparatorLine() + tg.BlankLine();
 
-            txt += tg.Size(6, tg.Color(activeTheme.Title, tg.Bold("Powers taken:")));
+            txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Powers taken:")));
             txt += tg.BlankLine() + tg.BlankLine();
             foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
             {
@@ -344,9 +343,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 txt += tg.BlankLine() + tg.BlankLine();
             }
 
-            txt += tg.SeparatorLine();
+            txt += tg.SeparatorLine() + tg.BlankLine();
 
-            txt += tg.Size(6, tg.Color(activeTheme.Title, tg.Bold("Inherents:")));
+            txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Inherents:")));
             txt += tg.BlankLine() + tg.BlankLine();
             foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
             {
@@ -408,7 +407,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     if (k++ == 0)
                     {
                         txt += tg.SeparatorLine();
-                        txt += tg.Size(6, tg.Color(activeTheme.Title, tg.Bold("Accolades:")));
+                        txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Accolades:")));
                         txt += tg.BlankLine() + tg.BlankLine();
                     }
 
@@ -441,7 +440,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     if (k++ == 0)
                     {
                         txt += tg.SeparatorLine();
-                        txt += tg.Size(6, tg.Color(activeTheme.Title, tg.Bold("Incarnates:")));
+                        txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Incarnates:")));
                         txt += tg.BlankLine() + tg.BlankLine();
                     }
 
@@ -452,7 +451,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             if (inclBonusBreakdown)
             {
                 txt += tg.SeparatorLine();
-                txt += tg.Size(6, tg.Color(activeTheme.Title, tg.Bold("Stats Breakdown:")));
+                txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Stats Breakdown:")));
                 txt += tg.BlankLine() + tg.BlankLine();
 
                 var displayStats = MidsContext.Character.DisplayStats;
@@ -513,7 +512,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         continue;
                     }
 
-                    txt += $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{displayStats.Defense(i):##0.##}%")}";
+                    txt +=
+                        $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{displayStats.Defense(i):##0.##}%")}";
                     txt += tg.BlankLine();
                 }
 
@@ -528,7 +528,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     }
 
                     var resValue = displayStats.DamageResistance(i, false);
-                    txt += $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{resValue:##0.##}%")}";
+                    txt +=
+                        $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{resValue:##0.##}%")}";
                     txt += tg.BlankLine();
                 }
 
@@ -607,7 +608,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 foreach (var m in mezList)
                 {
                     // Use Math.Abs() here instead of negative sign to prevent display of "-0"
-                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int)m]):####0.##}")}";
+                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}")}";
                     txt += tg.BlankLine();
                 }
 
@@ -617,8 +618,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
                 foreach (var m in mezList)
                 {
-                    // Use Math.Abs() here instead of negative sign to prevent display of "-0"
-                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int)m]:####0.##}%")}";
+                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%")}";
                     txt += tg.BlankLine();
                 }
 
@@ -653,261 +653,264 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         txt += tg.BlankLine();
                     }
                 }
-            }
 
-            txt += tg.BlankLine();
-            txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Set effects breakdown -"))));
-            txt += tg.BlankLine() + tg.BlankLine();
 
-            var setsEffects = "";
-            var countDict = new Dictionary<int, int>();
+                var setsEffects = "";
+                var countDict = new Dictionary<int, int>();
 
-            var hasOvercap = false;
-            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
-            {
-                for (var i = 0; i < s.SetInfo.Length; i++)
+                foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
                 {
-                    if (s.SetInfo[i].Powers.Length <= 0)
+                    for (var i = 0; i < s.SetInfo.Length; i++)
+                    {
+                        if (s.SetInfo[i].Powers.Length <= 0)
+                        {
+                            continue;
+                        }
+
+                        var setInfo = s.SetInfo;
+                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[i].SetIDX];
+                        var str2 = setsEffects + tg.Color(activeTheme.Levels,
+                            tg.Underline(tg.Bold(enhancementSet.DisplayName)));
+                        if (MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset > -1)
+                        {
+                            str2 += $"{tg.BlankLine()}{tg.Color(activeTheme.Slots, $"({DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower].DisplayName})")}";
+                        }
+
+                        str2 += tg.BlankLine();
+                        var str4 = tg.List(false, 2);
+                        for (var j = 0; j < enhancementSet.Bonus.Length; j++)
+                        {
+                            if (!((setInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
+                                  ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.Any) |
+                                   ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvE) &
+                                    !MidsContext.Config.Inc.DisablePvE) |
+                                   ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvP) &
+                                    MidsContext.Config.Inc.DisablePvE))))
+                            {
+                                continue;
+                            }
+
+                            var localOverCap = false;
+                            var str5 = enhancementSet.GetEffectString(j, false, true, true);
+                            if (string.IsNullOrWhiteSpace(str5))
+                            {
+                                continue;
+                            }
+
+                            foreach (var esb in enhancementSet.Bonus[j].Index)
+                            {
+                                if (esb <= -1)
+                                {
+                                    continue;
+                                }
+
+                                if (!countDict.ContainsKey(esb))
+                                {
+                                    countDict.Add(esb, 1);
+                                }
+                                else
+                                {
+                                    countDict[esb]++;
+                                }
+
+                                if (countDict[esb] > 5)
+                                {
+                                    localOverCap = true;
+                                }
+                            }
+
+                            if (localOverCap)
+                            {
+                                str5 = tg.Italic($"{str5} {tg.Color(activeTheme.Title, ">Cap")}");
+                            }
+
+                            str4 += tg.ListItem(str5);
+                        }
+
+                        foreach (var si in s.SetInfo[i].EnhIndexes)
+                        {
+                            var index5 = DatabaseAPI.IsSpecialEnh(si);
+                            if (index5 <= -1)
+                            {
+                                continue;
+                            }
+
+                            var localOverCap = false;
+                            var str6 = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].GetEffectString(index5, true, true, true);
+                            foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].SpecialBonus[index5].Index)
+                            {
+                                if (sb <= -1)
+                                {
+                                    continue;
+                                }
+
+                                if (!countDict.ContainsKey(sb))
+                                {
+                                    countDict.Add(sb, 1);
+                                }
+                                else
+                                {
+                                    countDict[sb]++;
+                                }
+
+                                if (countDict[sb] > 5)
+                                {
+                                    localOverCap = true;
+                                }
+                            }
+
+                            if (localOverCap)
+                            {
+                                str6 = tg.Italic($"{str6} {tg.Color(activeTheme.Title, ">Cap")}");
+                            }
+
+                            str4 += tg.ListItem(str6);
+                        }
+
+                        str4 += tg.List(true);
+
+                        setsEffects = str2 + str4 + tg.BlankLine();
+                    }
+                }
+
+                var setsFxSources = "";
+                var effectSources = MidsContext.Character.CurrentBuild.GetEffectSources();
+                var pickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
+                foreach (var fxGroup in effectSources)
+                {
+                    if (fxGroup.Key.EffectType == Enums.eEffectType.GrantPower |
+                        fxGroup.Key.EffectType == Enums.eEffectType.EntCreate |
+                        fxGroup.Key.EffectType == Enums.eEffectType.EntCreate_x |
+                        fxGroup.Key.EffectType == Enums.eEffectType.Null |
+                        fxGroup.Key.EffectType == Enums.eEffectType.NullBool |
+                        fxGroup.Key.EffectType == Enums.eEffectType.ExecutePower)
                     {
                         continue;
                     }
 
-                    var setInfo = s.SetInfo;
-                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[i].SetIDX];
-                    var str2 = setsEffects + tg.Color(activeTheme.Levels, tg.Underline(tg.Bold(enhancementSet.DisplayName)));
-                    if (MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset > -1)
+                    var l2Group = fxGroup.Key.L2Group;
+                    if (l2Group != Enums.eFXSubGroup.NoGroup && pickedGroups.ContainsKey(l2Group))
                     {
-                        str2 += $"{tg.BlankLine()}{tg.Color(activeTheme.Levels, $"({DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower].DisplayName})")}";
+                        continue;
                     }
 
-                    var str3 = $"{str2}{tg.BlankLine()}";
-                    var str4 = "";
-                    for (var j = 0; j < enhancementSet.Bonus.Length; j++)
+                    if (l2Group != Enums.eFXSubGroup.NoGroup)
                     {
-                        if (!((setInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
-                              ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.Any) |
-                               ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvE) &
-                                !MidsContext.Config.Inc.DisablePvE) |
-                               ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvP) &
-                                MidsContext.Config.Inc.DisablePvE))))
-                        {
-                            continue;
-                        }
-
-                        var localOverCap = false;
-                        var str5 = enhancementSet.GetEffectString(j, false, true, true);
-                        if (string.IsNullOrWhiteSpace(str5))
-                        {
-                            continue;
-                        }
-
-                        str5 = $"{tg.Indent()}{str5}";
-                        if (str4 != "")
-                        {
-                            str4 += tg.BlankLine();
-                        }
-
-                        foreach (var esb in enhancementSet.Bonus[j].Index)
-                        {
-                            if (esb <= -1)
-                            {
-                                continue;
-                            }
-
-                            if (!countDict.ContainsKey(esb))
-                            {
-                                countDict.Add(esb, 1);
-                            }
-                            else
-                            {
-                                countDict[esb]++;
-                            }
-
-                            if (countDict[esb] > 5)
-                            {
-                                localOverCap = true;
-                            }
-                        }
-
-                        if (localOverCap)
-                        {
-                            str5 = tg.Italic($"{str5} {tg.Color(activeTheme.Title, ">Cap")}");
-                            hasOvercap = true;
-                        }
-
-                        str4 += str5;
+                        pickedGroups.Add(l2Group, true);
                     }
 
-                    foreach (var si in s.SetInfo[i].EnhIndexes)
+                    var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
+                    if (fxGroup.Key.MezType != Enums.eMez.None)
                     {
-                        var index5 = DatabaseAPI.IsSpecialEnh(si);
-                        if (index5 <= -1)
-                        {
-                            continue;
-                        }
-
-                        if (str4 != "")
-                        {
-                            str4 += tg.BlankLine();
-                        }
-
-                        var localOverCap = false;
-                        var str6 = $"{tg.Indent()}{DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].GetEffectString(index5, true, true, true)}";
-                        foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].SpecialBonus[index5].Index)
-                        {
-                            if (sb <= -1)
-                            {
-                                continue;
-                            }
-
-                            if (!countDict.ContainsKey(sb))
-                            {
-                                countDict.Add(sb, 1);
-                            }
-                            else
-                            {
-                                countDict[sb]++;
-                            }
-
-                            if (countDict[sb] > 5)
-                            {
-                                localOverCap = true;
-                            }
-                        }
-
-                        if (localOverCap)
-                        {
-                            str6 = tg.Italic($"{str6} {tg.Color(activeTheme.Title, ">Cap")}");
-                            hasOvercap = true;
-                        }
-
-                        str4 += str6;
+                        effectName += $"({Enums.GetMezName(fxGroup.Key.MezType)})";
                     }
 
-                    setsEffects = str3 + str4 + tg.BlankLine() + tg.BlankLine();
+                    if (fxGroup.Key.DamageType != Enums.eDamage.None)
+                    {
+                        effectName += $"({Enums.GetDamageName(fxGroup.Key.DamageType)})";
+                    }
+
+                    if (fxGroup.Key.TargetEffectType != Enums.eEffectType.None)
+                    {
+                        effectName += $"({Enums.GetEffectName(fxGroup.Key.TargetEffectType)})";
+                    }
+
+                    if (setsFxSources != "")
+                    {
+                        setsFxSources += tg.BlankLine() + tg.BlankLine();
+                    }
+
+                    var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance ||
+                                        effectSources[fxGroup.Key].Count > 0 &&
+                                        effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
+                    var fxSumMag = effectSources[fxGroup.Key].Count > 0
+                        ? effectSources[fxGroup.Key].Sum(e => e.Mag)
+                        : 0;
+
+                    var fxBlockStr = "";
+                    var fxBlockHeader = "";
+                    if (l2Group != Enums.eFXSubGroup.NoGroup)
+                    {
+                        fxBlockHeader += fxGroup.Key.L2GroupText();
+                    }
+                    else
+                    {
+                        fxBlockHeader += Regex.Replace(fxGroup.Key.EffectType.ToString(), @"Endurance\b|Max End", "Max Endurance");
+                        fxBlockHeader += fxGroup.Key.MezType != Enums.eMez.None ? $" ({fxGroup.Key.MezType})" : "";
+                        fxBlockHeader += fxGroup.Key.DamageType != Enums.eDamage.None
+                            ? $" ({fxGroup.Key.DamageType})"
+                            : "";
+                        fxBlockHeader += fxGroup.Key.TargetEffectType != Enums.eEffectType.None
+                            ? $" ({fxGroup.Key.TargetEffectType})"
+                            : "";
+                    }
+
+                    var petSum = 0;
+                    var selfSum = 0;
+                    var fxBlockHeaderTotal = fxGroup.Key.EffectType switch
+                    {
+                        Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.EntCreate => "",
+                        Enums.eEffectType.Absorb => $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total) / {(fxTypePercent ? fxSumMag : fxSumMag / MidsContext.Character.Archetype.Hitpoints) * 100:##0.##}% of Base HP)",
+                        Enums.eEffectType.HitPoints => $" ({fxSumMag:##0.##} HP Total / {fxSumMag / MidsContext.Character.Archetype.Hitpoints * 100:##0.##}% of Base HP)",
+                        Enums.eEffectType.Regeneration => $" ({fxSumMag * 100:####0.##}% Total / {MidsContext.Character.DisplayStats.HealthRegenHPPerSec:####0.##} HP/s)",
+                        _ => $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)"
+                    };
+
+                    fxBlockStr += tg.Color(activeTheme.Headings, tg.Underline(tg.Bold(fxBlockHeader))) +
+                                  tg.Color(activeTheme.Levels, tg.Underline(tg.Bold(fxBlockHeaderTotal)));
+                    fxBlockStr += tg.List(false, 2);
+
+                    foreach (var e in effectSources[fxGroup.Key])
+                    {
+                        //if ((e.AffectedEntity & Enums.eEntity.Caster) == Enums.eEntity.None) continue;
+                        //if (e.EntitiesAutoHit != Enums.eEntity.None & ((e.EntitiesAutoHit & Enums.eEntity.Caster) == Enums.eEntity.None)) continue;
+                        var effectString = l2Group != Enums.eFXSubGroup.NoGroup
+                            ? e.Fx.BuildEffectString(true, "", false, false, false, true)
+                                .Replace(effectName, fxGroup.Key.L2GroupText())
+                            : e.Fx.BuildEffectString(true, "", false, false, false, true);
+
+                        if (!effectString.StartsWith("+"))
+                        {
+                            effectString = $"+{effectString}";
+                        }
+
+                        effectString = Regex.Replace(effectString, @"Endurance\b|Max End", "Max Endurance");
+
+                        var fxSource = "";
+                        if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
+                        {
+                            fxSource = tg.List(false, 4) +
+                                       tg.ListItem($"(From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})") +
+                                       tg.List(true);
+
+                        }
+                        else if (e is {IsFromEnh: true, Enhancement: not null})
+                        {
+                            fxSource = tg.List(false, 4) +
+                                       tg.ListItem($"(From {tg.Color(activeTheme.Levels, e.Enhancement.LongName)} in {tg.Color(activeTheme.Slots, e.Power)})") +
+                                       tg.List(true);
+                        }
+
+                        fxBlockStr += tg.ListItem($"{(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}{(e.AffectedEntity == Enums.eEntity.MyPet ? " to Pets" : "")}{fxSource}");
+                    }
+
+                    fxBlockStr += tg.List(true);
+
+                    setsFxSources += fxBlockStr;
                 }
+
+                txt += tg.BlankLine() + tg.SeparatorLine() + tg.BlankLine() +
+                       tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Set Effects Breakdown"))) +
+                       tg.BlankLine() + tg.BlankLine() +
+                       setsEffects +
+                       tg.BlankLine() + tg.SeparatorLine() + tg.BlankLine() +
+                       tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Set Buffs Totals"))) +
+                       tg.BlankLine() + tg.BlankLine() +
+                       setsFxSources;
             }
 
-            var setsFxSources = "";
-            var effectSources = MidsContext.Character.CurrentBuild.GetEffectSources();
-            var pickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
-            foreach (var fxGroup in effectSources)
-            {
-                if (fxGroup.Key.EffectType == Enums.eEffectType.GrantPower |
-                    fxGroup.Key.EffectType == Enums.eEffectType.EntCreate |
-                    fxGroup.Key.EffectType == Enums.eEffectType.EntCreate_x |
-                    fxGroup.Key.EffectType == Enums.eEffectType.Null |
-                    fxGroup.Key.EffectType == Enums.eEffectType.NullBool |
-                    fxGroup.Key.EffectType == Enums.eEffectType.ExecutePower)
-                {
-                    continue;
-                }
-
-                var l2Group = fxGroup.Key.L2Group;
-                if (l2Group != Enums.eFXSubGroup.NoGroup && pickedGroups.ContainsKey(l2Group))
-                {
-                    continue;
-                }
-
-                if (l2Group != Enums.eFXSubGroup.NoGroup)
-                {
-                    pickedGroups.Add(l2Group, true);
-                }
-
-                var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
-                if (fxGroup.Key.MezType != Enums.eMez.None)
-                {
-                    effectName += $"({Enums.GetMezName(fxGroup.Key.MezType)})";
-                }
-
-                if (fxGroup.Key.DamageType != Enums.eDamage.None)
-                {
-                    effectName += $"({Enums.GetDamageName(fxGroup.Key.DamageType)})";
-                }
-
-                if (fxGroup.Key.TargetEffectType != Enums.eEffectType.None)
-                {
-                    effectName += $"({Enums.GetEffectName(fxGroup.Key.TargetEffectType)})";
-                }
-
-                if (setsFxSources != "")
-                {
-                    setsFxSources += tg.BlankLine();
-                }
-
-                var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance ||
-                                    effectSources[fxGroup.Key].Count > 0 &&
-                                    effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
-                var fxSumMag = effectSources[fxGroup.Key].Count > 0
-                    ? effectSources[fxGroup.Key].Sum(e => e.Mag)
-                    : 0;
-
-                var fxBlockStr = "";
-                if (l2Group != Enums.eFXSubGroup.NoGroup)
-                {
-                    fxBlockStr += fxGroup.Key.L2GroupText();
-                }
-                else
-                {
-                    fxBlockStr += Regex.Replace(fxGroup.Key.EffectType.ToString(), @"Endurance\b|Max End", "Max Endurance");
-                    fxBlockStr += fxGroup.Key.MezType != Enums.eMez.None ? $" ({fxGroup.Key.MezType})" : "";
-                    fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
-                    fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None
-                        ? $" ({fxGroup.Key.TargetEffectType})"
-                        : "";
-                }
-
-                var petSum = 0;
-                var selfSum = 0;
-                fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)";
-
-                foreach (var e in effectSources[fxGroup.Key])
-                {
-                    //if ((e.AffectedEntity & Enums.eEntity.Caster) == Enums.eEntity.None) continue;
-                    //if (e.EntitiesAutoHit != Enums.eEntity.None & ((e.EntitiesAutoHit & Enums.eEntity.Caster) == Enums.eEntity.None)) continue;
-                    fxBlockStr += tg.BlankLine();
-                    var effectString = l2Group != Enums.eFXSubGroup.NoGroup
-                        ? e.Fx.BuildEffectString(true, "", false, false, false, true)
-                            .Replace(effectName, fxGroup.Key.L2GroupText())
-                        : e.Fx.BuildEffectString(true, "", false, false, false, true);
-
-                    if (!effectString.StartsWith("+"))
-                    {
-                        effectString = $"+{effectString}";
-                    }
-
-                    effectString = Regex.Replace(effectString, @"Endurance\b|Max End", "Max Endurance");
-                    fxBlockStr += $"{tg.Indent(4)}{(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
-                    switch (e.AffectedEntity)
-                    {
-                        case Enums.eEntity.MyPet:
-                            fxBlockStr += @" to Pets";
-                            break;
-                        case Enums.eEntity.Caster:
-                            fxBlockStr += @" to Self";
-                            break;
-                    }
-
-                    if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
-                    {
-                        fxBlockStr += $"{tg.BlankLine()}{tg.Indent(8)}(From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})";
-                    }
-                    else if (e.IsFromEnh)
-                    {
-                        if (e.Enhancement != null)
-                        {
-                            fxBlockStr += $"{tg.BlankLine()}{tg.Indent(8)}(From {tg.Color(activeTheme.Levels, e.Enhancement.LongName)} in {tg.Color(activeTheme.Slots, e.Power)})";
-                        }
-                    }
-                }
-
-                setsFxSources += fxBlockStr;
-            }
-
-            txt += setsEffects + tg.BlankLine() + tg.SeparatorLine() + tg.BlankLine() + setsFxSources;
-
-            txt += tg.BlankLine() + tg.BlankLine();
-            txt += tg.Footer();
+            txt += tg.BlankLine() + tg.BlankLine() +
+                   tg.Footer();
 
             return txt;
         }
