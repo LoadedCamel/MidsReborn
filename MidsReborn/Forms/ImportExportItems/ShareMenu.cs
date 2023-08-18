@@ -1013,17 +1013,17 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void chkOptLongFormat_CheckChanged(object sender, EventArgs e)
         {
-            _share.ForumFormat.InclBonusBreakdown = cbInclSetBonus.Checked;
+            _share.ForumFormat.InclBonusBreakdown = chkOptLongFormat.Checked;
         }
 
         private void chkOptIncarnates_CheckChanged(object sender, EventArgs e)
         {
-            _share.ForumFormat.InclIncarnates = cbInclIncarnate.Checked;
+            _share.ForumFormat.InclIncarnates = chkOptIncarnates.Checked;
         }
 
         private void chkOptAccolades_CheckChanged(object sender, EventArgs e)
         {
-            _share.ForumFormat.InclAccolades = cbInclAccolade.Checked;
+            _share.ForumFormat.InclAccolades = chkOptAccolades.Checked;
         }
 
         private void addThemeBtn_Click(object sender, EventArgs e)
