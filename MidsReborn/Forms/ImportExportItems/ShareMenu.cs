@@ -278,8 +278,12 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 tg.Bold(tg.Color(activeTheme.Headings,
                     $"{(string.IsNullOrWhiteSpace(MidsContext.Character.Name) ? "" : $"{MidsContext.Character.Name} - ")}{MidsContext.Character.Alignment} {MidsContext.Character.Archetype.DisplayName}")));
             txt += tg.BlankLine();
-            txt += tg.Size(4, tg.Color(activeTheme.Levels, tg.Italic($"Build plan made with {MidsContext.AppName} v{appVersion}")));
+            if (formatType is ExportFormatType.MarkdownHtml) // or ExportFormatType.Markdown
+            {
+                txt += tg.BlankLine();
+            }
 
+            txt += tg.Size(4, tg.Color(activeTheme.Levels, tg.Italic($"Build plan made with {MidsContext.AppName} v{appVersion}")));
             txt += tg.SeparatorLine();
 
             txt += tg.List();
@@ -409,16 +413,15 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         txt += tg.SeparatorLine();
                         txt += tg.Size(6, tg.Color(activeTheme.Headings, tg.Bold("Accolades:")));
                         txt += tg.BlankLine() + tg.BlankLine();
+                        txt += tg.List();
                     }
 
-                    txt += tg.Bold(tg.Color(activeTheme.Title, pe.Power.DisplayName));
-                    txt += tg.BlankLine();
-
+                    txt += tg.ListItem(tg.Bold(tg.Color(activeTheme.Title, pe.Power.DisplayName)));
                 }
 
                 if (k > 0)
                 {
-                    txt += tg.BlankLine() + tg.BlankLine();
+                    txt += tg.List(true) + tg.BlankLine() + tg.BlankLine();
                 }
             }
 
@@ -504,6 +507,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Defense -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
+                txt += tg.List(false, 2);
 
                 for (var i = 0; i < damageVectors.Length; i++)
                 {
@@ -512,13 +516,15 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         continue;
                     }
 
-                    txt +=
-                        $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{displayStats.Defense(i):##0.##}%")}";
-                    txt += tg.BlankLine();
+                    txt += tg.ListItem($"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{displayStats.Defense(i):##0.##}%")}");
                 }
 
+                txt += tg.List(true);
+
+                txt += tg.BlankLine(); 
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Resistance -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
+                txt += tg.List(false, 2);
 
                 for (var i = 0; i < damageVectors.Length; i++)
                 {
@@ -528,14 +534,15 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     }
 
                     var resValue = displayStats.DamageResistance(i, false);
-                    txt +=
-                        $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{resValue:##0.##}%")}";
-                    txt += tg.BlankLine();
+                    txt += tg.ListItem($"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{resValue:##0.##}%")}");
                 }
+
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- HP & Endurance -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
+                txt += tg.List(false, 2);
 
                 var regenValue = displayStats.HealthRegenPercent(false);
                 var hpValue = displayStats.HealthHitpointsNumeric(false);
@@ -543,20 +550,19 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 var absorbValue = Math.Min(displayStats.Absorb, hpBase);
                 var endRecValue = displayStats.EnduranceRecoveryNumeric;
 
-                txt += $"{tg.Bold("Regeneration:")} {tg.Color(activeTheme.Slots, $"{regenValue:##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Max HP:")} {tg.Color(activeTheme.Slots, $"{hpValue:###0.##}")} | {(absorbValue > 0 ? $" ({tg.Bold("Absorb:")} {tg.Color(activeTheme.Slots, $"{absorbValue:###0.##}")} -- {tg.Color(activeTheme.Slots, $"{absorbValue / hpBase * 100:##0.##}%")} of base HP)" : "")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("End Recovery:")} {tg.Color(activeTheme.Slots, $"{endRecValue:##0.##}/s")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("End Use:")} {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceUsage:##0.##}/s End.")} (Net gain: {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceRecoveryNet:##0.##}/s")})";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Max End:")} {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceMaxEnd:##0.##}")}";
-                txt += tg.BlankLine();
+                txt += tg.ListItem($"{tg.Bold("Regeneration:")} {tg.Color(activeTheme.Slots, $"{regenValue:##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("Max HP:")} {tg.Color(activeTheme.Slots, $"{hpValue:###0.##}")} | {(absorbValue > 0 ? $" ({tg.Bold("Absorb:")} {tg.Color(activeTheme.Slots, $"{absorbValue:###0.##}")} -- {tg.Color(activeTheme.Slots, $"{absorbValue / hpBase * 100:##0.##}%")} of base HP)" : "")}");
+                txt += tg.ListItem($"{tg.Bold("End Recovery:")} {tg.Color(activeTheme.Slots, $"{endRecValue:##0.##}/s")}");
+                txt += tg.ListItem($"{tg.Bold("End Use:")} {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceUsage:##0.##}/s End.")} (Net gain: {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceRecoveryNet:##0.##}/s")})");
+                txt += tg.ListItem($"{tg.Bold("Max End:")} {tg.Color(activeTheme.Slots, $"{displayStats.EnduranceMaxEnd:##0.##}")}");
+
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Movement -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
+
+                txt += tg.List(false, 2);
 
                 var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
                 var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
@@ -564,67 +570,62 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 var jumpSpdValue = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false);
                 var jumpHeightValue = displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat);
                 var flySpeedValue = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false);
-                txt += $"{tg.Bold("Run Speed:")} {tg.Color(activeTheme.Slots, $"{runSpdValue:##0.##} {movementUnitSpeed}")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Jump Speed:")} {tg.Color(activeTheme.Slots, $"{jumpSpdValue:##0.##} {movementUnitSpeed}")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Jump Height:")} {tg.Color(activeTheme.Slots, $"{jumpHeightValue:##0.##} {movementUnitDistance}")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Fly Speed:")} {tg.Color(activeTheme.Slots, $"{flySpeedValue:##0.##} {movementUnitSpeed}")}";
-                txt += tg.BlankLine();
+                txt += tg.ListItem($"{tg.Bold("Run Speed:")} {tg.Color(activeTheme.Slots, $"{runSpdValue:##0.##} {movementUnitSpeed}")}");
+                txt += tg.ListItem($"{tg.Bold("Jump Speed:")} {tg.Color(activeTheme.Slots, $"{jumpSpdValue:##0.##} {movementUnitSpeed}")}");
+                txt += tg.ListItem($"{tg.Bold("Jump Height:")} {tg.Color(activeTheme.Slots, $"{jumpHeightValue:##0.##} {movementUnitDistance}")}");
+                txt += tg.ListItem($"{tg.Bold("Fly Speed:")} {tg.Color(activeTheme.Slots, $"{flySpeedValue:##0.##} {movementUnitSpeed}")}");
+
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Stealth & Perception -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
 
-                txt += $"{tg.Bold("Stealth (PvE):")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Stealth (PvP):")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Perception:")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}";
-                txt += tg.BlankLine();
+                txt += tg.List(false, 2);
+
+                txt += tg.ListItem($"{tg.Bold("Stealth (PvE):")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}");
+                txt += tg.ListItem($"{tg.Bold("Stealth (PvP):")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}");
+                txt += tg.ListItem($"{tg.Bold("Perception:")} {tg.Color(activeTheme.Slots, $"{displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}")}");
+
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Misc -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
 
-                txt += $"{tg.Bold("Haste:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffHaste(false):##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("ToHit:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffToHit:##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Accuracy:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffAccuracy:##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Damage:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffDamage(false):##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("End Rdx:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffEndRdx:##0.##}%")}";
-                txt += tg.BlankLine();
-                txt += $"{tg.Bold("Threat:")} {tg.Color(activeTheme.Slots, $"{displayStats.ThreatLevel:##0.##}")}";
-                txt += tg.BlankLine();
+                txt += tg.List(false, 2);
+
+                txt += tg.ListItem($"{tg.Bold("Haste:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffHaste(false):##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("ToHit:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffToHit:##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("Accuracy:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffAccuracy:##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("Damage:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffDamage(false):##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("End Rdx:")} {tg.Color(activeTheme.Slots, $"{displayStats.BuffEndRdx:##0.##}%")}");
+                txt += tg.ListItem($"{tg.Bold("Threat:")} {tg.Color(activeTheme.Slots, $"{displayStats.ThreatLevel:##0.##}")}");
+
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Status Protection -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
 
-                foreach (var m in mezList)
-                {
-                    // Use Math.Abs() here instead of negative sign to prevent display of "-0"
-                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}")}";
-                    txt += tg.BlankLine();
-                }
+                txt += tg.List(false, 2);
+                // Use Math.Abs() here instead of negative sign to prevent display of "-0"
+                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}")}"));
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Status Resistance -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
 
-                foreach (var m in mezList)
-                {
-                    txt += $"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%")}";
-                    txt += tg.BlankLine();
-                }
+                txt += tg.List(false, 2);
+                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%")}"));
+                txt += tg.List(true);
 
                 txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Debuff Resistance -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
+
+                txt += tg.List(false, 2);
 
                 var cappedDebuffRes = debuffEffectsList.Select(e => Math.Min(
                         e == Enums.eEffectType.Defense
@@ -633,13 +634,16 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         MidsContext.Character.Totals.DebuffRes[(int)e]))
                     .ToList();
 
-                txt += cappedDebuffRes.Select((v, i) => $"{tg.Bold($"{debuffEffectsList[i]}:")} {tg.Color(activeTheme.Slots, $"{v:##0.##}%")}{tg.BlankLine()}");
+                txt += string.Join("", cappedDebuffRes.Select((v, i) => tg.ListItem($"{tg.Bold($"{debuffEffectsList[i]}:")} {tg.Color(activeTheme.Slots, $"{v:##0.##}%")}")));
+                txt += tg.List(true);
 
                 if (MidsContext.Config.Inc.DisablePvE)
                 {
                     txt += tg.BlankLine();
                     txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Elusivity (PvP) -"))));
                     txt += tg.BlankLine() + tg.BlankLine();
+
+                    txt += tg.List(false, 2);
 
                     for (var i = 0; i < damageVectors.Length; i++)
                     {
@@ -649,11 +653,11 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         }
 
                         var elValue = (MidsContext.Character.Totals.Elusivity[i] + 0.4f) * 100;
-                        txt += $"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{elValue:##0.##}%")}";
-                        txt += tg.BlankLine();
+                        txt += tg.ListItem($"{tg.Bold($"{damageVectorsNames[i]}:")} {tg.Color(activeTheme.Slots, $"{elValue:##0.##}%")}");
                     }
-                }
 
+                    txt += tg.List(true);
+                }
 
                 var setsEffects = "";
                 var countDict = new Dictionary<int, int>();
@@ -856,8 +860,14 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         _ => $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)"
                     };
 
-                    fxBlockStr += tg.Color(activeTheme.Headings, tg.Underline(tg.Bold(fxBlockHeader))) +
-                                  tg.Color(activeTheme.Levels, tg.Underline(tg.Bold(fxBlockHeaderTotal)));
+                    fxBlockStr += tg.Underline(tg.Bold(tg.Color(activeTheme.Headings, fxBlockHeader) +
+                                                      tg.Color(activeTheme.Levels, fxBlockHeaderTotal)));
+
+                    if (formatType is ExportFormatType.MarkdownHtml) // or ExportFormatType.Markdown
+                    {
+                        fxBlockStr += tg.BlankLine();
+                    }
+
                     fxBlockStr += tg.List(false, 2);
 
                     foreach (var e in effectSources[fxGroup.Key])
@@ -879,16 +889,22 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         var fxSource = "";
                         if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
                         {
-                            fxSource = tg.List(false, 4) +
-                                       tg.ListItem($"(From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})") +
-                                       tg.List(true);
+                            fxSource = formatType == ExportFormatType.Html
+                                ? tg.List(false, 4) +
+                                  tg.ListItem(
+                                      $"(From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})") +
+                                  tg.List(true)
+                                : $" (From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})";
 
                         }
                         else if (e is {IsFromEnh: true, Enhancement: not null})
                         {
-                            fxSource = tg.List(false, 4) +
-                                       tg.ListItem($"(From {tg.Color(activeTheme.Levels, e.Enhancement.LongName)} in {tg.Color(activeTheme.Slots, e.Power)})") +
-                                       tg.List(true);
+                            fxSource = formatType == ExportFormatType.Html
+                                ? tg.List(false, 4) +
+                                  tg.ListItem(
+                                      $"(From {tg.Color(activeTheme.Levels, e.Enhancement.LongName)} in {tg.Color(activeTheme.Slots, e.Power)})") +
+                                  tg.List(true)
+                                : $" (From {tg.Color(activeTheme.Levels, e.Enhancement.LongName)} in {tg.Color(activeTheme.Slots, e.Power)})";
                         }
 
                         fxBlockStr += tg.ListItem($"{(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}{(e.AffectedEntity == Enums.eEntity.MyPet ? " to Pets" : "")}{fxSource}");

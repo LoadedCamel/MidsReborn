@@ -149,7 +149,7 @@ ul.indent8 li {{
         {
             return _formatType switch
             {
-                ExportFormatType.Markdown => "**",
+                ExportFormatType.Markdown or ExportFormatType.MarkdownHtml => "**",
                 ExportFormatType.BbCode => close ? "[/b]" : "[b]",
                 ExportFormatType.Html => close ? "</strong>" : "<strong>",
                 _ => ""
@@ -165,7 +165,7 @@ ul.indent8 li {{
         {
             return _formatType switch
             {
-                ExportFormatType.Markdown => "*",
+                ExportFormatType.Markdown or ExportFormatType.MarkdownHtml => "*",
                 ExportFormatType.BbCode => close ? "[/i]" : "[i]",
                 ExportFormatType.Html => close ? "</em>" : "<em>",
                 _ => ""
@@ -183,7 +183,7 @@ ul.indent8 li {{
             {
                 ExportFormatType.BbCode => close ? "[/u]" : "[u]",
                 ExportFormatType.Html => close ? "</span>" : "<span style=\"text-decoration: underline;\">",
-                ExportFormatType.Markdown => "__",
+                ExportFormatType.Markdown or ExportFormatType.MarkdownHtml => "__",
                 _ => ""
             };
         }
@@ -225,7 +225,7 @@ ul.indent8 li {{
             return _formatType switch
             {
                 ExportFormatType.BbCode => close ? "[/list]" : "[list]",
-                ExportFormatType.Html => close ? "</ul>\r\n" : "<ul>",
+                ExportFormatType.Html => close ? "</ul>\r\n" : "<ul>\r\n",
                 _ => ""
             };
         }
@@ -267,7 +267,7 @@ ul.indent8 li {{
             {
                 ExportFormatType.BbCode => close ? "\r\n" : "[*] ",
                 ExportFormatType.Html => close ? "</li>\r\n" : "<li>",
-                ExportFormatType.Markdown => close ? "\r\n" : "- ",
+                ExportFormatType.Markdown or ExportFormatType.MarkdownHtml => close ? "\r\n" : "- ",
                 _ => ""
             };
         }
@@ -290,9 +290,10 @@ ul.indent8 li {{
         {
             return _formatType switch
             {
-                ExportFormatType.Html or ExportFormatType.MarkdownHtml => "<br /><hr /><br />\r\n",
+                ExportFormatType.Html => "<br /><hr /><br />\r\n",
                 ExportFormatType.BbCode => "\r\n──────────────────────────────\r\n", // U+2500 Box Drawings Light Horizontal
                 ExportFormatType.Markdown => "\r\n\r\n----\r\n\r\n",
+                ExportFormatType.MarkdownHtml => "\r\n\r\n<hr />\r\n\r\n",
                 _ => "\r\n──────────────────────────────\r\n"
             };
         }
