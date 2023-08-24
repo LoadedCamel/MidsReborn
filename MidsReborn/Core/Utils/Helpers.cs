@@ -69,8 +69,9 @@ namespace Mids_Reborn.Core.Utils
             return destImage;
         }
 
-        public static bool ValidShareData(string shareData)
+        public static bool ValidShareData(string? shareData)
         {
+            if (string.IsNullOrWhiteSpace(shareData)) return false;
             shareData = shareData.Trim();
             return shareData.Length % 4 == 0 && Regex.IsMatch(shareData, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
         }

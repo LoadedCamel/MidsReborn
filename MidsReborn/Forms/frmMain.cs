@@ -6250,16 +6250,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private async void tsImportShortCode_Click(object? sender, EventArgs e)
+        private void tsImportChunk_Click(object? sender, EventArgs e)
         {
-            // MessageBox.Show("test");
-            // var shortInput = InputBox.Show("Enter the short code to import", "Import Short Code", false, "Enter short code here", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            // if (!shortInput.OK) return;
-            // var response = await ShareClient.GetBuild(shortInput.Text);
-            // if (response != null)
-            // {
-            //     DoLoadFromSchema(response);
-            // }
+            using var importBuild = new ImportCode();
+            var result = importBuild.ShowDialog(this);
+            if (result != DialogResult.Continue) return;
+            if (importBuild.Data != null) CharacterBuildFile.LoadImportData(importBuild.Data);
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)

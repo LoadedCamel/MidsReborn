@@ -1341,7 +1341,7 @@ namespace Mids_Reborn.Forms
             this.tsImportDataChunk.Name = "tsImportDataChunk";
             this.tsImportDataChunk.Size = new System.Drawing.Size(240, 22);
             this.tsImportDataChunk.Text = "Import via DataChunk";
-            this.tsImportDataChunk.Click += new System.EventHandler(this.tsImportShortCode_Click);
+            this.tsImportDataChunk.Click += new System.EventHandler(this.tsImportChunk_Click);
             // 
             // tsShareDiscord
             //

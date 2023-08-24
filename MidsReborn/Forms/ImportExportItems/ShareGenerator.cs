@@ -1,15 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Forms.Controls;
-using Application = System.Windows.Forms.Application;
 using Clipboard = System.Windows.Clipboard;
 using DataFormats = System.Windows.DataFormats;
 using DataObject = System.Windows.DataObject;
@@ -24,10 +22,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
             var chunks = buildData.Chunk(105);
             var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{new string(chunk)}\r\n");
             return dataChunk;
-            // var data = new DataObject(dataChunk);
-            // Clipboard.SetDataObject(data, true);
-            // var messageBox = new MessageBoxEx("The data chunk has been added to your clipboard.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
-            // messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+        }
+
+        internal static string BuildDataFromChunk(string dataChunk)
+        {
+            var chunks = dataChunk.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var recompiledData = string.Concat(chunks);
+            return recompiledData;
         }
 
         internal static Image SharedBuildImage(bool useAltGfx = false)
