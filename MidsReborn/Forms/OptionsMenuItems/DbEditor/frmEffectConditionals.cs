@@ -12,6 +12,7 @@ using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -26,8 +27,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
         {
             InitializeComponent();
-            _conditionalTypes = new List<string> {"Power Active", "Power Taken", "Stacks", "Team Members"};
-            _conditionalOps = new List<string> {"Equal To", "Greater Than", "Less Than"};
+            _conditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
+            _conditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
             if (conditions != null) Conditionals = conditions.Clone();
             Text = @"Effect Conditions";
             Icon = Resources.MRB_Icon_Concept;
@@ -107,21 +108,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 switch (condition)
                 {
                     case "Active":
-                        var item = new ListViewItem {Text = linkTypeLv, Name = power?.FullName};
+                        var item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
                         item.SubItems.Add($@"{condition}:{power?.DisplayName}");
                         item.SubItems.Add("");
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Taken":
-                        item = new ListViewItem {Text = linkTypeLv, Name = power?.FullName};
+                        item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
                         item.SubItems.Add($@"{condition}:{power?.DisplayName}");
                         item.SubItems.Add("");
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Stacks":
-                        item = new ListViewItem {Text = linkTypeLv, Name = power?.FullName};
+                        item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
                         item.SubItems.Add($@"{condition}:{power?.DisplayName}");
                         var cVSplit = cVp.Value.Split(' ');
                         item.SubItems.Add(cVSplit[0]);
@@ -129,7 +130,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Team":
-                        item = new ListViewItem {Text = linkTypeLv, Name = conditionPower};
+                        item = new ListViewItem { Text = linkTypeLv, Name = conditionPower };
                         item.SubItems.Add($@"{condition}:{conditionPower}");
                         cVSplit = cVp.Value.Split(' ');
                         item.SubItems.Add(cVSplit[0]);
@@ -172,14 +173,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     var pArray = DatabaseAPI.Database.Power;
-                    var eArray = new[] {6, 7, 8, 9, 10, 11};
+                    var eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var pType = power.PowerType;
                         var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
                                      pType == Enums.ePowerType.Click && power.ClickBuff;
-                        var isUsable = !eArray.Contains((int) pSetType);
+                        var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType)
                         {
                             continue;
@@ -217,14 +218,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] {6, 7, 8, 9, 10, 11};
+                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var pType = power.PowerType;
                         var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
                                      (pType == Enums.ePowerType.Click && power.ClickBuff);
-                        var isUsable = !eArray.Contains((int) pSetType);
+                        var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable && !isType)
                         {
                             continue;
@@ -262,12 +263,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] {6, 8, 9, 10, 11};
+                    eArray = new[] { 6, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var isType = power.VariableEnabled;
-                        var isUsable = !eArray.Contains((int) pSetType);
+                        var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType) continue;
 
                         var pItem = new Regex("[_]");
@@ -447,7 +448,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem {Text = linkPrefixLv, Name = power?.FullName};
+                    item = new ListViewItem { Text = linkPrefixLv, Name = power?.FullName };
                     item.SubItems.Add($@"Active:{power?.DisplayName}");
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
@@ -460,7 +461,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem {Text = linkPrefixLv, Name = power?.FullName};
+                    item = new ListViewItem { Text = linkPrefixLv, Name = power?.FullName };
                     item.SubItems.Add($@"Taken:{power?.DisplayName}");
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
@@ -481,7 +482,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         _ => cOp
                     };
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem {Text = linkPrefixLv, Name = power?.FullName};
+                    item = new ListViewItem { Text = linkPrefixLv, Name = power?.FullName };
                     item.SubItems.Add($@"Stacks:{power?.DisplayName}");
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
@@ -500,7 +501,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         _ => cOp
                     };
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem {Text = linkPrefixLv, Name = archetype};
+                    item = new ListViewItem { Text = linkPrefixLv, Name = archetype };
                     item.SubItems.Add($@"Team:{archetype}");
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
@@ -540,7 +541,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             try
             {
-                var lvControl = (ctlListViewColored) sender;
+                var lvControl = (ctlListViewColored)sender;
                 lvControl.LostFocusItem = lvControl.FocusedItem.Index;
             }
             catch (Exception ex)
@@ -558,7 +559,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var lvControl = (ctlListViewColored) sender;
+            var lvControl = (ctlListViewColored)sender;
             if (lvControl.Enabled)
             {
                 if (e.Item.Selected)
@@ -608,8 +609,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case 0x84:
                     base.WndProc(ref m);
-                    if ((int) m.Result == 0x1)
-                        m.Result = (IntPtr) 0x2;
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
                     return;
             }
 
@@ -664,14 +665,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     var pArray = DatabaseAPI.Database.Power;
-                    var eArray = new[] {6, 7, 8, 9, 10, 11};
+                    var eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var pType = power.PowerType;
                         var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
                                      pType == Enums.ePowerType.Click && power.ClickBuff;
-                        var isUsable = !eArray.Contains((int) pSetType);
+                        var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType)
                         {
                             continue;
@@ -703,14 +704,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] {6, 7, 8, 9, 10, 11};
+                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var pType = power.PowerType;
                         var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
                                      (pType == Enums.ePowerType.Click && power.ClickBuff);
-                        var isUsable = !eArray.Contains((int) pSetType);
+                        var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable && !isType)
                         {
                             continue;
@@ -738,6 +739,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     break;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var a = new PowerSelector2();
+            var ret = a.ShowDialog(this);
+            Debug.WriteLine($"PowerSelector2: {ret}, NoItem: {a.NoItem}, SelectedItem: {(a.SelectedItem == null ? "<null>" : a.SelectedItem)}");
+
+            var b = new ArchetypeSelector();
+            ret = b.ShowDialog(this);
+            Debug.WriteLine($"ArchetypeSelector: {ret}, NoItem: {b.NoItem}, SelectedItem: {(b.SelectedItem == null ? "<null>" : b.SelectedItem)}");
+
+            var c = new PowerGroupSelector(true);
+            ret = c.ShowDialog(this);
+            Debug.WriteLine($"PowerGroupSelector(prefix=true): {ret}, NoItem: {c.NoItem}, SelectedItem: {(c.SelectedItem == null ? "<null>" : c.SelectedItem)}");
+
+            var d = new PowerGroupSelector(false);
+            ret = d.ShowDialog(this);
+            Debug.WriteLine($"PowerGroupSelector(prefix=false): {ret}, NoItem: {d.NoItem}, SelectedItem: {(d.SelectedItem == null ? "<null>" : d.SelectedItem)}");
+
+            var f = new AttackVectorSelector();
+            ret = f.ShowDialog(this);
+            Debug.WriteLine($"AttackVectorSelector: {ret}, NoItem: {f.NoItem}, SelectedItem: {(f.SelectedItem == null ? "<null>" : f.SelectedItem)}");
+
+            var g = new ModifierSelector();
+            ret = g.ShowDialog(this);
+            Debug.WriteLine($"ModifierSelector: {ret}, NoItem: {g.NoItem}, SelectedItem: {(g.SelectedItem == null ? "<null>" : g.SelectedItem)}");
         }
     }
 }

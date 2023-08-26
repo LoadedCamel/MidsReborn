@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Forms.Controls;
@@ -7,7 +8,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmExpressionBuilder : Form
     {
-
         public string Duration { get; set; }
         public string Magnitude { get; set; }
         public string Probability { get; set; }
@@ -27,7 +27,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lbCommandVars.BeginUpdate();
             lbCommandVars.Items.Clear();
-            lbCommandVars.DataSource = new BindingSource(Expressions.CommandsList, null);
+            lbCommandVars.DataSource = new BindingSource(Expressions.CommandsList.Select(e => e.Keyword).ToList(), null);
             lbCommandVars.EndUpdate();
             tbDurationExp.Text = _myEffect.Expressions.Duration;
             tbMagExpr.Text = _myEffect.Expressions.Magnitude;
@@ -36,12 +36,51 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerInsert_Click(object sender, EventArgs e)
         {
-            var powerSelector = new PowerSelector();
-            var result = powerSelector.ShowDialog(this);
-            if (result != DialogResult.OK) return;
+            if (lbCommandVars.SelectedIndex < 0)
+            {
+                return;
+            }
+            
+            var commandKeyword = lbCommandVars.Items[lbCommandVars.SelectedIndex].ToString();
+            var command = Expressions.CommandsList.First(e => e.Keyword == commandKeyword);
+            var token = "";
+            switch (command.CommandTokenType)
+            {
+                case Expressions.ExprCommandToken.PowerName:
+                    var powerSelector = new PowerSelector();
+                    var psResult = powerSelector.ShowDialog(this);
+                    if (psResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    token = powerSelector.SelectedPower.FullName;
+
+                    break;
+
+                case Expressions.ExprCommandToken.ArchetypeName:
+                    var archetypeSelector = new ArchetypeSelector();
+                    var asResult = archetypeSelector.ShowDialog(this);
+                    if (asResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    //token = archetypeSelector.SelectedArchetype.DisplayName;
+
+                    break;
+
+                case Expressions.ExprCommandToken.PowerGroup or Expressions.ExprCommandToken.PowerGroupPrefix:
+                    var powerGroupSelector = new PowerGroupSelector(command.CommandTokenType == Expressions.ExprCommandToken.PowerGroupPrefix);
+                    var pgResult = powerGroupSelector.ShowDialog(this);
+                    //if (pgResult !=)
+                    
+                    break;
+            }
+            
             if (SelectedExpression != null)
             {
-                SelectedExpression.Text = SelectedExpression.Text.Insert(InsertAtPos, powerSelector.SelectedPower.FullName);
+                //SelectedExpression.Text = SelectedExpression.Text.Insert(InsertAtPos, powerSelector.SelectedPower.FullName);
             }
         }
 

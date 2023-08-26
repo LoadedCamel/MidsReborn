@@ -47,7 +47,6 @@ namespace Mids_Reborn.Forms.Controls
             cbPowerset.ValueMember = null;
             cbPowerset.SelectedIndex = 0;
             cbPowerset.EndUpdate();
-
         }
 
         private void CbPowersetOnSelectedIndexChanged(object sender, EventArgs e)

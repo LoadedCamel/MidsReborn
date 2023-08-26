@@ -21,6 +21,41 @@ namespace Mids_Reborn.Core
             public string Message { get; set; }
         }
 
+        public struct ExprCommand
+        {
+            public string Keyword { get; set; }
+            public ExprKeywordType KeywordType { get; set; }
+            public ExprKeywordInfix InfixMode { get; set; }
+            public ExprCommandToken CommandTokenType { get; set; }
+            public bool SingleToken { get; set; }
+        }
+
+        public enum ExprKeywordType
+        {
+            Keyword,
+            Function
+        }
+
+        public enum ExprCommandToken
+        {
+            None,
+            Numeric,
+            ExpressionNumeric,
+            Modifier,
+            AttackVector,
+            PowerName,
+            PowerGroup, // Groups
+            PowerGroupPrefix, // Groups + Powersets
+            ArchetypeName
+        }
+
+        public enum ExprKeywordInfix
+        {
+            Atomic,
+            Prefix,
+            Suffix
+        }
+
         public enum ExpressionType
         {
             Duration,
@@ -28,42 +63,257 @@ namespace Mids_Reborn.Core
             Probability
         }
 
-        public static readonly List<string> CommandsList = new()
+        public static readonly List<ExprCommand> CommandsList = new()
         {
-            "power.base>activateperiod",
-            "power.base>activatetime",
-            "power.base>areafactor",
-            "power.base>rechargetime",
-            "power.base>endcost",
-            "power.base>range",
-            "effect>scale",
-            "@StdResult",
-            "ifPvE",
-            "ifPvP",
-            "modifier>current",
-            "maxEndurance",
-            "rand()",
-            "source.ownPower?(",
-            "source>Base.kHitPoints",
-            "source>Max.kHitPoints",
-            ">variableVal",
-            "modifier>",
-            "powerGroupIn(",
-            "powerGroupNotIn(",
-            "powerIs(",
-            "powerIsNot(",
-            "powerVectorsContains(",
-            "source.owner>arch(",
-            "source.owner>archIn(",
-            "eq(",
-            "ne(",
-            "gt(",
-            "gte(",
-            "lt(",
-            "lte(",
-            "minmax(",
+            new ExprCommand
+            {
+                Keyword = "power.base>activateperiod",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "power.base>areafactor",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "power.base>rechargetime",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "power.base>endcost",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "power.base>range",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "effect>scale",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "@StdResult",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "ifPvE",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "ifPvP",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "modifier>current",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "maxEndurance",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "rand()",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source.ownPower?(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>Base.kHitPoints",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>Max.kHitPoints",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = ">variableVal",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Suffix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "modifier>",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.Modifier,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerGroupIn(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerGroupPrefix,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerGroupNotIn(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerGroupPrefix,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerIs(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerIsNot(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerVectorsContains(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.AttackVector,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source.owner>arch(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ArchetypeName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source.owner>archIn(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ArchetypeName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "eq(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "ne(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "gt(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "gte(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "lt(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "lte(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "minmax(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
+                SingleToken = false
+            }
         };
-
 
         private static Dictionary<string, string> CommandsDict(IEffect sourceFx)
         {
@@ -137,27 +387,27 @@ namespace Mids_Reborn.Core
             return target == null ? "0" : $"{target.VariableValue}";
         }
 
-        public static float Parse(IEffect sourceFx, ExpressionType expressionType, out ErrorData error)
+        public static float Parse(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
         {
             error = new ErrorData();
             float retValue;
-            switch (expressionType)
+            switch (exprType)
             {
                 case ExpressionType.Duration:
-                    retValue = InternalParsing(sourceFx, expressionType, out error);
+                    retValue = InternalParsing(sourceFx, exprType, out error);
                     break;
 
                 case ExpressionType.Probability:
-                    retValue = InternalParsing(sourceFx, expressionType, out error);
+                    retValue = InternalParsing(sourceFx, exprType, out error);
                     break;
 
                 case ExpressionType.Magnitude:
                     if (sourceFx.Expressions.Magnitude.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
                     {
-                        retValue = (float)((Math.Max(Math.Min(sourceFx.GetPower().RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / sourceFx.GetPower().AoEModifier * sourceFx.Scale;
+                        retValue = (float)((Math.Max(Math.Min(sourceFx.GetPower().RechargeTime, 30f), 0) * 0.800000011920929 + 1.79999995231628) / 5.0) / sourceFx.GetPower().AoEModifier * sourceFx.Scale;
                         if (sourceFx.Expressions.Magnitude.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
                         {
-                            retValue *= float.Parse(sourceFx.Expressions.Magnitude.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1).Substring(0, 2));
+                            retValue *= float.Parse(sourceFx.Expressions.Magnitude.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1)[..2]);
                         }
 
                         return retValue;
@@ -166,28 +416,28 @@ namespace Mids_Reborn.Core
                     if (string.IsNullOrWhiteSpace(sourceFx.Expressions.Magnitude)) return 0f;
 
                     var baseFx = sourceFx.Clone() as IEffect;
-                    retValue = InternalParsing(baseFx, expressionType, out error);
+                    retValue = InternalParsing(baseFx, exprType, out error);
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(expressionType), expressionType, null);
+                    throw new ArgumentOutOfRangeException(nameof(exprType), exprType, null);
             }
 
             return error.Found ? 0f : retValue;
         }
 
-        private static float InternalParsing(IEffect sourceFx, ExpressionType expressionType, out ErrorData error)
+        private static float InternalParsing(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
         {
             var pickedPowerNames = MidsContext.Character.CurrentBuild == null ? new List<string?>() : MidsContext.Character.CurrentBuild.Powers.Select(pe => pe?.Power?.FullName).ToList();
 
             error = new ErrorData();
             var mathEngine = CalculationEngine.New<double>();
-            var expr = expressionType switch
+            var expr = exprType switch
             {
                 ExpressionType.Duration => sourceFx.Expressions.Duration,
                 ExpressionType.Magnitude => sourceFx.Expressions.Magnitude,
                 ExpressionType.Probability => sourceFx.Expressions.Probability,
-                _ => throw new ArgumentOutOfRangeException(nameof(expressionType), expressionType, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(exprType), exprType, null)
             };
 
             // Constants
@@ -213,7 +463,7 @@ namespace Mids_Reborn.Core
             {
                 Debug.WriteLine($"Expression failed in {expr}\n  Power: {sourceFx.GetPower()?.FullName}");
 
-                error.Type = expressionType;
+                error.Type = exprType;
                 error.Found = true;
                 error.Message = ex.Message;
 
@@ -223,7 +473,7 @@ namespace Mids_Reborn.Core
             {
                 Debug.WriteLine($"Expression failed (variable not defined) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
 
-                error.Type = expressionType;
+                error.Type = exprType;
                 error.Found = true;
                 error.Message = ex.Message;
 
@@ -233,7 +483,7 @@ namespace Mids_Reborn.Core
             {
                 Debug.WriteLine($"Expression failed (invalid operation) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
 
-                error.Type = expressionType;
+                error.Type = exprType;
                 error.Found = true;
                 error.Message = ex.Message;
 
