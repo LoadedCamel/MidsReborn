@@ -1155,6 +1155,11 @@ namespace Mids_Reborn.Core
                     }
                 }
 
+                if (power.Effects[re].Duration <= 0)
+                {
+                    continue;
+                }
+
                 var similarFxIds = new List<int>();
 
                 switch (power.Effects[re].EffectType)
@@ -1719,6 +1724,15 @@ namespace Mids_Reborn.Core
 
             switch (effectType)
             {
+                case Enums.eEffectType.Fly:
+                case Enums.eEffectType.MovementControl:
+                case Enums.eEffectType.MovementFriction:
+                    rankedEffect.Value = effectSource.DisplayPercentage
+                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
+                        : $"{magSum:###0.##}{toWhoShort}";
+
+                    break;
+
                 case Enums.eEffectType.Recovery:
                 case Enums.eEffectType.Endurance:
                     rankedEffect.Name = $"{effectType}";
