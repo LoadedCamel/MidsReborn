@@ -1155,9 +1155,13 @@ namespace Mids_Reborn.Core
                     }
                 }
 
-                if (power.Effects[re].Duration <= 0)
+                if (!(power.Effects[re].EffectType == Enums.eEffectType.Mez &
+                      power.Effects[re].MezType is Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
                 {
-                    continue;
+                    if (power.Effects[re].Duration <= 0)
+                    {
+                        continue;
+                    }
                 }
 
                 var similarFxIds = new List<int>();
