@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -13,7 +15,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public string Probability { get; set; }
 
         private readonly IEffect _myEffect;
-        private TextBox SelectedExpression { get; set; }
+        private TextBox? SelectedExpression { get; set; }
         private int InsertAtPos { get; set; }
 
         public frmExpressionBuilder(ICloneable fx)
@@ -47,14 +49,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (command.CommandTokenType)
             {
                 case Expressions.ExprCommandToken.PowerName:
-                    var powerSelector = new PowerSelector();
+                    var powerSelector = new PowerSelector2();
                     var psResult = powerSelector.ShowDialog(this);
                     if (psResult != DialogResult.OK)
                     {
                         return;
                     }
 
-                    token = powerSelector.SelectedPower.FullName;
+                    token = powerSelector.SelectedItem == null ? "" : ((IPower)powerSelector.SelectedItem).FullName;
 
                     break;
 
@@ -66,28 +68,69 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         return;
                     }
 
-                    //token = archetypeSelector.SelectedArchetype.DisplayName;
+                    token = archetypeSelector.SelectedItem == null ? "" : ((Archetype)archetypeSelector.SelectedItem).DisplayName;
 
                     break;
 
                 case Expressions.ExprCommandToken.PowerGroup or Expressions.ExprCommandToken.PowerGroupPrefix:
                     var powerGroupSelector = new PowerGroupSelector(command.CommandTokenType == Expressions.ExprCommandToken.PowerGroupPrefix);
                     var pgResult = powerGroupSelector.ShowDialog(this);
-                    //if (pgResult !=)
-                    
+                    if (pgResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    token = powerGroupSelector.SelectedItem switch
+                    {
+                        null => "",
+                        PowersetGroup pgGroup => pgGroup.Name,
+                        Powerset pgPowerset => pgPowerset.FullName,
+                        _ => ""
+                    };
+
+                    break;
+
+                case Expressions.ExprCommandToken.AttackVector:
+                    var vSelector = new AttackVectorSelector();
+                    var vResult = vSelector.ShowDialog(this);
+                    if (vResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    token = Convert.ToString(vSelector.SelectedItem, CultureInfo.InvariantCulture);
+
+                    break;
+
+                case Expressions.ExprCommandToken.Modifier:
+                    var mSelector = new ModifierSelector();
+                    var mResult = mSelector.ShowDialog(this);
+                    if (mResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    token = ((Modifiers.ModifierTable) mSelector.SelectedItem)?.ID;
+
                     break;
             }
-            
-            if (SelectedExpression != null)
+
+            if (SelectedExpression == null)
             {
-                //SelectedExpression.Text = SelectedExpression.Text.Insert(InsertAtPos, powerSelector.SelectedPower.FullName);
+                return;
             }
+
+            var expr = command.Keyword + token + (!command.Keyword.EndsWith(")") & command.KeywordType == Expressions.ExprKeywordType.Function ? ")" : "");
+            SelectedExpression.Text = SelectedExpression.Text.Insert(InsertAtPos, expr);
         }
 
         private void ExprOnGotFocus(object sender, EventArgs e)
         {
             SelectedExpression = sender as TextBox;
-            if (SelectedExpression != null) InsertAtPos = SelectedExpression.SelectionStart;
+            if (SelectedExpression != null)
+            {
+                InsertAtPos = SelectedExpression.SelectionStart;
+            }
         }
 
         private void ExprOnTextChanged(object sender, EventArgs e)

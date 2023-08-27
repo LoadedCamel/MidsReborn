@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Jace;
@@ -140,6 +141,22 @@ namespace Mids_Reborn.Core
             new ExprCommand
             {
                 Keyword = "modifier>current",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "caster>modifier(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.Modifier,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "caster>modifier>current",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
@@ -332,6 +349,7 @@ namespace Mids_Reborn.Core
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
+                { "caster>modifier>current", ModifierCaster(sourceFx) },
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
@@ -356,8 +374,47 @@ namespace Mids_Reborn.Core
                 { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
                 { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" }
+                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
+                { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) }
             };
+        }
+
+        private static string ModifierCaster(IEffect effect)
+        {
+            return ModifierCaster(effect.ModifierTable);
+        }
+
+        private static string ModifierCaster(string modifier)
+        {
+            const int maxPlayerLevel = 50;
+
+            var modifierData = DatabaseAPI.Database.AttribMods.Modifier
+                .DefaultIfEmpty(new Modifiers.ModifierTable())
+                .FirstOrDefault(e => string.Equals(e.ID, modifier, StringComparison.InvariantCultureIgnoreCase));
+
+            if (modifierData == null)
+            {
+                return "0";
+            }
+
+            if (modifierData.Table.Count <= 0)
+            {
+                return "0";
+            }
+
+            var archetypeNid = DatabaseAPI.Database.Classes
+                .Where(e => e is {Playable: true})
+                .Select((e, i) => new KeyValuePair<int, string>(i, e.DisplayName))
+                .DefaultIfEmpty(new KeyValuePair<int, string>(-1, ""))
+                .FirstOrDefault(e => e.Value == MidsContext.Character?.Archetype?.DisplayName)
+                .Key;
+            
+            if (archetypeNid < 0)
+            {
+                return "0";
+            }
+
+            return Convert.ToString(modifierData.Table[maxPlayerLevel - 1][archetypeNid], CultureInfo.InvariantCulture);
         }
 
         private static string PowerVectorsContains(IPower? sourcePower, string vector)
