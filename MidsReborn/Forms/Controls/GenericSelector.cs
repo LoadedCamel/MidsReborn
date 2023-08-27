@@ -1,7 +1,6 @@
 ﻿using Mids_Reborn.Core;
-using System.Threading.Tasks;
 using System;
-using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -15,7 +14,7 @@ namespace Mids_Reborn.Forms.Controls
 
         protected ItemType Type;
         protected bool MultiSelection; // Not implemented
-        
+
         private bool _playableArchetypesOnly;
 
         public enum ItemType
@@ -36,8 +35,10 @@ namespace Mids_Reborn.Forms.Controls
             InitializeComponent();
         }
 
-        protected async void OnLoad(object? sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             formPages1.SelectedIndex = Type switch
             {
                 ItemType.Archetype => 1,
@@ -46,6 +47,15 @@ namespace Mids_Reborn.Forms.Controls
                 ItemType.Modifier => 4,
                 _ => 0
             };
+
+            cbP2Powerset.Visible = Type == ItemType.PowerGroupPrefix;
+            label9.Visible = Type == ItemType.PowerGroupPrefix;
+            label7.Location = Type == ItemType.PowerGroupPrefix
+                ? new Point(12, 20)
+                : new Point(12, 73);
+            cbP2Group.Location = Type == ItemType.PowerGroupPrefix
+                ? new Point(12, 46)
+                : new Point(12, 99);
 
             _playableArchetypesOnly = true;
 
@@ -58,7 +68,7 @@ namespace Mids_Reborn.Forms.Controls
                     break;
 
                 case ItemType.Power:
-                    await FillPowerGroups();
+                    FillPowerGroups();
 
                     break;
 
@@ -79,7 +89,7 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private async Task FillPowerGroups()
+        private void FillPowerGroups()
         {
             var groups = (from dbGroup in DatabaseAPI.Database.PowersetGroups where dbGroup.Key != "Boosts" && dbGroup.Key != "Incarnate" && dbGroup.Key != "Set_Bonus" select new KeyValue<string, PowersetGroup>(dbGroup.Key, dbGroup.Value)).ToList();
             cbGroup.BeginUpdate();
@@ -89,13 +99,12 @@ namespace Mids_Reborn.Forms.Controls
             cbGroup.SelectedIndex = 0;
             cbGroup.EndUpdate();
             CbGroupOnSelectedIndexChanged(this, EventArgs.Empty);
-            await Task.CompletedTask;
         }
 
-        private void FillArchetypes() // make async ?
+        private void FillArchetypes()
         {
             var archetypes = DatabaseAPI.Database.Classes
-                .Where(e => e != null && _playableArchetypesOnly | e.Playable)
+                .Where(e => e != null && !_playableArchetypesOnly | e.Playable)
                 .Select(e => new KeyValue<string, Archetype>(e.DisplayName, e))
                 .ToList();
 
@@ -105,13 +114,11 @@ namespace Mids_Reborn.Forms.Controls
             cbArchetypes.ValueMember = "Value";
             cbArchetypes.SelectedIndex = 0;
             cbArchetypes.EndUpdate();
+            cbArchetypes_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void FillPowerGroups2(bool prefixMode)
         {
-            cbP2Powerset.Visible = prefixMode;
-            label9.Visible = prefixMode;
-
             var groups = (from dbGroup in DatabaseAPI.Database.PowersetGroups where dbGroup.Key != "Boosts" && dbGroup.Key != "Set_Bonus" select new KeyValue<string, PowersetGroup>(dbGroup.Key, dbGroup.Value)).ToList();
             cbP2Group.BeginUpdate();
             cbP2Group.DataSource = new BindingSource(groups, null);
@@ -119,7 +126,7 @@ namespace Mids_Reborn.Forms.Controls
             cbP2Group.ValueMember = "Value";
             cbP2Group.SelectedIndex = 0;
             cbP2Group.EndUpdate();
-            cbP2Powerset_SelectedIndexChanged(this, EventArgs.Empty);
+            cbP2Group_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void FillModifiers()
@@ -134,6 +141,7 @@ namespace Mids_Reborn.Forms.Controls
             cbModifier.ValueMember = "Key";
             cbModifier.SelectedIndex = 0;
             cbModifier.EndUpdate();
+            cbModifier_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void FillAttackVectors()
@@ -148,6 +156,7 @@ namespace Mids_Reborn.Forms.Controls
             cbVectors.ValueMember = "Key";
             cbVectors.SelectedIndex = 0;
             cbVectors.EndUpdate();
+            cbVectors_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void CbGroupOnSelectedIndexChanged(object sender, EventArgs e)
@@ -190,6 +199,7 @@ namespace Mids_Reborn.Forms.Controls
             cbPower.ValueMember = null;
             cbPower.SelectedIndex = 0;
             cbPower.EndUpdate();
+            CbPowerOnSelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void CbPowerOnSelectedIndexChanged(object sender, EventArgs e)
@@ -214,12 +224,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            if (cbModifier.SelectedValue is not int selectedModifier) // ???
-            {
-                return;
-            }
-
-            SelectedItem = DatabaseAPI.Database.AttribMods.Modifier[selectedModifier];
+            SelectedItem = DatabaseAPI.Database.AttribMods.Modifier[cbModifier.SelectedIndex];
         }
 
         private void cbVectors_SelectedIndexChanged(object sender, EventArgs e)
@@ -229,7 +234,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            if (cbVectors.SelectedValue is not int selectedVector) // ???
+            if (cbVectors.SelectedValue is not int selectedVector)
             {
                 return;
             }
@@ -257,12 +262,13 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var powerSets = selectedGroup.Powersets.Values.ToList();
-            cbPowerset.BeginUpdate();
-            cbPowerset.DataSource = new BindingSource(powerSets, null);
-            cbPowerset.DisplayMember = "DisplayName";
-            cbPowerset.ValueMember = null;
-            cbPowerset.SelectedIndex = 0;
-            cbPowerset.EndUpdate();
+            cbP2Powerset.BeginUpdate();
+            cbP2Powerset.DataSource = new BindingSource(powerSets, null);
+            cbP2Powerset.DisplayMember = "DisplayName";
+            cbP2Powerset.ValueMember = null;
+            cbP2Powerset.SelectedIndex = 0;
+            cbP2Powerset.EndUpdate();
+            cbP2Powerset_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void cbP2Powerset_SelectedIndexChanged(object sender, EventArgs e)
@@ -283,6 +289,21 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             SelectedItem = selectedPowerset;
+        }
+
+        private void cbArchetypes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbArchetypes.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (cbArchetypes.SelectedValue is not Archetype selectedArchetype)
+            {
+                return;
+            }
+
+            SelectedItem = selectedArchetype;
         }
 
         private void checkPlayableAtOnly_CheckedChanged(object sender, EventArgs e)
@@ -308,6 +329,7 @@ namespace Mids_Reborn.Forms.Controls
         private void btnChooseNone_Click(object sender, EventArgs e)
         {
             NoItem = true;
+            SelectedItem = null;
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -319,8 +341,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             Type = ItemType.Archetype;
             MultiSelection = multiSelection;
-
-            InitializeComponent();
         }
     }
 
@@ -330,8 +350,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             Type = prefixMode ? ItemType.PowerGroupPrefix : ItemType.PowerGroup;
             MultiSelection = multiSelection;
-
-            InitializeComponent();
         }
     }
 
@@ -341,8 +359,6 @@ namespace Mids_Reborn.Forms.Controls
         {
             Type = ItemType.AttackVector;
             MultiSelection = false;
-
-            InitializeComponent();
         }
     }
 
@@ -352,21 +368,17 @@ namespace Mids_Reborn.Forms.Controls
         {
             Type = ItemType.Modifier;
             MultiSelection = false;
-
-            InitializeComponent();
         }
     }
 
     // Get rid of PowerSelector, then rename
-    // When done with GenericSelector
+    // when done with GenericSelector
     public class PowerSelector2 : GenericSelector
     {
         public PowerSelector2(bool multiSelection = false)
         {
             Type = ItemType.Power;
             MultiSelection = multiSelection;
-
-            InitializeComponent();
         }
     }
 }

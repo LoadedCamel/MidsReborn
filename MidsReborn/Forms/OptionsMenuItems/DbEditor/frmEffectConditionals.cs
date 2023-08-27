@@ -740,32 +740,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var a = new PowerSelector2();
-            var ret = a.ShowDialog(this);
-            Debug.WriteLine($"PowerSelector2: {ret}, NoItem: {a.NoItem}, SelectedItem: {(a.SelectedItem == null ? "<null>" : a.SelectedItem)}");
-
-            var b = new ArchetypeSelector();
-            ret = b.ShowDialog(this);
-            Debug.WriteLine($"ArchetypeSelector: {ret}, NoItem: {b.NoItem}, SelectedItem: {(b.SelectedItem == null ? "<null>" : b.SelectedItem)}");
-
-            var c = new PowerGroupSelector(true);
-            ret = c.ShowDialog(this);
-            Debug.WriteLine($"PowerGroupSelector(prefix=true): {ret}, NoItem: {c.NoItem}, SelectedItem: {(c.SelectedItem == null ? "<null>" : c.SelectedItem)}");
-
-            var d = new PowerGroupSelector(false);
-            ret = d.ShowDialog(this);
-            Debug.WriteLine($"PowerGroupSelector(prefix=false): {ret}, NoItem: {d.NoItem}, SelectedItem: {(d.SelectedItem == null ? "<null>" : d.SelectedItem)}");
-
-            var f = new AttackVectorSelector();
-            ret = f.ShowDialog(this);
-            Debug.WriteLine($"AttackVectorSelector: {ret}, NoItem: {f.NoItem}, SelectedItem: {(f.SelectedItem == null ? "<null>" : f.SelectedItem)}");
-
-            var g = new ModifierSelector();
-            ret = g.ShowDialog(this);
-            Debug.WriteLine($"ModifierSelector: {ret}, NoItem: {g.NoItem}, SelectedItem: {(g.SelectedItem == null ? "<null>" : g.SelectedItem)}");
-        }
     }
 }

@@ -60,7 +60,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             panel1 = new System.Windows.Forms.Panel();
             btnClearFilter = new System.Windows.Forms.Button();
             tbFilter = new System.Windows.Forms.TextBox();
-            button1 = new System.Windows.Forms.Button();
             groupBox2.SuspendLayout();
             panelLinkType.SuspendLayout();
             panel1.SuspendLayout();
@@ -323,7 +322,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.Fixed3D;
-            panel1.Controls.Add(button1);
             panel1.Controls.Add(btnClearFilter);
             panel1.Controls.Add(tbFilter);
             panel1.Controls.Add(btnCancel);
@@ -356,19 +354,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tbFilter.Size = new System.Drawing.Size(380, 23);
             tbFilter.TabIndex = 164;
             tbFilter.TextChanged += tbFilter_TextChanged;
-            // 
-            // button1
-            // 
-            button1.BackColor = System.Drawing.Color.FromArgb(46, 56, 171);
-            button1.FlatStyle = FlatStyle.Popup;
-            button1.Location = new System.Drawing.Point(964, 500);
-            button1.Margin = new Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(112, 23);
-            button1.TabIndex = 166;
-            button1.Text = "Test selectors";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
             // 
             // frmEffectConditionals
             // 
@@ -419,6 +404,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private ColumnHeader columnHeader1;
         private System.Windows.Forms.Button btnClearFilter;
         private System.Windows.Forms.TextBox tbFilter;
-        private System.Windows.Forms.Button button1;
     }
 }
