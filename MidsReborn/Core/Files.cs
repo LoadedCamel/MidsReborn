@@ -38,7 +38,7 @@ namespace Mids_Reborn.Core
         
         public static string FileData = string.Empty;
         public static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, JsonFileConfig);
-        public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
+        public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Homecoming\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
         private static string? FPathAppData => MidsContext.Config.DataPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);

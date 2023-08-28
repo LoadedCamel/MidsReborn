@@ -29,6 +29,6 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         internal static Character? Character;
         internal static Build? Build;
 
-        public static ConfigData Config => ConfigData.Current;
+        public static ConfigData? Config => ConfigData.Current;
     }
 }

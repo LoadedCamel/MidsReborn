@@ -1300,10 +1300,7 @@ namespace Mids_Reborn.Core
             get
             {
                 string name;
-                if (MidsContext.Config == null)
-                    name = new DirectoryInfo(Files.FDefaultPath).Name;
-                else
-                    name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
                 return name;
             }
         }
