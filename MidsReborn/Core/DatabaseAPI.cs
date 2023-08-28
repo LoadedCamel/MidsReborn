@@ -1337,11 +1337,74 @@ namespace Mids_Reborn.Core
             var path = Files.SelectDataFileSave(Files.ServerDataFile, iPath);
             ServerData.Save(path);
         }
-
+        
         public static bool LoadServerData(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.ServerDataFile, iPath);
-            return !File.Exists(path) || ServerData.Load(path);
+            return !File.Exists(path) ? ProformaServerData(iPath) : ServerData.Load(path);
+        }
+
+        private static bool ProformaServerData(string? iPath)
+        {
+            var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
+
+            FileStream fileStream;
+            BinaryReader reader;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                reader = new BinaryReader(fileStream);
+            }
+            catch
+            {
+                return false;
+            }
+
+            try
+            {
+                var headerFound = true;
+                var header = reader.ReadString();
+                if (header != Files.Headers.ServerData.Start)
+                {
+                    headerFound = false;
+                }
+
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Server Data");
+                    return false;
+                }
+
+                ServerData.ManifestUri = reader.ReadString();
+                ServerData.MaxSlots = reader.ReadInt32();
+                ServerData.BaseFlySpeed = reader.ReadSingle();
+                ServerData.BaseJumpHeight = reader.ReadSingle();
+                ServerData.BaseJumpSpeed = reader.ReadSingle();
+                ServerData.BasePerception = reader.ReadSingle();
+                ServerData.BaseRunSpeed = reader.ReadSingle();
+                ServerData.BaseToHit = reader.ReadSingle();
+                ServerData.MaxFlySpeed = reader.ReadSingle();
+                ServerData.MaxJumpSpeed = reader.ReadSingle();
+                ServerData.MaxRunSpeed = reader.ReadSingle();
+                ServerData.EnableInherentSlotting = reader.ReadBoolean();
+                ServerData.HealthSlots = reader.ReadInt32();
+                ServerData.HealthSlot1Level = reader.ReadInt32();
+                ServerData.HealthSlot2Level = reader.ReadInt32();
+                ServerData.StaminaSlots = reader.ReadInt32();
+                ServerData.StaminaSlot1Level = reader.ReadInt32();
+                ServerData.StaminaSlot2Level = reader.ReadInt32();
+                reader.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                reader.Close();
+                fileStream.Close();
+                MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+                return false;
+            }
+
+            return true;
         }
 
         public static void SaveMainDatabase(ISerialize serializer, string? iPath)
