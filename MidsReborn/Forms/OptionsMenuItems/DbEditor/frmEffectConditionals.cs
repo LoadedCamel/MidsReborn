@@ -36,6 +36,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private async void OnLoad(object? sender, EventArgs e)
         {
+            CenterToParent();
             await UpdateConditionTypes();
             await UpdateConditionals();
         }
