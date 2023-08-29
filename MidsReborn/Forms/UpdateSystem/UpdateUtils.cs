@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Serialization;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -21,56 +22,66 @@ namespace Mids_Reborn.Forms.UpdateSystem
         private static readonly List<UpdateDetails> Updates = new();
         private static string? _tempFile;
 
-        private static void CheckForApp()
+        private static async Task CheckForApp()
         {
-            var serializer = new XmlSerializer(typeof(UpdateResponse));
             try
             {
-                var reader = new XmlTextReader(MidsContext.Config.UpdatePath!);
-                if (serializer.Deserialize(reader) is not UpdateResponse updateResponse)
+                using var client = new HttpClient();
+                var response = await client.GetAsync(MidsContext.Config?.UpdatePath);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var serializer = new XmlSerializer(typeof(Manifest));
+                using var reader = new StringReader(content);
+                if (serializer.Deserialize(reader) is Manifest manifest)
                 {
-                    return;
+                    var isAvailable =
+                        Helpers.CompareVersions(Version.Parse(manifest.Version), MidsContext.AppFileVersion);
+                    if (!isAvailable) return;
+                    Updates.Add(new UpdateDetails(PatchType.Application, MidsContext.AppName,
+                        $"{MidsContext.Config?.UpdatePath}", manifest.Version, manifest.File,
+                        $"{AppContext.BaseDirectory}"));
                 }
-
-                var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), MidsContext.AppFileVersion);
-                if (!isAvailable) return;
-                Updates.Add(new UpdateDetails(PatchType.Application, MidsContext.AppName, $"{MidsContext.Config.UpdatePath}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{AppContext.BaseDirectory}"));
             }
-            catch
+            catch (Exception)
             {
-                // ignored
+                // Ignored
             }
         }
 
-        private static void CheckForDatabase()
+        private static async Task CheckForDatabase()
         {
-            var serializer = new XmlSerializer(typeof(UpdateResponse));
             try
             {
-                var reader = new XmlTextReader(DatabaseAPI.ServerData.ManifestUri);
-                if (serializer.Deserialize(reader) is not UpdateResponse updateResponse)
+                using var client = new HttpClient();
+                var response = await client.GetAsync(MidsContext.Config?.UpdatePath);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var serializer = new XmlSerializer(typeof(Manifest));
+                using var reader = new StringReader(content);
+                if (serializer.Deserialize(reader) is Manifest manifest)
                 {
-                    return;
+                    var isAvailable =
+                        Helpers.CompareVersions(Version.Parse(manifest.Version), DatabaseAPI.Database.Version);
+                    if (!isAvailable) return;
+                    Updates.Add(new UpdateDetails(PatchType.Database, DatabaseAPI.DatabaseName,
+                        $"{DatabaseAPI.ServerData.ManifestUri}", manifest.Version, manifest.File,
+                        $"{Files.BaseDataPath}"));
                 }
-
-                var isAvailable = Helpers.CompareVersions(Version.Parse(updateResponse.UpdateVersion), DatabaseAPI.Database.Version);
-                if (!isAvailable) return;
-                Updates.Add(new UpdateDetails(PatchType.Database, DatabaseAPI.DatabaseName, $"{DatabaseAPI.ServerData.ManifestUri}", updateResponse.UpdateVersion, updateResponse.UpdateFile, $"{Files.BaseDataPath}"));
             }
-            catch
+            catch (Exception)
             {
-                // ignored
+                // Ignored
             }
         }
         
-        public static void CheckForUpdates(IWin32Window parent, bool checkDelay = false)
+        public static async void CheckForUpdates(IWin32Window parent, bool checkDelay = false)
         {
             if (checkDelay)
             {
                 if (!DelayCheckAvailable) return;
             }
-            CheckForApp();
-            CheckForDatabase();
+            await CheckForApp();
+            await CheckForDatabase();
             MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow;
 
             if (!Updates.Any())
@@ -81,7 +92,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
 
             _tempFile = Path.GetTempFileName();
-            File.WriteAllText(_tempFile, JsonConvert.SerializeObject(Updates));
+            await File.WriteAllTextAsync(_tempFile, JsonConvert.SerializeObject(Updates));
             InitiateQuery(parent);
         }
 

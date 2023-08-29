@@ -165,7 +165,7 @@ namespace Mids_Reborn.Core.Utils
             var exclusionList = new List<string>();
             exclusionList = PatchType switch
             {
-                EPatchType.Application => new List<string> { "Patches", "Data", ".pdb", "deps.json", "MidsReborn.exe.WebView2" },
+                EPatchType.Application => new List<string> { "Patches", "Data", ".pdb", "deps.json", "MidsReborn.exe.WebView2", "cleanup.dll", "cleanup.exe", "runtimeconfig.json", "appSettings" },
                 EPatchType.Database => new List<string> { "Patches" },
                 _ => exclusionList
             };
