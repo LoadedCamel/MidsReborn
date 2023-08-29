@@ -218,47 +218,6 @@ namespace Mids_Reborn.Core
             return $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded};HEX;|{separator}{saveString}{saveString}";
         }
 
-        public static string MxDBuildSaveString(bool includeAltEnh, bool forumMode)
-        {
-            var cData = new CompressionData();
-            var str1 = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
-            if (string.IsNullOrEmpty(str1)) return string.Empty;
-
-            var str3 = "\n";
-            string str4;
-            if (forumMode)
-            {
-                var flag1 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
-                    .IndexOf("HTML", StringComparison.Ordinal) > -1;
-                var flag2 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
-                    .IndexOf("no <br /> tags", StringComparison.OrdinalIgnoreCase) > -1;
-                if (flag1 && !flag2)
-                {
-                    str1 = str1.Replace("\n", "<br />");
-                    str3 = "<br />";
-                }
-
-                // TODO: review this string for update to Mids Reborn
-                // needs checking the reader to see if changing this will break anything
-                var str5 = "| Copy & Paste this data into Mids Reborn : Hero Designer to view the build |" + str3;
-                if (flag1)
-                    str5 = str5.Replace(" ", "&nbsp;");
-                str4 = str5 + "|-------------------------------------------------------------------|" + str3;
-            }
-            else
-            {
-                str4 = "|              Do not modify anything below this line!              |" + str3 +
-                       "|-------------------------------------------------------------------|" + str3;
-            }
-
-            const string str6 = ";HEX";
-            //var output = "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" + cData.SzEncoded + str6 + ";|" + str3 + str1 + str3;
-            var output = $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded}{str6};|{str3}{str1}{str3}";
-            return str4 + "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" +
-                   cData.SzEncoded + str6 + ";|" + str3 + str1 + str3 +
-                   "|-------------------------------------------------------------------|";
-        }
-
         private static List<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
         {
             var tList = powerList.FindAll(x => x.Power.InherentType == iType);
@@ -489,10 +448,10 @@ namespace Mids_Reborn.Core
                         else
                         {
                             sidPower1 = r.ReadInt32();
-                            var newId = DatabaseAPI.Database.ReplTable.FetchAlternate(sidPower1, charClass.ClassName);
+                            var newId = DatabaseAPI.Database.ReplTable?.FetchAlternate(sidPower1, charClass.ClassName);
                             if (newId >= 0)
                             {
-                                sidPower1 = newId;
+                                sidPower1 = (int)newId;
                             }
 
                             nId = DatabaseAPI.NidFromStaticIndexPower(sidPower1);

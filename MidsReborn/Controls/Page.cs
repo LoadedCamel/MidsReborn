@@ -6,6 +6,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Mids_Reborn.Controls
 {
+    [ToolboxItem(false)]
     [Designer("System.Windows.Forms.Design.ParentControlDesigner, System.Design", typeof(IDesigner))]
     public partial class Page : UserControl
     {
@@ -13,7 +14,7 @@ namespace Mids_Reborn.Controls
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public new string AccessibleDescription { get; set; }
+        public new string? AccessibleDescription { get; set; }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
@@ -21,7 +22,7 @@ namespace Mids_Reborn.Controls
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public new string AccessibleName { get; set; }
+        public new string? AccessibleName { get; set; }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
@@ -49,7 +50,7 @@ namespace Mids_Reborn.Controls
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public new ContextMenuStrip ContextMenuStrip { get; set; }
+        public new ContextMenuStrip? ContextMenuStrip { get; set; }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
@@ -72,10 +73,33 @@ namespace Mids_Reborn.Controls
         public new Point Location { get; set; }
 
         #endregion
+        #region PublicProps
+
+        [Category("Appearance")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string? Title { get; set; } = "My Page Title";
+
+        #endregion
+
+        public Page(string title)
+        {
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ContainerControl | ControlStyles.SupportsTransparentBackColor, true);
+            Title = title;
+            InitializeComponent();
+        }
 
         public Page()
         {
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ContainerControl | ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
+            BackColor = Color.FromArgb(44, 47, 51);
+            ForeColor = Color.WhiteSmoke;
         }
     }
 }

@@ -16,6 +16,8 @@
 
             public string Version { get; set; }
 
+            public string File { get; set; }
+
             public string ExtractTo { get; set; }
         }
 

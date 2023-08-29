@@ -282,18 +282,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 power.BaseRechargeTime = power.RechargeTime;
             }
 
-            Array.Sort(DatabaseAPI.Database.Power);
+            //Array.Sort(DatabaseAPI.Database.Power);
             var serializer = Serializer.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.MatchAllIDs();
 
             // Uncomment below to update AT modifier columns if necessary
-            // for (var index = 0; index < DatabaseAPI.Database.Classes.Length - 1; index++)
+            // for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             // {
             //     DatabaseAPI.Database.Classes[index].Column = index;
             // }
+
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-            frmMain.MainInstance.UpdateTitle();
+            frmMain.MainInstance?.UpdateTitle();
             BusyHide();
             DialogResult = DialogResult.OK;
             Hide();
@@ -1105,7 +1106,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                                 continue;
 
                             Array.Resize(ref iPowers1, iPowers1.Length + 1);
-                            iPowers1[iPowers1.Length - 1] = index;
+                            iPowers1[^1] = index;
                         }
 
                         displayFullName = true;

@@ -330,7 +330,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
             var endRecValue = displayStats.EnduranceRecoveryNumeric;
             leftColumnItems.Add($"Regeneration: {regenValue:###0.##}%");
-            leftColumnItems.Add($"Max HP: {hpValue:###0.##} {(absorbValue > 0 ? $" (Absorb: {absorbValue:##0.##} -- {absorbValue / hpBase * 100:##0.##}% of base HP)" : "")}");
+            leftColumnItems.Add($"Max HP: {hpValue:###0.##} {(absorbValue > 0 ? $" (Absorb: {absorbValue:###0.##} -- {absorbValue / hpBase * 100:##0.##}% of base HP)" : "")}");
             leftColumnItems.Add($"End Recovery: {endRecValue:##0.##}/s");
             leftColumnItems.Add($"End Use: {displayStats.EnduranceUsage:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)");
             leftColumnItems.Add($"Max End: {displayStats.EnduranceMaxEnd:##0.##}");
@@ -340,10 +340,10 @@ namespace Mids_Reborn.Core.Base.Document_Classes
 
             var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
             var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
-            var runSpdValue = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            var jumpSpdValue = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            var jumpHeightValue = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
-            var flySpeedValue = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
+            var runSpdValue = displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false);
+            var jumpSpdValue = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false);
+            var jumpHeightValue = displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat);
+            var flySpeedValue = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false);
             rightColumnItems.Add($"Run Speed: {runSpdValue:##0.##} {movementUnitSpeed}");
             rightColumnItems.Add($"Jump Speed: {jumpSpdValue:##0.##} {movementUnitSpeed}");
             rightColumnItems.Add($"Jump Height: {jumpHeightValue:##0.##} {movementUnitDistance}");
@@ -352,9 +352,9 @@ namespace Mids_Reborn.Core.Base.Document_Classes
             leftColumnItems.Add("");
             leftColumnItems.Add("- Stealth & Perception -");
             
-            leftColumnItems.Add($"Stealth (PvE): {displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
-            leftColumnItems.Add($"Stealth (PvP): {displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
-            leftColumnItems.Add($"Perception: {displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)} {movementUnitDistance}");
+            leftColumnItems.Add($"Stealth (PvE): {displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}");
+            leftColumnItems.Add($"Stealth (PvP): {displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}");
+            leftColumnItems.Add($"Perception: {displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat):####0.##} {movementUnitDistance}");
 
             rightColumnItems.Add("");
             rightColumnItems.Add("- Misc -");
@@ -391,18 +391,21 @@ namespace Mids_Reborn.Core.Base.Document_Classes
 
             leftColumnItems.AddRange(cappedDebuffRes.Select((v, i) => $"{debuffEffectsList[i]}: {v:##0.##}%"));
 
-            rightColumnItems.Add("");
-            rightColumnItems.Add("- Elusivity (PvP) -");
-
-            for (var i = 0; i < damageVectors.Length; i++)
+            if (MidsContext.Config.Inc.DisablePvE)
             {
-                if (excludedElusivityVectors.Contains(i))
-                {
-                    continue;
-                }
+                rightColumnItems.Add("");
+                rightColumnItems.Add("- Elusivity (PvP) -");
 
-                var elValue = (MidsContext.Character.Totals.Elusivity[i] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100;
-                rightColumnItems.Add($"{damageVectorsNames[i]}: {elValue:##0.##}%");
+                for (var i = 0; i < damageVectors.Length; i++)
+                {
+                    if (excludedElusivityVectors.Contains(i))
+                    {
+                        continue;
+                    }
+
+                    var elValue = (MidsContext.Character.Totals.Elusivity[i] + 0.4f) * 100;
+                    rightColumnItems.Add($"{damageVectorsNames[i]}: {elValue:##0.##}%");
+                }
             }
 
             var top = bounds.Top;

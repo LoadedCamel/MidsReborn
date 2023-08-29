@@ -7,12 +7,12 @@ namespace Mids_Reborn.Core.Base.Master_Classes
     {
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
-        private const int AppMinorVersion = 5;
+        private const int AppMinorVersion = 6;
         private const int AppBuildVersion = 5;
-        private const int AppRevisionVersion = 7;
+        private const int AppRevisionVersion = 3;
 
-        public const string AssemblyVersion = "3.5.5";
-        public const string AssemblyFileVersion = "3.5.5.7";
+        public const string AssemblyVersion = "3.6.5";
+        public const string AssemblyFileVersion = "3.6.5.3";
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
         public const string AppVersionStatus = "";
@@ -21,13 +21,13 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         public const int MathLevelBase = 49;
         public const int MathLevelExemp = -1;
 
-        public static bool EnhCheckMode = false;
+        internal static bool EnhCheckMode = false;
 
         //public static readonly Version AppVersion = new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
-        public static Archetype? Archetype;
-        public static Character? Character;
-        public static Build Build;
+        internal static Archetype? Archetype;
+        internal static Character? Character;
+        internal static Build? Build;
 
         public static ConfigData? Config => ConfigData.Current;
     }

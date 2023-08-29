@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms
 {
-    partial class frmInitializing
+    sealed partial class frmInitializing
     {
         /// <summary>
         /// Required designer variable.
@@ -32,47 +32,75 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.Label1 = new Mids_Reborn.Forms.TransparentLabel();
-            this.tmrOp = new System.Windows.Forms.Timer(this.components);
-            this.SuspendLayout();
+            components = new Container();
+            Label1 = new TransparentLabel();
+            tmrOp = new Timer(components);
+            panel1 = new Panel();
+            webView2 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            panel1.SuspendLayout();
+            ((ISupportInitialize)webView2).BeginInit();
+            SuspendLayout();
             // 
             // Label1
             // 
-            this.Label1.BackColor = System.Drawing.Color.Transparent;
-            this.Label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Label1.ForeColor = System.Drawing.Color.Gold;
-            this.Label1.Location = new System.Drawing.Point(0, 0);
-            this.Label1.Margin = new System.Windows.Forms.Padding(55, 0, 55, 0);
-            this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(936, 51);
-            this.Label1.TabIndex = 2;
-            this.Label1.Text = "Reading data files, please wait.";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            Label1.BackColor = System.Drawing.Color.Transparent;
+            Label1.FlatStyle = FlatStyle.Flat;
+            Label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            Label1.ForeColor = System.Drawing.Color.Gold;
+            Label1.Location = new System.Drawing.Point(27, 505);
+            Label1.Margin = new Padding(55, 0, 55, 0);
+            Label1.Name = "Label1";
+            Label1.Size = new System.Drawing.Size(704, 30);
+            Label1.TabIndex = 2;
+            Label1.Text = "Reading data files, please wait.";
+            Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(webView2);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(600, 447);
+            panel1.TabIndex = 3;
+            // 
+            // webView21
+            // 
+            webView2.AllowExternalDrop = true;
+            webView2.CreationProperties = null;
+            webView2.DefaultBackgroundColor = System.Drawing.Color.Black;
+            webView2.Dock = DockStyle.Fill;
+            webView2.Location = new System.Drawing.Point(0, 0);
+            webView2.Name = "webView2";
+            webView2.Size = new System.Drawing.Size(600, 447);
+            webView2.Source = new System.Uri("file://data\\blank.html", System.UriKind.Absolute);
+            webView2.TabIndex = 0;
+            webView2.ZoomFactor = 1D;
             // 
             // frmInitializing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = global::MRBResourceLib.Resources.MRB_Splash_Concept;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(936, 627);
-            this.Controls.Add(this.Label1);
-            this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(55, 18, 55, 18);
-            this.Name = "frmInitializing";
-            this.Text = "frmInitializing";
-            this.TopMost = true;
-            this.TransparencyKey = System.Drawing.Color.Black;
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            BackColor = System.Drawing.Color.Black;
+            BackgroundImageLayout = ImageLayout.None;
+            ClientSize = new System.Drawing.Size(600, 447);
+            Controls.Add(panel1);
+            Controls.Add(Label1);
+            DoubleBuffered = true;
+            Margin = new Padding(55, 18, 55, 18);
+            Name = "frmInitializing";
+            TopMost = true;
+            TransparencyKey = System.Drawing.Color.Transparent;
+            panel1.ResumeLayout(false);
+            ((ISupportInitialize)webView2).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
         private TransparentLabel Label1;
         private Timer tmrOp;
+        private Panel panel1;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2;
     }
 }

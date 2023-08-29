@@ -31,284 +31,277 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.OmegaButton = new ImageButton();
-            this.VitaeButton = new ImageButton();
-            this.StanceButton = new ImageButton();
-            this.GenesisButton = new ImageButton();
-            this.hybridBtn = new ImageButton();
-            this.destinyBtn = new ImageButton();
-            this.loreBtn = new ImageButton();
-            this.interfaceBtn = new ImageButton();
-            this.judgementBtn = new ImageButton();
-            this.alphaBtn = new ImageButton();
-            this.PLLeft = new ctlPowerList();
-            this.PLRight = new ctlPowerList();
-            this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.PopInfo = new ctlPopUp();
-            this.lblLock = new System.Windows.Forms.Label();
-            this.ibClose = new ImageButton();
-            this.ctlPanel1 = new ctlPanel();
-            this.ctlPanel2 = new ctlPanel();
-            this.ctlPanel1.SuspendLayout();
-            this.ctlPanel2.SuspendLayout();
-            this.SuspendLayout();
+            OmegaButton = new ImageButton();
+            VitaeButton = new ImageButton();
+            StanceButton = new ImageButton();
+            GenesisButton = new ImageButton();
+            hybridBtn = new ImageButton();
+            destinyBtn = new ImageButton();
+            loreBtn = new ImageButton();
+            interfaceBtn = new ImageButton();
+            judgementBtn = new ImageButton();
+            alphaBtn = new ImageButton();
+            PLLeft = new ctlPowerList();
+            PLRight = new ctlPowerList();
+            VScrollBar1 = new System.Windows.Forms.VScrollBar();
+            lblLock = new System.Windows.Forms.Label();
+            ibClose = new ImageButton();
+            ctlPanel1 = new ctlPanel();
+            ctlPanel2 = new ctlPanel();
+            ctlPanel1.SuspendLayout();
+            ctlPanel2.SuspendLayout();
+            SuspendLayout();
             // 
             // OmegaButton
             // 
-            this.OmegaButton.Checked = false;
-            this.OmegaButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.OmegaButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.OmegaButton.Location = new System.Drawing.Point(234, 68);
-            this.OmegaButton.Name = "OmegaButton";
-            this.OmegaButton.Size = new System.Drawing.Size(105, 22);
-            this.OmegaButton.TabIndex = 134;
-            this.OmegaButton.TextOff = "Omega";
-            this.OmegaButton.TextOn = "Omega";
-            this.OmegaButton.Toggle = true;
+            OmegaButton.Checked = false;
+            OmegaButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            OmegaButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            OmegaButton.Location = new System.Drawing.Point(234, 68);
+            OmegaButton.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            OmegaButton.Name = "OmegaButton";
+            OmegaButton.Size = new System.Drawing.Size(105, 22);
+            OmegaButton.TabIndex = 134;
+            OmegaButton.TextOff = "Omega";
+            OmegaButton.TextOn = "Omega";
+            OmegaButton.Toggle = true;
             // 
             // VitaeButton
             // 
-            this.VitaeButton.Checked = false;
-            this.VitaeButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.VitaeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.VitaeButton.Location = new System.Drawing.Point(123, 68);
-            this.VitaeButton.Name = "VitaeButton";
-            this.VitaeButton.Size = new System.Drawing.Size(105, 22);
-            this.VitaeButton.TabIndex = 133;
-            this.VitaeButton.TextOff = "Vitae";
-            this.VitaeButton.TextOn = "Vitae";
-            this.VitaeButton.Toggle = true;
+            VitaeButton.Checked = false;
+            VitaeButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            VitaeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            VitaeButton.Location = new System.Drawing.Point(123, 68);
+            VitaeButton.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            VitaeButton.Name = "VitaeButton";
+            VitaeButton.Size = new System.Drawing.Size(105, 22);
+            VitaeButton.TabIndex = 133;
+            VitaeButton.TextOff = "Vitae";
+            VitaeButton.TextOn = "Vitae";
+            VitaeButton.Toggle = true;
             // 
             // StanceButton
             // 
-            this.StanceButton.Checked = false;
-            this.StanceButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.StanceButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.StanceButton.Location = new System.Drawing.Point(345, 40);
-            this.StanceButton.Name = "StanceButton";
-            this.StanceButton.Size = new System.Drawing.Size(105, 22);
-            this.StanceButton.TabIndex = 132;
-            this.StanceButton.TextOff = "Stance";
-            this.StanceButton.TextOn = "Stance";
-            this.StanceButton.Toggle = true;
+            StanceButton.Checked = false;
+            StanceButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            StanceButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            StanceButton.Location = new System.Drawing.Point(345, 40);
+            StanceButton.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            StanceButton.Name = "StanceButton";
+            StanceButton.Size = new System.Drawing.Size(105, 22);
+            StanceButton.TabIndex = 132;
+            StanceButton.TextOff = "Stance";
+            StanceButton.TextOn = "Stance";
+            StanceButton.Toggle = true;
             // 
             // GenesisButton
             // 
-            this.GenesisButton.Checked = false;
-            this.GenesisButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.GenesisButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.GenesisButton.Location = new System.Drawing.Point(234, 40);
-            this.GenesisButton.Name = "GenesisButton";
-            this.GenesisButton.Size = new System.Drawing.Size(105, 22);
-            this.GenesisButton.TabIndex = 131;
-            this.GenesisButton.TextOff = "Genesis";
-            this.GenesisButton.TextOn = "Genesis";
-            this.GenesisButton.Toggle = true;
+            GenesisButton.Checked = false;
+            GenesisButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            GenesisButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            GenesisButton.Location = new System.Drawing.Point(234, 40);
+            GenesisButton.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            GenesisButton.Name = "GenesisButton";
+            GenesisButton.Size = new System.Drawing.Size(105, 22);
+            GenesisButton.TabIndex = 131;
+            GenesisButton.TextOff = "Genesis";
+            GenesisButton.TextOn = "Genesis";
+            GenesisButton.Toggle = true;
             // 
             // hybridBtn
             // 
-            this.hybridBtn.Checked = false;
-            this.hybridBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.hybridBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.hybridBtn.Location = new System.Drawing.Point(123, 40);
-            this.hybridBtn.Name = "hybridBtn";
-            this.hybridBtn.Size = new System.Drawing.Size(105, 22);
-            this.hybridBtn.TabIndex = 130;
-            this.hybridBtn.TextOff = "Hybrid";
-            this.hybridBtn.TextOn = "Hybrid";
-            this.hybridBtn.Toggle = true;
+            hybridBtn.Checked = false;
+            hybridBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            hybridBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            hybridBtn.Location = new System.Drawing.Point(123, 40);
+            hybridBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            hybridBtn.Name = "hybridBtn";
+            hybridBtn.Size = new System.Drawing.Size(105, 22);
+            hybridBtn.TabIndex = 130;
+            hybridBtn.TextOff = "Hybrid";
+            hybridBtn.TextOn = "Hybrid";
+            hybridBtn.Toggle = true;
             // 
             // destinyBtn
             // 
-            this.destinyBtn.Checked = false;
-            this.destinyBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.destinyBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.destinyBtn.Location = new System.Drawing.Point(12, 40);
-            this.destinyBtn.Name = "destinyBtn";
-            this.destinyBtn.Size = new System.Drawing.Size(105, 22);
-            this.destinyBtn.TabIndex = 129;
-            this.destinyBtn.TextOff = "Destiny";
-            this.destinyBtn.TextOn = "Destiny";
-            this.destinyBtn.Toggle = true;
+            destinyBtn.Checked = false;
+            destinyBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            destinyBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            destinyBtn.Location = new System.Drawing.Point(12, 40);
+            destinyBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            destinyBtn.Name = "destinyBtn";
+            destinyBtn.Size = new System.Drawing.Size(105, 22);
+            destinyBtn.TabIndex = 129;
+            destinyBtn.TextOff = "Destiny";
+            destinyBtn.TextOn = "Destiny";
+            destinyBtn.Toggle = true;
             // 
             // loreBtn
             // 
-            this.loreBtn.Checked = false;
-            this.loreBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.loreBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.loreBtn.Location = new System.Drawing.Point(345, 12);
-            this.loreBtn.Name = "loreBtn";
-            this.loreBtn.Size = new System.Drawing.Size(105, 22);
-            this.loreBtn.TabIndex = 128;
-            this.loreBtn.TextOff = "Lore";
-            this.loreBtn.TextOn = "Lore";
-            this.loreBtn.Toggle = true;
+            loreBtn.Checked = false;
+            loreBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            loreBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            loreBtn.Location = new System.Drawing.Point(345, 12);
+            loreBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            loreBtn.Name = "loreBtn";
+            loreBtn.Size = new System.Drawing.Size(105, 22);
+            loreBtn.TabIndex = 128;
+            loreBtn.TextOff = "Lore";
+            loreBtn.TextOn = "Lore";
+            loreBtn.Toggle = true;
             // 
             // interfaceBtn
             // 
-            this.interfaceBtn.Checked = false;
-            this.interfaceBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.interfaceBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.interfaceBtn.Location = new System.Drawing.Point(234, 12);
-            this.interfaceBtn.Name = "interfaceBtn";
-            this.interfaceBtn.Size = new System.Drawing.Size(105, 22);
-            this.interfaceBtn.TabIndex = 127;
-            this.interfaceBtn.TextOff = "Interface";
-            this.interfaceBtn.TextOn = "Interface";
-            this.interfaceBtn.Toggle = true;
+            interfaceBtn.Checked = false;
+            interfaceBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            interfaceBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            interfaceBtn.Location = new System.Drawing.Point(234, 12);
+            interfaceBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            interfaceBtn.Name = "interfaceBtn";
+            interfaceBtn.Size = new System.Drawing.Size(105, 22);
+            interfaceBtn.TabIndex = 127;
+            interfaceBtn.TextOff = "Interface";
+            interfaceBtn.TextOn = "Interface";
+            interfaceBtn.Toggle = true;
             // 
             // judgementBtn
             // 
-            this.judgementBtn.Checked = false;
-            this.judgementBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.judgementBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.judgementBtn.Location = new System.Drawing.Point(123, 12);
-            this.judgementBtn.Name = "judgementBtn";
-            this.judgementBtn.Size = new System.Drawing.Size(105, 22);
-            this.judgementBtn.TabIndex = 126;
-            this.judgementBtn.TextOff = "Judgement";
-            this.judgementBtn.TextOn = "Judgement";
-            this.judgementBtn.Toggle = true;
+            judgementBtn.Checked = false;
+            judgementBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            judgementBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            judgementBtn.Location = new System.Drawing.Point(123, 12);
+            judgementBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            judgementBtn.Name = "judgementBtn";
+            judgementBtn.Size = new System.Drawing.Size(105, 22);
+            judgementBtn.TabIndex = 126;
+            judgementBtn.TextOff = "Judgement";
+            judgementBtn.TextOn = "Judgement";
+            judgementBtn.Toggle = true;
             // 
             // alphaBtn
             // 
-            this.alphaBtn.Checked = true;
-            this.alphaBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.alphaBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.alphaBtn.Location = new System.Drawing.Point(12, 12);
-            this.alphaBtn.Name = "alphaBtn";
-            this.alphaBtn.Size = new System.Drawing.Size(105, 22);
-            this.alphaBtn.TabIndex = 125;
-            this.alphaBtn.TextOff = "Alpha";
-            this.alphaBtn.TextOn = "Alpha";
-            this.alphaBtn.Toggle = true;
+            alphaBtn.Checked = true;
+            alphaBtn.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            alphaBtn.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            alphaBtn.Location = new System.Drawing.Point(12, 12);
+            alphaBtn.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            alphaBtn.Name = "alphaBtn";
+            alphaBtn.Size = new System.Drawing.Size(105, 22);
+            alphaBtn.TabIndex = 125;
+            alphaBtn.TextOff = "Alpha";
+            alphaBtn.TextOn = "Alpha";
+            alphaBtn.Toggle = true;
             // 
             // PLLeft
             // 
-            this.PLLeft.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PLLeft.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.PLLeft.FormattingEnabled = true;
-            this.PLLeft.ItemHeight = 16;
-            this.PLLeft.Location = new System.Drawing.Point(3, 1);
-            this.PLLeft.Name = "PLLeft";
-            this.PLLeft.SelectionBackColor = System.Drawing.Color.DarkOrange;
-            this.PLLeft.SelectionColor = System.Drawing.Color.Empty;
-            this.PLLeft.Size = new System.Drawing.Size(222, 256);
-            this.PLLeft.TabIndex = 135;
+            PLLeft.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            PLLeft.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            PLLeft.FormattingEnabled = true;
+            PLLeft.ItemHeight = 16;
+            PLLeft.Location = new System.Drawing.Point(3, 1);
+            PLLeft.Name = "PLLeft";
+            PLLeft.SelectionBackColor = System.Drawing.Color.DarkOrange;
+            PLLeft.SelectionColor = System.Drawing.Color.Empty;
+            PLLeft.Size = new System.Drawing.Size(222, 256);
+            PLLeft.TabIndex = 135;
             // 
             // PLRight
             // 
-            this.PLRight.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PLRight.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.PLRight.FormattingEnabled = true;
-            this.PLRight.ItemHeight = 16;
-            this.PLRight.Location = new System.Drawing.Point(231, 3);
-            this.PLRight.Name = "PLRight";
-            this.PLRight.SelectionBackColor = System.Drawing.Color.DarkOrange;
-            this.PLRight.SelectionColor = System.Drawing.Color.Empty;
-            this.PLRight.Size = new System.Drawing.Size(222, 256);
-            this.PLRight.TabIndex = 136;
+            PLRight.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            PLRight.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            PLRight.FormattingEnabled = true;
+            PLRight.ItemHeight = 16;
+            PLRight.Location = new System.Drawing.Point(231, 3);
+            PLRight.Name = "PLRight";
+            PLRight.SelectionBackColor = System.Drawing.Color.DarkOrange;
+            PLRight.SelectionColor = System.Drawing.Color.Empty;
+            PLRight.Size = new System.Drawing.Size(222, 256);
+            PLRight.TabIndex = 136;
             // 
             // VScrollBar1
             // 
-            this.VScrollBar1.Location = new System.Drawing.Point(439, 0);
-            this.VScrollBar1.Name = "VScrollBar1";
-            this.VScrollBar1.Size = new System.Drawing.Size(17, 211);
-            this.VScrollBar1.TabIndex = 138;
-            // 
-            // PopInfo
-            // 
-            this.PopInfo.BXHeight = 1024;
-            this.PopInfo.ColumnPosition = 0.5F;
-            this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.PopInfo.ForeColor = System.Drawing.Color.Black;
-            this.PopInfo.InternalPadding = 3;
-            this.PopInfo.Location = new System.Drawing.Point(3, 3);
-            this.PopInfo.Name = "PopInfo";
-            this.PopInfo.ScrollY = 0F;
-            this.PopInfo.SectionPadding = 8;
-            this.PopInfo.Size = new System.Drawing.Size(433, 203);
-            this.PopInfo.TabIndex = 137;
+            VScrollBar1.Location = new System.Drawing.Point(439, 0);
+            VScrollBar1.Name = "VScrollBar1";
+            VScrollBar1.Size = new System.Drawing.Size(17, 211);
+            VScrollBar1.TabIndex = 138;
             // 
             // lblLock
             // 
-            this.lblLock.BackColor = System.Drawing.Color.Red;
-            this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.lblLock.ForeColor = System.Drawing.Color.White;
-            this.lblLock.Location = new System.Drawing.Point(3, 585);
-            this.lblLock.Name = "lblLock";
-            this.lblLock.Size = new System.Drawing.Size(56, 20);
-            this.lblLock.TabIndex = 140;
-            this.lblLock.Text = "[Unlock]";
-            this.lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblLock.Visible = false;
+            lblLock.BackColor = System.Drawing.Color.Red;
+            lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblLock.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            lblLock.ForeColor = System.Drawing.Color.White;
+            lblLock.Location = new System.Drawing.Point(3, 585);
+            lblLock.Name = "lblLock";
+            lblLock.Size = new System.Drawing.Size(56, 20);
+            lblLock.TabIndex = 140;
+            lblLock.Text = "[Unlock]";
+            lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblLock.Visible = false;
             // 
             // ibClose
             // 
-            this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibClose.Location = new System.Drawing.Point(172, 585);
-            this.ibClose.Name = "ibClose";
-            this.ibClose.Size = new System.Drawing.Size(105, 22);
-            this.ibClose.TabIndex = 139;
-            this.ibClose.TextOff = "Done";
-            this.ibClose.TextOn = "Alt Text";
-            this.ibClose.Toggle = false;
+            ibClose.Checked = false;
+            ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            ibClose.Location = new System.Drawing.Point(172, 585);
+            ibClose.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            ibClose.Name = "ibClose";
+            ibClose.Size = new System.Drawing.Size(105, 22);
+            ibClose.TabIndex = 139;
+            ibClose.TextOff = "Done";
+            ibClose.TextOn = "Alt Text";
+            ibClose.Toggle = false;
             // 
             // ctlPanel1
             // 
-            this.ctlPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ctlPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ctlPanel1.Controls.Add(this.VScrollBar1);
-            this.ctlPanel1.Controls.Add(this.PopInfo);
-            this.ctlPanel1.Location = new System.Drawing.Point(3, 364);
-            this.ctlPanel1.Name = "ctlPanel1";
-            this.ctlPanel1.Size = new System.Drawing.Size(460, 215);
-            this.ctlPanel1.TabIndex = 141;
+            ctlPanel1.BackColor = System.Drawing.Color.FromArgb(150, 0, 0, 0);
+            ctlPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            ctlPanel1.Controls.Add(VScrollBar1);
+            ctlPanel1.Location = new System.Drawing.Point(3, 364);
+            ctlPanel1.Name = "ctlPanel1";
+            ctlPanel1.Size = new System.Drawing.Size(460, 215);
+            ctlPanel1.TabIndex = 141;
             // 
             // ctlPanel2
             // 
-            this.ctlPanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ctlPanel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ctlPanel2.Controls.Add(this.PLLeft);
-            this.ctlPanel2.Controls.Add(this.PLRight);
-            this.ctlPanel2.Location = new System.Drawing.Point(3, 96);
-            this.ctlPanel2.Name = "ctlPanel2";
-            this.ctlPanel2.Size = new System.Drawing.Size(460, 262);
-            this.ctlPanel2.TabIndex = 142;
+            ctlPanel2.BackColor = System.Drawing.Color.FromArgb(150, 0, 0, 0);
+            ctlPanel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            ctlPanel2.Controls.Add(PLLeft);
+            ctlPanel2.Controls.Add(PLRight);
+            ctlPanel2.Location = new System.Drawing.Point(3, 96);
+            ctlPanel2.Name = "ctlPanel2";
+            ctlPanel2.Size = new System.Drawing.Size(460, 262);
+            ctlPanel2.TabIndex = 142;
             // 
             // frmIncarnates
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(466, 614);
-            this.Controls.Add(this.lblLock);
-            this.Controls.Add(this.ibClose);
-            this.Controls.Add(this.ctlPanel1);
-            this.Controls.Add(this.ctlPanel2);
-            this.Controls.Add(this.OmegaButton);
-            this.Controls.Add(this.VitaeButton);
-            this.Controls.Add(this.StanceButton);
-            this.Controls.Add(this.GenesisButton);
-            this.Controls.Add(this.hybridBtn);
-            this.Controls.Add(this.destinyBtn);
-            this.Controls.Add(this.loreBtn);
-            this.Controls.Add(this.interfaceBtn);
-            this.Controls.Add(this.judgementBtn);
-            this.Controls.Add(this.alphaBtn);
-            this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "frmIncarnates";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmIncarnates";
-            this.ctlPanel1.ResumeLayout(false);
-            this.ctlPanel2.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.Black;
+            ClientSize = new System.Drawing.Size(466, 614);
+            Controls.Add(lblLock);
+            Controls.Add(ibClose);
+            Controls.Add(ctlPanel1);
+            Controls.Add(ctlPanel2);
+            Controls.Add(OmegaButton);
+            Controls.Add(VitaeButton);
+            Controls.Add(StanceButton);
+            Controls.Add(GenesisButton);
+            Controls.Add(hybridBtn);
+            Controls.Add(destinyBtn);
+            Controls.Add(loreBtn);
+            Controls.Add(interfaceBtn);
+            Controls.Add(judgementBtn);
+            Controls.Add(alphaBtn);
+            ForeColor = System.Drawing.Color.White;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            Name = "frmIncarnates";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "frmIncarnates";
+            ctlPanel1.ResumeLayout(false);
+            ctlPanel2.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

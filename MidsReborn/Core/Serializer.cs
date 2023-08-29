@@ -33,7 +33,7 @@ namespace Mids_Reborn.Core
                         NullValueHandling = NullValueHandling.Ignore,
                         PreserveReferencesHandling = PreserveReferencesHandling.None,
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                        DefaultValueHandling = DefaultValueHandling.Ignore
+                        DefaultValueHandling = DefaultValueHandling.Include
                     }
                 ), "json");
         }

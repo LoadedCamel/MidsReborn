@@ -456,7 +456,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public ImageButtonEx()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             ButtonTypeChanged += OnButtonTypeChanged;
             FontChanged += OnFontChanged;
             ForeColorChanged += OnForeColorChanged;
@@ -708,9 +708,6 @@ namespace Mids_Reborn.Forms.Controls
             e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-            // Clear graphics with transparency
-            e.Graphics.Clear(Color.Transparent);
 
             // Assign variable to be used in drawing operations (some may be wrapped in using statements)
             var rect = ClientRectangle with { X = 0, Y = 0 };

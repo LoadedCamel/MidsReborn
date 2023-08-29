@@ -76,9 +76,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             lblFileAssocTxt = new Label();
             lblFileAssoc = new Label();
             GroupBox1 = new GroupBox();
+            rbUpdDisabled = new RadioButton();
+            rbUpdDelay = new RadioButton();
+            rbUpdStartup = new RadioButton();
+            tbUpdDelayDays = new TextBox();
+            label11 = new Label();
             Label34 = new Label();
-            chkUpdates = new CheckBox();
             TabPage1 = new TabPage();
+            label5 = new Label();
+            rbEnhPopupCloseStyle2 = new RadioButton();
+            rbEnhPopupCloseStyle1 = new RadioButton();
             Label15 = new Label();
             Label10 = new Label();
             cmbAction = new ComboBox();
@@ -111,6 +118,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkNoTips = new CheckBox();
             chkMiddle = new CheckBox();
             GroupBox17 = new GroupBox();
+            chkDimWindowBorders = new CheckBox();
             chkPowersBold = new CheckBox();
             chkPowSelBold = new CheckBox();
             udPowersSize = new NumericUpDown();
@@ -382,9 +390,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             groupBox10.Controls.Add(chkWarnOldDbVersion);
             groupBox10.Controls.Add(chkWarnOldAppVersion);
-            groupBox10.Location = new System.Drawing.Point(8, 295);
+            groupBox10.Location = new System.Drawing.Point(8, 311);
             groupBox10.Name = "groupBox10";
-            groupBox10.Size = new System.Drawing.Size(761, 69);
+            groupBox10.Size = new System.Drawing.Size(761, 53);
             groupBox10.TabIndex = 74;
             groupBox10.TabStop = false;
             groupBox10.Text = "App/database version checks (new build format only)";
@@ -415,7 +423,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             groupBox4.Controls.Add(btnRepairSchemaAssoc);
             groupBox4.Controls.Add(label6);
             groupBox4.Controls.Add(lblSchemaAssoc);
-            groupBox4.Location = new System.Drawing.Point(394, 76);
+            groupBox4.Location = new System.Drawing.Point(394, 109);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new System.Drawing.Size(375, 87);
             groupBox4.TabIndex = 73;
@@ -472,9 +480,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             groupBox16.Controls.Add(chkLoadLastFile);
             groupBox16.Controls.Add(btnSaveFolderReset);
             groupBox16.Controls.Add(btnSaveFolder);
-            groupBox16.Location = new System.Drawing.Point(8, 169);
+            groupBox16.Location = new System.Drawing.Point(8, 202);
             groupBox16.Name = "groupBox16";
-            groupBox16.Size = new System.Drawing.Size(761, 120);
+            groupBox16.Size = new System.Drawing.Size(761, 103);
             groupBox16.TabIndex = 72;
             groupBox16.TabStop = false;
             groupBox16.Text = "Character Builds Location";
@@ -532,7 +540,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             groupBox19.Controls.Add(btnRepairFileAssoc);
             groupBox19.Controls.Add(lblFileAssocTxt);
             groupBox19.Controls.Add(lblFileAssoc);
-            groupBox19.Location = new System.Drawing.Point(8, 76);
+            groupBox19.Location = new System.Drawing.Point(8, 109);
             groupBox19.Name = "groupBox19";
             groupBox19.Size = new System.Drawing.Size(380, 87);
             groupBox19.TabIndex = 71;
@@ -584,34 +592,86 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // GroupBox1
             // 
+            GroupBox1.Controls.Add(rbUpdDisabled);
+            GroupBox1.Controls.Add(rbUpdDelay);
+            GroupBox1.Controls.Add(rbUpdStartup);
+            GroupBox1.Controls.Add(tbUpdDelayDays);
+            GroupBox1.Controls.Add(label11);
             GroupBox1.Controls.Add(Label34);
-            GroupBox1.Controls.Add(chkUpdates);
             GroupBox1.Location = new System.Drawing.Point(8, 3);
             GroupBox1.Name = "GroupBox1";
-            GroupBox1.Size = new System.Drawing.Size(761, 67);
+            GroupBox1.Size = new System.Drawing.Size(761, 100);
             GroupBox1.TabIndex = 7;
             GroupBox1.TabStop = false;
             GroupBox1.Text = "Automatic Updates";
             // 
+            // rbUpdDisabled
+            // 
+            rbUpdDisabled.AutoSize = true;
+            rbUpdDisabled.Location = new System.Drawing.Point(580, 15);
+            rbUpdDisabled.Name = "rbUpdDisabled";
+            rbUpdDisabled.Size = new System.Drawing.Size(70, 17);
+            rbUpdDisabled.TabIndex = 11;
+            rbUpdDisabled.TabStop = true;
+            rbUpdDisabled.Text = "Disabled";
+            rbUpdDisabled.UseVisualStyleBackColor = true;
+            // 
+            // rbUpdDelay
+            // 
+            rbUpdDelay.AutoSize = true;
+            rbUpdDelay.Location = new System.Drawing.Point(580, 61);
+            rbUpdDelay.Name = "rbUpdDelay";
+            rbUpdDelay.Size = new System.Drawing.Size(53, 17);
+            rbUpdDelay.TabIndex = 10;
+            rbUpdDelay.TabStop = true;
+            rbUpdDelay.Text = "Delay";
+            rbUpdDelay.UseVisualStyleBackColor = true;
+            // 
+            // rbUpdStartup
+            // 
+            rbUpdStartup.AutoSize = true;
+            rbUpdStartup.Location = new System.Drawing.Point(580, 38);
+            rbUpdStartup.Name = "rbUpdStartup";
+            rbUpdStartup.Size = new System.Drawing.Size(63, 17);
+            rbUpdStartup.TabIndex = 9;
+            rbUpdStartup.TabStop = true;
+            rbUpdStartup.Text = "Startup";
+            rbUpdStartup.UseVisualStyleBackColor = true;
+            // 
+            // tbUpdDelayDays
+            // 
+            tbUpdDelayDays.Enabled = false;
+            tbUpdDelayDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbUpdDelayDays.Location = new System.Drawing.Point(639, 60);
+            tbUpdDelayDays.Name = "tbUpdDelayDays";
+            tbUpdDelayDays.Size = new System.Drawing.Size(21, 20);
+            tbUpdDelayDays.TabIndex = 8;
+            tbUpdDelayDays.Text = "3";
+            tbUpdDelayDays.TextChanged += TbUpdDelayDaysOnTextChanged;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new System.Drawing.Point(666, 63);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(31, 13);
+            label11.TabIndex = 7;
+            label11.Text = "Days";
+            // 
             // Label34
             // 
-            Label34.Location = new System.Drawing.Point(6, 16);
+            Label34.AutoSize = true;
+            Label34.Location = new System.Drawing.Point(6, 18);
             Label34.Name = "Label34";
-            Label34.Size = new System.Drawing.Size(501, 39);
+            Label34.Size = new System.Drawing.Size(503, 65);
             Label34.TabIndex = 5;
-            Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when it starts. This feature requires an internet connection.";
-            Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // chkUpdates
-            // 
-            chkUpdates.Location = new System.Drawing.Point(552, 19);
-            chkUpdates.Name = "chkUpdates";
-            chkUpdates.Size = new System.Drawing.Size(203, 24);
-            chkUpdates.TabIndex = 6;
-            chkUpdates.Text = "Check for updates on startup";
+            Label34.Text = resources.GetString("Label34.Text");
             // 
             // TabPage1
             // 
+            TabPage1.Controls.Add(label5);
+            TabPage1.Controls.Add(rbEnhPopupCloseStyle2);
+            TabPage1.Controls.Add(rbEnhPopupCloseStyle1);
             TabPage1.Controls.Add(Label15);
             TabPage1.Controls.Add(Label10);
             TabPage1.Controls.Add(cmbAction);
@@ -623,6 +683,39 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage1.TabIndex = 6;
             TabPage1.Text = "Drag & Drop";
             TabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(416, 270);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(215, 13);
+            label5.TabIndex = 7;
+            label5.Text = "Enhancement selection popup behavior:";
+            // 
+            // rbEnhPopupCloseStyle2
+            // 
+            rbEnhPopupCloseStyle2.AutoSize = true;
+            rbEnhPopupCloseStyle2.Location = new System.Drawing.Point(416, 317);
+            rbEnhPopupCloseStyle2.Name = "rbEnhPopupCloseStyle2";
+            rbEnhPopupCloseStyle2.Size = new System.Drawing.Size(92, 17);
+            rbEnhPopupCloseStyle2.TabIndex = 6;
+            rbEnhPopupCloseStyle2.TabStop = true;
+            rbEnhPopupCloseStyle2.Text = "Click to close";
+            rbEnhPopupCloseStyle2.UseVisualStyleBackColor = true;
+            rbEnhPopupCloseStyle2.CheckedChanged += rbEnhPopupCloseStyle2_CheckedChanged;
+            // 
+            // rbEnhPopupCloseStyle1
+            // 
+            rbEnhPopupCloseStyle1.AutoSize = true;
+            rbEnhPopupCloseStyle1.Location = new System.Drawing.Point(416, 294);
+            rbEnhPopupCloseStyle1.Name = "rbEnhPopupCloseStyle1";
+            rbEnhPopupCloseStyle1.Size = new System.Drawing.Size(221, 17);
+            rbEnhPopupCloseStyle1.TabIndex = 5;
+            rbEnhPopupCloseStyle1.TabStop = true;
+            rbEnhPopupCloseStyle1.Text = "Close when pointer goes out (default)";
+            rbEnhPopupCloseStyle1.UseVisualStyleBackColor = true;
+            rbEnhPopupCloseStyle1.CheckedChanged += rbEnhPopupCloseStyle1_CheckedChanged;
             // 
             // Label15
             // 
@@ -938,6 +1031,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // GroupBox17
             // 
+            GroupBox17.Controls.Add(chkDimWindowBorders);
             GroupBox17.Controls.Add(chkPowersBold);
             GroupBox17.Controls.Add(chkPowSelBold);
             GroupBox17.Controls.Add(udPowersSize);
@@ -960,6 +1054,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox17.TabIndex = 76;
             GroupBox17.TabStop = false;
             GroupBox17.Text = "Font Size/Colors:";
+            // 
+            // chkDimWindowBorders
+            // 
+            chkDimWindowBorders.AutoSize = true;
+            chkDimWindowBorders.Location = new System.Drawing.Point(280, 52);
+            chkDimWindowBorders.Name = "chkDimWindowBorders";
+            chkDimWindowBorders.Size = new System.Drawing.Size(163, 30);
+            chkDimWindowBorders.TabIndex = 86;
+            chkDimWindowBorders.Text = "Dim window border colors\r\n(Better fit dark themes)";
+            chkDimWindowBorders.UseVisualStyleBackColor = true;
             // 
             // chkPowersBold
             // 
@@ -1021,7 +1125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkShowAlphaPopup
             // 
-            chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
+            chkShowAlphaPopup.Location = new System.Drawing.Point(280, 85);
             chkShowAlphaPopup.Name = "chkShowAlphaPopup";
             chkShowAlphaPopup.Size = new System.Drawing.Size(246, 18);
             chkShowAlphaPopup.TabIndex = 79;
@@ -1056,7 +1160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // btnFontColor
             // 
-            btnFontColor.Location = new System.Drawing.Point(280, 32);
+            btnFontColor.Location = new System.Drawing.Point(280, 20);
             btnFontColor.Name = "btnFontColor";
             btnFontColor.Size = new System.Drawing.Size(172, 27);
             btnFontColor.TabIndex = 61;
@@ -1287,6 +1391,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             groupBox19.ResumeLayout(false);
             groupBox19.PerformLayout();
             GroupBox1.ResumeLayout(false);
+            GroupBox1.PerformLayout();
             TabPage1.ResumeLayout(false);
             TabPage1.PerformLayout();
             GroupBox9.ResumeLayout(false);
@@ -1331,9 +1436,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Button btnRepairFileAssoc;
         private Label lblFileAssocTxt;
         private Label lblFileAssoc;
-        private GroupBox GroupBox1;
         private Label Label34;
-        private CheckBox chkUpdates;
         private TabPage TabPage1;
         private Label Label15;
         private Label Label10;
@@ -1420,5 +1523,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private GroupBox groupBox10;
         private CheckBox chkWarnOldDbVersion;
         private CheckBox chkWarnOldAppVersion;
+        private CheckBox chkDimWindowBorders;
+        private Label label5;
+        private RadioButton rbEnhPopupCloseStyle2;
+        private RadioButton rbEnhPopupCloseStyle1;
+        private TextBox tbUpdDelayDays;
+        private Label label11;
+        private RadioButton rbUpdDelay;
+        private RadioButton rbUpdStartup;
+        private RadioButton rbUpdDisabled;
+        private GroupBox GroupBox1;
     }
 }

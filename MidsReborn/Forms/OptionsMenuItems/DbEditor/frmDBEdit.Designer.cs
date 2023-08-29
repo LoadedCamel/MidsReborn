@@ -722,6 +722,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnServerDataEdit;
         private TableLayoutPanel tableLayoutPanel3;
         private Button btnGeneratePatch;
-        private Controls.PatchMessenger messenger1;
     }
 }

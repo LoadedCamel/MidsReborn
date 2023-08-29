@@ -56,8 +56,8 @@ namespace Mids_Reborn.UIv2
             this.poolList1 = new Mids_Reborn.Forms.Controls.PowerList();
             this.secondaryPowerList = new Mids_Reborn.Forms.Controls.PowerList();
             this.primaryPowerList = new Mids_Reborn.Forms.Controls.PowerList();
-            this.originCombo = new Mids_Reborn.Controls.AtOriginCombo();
-            this.atCombo = new Mids_Reborn.Controls.AtOriginCombo();
+            this.originCombo = new AtOriginCombo();
+            this.atCombo = new AtOriginCombo();
             this.popup1 = new Mids_Reborn.Forms.Controls.Popup();
             this.MainPanel.SuspendLayout();
             this.rightPanel.SuspendLayout();
@@ -342,7 +342,7 @@ namespace Mids_Reborn.UIv2
             // 
             // originCombo
             // 
-            this.originCombo.ComboType = Mids_Reborn.Controls.AtOriginCombo.ComboBoxType.Origin;
+            this.originCombo.ComboType = AtOriginCombo.ComboBoxType.Origin;
             this.originCombo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.originCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.originCombo.FormattingEnabled = true;
@@ -354,7 +354,7 @@ namespace Mids_Reborn.UIv2
             // 
             // atCombo
             // 
-            this.atCombo.ComboType = Mids_Reborn.Controls.AtOriginCombo.ComboBoxType.Archetype;
+            this.atCombo.ComboType = AtOriginCombo.ComboBoxType.Archetype;
             this.atCombo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.atCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.atCombo.FormattingEnabled = true;

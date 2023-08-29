@@ -170,9 +170,9 @@ namespace Mids_Reborn.Forms.Controls
             // 
             lblDmg.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblDmg.ForeColor = System.Drawing.Color.White;
-            lblDmg.Location = new System.Drawing.Point(3, 289);
+            lblDmg.Location = new System.Drawing.Point(3, 287);
             lblDmg.Name = "lblDmg";
-            lblDmg.Size = new System.Drawing.Size(292, 15);
+            lblDmg.Size = new System.Drawing.Size(292, 17);
             lblDmg.TabIndex = 15;
             lblDmg.Text = "Damage (Green = Base | Red = Enhanced)";
             lblDmg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

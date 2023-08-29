@@ -624,7 +624,7 @@ namespace Mids_Reborn.Forms
                         items[2] = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDX].NIDPower]
                             .DisplayName;
                         lvDPA.Items.Add(new ListViewItem(items, ilSets.Images.Count - 1));
-                        lvDPA.Items[lvDPA.Items.Count - 1].Tag = MidsContext.Character.CurrentBuild.Powers[hIDX]
+                        lvDPA.Items[^1].Tag = MidsContext.Character.CurrentBuild.Powers[hIDX]
                             .Slots[index2].Enhancement.Enh;
                     }
                 }
@@ -641,7 +641,7 @@ namespace Mids_Reborn.Forms
             lvPower.Items.Clear();
             lvPower.Sorting = SortOrder.None;
             lvPower.Items.Add(" - All Powers - ");
-            lvPower.Items[lvPower.Items.Count - 1].Tag = -1;
+            lvPower.Items[^1].Tag = -1;
             var num = MidsContext.Character.CurrentBuild.Powers.Count;
             for (var hIdx = 0; hIdx < num; hIdx++)
             {
@@ -652,7 +652,7 @@ namespace Mids_Reborn.Forms
                 if (chkSortByLevel.Checked)
                     text = $"{MidsContext.Character.CurrentBuild.Powers[hIdx].Level + 1:00} - {text}";
                 lvPower.Items.Add(text);
-                lvPower.Items[lvPower.Items.Count - 1].Tag = hIdx;
+                lvPower.Items[^1].Tag = hIdx;
             }
 
             lvPower.Sorting = SortOrder.Ascending;

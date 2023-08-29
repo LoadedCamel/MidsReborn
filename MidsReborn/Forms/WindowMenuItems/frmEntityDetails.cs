@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
@@ -12,10 +13,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class FrmEntityDetails : Form
     {
+        public delegate void PowerIncludeChangedEventHandler(IPower power);
+        public event PowerIncludeChangedEventHandler PowerIncludeChanged;
+
         private const int WM_NCHITTEST = 0x84;
         private const int HTCLIENT = 0x1;
         private const int HTCAPTION = 0x2;
         private const int WM_NCLBUTTONDBLCLK = 0x00A3;
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+
+        [DllImport("User32.dll")]
+        public static extern bool ReleaseCapture();
+
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         private string _entityUid;
         private List<string> _powers;
@@ -68,10 +79,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             powersCombo1.SelectedPowersIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
         }
 
-        protected override CreateParams CreateParams 
-        {            
-            get {
-                var cp =  base.CreateParams;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
                 cp.ExStyle |= 0x00000020;
                 return cp;
             }
@@ -92,27 +104,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 message.Result = (IntPtr)HTCAPTION;
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            using var pen = new Pen(Color.Silver, 1);
-            var strokeOffset = Convert.ToInt32(Math.Ceiling(pen.Width));
-            var cornerRadius = 10;
-            var bounds = Rectangle.Inflate(e.ClipRectangle, -strokeOffset, -strokeOffset);
-            pen.EndCap = pen.StartCap = LineCap.Round;
-            using var path = new GraphicsPath();
-            path.AddArc(bounds.X, bounds.Y, cornerRadius, cornerRadius, 180, 90);
-            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y, cornerRadius, cornerRadius, 270, 90);
-            path.AddArc(bounds.X + bounds.Width - cornerRadius, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 0, 90);
-            path.AddArc(bounds.X, bounds.Y + bounds.Height - cornerRadius, cornerRadius, cornerRadius, 90, 90);
-            path.CloseAllFigures();
-
-            e.Graphics.FillPath(new SolidBrush(Color.FromArgb(75, BackColor)), path);
-            e.Graphics.DrawPath(pen, path);
-        }
-
         private void OnClosed(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null) return;
             MidsContext.Config.EntityDetailsLocation = Location;
         }
 
@@ -148,19 +141,39 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
+        private void SetTitleText(string text, bool adjustFontSize = true, float minFontSize = 9, float maxFontSize = 14.25f)
+        {
+            if (!adjustFontSize)
+            {
+                lblEntityName.Text = text;
+
+                return;
+            }
+
+            const float fontSizeIncrement = 0.5f;
+            for (var i = maxFontSize; i > minFontSize; i -= fontSizeIncrement)
+            {
+                var font = new Font("Segoe UI Variable Display", i, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
+                var textSize = TextRenderer.MeasureText(text, font);
+                if (textSize.Width > lblEntityName.Width - 3)
+                {
+                    continue;
+                }
+
+                lblEntityName.Font = font;
+                lblEntityName.Text = text;
+
+                return;
+            }
+        }
+
         private void frmEntityDetails_Load(object sender, EventArgs e)
         {
-            btnTopMost.Visible = false;
             var owner = (frmMain)Owner;
 
-            if (MidsContext.Config == null || MidsContext.Config.EntityDetailsLocation == null)
-            {
-                Location = new Point(owner.Location.X + 10, owner.Bottom - Height - 10);
-            }
-            else
-            {
-                Location = (Point)MidsContext.Config.EntityDetailsLocation;
-            }
+            Location = MidsContext.Config.EntityDetailsLocation == null
+                ? new Point(owner.Location.X + 10, owner.Bottom - Height - 10)
+                : (Point)MidsContext.Config.EntityDetailsLocation;
 
             switch (TopMost)
             {
@@ -179,20 +192,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //petView1.TabsMask = new[] {true, true, false, false};
             //petView1.BackColor = BackColor;
             //petView1.Refresh();
-            
+
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
-            
+
             _entityData = DatabaseAPI.Database.Entities
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(en => en?.UID == _entityUid);
-            
+
             _powersData = _powers
                 .Select(DatabaseAPI.GetPowerByFullName).Where(p => !p.DisplayName.Contains("Granter"))
                 .ToList();
 
-            lblEntityName.Text = _entityData == null
+            var entityName = _entityData == null
                 ? "Entity Details"
                 : $"Entity: {_entityData.DisplayName}";
+
+            SetTitleText(entityName);
 
             powersCombo1.DisplayMember = "DisplayName";
             powersCombo1.ValueMember = null;
@@ -215,6 +230,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 return;
             }
+
+            cbPowerInclude.Visible = power.ClickBuff | power.PowerType == Enums.ePowerType.Toggle;
+            cbPowerInclude.Checked = MidsContext.Character.CurrentBuild.PowerUsed(power);
 
             if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
@@ -272,7 +290,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
-           _petInfo.ExecuteUpdate();
+            _petInfo.ExecuteUpdate();
 
             //ListPowers();
             if (TopMost) BringToFront();
@@ -288,6 +306,48 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnTopMost.UseAlt = charVillain;
             btnClose.UseAlt = charVillain;
             petView1.UseAlt = charVillain;
+        }
+
+        // Bug: DisplayLocation increases + 1 on every use
+        // Bug (CurrentBuild.AddPower): power modifications are ignored and have to be set on the resulting PowerEntry after the call
+        // Bug: Entity name is appended on every use and change every occurrence of the power (entity details, dataview, database editor...)
+        // To be improved: checkbox responsiveness is very slow (1-2s freeze delay)
+        private void cbPowerInclude_CheckedChanged(object sender, EventArgs e)
+        {
+            var power = new Power((IPower)powersCombo1.Items[powersCombo1.SelectedIndex]);
+
+            if (MidsContext.Character?.CurrentBuild?.PowerUsed(power) == false)
+            {
+                var pe = MidsContext.Character.CurrentBuild.AddPower(power, 49);
+                pe.StatInclude = true; // Toggle on
+                pe.Power.IncludeFlag = true; // Show in inherents
+                pe.Power.InherentType = Enums.eGridType.Pet;
+                pe.Power.DisplayName += _entityData == null
+                    ? ""
+                    : $" ({_entityData.DisplayName})";
+                pe.Power.DisplayLocation = (int)MidsContext.Character?.CurrentBuild?.Powers // Pick first available index on the inherents grid
+                    .Where(e => e?.Power is { IncludeFlag: true })
+                    .Select(e => e?.Power?.DisplayLocation)
+                    .Max() + 1;
+                //Debug.WriteLine($"- IncludeFlag: {pe.Power.IncludeFlag}, DisplayLocation: {pe.Power.DisplayLocation}, NIDPower: {pe.NIDPower}, NIDPowerset: {pe.NIDPowerset}");
+            }
+            else
+            {
+                MidsContext.Character?.CurrentBuild?.RemovePower(power);
+            }
+
+            PowerIncludeChanged?.Invoke(power);
+        }
+
+        private void borderPanel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            ReleaseCapture();
+            SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
         }
     }
 }

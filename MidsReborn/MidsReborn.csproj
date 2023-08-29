@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <OutputType>WinExe</OutputType>
+	  <TargetFramework>net6.0-windows</TargetFramework>
+	  <OutputType>WinExe</OutputType>
     <RootNamespace>Mids_Reborn</RootNamespace>
-	  <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
 	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
@@ -12,13 +11,16 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>true</Optimize>
 	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
+	  <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>true</Optimize>
     <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <NoWarn>1701;1702;CA1416</NoWarn>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
@@ -69,6 +71,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Rebirth\SData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Fonts\NotoSans-Black.ttf">
@@ -123,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Fonts\NotoSans-ThinItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\MRBLoading.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 	<Content Include="Images\Unknown.png">
@@ -261,13 +269,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Images\Archetypes\Class_Arachnos_Soldier.png" />
     <Content Include="Images\Archetypes\Class_Arachnos_Widow.png" />
     <Content Include="Images\Archetypes\Class_Blaster.png" />
@@ -342,26 +343,25 @@
     <PackageReference Include="FontAwesome.Sharp">
       <Version>6.3.0</Version>
     </PackageReference>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
     <PackageReference Include="Jace4fc" Version="1.0.2" />
-    <PackageReference Include="LiteDB">
-      <Version>5.0.16</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.1722.45</Version>
+      <Version>1.0.1905-prerelease</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
     <PackageReference Include="RestSharp">
       <Version>110.2.0</Version>
     </PackageReference>
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
       <Version>110.2.0</Version>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.88.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.1" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.3" />
+    <PackageReference Include="WebMarkupMin.Core" Version="2.14.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
@@ -376,6 +376,7 @@
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Data\Rebirth\SData.json" />
     <None Remove="Fonts\NotoSans-Black.ttf" />
     <None Remove="Fonts\NotoSans-BlackItalic.ttf" />
     <None Remove="Fonts\NotoSans-Bold.ttf" />
@@ -394,9 +395,19 @@
     <None Remove="Fonts\NotoSans-SemiBoldItalic.ttf" />
     <None Remove="Fonts\NotoSans-Thin.ttf" />
     <None Remove="Fonts\NotoSans-ThinItalic.ttf" />
+    <None Remove="Images\MRBLoading.gif" />
     <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+    <WV2WinRTVerbosity>low</WV2WinRTVerbosity>
+  </PropertyGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
@@ -404,5 +415,29 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>1701;1702;CA1416</NoWarn>
+    <DebugType>full</DebugType>
   </PropertyGroup>
+	    <PropertyGroup>
+        <Main>bin\$(Platform)\$(Configuration)\net6.0-windows\</Main>
+		<Osx>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\osx</Osx>
+		<Win86>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-x86</Win86>
+        <WinARM>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-arm64</WinARM>
+	</PropertyGroup>
+	
+	<Target Name="DeleteFilesAfterBuild" AfterTargets="Build">
+		<ItemGroup>
+			<FilesToDelete Include="$(Main)*Wpf.dll" />
+		</ItemGroup>
+		<Message Text="Deleting Files @(FilesToDelete)" />
+		<Delete Files="@(FilesToDelete)">
+			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
+		</Delete>
+		<Message Text="Files deleted: @(FilesDeleted)" />
+	</Target>
+
+	<Target Name="DeleteFoldersAfterBuild" AfterTargets="DeleteFilesAfterBuild">
+		<RemoveDir Directories="$(Osx)" />
+		<RemoveDir Directories="$(Win86)" />
+		<RemoveDir Directories="$(WinARM)" />
+	</Target>						
 </Project>

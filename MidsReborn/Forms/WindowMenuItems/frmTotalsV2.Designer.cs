@@ -474,6 +474,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "MPH";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton2
             // 
@@ -487,6 +488,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "KPH";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton3
             // 
@@ -500,6 +502,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "Feet/Sec";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // radioButton4
             // 
@@ -513,6 +516,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.radioButton4.TabStop = true;
             this.radioButton4.Text = "Meters/Sec";
             this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.rbUnits_CheckChanged);
             // 
             // graphThreat
             // 
@@ -731,7 +735,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.graphToHit.Lines = true;
             this.graphToHit.Location = new System.Drawing.Point(12, 409);
             this.graphToHit.MarkerValue = 0F;
-            this.graphToHit.Max = 100F;
+            this.graphToHit.Max = 250F;
             this.graphToHit.MaxItems = 1;
             this.graphToHit.Name = "graphToHit";
             this.graphToHit.OuterBorder = true;
@@ -1172,10 +1176,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ctlTotalsTabStrip1
             // 
             this.ctlTotalsTabStrip1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ctlTotalsTabStrip1.BackgroundImage")));
-            this.ctlTotalsTabStrip1.ColorActiveTab = System.Drawing.Color.Goldenrod;
-            this.ctlTotalsTabStrip1.ColorInactiveHoveredTab = System.Drawing.Color.FromArgb(43, 122, 187);
-            this.ctlTotalsTabStrip1.ColorInactiveTab = System.Drawing.Color.FromArgb(30, 85, 130);
-            this.ctlTotalsTabStrip1.ColorStripLine = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.ActiveTabColor = System.Drawing.Color.Goldenrod;
+            this.ctlTotalsTabStrip1.InactiveHoveredTabColor = System.Drawing.Color.FromArgb(43, 122, 187);
+            this.ctlTotalsTabStrip1.InactiveTabColor = System.Drawing.Color.FromArgb(30, 85, 130);
+            this.ctlTotalsTabStrip1.StripLineColor = System.Drawing.Color.Goldenrod;
             this.ctlTotalsTabStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctlTotalsTabStrip1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.ctlTotalsTabStrip1.ItemPadding = 18;
@@ -1185,6 +1189,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ctlTotalsTabStrip1.Size = new System.Drawing.Size(2267, 24);
             this.ctlTotalsTabStrip1.TabIndex = 106;
             this.ctlTotalsTabStrip1.TabClick += new Mids_Reborn.Controls.ctlTotalsTabStrip.TabClickEventHandler(this.ctlTotalsTabStrip1_TabClick);
+            this.ctlTotalsTabStrip1.UseDimmedBackground = false;
             // 
             // frmTotalsV2
             // 

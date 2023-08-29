@@ -1036,8 +1036,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             for (var i = 0; i < weightedEffects.Count; i++)
             {
-                if (MidsContext.Config == null ||
-                    (MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
+                if ((MidsContext.Config.Suppression & weightedEffects[i].Key.Key.Suppression) == Enums.eSuppress.None ||
                     MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvE ||
                     !MidsContext.Config.Inc.DisablePvE & weightedEffects[i].Key.Key.PvMode == Enums.ePvX.PvP)
                 {
@@ -1174,7 +1173,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var effectsWeights = new int[Effects.Length];
             for (var index1 = 0; index1 < Effects.Length; index1++)
             {
-                if (MidsContext.Config != null && (MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
+                if ((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
                 {
                     effectsWeights[index1] = (int) (Effects[index1].EffectClass + 1);
                     if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
@@ -1400,168 +1399,44 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return new[] {iID1, num1};
         }
 
+        internal class EffectDurationComparer : IComparer<IEffect>
+        {
+            public int Compare(IEffect? a, IEffect? b)
+            {
+                if (a?.Duration.CompareTo(b?.Duration) != 0)
+                {
+                    var ret = a?.Duration.CompareTo(b?.Duration);
+                    
+                    return ret ?? 0;
+                }
+
+                if (a?.BuffedMag.CompareTo(b?.BuffedMag) != 0)
+                {
+                    var ret = a?.BuffedMag.CompareTo(b?.BuffedMag);
+
+                    return ret ?? 0;
+                }
+
+                return 0;
+            }
+        }
+
         public int GetDurationEffectID()
         {
-            var idx = -1;
-            var eEffectClass = Enums.eEffectClass.Ignored;
-            var probability = 0.0f;
-            var duration = 0.0f;
-            var isDmg = false;
-            var eEffectType = Enums.eEffectType.None;
-            var mag = 0.0f;
-            var buffable = false;
-            var isDefiance = false;
-            var isEntCreate = false;
-            var delayTime = int.MaxValue;
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-            {
-                var applies = false;
-                if (!((!MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvE))) || !(((Effects[index].Duration > 0.0) | (Effects[index].EffectType == Enums.eEffectType.EntCreate)) & (Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
-                {
-                    continue;
-                }
-
-                if (Effects[index].EffectClass < eEffectClass)
-                {
-                    applies = true;
-                }
-
-                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")))
-                {
-                    applies = true;
-                }
-
-
-                //write in where active conditionals true clause doesn't coincide with defiance
-
-                if (Effects[index].Buffable & !buffable)
-                {
-                    applies = true;
-                }
-
-                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")) & isDefiance)
-                {
-                    applies = true;
-                }
-
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("Active", "Defiance")) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
-                {
-                    if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
-                    {
-                        if (Effects[index].BuffedMag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("Active", "Domination") && MidsContext.Character.Domination)
-                        {
-                            applies = true;
-                        }
-                    }
-                    else
-                    {
-                        applies = true;
-                    }
-                }
-
-                if ((delayTime > (double) Effects[index].DelayedTime) & (Effects[index].DelayedTime > 5.0))
-                {
-                    applies = true;
-                }
-
-                if ((Math.Abs(Effects[index].Probability - 1f) < 0.01) & isDmg & (Effects[index].EffectType == Enums.eEffectType.Mez))
-                {
-                    applies = true;
-                }
-
-                if (Effects[index].EffectType == Enums.eEffectType.Mez && Effects[index].MezType == Enums.eMez.Taunt && Effects[index].EffectClass != Enums.eEffectClass.Primary)
-                {
-                    applies = false;
-                }
-
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (Effects[index].SpecialCase != Enums.eSpecialCase.Domination ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
-                {
-                    applies = false;
-                }
-
-                /*if ((Effects[index].EffectClass > eEffectClass ? 1 : 0) == 0)
-                {
-                    if (Effects[index].SpecialCase == Enums.eSpecialCase.None && !Effects[index].ValidateConditional())
-                    {
-                        applies = false;
-                    }
-                    else
-                    {
-                        applies = true;
-                    }
-                }*/
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("Active", "Domination") ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
-                {
-                    applies = false;
-                }
-
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("Active", "Assassination") ? 1 : !MidsContext.Character.Assassination ? 1 : 0)) != 0)
-                {
-                    applies = false;
-                }
-
-                if ((Effects[index].EffectType == Enums.eEffectType.EntCreate) & !isEntCreate &
-                    (Effects[index].DelayedTime < 20.0) & (eEffectType != Enums.eEffectType.Mez))
-                {
-                    applies = true;
-                }
-
-                if (isEntCreate & (Effects[index].EffectType != Enums.eEffectType.EntCreate) &
-                    ((Effects[index].Duration < (double) duration) | (Math.Abs(duration) < 0.01) |
-                     (Effects[index].DelayedTime > (double) delayTime) |
-                     ((Effects[index].BuffedMag < 0.0) & (Effects[index].ToWho == Enums.eToWho.Self))))
-                {
-                    applies = false;
-                }
-
-                if (isEntCreate & (Effects[index].EffectType != Enums.eEffectType.EntCreate) &
-                    (Effects[index].Absorbed_Duration > (double) duration))
-                {
-                    applies = true;
-                }
-
-                if ((eEffectType == Enums.eEffectType.Mez) & (mag < 0) &
-                    ((Effects[index].EffectType == Enums.eEffectType.Resistance) |
-                     (Effects[index].EffectType == Enums.eEffectType.Regeneration)) & (Effects[index].BuffedMag > 0))
-                {
-                    applies = true;
-                }
-
-                if (Effects[index].EffectType == Enums.eEffectType.SetMode)
-                {
-                    applies = false;
-                }
-
-                if (!applies)
-                {
-                    continue;
-                }
-
-                idx = index;
-                eEffectClass = Effects[index].EffectClass;
-                probability = Effects[index].Probability;
-                duration = !(isEntCreate & (Effects[index].EffectType != Enums.eEffectType.EntCreate) &
-                             (Effects[index].Absorbed_Duration > (double) duration))
-                    ? Effects[index].Duration
-                    : Effects[index].Absorbed_Duration;
-                isDmg = Effects[index].EffectType == Enums.eEffectType.Damage;
-                eEffectType = Effects[index].EffectType;
-                mag = Effects[index].BuffedMag;
-                buffable = Effects[index].Buffable;
-                if (Effects[index].SpecialCase == Enums.eSpecialCase.Defiance || Effects[index].ValidateConditional("Active", "Defiance"))
-                {
-                    isDefiance = true;
-                }
-                else
-                {
-                    isDefiance = false;
-                }
-                //isDefiance = Effects[index].SpecialCase == Enums.eSpecialCase.Defiance;
-                isEntCreate = Effects[index].EffectType == Enums.eEffectType.EntCreate;
-                delayTime = (int) Effects[index].DelayedTime;
-            }
-
-            return idx;
+            return Effects
+                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                .Where(e =>
+                    (e.Value.PvMode == Enums.ePvX.Any |
+                     e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                     e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
+                    e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
+                    e.Value.EffectType == Enums.eEffectType.Mez & e.Value.ValidateConditional() &
+                    e.Value.Probability > float.Epsilon &
+                    e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                .OrderByDescending(e => e.Value, new EffectDurationComparer())
+                .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
+                .FirstOrDefault()
+                .Key;
         }
 
         public float[] GetDef(int buffDebuff = 0)
@@ -1574,7 +1449,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (!(fx.EffectType == Enums.eEffectType.Defense & fx.Probability > 0 &
                       fx.CanInclude()) ||
                     !(buffDebuff == 0 | buffDebuff < 0 & fx.BuffedMag < 0 |
-                      buffDebuff > 0 & fx.BuffedMag > 0.0) ||
+                      buffDebuff > 0 & fx.BuffedMag > 0) ||
                     (fx.Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None ||
                     !(fx.PvMode == ePvX | fx.PvMode == Enums.ePvX.Any))
                 {
@@ -2126,7 +2001,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
                         Array.Resize(ref array, array.Length + 1);
-                        array[array.Length - 1] = index;
+                        array[^1] = index;
                     }
 
                     ++num1;
@@ -2186,7 +2061,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate && source.Effects[effectId].nSummon > -1)
                 {
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = effectId;
+                    array[^1] = effectId;
                 }
 
                 var num3 = num1 + 1;
@@ -2265,8 +2140,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         Array.Resize(ref array1, array1.Length + 1);
                         Array.Resize(ref array2, array2.Length + 1);
-                        array1[array1.Length - 1] = index;
-                        array2[array2.Length - 1] = Effects[index].nSummon;
+                        array1[^1] = index;
+                        array2[^1] = Effects[index].nSummon;
                     }
 
                     num2 = Effects.Length;
@@ -2643,14 +2518,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             if (iReq.Contains(oldValue2))
                             {
                                 Array.Resize(ref requirement2.ClassNameNot, requirement2.ClassNameNot.Length + 1);
-                                requirement2.ClassNameNot[requirement2.ClassNameNot.Length - 1] =
+                                requirement2.ClassNameNot[^1] =
                                     DatabaseAPI.Database.Classes[index2].ClassName;
                                 iReq = iReq.Replace(oldValue2, "true");
                             }
                             else if (iReq.Contains(oldValue1))
                             {
                                 Array.Resize(ref requirement2.ClassName, requirement2.ClassName.Length + 1);
-                                requirement2.ClassName[requirement2.ClassName.Length - 1] =
+                                requirement2.ClassName[^1] =
                                     DatabaseAPI.Database.Classes[index2].ClassName;
                                 iReq = iReq.Replace(oldValue1, "true");
                             }

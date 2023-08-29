@@ -82,13 +82,13 @@ namespace Mids_Reborn.Forms.Controls
             switch (messageBoxButtons)
             {
                 case MessageBoxButtons.Okay:
-                    btnOkay.Text = @"Okay";
+                    btnOkay.Text = @"OK";
                     btnOkay.DialogResult = DialogResult.OK;
                     btnCancel.Visible = false;
                     btnCancel.Enabled = false;
                     break;
                 case MessageBoxButtons.OkayCancel:
-                    btnOkay.Text = @"Okay";
+                    btnOkay.Text = @"OK";
                     btnOkay.DialogResult = DialogResult.OK;
                     btnCancel.Visible = true;
                     btnCancel.Enabled = true;

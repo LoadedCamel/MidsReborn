@@ -88,7 +88,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Schedule = Enums.eSchedule.A,
                 FX = (IEffect)frmPowerEffect.MyFx.Clone()
             });
-            effects[effects.Count - 1].FX.isEnhancementEffect = true;
+            effects[^1].FX.isEnhancementEffect = true;
             var sEffects = effects.ToArray();
             enh.Effect = sEffects;
             ListSelectedEffects();

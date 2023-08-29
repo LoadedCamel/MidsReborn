@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core
 {
@@ -21,12 +21,13 @@ namespace Mids_Reborn.Core
         public const string MxdbFileOverrides = "Compare.mhd";
         public const string MxdbFileModifiers = "AttribMod.mhd";
         public const string MxdbFileEffectIds = "GlobalMods.mhd";
-        public const string MxdbFileSd = "SData.mhd";
         public const string MxdbFileGraphics = "I9.mhd";
+        public const string MxdbFileSd = "SData.mhd";
 
+        public const string ServerDataFile = "SData.json";
         public const string JsonFileModifiers = "AttribMod.json";
         public const string JsonFileTypeGrades = "TypeGrades.json";
-        private const string JsonFileConfig = "Config.json";
+        private const string JsonFileConfig = "appSettings.json";
 
         //public const string PatchRtf = "patch.rtf";
         private const string MxdbPowersReplTable = "PowersReplTable.mhd";
@@ -36,10 +37,10 @@ namespace Mids_Reborn.Core
         public const string BuildsFolder = "Hero & Villain Builds\\";
         
         public static string FileData = string.Empty;
-        private static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, RoamingFolder, JsonFileConfig);
-        public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Generic\\");
+        public static string FNameJsonConfig => Path.Combine(AppContext.BaseDirectory, JsonFileConfig);
+        public static string? FDefaultPath => Path.Combine(AppContext.BaseDirectory, RoamingFolder, "Homecoming\\");
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
-        private static string? FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
+        private static string? FPathAppData => MidsContext.Config.DataPath;
         public static string FDefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
         public static string CNamePowersRepl => Path.Combine(FPathAppData, MxdbCrypticReplTable);
 
@@ -59,24 +60,10 @@ namespace Mids_Reborn.Core
 
         public static string SelectDataFileSave(string iDataFile, string? iPath = "")
         {
-            var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+            var filePath = Path.Combine((!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData) ?? throw new InvalidOperationException(), iDataFile);
             if (!Debugger.IsAttached) return filePath;
-            filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..", RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
-            if (!Directory.Exists(FileIO.StripFileName(filePath)))
-            {
-                Directory.CreateDirectory(FileIO.StripFileName(filePath));
-            }
-
+            filePath = Path.Combine(Helpers.GetPathInDebug(), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile);
             return filePath;
-        }
-
-        public static string GetConfigFilename()
-        {
-            if (File.Exists(FNameJsonConfig)) return FNameJsonConfig;
-            MessageBox.Show(@"Config file doesn't exist, generating a new one.", @"Missing config file", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            File.WriteAllText(FNameJsonConfig, "");
-
-            return FNameJsonConfig;
         }
 
         public static class Headers

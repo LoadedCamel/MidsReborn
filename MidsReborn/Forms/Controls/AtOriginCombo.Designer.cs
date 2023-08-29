@@ -1,4 +1,4 @@
-﻿namespace Mids_Reborn.Controls
+﻿namespace Mids_Reborn.Forms.Controls
 {
     partial class AtOriginCombo
     {

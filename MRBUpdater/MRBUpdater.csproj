@@ -33,18 +33,27 @@
     <None Remove="MRBUpdater.csproj.old" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SharpZipLib">
       <Version>1.4.2</Version>
     </PackageReference>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MRB_Icon_Concept.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Controls\ctlProgressBar.cs">
+    <Compile Update="Controls\ProgressBarEx.cs">
       <SubType>Component</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="cleanup.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="cleanup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="cleanup.runtimeconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

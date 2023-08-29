@@ -57,8 +57,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             items[6] = setContainsPvPfx ? "X" : "";
             lvSets.Items.Add(new ListViewItem(items, idx));
-            lvSets.Items[lvSets.Items.Count - 1].Selected = true;
-            lvSets.Items[lvSets.Items.Count - 1].EnsureVisible();
+            lvSets.Items[^1].Selected = true;
+            lvSets.Items[^1].EnsureVisible();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

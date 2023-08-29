@@ -233,16 +233,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     MySet.Bonus[BonusId()].PvMode = bonusMode;
                     Array.Resize(ref MySet.Bonus[BonusId()].Name, MySet.Bonus[BonusId()].Name.Length + 1);
                     Array.Resize(ref MySet.Bonus[BonusId()].Index, MySet.Bonus[BonusId()].Index.Length + 1);
-                    MySet.Bonus[BonusId()].Name[MySet.Bonus[BonusId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
-                    MySet.Bonus[BonusId()].Index[MySet.Bonus[BonusId()].Index.Length - 1] = index;
+                    MySet.Bonus[BonusId()].Name[^1] = DatabaseAPI.Database.Power[index].FullName;
+                    MySet.Bonus[BonusId()].Index[^1] = index;
                 }
                 else if (IsSpecial())
                 {
                     MySet.SpecialBonus[SpecialId()].Special = SpecialId();
                     Array.Resize(ref MySet.SpecialBonus[SpecialId()].Name, MySet.SpecialBonus[SpecialId()].Name.Length + 1);
                     Array.Resize(ref MySet.SpecialBonus[SpecialId()].Index, MySet.SpecialBonus[SpecialId()].Index.Length + 1);
-                    MySet.SpecialBonus[SpecialId()].Name[MySet.SpecialBonus[SpecialId()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
-                    MySet.SpecialBonus[SpecialId()].Index[MySet.SpecialBonus[SpecialId()].Index.Length - 1] = index;
+                    MySet.SpecialBonus[SpecialId()].Name[^1] = DatabaseAPI.Database.Power[index].FullName;
+                    MySet.SpecialBonus[SpecialId()].Index[^1] = index;
                 }
 
                 DisplayBonus();

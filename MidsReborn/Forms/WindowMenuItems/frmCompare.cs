@@ -1,11 +1,11 @@
 using System;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
@@ -17,7 +17,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private readonly IPower?[][] Powers;
         private readonly string[][] Tips;
         private readonly float[][] Values;
-        private ImageButton btnClose;
         private Button btnTweakMatch;
         private ComboBox cbAT1;
         private ComboBox cbAT2;
@@ -26,7 +25,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ComboBox cbType1;
         private ComboBox cbType2;
         private CheckBox chkMatching;
-        private ImageButton chkOnTop;
         private CtlMultiGraph Graph;
         private float GraphMax;
         private GroupBox GroupBox1;
@@ -88,11 +86,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Icon = Resources.MRB_Icon_Concept;
         }
 
-        private void btnClose_ButtonClicked()
-        {
-            Close();
-        }
-
         private void btnTweakMatch_Click(object sender, EventArgs e)
         {
             new frmTweakMatching().ShowDialog(this);
@@ -103,14 +96,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (!Loaded)
                 return;
-            List_Sets(0);
+            ListSets(0);
         }
 
         private void cbAT2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
-            List_Sets(1);
+            ListSets(1);
         }
 
         private void cbSet1_SelectedIndexChanged(object sender, EventArgs e)
@@ -133,14 +126,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (!Loaded)
                 return;
-            List_Sets(0);
+            ListSets(0);
         }
 
         private void cbType2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
-            List_Sets(1);
+            ListSets(1);
         }
 
         private void chkMatching_CheckedChanged(object sender, EventArgs e)
@@ -151,142 +144,145 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             DisplayGraph();
         }
 
-        private void chkOnTop_CheckedChanged()
-        {
-            TopMost = chkOnTop.Checked;
-        }
-
         private void DisplayGraph()
         {
             if (lstDisplay.SelectedIndex < 0)
+            {
                 return;
+            }
+
             Graph.BeginUpdate();
             Graph.Clear();
             GetPowers();
             if (Matching)
-                map_Advanced();
+            {
+                MapAdvanced();
+            }
             else
-                map_Simple();
+            {
+                MapSimple();
+            }
+
             switch (lstDisplay.SelectedIndex)
             {
                 case 0:
-                    Graph.ColorFadeEnd = Color.FromArgb(byte.MaxValue, byte.MaxValue, 0);
-                    values_Accuracy();
+                    Graph.ColorFadeEnd = Color.FromArgb(255, 255, 0);
+                    ValuesAccuracy();
                     break;
                 case 1:
                     Graph.ColorFadeEnd = Color.Red;
-                    values_Damage();
+                    ValuesDamage();
                     break;
                 case 2:
                     Graph.ColorFadeEnd = Color.Red;
-                    values_DPA();
+                    ValuesDpa();
                     break;
                 case 3:
                     Graph.ColorFadeEnd = Color.Red;
-                    values_DPS();
+                    ValuesDps();
                     break;
                 case 4:
                     Graph.ColorFadeEnd = Color.Red;
-                    values_DPE();
+                    ValuesDpe();
                     break;
                 case 5:
                     Graph.ColorFadeEnd = Color.FromArgb(192, 0, 0);
-                    Values_Universal(Enums.eEffectType.DamageBuff, false, false);
+                    ValuesUniversal(Enums.eEffectType.DamageBuff, false, false);
                     break;
                 case 6:
                     Graph.ColorFadeEnd = Color.FromArgb(192, 0, 192);
-                    Values_Universal(Enums.eEffectType.Defense, false, false);
+                    ValuesUniversal(Enums.eEffectType.Defense, false, false);
                     break;
                 case 7:
                     Graph.ColorFadeEnd = Color.FromArgb(128, 0, 128);
-                    Values_Universal(Enums.eEffectType.Defense, false, true);
+                    ValuesUniversal(Enums.eEffectType.Defense, false, true);
                     break;
                 case 8:
-                    Graph.ColorFadeEnd = Color.FromArgb(128, 0, byte.MaxValue);
-                    values_Duration();
+                    Graph.ColorFadeEnd = Color.FromArgb(128, 0, 255);
+                    ValuesDuration();
                     break;
                 case 9:
-                    Graph.ColorFadeEnd = Color.FromArgb(192, 192, byte.MaxValue);
-                    values_End();
+                    Graph.ColorFadeEnd = Color.FromArgb(192, 192, 255);
+                    ValuesEnd();
                     break;
                 case 10:
-                    Graph.ColorFadeEnd = Color.FromArgb(192, 192, byte.MaxValue);
-                    values_EPS();
+                    Graph.ColorFadeEnd = Color.FromArgb(192, 192, 255);
+                    ValuesEps();
                     break;
                 case 11:
-                    Graph.ColorFadeEnd = Color.FromArgb(96, byte.MaxValue, 96);
-                    values_Heal();
+                    Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
+                    ValuesHeal();
                     break;
                 case 12:
-                    Graph.ColorFadeEnd = Color.FromArgb(96, byte.MaxValue, 96);
-                    values_HPS();
+                    Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
+                    ValuesHps();
                     break;
                 case 13:
-                    Graph.ColorFadeEnd = Color.FromArgb(96, byte.MaxValue, 96);
-                    values_HPE();
+                    Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
+                    ValuesHpe();
                     break;
                 case 14:
-                    Graph.ColorFadeEnd = Color.FromArgb(96, byte.MaxValue, 96);
-                    Values_Universal(Enums.eEffectType.HitPoints, true, false);
+                    Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
+                    ValuesUniversal(Enums.eEffectType.HitPoints, true, false);
                     break;
                 case 15:
                     Graph.ColorFadeEnd = Color.FromArgb(64, 128, 128);
-                    values_MaxTargets();
+                    ValuesMaxTargets();
                     break;
                 case 16:
                     Graph.ColorFadeEnd = Color.FromArgb(96, 128, 96);
-                    values_Range();
+                    ValuesRange();
                     break;
                 case 17:
-                    Graph.ColorFadeEnd = Color.FromArgb(byte.MaxValue, 192, 128);
-                    values_Recharge();
+                    Graph.ColorFadeEnd = Color.FromArgb(255, 192, 128);
+                    ValuesRecharge();
                     break;
                 case 18:
-                    Graph.ColorFadeEnd = Color.FromArgb(96, byte.MaxValue, 96);
-                    Values_Universal(Enums.eEffectType.Regeneration, true, false);
+                    Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
+                    ValuesUniversal(Enums.eEffectType.Regeneration, true, false);
                     break;
                 case 19:
                     Graph.ColorFadeEnd = Color.FromArgb(0, 192, 192);
-                    Values_Universal(Enums.eEffectType.Resistance, false, false);
+                    ValuesUniversal(Enums.eEffectType.Resistance, false, false);
                     break;
                 case 20:
                     Graph.ColorFadeEnd = Color.FromArgb(0, 128, 128);
-                    Values_Universal(Enums.eEffectType.Resistance, false, true);
+                    ValuesUniversal(Enums.eEffectType.Resistance, false, true);
                     break;
                 case 21:
-                    Graph.ColorFadeEnd = Color.FromArgb(byte.MaxValue, byte.MaxValue, 96);
-                    Values_Universal(Enums.eEffectType.ToHit, true, false);
+                    Graph.ColorFadeEnd = Color.FromArgb(255, 255, 96);
+                    ValuesUniversal(Enums.eEffectType.ToHit, true, false);
                     break;
                 case 22:
                     Graph.ColorFadeEnd = Color.FromArgb(192, 192, 64);
-                    Values_Universal(Enums.eEffectType.ToHit, true, true);
+                    ValuesUniversal(Enums.eEffectType.ToHit, true, true);
                     break;
             }
 
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 20; index1++)
             {
                 string[] powerDisplays = {"", ""};
                 var values = new float[2];
                 var iTip = "";
-                var mapIdx = 0;
-                do
+                for (var mapIdx = 0; mapIdx < 2; mapIdx++)
                 {
-                    if (Map.Map[index1, mapIdx] > -1)
+                    if (Map.Map[index1, mapIdx] <= -1)
                     {
-                        powerDisplays[mapIdx] = Powers[mapIdx][Map.Map[index1, mapIdx]].DisplayName;
-                        values[mapIdx] = Values[mapIdx][Map.Map[index1, mapIdx]];
-                        if ((iTip != "") & (Tips[mapIdx][Map.Map[index1, mapIdx]] != ""))
-                            iTip += "\r\n----------\r\n";
-                        iTip += Tips[mapIdx][Map.Map[index1, mapIdx]];
+                        continue;
                     }
 
-                    ++mapIdx;
-                } while (mapIdx <= 1);
+                    powerDisplays[mapIdx] = Powers[mapIdx][Map.Map[index1, mapIdx]].DisplayName;
+                    values[mapIdx] = Values[mapIdx][Map.Map[index1, mapIdx]];
+                    if (iTip != "" & Tips[mapIdx][Map.Map[index1, mapIdx]] != "")
+                    {
+                        iTip += "\r\n----------\r\n";
+                    }
+
+                    iTip += Tips[mapIdx][Map.Map[index1, mapIdx]];
+                }
 
                 Graph.AddItemPair(powerDisplays[0], powerDisplays[1], values[0], values[1], iTip);
-                ++index1;
-            } while (index1 <= 20);
+            }
 
             Graph.Max = GraphMax;
             tbScaleX.Value = Graph.ScaleIndex;
@@ -306,16 +302,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmCompare_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.EventHandlerWithCatch(() =>
-                myParent.FloatCompareGraph(false));
+            this.EventHandlerWithCatch(() => myParent.FloatCompareGraph(false));
         }
 
         private void frmCompare_KeyDown(object sender, KeyEventArgs e)
         {
             this.EventHandlerWithCatch(() =>
             {
-                if (!(e.Control & e.Shift & (e.KeyCode == Keys.T)))
+                if (!(e.Control & e.Shift & e.KeyCode == Keys.T))
+                {
                     return;
+                }
+
                 btnTweakMatch.Visible = true;
             });
         }
@@ -324,18 +322,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             FillDisplayList();
             UpdateData();
-            list_AT();
+            ListAt();
             if (MidsContext.Character.Archetype.Idx > -1)
+            {
                 cbAT1.SelectedIndex = MidsContext.Character.Archetype.Idx;
+            }
+
             if (MidsContext.Character.Archetype.Idx > -1)
+            {
                 cbAT2.SelectedIndex = MidsContext.Character.Archetype.Idx;
+            }
+
             tbScaleX.Minimum = 0;
             tbScaleX.Maximum = Graph.ScaleCount - 1;
-            list_Type();
-            List_Sets(0);
-            List_Sets(1);
+            ListType();
+            ListSets(0);
+            ListSets(1);
             Map.Init();
             chkMatching.Checked = Matching;
+            ibExKeepOnTop.ToggleState = ImageButtonEx.States.ToggledOn;
             Loaded = true;
             DisplayGraph();
             tTip.SetToolTip(chkMatching,
@@ -354,8 +359,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmCompare_VisibleChanged(object sender, EventArgs e)
         {
-            this.EventHandlerWithCatch(() =>
-                Graph.BackColor = BackColor);
+            this.EventHandlerWithCatch(() => Graph.BackColor = BackColor);
+        }
+
+        private void ibExKeepOnTop_Click(object sender, EventArgs e)
+        {
+            TopMost = ibExKeepOnTop.ToggleState == ImageButtonEx.States.ToggledOn;
+        }
+
+        private void ibExClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         private int getAT(int idx)
@@ -368,9 +382,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             };
         }
 
-        private int getMax(int iVal1, int ival2)
+        private int GetMax(int a, int b)
         {
-            return iVal1 <= ival2 ? ival2 : iVal1;
+            return a <= b ? b : a;
         }
 
         private int GetNextFreeSlot()
@@ -380,43 +394,69 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 ++index;
                 if (index > 20)
+                {
                     return 20;
+                }
             }
 
             return index;
         }
 
+        // clsToonX.GBPA_ApplyPowerOverride()
+        private void ApplyPowerOverride(ref IPower ret)
+        {
+            if (!ret.HasPowerOverrideEffect)
+            {
+                return;
+            }
+
+            foreach (var fx in ret.Effects)
+            {
+                if (fx.EffectType != Enums.eEffectType.PowerRedirect || !(fx.nOverride > -1 & Math.Abs(fx.Probability - 1) < 0.01 & fx.CanInclude()))
+                {
+                    continue;
+                }
+
+                ret = new Power(DatabaseAPI.Database.Power[fx.nOverride])
+                {
+                    Level = ret.Level
+                };
+            }
+        }
+
         private void GetPowers()
         {
             var numArray = new int[2];
-            var Index = 0;
-            do
+            for (var index = 0; index < 2; index++)
             {
-                numArray[Index] = getSetIndex(Index);
-                Powers[Index] = new IPower[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
-                Values[Index] = new float[Powers[Index].Length + 1];
-                Tips[Index] = new string[Powers[Index].Length + 1];
-                var nIDClass = Index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;
-                var num = Powers[Index].Length - 1;
-                for (var index = 0; index <= num; ++index)
+                numArray[index] = GetSetIndex(index);
+                Powers[index] = new IPower[DatabaseAPI.Database.Powersets[numArray[index]].Powers.Length];
+                Values[index] = new float[Powers[index].Length + 1];
+                Tips[index] = new string[Powers[index].Length + 1];
+                var nIDClass = index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;
+                for (var i = 0; i < Powers[index].Length; i++)
                 {
-                    Powers[Index][index] = new Power(DatabaseAPI.Database.Powersets[numArray[Index]].Powers[index]);
-                    Powers[Index][index].AbsorbPetEffects();
-                    Powers[Index][index].ApplyGrantPowerEffects();
-                    if (nIDClass <= -1)
-                        continue;
-                    Powers[Index][index].ForcedClassID = nIDClass;
-                    Powers[Index][index].ForcedClass = DatabaseAPI.UidFromNidClass(nIDClass);
-                }
+                    Powers[index][i] = new Power(DatabaseAPI.Database.Powersets[numArray[index]].Powers[i]);
+                    ApplyPowerOverride(ref Powers[index][i]);
+                    Powers[index][i].AbsorbPetEffects();
+                    Powers[index][i].ApplyGrantPowerEffects();
+                    Powers[index][i].ProcessExecutes();
 
-                ++Index;
-            } while (Index <= 1);
+                    if (nIDClass <= -1)
+                    {
+                        continue;
+                    }
+
+                    Powers[index][i].ForcedClassID = nIDClass;
+                    Powers[index][i].ForcedClass = DatabaseAPI.UidFromNidClass(nIDClass);
+                }
+            }
         }
 
-        private int getSetIndex(int Index)
+        private int GetSetIndex(int index)
         {
             ComboBox comboBox;
-            switch (Index)
+            switch (index)
             {
                 case 0:
                     comboBox = cbSet1;
@@ -428,10 +468,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     return 0;
             }
 
-            return DatabaseAPI.GetPowersetIndexes(getAT(Index), getSetType(Index))[comboBox.SelectedIndex].nID;
+            return DatabaseAPI.GetPowersetIndexes(getAT(index), GetSetType(index))[comboBox.SelectedIndex].nID;
         }
 
-        private Enums.ePowerSetType getSetType(int Index)
+        private Enums.ePowerSetType GetSetType(int Index)
         {
             ComboBox comboBox;
             switch (Index)
@@ -459,68 +499,78 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower? iPower)
         {
             var str1 = "";
-            string str2;
-            if (iSFX.Present)
+            var str2 = "";
+            if (!iSFX.Present)
             {
-                var numArray = new int[0];
-                var str3 = "";
-                IPower power = new Power(iPower);
-                var num1 = iSFX.Index.Length - 1;
-                for (var index1 = 0; index1 <= num1; ++index1)
-                {
-                    if (iSFX.Index[index1] == -1 ||
-                        power.Effects[iSFX.Index[index1]].EffectType == Enums.eEffectType.None)
-                        continue;
-                    var returnString = "";
-                    var returnMask = new int[0];
-                    power.GetEffectStringGrouped(iSFX.Index[index1], ref returnString, ref returnMask, false, false);
-                    if (returnMask.Length <= 0)
-                        continue;
-                    if (str3 != "")
-                        str3 += "\r\n  ";
-                    str3 += returnString.Replace("\r\n", "\r\n  ");
-                    var num2 = returnMask.Length - 1;
-                    for (var index2 = 0; index2 <= num2; ++index2)
-                        power.Effects[returnMask[index2]].EffectType = Enums.eEffectType.None;
-                }
-
-                var num3 = iSFX.Index.Length - 1;
-                for (var index = 0; index <= num3; ++index)
-                {
-                    if (power.Effects[iSFX.Index[index]].EffectType == Enums.eEffectType.None)
-                        continue;
-                    if (str3 != "")
-                        str3 += "\r\n  ";
-                    str3 += power.Effects[iSFX.Index[index]].BuildEffectString().Replace("\r\n", "\r\n  ");
-                }
-
-                str2 = str1 + str3;
-            }
-            else
-            {
-                str2 = "";
+                return str2;
             }
 
-            return str2;
+            var str3 = "";
+            IPower power = new Power(iPower);
+            foreach (var sfx in iSFX.Index)
+            {
+                if (sfx == -1 || power.Effects[sfx].EffectType == Enums.eEffectType.None)
+                {
+                    continue;
+                }
+
+                var returnString = "";
+                var returnMask = Array.Empty<int>();
+                power.GetEffectStringGrouped(sfx, ref returnString, ref returnMask, false, false);
+                if (returnMask.Length <= 0)
+                {
+                    continue;
+                }
+
+                if (str3 != "")
+                {
+                    str3 += "\r\n  ";
+                }
+
+                str3 += returnString.Replace("\r\n", "\r\n  ");
+                foreach (var m in returnMask)
+                {
+                    power.Effects[m].EffectType = Enums.eEffectType.None;
+                }
+            }
+
+            foreach (var sfx in iSFX.Index)
+            {
+                if (power.Effects[sfx].EffectType == Enums.eEffectType.None)
+                {
+                    continue;
+                }
+
+                if (str3 != "")
+                {
+                    str3 += "\r\n  ";
+                }
+
+                str3 += power.Effects[sfx].BuildEffectString().Replace("\r\n", "\r\n  ");
+            }
+
+            return str1 + str3;
         }
 
         private void Graph_Load(object sender, EventArgs e)
         {
         }
 
-        private void list_AT()
+        private void ListAt()
         {
             cbAT1.BeginUpdate();
             cbAT1.Items.Clear();
             cbAT2.BeginUpdate();
             cbAT2.Items.Clear();
-            var num = DatabaseAPI.Database.Classes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            foreach (var c in DatabaseAPI.Database.Classes)
             {
-                if (!DatabaseAPI.Database.Classes[index].Playable)
+                if (!c.Playable)
+                {
                     continue;
-                cbAT1.Items.Add(DatabaseAPI.Database.Classes[index].DisplayName);
-                cbAT2.Items.Add(DatabaseAPI.Database.Classes[index].DisplayName);
+                }
+
+                cbAT1.Items.Add(c.DisplayName);
+                cbAT2.Items.Add(c.DisplayName);
             }
 
             cbAT1.SelectedIndex = MidsContext.Character.Archetype.Idx;
@@ -529,13 +579,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             cbAT2.EndUpdate();
         }
 
-        private void List_Sets(int Index)
+        private void ListSets(int index)
         {
-            var iSet = Enums.ePowerSetType.None;
-            ComboBox comboBox1;
-            ComboBox comboBox2;
-            int selectedIndex;
-            if (Index == 0)
+            var comboBox1 = index == 0 ? cbSet1 : cbSet2;
+            var comboBox2 = index == 0 ? cbType1 : cbType2;
+            var selectedIndex = index == 0 ? cbAT1.SelectedIndex : cbAT2.SelectedIndex;
+            
+            if (index == 0)
             {
                 comboBox1 = cbSet1;
                 comboBox2 = cbType1;
@@ -548,25 +598,31 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 selectedIndex = cbAT2.SelectedIndex;
             }
 
-            iSet = comboBox2.SelectedIndex switch
+            var iSet = comboBox2.SelectedIndex switch
             {
                 0 => Enums.ePowerSetType.Primary,
                 1 => Enums.ePowerSetType.Secondary,
                 2 => Enums.ePowerSetType.Ancillary,
-                _ => iSet
+                _ => Enums.ePowerSetType.None
             };
+
             comboBox1.BeginUpdate();
             comboBox1.Items.Clear();
             var powersetIndexes = DatabaseAPI.GetPowersetIndexes(selectedIndex, iSet);
-            var num = powersetIndexes.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                comboBox1.Items.Add(powersetIndexes[index].DisplayName);
+            foreach (var pi in powersetIndexes)
+            {
+                comboBox1.Items.Add(pi.DisplayName);
+            }
+
             if (comboBox1.Items.Count > 0)
+            {
                 comboBox1.SelectedIndex = 0;
+            }
+
             comboBox1.EndUpdate();
         }
 
-        private void list_Type()
+        private void ListType()
         {
             cbType1.BeginUpdate();
             cbType1.Items.Clear();
@@ -587,276 +643,300 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void lstDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
+            {
                 return;
+            }
+
             ResetScale();
             DisplayGraph();
         }
 
-        private void map_Advanced()
+        private void MapAdvanced()
         {
-            var Placed = new bool[Powers[1].Length - 1 + 1];
-            var num1 = Placed.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-                Placed[index] = false;
+            var placed = new bool[Powers[1].Length];
+            for (var index = 0; index < placed.Length; index++)
+            {
+                placed[index] = false;
+            }
+
             Map.Init();
-            var num2 = getMax(Powers[0].Length, Powers[1].Length);
-            if (num2 > 20)
-                num2 = 20;
-            var num3 = num2;
-            for (var index = 0; index <= num3; ++index)
+            for (var index = 0; index < Math.Min(20, GetMax(Powers[0].Length, Powers[1].Length)); index++)
+            {
                 if (Powers[0].Length > index)
+                {
                     Map.Map[index, 0] = index;
-            var num4 = Powers[1].Length - 1;
-            for (var index1 = 0; index1 <= num4; ++index1)
+                }
+            }
+
+            for (var index1 = 0; index1 < Powers[1].Length; index1++)
             {
                 var displayName = Powers[1][index1].DisplayName;
-                var num5 = Powers[0].Length - 1;
-                for (var index2 = 0; index2 <= num5; ++index2)
+                for (var index2 = 0; index2 < Powers[0].Length; index2++)
                 {
-                    if (!(string.Equals(Powers[0][index2].DisplayName, displayName,
-                        StringComparison.OrdinalIgnoreCase) & !Placed[index1]))
+                    if (!(string.Equals(Powers[0][index2].DisplayName, displayName, StringComparison.OrdinalIgnoreCase) & !placed[index1]))
+                    {
                         continue;
+                    }
+
                     Map.Map[index2, 1] = index1;
-                    Placed[index1] = true;
+                    placed[index1] = true;
                     break;
                 }
             }
 
-            mapOverride();
-            mapDescString(new[] {"summon"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "smash"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "energy"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "fire"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "ranged"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "melee"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def", "aoe"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "smash"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "energy"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "fire"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "ranged"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "melee"}, ref Placed);
-            mapDescString(new[] {"auto", "+def", "aoe"}, ref Placed);
-            mapDescString(new[] {"toggle", "+res", "smash"}, ref Placed);
-            mapDescString(new[] {"toggle", "+res", "energy"}, ref Placed);
-            mapDescString(new[] {"toggle", "+res", "fire"}, ref Placed);
-            mapDescString(new[] {"auto", "+res", "smash"}, ref Placed);
-            mapDescString(new[] {"auto", "+res", "energy"}, ref Placed);
-            mapDescString(new[] {"auto", "+res", "fire"}, ref Placed);
-            mapDescString(new[] {"toggle", "+def"}, ref Placed);
-            mapDescString(new[] {"toggle", "+res"}, ref Placed);
-            mapDescString(new[] {"auto", "+def"}, ref Placed);
-            mapDescString(new[] {"auto", "+res"}, ref Placed);
-            mapDescString(new[] {"AoE", "disorient"}, ref Placed);
-            mapDescString(new[] {"AoE", "stun"}, ref Placed);
-            mapDescString(new[] {"AoE", "hold"}, ref Placed);
-            mapDescString(new[] {"AoE", "sleep"}, ref Placed);
-            mapDescString(new[]
+            MapOverride();
+            MapDescString(new[] { "summon" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "smash" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "energy" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "fire" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "ranged" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "melee" }, ref placed);
+            MapDescString(new[] { "toggle", "+def", "aoe" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "smash" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "energy" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "fire" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "ranged" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "melee" }, ref placed);
+            MapDescString(new[] { "auto", "+def", "aoe" }, ref placed);
+            MapDescString(new[] { "toggle", "+res", "smash" }, ref placed);
+            MapDescString(new[] { "toggle", "+res", "energy" }, ref placed);
+            MapDescString(new[] { "toggle", "+res", "fire" }, ref placed);
+            MapDescString(new[] { "auto", "+res", "smash" }, ref placed);
+            MapDescString(new[] { "auto", "+res", "energy" }, ref placed);
+            MapDescString(new[] { "auto", "+res", "fire" }, ref placed);
+            MapDescString(new[] { "toggle", "+def" }, ref placed);
+            MapDescString(new[] { "toggle", "+res" }, ref placed);
+            MapDescString(new[] { "auto", "+def" }, ref placed);
+            MapDescString(new[] { "auto", "+res" }, ref placed);
+            MapDescString(new[] { "AoE", "disorient" }, ref placed);
+            MapDescString(new[] { "AoE", "stun" }, ref placed);
+            MapDescString(new[] { "AoE", "hold" }, ref placed);
+            MapDescString(new[] { "AoE", "sleep" }, ref placed);
+            MapDescString(new[]
             {
                 "AoE",
                 "immobilize"
-            }, ref Placed);
-            mapDescString(new[] {"AoE", "confuse"}, ref Placed);
-            mapDescString(new[] {"AoE", "fear"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "AoE", "confuse" }, ref placed);
+            MapDescString(new[] { "AoE", "fear" }, ref placed);
+            MapDescString(new[]
             {
                 "Cone",
                 "disorient"
-            }, ref Placed);
-            mapDescString(new[] {"Cone", "stun"}, ref Placed);
-            mapDescString(new[] {"Cone", "hold"}, ref Placed);
-            mapDescString(new[] {"Cone", "sleep"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "Cone", "stun" }, ref placed);
+            MapDescString(new[] { "Cone", "hold" }, ref placed);
+            MapDescString(new[] { "Cone", "sleep" }, ref placed);
+            MapDescString(new[]
             {
                 "Cone",
                 "immobilize"
-            }, ref Placed);
-            mapDescString(new[] {"Cone", "confuse"}, ref Placed);
-            mapDescString(new[] {"Cone", "fear"}, ref Placed);
-            mapDescString(new[] {"snipe"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "Cone", "confuse" }, ref placed);
+            MapDescString(new[] { "Cone", "fear" }, ref placed);
+            MapDescString(new[] { "snipe" }, ref placed);
+            MapDescString(new[]
             {
                 "AoE",
                 "Extreme",
                 "Self -Recovery"
-            }, ref Placed);
-            mapDescString(new[] {"close", "high"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "close", "high" }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "disorient",
                 "minor"
-            }, ref Placed);
-            mapDescString(new[] {"ranged", "hold"}, ref Placed);
-            mapDescString(new[] {"cone", "extreme"}, ref Placed);
-            mapDescString(new[] {"cone", "superior"}, ref Placed);
-            mapDescString(new[] {"cone", "high"}, ref Placed);
-            mapDescString(new[] {"cone", "moderate"}, ref Placed);
-            mapDescString(new[] {"cone", "minor"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "ranged", "hold" }, ref placed);
+            MapDescString(new[] { "cone", "extreme" }, ref placed);
+            MapDescString(new[] { "cone", "superior" }, ref placed);
+            MapDescString(new[] { "cone", "high" }, ref placed);
+            MapDescString(new[] { "cone", "moderate" }, ref placed);
+            MapDescString(new[] { "cone", "minor" }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "AoE",
                 "extreme"
-            }, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "AoE",
                 "superior"
-            }, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "AoE",
                 "high"
-            }, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "AoE",
                 "moderate"
-            }, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[]
             {
                 "ranged",
                 "AoE",
                 "minor"
-            }, ref Placed);
-            mapDescString(new[] {"AoE", "extreme"}, ref Placed);
-            mapDescString(new[] {"AoE", "superior"}, ref Placed);
-            mapDescString(new[] {"AoE", "high"}, ref Placed);
-            mapDescString(new[] {"AoE", "moderate"}, ref Placed);
-            mapDescString(new[] {"AoE", "minor"}, ref Placed);
-            mapDescString(new[] {"melee", "extreme"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "AoE", "extreme" }, ref placed);
+            MapDescString(new[] { "AoE", "superior" }, ref placed);
+            MapDescString(new[] { "AoE", "high" }, ref placed);
+            MapDescString(new[] { "AoE", "moderate" }, ref placed);
+            MapDescString(new[] { "AoE", "minor" }, ref placed);
+            MapDescString(new[] { "melee", "extreme" }, ref placed);
+            MapDescString(new[]
             {
                 "melee",
                 "superior"
-            }, ref Placed);
-            mapDescString(new[] {"melee", "high"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "melee", "high" }, ref placed);
+            MapDescString(new[]
             {
                 "melee",
                 "moderate"
-            }, ref Placed);
-            mapDescString(new[] {"melee", "minor"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "melee", "minor" }, ref placed);
+            MapDescString(new[]
             {
                 "melee",
                 "disorient"
-            }, ref Placed);
-            mapDescString(new[] {"melee", "stun"}, ref Placed);
-            mapDescString(new[] {"melee", "hold"}, ref Placed);
-            mapDescString(new[] {"AoE", "knockback"}, ref Placed);
-            mapDescString(new[] {"AoE", "knockup"}, ref Placed);
-            mapDescString(new[]
+            }, ref placed);
+            MapDescString(new[] { "melee", "stun" }, ref placed);
+            MapDescString(new[] { "melee", "hold" }, ref placed);
+            MapDescString(new[] { "AoE", "knockback" }, ref placed);
+            MapDescString(new[] { "AoE", "knockup" }, ref placed);
+            MapDescString(new[]
             {
                 "Cone",
                 "knockback"
-            }, ref Placed);
-            mapDescString(new[] {"Cone", "knockup"}, ref Placed);
-            mapDescString(new[] {"AoE", "stealth"}, ref Placed);
-            mapDescString(new[] {"stealth"}, ref Placed);
-            mapDescString(new[] {"toggle", "-def"}, ref Placed);
-            mapDescString(new[] {"toggle", "-res"}, ref Placed);
-            mapDescString(new[] {"toggle", "-acc"}, ref Placed);
-            mapDescString(new[] {"toggle", "-dmg"}, ref Placed);
-            mapDescString(new[] {"-def"}, ref Placed);
-            mapDescString(new[] {"-res"}, ref Placed);
-            mapDescString(new[] {"-acc"}, ref Placed);
-            mapDescString(new[] {"-dmg"}, ref Placed);
-            mapDescString(new[] {"+dmg"}, ref Placed);
-            mapDescString(new[] {"+acc"}, ref Placed);
-            mapDescString(new[] {"heal", "team"}, ref Placed);
-            mapDescString(new[] {"heal", "ally"}, ref Placed);
-            mapDescString(new[] {"heal"}, ref Placed);
-            mapDescString(new[] {"+recovery"}, ref Placed);
-            mapDescString(new[] {"-recovery"}, ref Placed);
-            mapDescString(new[] {"-regen"}, ref Placed);
-            mapDescString(new[] {"extreme"}, ref Placed);
-            mapDescString(new[] {"superior"}, ref Placed);
-            mapDescString(new[] {"high"}, ref Placed);
-            mapDescString(new[] {"moderate"}, ref Placed);
-            mapDescString(new[] {"minor"}, ref Placed);
-            mapDescString(new[] {"disorient"}, ref Placed);
-            mapDescString(new[] {"stun"}, ref Placed);
-            mapDescString(new[] {"hold"}, ref Placed);
-            mapDescString(new[] {"sleep"}, ref Placed);
-            mapDescString(new[] {"immobilize"}, ref Placed);
-            mapDescString(new[] {"confuse"}, ref Placed);
-            mapDescString(new[] {"fear"}, ref Placed);
-            mapDescString(new[] {"cone"}, ref Placed);
-            mapDescString(new[] {"aoe"}, ref Placed);
-            mapDescString(new[] {"melee"}, ref Placed);
-            mapDescString(new[] {"ranged"}, ref Placed);
-            var num6 = Powers[1].Length - 1;
-            for (var index = 0; index <= num6; ++index)
+            }, ref placed);
+            MapDescString(new[] { "Cone", "knockup" }, ref placed);
+            MapDescString(new[] { "AoE", "stealth" }, ref placed);
+            MapDescString(new[] { "stealth" }, ref placed);
+            MapDescString(new[] { "toggle", "-def" }, ref placed);
+            MapDescString(new[] { "toggle", "-res" }, ref placed);
+            MapDescString(new[] { "toggle", "-acc" }, ref placed);
+            MapDescString(new[] { "toggle", "-dmg" }, ref placed);
+            MapDescString(new[] { "-def" }, ref placed);
+            MapDescString(new[] { "-res" }, ref placed);
+            MapDescString(new[] { "-acc" }, ref placed);
+            MapDescString(new[] { "-dmg" }, ref placed);
+            MapDescString(new[] { "+dmg" }, ref placed);
+            MapDescString(new[] { "+acc" }, ref placed);
+            MapDescString(new[] { "heal", "team" }, ref placed);
+            MapDescString(new[] { "heal", "ally" }, ref placed);
+            MapDescString(new[] { "heal" }, ref placed);
+            MapDescString(new[] { "+recovery" }, ref placed);
+            MapDescString(new[] { "-recovery" }, ref placed);
+            MapDescString(new[] { "-regen" }, ref placed);
+            MapDescString(new[] { "extreme" }, ref placed);
+            MapDescString(new[] { "superior" }, ref placed);
+            MapDescString(new[] { "high" }, ref placed);
+            MapDescString(new[] { "moderate" }, ref placed);
+            MapDescString(new[] { "minor" }, ref placed);
+            MapDescString(new[] { "disorient" }, ref placed);
+            MapDescString(new[] { "stun" }, ref placed);
+            MapDescString(new[] { "hold" }, ref placed);
+            MapDescString(new[] { "sleep" }, ref placed);
+            MapDescString(new[] { "immobilize" }, ref placed);
+            MapDescString(new[] { "confuse" }, ref placed);
+            MapDescString(new[] { "fear" }, ref placed);
+            MapDescString(new[] { "cone" }, ref placed);
+            MapDescString(new[] { "aoe" }, ref placed);
+            MapDescString(new[] { "melee" }, ref placed);
+            MapDescString(new[] { "ranged" }, ref placed);
+            for (var index = 0; index < Powers[1].Length; index++)
             {
-                if (Placed[index] || Map.Map[index, 1] != -1)
+                if (placed[index] || Map.Map[index, 1] != -1)
+                {
                     continue;
+                }
+
                 Map.Map[index, 1] = index;
-                Placed[index] = true;
+                placed[index] = true;
             }
 
-            var num7 = Powers[1].Length - 1;
-            for (var index = 0; index <= num7; ++index)
+            for (var index = 0; index < Powers[1].Length; index++)
             {
-                if (Placed[index])
+                if (placed[index])
+                {
                     continue;
+                }
+
                 Map.Map[GetNextFreeSlot(), 1] = index;
-                Placed[index] = true;
+                placed[index] = true;
             }
         }
 
-        private void map_Simple()
+        private void MapSimple()
         {
             Map.Init();
-            var Index = 0;
-            do
-            {
-                Map.IdxAT[Index] = getAT(Index);
-                Map.IdxSet[Index] = getSetIndex(Index);
-                ++Index;
-            } while (Index <= 1);
 
-            var num1 = getMax(Powers[0].Length, Powers[1].Length);
-            if (num1 > 20)
-                num1 = 20;
-            var num2 = num1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < 1; index++)
+            {
+                Map.IdxAT[index] = getAT(index);
+                Map.IdxSet[index] = GetSetIndex(index);
+            }
+
+            for (var index = 0; index < Math.Min(20, GetMax(Powers[0].Length, Powers[1].Length)); index++)
             {
                 if (Powers[0].Length > index)
+                {
                     Map.Map[index, 0] = index;
+                }
+
                 if (Powers[1].Length > index)
+                {
                     Map.Map[index, 1] = index;
+                }
             }
         }
 
-        private int mapDescString(string[] iStrings, ref bool[] placed)
+        private int MapDescString(string[] iStrings, ref bool[] placed)
         {
             var num1 = 0;
-            for (var powerIdx = 0; powerIdx <= Powers[1].Length - 1; ++powerIdx)
+            for (var powerIdx = 0; powerIdx < Powers[1].Length; powerIdx++)
             {
                 var flag1 = true;
-                for (var index2 = 0; index2 <= iStrings.Length - 1; ++index2)
-                    if (Powers[1][powerIdx].DescShort.IndexOf(iStrings[index2], StringComparison.OrdinalIgnoreCase) < 0)
+                foreach (var s in iStrings)
+                {
+                    if (Powers[1][powerIdx].DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0)
+                    {
                         flag1 = false;
+                    }
+                }
 
                 if (!(flag1 & !placed[powerIdx]))
-                    continue;
                 {
-                    for (var index2 = 0; index2 <= Powers[0].Length - 1; ++index2)
+                    continue;
+                }
+
+                {
+                    for (var index2 = 0; index2 <= Powers[0].Length; index2++)
                     {
                         var flag2 = Map.Map[index2, 1] < 0;
-                        for (var index3 = 0; index3 <= iStrings.Length - 1; ++index3)
-                            if (Powers[0][index2].DescShort
-                                .IndexOf(iStrings[index3], StringComparison.OrdinalIgnoreCase) < 0)
+                        foreach (var s in iStrings)
+                        {
+                            if (Powers[0][index2].DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0)
+                            {
                                 flag2 = false;
+                            }
+                        }
 
                         if (!flag2)
+                        {
                             continue;
+                        }
+
                         Map.Map[index2, 1] = powerIdx;
                         placed[powerIdx] = true;
+
                         return powerIdx;
                     }
                 }
@@ -865,29 +945,31 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             return num1;
         }
 
-        private void mapOverride()
+        private void MapOverride()
         {
-            for (var index1 = 0; index1 <= MidsContext.Config.CompOverride.Length - 1; ++index1)
+            for (var index1 = 0; index1 < MidsContext.Config.CompOverride.Length; index1++)
             {
                 var compOverride = MidsContext.Config.CompOverride;
-                mapOverrideDo(compOverride[index1].Powerset, compOverride[index1].Power, compOverride[index1].Override);
+                MapOverrideDo(compOverride[index1].Powerset, compOverride[index1].Power, compOverride[index1].Override);
             }
         }
 
-        private void mapOverrideDo(string iSet, string iPower, string iNewStr)
+        private void MapOverrideDo(string iSet, string iPower, string iNewStr)
         {
             var index1 = 0;
-            do
+            for (var i = 0; i < 2; i++)
             {
-                var num = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
+                {
                     if (Powers[index1][index2].PowerSetID > -1 &&
                         string.Equals(Powers[index1][index2].DisplayName, iPower, StringComparison.OrdinalIgnoreCase) &
                         string.Equals(DatabaseAPI.Database.Powersets[Powers[index1][index2].PowerSetID].DisplayName,
                             iSet, StringComparison.OrdinalIgnoreCase))
+                    {
                         Powers[index1][index2].DescShort = iNewStr.ToUpper();
-                ++index1;
-            } while (index1 <= 1);
+                    }
+                }
+            }
         }
 
         private void ResetScale()
@@ -904,23 +986,33 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 X = MainModule.MidsController.SzFrmCompare.X,
                 Y = MainModule.MidsController.SzFrmCompare.Y
             };
+
             if (rectangle.X < 1)
-                rectangle.X = (int) Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2.0);
+            {
+                rectangle.X = (int)Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2f);
+            }
+
             if (rectangle.Y < 32)
-                rectangle.Y = (int) Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2.0);
+            {
+                rectangle.Y = (int)Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2f);
+            }
+
             Top = rectangle.Y;
             Left = rectangle.X;
         }
 
         private void SetScaleLabel()
         {
-            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue, CultureInfo.InvariantCulture);
+            lblScale.Text = $"Scale: 0 - {Graph.ScaleValue}";
         }
 
         private void StoreLocation()
         {
             if (!MainModule.MidsController.IsAppInitialized)
+            {
                 return;
+            }
+
             MainModule.MidsController.SzFrmCompare.X = Left;
             MainModule.MidsController.SzFrmCompare.Y = Top;
         }
@@ -933,711 +1025,594 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public void UpdateData()
         {
-            btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             if (!Loaded)
+            {
                 return;
+            }
+
             ResetScale();
             DisplayGraph();
         }
 
-        private void values_Accuracy()
+        private void ValuesAccuracy()
         {
             var num1 = 1f;
             var index1 = 0;
-            do
+            for (var i = 0 ; i < 2 ; i++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     var flag = false;
-                    var num3 = Powers[index1][index2].Effects.Length - 1;
-                    for (var index3 = 0; index3 <= num3; ++index3)
-                        if (Powers[index1][index2].Effects[index3].RequiresToHitCheck)
-                            flag = true;
-                    Values[index1][index2] = !((Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None) | flag)
-                        ? 0.0f
-                        : (float) (Powers[index1][index2].Accuracy * (double) MidsContext.Config.ScalingToHit * 100.0);
-                    if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
+                    foreach (var fx in Powers[index1][index2].Effects)
                     {
-                        Tips[index1][index2] =
-                            DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                            Powers[index1][index2].DisplayName;
-                        if (Matching)
+                        if (fx.RequiresToHitCheck)
                         {
-                            var tips = Tips;
-                            var index3 = index1;
-                            var index4 = index2;
-                            tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                                   Convert.ToString(Powers[index1][index2].Level) + "]";
+                            flag = true;
                         }
+                    }
 
-                        var tips1 = Tips;
-                        var index5 = index1;
-                        var index6 = index2;
-                        tips1[index5][index6] = $"{tips1[index5][index6]}\r\n {Convert.ToDecimal(Values[index1][index2]):##0.##}% base Accuracy";
-                        //tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Strings.Format(Values[index1][index2], "##0.##") + "% base Accuracy";
-                        var tips2 = Tips;
-                        var index7 = index1;
-                        var index8 = index2;
-                        tips2[index7][index8] = $"{tips2[index7][index8]}\r\n (Real Numbers style: {Convert.ToDecimal(Powers[index1][index2].Accuracy):##0.##}x)";
-                        //tips2[index7][index8] = tips2[index7][index8] + "\r\n  (Real Numbers style: " + Strings.Format(Powers[index1][index2].Accuracy, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x)";
-                        if (num1 < (double) Values[index1][index2])
-                            num1 = Values[index1][index2];
+                    Values[index1][index2] = !((Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None) | flag)
+                        ? 0
+                        : Powers[index1][index2].Accuracy * MidsContext.Config.ScalingToHit * 100;
+                    
+                    if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    {
+                        continue;
+                    }
+
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    Tips[index1][index2] += $"\r\n {Values[index1][index2]:##0.##}% base Accuracy";
+                    Tips[index1][index2] += $"\r\n (Real Numbers style: {Powers[index1][index2].Accuracy:##0.##}x)";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
                     }
                 }
-
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_Damage()
+        private void ValuesDamage()
         {
             var num1 = 1f;
             var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
-            var index1 = 0;
-            do
+            for (var index1 = 0 ; index1 < 2 ; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    {
                         continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
+                    }
+
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
                     if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        Tips[index1][index2] += $" [Level {Convert.ToString(Powers[index1][index2].Level)}]";
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] =
-                        tips1[index5][index6] + "\r\n  " + Powers[index1][index2].FXGetDamageString();
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                    if (Powers[index1][index2].PowerType != Enums.ePowerType.Toggle)
-                        continue;
+                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].FXGetDamageString()}";
+                    if (num1 < Values[index1][index2])
                     {
-                        var tips2 = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " +
-                                                Convert.ToString(Powers[index1][index2].ActivatePeriod,
-                                                    CultureInfo.InvariantCulture) + "s)";
+                        num1 = Values[index1][index2];
                     }
+
+                    if (Powers[index1][index2].PowerType != Enums.ePowerType.Toggle)
+                    {
+                        continue;
+                    }
+
+                    Tips[index1][index2] += $"\r\n  (Applied every {Powers[index1][index2].ActivatePeriod}s)";
                 }
 
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        private void values_DPA()
+        private void ValuesDpa()
         {
             var num1 = 1f;
             var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPA;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                for (var index2 = 0; index2 <= Powers[index1].Length - 1; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        tips[index1][index2] = tips[index1][index2] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                            Powers[index1][index2].FXGetDamageString() + "/s";
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Convert.ToString(Powers[index1][index2].Level)}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].FXGetDamageString()}/s";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        private void values_DPE()
+        private void ValuesDpe()
         {
             var num1 = 1f;
             var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
-            var powIdx = 0;
-            do
+            for (var powIdx = 0; powIdx < 2; powIdx++)
             {
-                for (var subPowIdx = 0; subPowIdx <= Powers[powIdx].Length - 1; ++subPowIdx)
+                for (var subPowIdx = 0; subPowIdx < Powers[powIdx].Length; subPowIdx++)
                 {
                     Values[powIdx][subPowIdx] = Powers[powIdx][subPowIdx].FXGetDamageValue();
                     if (Math.Abs(Values[powIdx][subPowIdx]) < float.Epsilon)
+                    {
                         continue;
-                    if (Powers[powIdx][subPowIdx].PowerType == Enums.ePowerType.Click &&
-                        Powers[powIdx][subPowIdx].EndCost > 0.0)
-                        Values[powIdx][subPowIdx] /= Powers[powIdx][subPowIdx].EndCost;
-                    Tips[powIdx][subPowIdx] =
-                        DatabaseAPI.Database.Classes[Powers[powIdx][subPowIdx].ForcedClassID].DisplayName + ":" +
-                        Powers[powIdx][subPowIdx].DisplayName;
-                    if (Matching)
-                        Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " [Level " +
-                                                  Convert.ToString(Powers[powIdx][subPowIdx].Level) + "]";
-                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + "\r\n  " +
-                                              Powers[powIdx][subPowIdx].FXGetDamageString();
-                    if (num1 < (double) Values[powIdx][subPowIdx])
-                        num1 = Values[powIdx][subPowIdx];
-                    Tips[powIdx][subPowIdx] = $"{Tips[powIdx][subPowIdx]} - DPE: {Convert.ToDecimal(Values[powIdx][subPowIdx]):##0.##}";
-                    //Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " - DPE: " + Strings.Format(Values[powIdx][subPowIdx], "##0.##");
-                }
+                    }
 
-                ++powIdx;
-            } while (powIdx <= 1);
+                    if (Powers[powIdx][subPowIdx].PowerType == Enums.ePowerType.Click &&
+                        Powers[powIdx][subPowIdx].EndCost > 0)
+                    {
+                        Values[powIdx][subPowIdx] /= Powers[powIdx][subPowIdx].EndCost;
+                    }
+
+                    Tips[powIdx][subPowIdx] = $"{DatabaseAPI.Database.Classes[Powers[powIdx][subPowIdx].ForcedClassID].DisplayName}:{Powers[powIdx][subPowIdx].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[powIdx][subPowIdx] += $" [Level {Convert.ToString(Powers[powIdx][subPowIdx].Level)}]";
+                    }
+
+                    Tips[powIdx][subPowIdx] += $"\r\n  {Powers[powIdx][subPowIdx].FXGetDamageString()}";
+                    if (num1 < Values[powIdx][subPowIdx])
+                    {
+                        num1 = Values[powIdx][subPowIdx];
+                    }
+
+                    Tips[powIdx][subPowIdx] += $" - DPE: {Values[powIdx][subPowIdx]:##0.##}";
+                }
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        private void values_DPS()
+        private void ValuesDps()
         {
             var num1 = 1f;
             var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                            Powers[index1][index2].FXGetDamageString() + "/s";
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].FXGetDamageString()}/s";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        private void values_Duration()
+        private void ValuesDuration()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var powerCount = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= powerCount; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     var durationEffectId = Powers[index1][index2].GetDurationEffectID();
                     if (durationEffectId <= -1)
+                    {
                         continue;
+                    }
+
                     Values[index1][index2] = Powers[index1][index2].Effects[durationEffectId].Duration;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                            Powers[index1][index2].Effects[durationEffectId].BuildEffectString();
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Convert.ToString(Powers[index1][index2].Level)}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].Effects[durationEffectId].BuildEffectString()}";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_End()
+        private void ValuesEnd()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].EndCost;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n End: {Convert.ToDecimal(Powers[index1][index2].EndCost):##0.##}";
-                    //tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " + Strings.Format(Powers[index1][index2].EndCost, "##0.##");
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    Tips[index1][index2] += $"\r\n End: {Powers[index1][index2].EndCost:##0.##}";
                     if (Powers[index1][index2].PowerType == Enums.ePowerType.Toggle)
                     {
-                        var tips2 = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips2[index3][index4] = tips2[index3][index4] + " (Per Second)";
+                        Tips[index1][index2] += " (Per Second)";
                     }
 
-                    if ((double) num1 < Values[index1][index2])
+                    if (num1 < Values[index1][index2])
+                    {
                         num1 = Values[index1][index2];
+                    }
                 }
-
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_EPS()
+        private void ValuesEps()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].EndCost;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    {
                         continue;
+                    }
+
                     switch (Powers[index1][index2].PowerType)
                     {
                         case Enums.ePowerType.Click:
                         {
-                            if (Powers[index1][index2].RechargeTime + (double) Powers[index1][index2].CastTime +
-                                Powers[index1][index2].InterruptTime > 0.0)
+                            if (Powers[index1][index2].RechargeTime + Powers[index1][index2].CastTime +
+                                Powers[index1][index2].InterruptTime > 0)
+                            {
                                 Values[index1][index2] = Powers[index1][index2].EndCost /
                                                          (Powers[index1][index2].RechargeTime +
                                                           Powers[index1][index2].CastTime +
                                                           Powers[index1][index2].InterruptTime);
+                            }
+
                             break;
                         }
                         case Enums.ePowerType.Toggle:
-                            Values[index1][index2] =
-                                Powers[index1][index2].EndCost / Powers[index1][index2].ActivatePeriod;
+                            Values[index1][index2] = Powers[index1][index2].EndCost / Powers[index1][index2].ActivatePeriod;
                             break;
                     }
 
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
                     if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n  End: {Convert.ToDecimal(Values[index1][index2]):##0.##}";
-                    var tips2 = Tips;
-                    var index7 = index1;
-                    var index8 = index2;
-                    tips2[index7][index8] += "/s";
-                    if (num1 < (double) Values[index1][index2])
+                    Tips[index1][index2] += $"\r\n  End: {Values[index1][index2]:##0.##}/s";
+                    if (num1 < Values[index1][index2])
+                    {
                         num1 = Values[index1][index2];
+                    }
                 }
-
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_Heal()
+        private void ValuesHeal()
         {
             var archetype = MidsContext.Archetype;
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
                     var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] = MidsContext.Archetype.DisplayName + ":" + Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
-                                            Powers[index1][index2].Effects[effectMagSum.Index[0]].BuildEffectString();
-                    if (num1 < (double) Values[index1][index2])
+                    Tips[index1][index2] = $"{MidsContext.Archetype.DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].Effects[effectMagSum.Index[0]].BuildEffectString()}";
+                    if (num1 < Values[index1][index2])
+                    {
                         num1 = Values[index1][index2];
+                    }
                 }
 
                 ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
-        private void values_HPE()
+        private void ValuesHpe()
         {
             var archetype = MidsContext.Archetype;
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
                     var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    {
                         continue;
-                    if (Powers[index1][index2].EndCost > 0.0)
+                    }
+
+                    if (Powers[index1][index2].EndCost > 0)
+                    {
                         Values[index1][index2] /= Powers[index1][index2].EndCost;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
-                    {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n Heal: {Convert.ToDecimal(Values[index1][index2]):##0.##} HP per unit of end.";
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n Heal: {Values[index1][index2]:##0.##} HP per unit of end.";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
-        private void values_HPS()
+        private void ValuesHps()
         {
             var archetype = MidsContext.Archetype;
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
                     var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    {
                         continue;
+                    }
+
                     if (Powers[index1][index2].PowerType == Enums.ePowerType.Click &&
-                        Powers[index1][index2].RechargeTime + (double) Powers[index1][index2].CastTime +
-                        Powers[index1][index2].InterruptTime > 0.0)
+                        Powers[index1][index2].RechargeTime + Powers[index1][index2].CastTime +
+                        Powers[index1][index2].InterruptTime > 0)
+                    {
                         Values[index1][index2] /= Powers[index1][index2].RechargeTime +
                                                   Powers[index1][index2].CastTime +
                                                   Powers[index1][index2].InterruptTime;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
-                    {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n Heal: {Convert.ToDecimal(Values[index1][index2]):##0.##} HP/s";
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n Heal: {Values[index1][index2]:##0.##} HP/s";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
-        private void values_MaxTargets()
+        private void ValuesMaxTargets()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].MaxTargets;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    if (Values[index1][index2] > 1.0)
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " +
-                                               Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) +
-                                               " Targets Max.";
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    if (Values[index1][index2] > 1)
+                    {
+                        Tips[index1][index2] += $"\r\n  {Values[index1][index2]} Targets Max.";
                     }
                     else
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " +
-                                               Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) +
-                                               " Target Max.";
+                        Tips[index1][index2] += $"\r\n  {Values[index1][index2]} Target Max.";
                     }
 
-                    if (num1 < (double) Values[index1][index2])
+                    if (num1 < Values[index1][index2])
+                    {
                         num1 = Values[index1][index2];
+                    }
                 }
-
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_Range()
+        private void ValuesRange()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     var str = "";
                     switch (Powers[index1][index2].EffectArea)
                     {
                         case Enums.eEffectArea.Character:
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
-                                  "ft range.";
+                            str = $"{Powers[index1][index2].Range}ft range.";
                             Values[index1][index2] = Powers[index1][index2].Range;
                             break;
+
                         case Enums.eEffectArea.Sphere:
                             Values[index1][index2] = Powers[index1][index2].Radius;
-                            if (Powers[index1][index2].Range > 0.0)
+                            if (Powers[index1][index2].Range > 0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
-                                      "ft range, ";
+                                str = $"{Powers[index1][index2].Range}ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
 
-                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
-                                  "ft radius.";
+                            str += $"{Powers[index1][index2].Radius}ft radius.";
                             break;
+
                         case Enums.eEffectArea.Cone:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
-                                  "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
+                            str = $"{Powers[index1][index2].Range}ft range, {Powers[index1][index2].Arc} degrees cone.";
                             break;
+
                         case Enums.eEffectArea.Location:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
-                                  "ft range, " +
-                                  Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
-                                  "ft radius.";
+                            str = $"{Powers[index1][index2].Range}ft range, {Powers[index1][index2].Radius}ft radius.";
                             break;
+
                         case Enums.eEffectArea.Volume:
                             Values[index1][index2] = Powers[index1][index2].Radius;
-                            if (Powers[index1][index2].Range > 0.0)
+                            if (Powers[index1][index2].Range > 0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
-                                      "ft range, ";
+                                str = $"{Powers[index1][index2].Range}ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
 
-                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
-                                  "ft radius.";
+                            str += $"{Powers[index1][index2].Radius}ft radius.";
                             break;
                     }
 
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + str;
-                    if (num1 < (double) Values[index1][index2])
-                        num1 = Values[index1][index2];
-                }
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
 
-                ++index1;
-            } while (index1 <= 1);
+                    Tips[index1][index2] += $"\r\n  {str}";
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
+                    }
+                }
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void values_Recharge()
+        private void ValuesRecharge()
         {
             var num1 = 1f;
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 2; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     Values[index1][index2] = Powers[index1][index2].RechargeTime;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
-                    Tips[index1][index2] =
-                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                        Powers[index1][index2].DisplayName;
-                    if (Matching)
                     {
-                        var tips = Tips;
-                        var index3 = index1;
-                        var index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " +
-                                               Convert.ToString(Powers[index1][index2].Level) + "]";
+                        continue;
                     }
 
-                    var tips1 = Tips;
-                    var index5 = index1;
-                    var index6 = index2;
-                    tips1[index5][index6] = $"{tips1[index5][index6]}\r\n {Convert.ToDecimal(Values[index1][index2]):##0.##}s";
-                    if (num1 < (double) Values[index1][index2])
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    Tips[index1][index2] += $"\r\n {Values[index1][index2]:##0.##}s";
+                    if (num1 < Values[index1][index2])
+                    {
                         num1 = Values[index1][index2];
+                    }
                 }
 
                 ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
         }
 
-        private void Values_Universal(Enums.eEffectType iEffectType, bool Sum, bool Debuff)
+        private void ValuesUniversal(Enums.eEffectType iEffectType, bool sum, bool Debuff)
         {
             var archetype = MidsContext.Archetype;
             var num1 = 1f;
             var str = "";
-            var index1 = 0;
-            do
+            for (var index1 = 0; index1 < 1; index1++)
             {
-                var num2 = Powers[index1].Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
                     var effectMagSum = Powers[index1][index2].GetEffectMagSum(iEffectType);
@@ -1646,91 +1621,95 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     {
                         if (Debuff)
                         {
-                            var num3 = effectMagSum.Index.Length - 1;
-                            for (var index4 = 0; index4 <= num3; ++index4)
-                                if (effectMagSum.Value[index4] > 0.0)
-                                    effectMagSum.Value[index4] = 0.0f;
+                            for (var index4 = 0; index4 < effectMagSum.Index.Length; index4++)
+                            {
+                                if (effectMagSum.Value[index4] > 0)
+                                {
+                                    effectMagSum.Value[index4] = 0;
+                                }
                                 else
-                                    effectMagSum.Value[index4] *= -1f;
+                                {
+                                    effectMagSum.Value[index4] *= -1;
+                                }
+                            }
+
                             effectMagSum.ReSum();
                             index3 = effectMagSum.Max;
                         }
                         else
                         {
-                            var num3 = effectMagSum.Index.Length - 1;
-                            for (var index4 = 0; index4 <= num3; ++index4)
-                                if (effectMagSum.Value[index4] < 0.0)
-                                    effectMagSum.Value[index4] = 0.0f;
+                            for (var index4 = 0; index4 < effectMagSum.Index.Length; index4++)
+                            {
+                                if (effectMagSum.Value[index4] < 0)
+                                {
+                                    effectMagSum.Value[index4] = 0;
+                                }
+                            }
+
                             index3 = effectMagSum.Max;
                             effectMagSum.ReSum();
                         }
                     }
 
-                    if (!Sum)
+                    if (!sum)
                     {
                         if (effectMagSum.Present)
                         {
                             str = GetUniversalTipString(effectMagSum, ref Powers[index1][index2]);
                             Values[index1][index2] = effectMagSum.Value[index3];
                             if (Powers[index1][index2].Effects[effectMagSum.Index[index3]].DisplayPercentage)
-                                Values[index1][index2] *= 100f;
+                            {
+                                Values[index1][index2] *= 100;
+                            }
                         }
                     }
                     else
                     {
-                        if (effectMagSum.Present &&
-                            Powers[index1][index2].Effects[effectMagSum.Index[index3]].DisplayPercentage)
+                        if (effectMagSum.Present && Powers[index1][index2].Effects[effectMagSum.Index[index3]].DisplayPercentage)
+                        {
                             effectMagSum.Multiply();
+                        }
+
                         Values[index1][index2] = effectMagSum.Sum;
                     }
 
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
-                        continue;
                     {
-                        Tips[index1][index2] =
-                            DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
-                            Powers[index1][index2].DisplayName;
-                        if (Matching)
-                        {
-                            var tips = Tips;
-                            var index4 = index1;
-                            var index5 = index2;
-                            tips[index4][index5] = tips[index4][index5] + " [Level " +
-                                                   Convert.ToString(Powers[index1][index2].Level) + "]";
-                        }
+                        continue;
+                    }
 
-                        if (Sum)
+                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    if (Matching)
+                    {
+                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                    }
+
+                    if (sum)
+                    {
+                        str = "";
+                        for (var index4 = 0; index4 < effectMagSum.Index.Length; index4++)
                         {
-                            str = "";
-                            var num3 = effectMagSum.Index.Length - 1;
-                            for (var index4 = 0; index4 <= num3; ++index4)
+                            if (str != "")
                             {
-                                if (str != "")
-                                    str += "\r\n";
-                                str = str + "  " + Powers[index1][index2].Effects[effectMagSum.Index[index4]]
-                                    .BuildEffectString().Replace("\r\n", "\r\n  ");
+                                str += "\r\n";
                             }
 
-                            var tips = Tips;
-                            var index5 = index1;
-                            var index6 = index2;
-                            tips[index5][index6] = tips[index5][index6] + "\r\n" + str;
-                        }
-                        else
-                        {
-                            var tips = Tips;
-                            var index4 = index1;
-                            var index5 = index2;
-                            tips[index4][index5] = tips[index4][index5] + "\r\n  " + str;
+                            str += $"  {Powers[index1][index2].Effects[effectMagSum.Index[index4]].BuildEffectString().Replace("\r\n", "\r\n  ")}";
                         }
 
-                        if (num1 < (double) Values[index1][index2])
-                            num1 = Values[index1][index2];
+                        Tips[index1][index2] += $"\r\n{str}";
+                    }
+                    else
+                    {
+                        Tips[index1][index2] += $"\r\n  {str}";
+                    }
+
+                    if (num1 < Values[index1][index2])
+                    {
+                        num1 = Values[index1][index2];
                     }
                 }
-
-                ++index1;
-            } while (index1 <= 1);
+            }
 
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;

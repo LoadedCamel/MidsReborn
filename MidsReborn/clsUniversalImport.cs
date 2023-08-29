@@ -58,11 +58,11 @@ namespace Mids_Reborn
                     continue;
                 Array.Copy(sPowerLine.Slots, new sSlot[sPowerLine.Slots.Length + 1], sPowerLine.Slots.Length + 1);
                 //sPowerLine.Slots = (sSlot[]) Utils.CopyArray(sPowerLine.Slots, new sSlot[sPowerLine.Slots.Length + 1]);
-                sPowerLine.Slots[sPowerLine.Slots.Length - 1].Enh = iStr.Substring(0, num2).Trim();
-                sPowerLine.Slots[sPowerLine.Slots.Length - 1].Level = Convert.ToInt32(iStr.Substring(startIndex).Trim());
+                sPowerLine.Slots[^1].Enh = iStr.Substring(0, num2).Trim();
+                sPowerLine.Slots[^1].Level = Convert.ToInt32(iStr.Substring(startIndex).Trim());
                 if (iStr.Substring(startIndex).Trim().StartsWith("A"))
-                    sPowerLine.Slots[sPowerLine.Slots.Length - 1].Level = sPowerLine.Level;
-                sPowerLine.Slots[sPowerLine.Slots.Length - 1].PowerName = sPowerLine.Power;
+                    sPowerLine.Slots[^1].Level = sPowerLine.Level;
+                sPowerLine.Slots[^1].PowerName = sPowerLine.Power;
             }
 
             return sPowerLine;
@@ -286,7 +286,7 @@ namespace Mids_Reborn
                         continue;
                     //sPowerLineArray = (sPowerLine[]) Utils.CopyArray(sPowerLineArray, new sPowerLine[sPowerLineArray.Length + 1]);
                     Array.Copy(sPowerLineArray, new sPowerLine[sPowerLineArray.Length + 1], sPowerLineArray.Length + 1);
-                    sPowerLineArray[sPowerLineArray.Length - 1].Assign(iPL);
+                    sPowerLineArray[^1].Assign(iPL);
                 }
 
                 for (var index1 = 0; index1 <= sPowerLineArray.Length - 1; ++index1)
@@ -341,10 +341,10 @@ namespace Mids_Reborn
                         }
                         case Enums.ePowerSetType.Ancillary
                             when !MainModule.MidsController.Toon.PoolLocked[
-                                MainModule.MidsController.Toon.PoolLocked.Length - 1]:
+                                ^1]:
                             MidsContext.Character.Powersets[7].nID = power.Powerset;
                             MainModule.MidsController.Toon.PoolLocked[
-                                MainModule.MidsController.Toon.PoolLocked.Length - 1] = true;
+                                ^1] = true;
                             break;
                     }
                 }
@@ -602,7 +602,7 @@ namespace Mids_Reborn
                         continue;
                     //strArray = (string[]) Utils.CopyArray(strArray, new string[strArray.Length + 1]);
                     Array.Copy(strArray, new string[strArray.Length + 1], strArray.Length + 1);
-                    strArray[strArray.Length - 1] = start <= -1
+                    strArray[^1] = start <= -1
                         ? haystack[index1].Substring(num2).Trim()
                         : haystack[index1].Substring(num2, start - num2).Trim();
                 }

@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Utils;
+using Path = System.IO.Path;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Mids_Reborn.Core
 {
@@ -45,7 +49,25 @@ namespace Mids_Reborn.Core
             CharNameBuildFile
         }
 
+        public enum AutoUpdType
+        {
+            None,
+            Disabled,
+            Delay,
+            Startup
+        }
+
+        public enum Modes
+        {
+            User,
+            DbAdmin,
+            AppAdmin
+        }
+
         private const string OverrideNames = "Mids Reborn Comparison Overrides";
+
+        public bool FirstRun { get; set; }
+        public AutoUpdate AutomaticUpdates { get; set; }
 
         public readonly short[] DragDropScenarioAction =
         {
@@ -53,29 +75,25 @@ namespace Mids_Reborn.Core
         };
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-        public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-        public string? AppChangeLog { get; set; }
-        public string? DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
 
-
-        public ConfigData()
+        private ConfigData()
         {
-            CheckForUpdates = true;
-            Authorized = false;
-            Registered = false;
+            AutomaticUpdates = new AutoUpdate(AutoUpdType.Delay);
             DamageMath.Calculate = EDamageMath.Average;
             DamageMath.ReturnValue = EDamageReturn.Numeric;
             I9.DefaultIOLevel = 49;
             TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
             RtFont.SetDefault();
             Tips = new Tips();
-            Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
             WarnOnOldAppMbd = true;
             WarnOnOldDbMbd = true;
+            DimWindowStyleColors = true;
+            CloseEnhSelectPopupByMove = true;
+            Mode = Modes.User;
             InitializeComponent();
         }
 
@@ -89,19 +107,14 @@ namespace Mids_Reborn.Core
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
 
-        public bool Authorized { get; set; }
-        public bool Registered { get; set; }
         public bool UseOldTotalsWindow { get; set; }
 
         public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
 
-        public bool DoNotUpdateFileAssociation { get; set; }
         public int ExempHigh { get; set; } = 50;
         public int TeamSize { get; set; } = 1;
         public int ExempLow { get; set; } = 50;
         public int ForceLevel { get; set; } = 50;
-        public int ExportScheme { get; set; } = 1;
-        public int ExportTarget { get; set; } = 1;
         public bool DisableDataDamageGraph { get; private set; }
         public bool DisableVillainColors { get; set; }
         public bool IsInitialized { get; set; }
@@ -110,7 +123,7 @@ namespace Mids_Reborn.Core
         public bool DisablePrintProfileEnh { get; set; }
         public string LastPrinter { get; set; } = string.Empty;
         public bool DisableLoadLastFileOnStart { get; set; }
-        public string LastFileName { get; set; } = string.Empty;
+        public string? LastFileName { get; set; } = string.Empty;
         public Enums.eEnhGrade CalcEnhOrigin { get; set; } = Enums.eEnhGrade.SingleO;
         public Enums.eEnhRelative CalcEnhLevel { get; set; } = Enums.eEnhRelative.Even;
         public Enums.eDDGraph DataGraphType { get; set; } = Enums.eDDGraph.Both;
@@ -124,18 +137,13 @@ namespace Mids_Reborn.Core
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
-        public bool DisableExportHex { get; set; }
-        private static ConfigData? _current { get; set; }
-
-        public bool ExportBonusTotals { get; set; }
-        public bool ExportBonusList { get; set; }
+        private static ConfigData? Instance { get; set; } = null;
         public bool NoToolTips { get; set; }
         public bool DataDamageGraphPercentageOnly { get; private set; }
-        public bool CheckForUpdates { get; set; }
         public Enums.eVisibleSize DvState { get; set; }
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
-        public ExportConfig Export { get; }
+        public ShareConfig ShareConfig { get; set; } = new();
         public bool PrintInColor { get; set; }
         public bool PrintHistory { get; set; }
         public bool SaveFolderChecked { get; set; }
@@ -147,13 +155,27 @@ namespace Mids_Reborn.Core
         public Tips Tips { get; set; }
         public bool PopupRecipes { get; set; }
         public bool ShoppingListIncludesRecipes { get; set; }
-        public bool ExportChunkOnly { get; set; }
-        public bool LongExport { get; set; }
-        public bool MasterMode { get; set; }
-        public bool IsLcAdmin { get; set; }
+
+        internal bool MasterMode
+        {
+            get
+            {
+                var mode = Mode switch
+                {
+                    Modes.User => false,
+                    Modes.DbAdmin => true,
+                    Modes.AppAdmin => true,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return mode;
+            }
+        }
+        public Modes Mode { get; set; }
         public bool ShrinkFrmSets { get; set; }
         public bool WarnOnOldAppMbd { get; set; }
         public bool WarnOnOldDbMbd { get; set; }
+        public bool DimWindowStyleColors { get; set; }
+        public bool CloseEnhSelectPopupByMove { get; set; }
 
         private string _buildsPath = Files.FDefaultBuildsPath;
 
@@ -184,8 +206,9 @@ namespace Mids_Reborn.Core
                 {
                     if (!Directory.Exists(value))
                     {
-                        Directory.CreateDirectory(value);
+                        if (value != null) Directory.CreateDirectory(value);
                     }
+
                     _savePath = value;
                 }
                 else
@@ -195,7 +218,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public bool FirstRun { get; set; }
+        public string? UpdatePath { get; private set; }
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
@@ -209,8 +232,8 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                var configData = _current;
-                return configData;
+                var configData = Instance;
+                return configData!;
             }
         }
 
@@ -235,32 +258,26 @@ namespace Mids_Reborn.Core
             BuildsPath = Files.FDefaultBuildsPath;
         }
 
-        public static void Initialize(ISerialize serializer)
+        public static void Initialize(bool firstRun = false)
         {
-            var fn = Files.GetConfigFilename();
-            
-            if (File.Exists(fn))
+            var serializer = Serializer.GetSerializer();
+            if (firstRun)
             {
-                try
-                {
-                    var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
-                    _current = value;
-                }
-                catch
-                {
-                    MessageBox.Show("Failed to read config file.");
-                }
+                Instance = new ConfigData();
+                Instance.SaveConfig();
+                Instance.InitializeComponent();
+                return;
             }
 
-            _current?.InitializeComponent();
+            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
+            Instance.InitializeComponent();
         }
 
         private void InitializeComponent()
         {
-            if (string.IsNullOrWhiteSpace(UpdatePath))
-            {
-                UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-            }
+            UpdatePath = Debugger.IsAttached
+                ? "https://midsreborn.com/mids_updates/app-test/update_manifest.xml"
+                : "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
             if (string.IsNullOrWhiteSpace(DataPath))
             {
@@ -299,37 +316,34 @@ namespace Mids_Reborn.Core
 
             return fntSize;
         }
-        
+
         private void SaveRaw(ISerialize serializer, string iFilename)
         {
             SaveRawMhd(serializer, this, iFilename, null);
         }
 
-        public void Save(ISerialize serializer, string iFilename)
+        private void Save(ISerialize serializer, string iFilename)
         {
             SaveRaw(serializer, iFilename);
         }
 
-        // poorly named
-        // saves both config.mhd, and compare.mhd
-        public void SaveConfig(ISerialize serializer)
+        public void SaveConfig()
         {
-            try
+            if (!File.Exists(Files.FNameJsonConfig))
             {
-                Save(serializer, Files.GetConfigFilename());
-                SaveOverrides(serializer);
+                File.Create(Files.FNameJsonConfig);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
+
+            var serializer = Serializer.GetSerializer();
+            Save(serializer, Files.FNameJsonConfig);
+            SaveOverrides(serializer);
         }
 
         private void LoadOverrides()
         {
             if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", "Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($@"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CompOverride = Array.Empty<Enums.CompOverride>();
                 SaveOverrides(Serializer.GetSerializer());
 
@@ -340,7 +354,7 @@ namespace Mids_Reborn.Core
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", "Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($@"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }
@@ -354,7 +368,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static RawSaveResult SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
+        public static RawSaveResult? SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
         {
             var rootDir = Path.GetDirectoryName(fn);
             var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
@@ -400,7 +414,7 @@ namespace Mids_Reborn.Core
                 MessageBox.Show(
                     $"Failed to save to {serializer.Extension.ToUpperInvariant()}: {ex.Message}\r\n\r\nFile: {targetFile}\r\nTemp file: {tempFile}",
                     "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
                 return null;
             }
 
@@ -431,6 +445,20 @@ namespace Mids_Reborn.Core
                 binaryWriter.Write(CompOverride[index].Powerset);
                 binaryWriter.Write(CompOverride[index].Power);
                 binaryWriter.Write(CompOverride[index].Override);
+            }
+        }
+
+        public class AutoUpdate
+        {
+            public bool Enabled => Type is AutoUpdType.Delay or AutoUpdType.Startup;
+            public AutoUpdType Type { get; set; }
+            public int Delay { get; set; }
+            public DateTime? LastChecked { get; set; }
+
+            public AutoUpdate(AutoUpdType type, int delay = 3)
+            {
+                Type = type;
+                Delay = delay;
             }
         }
 
@@ -494,7 +522,6 @@ namespace Mids_Reborn.Core
             public Color ColorPowerHighlightVillain { get; set; }
             public Color ColorDamageBarBase { get; set; }
             public Color ColorDamageBarEnh { get; set; }
-            public List<Color> ColorList { get; set; }
             public bool PairedBold { get; set; }
             public float PairedBase { get; set; }
             public bool PowersSelectBold { get; set; }
@@ -526,7 +553,6 @@ namespace Mids_Reborn.Core
                 ColorPowerHighlightVillain = iFs.ColorPowerHighlightVillain;
                 ColorDamageBarBase = iFs.ColorDamageBarBase;
                 ColorDamageBarEnh = iFs.ColorDamageBarEnh;
-                ColorList = iFs.ColorList;
                 PairedBold = iFs.PairedBold;
                 PairedBase = iFs.PairedBase;
                 PowersSelectBase = iFs.PowersSelectBase;
@@ -603,11 +629,6 @@ namespace Mids_Reborn.Core
                 ColorPowerHighlightVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerHighlightVillain);
                 ColorDamageBarBase = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarBase);
                 ColorDamageBarEnh = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarEnh);
-                ColorList = new List<Color>
-                {
-                    ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
-                    ColorPowerTakenDarkVillain, ColorPowerHighlightVillain
-                };
                 PairedBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PairedBase);
                 PairedBold = false;
                 // Zed: With Tahoma, spaces tend to be munched if PowersSelectBase is at 8.25

@@ -23,7 +23,6 @@ namespace MRBUpdater
         private readonly Queue<UpdateDetails>? _downloadQueue;
         private readonly Queue<InstallDetails> _installQueue;
         private InstallDetails _installDetails;
-        private int _timeToRestart = 5;
 
         public Update(IReadOnlyList<string> passedArgs)
         {
@@ -66,10 +65,10 @@ namespace MRBUpdater
                     lblStatus.Text = @"Downloading Update(s)...";
                     var item = _downloadQueue.Dequeue();
                     var lastSeg = new Uri(item.Uri).Segments.Last();
-                    var updFile = new Uri($"{item.Uri.Replace(lastSeg, $"{item.Version}.mru")}");
-                    PackedUpdate = Path.Combine(Path.GetTempPath(), $"{item.Version}.mru");
+                    var updFile = new Uri($"{item.Uri.Replace(lastSeg, $"{item.File}")}");
+                    PackedUpdate = Path.Combine(Path.GetTempPath(), $"{item.File}");
                     ExtractPath = item.ExtractTo;
-                    lblFileName.Text = $@"{item.Version}.mru";
+                    lblFileName.Text = $@"{item.File}";
                     await client.DownloadFileTaskAsync(updFile, PackedUpdate);
                 }
                 else
@@ -86,11 +85,11 @@ namespace MRBUpdater
             await Task.Delay(50);
             if (e.ProgressPercentage > 99)
             {
-                ctlProgressBar1.Value = e.ProgressPercentage - 1;
+                progressBar.Value = e.ProgressPercentage - 1;
             }
             else
             {
-                ctlProgressBar1.Value = e.ProgressPercentage;
+                progressBar.Value = e.ProgressPercentage;
             }
         }
 
@@ -114,7 +113,7 @@ namespace MRBUpdater
                 while (_installQueue.Count > 0)
                 {
                     _installDetails = _installQueue.Dequeue();
-                    ctlProgressBar1.Value = 0;
+                    progressBar.Value = 0;
                     lblStatus.Text = @"Installing Update(s)...";
                     _patchDecompressor = new PatchDecompressor();
                     _decompressedData = PatchDecompressor.DecompressData(_installDetails.File);
@@ -153,29 +152,18 @@ namespace MRBUpdater
         {
             lblFileName.Text = e.Name;
             await Task.Delay(250);
-            ctlProgressBar1.Value = e.PercentComplete;
+            progressBar.Value = e.PercentComplete;
         }
 
         private async Task UpdaterFinished()
         {
-            ctlProgressBar1.Value = 99;
+            progressBar.Value = 100;
             lblStatus.Text = @"Update Complete!";
             File.Delete(TempFile);
-            await AsyncRestart();
-            Process.Start(Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe"));
+            await Task.Delay(250);
+            lblFileName.Text = @"Cleaning Up and Restarting MRB...";
+            await Task.Delay(1000);
             Application.Exit();
-        }
-
-        private async Task AsyncRestart()
-        {
-            while (_timeToRestart != 0)
-            {
-                lblFileName.Text = $@"Restarting in {_timeToRestart}...";
-                _timeToRestart -= 1;
-                await Task.Delay(1250);
-            }
-            lblFileName.Text = @"Restarting MRB...";
-            await Task.Delay(1500);
         }
     }
 }

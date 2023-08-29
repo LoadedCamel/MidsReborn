@@ -15,7 +15,7 @@ namespace Mids_Reborn.Core
         private const string SubPath = "shell\\open\\command";
         private const string Legacy = @".mxd";
         private const string Current = @".mbd";
-        private const string Schema = @"MidsReborn.URL";
+        private const string Schema = @"mrb";
 
         internal static bool FileTypeScan()
         {

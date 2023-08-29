@@ -42,7 +42,7 @@ namespace Mids_Reborn.Core
         {
             public string FileName { get; set; }
             public string Directory { get; set; }
-            public string Path { get; set; }
+            public string? Path { get; set; }
             public bool IsBase { get; set; }
         }
 
@@ -60,7 +60,10 @@ namespace Mids_Reborn.Core
             foreach (var file in files)
             {
                 var fInfo = new FileInfo(file);
-                retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory?.Name, Path = file, IsBase = true });
+                if (fInfo.Directory != null)
+                {
+                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = true });
+                }
             }
 
             return retList;
@@ -73,7 +76,10 @@ namespace Mids_Reborn.Core
             foreach (var file in files)
             {
                 var fInfo = new FileInfo(file);
-                retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory?.Name, Path = file, IsBase = false });
+                if (fInfo.Directory != null)
+                {
+                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = false });
+                }
             }
 
             return retList;
@@ -135,28 +141,28 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
-        public static async Task<List<string>> LoadButtons()
+        public static async Task<List<string?>> LoadButtons()
         {
-            var cSource = new TaskCompletionSource<List<string>>();
+            var cSource = new TaskCompletionSource<List<string?>>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
-            var buttonImages = Images.Where(x => x.FileName.Contains("pSlot")).ToList();
+            var buttonImages = baseImages.Where(x => x.FileName.Contains("pSlot")).ToList();
             var retList = buttonImages.Select(buttonImage => buttonImage.Path).ToList();
             cSource.TrySetResult(retList);
             return await cSource.Task;
         }
 
-        public static async Task<string> LoadNewSlot()
+        public static async Task<string?> LoadNewSlot()
         {
-            var cSource = new TaskCompletionSource<string>();
+            var cSource = new TaskCompletionSource<string?>();
             var slotImage = Images.FirstOrDefault(x => x.FileName.Contains("New"));
             cSource.TrySetResult(slotImage.Path);
             return await cSource.Task;
         }
 
-        public static async Task<List<string>> LoadArchetypes()
+        public static async Task<List<string?>> LoadArchetypes()
         {
-            var cSource = new TaskCompletionSource<List<string>>();
-            var retList = new List<string>();
+            var cSource = new TaskCompletionSource<List<string?>>();
+            var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
@@ -177,10 +183,58 @@ namespace Mids_Reborn.Core
             return await cSource.Task;
         }
 
-        public static async Task<List<string>> LoadOrigins()
+        public static List<string> ArchetypeImages
         {
-            var cSource = new TaskCompletionSource<List<string>>();
-            var retList = new List<string>();
+            get
+            {
+                var retList = new List<string>();
+                var baseImages = Images.Where(x => x.IsBase).ToList();
+                var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
+                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
+                foreach (var c in DatabaseAPI.Database.Classes)
+                {
+                    var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
+                    if (string.IsNullOrWhiteSpace(path))
+                    {
+                        path = unknown;
+                    }
+
+                    if (retList.Any(p => p == path)) continue;
+                    if (path != null) retList.Add(path);
+                }
+
+                return retList;
+            }
+        }
+
+        public static List<string> OriginImages
+        {
+            get
+            {
+                var retList = new List<string>();
+                var baseImages = Images.Where(x => x.IsBase).ToList();
+                var images = Images.Where(x => x.Directory == "Origins").ToList();
+                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
+                foreach (var o in DatabaseAPI.Database.Origins)
+                {
+                    var path = images.First(i => i.FileName == $"{o.Name}.png").Path;
+                    if (string.IsNullOrWhiteSpace(path))
+                    {
+                        path = unknown;
+                    }
+
+                    if (retList.Any(p => p == path)) continue;
+                    if (path != null) retList.Add(path);
+                }
+
+                return retList;
+            }
+        }
+
+        public static async Task<List<string?>> LoadOrigins()
+        {
+            var cSource = new TaskCompletionSource<List<string?>>();
+            var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var images = Images.Where(x => x.Directory == "Origins").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
@@ -713,12 +767,12 @@ namespace Mids_Reborn.Core
             return Origin.Grade.None;
         }
 
-        public static string GetRecipeName()
+        public static string? GetRecipeName()
         {
             return ImagePath("Overlay") + "\\Recipe.png";
         }
 
-        public static string GetRecipeTransparentName()
+        public static string? GetRecipeTransparentName()
         {
             return ImagePath("Overlay") + "\\Recipe2.png";
         }
@@ -866,7 +920,7 @@ namespace Mids_Reborn.Core
             return new RectangleF(imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height);
         }
 
-        public static string UnknownImgPath()
+        public static string? UnknownImgPath()
         {
             return Images
                 .Where(x => x.IsBase)

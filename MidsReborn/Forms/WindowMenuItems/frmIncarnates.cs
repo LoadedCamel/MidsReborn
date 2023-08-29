@@ -86,6 +86,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 button.IA = myParent.Drawing.pImageAttributes;
                 button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
                 button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+                Debug.WriteLine(button.TextOn);
+                Debug.WriteLine(DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn]);
+                button.Enabled = DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn];
             }
 
             BackColor = myParent.BackColor;

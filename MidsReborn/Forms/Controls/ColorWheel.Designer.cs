@@ -31,6 +31,7 @@
             colorPicker = new System.Windows.Forms.PictureBox();
             colorPreview = new System.Windows.Forms.Panel();
             colorSelection = new System.Windows.Forms.Panel();
+            brightnessSelector = new BrightnessSelector();
             ((System.ComponentModel.ISupportInitialize)colorPicker).BeginInit();
             SuspendLayout();
             // 
@@ -43,8 +44,8 @@
             colorPicker.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             colorPicker.TabIndex = 0;
             colorPicker.TabStop = false;
-            colorPicker.MouseDown += colorPicker_MouseDown;
-            colorPicker.MouseMove += colorPicker_MouseMove;
+            colorPicker.MouseDown += ColorPicker_MouseDown;
+            colorPicker.MouseMove += ColorPicker_MouseMove;
             // 
             // colorPreview
             // 
@@ -64,19 +65,33 @@
             colorSelection.Size = new System.Drawing.Size(146, 35);
             colorSelection.TabIndex = 2;
             // 
+            // brightnessSelector
+            // 
+            brightnessSelector.BackColor = System.Drawing.Color.Transparent;
+            brightnessSelector.CursorColor = System.Drawing.Color.FromArgb(85, 170, 255);
+            brightnessSelector.CursorWidth = 8;
+            brightnessSelector.ForeColor = System.Drawing.Color.White;
+            brightnessSelector.Location = new System.Drawing.Point(309, 0);
+            brightnessSelector.MaximumSize = new System.Drawing.Size(40, 300);
+            brightnessSelector.MinimumSize = new System.Drawing.Size(40, 300);
+            brightnessSelector.Name = "brightnessSelector";
+            brightnessSelector.Size = new System.Drawing.Size(40, 300);
+            brightnessSelector.TabIndex = 3;
+            brightnessSelector.PositionChanged += brightnessSelector_PositionChanged;
+            // 
             // ColorWheel
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            AutoSize = true;
             AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             BackColor = System.Drawing.Color.Transparent;
+            Controls.Add(brightnessSelector);
             Controls.Add(colorSelection);
             Controls.Add(colorPreview);
             Controls.Add(colorPicker);
             DoubleBuffered = true;
             Name = "ColorWheel";
-            Size = new System.Drawing.Size(306, 344);
+            Size = new System.Drawing.Size(379, 344);
             ((System.ComponentModel.ISupportInitialize)colorPicker).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -87,5 +102,6 @@
         private System.Windows.Forms.PictureBox colorPicker;
         private System.Windows.Forms.Panel colorPreview;
         private System.Windows.Forms.Panel colorSelection;
+        private BrightnessSelector brightnessSelector;
     }
 }

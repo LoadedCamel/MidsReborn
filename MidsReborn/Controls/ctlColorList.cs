@@ -16,6 +16,7 @@ namespace Mids_Reborn.Controls
                 ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
                 ControlStyles.UserPaint | ControlStyles.SupportsTransparentBackColor, true);
             DrawMode = DrawMode.OwnerDrawFixed;
+            SelectionMode = SelectionMode.None;
         }
 
         public List<Color> Colors { get; set; }
@@ -30,17 +31,11 @@ namespace Mids_Reborn.Controls
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = e.Graphics;
-            var rec = ClientRectangle;
-
-            /*IntPtr hdc = g.GetHdc();
-            DrawThemeParentBackground(Handle, hdc, ref rec);
-            g.ReleaseHdc(hdc);*/
-
             using var reg = new Region(e.ClipRectangle);
             if (Items.Count > 0)
                 for (var i = 0; i < Items.Count; i++)
                 {
-                    rec = GetItemRectangle(i);
+                    var rec = GetItemRectangle(i);
 
                     if (e.ClipRectangle.IntersectsWith(rec))
                     {
@@ -61,7 +56,7 @@ namespace Mids_Reborn.Controls
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            if (e.Index == 2 || e.Index == 5)
+            if (e.Index is 2 or 5)
             {
                 using Brush backBrush = new SolidBrush(Colors[e.Index]);
                 e.Graphics.FillRectangle(backBrush, e.Bounds);

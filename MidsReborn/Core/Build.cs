@@ -9,6 +9,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Core
 {
@@ -134,13 +135,26 @@ namespace Mids_Reborn.Core
 
         public async Task RemoveSlotFromPowerEntry(int powerIdx, int slotIdx)
         {
-            if (powerIdx < 0 || slotIdx <= 0)  return;
+            if (powerIdx < 0 || slotIdx <= 0)
+            {
+                return;
+            }
+
             var power = Powers.FirstOrDefault(x => x != null && x.IDXPower == powerIdx);
-            if (power == null) return;
-            if (slotIdx > power.Slots.Length) return;
+            if (power == null)
+            {
+                return;
+            }
+
+            if (slotIdx >= power.Slots.Length)
+            {
+                return;
+            }
+
             var slots = power.Slots.ToList();
             slots.RemoveAt(slotIdx);
             power.Slots = slots.ToArray();
+
             await Task.CompletedTask;
         }
 
@@ -724,8 +738,7 @@ namespace Mids_Reborn.Core
                 switch (power?.Power?.FullName)
                 {
                     case "Inherent.Fitness.Health":
-                        if (MidsContext.Config != null)
-                            switch (MidsContext.Config.BuildMode)
+                       switch (MidsContext.Config.BuildMode)
                             {
                                 case Enums.dmModes.LevelUp:
                                     if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot1Level)
@@ -765,44 +778,45 @@ namespace Mids_Reborn.Core
 
                         break;
                     case "Inherent.Fitness.Stamina":
-                        if (MidsContext.Config != null)
-                            switch (MidsContext.Config.BuildMode)
-                            {
-                                case Enums.dmModes.LevelUp:
-                                    if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.StaminaSlot1Level)
+                        switch (MidsContext.Config.BuildMode)
+                        {
+                            case Enums.dmModes.LevelUp:
+                                if (MidsContext.Character != null && MidsContext.Character.Level ==
+                                    DatabaseAPI.ServerData.StaminaSlot1Level)
+                                {
+                                    if (power.InherentSlotsUsed < 1)
                                     {
-                                        if (power.InherentSlotsUsed < 1)
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
-                                            power.InherentSlotsUsed += 1;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
+                                        power.InherentSlotsUsed += 1;
                                     }
+                                }
 
-                                    if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.StaminaSlot2Level)
+                                if (MidsContext.Character != null && MidsContext.Character.Level ==
+                                    DatabaseAPI.ServerData.StaminaSlot2Level)
+                                {
+                                    if (power.InherentSlotsUsed is > 0 and < 2)
                                     {
-                                        if (power.InherentSlotsUsed is > 0 and < 2)
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
-                                            power.InherentSlotsUsed += 1;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
+                                        power.InherentSlotsUsed += 1;
                                     }
+                                }
 
-                                    break;
-                                case Enums.dmModes.Normal
-                                    : // Need to check if a build is started if not then do not add slots
-                                    var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList().Count;
-                                    if (chosenCount > 0)
+                                break;
+                            case Enums.dmModes.Normal
+                                : // Need to check if a build is started if not then do not add slots
+                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList().Count;
+                                if (chosenCount > 0)
+                                {
+                                    if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
                                     {
-                                        if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
-                                            power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
-                                            power.InherentSlotsUsed = 2;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
+                                        power.InherentSlotsUsed = 2;
                                     }
+                                }
 
-                                    break;
-                            }
+                                break;
+                        }
 
                         break;
 
@@ -908,66 +922,104 @@ namespace Mids_Reborn.Core
         public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
         {
             if (nLevel < 0)
+            {
                 return false;
+            }
 
             var nIdSkip = -1;
-            if ((skipIdx > -1) & (skipIdx < Powers.Count))
+            if (skipIdx > -1 & skipIdx < Powers.Count)
+            {
                 nIdSkip = Powers[skipIdx].Power == null ? -1 : Powers[skipIdx].Power.PowerIndex;
+            }
+
             if (nLevel + 1 < power.Level)
+            {
                 return false;
-            if ((power.Requires.NClassName.Length == 0) & (power.Requires.NClassNameNot.Length == 0) &
-                (power.Requires.NPowerID.Length == 0) &
-                (power.Requires.NPowerIDNot.Length == 0))
+            }
+
+            if (power.Requires.NClassName.Length == 0 & power.Requires.NClassNameNot.Length == 0 & power.Requires.NPowerID.Length == 0 & power.Requires.NPowerIDNot.Length == 0)
+            {
                 return true;
+            }
 
             var valid = power.Requires.NClassName.Length == 0;
 
             foreach (var clsNameIdx in power.Requires.NClassName)
+            {
                 if (MidsContext.Character.Archetype.Idx == clsNameIdx)
+                {
                     valid = true;
+                }
+            }
 
-            if (power.Requires.NClassNameNot.Any(nclsnamenot => MidsContext.Character.Archetype.Idx == nclsnamenot)
-            ) return false;
+            if (power.Requires.NClassNameNot.Any(nClsNameNot => MidsContext.Character.Archetype.Idx == nClsNameNot))
+            {
+                return false;
+            }
 
             if (!valid)
+            {
                 return false;
+            }
 
             if (power.Requires.NPowerID.Length > 0)
+            {
                 valid = false;
+            }
+
             foreach (var numArray in power.Requires.NPowerID)
             {
                 var doubleValid = true;
-                foreach (var nIDPower in numArray)
+                var powerIndex = -1;
+                foreach (var nIdPower in numArray)
                 {
-                    if (nIDPower <= -1)
-                        continue;
-                    var index = -1;
-                    if (nIDPower != nIdSkip)
-                        index = FindInToonHistory(nIDPower);
-                    if (index < 0)
+                    if (nIdPower <= -1) continue;
+                    if (nIdPower != nIdSkip)
+                    {
+                        powerIndex = FindInToonHistory(nIdPower);
+                    }
+
+                    if (powerIndex < 0 || Powers[powerIndex]?.Level > nLevel)
+                    {
                         doubleValid = false;
-                    else if (Powers[index].Level > nLevel)
-                        doubleValid = false;
+                    }
                 }
 
                 if (!doubleValid)
+                {
                     continue;
+                }
+
                 valid = true;
                 break;
             }
 
             if (!valid)
+            {
                 return false;
+            }
+
             foreach (var numArray in power.Requires.NPowerIDNot)
-                foreach (var nIDPower in numArray)
+            {
+                foreach (var nIdPower in numArray)
                 {
-                    if (nIDPower <= -1) continue;
+                    if (nIdPower <= -1)
+                    {
+                        continue;
+                    }
+
                     var histIdx = -1;
-                    if (nIDPower != nIdSkip)
-                        histIdx = FindInToonHistory(nIDPower);
+                    if (nIdPower != nIdSkip)
+                    {
+                        histIdx = FindInToonHistory(nIdPower);
+                    }
+
                     if (histIdx > -1)
+                    {
                         return false;
+                    }
                 }
+            }
 
             return true;
         }
@@ -1085,13 +1137,20 @@ namespace Mids_Reborn.Core
                 for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
                     if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
+                    {
                         continue;
+                    }
+
                     if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
                     {
                         if (!silent)
                         {
-                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
+                            // Standard MessageBox may spawn behind TopMost controls like the totals or sets windows.
+                            //MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
+                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning);
+                            msgBox.ShowDialog();
                         }
+
                         return false;
                     }
 
@@ -1482,6 +1541,121 @@ namespace Mids_Reborn.Core
         public void FullMutexCheck()
         {
             for (var hIdx = Powers.Count - 1; hIdx >= 0; hIdx += -1) MutexV2(hIdx, true, true);
+        }
+
+        public Dictionary<FXIdentifierKey, List<FXSourceData>> GetEffectSources()
+        {
+            var ret = new Dictionary<FXIdentifierKey, List<FXSourceData>>();
+
+            foreach (var s in SetBonus)
+            {
+                for (var i = 0; i < s.SetInfo.Length; i++)
+                {
+                    if (s.SetInfo[i].Powers.Length <= 0) continue;
+
+                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX];
+                    var sourcePower = DatabaseAPI.Database
+                        .Powersets[Powers[s.PowerIndex].NIDPowerset]
+                        .Powers[Powers[s.PowerIndex].IDXPower];
+                    var powerName = sourcePower.DisplayName;
+
+                    for (var j = 0; j < enhancementSet.Bonus.Length; j++)
+                    {
+                        var pvMode = enhancementSet.Bonus[j].PvMode;
+                        if (!((s.SetInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
+                              ((pvMode == Enums.ePvX.Any) |
+                               ((pvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                               ((pvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
+                            continue;
+
+                        var setEffectsData = enhancementSet.GetEffectDetailedData2(j, false);
+                        var setLinkedPowers = enhancementSet.GetEnhancementSetLinkedPowers(j, false);
+
+                        foreach (var e in setEffectsData)
+                        {
+                            var p = setLinkedPowers.First(pw => pw.FullName == e.Key);
+                            foreach (var fx in e.Value)
+                            {
+                                var identKey = new FXIdentifierKey
+                                {
+                                    EffectType = fx.EffectType,
+                                    MezType = fx.MezType,
+                                    DamageType = fx.DamageType,
+                                    TargetEffectType = fx.ETModifies,
+                                };
+
+                                if (!ret.ContainsKey(identKey))
+                                {
+                                    ret.Add(identKey, new List<FXSourceData>());
+                                }
+
+                                ret[identKey].Add(new FXSourceData
+                                {
+                                    Fx = fx,
+                                    Mag = fx.Mag,
+                                    EnhSet = enhancementSet.DisplayName,
+                                    Power = powerName,
+                                    PvMode = pvMode,
+                                    IsFromEnh = false,
+                                    AffectedEntity = p.EntitiesAffected,
+                                    EntitiesAutoHit = p.EntitiesAutoHit
+                                });
+                            }
+                        }
+                    }
+
+                    foreach (var si in s.SetInfo[i].EnhIndexes)
+                    {
+                        var specialEnhIdx = DatabaseAPI.IsSpecialEnh(si);
+                        if (specialEnhIdx <= -1) continue;
+
+                        var enhEffectsData = enhancementSet.GetEffectDetailedData2(specialEnhIdx, true);
+                        var setLinkedPowers = enhancementSet.GetEnhancementSetLinkedPowers(specialEnhIdx, true);
+                        foreach (var e in enhEffectsData)
+                        {
+                            var p = setLinkedPowers.First(pw => pw.FullName == e.Key);
+                            foreach (var fx in e.Value)
+                            {
+                                var identKey = new FXIdentifierKey
+                                {
+                                    EffectType = fx.EffectType,
+                                    MezType = fx.MezType,
+                                    DamageType = fx.DamageType,
+                                    TargetEffectType = fx.ETModifies
+                                };
+
+                                if (!ret.ContainsKey(identKey)) ret.Add(identKey, new List<FXSourceData>());
+                                ret[identKey].Add(new FXSourceData
+                                {
+                                    Fx = fx,
+                                    Mag = fx.Mag,
+                                    EnhSet = enhancementSet.DisplayName,
+                                    Power = powerName,
+                                    PvMode = Enums.ePvX.Any,
+                                    IsFromEnh = true,
+                                    AffectedEntity = p.EntitiesAffected,
+                                    EntitiesAutoHit = p.EntitiesAutoHit,
+                                    Enhancement = DatabaseAPI.Database.Enhancements[si]
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var fxListSub in ret)
+            {
+                // Sort each type of buff, biggest one first
+                fxListSub.Value.Sort((a, b) => -a.Mag.CompareTo(b.Mag));
+            }
+
+            // Sort groups by effect type, mez type, damage type and target effect type (e.g. for enhancement(something) )
+            ret = ret
+                .OrderBy(pair =>
+                    $"{pair.Key.EffectType}{(int)pair.Key.MezType:0:000}{(int)pair.Key.DamageType:0:000}{(int)pair.Key.TargetEffectType:0:000}")
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            return ret;
         }
 
         #region EDFigures sub-class
@@ -1978,7 +2152,222 @@ namespace Mids_Reborn.Core
                 return ret;
             }
         }
-        
+
+        #endregion
+
+        #region FXIdentifierKey sub-class
+        public class FXIdentifierKey
+        {
+            public Enums.eEffectType EffectType { get; set; }
+            public Enums.eMez MezType { get; set; }
+            public Enums.eDamage DamageType { get; set; }
+            public Enums.eEffectType TargetEffectType { get; set; }
+
+            public Enums.eFXGroup L1Group
+            {
+                get
+                {
+                    if (EffectType == Enums.eEffectType.Damage |
+                        EffectType == Enums.eEffectType.DamageBuff |
+                        EffectType == Enums.eEffectType.Accuracy |
+                        EffectType == Enums.eEffectType.ToHit |
+                        EffectType == Enums.eEffectType.RechargeTime |
+                        EffectType == Enums.eEffectType.Range |
+                        EffectType == Enums.eEffectType.Enhancement &
+                        (TargetEffectType == Enums.eEffectType.RechargeTime |
+                         TargetEffectType == Enums.eEffectType.Accuracy))
+                    {
+                        return Enums.eFXGroup.Offense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Regeneration |
+                        EffectType == Enums.eEffectType.HitPoints |
+                        EffectType == Enums.eEffectType.Absorb |
+                        EffectType == Enums.eEffectType.Recovery |
+                        EffectType == Enums.eEffectType.Endurance |
+                        EffectType == Enums.eEffectType.EnduranceDiscount)
+                    {
+                        return Enums.eFXGroup.Survival;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Mez |
+                        EffectType == Enums.eEffectType.MezResist |
+                        EffectType == Enums.eEffectType.Slow |
+                        EffectType == Enums.eEffectType.ResEffect |
+                        (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.None & MezType != Enums.eMez.None))
+                    {
+                        return Enums.eFXGroup.StatusEffects;
+                    }
+
+                    if (EffectType == Enums.eEffectType.SpeedRunning |
+                        EffectType == Enums.eEffectType.MaxRunSpeed |
+                        EffectType == Enums.eEffectType.SpeedJumping |
+                        EffectType == Enums.eEffectType.JumpHeight |
+                        EffectType == Enums.eEffectType.MaxJumpSpeed |
+                        EffectType == Enums.eEffectType.SpeedFlying |
+                        EffectType == Enums.eEffectType.MaxFlySpeed)
+                    {
+                        return Enums.eFXGroup.Movement;
+                    }
+
+                    if (EffectType == Enums.eEffectType.StealthRadius |
+                        EffectType == Enums.eEffectType.StealthRadiusPlayer |
+                        EffectType == Enums.eEffectType.PerceptionRadius)
+                    {
+                        return Enums.eFXGroup.Perception;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance |
+                        EffectType == Enums.eEffectType.Defense |
+                        EffectType == Enums.eEffectType.Elusivity)
+                    {
+                        return Enums.eFXGroup.Defense;
+                    }
+
+                    return Enums.eFXGroup.Misc;
+                }
+            }
+
+            public Enums.eFXSubGroup L2Group
+            {
+                get
+                {
+                    if (EffectType == Enums.eEffectType.DamageBuff)
+                    {
+                        return Enums.eFXSubGroup.DamageAll;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (MezType == Enums.eMez.Sleep |
+                         MezType == Enums.eMez.Stunned |
+                         MezType == Enums.eMez.Held |
+                         MezType == Enums.eMez.Immobilized |
+                         MezType == Enums.eMez.Confused |
+                         MezType == Enums.eMez.Terrorized))
+                    {
+                        return Enums.eFXSubGroup.MezResistAll;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
+                    {
+                        return Enums.eFXSubGroup.SmashLethalDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
+                    {
+                        return Enums.eFXSubGroup.FireColdDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
+                    {
+                        return Enums.eFXSubGroup.EnergyNegativeDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
+                    {
+                        return Enums.eFXSubGroup.SmashLethalResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
+                    {
+                        return Enums.eFXSubGroup.FireColdResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
+                    {
+                        return Enums.eFXSubGroup.EnergyNegativeResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (TargetEffectType == Enums.eEffectType.SpeedRunning |
+                         TargetEffectType == Enums.eEffectType.SpeedJumping |
+                         TargetEffectType == Enums.eEffectType.SpeedFlying |
+                         TargetEffectType == Enums.eEffectType.RechargeTime))
+                    {
+                        return Enums.eFXSubGroup.SlowResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.Slow) // ???
+                    {
+                        return Enums.eFXSubGroup.SlowBuffs;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (MezType == Enums.eMez.Knockback | MezType == Enums.eMez.Knockup))
+                    {
+                        return Enums.eFXSubGroup.KnockResistance;
+                    }
+
+                    return Enums.eFXSubGroup.NoGroup;
+                }
+            }
+
+            public string L2GroupText()
+            {
+                return L2Group switch
+                {
+                    Enums.eFXSubGroup.DamageAll => "Damage(All)",
+                    Enums.eFXSubGroup.MezResistAll => "MezResist(All)",
+                    Enums.eFXSubGroup.SmashLethalDefense => "S/L Defense",
+                    Enums.eFXSubGroup.FireColdDefense => "Fire/Cold Defense",
+                    Enums.eFXSubGroup.EnergyNegativeDefense => "Energy/Negative Defense",
+                    Enums.eFXSubGroup.SmashLethalResistance => "S/L Resistance",
+                    Enums.eFXSubGroup.FireColdResistance => "Fire/Cold Resistance",
+                    Enums.eFXSubGroup.EnergyNegativeResistance => "Energy/Negative Resistance",
+                    Enums.eFXSubGroup.SlowResistance => "Slow Resistance",
+                    Enums.eFXSubGroup.SlowBuffs => "Slows",
+                    Enums.eFXSubGroup.KnockProtection => "Knock Protection",
+                    Enums.eFXSubGroup.KnockResistance => "Knock Resistance",
+                    Enums.eFXSubGroup.Jump => "Jump",
+                    _ => "No group"
+                };
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is FXIdentifierKey o)
+                {
+                    return (EffectType == o.EffectType &
+                            MezType == o.MezType &
+                            DamageType == o.DamageType &
+                            TargetEffectType == o.TargetEffectType);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return EffectType.GetHashCode() ^ MezType.GetHashCode() ^ DamageType.GetHashCode() ^ TargetEffectType.GetHashCode();
+            }
+        }
+        #endregion
+
+        #region FXSourceData sub-class
+
+        public class FXSourceData
+        {
+            private IEffect _fx;
+            public IEffect Fx
+            {
+                get => _fx;
+                set => _fx = (IEffect)value.Clone();
+            }
+            public float Mag { get; set; }
+            public string EnhSet { get; set; }
+            public string Power { get; set; }
+            public Enums.ePvX PvMode { get; set; }
+            public bool IsFromEnh { get; set; }
+            public Enums.eEntity AffectedEntity { get; set; }
+            public Enums.eEntity EntitiesAutoHit { get; set; }
+            public IEnhancement Enhancement { get; set; }
+        }
         #endregion
     }
 }

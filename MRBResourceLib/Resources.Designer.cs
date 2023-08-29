@@ -71,12 +71,78 @@ namespace MRBResourceLib {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///&lt;title&gt;{title}&lt;/title&gt;
+        ///&lt;meta name=&quot;twitter:title&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:description&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:image&quot; content=&quot;&quot;&gt;
+        ///&lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot;&gt;
+        ///&lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///&lt;style&gt;
+        ///        body {
+        ///            background-color: black;
+        ///            color: whitesmoke;
+        ///        }
+        ///
+        ///        * {
+        ///            font-family: Helvetica, Arial, sans-serif;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Boilerplate {
+            get {
+                return ResourceManager.GetString("Boilerplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ColorSpectrum {
+            get {
+                object obj = ResourceManager.GetObject("ColorSpectrum", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap defaultAvatar {
             get {
                 object obj = ResourceManager.GetObject("defaultAvatar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///&lt;title&gt;{title}&lt;/title&gt;
+        ///&lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///&lt;style&gt;
+        ///        body {
+        ///            background-color: black;
+        ///            color: whitesmoke;
+        ///        }
+        ///
+        ///        * {
+        ///            font-family: Helvetica, Arial, sans-serif;
+        ///            font-size: 1em;
+        ///        }
+        ///
+        ///        .sectionBlock {
+        ///            border: 0.125em solid inherit;
+        ///            border-radius: 0.3125em;
+        ///            -moz-border-radius: 0.3 [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string DummyBoilerPlate {
+            get {
+                return ResourceManager.GetString("DummyBoilerPlate", resourceCulture);
             }
         }
         
@@ -106,6 +172,16 @@ namespace MRBResourceLib {
         public static System.Drawing.Bitmap enhData {
             get {
                 object obj = ResourceManager.GetObject("enhData", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap gradientBar {
+            get {
+                object obj = ResourceManager.GetObject("gradientBar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,6 +319,16 @@ namespace MRBResourceLib {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap selector {
+            get {
+                object obj = ResourceManager.GetObject("selector", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap VillainButton {
             get {
                 object obj = ResourceManager.GetObject("VillainButton", resourceCulture);
@@ -256,16 +342,6 @@ namespace MRBResourceLib {
         public static System.Drawing.Bitmap VillainButtonHover {
             get {
                 object obj = ResourceManager.GetObject("VillainButtonHover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap ColorSpectrum {
-            get {
-                object obj = ResourceManager.GetObject("ColorSpectrum", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

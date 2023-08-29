@@ -28,20 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // ctlTotalsTabStrip
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Name = "ctlTotalsTabStrip";
-            this.Size = new System.Drawing.Size(532, 24);
-            this.Load += new System.EventHandler(this.ctlTotalsTabStrip_Load);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ctlTotalsTabStrip_MouseClick);
-            this.MouseLeave += new System.EventHandler(this.ctlTotalsTabStrip_MouseLeave);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlTotalsTabStrip_MouseMove);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.Black;
+            ForeColor = System.Drawing.Color.WhiteSmoke;
+            Name = "ctlTotalsTabStrip";
+            Size = new System.Drawing.Size(532, 24);
+            Load += ctlTotalsTabStrip_Load;
+            MouseClick += ctlTotalsTabStrip_MouseClick;
+            MouseLeave += ctlTotalsTabStrip_MouseLeave;
+            MouseMove += ctlTotalsTabStrip_MouseMove;
+            ResumeLayout(false);
         }
 
         #endregion

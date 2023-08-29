@@ -154,7 +154,7 @@ namespace Mids_Reborn
             }
             else
             {
-                if ((DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary) & !flag1 && (CurrentBuild.Powers[1].NIDPowerset < 0) & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
+                if (DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary & !flag1 && CurrentBuild.Powers[1].NIDPowerset < 0 & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
                 {
                     SetPower_NID(1, numArray[0]);
                 }
@@ -703,7 +703,7 @@ namespace Mids_Reborn
             for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
                 if (CurrentBuild.Powers[index1] == null) continue;
-                if (!(CurrentBuild.Powers[index1].StatInclude & (_buffedPower[index1] != null)))
+                if (!(CurrentBuild.Powers[index1].StatInclude & _buffedPower[index1] != null))
                 {
                     continue;
                 }
@@ -716,7 +716,7 @@ namespace Mids_Reborn
 
                 foreach (var buffedPwr in _buffedPower[index1].Effects)
                 {
-                    if ((buffedPwr.EffectType == Enums.eEffectType.Fly) & (buffedPwr.Mag > 0.0))
+                    if (buffedPwr.EffectType == Enums.eEffectType.Fly & buffedPwr.Mag > 0)
                     {
                         canFly = true;
                     }
@@ -754,7 +754,7 @@ namespace Mids_Reborn
             Totals.BuffEndRdx = _selfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx];
             Totals.BuffHaste = _selfEnhance.Effect[(int)Enums.eStatType.Haste] + _selfBuffs.Effect[(int)Enums.eStatType.Haste];
             Totals.BuffToHit = _selfBuffs.Effect[(int)Enums.eStatType.ToHit];
-            Totals.Perception = (float) (Statistics.BasePerception * (1.0 + _selfBuffs.Effect[(int)Enums.eStatType.Perception]));
+            Totals.Perception = Statistics.BasePerception * (1 + _selfBuffs.Effect[(int)Enums.eStatType.Perception]);
             Totals.StealthPvE = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvE];
             Totals.StealthPvP = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvP];
             Totals.ThreatLevel = _selfBuffs.Effect[(int)Enums.eStatType.ThreatLevel];
@@ -780,7 +780,7 @@ namespace Mids_Reborn
             if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
                 Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
             
-            Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4.0);
+            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;
             
             Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
             if (!canFly)
@@ -810,7 +810,7 @@ namespace Mids_Reborn
             {
                 Totals.BuffDam = maxDmgBuff;
             }
-            else if ((maxDmgBuff - (double) avgDmgBuff > avgDmgBuff - (double) minDmgBuff) & (minDmgBuff > 0.0))
+            else if (maxDmgBuff - (double) avgDmgBuff > avgDmgBuff - (double) minDmgBuff & minDmgBuff > 0.0)
             {
                 Totals.BuffDam = minDmgBuff;
             }
@@ -1276,7 +1276,7 @@ namespace Mids_Reborn
         {
             _buffedPower = new IPower[CurrentBuild.Powers.Count];
             _mathPower = new IPower[CurrentBuild.Powers.Count];
-            for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
+            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
             {
                 if (CurrentBuild.Powers[hIDX] == null) continue;
                 if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
@@ -1286,29 +1286,23 @@ namespace Mids_Reborn
                 }
             }
 
-            for (var index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
+            for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
                 if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1]?.NIDPower <= -1)
                     continue;
-                var num3 = CurrentBuild.Powers.Count - 1;
-                for (var index2 = 0; index2 <= num3; ++index2)
+                for (var index2 = 0; index2 < CurrentBuild.Powers.Count; index2++)
                 {
-                    switch ((index1 != index2) & CurrentBuild.Powers[index2]?.StatInclude & (CurrentBuild.Powers[index2]?.NIDPower > -1))
-                    {
-                        case false:
-                            continue;
-                        default:
-                        {
-                            var effectType = Enums.eEffectType.GrantPower;
-                            GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false,
-                                ref effectType);
-                            break;
-                        }
-                    }
+                    if (((index1 != index2) & CurrentBuild.Powers[index2]?.StatInclude &
+                         (CurrentBuild.Powers[index2]?.NIDPower > -1)) == false)
+                        continue;
+
+                    var effectType = Enums.eEffectType.GrantPower;
+                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false,
+                        ref effectType);
                 }
             }
 
-            for (var hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
+            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
             {
                 if (CurrentBuild.Powers[hIDX] == null || CurrentBuild.Powers[hIDX].NIDPower <= -1)
                     continue;
@@ -1332,15 +1326,15 @@ namespace Mids_Reborn
                 return false;
             }
 
-            powerMath.Accuracy = 0.0f;
-            powerMath.EndCost = 0.0f;
-            powerMath.InterruptTime = 0.0f;
-            powerMath.Range = 0.0f;
-            powerMath.RechargeTime = 0.0f;
+            powerMath.Accuracy = 0;
+            powerMath.EndCost = 0;
+            powerMath.InterruptTime = 0;
+            powerMath.Range = 0;
+            powerMath.RechargeTime = 0;
             foreach (var effect in powerMath.Effects)
             {
-                effect.Math_Mag = 0.0f;
-                effect.Math_Duration = 0.0f;
+                effect.Math_Mag = 0;
+                effect.Math_Duration = 0;
             }
 
             var isAcc = DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower].IgnoreEnhancement(Enums.eEnhance.Accuracy);
@@ -1351,7 +1345,7 @@ namespace Mids_Reborn
 
             for (var index = 0; index < CurrentBuild.Powers[hIDX].SlotCount; index++)
             {
-                if (!((CurrentBuild.Powers[hIDX].Slots[index].Enhancement.Enh > -1) & (CurrentBuild.Powers[hIDX].Slots[index].Level < MidsContext.Config.ForceLevel)))
+                if (!(CurrentBuild.Powers[hIDX].Slots[index].Enhancement.Enh > -1 & CurrentBuild.Powers[hIDX].Slots[index].Level < MidsContext.Config.ForceLevel))
                 {
                     continue;
                 }
@@ -1374,7 +1368,7 @@ namespace Mids_Reborn
                     powerMath.RechargeTime += enhancement.GetEnhancementEffect(Enums.eEnhance.RechargeTime, -1, 1f);
                 }
 
-                for (var effIdx = 0; effIdx <= powerMath.Effects.Length - 1; ++effIdx)
+                for (var effIdx = 0; effIdx < powerMath.Effects.Length; effIdx++)
                 {
                     if (!powerMath.Effects[effIdx].Buffable)
                     {
@@ -1389,19 +1383,19 @@ namespace Mids_Reborn
                         }
 
                         var eEnhance = Enums.eEnhance.None;
-                        var num6 = 0.0f;
+                        var num6 = 0f;
                         var eEffectType2 = (Enums.eEffectType)index2;
                         var flag6 = Enums.IsEnumValue(Enum.GetName(typeof(Enums.eEffectType), eEffectType2), eEnhance);
                         
                         var flag7 = false;
                         if (!flag6)
                         {
-                            if ((powerMath.Effects[effIdx].EffectType == Enums.eEffectType.Enhancement) & (powerMath.Effects[effIdx].ETModifies == Enums.eEffectType.Accuracy))
+                            if (powerMath.Effects[effIdx].EffectType == Enums.eEffectType.Enhancement & powerMath.Effects[effIdx].ETModifies == Enums.eEffectType.Accuracy)
                             {
                                 flag6 = true;
                                 flag7 = true;
                             }
-                            else if ((powerMath.Effects[effIdx].EffectType == Enums.eEffectType.ResEffect) & (powerMath.Effects[effIdx].ETModifies == Enums.eEffectType.Defense))
+                            else if (powerMath.Effects[effIdx].EffectType == Enums.eEffectType.ResEffect & powerMath.Effects[effIdx].ETModifies == Enums.eEffectType.Defense)
                             {
                                 flag6 = true;
                             }
@@ -1412,54 +1406,41 @@ namespace Mids_Reborn
                             continue;
                         }
 
-                        Enums.eEnhance iEffect;
-                        if (!flag7)
-                        {
-                            iEffect = (Enums.eEnhance)Enums.StringToFlaggedEnum(Enum.GetName(typeof(Enums.eEffectType), eEffectType2), eEnhance);
-                        }
-                        else
-                        {
-                            iEffect = Enums.eEnhance.Accuracy;
-                        }
+                        var iEffect = !flag7
+                            ? (Enums.eEnhance)Enums.StringToFlaggedEnum(
+                                Enum.GetName(typeof(Enums.eEffectType), eEffectType2), eEnhance)
+                            : Enums.eEnhance.Accuracy;
 
-                        float num7;
-                        if (eEffectType2 != Enums.eEffectType.Mez)
-                        {
-                            if (!((eEffectType2 == Enums.eEffectType.ResEffect) & (powerMath.Effects[effIdx].ETModifies == Enums.eEffectType.Defense)))
-                            {
-                                num7 = enhancement.GetEnhancementEffect(iEffect, -1, _buffedPower[hIDX].Effects[effIdx].Math_Mag);
-                            }
-                            else
-                            {
-                                num7 = enhancement.GetEnhancementEffect(Enums.eEnhance.Defense, -1, _buffedPower[hIDX].Effects[effIdx].Math_Mag);
-                            }
-                        }
-                        else
-                        {
-                            num7 = enhancement.GetEnhancementEffect(iEffect, (int)powerMath.Effects[effIdx].MezType, _buffedPower[hIDX].Effects[effIdx].Math_Mag);
-                        }
+                        var num7 = eEffectType2 != Enums.eEffectType.Mez
+                            ? !(eEffectType2 == Enums.eEffectType.ResEffect & powerMath.Effects[effIdx].ETModifies ==
+                                Enums.eEffectType.Defense)
+                                ? enhancement.GetEnhancementEffect(iEffect, -1,
+                                    _buffedPower[hIDX].Effects[effIdx].Math_Mag)
+                                : enhancement.GetEnhancementEffect(Enums.eEnhance.Defense, -1,
+                                    _buffedPower[hIDX].Effects[effIdx].Math_Mag)
+                            : enhancement.GetEnhancementEffect(iEffect, (int)powerMath.Effects[effIdx].MezType,
+                                _buffedPower[hIDX].Effects[effIdx].Math_Mag);
 
-                        if ((eEffectType2 == Enums.eEffectType.Damage) & (powerMath.Effects[effIdx].DamageType == Enums.eDamage.Special))
+                        if (eEffectType2 == Enums.eEffectType.Damage & powerMath.Effects[effIdx].DamageType == Enums.eDamage.Special)
                         {
-                            num7 = 0.0f;
+                            num7 = 0;
                         }
                         else if (eEffectType2 == Enums.eEffectType.Mez && powerMath.Effects[effIdx].AttribType == Enums.eAttribType.Duration)
                         {
                             num6 = num7;
-                            num7 = 0.0f;
+                            num7 = 0;
                         }
-                        
+
                         powerMath.Effects[effIdx].Math_Mag += num7;
                         powerMath.Effects[effIdx].Math_Duration += num6;
                     }
                 }
             }
 
-            var num8 = CurrentBuild.Powers.Count - 1;
-            for (var index = 0; index <= num8; ++index)
+            for (var index = 0; index < CurrentBuild.Powers.Count; index++)
             {
                 if (CurrentBuild.Powers[index] == null) continue;
-                if (!(CurrentBuild.Powers[index].StatInclude & (CurrentBuild.Powers[index].NIDPower > -1))) continue;
+                if (!(CurrentBuild.Powers[index].StatInclude & CurrentBuild.Powers[index].NIDPower > -1)) continue;
                 var effectType = Enums.eEffectType.Enhancement;
                 GBPA_ApplyIncarnateEnhancements(ref powerMath, hIDX, _mathPower[index], false, ref effectType);
             }
@@ -1784,7 +1765,7 @@ namespace Mids_Reborn
             for (var i = 0; i < CurrentBuild.Powers.Count; i++)
             {
                 if (CurrentBuild.Powers[i] == null) continue;
-                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
+                if (!(CurrentBuild.Powers[i].StatInclude & CurrentBuild.Powers[i].NIDPower > -1) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
                     continue;
 
                 if (_buffedPower[i] == null) continue;
@@ -1856,7 +1837,13 @@ namespace Mids_Reborn
         {
             if (basePowerHistoryIdx < 0)
             {
-                return null;
+                // If root power is not picked in build, get unbuffed powers data from the db directly.
+                var powersList = powers
+                    .Select(e => DatabaseAPI.Database.Power.DefaultIfEmpty(new Power { StaticIndex = -1 }).FirstOrDefault(f => f?.StaticIndex == e.StaticIndex))
+                    .Cast<IPower>()
+                    .ToList();
+
+                return new KeyValuePair<List<IPower>, List<IPower>>(powersList.Clone(), powersList.Clone());
             }
 
             var mathPowers = new List<IPower>();
@@ -2276,29 +2263,29 @@ namespace Mids_Reborn
             popupData.Sections[index1].Add(power.DisplayName, PopUp.Colors.Title, 1.25f);
             if (power.PowerSetID > -1)
             {
-                popupData.Sections[index1].Add("Powerset: " + DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                popupData.Sections[index1].Add($"Powerset: {DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName}", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
             }
 
             if (hIDX > -1)
             {
                 if (CurrentBuild.Powers[hIDX].Chosen)
                 {
-                    popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                    popupData.Sections[index1].Add("Placed: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Available: Level {power.Level}", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Placed: Level {CurrentBuild.Powers[hIDX].Level + 1}", PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                 }
                 else
                 {
-                    popupData.Sections[index1].Add("Inherent: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                    popupData.Sections[index1].Add($"Inherent: Level {CurrentBuild.Powers[hIDX].Level + 1}", PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                 }
             }
             else
             {
-                popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                popupData.Sections[index1].Add($"Available: Level {power.Level}", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
             }
 
             popupData.Sections[index1].Add(power.DescShort, PopUp.Colors.Text);
             var flag1 = false;
-            if ((hIDX < 0) & (pIDX > -1))
+            if (hIDX < 0 & pIDX > -1)
             {
                 if (DatabaseAPI.Database.Power[pIDX].NIDSubPower.Length > 0)
                 {
@@ -2307,12 +2294,11 @@ namespace Mids_Reborn
                     popupData.Sections[index1].Add("Powers:", PopUp.Colors.Title);
                     if (pIDX > -1)
                     {
-                        var num = DatabaseAPI.Database.Power[pIDX].NIDSubPower.Length - 1;
-                        for (var index2 = 0; index2 <= num; ++index2)
+                        foreach (var subPowerNid in DatabaseAPI.Database.Power[pIDX].NIDSubPower)
                         {
-                            if (DatabaseAPI.Database.Power[pIDX].NIDSubPower[index2] > -1)
+                            if (subPowerNid > -1)
                             {
-                                popupData.Sections[index1].Add(DatabaseAPI.Database.Power[DatabaseAPI.Database.Power[pIDX].NIDSubPower[index2]].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                                popupData.Sections[index1].Add(DatabaseAPI.Database.Power[subPowerNid].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                             }
                         }
                     }
@@ -2366,14 +2352,14 @@ namespace Mids_Reborn
                     }
                 }
 
-                for (var index2 = 0; index2 <= CurrentBuild.SetBonus.Count - 1; ++index2)
+                foreach (var sb in CurrentBuild.SetBonus)
                 {
-                    if (CurrentBuild.SetBonus[index2].PowerIndex != hIDX)
+                    if (sb.PowerIndex != hIDX)
                     {
                         continue;
                     }
 
-                    for (var senInfoIdx = 0; senInfoIdx <= CurrentBuild.SetBonus[index2].SetInfo.Length - 1; ++senInfoIdx)
+                    for (var senInfoIdx = 0; senInfoIdx < sb.SetInfo.Length; senInfoIdx++)
                     {
                         if (!flag1)
                         {
@@ -2382,12 +2368,12 @@ namespace Mids_Reborn
                             popupData.Sections[index1].Add("Active Enhancement Sets:", PopUp.Colors.Text);
                         }
 
-                        var setInfo = CurrentBuild.SetBonus[index2].SetInfo;
-                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
+                        var setInfo = sb.SetInfo;
+                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[senInfoIdx].SetIDX];
                         popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
-                        for (var bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
+                        for (var bonusIdx = 0; bonusIdx < enhancementSet.Bonus.Length; bonusIdx++)
                         {
-                            if ((setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted) & (((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
+                            if (setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted & (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))
                             {
                                 var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true);
                                 if (!string.IsNullOrWhiteSpace(enhString))
@@ -2397,9 +2383,9 @@ namespace Mids_Reborn
                             }
                         }
 
-                        for (var enhIdx = 0; enhIdx <= CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes.Length - 1; ++enhIdx)
+                        foreach (var enh in sb.SetInfo[senInfoIdx].EnhIndexes)
                         {
-                            var isSpecial = DatabaseAPI.IsSpecialEnh(CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes[enhIdx]);
+                            var isSpecial = DatabaseAPI.IsSpecialEnh(enh);
                             if (isSpecial > -1)
                             {
                                 popupData.Sections[index1].Add(enhancementSet.GetEffectString(isSpecial, true, true, true), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
@@ -2750,7 +2736,7 @@ namespace Mids_Reborn
                     sContent = new PopUp.StringValue[section.Content.Length + 1];
                     Array.Copy(section.Content, sContent, section.Content.Length);
                     section.Content = sContent;
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
+                    section.Content[^1] = BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
                 }
 
                 if (nDebuff[index] > 0.0)
@@ -2759,7 +2745,7 @@ namespace Mids_Reborn
                     sContent = new PopUp.StringValue[section.Content.Length + 1];
                     Array.Copy(section.Content, sContent, section.Content.Length);
                     section.Content = sContent;
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nDebuff, schedDebuff, Enum.GetName(eEnhance.GetType(), index) + " Debuff", afterED2);
+                    section.Content[^1] = BuildEDItem(index, nDebuff, schedDebuff, Enum.GetName(eEnhance.GetType(), index) + " Debuff", afterED2);
                 }
 
                 if (!(nAny[index] > 0.0))
@@ -2771,7 +2757,7 @@ namespace Mids_Reborn
                 sContent = new PopUp.StringValue[section.Content.Length + 1];
                 Array.Copy(section.Content, sContent, section.Content.Length);
                 section.Content = sContent;
-                section.Content[section.Content.Length - 1] = BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index), afterED3);
+                section.Content[^1] = BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index), afterED3);
             }
 
             for (var index = 0; index <= nMez.Length - 1; ++index)
@@ -2787,7 +2773,7 @@ namespace Mids_Reborn
                 section.Content = sContent;
                 if (section.Content != null)
                 {
-                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
+                    section.Content[^1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
                 }
             }
 
@@ -2903,8 +2889,16 @@ namespace Mids_Reborn
                     }
                     else
                     {
+                        if (power.InherentType != Enums.eGridType.None)
+                        {
+                            return ListLabelV3.LlItemState.Enabled;
+                        }
+
                         message =
                             "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
+
+                        return ListLabelV3.LlItemState.Invalid;
+
                     }
 
                     return ListLabelV3.LlItemState.Invalid;
@@ -3088,39 +3082,6 @@ namespace Mids_Reborn
             }
 
             return flag;
-        }
-
-        public bool Save(string iFileName)
-        {
-            Archetype ??= DatabaseAPI.Database.Classes[0];
-            if (Origin > Archetype.Origin.Length - 1)
-                Origin = Archetype.Origin.Length - 1;
-            var saveText = MidsCharacterFileFormat.MxDBuildSaveString(true, false);
-            if (string.IsNullOrWhiteSpace(saveText))
-            {
-                MessageBox.Show(@"Save failed - save function returned empty data.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            var str2 = new clsOutput
-            {
-                Plain = true, idFormat = 0
-            }.Build("", false) + "\r\n\r\n";
-            StreamWriter streamWriter;
-            try
-            {
-                streamWriter = new StreamWriter(iFileName, false);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            streamWriter.Write(str2);
-            streamWriter.Write(saveText);
-            streamWriter.Close();
-            return true;
         }
 
         private void SetPower_NID(int Index, int nIDPower)

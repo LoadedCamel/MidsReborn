@@ -1,6 +1,6 @@
 ﻿namespace Mids_Reborn.Forms.Controls
 {
-    partial class PowerList
+    sealed partial class PowerList
     {
         /// <summary> 
         /// Required designer variable.

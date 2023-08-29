@@ -42,7 +42,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(47)))), ((int)(((byte)(51)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.cbGroup);
             this.panel1.Controls.Add(this.label4);
@@ -79,7 +79,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
+            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -93,7 +93,7 @@
             // 
             // btnOkay
             // 
-            this.btnOkay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(78)))), ((int)(((byte)(237)))));
+            this.btnOkay.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
             this.btnOkay.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(170)))), ((int)(((byte)(181)))));
+            this.BackColor = System.Drawing.Color.FromArgb(153, 170, 181);
             this.ClientSize = new System.Drawing.Size(228, 260);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;

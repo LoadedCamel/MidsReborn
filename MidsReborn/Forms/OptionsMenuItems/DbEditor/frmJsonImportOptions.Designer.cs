@@ -1,4 +1,4 @@
-﻿namespace Forms.OptionsMenuItems.DbEditor
+﻿namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     partial class frmJsonImportOptions
     {

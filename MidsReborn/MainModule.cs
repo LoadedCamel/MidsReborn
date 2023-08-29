@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -49,7 +50,7 @@ namespace Mids_Reborn
                 bFrm.SetMessage(sMessage);
             }
 
-            public static async Task ChangeDatabase(frmBusy iFrm)
+            public static async Task ChangeDatabase(frmBusy? iFrm)
             {
                 iFrm.SetMessage(@"Restarting with selected database.");
                 await Task.Delay(2000);
@@ -57,7 +58,22 @@ namespace Mids_Reborn
                 Application.Restart();
             }
 
-            public static void SelectDatabase(frmInitializing iFrm)
+            public static void SelectDefaultDatabase(frmInitializing? iFrm)
+            {
+                var installedDatabases = DatabaseAPI.GetInstalledDatabases();
+                if (installedDatabases.Count == 0)
+                {
+                    MessageBox.Show(@"No databases were found. Please install a database.", @"No Databases Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                var defaultDatabase = installedDatabases.First(db => db.Key != "Generic");
+                MidsContext.Config.DataPath = defaultDatabase.Value;
+                MidsContext.Config.SavePath = defaultDatabase.Value;
+                LoadData(ref iFrm, MidsContext.Config.DataPath);
+            }
+
+            public static void SelectDatabase(frmInitializing? iFrm)
             {
                 using var dbSelector = new DatabaseSelector();
                 var result = dbSelector.ShowDialog();
@@ -72,15 +88,14 @@ namespace Mids_Reborn
                     dbSelected = Files.FDefaultPath;
                 }
 
-                if (MidsContext.Config == null) return;
+                
                 MidsContext.Config.DataPath = dbSelected;
                 MidsContext.Config.SavePath = dbSelected;
                 LoadData(ref iFrm, MidsContext.Config.DataPath);
             }
 
-            public static void LoadData(ref frmInitializing iFrm, string? path)
+            public static void LoadData(ref frmInitializing? iFrm, string? path)
             {
-                IsAppInitialized = true;
                 iFrm?.SetMessage("Initializing Data...");
                 iFrm?.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
@@ -146,7 +161,7 @@ namespace Mids_Reborn
                 iFrm?.SetMessage("Loading Graphics...");
                 LoadGraphics(path).GetAwaiter().GetResult();
 
-                MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                //MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
                 if (iFrm != null)
                 {
                     DatabaseAPI.MatchAllIDs(iFrm);
@@ -157,6 +172,8 @@ namespace Mids_Reborn
 
                 DatabaseAPI.AssignRecipeIDs();
                 GC.Collect();
+                IsAppInitialized = true;
+                if (iFrm != null) iFrm.LoadingComplete = true;
             }
 
             public static bool LoadData(string? path)
@@ -212,7 +229,7 @@ namespace Mids_Reborn
 
                 LoadGraphics(path).GetAwaiter().GetResult();
 
-                MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                //MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
                 DatabaseAPI.MatchIds();
                 DatabaseAPI.AssignSetBonusIndexes();
                 DatabaseAPI.AssignRecipeIDs();

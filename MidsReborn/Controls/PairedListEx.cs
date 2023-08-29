@@ -273,7 +273,7 @@ namespace Mids_Reborn.Controls
 
         public void AddItem(Item iItem)
         {
-            Items?.Add(new Item(iItem));
+            Items?.Add(iItem);
             Invalidate();
         }
 

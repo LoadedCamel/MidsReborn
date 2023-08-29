@@ -110,12 +110,24 @@ namespace Mids_Reborn.Core
 
         public int FetchAlternate(int oldId, string archetype = "")
         {
+            if (_table == null || _table.Count == 0)
+            {
+                return -1;
+            }
+
             archetype = archetype.ToLowerInvariant();
 
             foreach (var item in _table)
             {
-                if (item.SourcePowerId == oldId & archetype == "") return item.TargetPowerId;
-                if (item.SourcePowerId == oldId & archetype != "" & archetype == item.Archetype) return item.TargetPowerId;
+                if (item.SourcePowerId == oldId & archetype == "")
+                {
+                    return item.TargetPowerId;
+                }
+
+                if (item.SourcePowerId == oldId & archetype != "" & archetype == item.Archetype)
+                {
+                    return item.TargetPowerId;
+                }
             }
 
             return -1;

@@ -12,7 +12,7 @@ using MRBResourceLib;
 using Color = System.Drawing.Color;
 using Pen = System.Drawing.Pen;
 
-namespace Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmAbout : Form
     {

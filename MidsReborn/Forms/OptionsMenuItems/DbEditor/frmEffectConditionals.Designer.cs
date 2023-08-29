@@ -99,7 +99,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             rbLinkTypeOr.AutoSize = true;
             rbLinkTypeOr.Location = new System.Drawing.Point(31, 71);
             rbLinkTypeOr.Name = "rbLinkTypeOr";
-            rbLinkTypeOr.Size = new System.Drawing.Size(41, 20);
+            rbLinkTypeOr.Size = new System.Drawing.Size(41, 19);
             rbLinkTypeOr.TabIndex = 2;
             rbLinkTypeOr.TabStop = true;
             rbLinkTypeOr.Text = "OR";
@@ -111,7 +111,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             rbLinkTypeAnd.AutoSize = true;
             rbLinkTypeAnd.Location = new System.Drawing.Point(31, 45);
             rbLinkTypeAnd.Name = "rbLinkTypeAnd";
-            rbLinkTypeAnd.Size = new System.Drawing.Size(50, 20);
+            rbLinkTypeAnd.Size = new System.Drawing.Size(50, 19);
             rbLinkTypeAnd.TabIndex = 1;
             rbLinkTypeAnd.TabStop = true;
             rbLinkTypeAnd.Text = "AND";
@@ -123,7 +123,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             label1.AutoSize = true;
             label1.Location = new System.Drawing.Point(14, 15);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(112, 16);
+            label1.Size = new System.Drawing.Size(112, 15);
             label1.TabIndex = 0;
             label1.Text = "Link condition with:";
             // 
@@ -300,7 +300,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnOkay.Name = "btnOkay";
             btnOkay.Size = new System.Drawing.Size(88, 43);
             btnOkay.TabIndex = 162;
-            btnOkay.Text = "Okay";
+            btnOkay.Text = "Ok";
             btnOkay.UseVisualStyleBackColor = false;
             btnOkay.Click += btnOkay_Click;
             // 
@@ -381,19 +381,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private System.Windows.Forms.GroupBox groupBox2;
         private ctlListViewColored lvConditionalOp;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader7;
         private System.Windows.Forms.Button removeConditional;
         private System.Windows.Forms.Button addConditional;
         private ctlListViewColored lvActiveConditionals;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader8;
+        private ColumnHeader columnHeader6;
         private ctlListViewColored lvConditionalBool;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader4;
         private ctlListViewColored lvConditionalType;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader3;
         private ctlListViewColored lvSubConditional;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnOkay;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Panel panel1;

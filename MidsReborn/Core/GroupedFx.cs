@@ -85,12 +85,25 @@ namespace Mids_Reborn.Core
             public Enums.eDamage DamageType;
             public Enums.eEffectType ETModifies;
             public Enums.eToWho ToWho;
+            public Enums.ePvX PvMode;
             public int SummonId;
             public float Duration;
+            public bool IgnoreScaling;
 
             public override string ToString()
             {
-                return $"<FxId> {{Type: {EffectType}, Modifies: {ETModifies}, Mez: {MezType}, Damage: {DamageType}, ToWho: {ToWho}}}";
+                return $"<FxId> {{Type: {EffectType}, Modifies: {ETModifies}, Mez: {MezType}, Damage: {DamageType}, ToWho: {ToWho}, PvMode: {PvMode}, IgnoreScaling: {IgnoreScaling}}}";
+            }
+        }
+
+        public struct EnhancedMagSum
+        {
+            public float Base;
+            public float Enhanced;
+
+            public override string ToString()
+            {
+                return $"<EnhancedMagSum> {{Base: {Base}, Enhanced: {Enhanced}}}";
             }
         }
 
@@ -109,6 +122,8 @@ namespace Mids_Reborn.Core
         public Enums.eMez MezType => FxIdentifier.MezType;
         public Enums.eDamage DamageType => FxIdentifier.DamageType;
         public Enums.eToWho ToWho => FxIdentifier.ToWho;
+        public Enums.ePvX PvMode => FxIdentifier.PvMode;
+        public bool IgnoreScaling => FxIdentifier.IgnoreScaling;
         public bool EnhancementEffect => IsEnhancement;
 
         /// <summary>
@@ -176,7 +191,9 @@ namespace Mids_Reborn.Core
                 EffectType = effect.EffectType,
                 ETModifies = effect.ETModifies,
                 MezType = effect.MezType,
-                ToWho = effect.ToWho
+                ToWho = effect.ToWho,
+                PvMode = effect.PvMode,
+                IgnoreScaling = effect.IgnoreScaling
             };
             Mag = effect.BuffedMag;
             Alias = "";
@@ -214,6 +231,17 @@ namespace Mids_Reborn.Core
         public IEffect GetEffectAt(IPower power, int index = 0)
         {
             return power.Effects[IncludedEffects[index]];
+        }
+
+        /// <summary>
+        /// Get mathing effect from an effect index (in power effects)
+        /// </summary>
+        /// <param name="power">Source power</param>
+        /// <param name="index">Effect index</param>
+        /// <returns>Matching effect from source power</returns>
+        private IEffect GetPowerEffectAt(IPower power, int index = 0)
+        {
+            return power.Effects[index];
         }
 
         /// <summary>
@@ -282,14 +310,16 @@ namespace Mids_Reborn.Core
             var returnedTypes = DatabaseAPI.RealmUsesToxicDefense switch
             {
                 false => from type in damageTypes
-                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
-                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
-                        or Enums.eDamage.Unique3 or Enums.eDamage.Toxic
+                    where type is not Enums.eDamage.None
+                        and not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE
+                        and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
+                        and not Enums.eDamage.Unique3 and not Enums.eDamage.Toxic
                     select type,
                 true => from type in damageTypes
-                    where type is not Enums.eDamage.AoE or Enums.eDamage.Melee or Enums.eDamage.Ranged
-                        or Enums.eDamage.Special or Enums.eDamage.Unique1 or Enums.eDamage.Unique2
-                        or Enums.eDamage.Unique3
+                    where type is not Enums.eDamage.None
+                        and not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE
+                        and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
+                        and not Enums.eDamage.Unique3
                     select type
             };
 
@@ -929,6 +959,11 @@ namespace Mids_Reborn.Core
                         $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType})",
                         $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
 
+                Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
+                    .Replace(" in ", " after ")
+                    .Replace(" to Self", "")
+                    .Replace(" to Target", ""),
+
                 _ => baseEffectString
             };
 
@@ -961,7 +996,9 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                 e.Value.nSummon == fxIdentifier.SummonId && e.Value.ToWho == fxIdentifier.ToWho &&
                                 (Math.Abs(e.Value.Duration - fxIdentifier.Duration) < float.Epsilon || fxIdentifier.Duration == 0) &&
-                                e.Value.isEnhancementEffect == enhancementEffect)
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -972,7 +1009,9 @@ namespace Mids_Reborn.Core
                             e.Value.EffectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                                 or Enums.eEffectType.SpeedRunning && e.Value.ToWho == fxIdentifier.ToWho &&
                             Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
-                            e.Value.isEnhancementEffect == enhancementEffect)
+                            e.Value.isEnhancementEffect == enhancementEffect &&
+                            e.Value.PvMode == fxIdentifier.PvMode &&
+                            e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                         .Select(e => e.Key)
                         .ToList(),
 
@@ -983,17 +1022,21 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                 e.Value.ETModifies == fxIdentifier.ETModifies && e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
-                                e.Value.isEnhancementEffect == enhancementEffect)
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
                 Enums.eEffectType.Enhancement => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.ETModifies is not Enums.eEffectType.Mez or Enums.eEffectType.MezResist &&
+                                e.Value.ETModifies is not Enums.eEffectType.Mez and not Enums.eEffectType.MezResist &&
                                 e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
-                                e.Value.isEnhancementEffect == enhancementEffect)
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1003,7 +1046,9 @@ namespace Mids_Reborn.Core
                         .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                     e.Value.ToWho == fxIdentifier.ToWho &&
                                     Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
-                                    e.Value.isEnhancementEffect == enhancementEffect)
+                                    e.Value.isEnhancementEffect == enhancementEffect &&
+                                    e.Value.PvMode == fxIdentifier.PvMode &&
+                                    e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                         .Select(e => e.Key)
                         .ToList(),
 
@@ -1011,7 +1056,9 @@ namespace Mids_Reborn.Core
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
-                                e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect)
+                                e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1020,7 +1067,9 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
                                 Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
                                 e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
-                                e.Value.isEnhancementEffect == enhancementEffect)
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
                     .ToList(),
 
@@ -1106,6 +1155,15 @@ namespace Mids_Reborn.Core
                     }
                 }
 
+                if (!(power.Effects[re].EffectType == Enums.eEffectType.Mez &
+                      power.Effects[re].MezType is Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
+                {
+                    if (power.Effects[re].Duration <= 0)
+                    {
+                        continue;
+                    }
+                }
+
                 var similarFxIds = new List<int>();
 
                 switch (power.Effects[re].EffectType)
@@ -1120,7 +1178,9 @@ namespace Mids_Reborn.Core
                                 MezType = Enums.eMez.None,
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = power.Effects[re].nSummon,
-                                Duration = 0 //power.Effects[re].Duration
+                                Duration = 0, //power.Effects[re].Duration
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
@@ -1136,7 +1196,9 @@ namespace Mids_Reborn.Core
                                     MezType = Enums.eMez.None,
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = power.Effects[re].nSummon,
-                                    Duration = 0 //power.Effects[re].Duration
+                                    Duration = 0, //power.Effects[re].Duration
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
                                 },
                                 power.Effects[re].BuffedMag,
                                 "Summon",
@@ -1157,13 +1219,15 @@ namespace Mids_Reborn.Core
                                 MezType = Enums.eMez.None,
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
-                                Duration = 0
+                                Duration = 0,
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
                         
                         ignoredEffects.AddRangeUnique(similarFxIds);
-                        
+
                         groupedRankedEffects.Add(
                             new GroupedFx(new FxId
                                 {
@@ -1173,8 +1237,10 @@ namespace Mids_Reborn.Core
                                     MezType = Enums.eMez.None,
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
-                                    Duration = 0
-                            },
+                                    Duration = 0,
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                                },
                                 power.Effects[re].BuffedMag,
                                 "Slow",
                                 similarFxIds,
@@ -1196,7 +1262,9 @@ namespace Mids_Reborn.Core
                                 MezType = Enums.eMez.None,
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
-                                Duration = 0
+                                Duration = 0,
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
                             power.Effects[re].isEnhancementEffect);
@@ -1212,8 +1280,10 @@ namespace Mids_Reborn.Core
                                     MezType = Enums.eMez.None,
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
-                                    Duration = 0
-                                },
+                                    Duration = 0,
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                            },
                                 power.Effects[re].BuffedMag,
                                 isDefiance ? "Defiance" : $"{power.Effects[re].EffectType}",
                                 similarFxIds,
@@ -1237,7 +1307,9 @@ namespace Mids_Reborn.Core
                                 DamageType = Enums.eDamage.None,
                                 ToWho = power.Effects[re].ToWho,
                                 SummonId = -1,
-                                Duration = 0
+                                Duration = 0,
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
                             },
                             power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
@@ -1254,8 +1326,10 @@ namespace Mids_Reborn.Core
                                     DamageType = Enums.eDamage.None,
                                     ToWho = power.Effects[re].ToWho,
                                     SummonId = -1,
-                                    Duration = 0
-                            },
+                                    Duration = 0,
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                                },
                                 power.Effects[re].BuffedMag,
                                 power.Effects[re].EffectType == Enums.eEffectType.Enhancement
                                     ? $"{power.Effects[re].EffectType}({power.Effects[re].ETModifies})"
@@ -1302,17 +1376,29 @@ namespace Mids_Reborn.Core
                 groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
             }
 
-            return groupedRankedEffects2;
+            // Pass 3: generate aggregated GroupedFx, recalc mag sum
+
+            var greAggregated = Aggregate(groupedRankedEffects2);
+            foreach (var gre in greAggregated)
+            {
+                if (!gre.IsAggregated)
+                {
+                    continue;
+                }
+
+                gre.Mag = gre.GetMagSum(power);
+            }
+
+            return greAggregated;
         }
 
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
         /// <param name="groupedRankedEffects">Raw grouped effects (use output from AssembleGroupedEffects)</param>
         /// <returns>Ranked effects matching grouped effects in the form of ItemPairs, with their associated grouped effect, and effect identifier</returns>
-        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(
-            List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects,
-            float displayBlockFontSize)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects, float displayBlockFontSize)
         {
             var ret = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
+            var powerInBuild = MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
 
             foreach (var gre in groupedRankedEffects)
             {
@@ -1320,7 +1406,7 @@ namespace Mids_Reborn.Core
                 if (greIndex < 0) continue;
 
                 var rankedEffect = FastItemBuilder.GetRankedEffect(rankedEffects.ToArray(), greIndex, pBase, pEnh);
-                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], displayBlockFontSize);
+                FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], powerInBuild, displayBlockFontSize);
 
                 ret.Add(new KeyValuePair<GroupedFx, PairedListEx.Item>(gre, rankedEffect));
             }
@@ -1346,7 +1432,7 @@ namespace Mids_Reborn.Core
                 .ToList();
         }
 
-        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict, Func<FxId, bool> filterFunc)
+        public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>>? itemsDict, Func<FxId, bool> filterFunc)
         {
             if (itemsDict == null)
             {
@@ -1364,7 +1450,7 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="itemsDict">ItemPairs (use output from GenerateListItems)</param>
         /// <returns>Full list of ItemPairs</returns>
-        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict)
+        public static List<PairedListEx.Item> FilterListItems(List<KeyValuePair<GroupedFx, PairedListEx.Item>>? itemsDict)
         {
             if (itemsDict == null)
             {
@@ -1392,13 +1478,13 @@ namespace Mids_Reborn.Core
             var fxIdList = new List<FxId>();
             var effects = (IEffect[]) power.Effects.Clone();
             effects = effects.OrderBy(e => e.ToWho)
-                .Where(e => e.EffectType is not Enums.eEffectType.Null or Enums.eEffectType.NullBool
+                .Where(e => e.EffectType is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool
                                 or Enums.eEffectType.Meter or Enums.eEffectType.Damage or Enums.eEffectType.MaxFlySpeed
                                 or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.MaxRunSpeed
                                 or Enums.eEffectType.ExecutePower or Enums.eEffectType.RevokePower
                                 or Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.SetMode
-                                or Enums.eEffectType.SetCostume &&
-                            e.ETModifies is not Enums.eEffectType.Null or Enums.eEffectType.NullBool &&
+                                or Enums.eEffectType.SetCostume) &&
+                            e.ETModifies is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool) &&
                             e.ToWho != Enums.eToWho.Unspecified &&
                             Math.Abs(e.BuffedMag) >= float.Epsilon &&
                             (e.PvMode == Enums.ePvX.Any || (e.PvMode == Enums.ePvX.PvE && !MidsContext.Config.Inc.DisablePvE) || (e.PvMode == Enums.ePvX.PvP && MidsContext.Config.Inc.DisablePvE)) &&
@@ -1487,48 +1573,189 @@ namespace Mids_Reborn.Core
             return string.Join(", ", effectShorts);
         }
 
+        /// <summary>
+        /// Get the total magnitude of a grouped effect.
+        /// If all values are negative sum up everything.
+        /// If some are positive, ignore the negative ones.
+        /// This overload will return magnitude sum based on base and enhanced powers.
+        /// </summary>
+        /// <param name="pBase">Base power</param>
+        /// <param name="pEnh">Enhanced power</param>
+        /// <returns>Magnitude sum for this grouped effect based on both base and enhanced power as an EnhancedMagSum struct.</returns>
+        public EnhancedMagSum GetMagSum(IPower pBase, IPower pEnh)
+        {
+            var allNegBase = IncludedEffects
+                .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                .All(e => e < 0);
+
+            var allNegEnh = IncludedEffects
+                .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                .All(e => e < 0);
+
+            return new EnhancedMagSum
+            {
+                Base = allNegBase
+                    ? IncludedEffects
+                        .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                        .Sum()
+                    : IncludedEffects
+                        .Select(e => GetPowerEffectAt(pBase, e).BuffedMag)
+                        .Where(e => e > 0)
+                        .Sum(),
+                Enhanced = allNegEnh
+                    ? IncludedEffects
+                        .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                        .Sum()
+                    : IncludedEffects
+                        .Select(e => GetPowerEffectAt(pEnh, e).BuffedMag)
+                        .Where(e => e > 0)
+                        .Sum()
+            };
+        }
+
+        /// <summary>
+        /// Get the total magnitude of a grouped effect.
+        /// If all values are negative sum up everything.
+        /// If some are positive, ignore the negative ones.
+        /// This overload will return magnitude sum based on a single power.
+        /// </summary>
+        /// <remarks>This is intended to be used with the enhanced power as a shortcut.</remarks>
+        /// <param name="power">Source power</param>
+        /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
+        public float GetMagSum(IPower power)
+        {
+            var allNegEnh = IncludedEffects
+                .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                .All(e => e < 0);
+
+            if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
+                or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez
+                or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement)
+            {
+                return GetEffectAt(power).BuffedMag;
+            }
+
+            return allNegEnh
+                ? IncludedEffects
+                    .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                    .Sum()
+                : IncludedEffects
+                    .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                    .Where(e => e > 0)
+                    .Sum();
+        }
+        
+        /// <summary>
+        /// Create an aggregated list of GroupedFx from multiple similar ones.
+        /// </summary>
+        /// <param name="greList">Source list of grouped effects</param>
+        /// <returns>List of merged grouped effects. Those created this way will have IsAggregated = true</returns>
+        public static List<GroupedFx> Aggregate(List<GroupedFx> greList)
+        {
+            var ret = new List<GroupedFx>();
+            var excludedGre = new List<int>();
+
+            for (var i = 0; i < greList.Count; i++)
+            {
+                if (excludedGre.Contains(i))
+                {
+                    continue;
+                }
+
+                excludedGre.Add(i);
+                var includedGre = new List<int> {i};
+                for (var j = 0; j < greList.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
+                    if (excludedGre.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier))
+                    {
+                        continue;
+                    }
+
+                    includedGre.Add(j);
+                    excludedGre.Add(j);
+                }
+
+                ret.Add(new GroupedFx(greList[i].FxIdentifier, includedGre.Select(e => greList[e]).ToList()));
+            }
+
+            return ret;
+        }
+
         /// <summary>Post-processing of a ranked effect to fine-tune display</summary>
         /// <param name="rankedEffect">Base ranked effect (as ref)</param>
         /// <param name="pBase">Source power (base)</param>
         /// <param name="pEnh">Source power (enhanced)</param>
         /// <param name="gre">Associated grouped effect</param>
         /// <param name="effectIndex">Effect index in the enhanced power</param>
+        /// <param name="powerInBuild">True if power has been picked in build</param>
         /// <param name="displayBlockFontSize">Display block font size</param>
-        private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, float displayBlockFontSize)
+        private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, bool powerInBuild, float displayBlockFontSize)
         {
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = gre.GetTooltip(pEnh);
+            var magSum = gre.GetMagSum(pEnh);
+            var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
+                (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
+                (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon;
             var magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
-                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0));
+                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)) > float.Epsilon |
+                          mezDurationDiff;
             var toWhoShort = effectSource.ToWho switch
             {
-                Enums.eToWho.Self => "Slf",
-                Enums.eToWho.Target => "Tgt",
+                Enums.eToWho.Self => " (Slf)",
+                Enums.eToWho.Target => " (Tgt)",
                 _ => ""
             };
 
             rankedEffect.UseUniqueColor = effectSource.isEnhancementEffect;
             rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &
-                                          magDiff > float.Epsilon &
-                                          (effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) &
-                                          effectSource.Buffable;
+                                          magDiff &
+                                          ((effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) | mezDurationDiff) &
+                                          effectSource.Buffable &
+                                          powerInBuild;
 
             switch (effectType)
             {
+                case Enums.eEffectType.Fly:
+                case Enums.eEffectType.MovementControl:
+                case Enums.eEffectType.MovementFriction:
+                    rankedEffect.Value = effectSource.DisplayPercentage
+                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
+                        : $"{magSum:###0.##}{toWhoShort}";
+
+                    break;
+
                 case Enums.eEffectType.Recovery:
                 case Enums.eEffectType.Endurance:
                     rankedEffect.Name = $"{effectType}";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
+                        : $"{magSum:###0.##}{toWhoShort}";
 
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
-                case Enums.eEffectType.EntCreate: // when !pEnh.AbsorbSummonEffects | !pEnh.AbsorbSummonAttributes:
+                case Enums.eEffectType.SilentKill when effectSource.ToWho == Enums.eToWho.Self:
+                    rankedEffect.Name = "Lifespan";
+                    rankedEffect.Value = $"{Math.Max(effectSource.Duration, Math.Max(effectSource.DelayedTime, effectSource.Absorbed_Duration)):####0.##} s";
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
+                case Enums.eEffectType.EntCreate: // when !power.AbsorbSummonEffects | !power.AbsorbSummonAttributes:
                     rankedEffect.Name = "Summon";
                     rankedEffect.Value = effectSource.nSummon > -1
                         ? DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName
@@ -1567,8 +1794,11 @@ namespace Mids_Reborn.Core
                                             : $" ({DatabaseAPI.Database.Power[p].DescShort})";
                                 }
                             }
+
+                            entityTooltip += "\r\n\r\nTo see the effects of these Powers, Left-Click on the Entity.";
                         }
 
+                        rankedEffect.EntTag = DatabaseAPI.Database.Entities[effectSource.nSummon];
                         rankedEffect.ToolTip = entityTooltip;
                     }
                     else
@@ -1619,6 +1849,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
+                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%";
                     rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
@@ -1656,8 +1887,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Translucency:
                     rankedEffect.Name = "Trnslcncy";
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
+                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -1670,6 +1901,10 @@ namespace Mids_Reborn.Core
                         rankedEffect.Name = "Slow";
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
+                    else if (gre.IncludedEffects.Count > 1)
+                    {
+                        rankedEffect.Name = $"{(effectSource.Mag < 0 ? "-" : "")}Movement";
+                    }
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -1681,50 +1916,40 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MezResist:
                 case Enums.eEffectType.Enhancement:
                 case Enums.eEffectType.ResEffect:
-                    rankedEffect.Name = effectType == Enums.eEffectType.Enhancement & gre.ToWho == Enums.eToWho.Target & effectSource.Mag < 0
-                        ? "Debuff"
-                        : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
+                    rankedEffect.Name = effectType == Enums.eEffectType.Enhancement
+                        ? gre.IncludedEffects.Count > 1
+                            ? effectSource.Mag < 0
+                                ? "Debuff"
+                                : "Enhancement"
+                            : $"{(effectSource.Mag < 0 ? "-" : "+")}{effectSource.ETModifies}"
+                        : FastItemBuilder.Str.ShortStr(displayBlockFontSize,
+                            Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
+
                     rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}% ({toWhoShort})"
-                        : $"{effectSource.BuffedMag:###0.##} ({toWhoShort})";
+                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
+                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.PerceptionRadius:
-                    rankedEffect.Name = $"Pceptn ({toWhoShort})";
-                    rankedEffect.Value =
-                        $"{(effectSource.DisplayPercentage ? $"{effectSource.BuffedMag * 100:###0.##}%" : $"{effectSource.BuffedMag:###0.##}")} ({Statistics.BasePerception * effectSource.BuffedMag:###0.##}ft)";
+                    rankedEffect.Name = $"Pceptn{toWhoShort}";
+                    rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{magSum * 100:###0.##}%" : $"{magSum:###0.##}")} ({Statistics.BasePerception * magSum:###0.##}ft)";
+
+                    break;
+
+                case Enums.eEffectType.ToHit:
+                case Enums.eEffectType.Heal:
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%";
 
                     break;
 
                 default:
                     var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
-                    var magSumEnh = pEnh.Effects
-                        .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                     !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                     e.PvMode == Enums.ePvX.Any) &
-                                    effectSource.ToWho == e.ToWho &
-                                    effectSource.EffectType == e.EffectType &
-                                    effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
-                        .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                        .Sum();
 
-                    var magSumBase = pBase.Effects
-                        .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
-                                     !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
-                                     e.PvMode == Enums.ePvX.Any) &
-                                    effectSource.ToWho == e.ToWho &
-                                    effectSource.EffectType == e.EffectType &
-                                    effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
-                        .Select(e => e.BuffedMag * (e.DisplayPercentage ? 100 : 1))
-                        .Sum();
-
-                    rankedEffect.Value = $"{magSumEnh:####0.##}{(effectSource.DisplayPercentage ? "%" : "")} ({toWhoShort})";
-                    rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon && effectSource.Buffable;
+                    rankedEffect.Value = $"{magSum:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
+                    //rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect && Math.Abs(magSumEnh - magSumBase) > float.Epsilon & effectSource.Buffable & powerInBuild;
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects
@@ -1735,7 +1960,9 @@ namespace Mids_Reborn.Core
                                     effectSource.ToWho == e.ToWho &
                                     effectSource.EffectType == e.EffectType &
                                     effectSource.MezType == e.MezType &
-                                    effectSource.ETModifies == e.ETModifies)
+                                    effectSource.ETModifies == e.ETModifies &
+                                    (effectSource.PvMode == e.PvMode | e.PvMode == Enums.ePvX.Any) &
+                                    effectSource.IgnoreScaling == e.IgnoreScaling)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
 
                     break;

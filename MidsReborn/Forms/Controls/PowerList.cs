@@ -14,7 +14,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.Controls
 {
-    public partial class PowerList : UserControl
+    public sealed partial class PowerList : UserControl
     {
         #region SubControl Declarations
 
@@ -31,8 +31,10 @@ namespace Mids_Reborn.Forms.Controls
 
         public delegate void ListItemClickedHandler(object sender, ListPanelItem item, MouseEventArgs e);
         public delegate void ListItemHoveredHandler(object sender, ListPanelItem? item, MouseEventArgs e);
+        public delegate void DropDownItemHoverHandler(object sender, IPowerset? item);
         public event ListItemClickedHandler? ItemClicked;
         public event ListItemHoveredHandler? ItemHovered;
+        public event DropDownItemHoverHandler? DropDownItemHovered;
 
         #endregion
 
@@ -41,7 +43,7 @@ namespace Mids_Reborn.Forms.Controls
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public override Image BackgroundImage { get; set; }
+        public override Image? BackgroundImage { get; set; } = null;
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -57,7 +59,7 @@ namespace Mids_Reborn.Forms.Controls
 
         #region Designer Properties (PRIVATE)
 
-        private string _text;
+        private string _text = "";
 
         private Color _backColor = Color.Transparent;
 
@@ -97,7 +99,7 @@ namespace Mids_Reborn.Forms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public new Font Font { get; set; } = new("Microsoft Sans Serif", 9.25f, FontStyle.Bold);
+        public override Font Font { get; set; } = new("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
 
         [Description("The color of the text used for the control label.")]
         [Category("Appearance")]
@@ -173,18 +175,63 @@ namespace Mids_Reborn.Forms.Controls
             Ancillary
         }
 
+        [Browsable(false)] 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool DropDownEnabled
+        {
+            get => _typeDropDown.Enabled;
+            set => _typeDropDown.Enabled = value;
+        }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Point DropDownLocation => _typeDropDown.Location;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Size DropDownSize => _typeDropDown.Size;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Rectangle DropDownBounds => _typeDropDown.Bounds;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Rectangle ListBounds => _listPanel.Bounds;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Rectangle LabelBounds => _outlinedLabel.Bounds;
+
+        public void UpdateTextColors(ItemState state, Color color)
+        {
+            if ((state < ItemState.Enabled) | (state > ItemState.Invalid))
+                return;
+            _listPanel.Colors[(int)state] = color;
+        }
+
+        [Flags]
+        public enum ItemState
+        {
+            Enabled = 0,
+            Selected = 1,
+            Disabled = 2,
+            SelectedDisabled = 3,
+            Invalid = 4,
+        }
+
         #endregion
 
         #region Designer Properties TypeConverters and Classes
 
         public class PowerListTypeConverter<T> : TypeConverter
         {
-            public override bool GetPropertiesSupported(ITypeDescriptorContext context)
+            public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
             {
                 return true;
             }
 
-            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
             {
                 return TypeDescriptor.GetProperties(typeof(T));
             }
@@ -299,6 +346,7 @@ namespace Mids_Reborn.Forms.Controls
             _typeDropDown.Font = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
             _typeDropDown.FormattingEnabled = true;
             _typeDropDown.SelectedIndexChanged += TypeDropDownOnSelectedIndexChanged;
+            _typeDropDown.DropDownHoveredItem += TypeDropDown_DropDownHoveredItem;
 
             _separatorPanel.Location = new Point(0, 37);
             _separatorPanel.Size = new Size(211, 8);
@@ -319,6 +367,7 @@ namespace Mids_Reborn.Forms.Controls
             _listPanel.ItemsUpdated += ListPanelOnItemsUpdated;
             _listPanel.MouseDown += ListPanelOnMouseDown;
             _listPanel.MouseMove += ListPanelOnMouseMove;
+            _listPanel.MeasureItem += ListPanelOnMeasureItem;
 
             Controls.Add(_listPanel);
             Controls.Add(_separatorPanel);
@@ -334,15 +383,28 @@ namespace Mids_Reborn.Forms.Controls
             InitializeComponent();
         }
 
+        private void TypeDropDown_DropDownHoveredItem(object? sender, DropDownHoverEventArgs e)
+        {
+            if (e.Index >= 0) DropDownItemHovered?.Invoke(this, (IPowerset)_typeDropDown.Items[e.Index]);
+        }
+
+        private void ListPanelOnMeasureItem(object? sender, MeasureItemEventArgs e)
+        {
+            var measurement = TextRenderer.MeasureText(e.Graphics, Items[e.Index].Text, Font);
+            e.ItemHeight = measurement.Height;
+            e.ItemWidth = measurement.Width;
+        }
+
         private void ListPanelOnMouseMove(object? sender, MouseEventArgs e)
         {
             if (_listPanel.HoverIndex != -1)
             {
-                var item = (ListPanelItem)_listPanel.Items[_listPanel.HoverIndex];
-                ItemHovered?.Invoke(this, item, e);
+                HoverItem = (ListPanelItem)_listPanel.Items[_listPanel.HoverIndex];
+                ItemHovered?.Invoke(this, HoverItem, e);
             }
             else
             {
+                HoverItem = null;
                 ItemHovered?.Invoke(this, null, e);
             }
         }
@@ -382,16 +444,21 @@ namespace Mids_Reborn.Forms.Controls
             _outlinedLabel.Invalidate();
         }
 
-        private void OnTextChanged(object sender, string e)
+        private void OnTextChanged(object? sender, string e)
         {
             _outlinedLabel.Text = e;
             _outlinedLabel.Invalidate();
         }
 
-        private void ListPanelOnMouseDown(object sender, MouseEventArgs e)
+        private void ListPanelOnMouseDown(object? sender, MouseEventArgs e)
         {
             var index = _listPanel.IndexFromPoint(e.Location);
-            if (index < 0) return;
+            if (index < 0)
+            {
+                SelectedItem = null;
+                return;
+            }
+            SelectedItem = Items[index];
             ItemClicked?.Invoke(this, Items[index], e);
         }
 
@@ -441,7 +508,7 @@ namespace Mids_Reborn.Forms.Controls
                             powerList = new List<IPower?>(selectedSet.Powers);
                             break;
                         default:
-                            powerList = new List<IPower?>(selectedSet.Powers);
+                            powerList = selectedSet.Powers.ToList();
                             break;
                     }
 
@@ -480,16 +547,18 @@ namespace Mids_Reborn.Forms.Controls
                     break;
             }
 
-            powerList = powerList.Where(p => p.Level > 0).ToList();
-            var powerListItems = powerList.Select((power, index) => new ListPanelItem(index, power, ListPanel.ItemState.Enabled)).ToList();
+            powerList = powerList.Where(p => p is { Level: > 0 }).ToList();
+            var powerListItems = powerList.Select((power, index) => new ListPanelItem(index, power, ItemState.Enabled)).ToList();
+            
             if (LevelUpMode)
             {
                 foreach (var powerItem in powerListItems)
                 {
-                    if (powerItem.Power.Level != MidsContext.Character.Level) powerItem.ItemState = ListPanel.ItemState.Disabled;
+                    if (powerItem.Power?.Level != MidsContext.Character.Level) powerItem.ItemState = ItemState.Disabled;
                 }
                 _listPanel.Invalidate();
             }
+
             var boundSource = new BindingSource
             {
                 DataSource = powerListItems
@@ -570,6 +639,50 @@ namespace Mids_Reborn.Forms.Controls
 
         #endregion
 
+        #region SubControl EventArgs
+
+        internal class DropDownHoverEventArgs : EventArgs
+        {
+            public int Index { get; }
+            public string Text { get; set; }
+            public DropDownHoverEventArgs(int index, string text)
+            {
+                Index = index;
+                Text = text;
+            }
+        }
+
+        public class ListPanelDrawItemEventArgs : EventArgs
+        {
+            public Graphics Graphics { get; }
+            public Font Font { get; }
+            public Rectangle Bounds { get; }
+            public int Index { get; }
+            public ListPanelItem Item { get; set; }
+            public Color ForeColor { get; }
+
+            public ListPanelDrawItemEventArgs(Graphics graphics, Font font, Rectangle rect, int index, ListPanelItem item, Color foreColor)
+            {
+                Graphics = graphics;
+                Font = font;
+                Bounds = rect;
+                Index = index;
+                Item = item;
+                ForeColor = foreColor;
+            }
+
+            public ListPanelDrawItemEventArgs(Graphics graphics, Font font, Rectangle rect, int index, ListPanelItem item)
+            {
+                Graphics = graphics;
+                Font = font;
+                Bounds = rect;
+                Index = index;
+                Item = item;
+            }
+        }
+
+        #endregion
+
         #region SubControls
 
         internal class OutlinedLabel : Label
@@ -603,16 +716,37 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        internal class TypeDropDown : ComboBox
+        internal sealed class TypeDropDown : ComboBox
         {
-            public DropDownType DropType => IplDropDown.Type;
+            public event EventHandler<DropDownHoverEventArgs>? DropDownHoveredItem;
 
+            private const int CB_GETCURSEL = 0x0147;
+            private int _listItem = -1;
+
+            private void OnListItemSelectionChanged(DropDownHoverEventArgs e) => DropDownHoveredItem?.Invoke(this, e);
+
+            public DropDownType DropType => IplDropDown.Type;
             public Color HighlightColor => IplDropDown.HighlightColor;
 
             public TypeDropDown()
             {
                 SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); DropDownStyle = ComboBoxStyle.DropDownList;
                 DrawMode = DrawMode.OwnerDrawFixed;
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                var selItem = -1;
+                base.WndProc(ref m);
+
+                selItem = m.Msg switch
+                {
+                    CB_GETCURSEL => m.Result.ToInt32(),
+                    _ => selItem
+                };
+                if (_listItem == selItem) return;
+                _listItem = selItem;
+                OnListItemSelectionChanged(new DropDownHoverEventArgs(_listItem, _listItem < 0 ? string.Empty : GetItemText(Items[_listItem])));
             }
 
             protected override void OnDrawItem(DrawItemEventArgs e)
@@ -623,7 +757,7 @@ namespace Mids_Reborn.Forms.Controls
                 if (e.Index >= 0 && e.Index < Items.Count)
                 {
                     e.Graphics.FillRectangle((e.State & DrawItemState.Selected) == DrawItemState.Selected ? new SolidBrush(HighlightColor) : new SolidBrush(BackColor), e.Bounds);
-                    Image comboImage = null;
+                    Image? comboImage = null;
                     List<string> images;
                     string selectedImage;
                     IPowerset selected;
@@ -676,28 +810,15 @@ namespace Mids_Reborn.Forms.Controls
         public sealed class ListPanel : ListBox
         {
             public delegate void DrawPowerListItem(ListPanelDrawItemEventArgs e);
-            public event DrawPowerListItem DrawListItem;
+            public event DrawPowerListItem? DrawListItem;
             public event EventHandler? ItemsUpdated;
 
             public override Color ForeColor { get; set; }
-            private List<Color> Colors { get; set; }
-
-            [Flags]
-            public enum ItemState
-            {
-                Enabled = 0,
-                Selected = 1,
-                Disabled = 2,
-                SelectedDisabled = 3,
-                Invalid = 4
-            }
+            internal List<Color> Colors { get; set; }
 
             public ListPanel()
             {
-                SetStyle(
-                    ControlStyles.Opaque | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw |
-                    ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint |
-                    ControlStyles.SupportsTransparentBackColor, true);
+                SetStyle(ControlStyles.Opaque | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.SupportsTransparentBackColor, true);
                 DrawMode = DrawMode.OwnerDrawFixed;
                 DoubleBuffered = true;
                 Colors = new List<Color>
@@ -743,7 +864,7 @@ namespace Mids_Reborn.Forms.Controls
                 var size = GetItemSize(e.Graphics, GetItemText(Items[e.Index]));
                 e.ItemWidth = size.Width;
                 e.ItemHeight = size.Height;
-                base.OnMeasureItem(e);
+                //base.OnMeasureItem(e);
             }
 
             protected override void OnPaint(PaintEventArgs e)
@@ -752,7 +873,7 @@ namespace Mids_Reborn.Forms.Controls
                 var rec = ClientRectangle;
 
                 var hdc = g.GetHdc();
-                DrawThemeParentBackground(Handle, hdc, ref rec);
+                _ = DrawThemeParentBackground(Handle, hdc, ref rec);
                 g.ReleaseHdc(hdc);
 
                 using var reg = new Region(e.ClipRectangle);
@@ -769,14 +890,14 @@ namespace Mids_Reborn.Forms.Controls
                     item.Bounds = rec;
 
                     item.ItemState = SelectedIndices.Contains(i) ? ItemState.Selected : ItemState.Enabled;
-                    DrawListItem.Invoke(new ListPanelDrawItemEventArgs(g, Font, rec, i, item));
+                    DrawListItem?.Invoke(new ListPanelDrawItemEventArgs(g, Font, rec, i, item));
                     reg.Complement(rec);
                 }
             }
 
             private void OnDrawListItem(ListPanelDrawItemEventArgs e)
             {
-                //if (e.Index < 0) return;
+                if (e.Index < 0) return;
 
                 var rec = e.Bounds;
                 var g = e.Graphics;
@@ -799,15 +920,8 @@ namespace Mids_Reborn.Forms.Controls
                     ItemState.Invalid => Colors[4],
                     _ => textColor
                 };
-
+                
                 TextRenderer.DrawText(g, GetItemText(Items[e.Index]), Font, e.Bounds, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.PreserveGraphicsClipping | TextFormatFlags.WordBreak);
-            }
-
-            public void UpdateTextColors(ItemState state, Color color)
-            {
-                if ((state < ItemState.Enabled) | (state > ItemState.Invalid))
-                    return;
-                Colors[(int)state] = color;
             }
 
             protected override void OnDataSourceChanged(EventArgs e)
@@ -873,49 +987,22 @@ namespace Mids_Reborn.Forms.Controls
         public class ListPanelItem
         {
             public Rectangle Bounds { get; set; }
-            public IPower Power { get; set; }
-            public ListPanel.ItemState ItemState { get; set; }
+            public int Index { get; set; }
+            public IPower? Power { get; set; }
+            public ItemState ItemState { get; set; }
             public string Text => Power.DisplayName;
 
             public ListPanelItem()
             {
                 Power = new Power();
-                ItemState = ListPanel.ItemState.Enabled;
+                ItemState = ItemState.Enabled;
             }
 
-            public ListPanelItem(int index, IPower power, ListPanel.ItemState state)
+            public ListPanelItem(int index, IPower? power, ItemState state)
             {
+                Index = index;
                 Power = power;
                 ItemState = state;
-            }
-        }
-
-        public class ListPanelDrawItemEventArgs : EventArgs
-        {
-            public Graphics Graphics { get; }
-            public Font Font { get; }
-            public Rectangle Bounds { get; }
-            public int Index { get; }
-            public ListPanelItem Item { get; set; }
-            public Color ForeColor { get; }
-
-            public ListPanelDrawItemEventArgs(Graphics graphics, Font font, Rectangle rect, int index, ListPanelItem item, Color foreColor)
-            {
-                Graphics = graphics;
-                Font = font;
-                Bounds = rect;
-                Index = index;
-                Item = item;
-                ForeColor = foreColor;
-            }
-
-            public ListPanelDrawItemEventArgs(Graphics graphics, Font font, Rectangle rect, int index, ListPanelItem item)
-            {
-                Graphics = graphics;
-                Font = font;
-                Bounds = rect;
-                Index = index;
-                Item = item;
             }
         }
 

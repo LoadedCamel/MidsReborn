@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
-using mrbBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -75,7 +75,7 @@ namespace Mids_Reborn.Core
         
         public static IEnumerable<string> GetATOEnhancements => GetArchetypeEnhancements();
         public static IDatabase Database => Base.Data_Classes.Database.Instance;
-        public static IServerData ServerData => Core.ServerData.Instance;
+        public static ServerData ServerData => ServerData.Instance;
 
         private static void ClearLookups()
         {
@@ -162,8 +162,8 @@ namespace Mids_Reborn.Core
             Database.PowersetGroups = new Dictionary<string, PowersetGroup>();
             foreach (var powerset in Database.Powersets)
             {
-                if (string.IsNullOrEmpty(powerset.GroupName))
-                    continue;
+                if (powerset is null) continue;
+                if (string.IsNullOrEmpty(powerset.GroupName)) continue;
                 if (!Database.PowersetGroups.TryGetValue(powerset.GroupName, out var powersetGroup))
                 {
                     powersetGroup = new PowersetGroup(powerset.GroupName);
@@ -574,7 +574,9 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") | p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1);
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
+                                     p.GetPowerSet().nArchetype == -1);
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
@@ -583,7 +585,8 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") |
+                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
+                                     p.FullName.StartsWith("Incarnate") |
                                      (listPowersets.Contains(p.GetPowerSet().FullName) &&
                                       p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1));
         }
@@ -1104,6 +1107,15 @@ namespace Mids_Reborn.Core
             }
 
             var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            if (e >= 0)
+            {
+                return e;
+            }
+
+            // CaltoArm-+Def(Pets) through build recovery
+            iName = iName.Replace("[", "(").Replace("]", ")");
+            e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+
             return e >= 0
                 ? e
                 : GetEnhancementByShortName(iName);
@@ -1189,7 +1201,7 @@ namespace Mids_Reborn.Core
                 if (Database.Power[index1].Requires.ReferencesPower(uidPower, uidNew))
                 {
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = Database.Power[index1].FullName + " (Requirement)";
+                    array[^1] = Database.Power[index1].FullName + " (Requirement)";
                 }
 
                 for (var index2 = 0; index2 <= Database.Power[index1].Effects.Length - 1; ++index2)
@@ -1198,7 +1210,7 @@ namespace Mids_Reborn.Core
                         continue;
                     Database.Power[index1].Effects[index2].Summon = uidNew;
                     Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = Database.Power[index1].FullName + " (GrantPower)";
+                    array[^1] = Database.Power[index1].FullName + " (GrantPower)";
                 }
             }
 
@@ -1288,10 +1300,7 @@ namespace Mids_Reborn.Core
             get
             {
                 string name;
-                if (MidsContext.Config == null)
-                    name = new DirectoryInfo(Files.FDefaultPath).Name;
-                else
-                    name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
                 return name;
             }
         }
@@ -1322,53 +1331,17 @@ namespace Mids_Reborn.Core
 
         public static void SaveServerData(string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileSd, iPath);
-            FileStream fileStream;
-            BinaryWriter writer;
-            try
-            {
-                fileStream = new FileStream(path, FileMode.Create);
-                writer = new BinaryWriter(fileStream);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Server Data save failed: " + ex.Message);
-                return;
-            }
-
-            try
-            {
-                writer.Write(Files.Headers.ServerData.Start);
-                writer.Write(ServerData.ManifestUri);
-                writer.Write(ServerData.MaxSlots);
-                writer.Write(ServerData.BaseFlySpeed);
-                writer.Write(ServerData.BaseJumpHeight);
-                writer.Write(ServerData.BaseJumpSpeed);
-                writer.Write(ServerData.BasePerception);
-                writer.Write(ServerData.BaseRunSpeed);
-                writer.Write(ServerData.BaseToHit);
-                writer.Write(ServerData.MaxFlySpeed);
-                writer.Write(ServerData.MaxJumpSpeed);
-                writer.Write(ServerData.MaxRunSpeed);
-                writer.Write(ServerData.EnableInherentSlotting);
-                writer.Write(ServerData.HealthSlots);
-                writer.Write(ServerData.HealthSlot1Level);
-                writer.Write(ServerData.HealthSlot2Level);
-                writer.Write(ServerData.StaminaSlots);
-                writer.Write(ServerData.StaminaSlot1Level);
-                writer.Write(ServerData.StaminaSlot2Level);
-                writer.Close();
-                fileStream.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Message: {e.Message}\r\nTrace: {e.StackTrace}");
-                writer.Close();
-                fileStream.Close();
-            }
+            var path = Files.SelectDataFileSave(Files.ServerDataFile, iPath);
+            ServerData.Save(path);
+        }
+        
+        public static bool LoadServerData(string? iPath)
+        {
+            var path = Files.SelectDataFileLoad(Files.ServerDataFile, iPath);
+            return !File.Exists(path) ? ProformaServerData(iPath) : ServerData.Load(path);
         }
 
-        public static bool LoadServerData(string? iPath)
+        private static bool ProformaServerData(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
 
@@ -2350,11 +2323,11 @@ namespace Mids_Reborn.Core
                     if (strArray[0] != "End")
                     {
                         Array.Resize(ref enhancementClasses, enhancementClasses.Length + 1);
-                        enhancementClasses[enhancementClasses.Length - 1].ID = int.Parse(strArray[0]);
-                        enhancementClasses[enhancementClasses.Length - 1].Name = strArray[1];
-                        enhancementClasses[enhancementClasses.Length - 1].ShortName = strArray[2];
-                        enhancementClasses[enhancementClasses.Length - 1].ClassID = strArray[3];
-                        enhancementClasses[enhancementClasses.Length - 1].Desc = strArray[4];
+                        enhancementClasses[^1].ID = int.Parse(strArray[0]);
+                        enhancementClasses[^1].Name = strArray[1];
+                        enhancementClasses[^1].ShortName = strArray[2];
+                        enhancementClasses[^1].ClassID = strArray[3];
+                        enhancementClasses[^1].Desc = strArray[4];
                     }
                     else
                     {
@@ -2773,7 +2746,7 @@ namespace Mids_Reborn.Core
         public static void MatchPowersetIDs()
 
         {
-            for (var index1 = 0; index1 <= Database.Powersets.Length - 1; ++index1)
+            for (var index1 = 0; index1 < Database.Powersets.Length; index1++)
             {
                 var powerset = Database.Powersets[index1];
                 powerset.nID = index1;
@@ -2799,15 +2772,21 @@ namespace Mids_Reborn.Core
         public static void MatchPowerIDs()
         {
             Database.MutexList = UidMutexAll();
-            for (var index = 0; index < Database.Power.Length; ++index)
+            for (var index = 0; index < Database.Power.Length; index++)
             {
                 var power1 = Database.Power[index];
                 if (string.IsNullOrEmpty(power1.FullName))
-                    power1.FullName = "Orphan." + power1.DisplayName.Replace(" ", "_");
+                {
+                    power1.FullName = $"Orphan.{power1.DisplayName.Replace(" ", "_")}";
+                }
+
                 power1.PowerIndex = index;
                 power1.PowerSetID = NidFromUidPowerset(power1.FullSetName);
                 if (power1.PowerSetID <= -1)
+                {
                     continue;
+                }
+
                 var ps = power1.GetPowerSet();
                 var length = ps.Powers.Length;
                 power1.PowerSetIndex = length;
@@ -2838,7 +2817,10 @@ namespace Mids_Reborn.Core
                 foreach (var effect in power.Effects)
                 {
                     if (flag)
+                    {
                         effect.buffMode = Enums.eBuffMode.Debuff;
+                    }
+
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.GrantPower:
@@ -2856,19 +2838,27 @@ namespace Mids_Reborn.Core
                 }
 
                 power.NGroupMembership = new int[power.GroupMembership.Length];
-                for (var index1 = 0; index1 < power.GroupMembership.Length; ++index1)
-                for (var index2 = 0; index2 < Database.MutexList.Length; ++index2)
+                for (var index1 = 0; index1 < power.GroupMembership.Length; index1++)
                 {
-                    if (!string.Equals(Database.MutexList[index2], power.GroupMembership[index1],
-                        StringComparison.OrdinalIgnoreCase))
-                        continue;
-                    power.NGroupMembership[index1] = index2;
-                    break;
+                    for (var index2 = 0; index2 < Database.MutexList.Length; index2++)
+                    {
+                        if (!string.Equals(Database.MutexList[index2], power.GroupMembership[index1],
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        power.NGroupMembership[index1] = index2;
+                        break;
+                    }
                 }
 
                 power.NIDSubPower = new int[power.UIDSubPower.Length];
-                for (var index = 0; index < power.UIDSubPower.Length; ++index)
+                for (var index = 0; index < power.UIDSubPower.Length; index++)
+                {
                     power.NIDSubPower[index] = NidFromUidPower(power.UIDSubPower[index]);
+                }
+
                 MatchRequirementId(power);
             }
         }
@@ -2879,76 +2869,96 @@ namespace Mids_Reborn.Core
             if (power.Requires.ClassName.Length > 0)
             {
                 power.Requires.NClassName = new int[power.Requires.ClassName.Length];
-                for (var index = 0; index < power.Requires.ClassName.Length; ++index)
+                for (var index = 0; index < power.Requires.ClassName.Length; index++)
+                {
                     power.Requires.NClassName[index] = NidFromUidClass(power.Requires.ClassName[index]);
+                }
             }
 
             if (power.Requires.ClassNameNot.Length > 0)
             {
                 power.Requires.NClassNameNot = new int[power.Requires.ClassNameNot.Length];
-                for (var index = 0; index < power.Requires.ClassNameNot.Length; ++index)
+                for (var index = 0; index < power.Requires.ClassNameNot.Length; index++)
+                {
                     power.Requires.NClassNameNot[index] = NidFromUidClass(power.Requires.ClassNameNot[index]);
+                }
             }
 
             if (power.Requires.PowerID.Length > 0)
             {
                 power.Requires.NPowerID = new int[power.Requires.PowerID.Length][];
-                for (var index1 = 0; index1 < power.Requires.PowerID.Length; ++index1)
+                for (var index1 = 0; index1 < power.Requires.PowerID.Length; index1++)
                 {
                     power.Requires.NPowerID[index1] = new int[power.Requires.PowerID[index1].Length];
-                    for (var index2 = 0; index2 < power.Requires.PowerID[index1].Length; ++index2)
+                    for (var index2 = 0; index2 < power.Requires.PowerID[index1].Length; index2++)
+                    {
                         power.Requires.NPowerID[index1][index2] =
                             !string.IsNullOrEmpty(power.Requires.PowerID[index1][index2])
                                 ? NidFromUidPower(power.Requires.PowerID[index1][index2])
                                 : -1;
+                    }
                 }
             }
 
             if (power.Requires.PowerIDNot.Length <= 0)
+            {
                 return;
+            }
+
             power.Requires.NPowerIDNot = new int[power.Requires.PowerIDNot.Length][];
-            for (var index1 = 0; index1 < power.Requires.PowerIDNot.Length; ++index1)
+            for (var index1 = 0; index1 < power.Requires.PowerIDNot.Length; index1++)
             {
                 power.Requires.NPowerIDNot[index1] = new int[power.Requires.PowerIDNot[index1].Length];
-                for (var index2 = 0; index2 < power.Requires.PowerIDNot[index1].Length; ++index2)
+                for (var index2 = 0; index2 < power.Requires.PowerIDNot[index1].Length; index2++)
+                {
                     power.Requires.NPowerIDNot[index1][index2] =
                         !string.IsNullOrEmpty(power.Requires.PowerIDNot[index1][index2])
                             ? NidFromUidPower(power.Requires.PowerIDNot[index1][index2])
                             : -1;
+                }
             }
         }
 
         public static void SetPowersetsFromGroups()
         {
-            for (var index1 = 0; index1 < Database.Classes.Length; ++index1)
+            for (var index1 = 0; index1 < Database.Classes.Length; index1++)
             {
                 var archetype = Database.Classes[index1];
                 var intList1 = new List<int>();
                 var intList2 = new List<int>();
                 var intList3 = new List<int>();
-                for (var index2 = 0; index2 < Database.Powersets.Length; ++index2)
+                for (var index2 = 0; index2 < Database.Powersets.Length; index2++)
                 {
                     var powerset = Database.Powersets[index2];
                     if (powerset.Powers.Length > 0)
+                    {
                         powerset.Powers[0].SortOverride = true;
+                    }
+
                     if (string.Equals(powerset.GroupName, archetype.PrimaryGroup, StringComparison.OrdinalIgnoreCase))
                     {
                         intList1.Add(index2);
                         if (powerset.nArchetype < 0)
+                        {
                             powerset.nArchetype = index1;
+                        }
                     }
 
                     if (string.Equals(powerset.GroupName, archetype.SecondaryGroup, StringComparison.OrdinalIgnoreCase))
                     {
                         intList2.Add(index2);
                         if (powerset.nArchetype < 0)
+                        {
                             powerset.nArchetype = index1;
+                        }
                     }
 
                     if (string.Equals(powerset.GroupName, archetype.EpicGroup, StringComparison.OrdinalIgnoreCase) &&
                         (powerset.nArchetype == index1 || powerset.Powers.Length > 0 &&
                             powerset.Powers[0].Requires.ClassOk(archetype.ClassName)))
+                    {
                         intList3.Add(index2);
+                    }
                 }
 
                 archetype.Primary = intList1.ToArray();
@@ -2996,7 +3006,7 @@ namespace Mids_Reborn.Core
                     Array.Resize(ref Database.EnhancementSets[index2].Enhancements,
                         Database.EnhancementSets[index2].Enhancements.Length + 1);
                     Database.EnhancementSets[index2]
-                        .Enhancements[Database.EnhancementSets[index2].Enhancements.Length - 1] = index1;
+                        .Enhancements[^1] = index1;
                 }
                 else
                 {
@@ -3050,38 +3060,77 @@ namespace Mids_Reborn.Core
         public static void AssignStaticIndexValues(ISerialize serializer, bool save)
         {
             var lastStaticPowerIdx = -2;
-            for (var index = 0; index <= Database.Power.Length - 1; ++index)
-                if (Database.Power[index].StaticIndex > -1 && Database.Power[index].StaticIndex > lastStaticPowerIdx)
-                    lastStaticPowerIdx = Database.Power[index].StaticIndex;
-            if (lastStaticPowerIdx < -1)
-                lastStaticPowerIdx = -1;
-            for (var index = 0; index <= Database.Power.Length - 1; ++index)
+            foreach (var p in Database.Power)
             {
-                if (Database.Power[index].StaticIndex >= 0)
+                if (p.StaticIndex > -1 && p.StaticIndex > lastStaticPowerIdx)
+                {
+                    lastStaticPowerIdx = p.StaticIndex;
+                }
+            }
+
+            if (lastStaticPowerIdx < -1)
+            {
+                lastStaticPowerIdx = -1;
+            }
+
+            foreach (var p in Database.Power)
+            {
+                if (p.StaticIndex >= 0)
+                {
                     continue;
+                }
+
                 ++lastStaticPowerIdx;
-                Database.Power[index].StaticIndex = lastStaticPowerIdx;
+                p.StaticIndex = lastStaticPowerIdx;
             }
 
             var lastStaticEnhIdx = -2;
-            for (var index = 1; index <= Database.Enhancements.Length - 1; ++index)
+            for (var index = 1; index < Database.Enhancements.Length; index++)
+            {
                 if (Database.Enhancements[index].StaticIndex > -1 &&
                     Database.Enhancements[index].StaticIndex > lastStaticEnhIdx)
+                {
                     lastStaticEnhIdx = Database.Enhancements[index].StaticIndex;
+                }
+            }
+
             if (lastStaticEnhIdx < -1)
+            {
                 lastStaticEnhIdx = -1;
-            for (var index = 1; index <= Database.Enhancements.Length - 1; ++index)
+            }
+
+            for (var index = 1; index < Database.Enhancements.Length; index++)
             {
                 if (Database.Enhancements[index].StaticIndex >= 1)
+                {
                     continue;
+                }
+
                 ++lastStaticEnhIdx;
                 Database.Enhancements[index].StaticIndex = lastStaticEnhIdx;
             }
 
             if (!save)
+            {
                 return;
+            }
+
             SaveMainDatabase(serializer, MidsContext.Config.SavePath);
             SaveEnhancementDb(serializer, MidsContext.Config.SavePath);
+        }
+
+        public static Dictionary<string, string> GetInstalledDatabases()
+        {
+            var databases = new Dictionary<string, string>();
+            var foundDatabases = Directory.GetDirectories(Files.BaseDataPath).ToList();
+            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, Files.MxdbFileDb)));
+            foreach (var database in foundDatabases)
+            {
+                var dirInfo = new DirectoryInfo(database);
+                databases.Add(dirInfo.Name, database);
+            }
+
+            return databases;
         }
     }
 

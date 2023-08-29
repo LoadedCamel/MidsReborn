@@ -2,10 +2,14 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace Mids_Reborn.Forms
 {
@@ -91,7 +95,8 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsShareDiscord = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShareForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShareMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsImportDataChunk = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsChangeDb = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
@@ -499,12 +504,13 @@ namespace Mids_Reborn.Forms
             // 
             // DlgOpen
             // 
+            this.DlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgOpen.DefaultExt = "mbd";
-            this.DlgOpen.Filter =
-                "Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
+            this.DlgOpen.Filter = "All Supported Formats (*.mbd; *.mxd; *.txt)|*.mbd;*.mxd;*.txt|Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd;*.txt)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
             // 
             // DlgSave
             // 
+            this.DlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgSave.DefaultExt = "mbd";
             this.DlgSave.Filter = "Character Builds (*.mbd)|*.mbd";
             // 
@@ -1310,13 +1316,15 @@ namespace Mids_Reborn.Forms
             //
             this.ShareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
-                this.tsShareForum,
-                this.tsShareDiscord
+                this.tsShareDiscord,
+                this.tsShareMenu,
+                this.ToolStripSeparator27,
+                this.tsImportDataChunk
             });
             this.ShareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem1";
             this.ShareToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
-            this.ShareToolStripMenuItem.Text = "&Share Build";
+            this.ShareToolStripMenuItem.Text = "&Build Sharing";
             //
             // ToolStripSeparator30
             //
@@ -1328,6 +1336,13 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator31.Name = "ToolStripSeparator31";
             this.ToolStripSeparator31.Size = new System.Drawing.Size(242, 6);
             // 
+            // tsImportShortCode
+            //
+            this.tsImportDataChunk.Name = "tsImportDataChunk";
+            this.tsImportDataChunk.Size = new System.Drawing.Size(240, 22);
+            this.tsImportDataChunk.Text = "Import via DataChunk";
+            this.tsImportDataChunk.Click += new System.EventHandler(this.tsImportChunk_Click);
+            // 
             // tsShareDiscord
             //
             this.tsShareDiscord.Name = "tsShareDiscord";
@@ -1335,12 +1350,12 @@ namespace Mids_Reborn.Forms
             this.tsShareDiscord.Text = "Via Discord";
             this.tsShareDiscord.Click += new System.EventHandler(this.tsShareDiscord_Click);
             // 
-            // tsShareForum
+            // tsShareForum2
             //
-            this.tsShareForum.Name = "tsShareForum";
-            this.tsShareForum.Size = new System.Drawing.Size(240, 22);
-            this.tsShareForum.Text = "Via Forum Export";
-            this.tsShareForum.Click += new System.EventHandler(this.ForumExport_Click);
+            this.tsShareMenu.Name = "tsShareMenu";
+            this.tsShareMenu.Size = new System.Drawing.Size(240, 22);
+            this.tsShareMenu.Text = "Open Share Menu";
+            this.tsShareMenu.Click += new System.EventHandler(this.ShareMenu_Click);
             //
             // HelpToolStripMenuItem
             //
@@ -1448,8 +1463,8 @@ namespace Mids_Reborn.Forms
                 this.tsViewTotals,
                 this.ToolStripSeparator18,
                 this.tsRecipeViewer,
-                this.tsDPSCalc,
-                this.ToolStripSeparator19,
+                //this.tsDPSCalc,
+                //this.ToolStripSeparator19,
                 this.tsSetFind,
                 this.ToolStripSeparator21,
                 this.InGameRespecHelperToolStripMenuItem
@@ -2144,13 +2159,15 @@ namespace Mids_Reborn.Forms
             this.i9Picker.Size = new System.Drawing.Size(198, 235);
             this.i9Picker.TabIndex = 83;
             this.i9Picker.Visible = false;
-            this.i9Picker.EnhancementPicked +=
-                new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.EnhancementPicked += new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.EnhancementSelectionCancelled += new I9Picker.EnhancementSelectionCancelledEventHandler(this.I9Picker_EnhancementSelectionCancelled);
             this.i9Picker.HoverEnhancement += new I9Picker.HoverEnhancementEventHandler(this.I9Picker_HoverEnhancement);
             this.i9Picker.HoverSet += new I9Picker.HoverSetEventHandler(this.I9Picker_HoverSet);
             this.i9Picker.Moved += new I9Picker.MovedEventHandler(this.I9Picker_Moved);
             this.i9Picker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.I9Picker_MouseDown);
-            this.i9Picker.MouseLeave += new System.EventHandler(this.I9Picker_Hiding);
+            this.i9Picker.MouseEnter += new System.EventHandler(this.I9Picker_MouseEnter);
+            this.i9Picker.MouseLeave += new System.EventHandler(this.I9Picker_MouseLeave);
+            this.i9Picker.KeyDown += new KeyEventHandler(this.I9Picker_KeyDown);
             // 
             // I9Popup
             // 
@@ -2456,7 +2473,8 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator25;
         ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsShareDiscord;
-        ToolStripMenuItem tsShareForum;
+        ToolStripMenuItem tsShareMenu;
+        ToolStripMenuItem tsImportDataChunk;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;
@@ -2608,5 +2626,7 @@ namespace Mids_Reborn.Forms
         public ImageButtonEx ibPrestigePowersEx;
         public ImageButtonEx ibIncarnatePowersEx;
         public ImageButtonEx ibTempPowersEx;
+        internal OpenFileDialog DlgOpen;
+        internal SaveFileDialog DlgSave;
     }
 }

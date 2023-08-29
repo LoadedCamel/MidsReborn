@@ -70,23 +70,24 @@ namespace Mids_Reborn.Forms.Controls
         protected const int szPadding = 4;
         private readonly string[] Pages;
 
+        public bool MoveDisable;
+        public Rectangle SnapLocation;
+        public int TabPage;
+        public bool[]? TabsMask;
+
         private bool bFloating;
         private ExtendedBitmap bxFlip;
         private bool Compact;
         private int HistoryIDX;
         private bool Lock;
         private Point mouse_offset;
-        public bool MoveDisable;
         private IPower? pBase;
         private IPower? pEnh;
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private int pLastScaleVal;
         private Rectangle ScreenBounds;
-        public Rectangle SnapLocation;
-        public int TabPage;
         private bool VillainColor;
-        public bool[]? TabsMask;
         private List<GroupedFx> GroupedRankedEffects;
         private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
 
@@ -731,17 +732,26 @@ namespace Mids_Reborn.Forms.Controls
                 SetDamageTip();
             }*/
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
-            var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
-            var flag2 = pBase.Effects.Any(t => t.RequiresToHitCheck);
-
-            if (pBase.EntitiesAutoHit == Enums.eEntity.None | flag2 | flag1 | pBase.Range > 20 & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
+            var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
+            var requiresToHitCheckFlag = pBase.Effects.Any(t => t.RequiresToHitCheck);
+            var entitiesAutoHitFlag = pBase.EntitiesAutoHit == Enums.eEntity.None |
+                                      pBase.Effects
+                                          .Where(e => e.EffectType == Enums.eEffectType.EntCreate)
+                                          .SelectMany(e => DatabaseAPI.Database.Entities.ElementAtOrDefault(e.nSummon) == null
+                                              ? Array.Empty<IPower?>()
+                                              : DatabaseAPI.Database.Powersets.ElementAtOrDefault(DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]) == null
+                                                ? Array.Empty<IPower?>()
+                                                : DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]]?.Powers)
+                                          .Any(e => e?.EntitiesAutoHit == Enums.eEntity.None);
+            
+            if (entitiesAutoHitFlag | requiresToHitCheckFlag | absorbedEffectsFlag | pBase.Range > 20 & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
                 var num2 = MidsContext.Config.ScalingToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
-                if (pBase.EntitiesAutoHit != Enums.eEntity.None & flag2)
+                if (pBase.EntitiesAutoHit != Enums.eEntity.None & requiresToHitCheckFlag)
                 {
                     str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
                     suffix2 += "*";
@@ -769,23 +779,37 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Recharge", "Rchg"), pBase.RechargeTime, enhancedPower.RechargeTime, "s"));
             var s1 = 0f;
             var s2 = 0f;
+            var durationTip = "";
             var durationEffectId = pBase.GetDurationEffectID();
-            if (durationEffectId > -1)
+            if (durationEffectId > -1 && pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                pBase.Effects[durationEffectId].Duration <= 9999)
             {
-                if (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate &
-                    pBase.Effects[durationEffectId].Duration >= 9999)
-                {
-                    s1 = 0f;
-                    s2 = 0f;
-                }
-                else
-                {
-                    s1 = pBase.Effects[durationEffectId].Duration;
-                    s2 = enhancedPower.Effects[durationEffectId].Duration;
-                }
+                s1 = pBase.Effects[durationEffectId].Duration;
+                s2 = enhancedPower.Effects[durationEffectId].Duration;
+                durationTip = string.Join("\r\n", enhancedPower.Effects
+                    .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                                e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
+                                Math.Abs(e.Duration - s2) <= 0.1 &&
+                                e.PvMode == Enums.ePvX.Any |
+                                e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)
+                    .OrderBy(e => e.PvMode)
+                    .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
             }
 
-            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
+            var validMez = durationEffectId > -1 &&
+                           pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
+                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Afraid &
+                           !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
+                              pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
+                             pBase.Effects[durationEffectId].Mag < 0);
+
+            if (validMez)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
+            }
+
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Range", "Range"), pBase.Range, enhancedPower.Range, "ft"));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItemBuilder.Fi.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
@@ -794,12 +818,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItemBuilder.Fi.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItemBuilder.Fi.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
-            if (durationEffectId > -1 &&
-                pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
-                pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
-                !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
-                   pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
-                  pBase.Effects[durationEffectId].Mag < 0))
+            if (validMez)
             {
                 info_DataList.AddItem(new PairedListEx.Item("Effect:",
                     Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
@@ -813,11 +832,21 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].Probability < 1));
             }
 
-            var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs,
-                e => e.EffectType is not Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
-                         or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez ||
-                     e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
-                         {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport});
+            var rankedEffectsExt = MidsContext.Config?.Inc.DisablePvE == false
+                ? GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                    e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                             or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
+                             or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
+                         (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
+                : GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                    e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                             or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
+                         (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
+                             {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
+
             foreach (var rex in rankedEffectsExt)
             {
                 info_DataList.AddItem(rex.Value);
@@ -828,16 +857,13 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             info_DataList.Redraw();
-            var str1 = "Damage";
-            switch (MidsContext.Config.DamageMath.ReturnValue)
+
+            var str1 = "Damage" + MidsContext.Config.DamageMath.ReturnValue switch
             {
-                case ConfigData.EDamageReturn.DPS:
-                    str1 += " Per Second";
-                    break;
-                case ConfigData.EDamageReturn.DPA:
-                    str1 += " Per Animation Second";
-                    break;
-            }
+                ConfigData.EDamageReturn.DPS => " Per Second",
+                ConfigData.EDamageReturn.DPA => " Per Animation Second",
+                _ => ""
+            };
 
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
             {
@@ -885,6 +911,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private void DisplayData(bool noLevel = false, int iEnhLevel = -1)
         {
+            if (IsDisposed)
+            {
+                // Occurs when trying to load a build made for a different database
+                // and auto switch
+                return;
+            }
+
             if (!MidsContext.Config.DisableDataDamageGraph)
             {
                 Info_Damage.GraphType = MidsContext.Config.DataGraphType;
@@ -1019,7 +1052,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Elusivity",
                     Filter = e =>
-                        (MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE) &
+                        (MidsContext.Config.Inc.DisablePvE) &
                         e.EffectType == Enums.eEffectType.Elusivity,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 }
@@ -2381,7 +2414,7 @@ namespace Mids_Reborn.Forms.Controls
             var rootPowerName = iHistoryIdx >= 0 && iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
                 ? MidsContext.Character.CurrentBuild.Powers[iHistoryIdx]?.Power?.FullName
                 : MidsContext.Character.CurrentBuild.Powers
-                    .Where(e => e.Power != null)
+                    .Where(e => e is {Power: not null})
                     .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
                     .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
                     .FirstOrDefault(e => e.Value.Any(fx =>
@@ -2849,36 +2882,34 @@ namespace Mids_Reborn.Forms.Controls
 
         private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
             if (item == null)
             {
                 return;
             }
-
-            if (e.Button != MouseButtons.Left || e.Clicks != 1)
-            {
-                return;
-            }
-
             if (item.EntTag == null)
             {
                 return;
             }
 
             var sets = item.EntTag.PowersetFullName.ToList();
-            var petPowers = new List<IPower>();
+            var petPowers = new List<IPower?>();
             foreach (var powersFound in sets.Select(powerSet => DatabaseAPI.GetPowersetByName(powerSet)?.Powers.ToList()).Where(powersFound => powersFound != null))
             {
-                petPowers.AddRange(powersFound);
+                if (powersFound != null) petPowers.AddRange(powersFound);
             }
 
-            PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
+            if (pBase != null) PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
 
 
             var powers = new HashSet<string>();
             foreach (var ps in sets)
             {
                 var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
-                var returnedPowers = powerList?.SelectMany(p => p.FullName, (power, c) => power.FullName).ToHashSet();
+                var returnedPowers = powerList?.SelectMany(p => p!.FullName, (power, c) => power!.FullName).ToHashSet();
                 if (returnedPowers == null)
                 {
                     continue;

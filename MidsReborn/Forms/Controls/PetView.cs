@@ -3,7 +3,6 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,17 +23,23 @@ namespace Mids_Reborn.Forms.Controls
 
         private IPower? _basePower;
         private IPower? _enhancedPower;
+        private IPower? _rootPowerBase;
+        //private IPower? _rootPowerEnh;
         private int _entryIndex;
         private int _lastScaleVal;
         private int _scaleVal;
         private bool _useAlt;
-        public bool Lock;
         private PetInfo? _petInfo;
 
+        public bool Lock;
+
+        private List<GroupedFx> GroupedRankedEffects;
+        private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
+
         private readonly Color _mainHeroColor = Color.FromArgb(12, 56, 100);
-        private readonly Color _mainVillainColor = Color.FromArgb(12, 56, 100);
-        private readonly Color _dimmedHeroColor = Color.FromArgb(12, 56, 100);
-        private readonly Color _dimmedVillainColor = Color.FromArgb(12, 56, 100);
+        private readonly Color _dimmedHeroColor = Color.FromArgb(30, 53, 76); // S = 60%, L = 30%
+        private readonly Color _mainVillainColor = Color.FromArgb(100, 12, 12);
+        private readonly Color _dimmedVillainColor = Color.FromArgb(77, 31, 31);
         public bool UseAlt
         {
             get => _useAlt;
@@ -84,25 +89,23 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            var enhancedPower = _enhancedPower != null && _enhancedPower.PowerIndex == -1 ? _basePower : _enhancedPower;
+            var enhancedPower = _enhancedPower is { PowerIndex: -1 } ? _basePower : _enhancedPower;
 
-            info_Title.Text = !noLevel & _basePower.Level > 0
+            var infoTitleText = !noLevel & _basePower.Level > 0
                 ? $"[{_basePower.Level}] {_basePower.DisplayName}"
                 : _basePower.DisplayName;
 
             if (iEnhLvl > -1)
             {
-                var infoTitle = info_Title;
-                infoTitle.Text = $@"{infoTitle.Text} (Slot Level {iEnhLvl + 1})";
+                infoTitleText = $@"{infoTitleText} (Slot Level {iEnhLvl + 1})";
             }
+            
+            info_Title.Text = infoTitleText;
 
-            //var longInfo = Regex.Replace(_basePower.DescLong.Trim().Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
-            //info_TxtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(_basePower.DescShort.Trim()) + RTF.EndRTF();
-            //info_TxtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             info_TxtSmall.Text = _basePower.DescShort;
             info_TxtLarge.Text = _basePower.DescLong.Trim().Replace("\0", "");
             var suffix1 = _basePower.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
-            
+
             info_DataList.Clear();
             var tip1 = string.Empty;
             if (_basePower.PowerType == Enums.ePowerType.Click)
@@ -112,7 +115,7 @@ namespace Mids_Reborn.Forms.Controls
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if (enhancedPower != null && MidsContext.Config != null && enhancedPower.ToggleCost > 0 &
+                if (enhancedPower != null && enhancedPower.ToggleCost > 0 &
                     MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(_enhancedPower == null);
@@ -178,23 +181,26 @@ namespace Mids_Reborn.Forms.Controls
                     enhancedPower.RechargeTime, "s"));
                 var s1 = 0f;
                 var s2 = 0f;
+                var durationTip = "";
                 var durationEffectId = _basePower.GetDurationEffectID();
-                if (durationEffectId > -1)
+                if (durationEffectId > -1 && _basePower.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
+                    _basePower.Effects[durationEffectId].Duration <= 9999)
                 {
-                    if (_basePower.Effects[durationEffectId].EffectType == Enums.eEffectType.EntCreate &
-                        _basePower.Effects[durationEffectId].Duration >= 9999)
-                    {
-                        s1 = 0f;
-                        s2 = 0f;
-                    }
-                    else
-                    {
-                        s1 = _basePower.Effects[durationEffectId].Duration;
-                        s2 = enhancedPower.Effects[durationEffectId].Duration;
-                    }
+                    s1 = _basePower.Effects[durationEffectId].Duration;
+                    s2 = enhancedPower.Effects[durationEffectId].Duration;
+
+                    durationTip = string.Join("\r\n", enhancedPower.Effects
+                        .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                                    e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
+                                    Math.Abs(e.Duration - s2) <= 0.1 &&
+                                    e.PvMode == Enums.ePvX.Any |
+                                    e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                    e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)
+                        .OrderBy(e => e.PvMode)
+                        .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
                 }
 
-                info_DataList.AddItem(FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
+                info_DataList.AddItem(FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
 
                 info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), _basePower.Range, enhancedPower.Range,
                     "ft"));
@@ -229,209 +235,17 @@ namespace Mids_Reborn.Forms.Controls
                         _basePower.Effects[durationEffectId].Probability < 1));
                 }
 
-                var rankedEffects = _basePower.GetRankedEffects(true);
-                var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
-                for (var id = 0; id < rankedEffects.Length; id++)
+                //var rankedEffects = _basePower.GetRankedEffects(true);
+                //var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
+                var rankedEffectsExt = GroupedFx.FilterListItemsExt(EffectsItemPairs,
+                    e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
+                             or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez) ||
+                         e is { EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self } or
+                         { EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport });
+                foreach (var rex in rankedEffectsExt)
                 {
-                    if (rankedEffects[id] <= -1)
-                    {
-                        continue;
-                    }
-
-                    /*if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.Mez)
-                    {
-                        continue;
-                    }*/
-
-                    var rankedEffect = GetRankedEffect(rankedEffects, id);
-                    // if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.PowerRedirect)
-                    //     continue;
-
-                    if (!(_basePower.Effects[rankedEffects[id]].Probability > 0 &
-                          (MidsContext.Config.Suppression & _basePower.Effects[rankedEffects[id]].Suppression) ==
-                          Enums.eSuppress.None & _basePower.Effects[rankedEffects[id]].CanInclude()))
-                    {
-                        continue;
-                    }
-
-                    if (MidsContext.Config != null &&
-                        (MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvE ||
-                        !MidsContext.Config.Inc.DisablePvE & _basePower.Effects[rankedEffects[id]].PvMode == Enums.ePvX.PvP))
-                    {
-                        continue;
-                    }
-
-                    if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.RevokePower &&
-                        _basePower.Effects[rankedEffects[id]].nSummon <= -1 &&
-                        string.IsNullOrWhiteSpace(_basePower.Effects[rankedEffects[id]].Summon))
-                    {
-                        continue;
-                    }
-
-                    if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.GrantPower &&
-                        _basePower.Effects[rankedEffects[id]].nSummon <= -1)
-                    {
-                        continue;
-                    }
-
-                    if (_basePower.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Enhancement)
-                    {
-                        if (_basePower.Effects[rankedEffects[id]].EffectType != Enums.eEffectType.Mez)
-                        {
-                            switch (_basePower.Effects[rankedEffects[id]].EffectType)
-                            {
-                                case Enums.eEffectType.Recovery:
-                                case Enums.eEffectType.Endurance:
-                                    rankedEffect.Name = $"{_basePower.Effects[rankedEffects[id]].EffectType}";
-                                    var fxTarget = enhancedPower.Effects[rankedEffects[id]].ToWho switch
-                                    {
-                                        Enums.eToWho.Self => "(Self)",
-                                        Enums.eToWho.Target => "(Tgt)",
-                                        _ => ""
-                                    };
-                                    rankedEffect.Value = enhancedPower.Effects[rankedEffects[id]].DisplayPercentage
-                                        ? $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag * 100:###0.##}% {fxTarget}"
-                                        : $"{enhancedPower.Effects[rankedEffects[id]].BuffedMag:###0.##} {fxTarget}";
-                                    break;
-
-                                case Enums.eEffectType.EntCreate when !_basePower.AbsorbSummonEffects |
-                                                                      !_basePower.AbsorbSummonAttributes:
-                                {
-                                    rankedEffect.Name = "Summon";
-                                    if (_basePower.Effects[rankedEffects[id]].nSummon > -1)
-                                    {
-                                        rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[_basePower.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                    }
-                                    else
-                                    {
-                                        rankedEffect.Value = _basePower.Effects[rankedEffects[id]].Summon;
-                                        rankedEffect.Value = Regex.Replace(rankedEffect.Value,
-                                            @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
-                                    }
-
-                                    break;
-                                }
-                                case Enums.eEffectType.GrantPower:
-                                {
-                                    rankedEffect.Name = "Grant";
-                                    if (_basePower.Effects[rankedEffects[id]].nSummon > -1)
-                                    {
-                                        rankedEffect.Value = DatabaseAPI.Database
-                                            .Power[_basePower.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                    }
-
-                                    break;
-                                }
-
-                                case Enums.eEffectType.CombatModShift:
-                                {
-                                    rankedEffect.Name = "LvlShift";
-                                    rankedEffect.Value =
-                                        $"{(_basePower.Effects[rankedEffects[id]].Mag > 0 ? "+" : "")}{_basePower.Effects[rankedEffects[id]].Mag:##0.##}";
-
-                                    break;
-                                }
-
-                                case Enums.eEffectType.RevokePower:
-                                {
-                                    rankedEffect.Name = "Revoke";
-                                    if (_basePower.Effects[rankedEffects[id]].nSummon > -1)
-                                    {
-                                        rankedEffect.Value = DatabaseAPI.Database
-                                            .Entities[_basePower.Effects[rankedEffects[id]].nSummon].DisplayName;
-                                    }
-                                    else
-                                    {
-                                        rankedEffect.Value = _basePower.Effects[rankedEffects[id]].Summon;
-                                        rankedEffect.Value = Regex.Replace(rankedEffect.Value,
-                                            @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
-                                    }
-
-                                    break;
-                                }
-
-                                case Enums.eEffectType.DamageBuff:
-                                    var isDefiance =
-                                        _basePower.Effects[rankedEffects[id]].SpecialCase ==
-                                        Enums.eSpecialCase.Defiance &&
-                                        _basePower.Effects[rankedEffects[id]]
-                                            .ValidateConditional("Active", "Defiance") |
-                                        MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
-                                    rankedEffect.Name = isDefiance
-                                        ? "Defiance"
-                                        : ShortStr(
-                                            Enums.GetEffectName(_basePower.Effects[rankedEffects[id]].EffectType),
-                                            Enums.GetEffectNameShort(_basePower.Effects[rankedEffects[id]].EffectType));
-                                    rankedEffect.ToolTip = isDefiance
-                                        ? _basePower.Effects[rankedEffects[id]].BuildEffectString(false,
-                                            "DamageBuff (Defiance)", false, false, false, true)
-                                        : (_enhancedPower ?? _basePower).BuildTooltipStringAllVectorsEffects(
-                                            _basePower.Effects[rankedEffects[id]].EffectType);
-                                    break;
-
-                                case Enums.eEffectType.Resistance:
-                                case Enums.eEffectType.Defense:
-                                case Enums.eEffectType.Elusivity:
-                                    rankedEffect.Name = ShortStr(
-                                        Enums.GetEffectName(_basePower.Effects[rankedEffects[id]].EffectType),
-                                        Enums.GetEffectNameShort(_basePower.Effects[rankedEffects[id]].EffectType));
-
-                                    rankedEffect.ToolTip =
-                                        (_enhancedPower ?? _basePower).BuildTooltipStringAllVectorsEffects(_basePower
-                                            .Effects[rankedEffects[id]].EffectType);
-
-                                    break;
-
-                                //case Enums.eEffectType.ToHit:
-                                default:
-                                    rankedEffect.Value =
-                                        $"{_enhancedPower.Effects[rankedEffects[id]].BuffedMag * (_enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? 100 : 1):####0.##}{(_enhancedPower.Effects[rankedEffects[id]].DisplayPercentage ? "%" : "")}";
-                                    rankedEffect.Value += _enhancedPower.Effects[rankedEffects[id]].ToWho switch
-                                    {
-                                        Enums.eToWho.Self => " (Self)",
-                                        Enums.eToWho.Target => " (Tgt)",
-                                        _ => ""
-                                    };
-
-                                    rankedEffect.UseAlternateColor = Math.Abs(_enhancedPower.Effects[rankedEffects[id]].BuffedMag - _basePower.Effects[rankedEffects[id]].BuffedMag) > float.Epsilon;
-                                    rankedEffect.Name =
-                                        ShortStr(Enums.GetEffectName(_basePower.Effects[rankedEffects[id]].EffectType),
-                                            Enums.GetEffectNameShort(_basePower.Effects[rankedEffects[id]].EffectType));
-                                    rankedEffect.ToolTip = _enhancedPower.Effects[rankedEffects[id]]
-                                        .BuildEffectString(false, "", false, false, false, true);
-
-                                    break;
-
-                                /*default:
-                                rankedEffect.Name = ShortStr(Enums.GetEffectName(_basePower.Effects[rankedEffects[id]].EffectType),
-                                    Enums.GetEffectNameShort(_basePower.Effects[rankedEffects[id]].EffectType));
-                                rankedEffect.ToolTip = _enhancedPower.Effects[rankedEffects[id]].BuildEffectString(false, "", false, false, false, true);
-                                
-                                break;*/
-                            }
-                        }
-                        else
-                        {
-                            rankedEffect.Name = ShortStr(
-                                Enums.GetMezName((Enums.eMezShort)_basePower.Effects[rankedEffects[id]].MezType),
-                                Enums.GetMezNameShort((Enums.eMezShort)_basePower.Effects[rankedEffects[id]].MezType));
-                            rankedEffect.ToolTip = _enhancedPower.Effects[rankedEffects[id]]
-                                .BuildEffectString(false, "", false, false, false, true);
-                        }
-                    }
-
-                    // Ignore fully absorbed entities
-                    if (_basePower.Effects[rankedEffects[id]].EffectType == Enums.eEffectType.EntCreate)
-                    {
-                        if (_basePower.AbsorbSummonEffects & _basePower.AbsorbSummonAttributes)
-                        {
-                            continue;
-                        }
-                    }
-
-                    info_DataList.AddItem(rankedEffect);
-                    if (_basePower.Effects[rankedEffects[id]].isEnhancementEffect)
+                    info_DataList.AddItem(rex.Value);
+                    if (rex.Key.EnhancementEffect)
                     {
                         info_DataList.SetUnique();
                     }
@@ -462,10 +276,10 @@ namespace Mids_Reborn.Forms.Controls
                 if (_basePower.NIDSubPower.Length > 0 & baseDamage == 0 && enhancedDamage == 0)
                 {
                     lblDmg.Text = string.Empty;
-                    info_Damage.nBaseVal = 0f;
-                    info_Damage.nEnhVal = 0f;
-                    info_Damage.nMaxEnhVal = 0f;
-                    info_Damage.nHighEnh = 0f;
+                    info_Damage.nBaseVal = 0;
+                    info_Damage.nEnhVal = 0;
+                    info_Damage.nMaxEnhVal = 0;
+                    info_Damage.nHighEnh = 0;
                     info_Damage.Text = string.Empty;
                 }
                 else
@@ -494,7 +308,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            SetpowerScaler();
+            SetPowerScaler();
         }
 
         private void DisplayData(bool noLevel = false, int iEnhLevel = -1)
@@ -613,7 +427,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
+                if (sourcePower.Effects[tagId].ActiveConditionals is { Count: > 0 })
                 {
                     if (!sourcePower.Effects[tagId].ValidateConditional())
                     {
@@ -728,7 +542,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (sourcePower.Effects[tagId].ActiveConditionals is {Count: > 0})
+                if (sourcePower.Effects[tagId].ActiveConditionals is { Count: > 0 })
                 {
                     if (!sourcePower.Effects[tagId].ValidateConditional())
                     {
@@ -747,7 +561,7 @@ namespace Mids_Reborn.Forms.Controls
 
                 var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
                 var iItem = new PairedListEx.Item(
-                    $"{CapString($"-{names[(int) sourcePower.Effects[tagId].MezType]}", 7)}:", iValue, false, false,
+                    $"{CapString($"-{names[(int)sourcePower.Effects[tagId].MezType]}", 7)}:", iValue, false, false,
                     false, tip);
                 iList.AddItem(iItem);
                 if (sourcePower.Effects[tagId].isEnhancementEffect)
@@ -824,7 +638,7 @@ namespace Mids_Reborn.Forms.Controls
                     continue;
                 }
 
-                if (_basePower.Effects[index].ActiveConditionals is {Count: > 0})
+                if (_basePower.Effects[index].ActiveConditionals is { Count: > 0 })
                 {
                     if (!_basePower.Effects[index].ValidateConditional())
                     {
@@ -851,7 +665,7 @@ namespace Mids_Reborn.Forms.Controls
                     }
 
                     var iTip = _enhancedPower.Effects[index].BuildEffectString();
-                    if (MidsContext.Config != null && (_basePower.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                    if ((_basePower.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     {
                         iValue = "(suppressed)";
                     }
@@ -882,7 +696,7 @@ namespace Mids_Reborn.Forms.Controls
                         basePower.Effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .Where(e =>
-                                MidsContext.Config != null && e.Value.EffectType == baseFx.EffectType &
+                                e.Value.EffectType == baseFx.EffectType &
                                 e.Value.DamageType == baseFx.DamageType &
                                 e.Value.MezType == baseFx.MezType &
                                 e.Value.ETModifies == baseFx.ETModifies &
@@ -899,7 +713,7 @@ namespace Mids_Reborn.Forms.Controls
                         basePower.Effects
                             .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                             .Where(e =>
-                                MidsContext.Config != null && e.Value.EffectType == baseFx.EffectType &
+                                e.Value.EffectType == baseFx.EffectType &
                                 e.Value.DamageType == baseFx.DamageType &
                                 e.Value.MezType == baseFx.MezType &
                                 e.Value.ETModifies == baseFx.ETModifies &
@@ -925,7 +739,7 @@ namespace Mids_Reborn.Forms.Controls
                        basePower.Effects
                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                            .Where(e =>
-                               MidsContext.Config != null && effectTypes.Contains(e.Value.EffectType) &
+                               effectTypes.Contains(e.Value.EffectType) &
                                effectDmgTypes.Contains(e.Value.DamageType) &
                                effectEtModifies.Contains(e.Value.ETModifies) &
                                effectMezTypes.Contains(e.Value.MezType) &
@@ -942,7 +756,7 @@ namespace Mids_Reborn.Forms.Controls
                        basePower.Effects
                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                            .Where(e =>
-                               MidsContext.Config != null && effectTypes.Contains(e.Value.EffectType) &
+                               effectTypes.Contains(e.Value.EffectType) &
                                effectDmgTypes.Contains(e.Value.DamageType) &
                                effectEtModifies.Contains(e.Value.ETModifies) &
                                effectMezTypes.Contains(e.Value.MezType) &
@@ -997,7 +811,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             return FastItem(title, s1, s2, suffix, false, false, false, false, tip.Trim());
         }
-        
+
         private static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix, bool skiBasePower, bool alwaysShow, bool isChance, bool isSpecial, string tip)
         {
             var iValue = Utilities.FixDP(s2.Sum) + suffix;
@@ -1485,7 +1299,7 @@ namespace Mids_Reborn.Forms.Controls
             }*/
             if (num == _lastScaleVal)
                 return;
-            SetpowerScaler();
+            SetPowerScaler();
             _lastScaleVal = num;
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             var slotUpdate = SlotUpdate;
@@ -1498,7 +1312,7 @@ namespace Mids_Reborn.Forms.Controls
             info_Damage.SetTip(iTip);
         }
 
-        private void SetpowerScaler()
+        private void SetPowerScaler()
         {
             if (_basePower == null)
             {
@@ -1539,6 +1353,20 @@ namespace Mids_Reborn.Forms.Controls
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
 
+            var rootPowerName = MidsContext.Character.CurrentBuild.Powers
+                    .Where(e => e.Power != null)
+                    .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
+                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                    .FirstOrDefault(e => e.Value.Any(fx =>
+                        fx.EffectType == Enums.eEffectType.PowerRedirect &&
+                        ((basePower != null && fx.Override == basePower.FullName) |
+                         (enhancedPower != null && fx.Override == enhancedPower.FullName))))
+                    .Key;
+
+            _rootPowerBase = string.IsNullOrEmpty(rootPowerName)
+                ? null
+                : DatabaseAPI.GetPowerByFullName(rootPowerName);
+
             if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
             {
                 _basePower = null;
@@ -1553,7 +1381,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             _enhancedPower = enhancedPowerData.PowerIndex == -1
-                ? new Power(basePower) {PowerIndex = -1}
+                ? new Power(basePower) { PowerIndex = -1 }
                 : enhancedPowerData;
 
             // Data sent to the Dataview may differ from DB.
@@ -1570,7 +1398,10 @@ namespace Mids_Reborn.Forms.Controls
             _enhancedPower?.ProcessExecutes();
             //_enhancedPower?.AbsorbPetEffects(); // Done already during calculations (see clsToonX.GenerateBuffedPowerArray())
 
+            GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(_enhancedPower);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, _basePower, _enhancedPower, _enhancedPower.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
             _entryIndex = i_entryIndex;
+
             SetDamageTip();
             DisplayData(noLevel);
         }
@@ -1603,7 +1434,7 @@ namespace Mids_Reborn.Forms.Controls
                     shortFxArray1 = (Enums.ShortFX[])swappedFx[0].Clone();
                     shortFxArray2 = (Enums.ShortFX[])swappedFx[1].Clone();
                 }
-                
+
                 for (var index = 0; index < shortFxArray1.Length; index++)
                 {
                     if (!shortFxArray1[index].Present)
@@ -1736,7 +1567,7 @@ namespace Mids_Reborn.Forms.Controls
             }
             else
             {
-                infoTip.SetToolTip((Control) sender, string.Empty);
+                infoTip.SetToolTip((Control)sender, string.Empty);
             }
         }
 

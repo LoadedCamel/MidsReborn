@@ -1,0 +1,58 @@
+Set Type Names		
+Version:	3.5	
+Date:	6/20/2019	
+		
+Notes:		
+Export from Excel as Tab-Delimited Text as 'SetTypes.mhd'		
+		
+		
+		
+		
+SetID	Short	Full
+0	Untyped	Untyped
+1	MeleeST	Melee Damage
+2	RangedST	Ranged Damage
+3	RangedAoE	Targeted AoE Damage
+4	MeleeAoE	PBAoE Damage
+5	Snipe	Sniper Attacks
+6	Pets	Pet Damage
+7	Defense	Defense Sets
+8	Resistance	Resist Damage
+9	Heal	Healing
+10	Hold	Holds
+11	Stun	Stuns
+12	Immob	Immobilize
+13	Slow	Slow Movement
+14	Sleep	Sleep
+15	Fear	Fear
+16	Confuse	Confuse
+17	Flight	Flight
+18	Jump	Leaping
+19	Run	Running
+20	Teleport	Teleport
+21	DefDeb	Defense Debuff
+22	EndMod	Endurance Modification
+23	 Knockback	Knockback
+24	Taunt	Taunt
+25	ToHit	To Hit Buff
+26	ToHitDeb	To Hit Debuff
+27	PetRech	Recharge Intensive Pets
+28	Travel	Universal Travel
+29	AccHeal	Accurate Healing
+30	AccDefDeb	Accurate Defense Debuff
+31	AccToHitDeb	Accurate To-Hit Debuff
+32	Arachnos	Soldiers of Arachnos Archetype Sets
+33	Blaster	Blaster Archetype Sets
+34	Brute	Brute Archetype Sets
+35	Controller	Controller Archetype Sets
+36	Corruptor	Corruptor Archetype Sets
+37	Defender	Defender Archetype Sets
+38	Dominator	Dominator Archetype Sets
+39	Kheldian	Kheldian Archetype Sets
+40	Mastermind	Mastermind Archetype Sets
+41	Scrapper	Scrapper Archetype Sets
+42	Stalker	Stalker Archetype Sets
+43	Tanker	Tanker Archetype Sets
+44	UniversalDamage	Universal Damage
+45	Sentinel	Sentinel Archetype Sets
+End		
