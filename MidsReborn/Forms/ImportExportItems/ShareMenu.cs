@@ -80,10 +80,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         {
             // Restyle utility windows - experimental
             StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
-            if (_share.LastPageIndex > -1)
-            {
-                formPages1.SelectedIndex = _share.LastPageIndex;
-            }
+            formPages1.SelectedIndex = _share.LastPageIndex > -1 ? _share.LastPageIndex : 0;
 
             #region Page3
 
@@ -521,7 +518,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
                 txt += tg.List(true);
 
-                txt += tg.BlankLine(); 
+                txt += tg.BlankLine();
                 txt += tg.Size(4, tg.Color(activeTheme.Headings, tg.Italic(tg.Bold("- Resistance -"))));
                 txt += tg.BlankLine() + tg.BlankLine();
                 txt += tg.List(false, 2);
@@ -610,7 +607,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
                 txt += tg.List(false, 2);
                 // Use Math.Abs() here instead of negative sign to prevent display of "-0"
-                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}")}"));
+                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{Math.Abs(MidsContext.Character.Totals.Mez[(int)m]):####0.##}")}"));
                 txt += tg.List(true);
 
                 txt += tg.BlankLine();
@@ -618,7 +615,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 txt += tg.BlankLine() + tg.BlankLine();
 
                 txt += tg.List(false, 2);
-                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%")}"));
+                txt = mezList.Aggregate(txt, (current, m) => current + tg.ListItem($"{tg.Bold($"{m}:")} {tg.Color(activeTheme.Slots, $"{MidsContext.Character.Totals.MezRes[(int)m]:####0.##}%")}"));
                 txt += tg.List(true);
 
                 txt += tg.BlankLine();
@@ -897,7 +894,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                                 : $" (From {tg.Color(activeTheme.Levels, e.EnhSet)} in {tg.Color(activeTheme.Slots, e.Power)})";
 
                         }
-                        else if (e is {IsFromEnh: true, Enhancement: not null})
+                        else if (e is { IsFromEnh: true, Enhancement: not null })
                         {
                             fxSource = formatType == ExportFormatType.Html
                                 ? tg.List(false, 4) +

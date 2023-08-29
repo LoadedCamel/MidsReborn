@@ -6255,7 +6255,26 @@ The default position/state will be used upon next launch.", @"Window State Warni
             using var importBuild = new ImportCode();
             var result = importBuild.ShowDialog(this);
             if (result != DialogResult.Continue) return;
-            if (importBuild.Data != null) CharacterBuildFile.LoadImportData(importBuild.Data);
+            if (importBuild.Data == null) return;
+            DataViewLocked = false;
+            NewToon(true, true);
+            CharacterBuildFile.LoadImportData(importBuild.Data);
+            FileModified = false;
+            if (drawing != null) drawing.Highlight = -1;
+            switch (MidsContext.Character?.Archetype?.DisplayName)
+            {
+                case "Mastermind":
+                    ibPetsEx.Visible = true;
+                    ibPetsEx.Enabled = true;
+                    break;
+                default:
+                    ibPetsEx.Visible = false;
+                    ibPetsEx.Enabled = false;
+                    break;
+            }
+
+            myDataView?.Clear();
+            PowerModified(false);
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)

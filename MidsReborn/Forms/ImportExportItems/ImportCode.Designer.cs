@@ -42,8 +42,9 @@
             tbChunkBox.Name = "tbChunkBox";
             tbChunkBox.PlaceholderText = "Paste the build data chunk you received here, then click the import button.";
             tbChunkBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            tbChunkBox.Size = new System.Drawing.Size(636, 387);
+            tbChunkBox.Size = new System.Drawing.Size(746, 271);
             tbChunkBox.TabIndex = 0;
+            tbChunkBox.WordWrap = true;
             // 
             // bdImport
             // 
@@ -54,7 +55,7 @@
             bdImport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             bdImport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             bdImport.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            bdImport.Location = new System.Drawing.Point(250, 406);
+            bdImport.Location = new System.Drawing.Point(316, 289);
             bdImport.Lock = false;
             bdImport.Name = "bdImport";
             bdImport.Size = new System.Drawing.Size(148, 28);
@@ -79,7 +80,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(659, 446);
+            ClientSize = new System.Drawing.Size(769, 324);
             Controls.Add(bdImport);
             Controls.Add(tbChunkBox);
             DoubleBuffered = true;

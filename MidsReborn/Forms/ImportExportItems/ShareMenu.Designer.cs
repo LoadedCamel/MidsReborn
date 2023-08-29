@@ -110,7 +110,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             formPages1.Pages.Add(forumFormats);
             formPages1.Pages.Add(infoGraphic);
             formPages1.Pages.Add(mobileFriendly);
-            formPages1.SelectedIndex = 0;
+            formPages1.SelectedIndex = 3;
             formPages1.Size = new System.Drawing.Size(776, 393);
             formPages1.TabIndex = 45;
             // 
@@ -200,7 +200,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             bdChunkBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             bdChunkBox.Size = new System.Drawing.Size(746, 271);
             bdChunkBox.TabIndex = 0;
-            bdChunkBox.WordWrap = false;
+            bdChunkBox.WordWrap = true;
             // 
             // forumFormats
             // 
@@ -759,7 +759,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // cbInclIncarnate
             // 
             cbInclIncarnate.AutoSize = true;
-            cbInclIncarnate.Location = new System.Drawing.Point(20, 163);
+            cbInclIncarnate.Location = new System.Drawing.Point(20, 138);
             cbInclIncarnate.Name = "cbInclIncarnate";
             cbInclIncarnate.Size = new System.Drawing.Size(122, 19);
             cbInclIncarnate.TabIndex = 48;
@@ -770,7 +770,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // cbInclAccolade
             // 
             cbInclAccolade.AutoSize = true;
-            cbInclAccolade.Location = new System.Drawing.Point(20, 139);
+            cbInclAccolade.Location = new System.Drawing.Point(20, 163);
             cbInclAccolade.Name = "cbInclAccolade";
             cbInclAccolade.Size = new System.Drawing.Size(122, 19);
             cbInclAccolade.TabIndex = 47;

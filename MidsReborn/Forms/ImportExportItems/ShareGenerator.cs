@@ -19,9 +19,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
         internal static string GeneratedBuildDataChunk()
         {
             var buildData = CharacterBuildFile.GenerateShareData();
-            var chunks = buildData.Chunk(105);
-            var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{new string(chunk)}\r\n");
-            return dataChunk;
+            //var chunks = buildData.Chunk(105);
+            //var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{new string(chunk)}\r\n");
+            return buildData;
         }
 
         internal static string BuildDataFromChunk(string dataChunk)
