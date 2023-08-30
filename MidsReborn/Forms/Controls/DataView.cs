@@ -683,16 +683,17 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var defianceFound = false;
-            var enhancedPower = pEnh.PowerIndex == -1 ? pBase : pEnh;
+            var enhancedPower = pEnh == null || pEnh.PowerIndex == -1 ? pBase : pEnh;
 
+            // If power is using redirects, level may not match.
+            // Ignore the level set in redirects.
             info_Title.Text = !noLevel & pBase.Level > 0
-                ? $"[{pBase.Level}] {pBase.DisplayName}"
+                ? $"[{rootPowerBase?.Level ?? pBase.Level}] {pBase.DisplayName}"
                 : pBase.DisplayName;
 
             if (iEnhLvl > -1)
             {
-                var infoTitle = info_Title;
-                infoTitle.Text = $"{infoTitle.Text} (Slot Level {iEnhLvl + 1})";
+                info_Title.Text += $" (Slot Level {iEnhLvl + 1})";
             }
 
             enhNameDisp.Text = "Enhancement Values";
@@ -2411,11 +2412,14 @@ namespace Mids_Reborn.Forms.Controls
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
 
-            var rootPowerName = iHistoryIdx >= 0 && iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
+            var rootPowerName = iHistoryIdx >= 0 & iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
                 ? MidsContext.Character.CurrentBuild.Powers[iHistoryIdx]?.Power?.FullName
-                : MidsContext.Character.CurrentBuild.Powers
-                    .Where(e => e is {Power: not null})
-                    .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
+                
+                : MidsContext.Character.Powersets
+                    .Where(e => e != null)
+                    .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
+                    .Where(e => e != null)
+                    .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
                     .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
                     .FirstOrDefault(e => e.Value.Any(fx =>
                         fx.EffectType == Enums.eEffectType.PowerRedirect &&
