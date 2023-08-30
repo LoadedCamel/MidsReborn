@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -13,6 +12,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -2411,15 +2411,6 @@ namespace Mids_Reborn.Core
             Database.EnhGradeStringShort[3] = "SO";
         }
 
-        public static void ShowSetTypes()
-        {
-            for (var index = 0; index < Database.SetTypes.Count; index++)
-            {
-                var setType = Database.SetTypes[index];
-                Debug.WriteLine($"SetType: {setType.Name}\n\tShortName: {setType.ShortName}\n\tIndex: {setType.Index}\n\tActual Index: {index}\r\n");
-            }
-        }
-
         public static TypeGrade GetSetTypeByName(string name)
         {
             return Database.SetTypes.FirstOrDefault(x => x.Name == name);
@@ -2524,6 +2515,62 @@ namespace Mids_Reborn.Core
             streamReader.Close();
         }*/
 
+        private static void InitializeMaths()
+        {
+            Database.MultED = new float[4][];
+            for (var index = 0; index < 4; ++index)
+            {
+                Database.MultED[index] = new float[3];
+            }
+
+            for (var index1 = 0; index1 <= 2; ++index1)
+            {
+                for (var index2 = 0; index2 < 4; ++index2)
+                {
+                    Database.MultED[index2][index1] = 1;
+                }
+            }
+
+            Database.MultTO = new float[1][];
+            Database.MultDO = new float[1][];
+            Database.MultSO = new float[1][];
+            Database.MultHO = new float[1][];
+
+            Database.MultTO[0] = new float[4];
+            for (var index = 0; index < 4; ++index)
+            {
+                Database.MultTO[0][index] = 1;
+            }
+
+            Database.MultDO[0] = new float[4];
+            for (var index = 0; index < 4; ++index)
+            {
+                Database.MultDO[0][index] = 1;
+            }
+
+            Database.MultSO[0] = new float[4];
+            for (var index = 0; index < 4; ++index)
+            {
+                Database.MultSO[0][index] = 1;
+            }
+
+            Database.MultHO[0] = new float[4];
+            for (var index = 0; index < 4; ++index)
+            {
+                Database.MultHO[0][index] = 1;
+            }
+
+            Database.MultIO = new float[53][];
+            for (var index1 = 0; index1 < 53; ++index1)
+            {
+                Database.MultIO[index1] = new float[4];
+                for (var index2 = 0; index2 < 4; ++index2)
+                {
+                    Database.MultIO[index1][index2] = 1;
+                }
+            }
+        }
+
         public static bool LoadMaths(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
@@ -2535,99 +2582,168 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                var m = new MessageBoxEx("Error loading enhancement Maths",
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay,
+                    MessageBoxEx.MessageBoxIcon.Error);
+                m.ShowDialog();
+
                 return false;
             }
+
+            var loadErrorDetectedPass = -1;
 
             try
             {
                 if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
                 {
-                    throw new EndOfStreamException("Unable to load Enhancement Maths data, version header not found!");
+                    streamReader.Close();
+                    var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    m.ShowDialog();
+
+                    return false;
                 }
 
                 if (!FileIO.IOSeek(streamReader, "EDRT"))
                 {
-                    throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                    streamReader.Close();
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    m.ShowDialog();
+
+                    return false;
                 }
 
-                Database.MultED = new float[4][];
-                for (var index = 0; index < 4; ++index)
-                {
-                    Database.MultED[index] = new float[3];
-                }
+                InitializeMaths();
 
                 for (var index1 = 0; index1 <= 2; ++index1)
                 {
                     var strArray = FileIO.IOGrab(streamReader);
                     for (var index2 = 0; index2 < 4; ++index2)
                     {
-                        Database.MultED[index2][index1] = float.Parse(strArray[index2 + 1]);
+                        var ret = float.TryParse(strArray[index2 + 1], out Database.MultED[index2][index1]);
+                        if (ret)
+                        {
+                            continue;
+                        }
+
+                        loadErrorDetectedPass = 1;
                     }
                 }
 
                 if (!FileIO.IOSeek(streamReader, "EGE"))
                 {
-                    throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                    streamReader.Close();
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    m.ShowDialog();
+
+                    return false;
                 }
 
-                Database.MultTO = new float[1][];
-                Database.MultDO = new float[1][];
-                Database.MultSO = new float[1][];
-                Database.MultHO = new float[1][];
                 var strArray1 = FileIO.IOGrab(streamReader);
-                Database.MultTO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
                 {
-                    Database.MultTO[0][index] = float.Parse(strArray1[index + 1]);
+                    var ret = float.TryParse(strArray1[index + 1], out Database.MultTO[0][index]);
+                    if (ret)
+                    {
+                        continue;
+                    }
+
+                    loadErrorDetectedPass = 2;
                 }
 
                 var strArray2 = FileIO.IOGrab(streamReader);
-                Database.MultDO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
                 {
-                    Database.MultDO[0][index] = float.Parse(strArray2[index + 1]);
+                    var ret = float.TryParse(strArray2[index + 1], out Database.MultDO[0][index]);
+                    if (ret)
+                    {
+                        continue;
+                    }
+
+                    loadErrorDetectedPass = 3;
                 }
 
                 var strArray3 = FileIO.IOGrab(streamReader);
-                Database.MultSO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
                 {
-                    Database.MultSO[0][index] = float.Parse(strArray3[index + 1]);
+                    var ret = float.TryParse(strArray3[index + 1], out Database.MultSO[0][index]);
+                    if (ret)
+                    {
+                        continue;
+                    }
+
+                    loadErrorDetectedPass = 4;
                 }
 
                 var strArray4 = FileIO.IOGrab(streamReader);
-                Database.MultHO[0] = new float[4];
                 for (var index = 0; index < 4; ++index)
                 {
-                    Database.MultHO[0][index] = float.Parse(strArray4[index + 1]);
+                    var ret = float.TryParse(strArray4[index + 1], out Database.MultHO[0][index]);
+                    if (ret)
+                    {
+                        continue;
+                    }
+
+                    loadErrorDetectedPass = 5;
                 }
 
                 if (!FileIO.IOSeek(streamReader, "LBIOE"))
                 {
-                    throw new EndOfStreamException("Unable to load Maths data, section header not found!");
+                    streamReader.Close();
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    m.ShowDialog();
+
+                    return false;
                 }
 
-                Database.MultIO = new float[53][];
                 for (var index1 = 0; index1 < 53; ++index1)
                 {
                     var strArray5 = FileIO.IOGrab(streamReader);
-                    Database.MultIO[index1] = new float[4];
                     for (var index2 = 0; index2 < 4; ++index2)
                     {
-                        Database.MultIO[index1][index2] = float.Parse(strArray5[index2 + 1]);
+                        var ret = float.TryParse(strArray5[index2 + 1], out Database.MultIO[index1][index2]);
+                        if (ret)
+                        {
+                            continue;
+                        }
+
+                        loadErrorDetectedPass = 6;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                var m = new MessageBoxEx("Error loading enhancement Maths",
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay,
+                    MessageBoxEx.MessageBoxIcon.Error);
+                m.ShowDialog();
                 streamReader.Close();
+                
                 return false;
             }
 
             streamReader.Close();
-            return true;
+
+            if (loadErrorDetectedPass == -1)
+            {
+                return true;
+            }
+
+            // Bug: will trigger high cpu usage from frmInitializing, then app will close by itself after about 30 sec
+            // Do not use throw exception or MessageBox as they will go below frmInitializing.
+            var mbe = new MessageBoxEx("Error loading " + loadErrorDetectedPass switch
+                {
+                    1 => "ED",
+                    2 => "TO",
+                    3 => "DO",
+                    4 => "SO",
+                    5 => "HO",
+                    6 => "IO",
+                    _ => "Other"
+                } + $" multipliers in {path}.\r\nFaulty multipliers have been defaulted to 1.",
+                MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+            mbe.ShowDialog();
+
+            return false;
         }
 
         public static void AssignSetBonusIndexes()

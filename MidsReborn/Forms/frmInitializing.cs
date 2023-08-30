@@ -125,7 +125,7 @@ div#message {
                     return;
                 }
 
-                webView2.CoreWebView2.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
+                webView2?.CoreWebView2?.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
 messageDiv.style.opacity = 0;
 setTimeout(() => {{ messageDiv.textContent = ""{text.Replace("\"", "\\\"")}""; }}, 100);
 setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");

@@ -360,6 +360,21 @@ namespace Mids_Reborn.Forms
         private void frmMain_Load(object? sender, EventArgs e)
         {
             _loading = true;
+
+            // Required for loading Maths if using different regional settings
+            var currentCultureInfo = new CultureInfo("en", false)
+            {
+                NumberFormat =
+                {
+                    NumberDecimalSeparator = ".",
+                    CurrencyDecimalSeparator = " "
+                }
+            };
+            Thread.CurrentThread.CurrentUICulture = currentCultureInfo;
+            Thread.CurrentThread.CurrentCulture = currentCultureInfo;
+            CultureInfo.DefaultThreadCurrentCulture = currentCultureInfo;
+            CultureInfo.CurrentCulture = currentCultureInfo;
+
             try
             {
                 using var iFrm = new frmInitializing();
@@ -370,6 +385,7 @@ namespace Mids_Reborn.Forms
                 {
                     Application.DoEvents();
                 }
+
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
@@ -496,9 +512,12 @@ namespace Mids_Reborn.Forms
                     false => ImageButtonEx.States.ToggledOff
                 };
 
+                
                 Show();
+                
                 _frmInitializing?.Hide();
                 _frmInitializing?.Close();
+
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
