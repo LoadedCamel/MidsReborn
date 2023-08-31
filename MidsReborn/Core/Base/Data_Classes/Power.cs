@@ -1430,7 +1430,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                      e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
                      e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
                     e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
-                    e.Value.EffectType == Enums.eEffectType.Mez & e.Value.ValidateConditional() &
+                    e.Value.ValidateConditional() &
                     e.Value.Probability > float.Epsilon &
                     e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
                 .OrderByDescending(e => e.Value, new EffectDurationComparer())
