@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
@@ -17,6 +15,7 @@ namespace Mids_Reborn.Forms
         private const int BorderSize = 2;
         private readonly Color _borderColor = Color.Black;
         private bool _webViewReady;
+        private bool _webViewInitialized;
 
         protected override CreateParams CreateParams
         {
@@ -30,8 +29,8 @@ namespace Mids_Reborn.Forms
 
         public frmInitializing()
         {
-            Load += FrmInitializing_Load;
             InitializeComponent();
+            Load += FrmInitializing_Load;
             Padding = new Padding(BorderSize);
             BackColor = _borderColor;
             panel1.Paint += Panel1_Paint;
@@ -42,18 +41,14 @@ namespace Mids_Reborn.Forms
             SetTopMost(false);
             webView2.CoreWebView2InitializationCompleted += OnInitializationCompleted;
             webView2.NavigationCompleted += OnNavigationCompleted;
-            await InitializeAsync();
+            await webView2.EnsureCoreWebView2Async(null);
+            if (_webViewInitialized) webView2.CoreWebView2.NavigateToString(Html);
         }
 
         private void OnInitializationCompleted(object? sender, CoreWebView2InitializationCompletedEventArgs e)
         {
-            webView2.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", $"{Path.Combine(AppContext.BaseDirectory)}", CoreWebView2HostResourceAccessKind.DenyCors);
-        }
-
-        private async Task InitializeAsync()
-        {
-            await webView2.EnsureCoreWebView2Async(null);
-            webView2.CoreWebView2.NavigateToString(Html);
+            webView2.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets.mrb", AppContext.BaseDirectory, CoreWebView2HostResourceAccessKind.DenyCors);
+            _webViewInitialized = true;
         }
 
         private void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -125,11 +120,10 @@ div#message {
                     return;
                 }
 
-                webView2?.CoreWebView2?.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
+                webView2.CoreWebView2.ExecuteScriptAsync($@"var messageDiv = document.querySelector(""div#message"");
 messageDiv.style.opacity = 0;
 setTimeout(() => {{ messageDiv.textContent = ""{text.Replace("\"", "\\\"")}""; }}, 100);
 setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
-                //Refresh();
             }
         }
 
@@ -185,8 +179,8 @@ setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
             form.Region = new Region(roundPath);
             if (!(borderSize >= 1)) return;
             var rect = form.ClientRectangle;
-            var scaleX = 1.0F - ((borderSize + 1) / rect.Width);
-            var scaleY = 1.0F - ((borderSize + 1) / rect.Height);
+            var scaleX = 1.0F - (borderSize + 1) / rect.Width;
+            var scaleY = 1.0F - (borderSize + 1) / rect.Height;
             transform.Scale(scaleX, scaleY);
             transform.Translate(borderSize / 1.6F, borderSize / 1.6F);
             graph.Transform = transform;
