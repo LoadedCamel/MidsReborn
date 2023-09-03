@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -119,6 +120,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ibTopMost
             // 
             this.ibTopMost.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ibTopMost.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
             this.ibTopMost.CurrentText = "Keep on Top";
             this.ibTopMost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ibTopMost.Images.Background = global::MRBResourceLib.Resources.HeroButton;
@@ -135,8 +137,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.ibTopMost.TextOutline.Width = 2;
             this.ibTopMost.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
             this.ibTopMost.ToggleText.Indeterminate = "Indeterminate State";
-            this.ibTopMost.ToggleText.ToggledOff = "ToggledOff State";
-            this.ibTopMost.ToggleText.ToggledOn = "ToggledOn State";
+            this.ibTopMost.ToggleText.ToggledOff = "To Top";
+            this.ibTopMost.ToggleText.ToggledOn = "Keep on Top";
             this.ibTopMost.UseAlt = false;
             this.ibTopMost.Click += new System.EventHandler(this.IbTopMostClick);
             // 
