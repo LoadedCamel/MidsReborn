@@ -1156,19 +1156,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void List_Sets(int selIdx)
         {
-            if ((lvGroup.SelectedItems.Count == 0) & ((cbFilter.SelectedIndex == 0) | (cbFilter.SelectedIndex == 1)))
+            if (lvGroup.SelectedItems.Count == 0 & (cbFilter.SelectedIndex == 0 | cbFilter.SelectedIndex == 1))
                 return;
             _updating = true;
             lvSet.BeginUpdate();
             lvSet.Items.Clear();
-            if ((cbFilter.SelectedIndex == 0) & (lvGroup.SelectedItems.Count > 0))
+            if (cbFilter.SelectedIndex == 0 & lvGroup.SelectedItems.Count > 0)
             {
                 var iSets = DatabaseAPI.NidSets(lvGroup.SelectedItems[0].SubItems[0].Text, "", Enums.ePowerSetType.None);
                 BuildPowersetImageList(iSets);
                 List_Sets_AddBlock(iSets);
                 lvSet.Enabled = true;
             }
-            else if ((cbFilter.SelectedIndex == 1) & (lvGroup.SelectedItems.Count > 0))
+            else if (cbFilter.SelectedIndex == 1 & lvGroup.SelectedItems.Count > 0)
             {
                 var iSets = DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Primary)
                     .Concat(DatabaseAPI.NidSets("", lvGroup.SelectedItems[0].SubItems[0].Text, Enums.ePowerSetType.Secondary))
@@ -1186,32 +1186,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 switch (cbFilter.SelectedIndex)
                 {
                     case 4:
+                        var ps = new List<int>();
+                        for (var index = 0; index < DatabaseAPI.Database.Powersets.Length; index++)
                         {
-                            var ps = new List<int>();
-                            var num = DatabaseAPI.Database.Powersets.Length - 1;
-                            for (var index = 0; index <= num; ++index)
-                            {
-                                if (!((DatabaseAPI.Database.Powersets[index].GetGroup() == null) |
-                                      string.IsNullOrEmpty(DatabaseAPI.Database.Powersets[index].GroupName)))
-                                    continue;
-                                ps.Add(index);
-                            }
+                            if (!(DatabaseAPI.Database.Powersets[index].GetGroup() == null |
+                                  string.IsNullOrEmpty(DatabaseAPI.Database.Powersets[index].GroupName)))
+                                continue;
+                            ps.Add(index);
+                        }
 
-                            var numArray3 = ps.ToArray();
-                            BuildPowersetImageList(numArray3);
-                            List_Sets_AddBlock(numArray3);
-                            lvSet.Enabled = true;
-                            break;
-                        }
+                        var numArray3 = ps.ToArray();
+                        BuildPowersetImageList(numArray3);
+                        List_Sets_AddBlock(numArray3);
+                        lvSet.Enabled = true;
+                        break;
                     case 2:
-                        {
-                            BusyMsg("Building List...");
-                            var iSets = DatabaseAPI.NidSets("", "", Enums.ePowerSetType.None);
-                            BuildPowersetImageList(iSets);
-                            List_Sets_AddBlock(iSets);
-                            lvSet.Enabled = true;
-                            break;
-                        }
+                        BusyMsg("Building List...");
+                        var iSets = DatabaseAPI.NidSets("", "", Enums.ePowerSetType.None);
+                        BuildPowersetImageList(iSets);
+                        List_Sets_AddBlock(iSets);
+                        lvSet.Enabled = true;
+                        break;
                     default:
                         lvSet.Enabled = false;
                         break;
@@ -1220,7 +1215,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvSet.Items.Count > 0)
             {
-                if ((lvSet.Items.Count > selIdx) & (selIdx > -1))
+                if (lvSet.Items.Count > selIdx & selIdx > -1)
                 {
                     lvSet.Items[selIdx].Selected = true;
                     lvSet.Items[selIdx].EnsureVisible();
@@ -1236,6 +1231,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             BusyHide();
             pnlSet.Enabled = lvSet.Enabled;
             _updating = false;
+            lvSet_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void List_Sets_AddBlock(IReadOnlyList<int> iSets)
@@ -1243,8 +1239,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var items = new string[5];
             if (iSets.Count < 1)
                 return;
-            var num = iSets.Count - 1;
-            for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
+            for (var imageIndex = 0; imageIndex < iSets.Count; imageIndex++)
             {
                 if (iSets[imageIndex] <= -1)
                     continue;
@@ -1317,23 +1312,40 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvSet.SelectedItems.Count > 0)
             {
+                var setArchetypes = "";
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
                 _selected[1] = lvSet.SelectedIndices[0];
+
+                if (DatabaseAPI.GetPowersetByFullname(lvSet.SelectedItems[0].SubItems[3].Text)?.SetType == Enums.ePowerSetType.Ancillary)
+                {
+                    var ps = DatabaseAPI.GetPowersetByFullname(lvSet.SelectedItems[0].SubItems[3].Text);
+                    var powersetsArchetypes = DatabaseAPI.Database.Classes
+                        .Where(t => t is {Playable: true})
+                        .Where(t => DatabaseAPI.GetPowersetIndexes(t, Enums.ePowerSetType.Ancillary).Any(p => p.Equals(ps)))
+                        .Select(t => t.DisplayName)
+                        .OrderBy(t => t)
+                        .ToList();
+
+                    if (powersetsArchetypes.Count > 0)
+                    {
+                        lblSet.Text += $" [{string.Join(", ", powersetsArchetypes)}]";
+                    }
+                }
             }
 
             List_Powers(0);
         }
 
-        private void RefreshLists(int @group = -1, int powerset = -1, int power = -1)
+        private void RefreshLists(int group = -1, int powerset = -1, int power = -1)
         {
-            var selectGroup = @group;
+            var selectGroup = group;
             var selectSet = powerset;
             var selectPower = power;
-            if ((lvGroup.SelectedIndices.Count > 0) & (selectGroup == -1))
+            if (lvGroup.SelectedIndices.Count > 0 & selectGroup == -1)
                 selectGroup = lvGroup.SelectedIndices[0];
-            if ((lvSet.SelectedIndices.Count > 0) & (selectSet == -1))
+            if (lvSet.SelectedIndices.Count > 0 & selectSet == -1)
                 selectSet = lvSet.SelectedIndices[0];
-            if ((lvPower.SelectedIndices.Count > 0) & (selectPower == -1))
+            if (lvPower.SelectedIndices.Count > 0 & selectPower == -1)
                 selectPower = lvPower.SelectedIndices[0];
             UpdateLists(selectGroup, selectSet, selectPower);
         }
