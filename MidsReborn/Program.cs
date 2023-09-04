@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms;
@@ -13,11 +16,13 @@ namespace Mids_Reborn
         [STAThread]
         private static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
             Fonts.BuildFontCollection();
-            Application.Run(new frmMain(args));
+            Application.Run(new Loader(args));
         }
     }
 }

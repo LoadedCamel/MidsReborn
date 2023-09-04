@@ -1,7 +1,6 @@
-﻿
-namespace Mids_Reborn.UIv2.v2Controls
+﻿namespace Mids_Reborn.Controls
 {
-    partial class PowersControl
+    sealed partial class LabelEx
     {
         /// <summary> 
         /// Required designer variable.

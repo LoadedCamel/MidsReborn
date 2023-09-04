@@ -49,9 +49,6 @@
     <Compile Update="Forms\Controls\PowerList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UIv2\v2Controls\PowersControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Content Include="Data\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

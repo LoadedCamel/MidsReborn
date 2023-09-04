@@ -2808,23 +2808,23 @@ namespace Mids_Reborn.Core
             return Database.AttribMods.Modifier[iTable].Table[iLevel][iClassColumn];
         }
 
-        public static void MatchAllIDs(IMessager? iFrm = null)
+        public static void MatchAllIDs(IMessenger? messenger = null)
         {
-            UpdateMessage(iFrm, "Matching Group IDs...");
+            UpdateMessage(messenger, "Matching Group IDs...");
             FillGroupArray();
-            UpdateMessage(iFrm, "Matching Class IDs...");
+            UpdateMessage(messenger, "Matching Class IDs...");
             MatchArchetypeIDs();
-            UpdateMessage(iFrm, "Matching Powerset IDs...");
+            UpdateMessage(messenger, "Matching Powerset IDs...");
             MatchPowersetIDs();
-            UpdateMessage(iFrm, "Matching Power IDs...");
+            UpdateMessage(messenger, "Matching Power IDs...");
             MatchPowerIDs();
-            UpdateMessage(iFrm, "Propagating Group IDs...");
+            UpdateMessage(messenger, "Propagating Group IDs...");
             SetPowersetsFromGroups();
-            UpdateMessage(iFrm, "Matching Enhancement IDs...");
+            UpdateMessage(messenger, "Matching Enhancement IDs...");
             MatchEnhancementIDs();
-            UpdateMessage(iFrm, "Matching Modifier IDs...");
+            UpdateMessage(messenger, "Matching Modifier IDs...");
             MatchModifierIDs();
-            UpdateMessage(iFrm, "Matching Entity IDs...");
+            UpdateMessage(messenger, "Matching Entity IDs...");
             MatchSummonIDs();
         }
 
@@ -2840,10 +2840,9 @@ namespace Mids_Reborn.Core
             MatchSummonIDs();
         }
 
-        private static void UpdateMessage(IMessager? iFrm, string iMsg)
-
+        private static void UpdateMessage(IMessenger? messenger, string iMessage)
         {
-            iFrm?.SetMessage(iMsg);
+            messenger.SetMessage(iMessage);
         }
 
         public static void MatchArchetypeIDs()
