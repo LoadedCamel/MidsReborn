@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
+using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.IO_Classes;
@@ -19,6 +21,7 @@ namespace Mids_Reborn.Forms
         private event LoadDataHandler? LoadData;
 
         private frmMain? _mainForm;
+
         private const int BorderSize = 2;
         private bool _useWebView;
         private bool _webViewReady;
@@ -36,21 +39,29 @@ namespace Mids_Reborn.Forms
                 return fileInfo.Length <= 8;
             }
         }
-        
+
         public Loader(string[]? args)
         {
             _passedArgs = args;
             InitializeComponent();
-            Padding = new Padding(BorderSize);
-            RoundControlCorners(mainPanel);
-            RoundControlCorners(webView);
-            RoundControlCorners(pictureBox);
             Load += OnLoad;
             LoadData += OnLoadData;
+            Shown += OnShown;
+            webView.CoreWebView2InitializationCompleted += WebViewOnCoreWebView2InitializationCompleted;
+            webView.NavigationCompleted += WebViewOnNavigationCompleted;
         }
 
-        private async void OnLoad(object? sender, EventArgs e)
+        private async void OnShown(object? sender, EventArgs e)
         {
+            await Task.Delay(1000);
+            InitializeWebView();
+        }
+
+        private void OnLoad(object? sender, EventArgs e)
+        {
+            RoundControlCorners(mainPanel);
+            RoundControlCorners(webView);
+
             switch (FirstRun)
             {
                 case true:
@@ -66,16 +77,26 @@ namespace Mids_Reborn.Forms
                     ConfigData.Initialize();
                     break;
             }
-            webView.CoreWebView2InitializationCompleted += WebViewOnCoreWebView2InitializationCompleted;
-            webView.NavigationCompleted += WebViewOnNavigationCompleted;
-            await webView.EnsureCoreWebView2Async(null);
-            if (_useWebView)
+        }
+
+        private async void InitializeWebView()
+        {
+            try
             {
-                webView.CoreWebView2?.NavigateToString(Consts.InitHtml);
+                await webView.EnsureCoreWebView2Async(null);
             }
-            else
+            catch (Exception)
             {
-                LoadData?.Invoke(this, false);
+                _useWebView = false;
+            }
+            switch (_useWebView)
+            {
+                case false:
+                    LoadData?.Invoke(this, false);
+                    break;
+                case true:
+                    webView.CoreWebView2?.NavigateToString(Consts.InitHtml);
+                    break;
             }
         }
 
@@ -88,8 +109,6 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                webView.Visible = false;
-                pictureBox.Visible = true;
                 _useWebView = false;
             }
         }
@@ -101,16 +120,11 @@ namespace Mids_Reborn.Forms
 
         private async void OnLoadData(object? sender, bool success)
         {
-            switch (success)
+            _webViewReady = success switch
             {
-                case true:
-                    _webViewReady = true;
-                    break;
-                case false:
-                    webView.Visible = false;
-                    pictureBox.Visible = true;
-                    break;
-            }
+                true => true,
+                false => false
+            };
 
             if (MidsContext.Config == null) return;
             switch (MidsContext.Config.FirstRun)

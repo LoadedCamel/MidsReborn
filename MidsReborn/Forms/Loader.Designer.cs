@@ -33,10 +33,8 @@ namespace Mids_Reborn.Forms
             label = new LabelEx();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             mainPanel = new System.Windows.Forms.Panel();
-            pictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
             mainPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // label
@@ -66,24 +64,11 @@ namespace Mids_Reborn.Forms
             // mainPanel
             // 
             mainPanel.Controls.Add(webView);
-            mainPanel.Controls.Add(pictureBox);
             mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             mainPanel.Location = new System.Drawing.Point(0, 0);
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new System.Drawing.Size(584, 408);
             mainPanel.TabIndex = 2;
-            // 
-            // pictureBox
-            // 
-            pictureBox.BackgroundImage = MRBResourceLib.Resources.MRB_Splash_Concept;
-            pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            pictureBox.Location = new System.Drawing.Point(0, 0);
-            pictureBox.Name = "pictureBox";
-            pictureBox.Size = new System.Drawing.Size(584, 408);
-            pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            pictureBox.TabIndex = 0;
-            pictureBox.TabStop = false;
-            pictureBox.Visible = false;
             // 
             // Loader
             // 
@@ -98,7 +83,6 @@ namespace Mids_Reborn.Forms
             Text = "Loader";
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             mainPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
         }
 
@@ -107,6 +91,5 @@ namespace Mids_Reborn.Forms
         private LabelEx label;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView;
         private System.Windows.Forms.Panel mainPanel;
-        private System.Windows.Forms.PictureBox pictureBox;
     }
 }
