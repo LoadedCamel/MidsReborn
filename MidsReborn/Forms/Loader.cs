@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
-using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.IO_Classes;
@@ -51,9 +50,8 @@ namespace Mids_Reborn.Forms
             webView.NavigationCompleted += WebViewOnNavigationCompleted;
         }
 
-        private async void OnShown(object? sender, EventArgs e)
+        private void OnShown(object? sender, EventArgs e)
         {
-            await Task.Delay(1000);
             InitializeWebView();
         }
 
