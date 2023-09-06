@@ -614,27 +614,32 @@ namespace Mids_Reborn.Controls
                 {
                     var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i];
                     var enhData = DatabaseAPI.Database.Enhancements[enh];
-                    _enhUniqueStatus.Add(!enhData.Unique
-                        ? null
-                        : new EnhUniqueStatus
-                        {
-                            InMain = _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                    _enhUniqueStatus.Add(new EnhUniqueStatus
+                    {
+                        InMain = enhData.Unique
+                            ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                                 .Powers
                                 .Where(e => e is {Power.Slottable: true})
-                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh)),
-                            InAlternate = _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh))
+                            : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                                 .Powers
-                                .Where(e => e is { Power.Slottable: true })
+                                .Where(e => e is {Power.Slottable: true} && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
+                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh)),
+                        InAlternate = enhData.Unique
+                            ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                            .Powers
+                            .Where(e => e is {Power.Slottable: true})
+                            .Any(f => f.Slots.Any(g => g.FlippedEnhancement.Enh == enh))
+                            : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                                .Powers
+                                .Where(e => e is { Power.Slottable: true } && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
                                 .Any(f => f.Slots.Any(g => g.FlippedEnhancement.Enh == enh))
-                        });
-                    var grey = _mySlotted.All(slotted => enh != slotted) && enhData.Unique &&
-                               (_enhUniqueStatus[i] == null
-                                   ? false
-                                   : _enhUniqueStatus[i].Value.InMain);
+                    });
+
                     var graphics = _myBx.Graphics;
                     I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
                         DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
-                        (Origin.Grade) 5, GreyItem(grey));
+                        (Origin.Grade) 5, GreyItem(_enhUniqueStatus[i]?.InMain == true));
                 }
             }
         }
@@ -678,9 +683,11 @@ namespace Mids_Reborn.Controls
                 return false;
             }
 
-            return _mySlotted.Any(t =>
-                DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                    .Enhancements[index] == t);
+            //var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index];
+            //var enhData = DatabaseAPI.Database.Enhancements[enh];
+            //var sourcePower = DatabaseAPI.Database.Enhancements[_mySlot.Enh].GetPower();
+
+            return _mySlotted.Any(t => DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index] == t);
         }
 
         private void DisplaySetImages()
@@ -1243,7 +1250,10 @@ namespace Mids_Reborn.Controls
                     case Enums.eType.SetO:
                         if (IsPlaced(index))
                         {
-                            return true;
+                            if (_mySlot.RelativeLevel == Ui.View.RelLevel)
+                            {
+                                return false;
+                            }
                         }
 
                         i9Slot.Enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index];
@@ -1255,7 +1265,15 @@ namespace Mids_Reborn.Controls
 
                             if (uniqueSlotted)
                             {
-                                return false;
+                                if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel)
+                                {
+                                    return false;
+                                }
+                                
+                                if (_mySlot.Enh != i9Slot.Enh)
+                                {
+                                    return false;
+                                }
                             }
                         }
 

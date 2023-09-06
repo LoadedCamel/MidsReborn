@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms;
-using Mids_Reborn.Forms.OptionsMenuItems;
 
 namespace Mids_Reborn
 {
@@ -52,13 +52,13 @@ namespace Mids_Reborn
 
             public static async Task ChangeDatabase(frmBusy? iFrm)
             {
-                iFrm.SetMessage(@"Restarting with selected database.");
+                iFrm?.SetMessage(@"Restarting with selected database.");
                 await Task.Delay(2000);
                 BusyHide();
                 Application.Restart();
             }
 
-            public static void SelectDefaultDatabase(frmInitializing? iFrm)
+            public static async void SelectDefaultDatabase(Loader iFrm)
             {
                 var installedDatabases = DatabaseAPI.GetInstalledDatabases();
                 if (installedDatabases.Count == 0)
@@ -68,12 +68,15 @@ namespace Mids_Reborn
                 }
 
                 var defaultDatabase = installedDatabases.First(db => db.Key != "Generic");
+                if (MidsContext.Config == null) return;
                 MidsContext.Config.DataPath = defaultDatabase.Value;
                 MidsContext.Config.SavePath = defaultDatabase.Value;
-                LoadData(ref iFrm, MidsContext.Config.DataPath);
+                MidsContext.Config.FirstRun = false;
+
+                await LoadData(iFrm, MidsContext.Config.DataPath);
             }
 
-            public static void SelectDatabase(frmInitializing? iFrm)
+            /*public static void SelectDatabase(frmInitializing? iFrm)
             {
                 using var dbSelector = new DatabaseSelector();
                 var result = dbSelector.ShowDialog();
@@ -92,9 +95,86 @@ namespace Mids_Reborn
                 MidsContext.Config.DataPath = dbSelected;
                 MidsContext.Config.SavePath = dbSelected;
                 LoadData(ref iFrm, MidsContext.Config.DataPath);
+            }*/
+
+            public static async Task LoadData(IMessenger messenger, string? path)
+            {
+                messenger.SetMessage("Initializing Data...");
+                messenger.SetMessage("Loading Server Data...");
+                if (!DatabaseAPI.LoadServerData(path))
+                {
+                    MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                messenger.SetMessage("Loading Attribute Modifiers...");
+                DatabaseAPI.Database.AttribMods = new Modifiers();
+                if (!DatabaseAPI.Database.AttribMods.Load(path)) { }
+
+                DatabaseAPI.LoadTypeGrades(path);
+                messenger.SetMessage("Loading Main Data...");
+                if (!DatabaseAPI.LoadLevelsDatabase(path))
+                {
+                    MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/LoadedCamel/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                if (!DatabaseAPI.LoadMainDatabase(path))
+                {
+                    MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+                
+                if (!DatabaseAPI.LoadMaths(path))
+                {
+                    Application.Exit();
+                }
+
+                messenger.SetMessage("Loading Global Chance Modifiers...");
+                if (!DatabaseAPI.LoadEffectIdsDatabase(path))
+                {
+                    Application.Exit();
+                }
+
+                messenger.SetMessage("Loading Enhancement Database...");
+                if (!DatabaseAPI.LoadEnhancementClasses(path))
+                {
+                    Application.Exit();
+                }
+
+                DatabaseAPI.LoadEnhancementDb(path);
+                DatabaseAPI.LoadOrigins(path);
+                
+                //DatabaseAPI.ShowSetTypes();
+                //DatabaseAPI.LoadSetTypeStrings(path);
+
+                messenger.SetMessage("Loading Recipe Database...");
+                DatabaseAPI.LoadSalvage(path);
+                DatabaseAPI.LoadRecipes(path);
+
+                if (File.Exists(Files.CNamePowersRepl))
+                {
+                    messenger.SetMessage("Loading Powers Replacement Table...");
+                    DatabaseAPI.LoadReplacementTable();
+                }
+
+                messenger.SetMessage("Loading Cryptic-specific power names translation table");
+                DatabaseAPI.LoadCrypticReplacementTable();
+
+                messenger.SetMessage("Loading Graphics...");
+                await LoadGraphics(path);
+
+                DatabaseAPI.MatchAllIDs(messenger);
+                messenger.SetMessage("Matching Set Bonus IDs...");
+                DatabaseAPI.AssignSetBonusIndexes();
+                messenger.SetMessage("Matching Recipe IDs...");
+
+                DatabaseAPI.AssignRecipeIDs();
+                GC.Collect();
+                IsAppInitialized = true;
             }
 
-            public static void LoadData(ref frmInitializing? iFrm, string? path)
+            /*public static void LoadData(ref Loader? iFrm, string? path)
             {
                 iFrm?.SetMessage("Initializing Data...");
                 iFrm?.SetMessage("Loading Server Data...");
@@ -174,11 +254,10 @@ namespace Mids_Reborn
                 GC.Collect();
                 IsAppInitialized = true;
                 if (iFrm != null) iFrm.LoadingComplete = true;
-            }
+            }*/
 
-            public static bool LoadData(string? path)
+            /*public static async void LoadData(string? path)
             {
-                IsAppInitialized = true;
                 if (!DatabaseAPI.LoadServerData(path))
                 {
                     MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -225,17 +304,20 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadSalvage(path);
                 DatabaseAPI.LoadRecipes(path);
 
-                DatabaseAPI.LoadReplacementTable();
+                if (File.Exists(Files.CNamePowersRepl))
+                {
+                    DatabaseAPI.LoadReplacementTable();
+                }
 
-                LoadGraphics(path).GetAwaiter().GetResult();
+                DatabaseAPI.LoadCrypticReplacementTable();
 
-                //MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+                await LoadGraphics(path);
+
                 DatabaseAPI.MatchIds();
                 DatabaseAPI.AssignSetBonusIndexes();
                 DatabaseAPI.AssignRecipeIDs();
-                GC.Collect();
-                return true;
-            }
+                IsAppInitialized = true;
+            }*/
 
             private static async Task LoadGraphics(string? path)
             {

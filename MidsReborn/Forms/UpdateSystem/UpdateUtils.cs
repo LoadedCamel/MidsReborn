@@ -53,7 +53,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             try
             {
                 using var client = new HttpClient();
-                var response = await client.GetAsync(MidsContext.Config?.UpdatePath);
+                var response = await client.GetAsync(DatabaseAPI.ServerData.ManifestUri);
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
                 var serializer = new XmlSerializer(typeof(Manifest));

@@ -18,7 +18,6 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
-using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
@@ -53,8 +52,8 @@ namespace Mids_Reborn.Forms
         }
 
         private const string UriScheme = "mrb";
-        private frmInitializing? _frmInitializing;
         private frmBusy? _frmBusy;
+        internal Loader? Loader;
         private bool _exportDiscordInProgress;
         private bool _loading;
         private bool _gfxDrawing;
@@ -72,39 +71,13 @@ namespace Mids_Reborn.Forms
         private Rectangle _pnlGfxFlowOrigin;
         private Rectangle _formOrigin;
 
-        private static bool FirstRun
-        {
-            get
-            {
-                if (!File.Exists(Files.FNameJsonConfig))
-                {
-                    File.Create(Files.FNameJsonConfig);
-                }
-                var fileInfo = new FileInfo(Files.FNameJsonConfig);
-                return fileInfo.Length <= 8;
-            }
-        }
-
         public frmMain(string[]? args = null)
         {
             CommandArgs = args;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
-            switch (FirstRun)
-            {
-                case true:
-                    ConfigData.Initialize(true);
-                    MidsContext.Config.IsInitialized = true;
-                    MidsContext.Config.FirstRun = true;
-                    break;
-                default:
-                    ConfigData.Initialize();
-                    break;
-            }
-
             Load += frmMain_Load;
             Closed += frmMain_Closed;
             FormClosing += frmMain_Closing;
-            //Resize += frmMain_Resize;
             ResizeEnd += frmMain_ResizeEnd;
             KeyDown += frmMain_KeyDown;
             MouseWheel += frmMain_MouseWheel;
@@ -198,8 +171,6 @@ namespace Mids_Reborn.Forms
 
         private async void OnShown(object? sender, EventArgs e)
         {
-            SetEnhCheckModePosition();
-
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
             var prevLoadLastCfg = MidsContext.Config.DisableLoadLastFileOnStart;
@@ -362,34 +333,22 @@ namespace Mids_Reborn.Forms
             _loading = true;
             try
             {
-                using var iFrm = new frmInitializing();
-                _frmInitializing = iFrm;
-                _frmInitializing.LoadingStarted += FrmInitializingOnLoadingStarted;
-                _frmInitializing.Show();
-                while (!_frmInitializing.LoadingComplete)
-                {
-                    Application.DoEvents();
-                }
+                Loader?.SetMessage(@"Initializing...");
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
 
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-                
                 myDataView = dvAnchored;
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
-
-                _frmInitializing?.SetMessage("Setting up UI...");
+                
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 NewToon();
                 MidsContext.Character!.AlignmentChanged += CharacterOnAlignmentChanged;
                 PowerModified(true);
                 
-                
-
                 var comboData = MidsContext.Config.RelativeScales;
                 if (EnemyRelativeToolStripComboBox.ComboBox != null)
                 {
@@ -496,9 +455,6 @@ namespace Mids_Reborn.Forms
                     false => ImageButtonEx.States.ToggledOff
                 };
 
-                Show();
-                _frmInitializing?.Hide();
-                _frmInitializing?.Close();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -515,10 +471,11 @@ namespace Mids_Reborn.Forms
                 setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 UpdatePoolsPanelSize();
                 InitializeDv();
-                if (this.IsInDesignMode())
-                {
-                    return;
-                }
+                SetEnhCheckModePosition();
+                // if (this.IsInDesignMode())
+                // {
+                //     return;
+                // }
             }
             catch (Exception ex)
             {
@@ -529,22 +486,7 @@ namespace Mids_Reborn.Forms
             }
 
             _loading = false;
-            MidsContext.Config.FirstRun = false;
             MidsContext.Config.SaveConfig();
-        }
-
-        private void FrmInitializingOnLoadingStarted(object? sender, EventArgs e)
-        {
-            switch (MidsContext.Config.FirstRun)
-            {
-                case true:
-                    MainModule.MidsController.SelectDefaultDatabase(_frmInitializing);
-                    break;
-                default:
-                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
-                    break;
-            }
-            
         }
 
         private async Task<bool> RunSchemaCommands(string url)
@@ -2419,6 +2361,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     break;
             }
             MidsContext.Config.SaveConfig();
+
+            Application.Exit();
         }
 
         private void frmMain_Closing(object? sender, FormClosingEventArgs e)
