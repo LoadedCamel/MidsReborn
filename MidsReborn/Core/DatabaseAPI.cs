@@ -2842,13 +2842,12 @@ namespace Mids_Reborn.Core
 
         private static void UpdateMessage(IMessenger? messenger, string iMessage)
         {
-            messenger.SetMessage(iMessage);
+            messenger?.SetMessage(iMessage);
         }
 
         public static void MatchArchetypeIDs()
-
         {
-            for (var index = 0; index <= Database.Classes.Length - 1; ++index)
+            for (var index = 0; index < Database.Classes.Length; ++index)
             {
                 Database.Classes[index].Idx = index;
                 Array.Sort(Database.Classes[index].Origin);
@@ -2859,7 +2858,6 @@ namespace Mids_Reborn.Core
         }
 
         public static void MatchPowersetIDs()
-
         {
             for (var index1 = 0; index1 < Database.Powersets.Length; index1++)
             {
@@ -2979,7 +2977,6 @@ namespace Mids_Reborn.Core
         }
 
         private static void MatchRequirementId(IPower? power)
-
         {
             if (power.Requires.ClassName.Length > 0)
             {

@@ -952,48 +952,59 @@ namespace Mids_Reborn.Controls
             checked
             {
                 Point point = default;
-                for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                 {
                     if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen))
                         point = PowerPosition(GetVisualIDX(i));
                     else
                         point = PowerPosition(i);
 
-                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + (PaddingY / 2))
+                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + PaddingY / 2)
+                    {
                         continue;
+                    }
+
                     oPower = i;
                     break;
                 }
 
                 if (oPower <= -1)
-                    return -1;
                 {
-                    var isValid = false;
-                    if (iY >= point.Y + OffsetY) // Y boundary of enhancments
-                    {
-                        if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
-                        {
-                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
-                                isValid = true;
-                        }
-                        else
-                        {
-                            isValid = true;
-                        }
-                    }
-
-                    if (!isValid)
-                        return -1;
-                    iX -= point.X - checked(SzPower.Width - icoOffset * 8); //X boundary of enhancments
-                    for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length - 1; i++)
-                    {
-                        var iZ = (i + 1) * icoOffset;
-                        if (iX <= iZ)
-                            return i;
-                    }
-
                     return -1;
                 }
+
+                var isValid = false;
+                if (iY >= point.Y + OffsetY) // Y boundary of enhancments
+                {
+                    if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
+                    {
+                        if (DatabaseAPI.Database
+                            .Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
+                            .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
+                            isValid = true;
+                    }
+                    else
+                    {
+                        isValid = true;
+                    }
+                }
+
+                if (!isValid)
+                {
+                    return -1;
+                }
+
+                iX -= point.X - checked(SzPower.Width - icoOffset * 8); //X boundary of enhancments
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
+                {
+                    var iZ = (i + 1) * icoOffset;
+                    if (iX <= iZ)
+                    {
+                        return i;
+                    }
+                }
+
+                return -1;
             }
         }
 
