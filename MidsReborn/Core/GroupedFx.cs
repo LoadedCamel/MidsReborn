@@ -1939,8 +1939,16 @@ namespace Mids_Reborn.Core
                     break;
 
                 case Enums.eEffectType.ToHit:
+                    rankedEffect.Name = $"ToHit";
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
                 case Enums.eEffectType.Heal:
-                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%";
+                    rankedEffect.Name = $"Heal{toWhoShort}";
+                    rankedEffect.Value = $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
