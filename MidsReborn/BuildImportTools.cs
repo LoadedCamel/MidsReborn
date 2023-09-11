@@ -269,9 +269,10 @@ namespace Mids_Reborn
 
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowerByName may return null
+        // Bug: Rebirth DB will add Disintegrating everywhere. Excluding this one as well.
         protected bool CheckValid(IPower? input)
         {
-            return input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
+            return (DatabaseAPI.DatabaseName != "Rebirth" || input?.DisplayName != "Disintegrating") && input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
         protected string FixPowersetsNames(string powerName)
@@ -388,6 +389,22 @@ namespace Mids_Reborn
         {
             listPowersets.FromList(listPowersets
                 .Where(e => !e.StartsWith("Incarnate") & !e.StartsWith("Temporary_Powers"))
+                .ToList());
+        }
+
+        public static void SortPowersets(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets
+                .Select(e => new KeyValuePair<string, int>(e, DatabaseAPI.GetPowersetByFullname(e)?.SetType switch
+                {
+                    Enums.ePowerSetType.Primary => 0,
+                    Enums.ePowerSetType.Secondary => 1,
+                    Enums.ePowerSetType.Pool => 2,
+                    Enums.ePowerSetType.Ancillary => 3,
+                    _ => 4
+                }))
+                .OrderBy(e => e.Value)
+                .Select(e => e.Key)
                 .ToList());
         }
     }
@@ -1170,7 +1187,7 @@ namespace Mids_Reborn
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)(\t([^\r\n\t]+))?");
             var rMatches = r.Matches(cnt);
 
-            foreach (Match mt in rMatches) // var mt is of type object?
+            foreach (Match mt in rMatches)
             {
                 p = new RawPowerData
                 {

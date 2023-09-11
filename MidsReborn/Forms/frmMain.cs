@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -7357,7 +7355,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 MidsContext.Config.BuildMode = Enums.dmModes.Respec;
             }
 
-            var psFullNames = listPowersetsFull.Select(e => e.Contains('.')
+            var psFullNames = listPowersetsFull
+                .Where(e => !e.StartsWith("Incarnate.Lore_Pet_"))
+                .Select(e => e.Contains('.')
                     ? e
                     : DatabaseAPI.GetPowersetByName(e, characterInfo.Archetype)?.FullName)
                 .Distinct()
@@ -7376,6 +7376,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Select(e => DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName)
                 .ToList();
 
+            Debug.WriteLine($"Trunk powersets: {string.Join(", ", trunkPowersets)}");
+
             foreach (var ps in listPowersetsFull)
             {
                 if (!trunkPowersets.Contains(ps))
@@ -7391,6 +7393,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ImportBase.FinalizePowersetsList(ref listPowersets, listPowers, trunkPowersets);
             ImportBase.PadPowerPools(ref listPowersets);
             ImportBase.FilterTempPowersets(ref listPowersets);
+            ImportBase.SortPowersets(ref listPowersets);
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
@@ -7421,6 +7424,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     // Regular powers
+                    Debug.WriteLine($"PowerPickedNoRedraw(power={powerEntryList[k].Power?.FullName}, level={powerEntryList[k].Level}, NIDPowerset={powerEntryList[k].NIDPowerset}, NIDPower={powerEntryList[k].NIDPower})");
+                    Debug.WriteLine($"  Powerset from NID: {DatabaseAPI.Database.Powersets[powerEntryList[k].NIDPowerset]?.FullName}, Power from NID: {DatabaseAPI.Database.Power[powerEntryList[k].NIDPower]?.FullName}");
                     PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
