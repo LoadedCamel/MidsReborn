@@ -896,8 +896,7 @@ namespace Mids_Reborn.Core
                 return;
             }
 
-            var powerIdx = 0;
-            while (powerIdx < Powers.Count)
+            for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
             {
                 if (Powers[powerIdx] == null)
                 {
@@ -908,13 +907,12 @@ namespace Mids_Reborn.Core
                 {
                     Powers[powerIdx].Reset();
                     if (Powers[powerIdx].Chosen)
+                    {
                         continue;
+                    }
+
                     Powers[powerIdx].Level = -1;
                     Powers[powerIdx].Slots = Array.Empty<SlotEntry>();
-                }
-                else
-                {
-                    ++powerIdx;
                 }
             }
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -834,57 +833,67 @@ namespace Mids_Reborn.Controls
             GC.Collect();
         }
 
-        public void Refresh(Rectangle Clip)
+        public void Refresh(Rectangle clip)
         {
-            OutputRefresh(Clip, Clip, GraphicsUnit.Pixel);
+            OutputRefresh(clip, clip, GraphicsUnit.Pixel);
         }
 
-        private int GetVisualIDX(int PowerIndex)
+        private int GetVisualIDX(int powerIndex)
         {
-            var nidpowerset = MidsContext.Character.CurrentBuild.Powers[PowerIndex].NIDPowerset;
-            var idxpower = MidsContext.Character.CurrentBuild.Powers[PowerIndex].IDXPower;
-            checked
-            {
-                if (nidpowerset > -1)
-                {
-                    int vIdx;
-                    if (DatabaseAPI.Database.Powersets[nidpowerset].SetType == Enums.ePowerSetType.Inherent)
-                    {
-                        vIdx = DatabaseAPI.Database.Powersets[nidpowerset].Powers[idxpower].LocationIndex;
-                    }
-                    else
-                    {
-                        vIdx = -1;
-                        for (var i = 0; i <= PowerIndex; i++)
-                            if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset > -1)
-                            {
-                                if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Inherent)
-                                    vIdx++;
-                            }
-                            else
-                            {
-                                vIdx++;
-                            }
-                    }
+            var nidPowerset = MidsContext.Character.CurrentBuild.Powers[powerIndex] != null
+                ? MidsContext.Character.CurrentBuild.Powers[powerIndex].NIDPowerset
+                : -1;
+            var idxPower = MidsContext.Character.CurrentBuild.Powers[powerIndex] != null
+                ? MidsContext.Character.CurrentBuild.Powers[powerIndex].IDXPower
+                : -1;
 
-                    return vIdx;
+            if (nidPowerset > -1)
+            {
+                int vIdx;
+                if (DatabaseAPI.Database.Powersets[nidPowerset].SetType == Enums.ePowerSetType.Inherent)
+                {
+                    vIdx = DatabaseAPI.Database.Powersets[nidPowerset].Powers[idxPower].LocationIndex;
                 }
                 else
                 {
-                    var vIdx = -1;
-                    for (var i = 0; i <= PowerIndex; i++)
-                        if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset > -1)
+                    vIdx = -1;
+                    for (var i = 0; i <= powerIndex; i++)
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[i]?.NIDPowerset > -1)
                         {
                             if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Inherent)
+                            {
                                 vIdx++;
+                            }
                         }
                         else
                         {
                             vIdx++;
                         }
-
-                    return vIdx;
+                    }
                 }
+
+                return vIdx;
+            }
+            else
+            {
+                var vIdx = -1;
+                for (var i = 0; i <= powerIndex; i++)
+                {
+                    if (MidsContext.Character.CurrentBuild.Powers[i]?.NIDPowerset > -1)
+                    {
+                        if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != Enums.ePowerSetType.Inherent)
+                        {
+                            vIdx++;
+                        }
+                    }
+                    else
+                    {
+                        vIdx++;
+                    }
+                }
+
+                return vIdx;
             }
         }
 
