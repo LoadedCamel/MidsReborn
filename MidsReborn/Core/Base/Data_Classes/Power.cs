@@ -1423,20 +1423,36 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int GetDurationEffectID()
         {
-            return Effects
-                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                .Where(e =>
-                    (e.Value.PvMode == Enums.ePvX.Any |
-                     e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                     e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
-                    e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
-                    e.Value.ValidateConditional() &
-                    e.Value.Probability > float.Epsilon &
-                    e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
-                .OrderByDescending(e => e.Value, new EffectDurationComparer())
-                .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
-                .FirstOrDefault()
-                .Key;
+            return Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+                ? Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e =>
+                        (e.Value.PvMode == Enums.ePvX.Any |
+                         e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                         e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
+                        e.Value.EffectType == Enums.eEffectType.Mez &
+                        e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
+                        e.Value.ValidateConditional() &
+                        e.Value.Probability > float.Epsilon &
+                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                    .OrderByDescending(e => e.Value, new EffectDurationComparer())
+                    .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
+                    .FirstOrDefault()
+                    .Key
+                : Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e =>
+                        (e.Value.PvMode == Enums.ePvX.Any |
+                         e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                         e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
+                        e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
+                        e.Value.ValidateConditional() &
+                        e.Value.Probability > float.Epsilon &
+                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                    .OrderByDescending(e => e.Value, new EffectDurationComparer())
+                    .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
+                    .FirstOrDefault()
+                    .Key;
         }
 
         public float[] GetDef(int buffDebuff = 0)
