@@ -1675,7 +1675,10 @@ namespace Mids_Reborn.Core
                         continue;
                     }
 
-                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier))
+                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
+                        Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon |
+                        greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                        greList[i].SpecialCase != greList[j].SpecialCase)
                     {
                         continue;
                     }
