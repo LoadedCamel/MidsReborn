@@ -1109,48 +1109,44 @@ namespace Mids_Reborn.Forms
             FloatTop(false);
             var msgBoxResult = MessageBox.Show(@"Do you wish to save your build before closing?", @"Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             FloatTop(true);
-            int num;
-            switch (msgBoxResult)
-            {
-                case DialogResult.Cancel:
-                    return true;
-                case DialogResult.Yes:
-                    num = DoSave() ? 1 : 0;
-                    break;
-                default:
-                    num = 1;
-                    break;
-            }
 
-            return num == 0;
+            return msgBoxResult switch
+            {
+                DialogResult.Cancel => true,
+                DialogResult.Yes => !DoSave(),
+                _ => false
+            };
         }
 
         private bool ComboCheckAT(Archetype?[] playableClasses)
         {
             var cbtAT = CbtAT.Value;
-            if (cbtAT.Count != playableClasses.Length) return true;
+            if (cbtAT.Count != playableClasses.Length)
+            {
+                return true;
+            }
 
-            var num = playableClasses.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (cbtAT[index].Idx != playableClasses[index].Idx)
-                    return true;
-
-            return false;
+            return playableClasses
+                .Where((t, index) => cbtAT[index].Idx != t.Idx)
+                .Any();
         }
 
         private bool ComboCheckOrigin()
         {
             var cbtOrigin = GetCbOrigin();
-            if (cbtOrigin.Count != MidsContext.Character.Archetype.Origin.Length) return true;
+            if (cbtOrigin.Count != MidsContext.Character.Archetype.Origin.Length)
+            {
+                return true;
+            }
 
             if (cbtOrigin.Count > 1)
+            {
                 return false;
-            var num = MidsContext.Character.Archetype.Origin.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (cbtOrigin[index] != MidsContext.Character.Archetype.Origin[index])
-                    return true;
+            }
 
-            return false;
+            return MidsContext.Character.Archetype.Origin
+                .Where((t, index) => cbtOrigin[index] != t)
+                .Any();
         }
 
         private static void ComboCheckPool(ComboBoxT<string> iCB, Enums.ePowerSetType iSetType)
@@ -2358,7 +2354,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     MidsContext.Config.WindowState = WindowState.ToString();
                     break;
             }
+
             MidsContext.Config.SaveConfig();
+
+            FormClosing -= frmMain_Closing;
 
             Application.Exit();
         }
@@ -7376,8 +7375,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Select(e => DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName)
                 .ToList();
 
-            Debug.WriteLine($"Trunk powersets: {string.Join(", ", trunkPowersets)}");
-
             foreach (var ps in listPowersetsFull)
             {
                 if (!trunkPowersets.Contains(ps))
@@ -7424,8 +7421,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     // Regular powers
-                    Debug.WriteLine($"PowerPickedNoRedraw(power={powerEntryList[k].Power?.FullName}, level={powerEntryList[k].Level}, NIDPowerset={powerEntryList[k].NIDPowerset}, NIDPower={powerEntryList[k].NIDPower})");
-                    Debug.WriteLine($"  Powerset from NID: {DatabaseAPI.Database.Powersets[powerEntryList[k].NIDPowerset]?.FullName}, Power from NID: {DatabaseAPI.Database.Power[powerEntryList[k].NIDPower]?.FullName}");
                     PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
