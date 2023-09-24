@@ -1,0 +1,287 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Mids_Reborn.Controls;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
+
+namespace Mids_Reborn.Forms
+{
+    public partial class frmRotationHelper : Form
+    {
+        private readonly frmMain myParent;
+        private Stopwatch Stopwatch;
+
+        public frmRotationHelper(frmMain parent)
+        {
+            myParent = parent;
+            InitializeComponent();
+            Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
+            ctlCombatTimeline1.UseArcanaTime = true;
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+        }
+
+        private void frmRotationHelper_Load(object sender, EventArgs e)
+        {
+            SetDataSources();
+
+            cbViewProfile.SelectedIndex = 0;
+
+            label4.Visible = false;
+            progressBarEx1.Visible = false;
+
+            lblRotation.Text = "";
+            lblBoosts.Text = "";
+
+            TopMost = true;
+            imageButtonEx2.ToggleState = ImageButtonEx.States.ToggledOn;
+            chkCastTimeReal.Checked = ctlCombatTimeline1.UseArcanaTime;
+        }
+
+        public void UpdateData()
+        {
+            SetDataSources();
+
+            // Data is off-sync, reset selected powers and boosts
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+
+            UpdatePowersText();
+            UpdateBoostsText();
+        }
+
+        private void SetDataSources()
+        {
+            // Available powers: all powers in build that are not auto, global boost, boost or toggles
+            listBox1.DataSource = MidsContext.Character.CurrentBuild.Powers
+                .Where(e => e is { Power: not null })
+                .Where(e => e.Power.PowerType is not (Enums.ePowerType.Auto_ or Enums.ePowerType.GlobalBoost or Enums.ePowerType.Boost or Enums.ePowerType.Toggle))
+                .Select(e => new KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>(
+                    $"{e.Power.DisplayName} [{e.Power.GetPowerSet()?.DisplayName}]",
+                    new ctlCombatTimeline.BuildPowerSlot(DatabaseAPI.GetPowerByFullName(e.Power.FullName), e.IDXPower)))
+                .ToList();
+            listBox1.DisplayMember = "Key";
+
+            // Available boosts: same as before, but click-buffs only
+            // May be problematic with snipes
+            listBox2.DataSource = MidsContext.Character.CurrentBuild.Powers
+                .Where(e => e is { Power: not null })
+                .Where(e => e.Power.PowerType is not (Enums.ePowerType.Auto_ or Enums.ePowerType.GlobalBoost or Enums.ePowerType.Boost or Enums.ePowerType.Toggle) & e.Power.ClickBuff)
+                .Select(e => new KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>(
+                    $"{e.Power.DisplayName} [{e.Power.GetPowerSet()?.DisplayName}]",
+                    new ctlCombatTimeline.BuildPowerSlot(DatabaseAPI.GetPowerByFullName(e.Power.FullName), e.IDXPower)))
+                .ToList();
+            listBox2.DisplayMember = "Key";
+        }
+
+        // Import from frmDPSCalc
+        /*public void SetLocation()
+        {
+            var rectangle = MainModule.MidsController.SzFrmRecipe with {Width = 800};
+            if (rectangle.Width < 1)
+            {
+                rectangle.Width = Width;
+            }
+
+            if (rectangle.Height < 1)
+            {
+                rectangle.Height = Height;
+            }
+
+            if (rectangle.Width < MinimumSize.Width)
+            {
+                rectangle.Width = MinimumSize.Width;
+            }
+
+            if (rectangle.Height < MinimumSize.Height)
+            {
+                rectangle.Height = MinimumSize.Height;
+            }
+
+            if (rectangle.X < 1)
+            {
+                rectangle.X = (int)Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2f);
+            }
+
+            if (rectangle.Y < 32)
+            {
+                rectangle.Y = (int)Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2f);
+            }
+
+            Top = rectangle.Y;
+            Left = rectangle.X;
+            Height = rectangle.Height;
+            Width = rectangle.Width;
+        }*/
+
+        /*private void StoreLocation()
+        {
+            if (!MainModule.MidsController.IsAppInitialized)
+            {
+                return;
+            }
+
+            MainModule.MidsController.SzFrmRecipe.X = Left;
+            MainModule.MidsController.SzFrmRecipe.Y = Top;
+            MainModule.MidsController.SzFrmRecipe.Width = Width;
+            MainModule.MidsController.SzFrmRecipe.Height = Height;
+        }*/
+
+        private float CalcArcanaCastTime(float castTime)
+        {
+            return (float)(Math.Ceiling(castTime / 0.132f) + 1) * 0.132f;
+        }
+
+        private void UpdateBoostsText()
+        {
+            lblBoosts.Text = string.Join(", ", ctlCombatTimeline1.UserBoosts.Select(e => e.DisplayName).OrderBy(e => e));
+        }
+
+        private void UpdatePowersText(bool useTimeData = false)
+        {
+            if (!useTimeData)
+            {
+                lblRotation.Text = string.Join(" > ", ctlCombatTimeline1.Powers.Select(e => e.BasePower?.DisplayName));
+
+                return;
+            }
+
+            var txt = "";
+            var prevTime = 0f;
+            foreach (var p in ctlCombatTimeline1.Timeline)
+            { 
+                if (!string.IsNullOrWhiteSpace(txt))
+                {
+                    txt += " > ";
+
+                    if (p.Time - prevTime > 0.132f)
+                    {
+                        txt += $"[Wait: {p.Time - prevTime:#####0.##} s.] > ";
+                    }
+                }
+
+                txt += $"{p.PowerSlot.EnhancedPower?.DisplayName}{(p.Time == 0 ? "" : $"({p.Time:#####0.##} s. - cast time: {(ctlCombatTimeline1.UseArcanaTime ? CalcArcanaCastTime(p.PowerSlot.EnhancedPower?.CastTimeReal ?? 0) : p.PowerSlot.EnhancedPower?.CastTimeReal ?? 0):#####0.##} s.)")}";
+                prevTime = p.Time + (p.PowerSlot.EnhancedPower == null
+                    ? 0
+                    : ctlCombatTimeline1.UseArcanaTime ? CalcArcanaCastTime(p.PowerSlot.EnhancedPower.CastTimeReal) : p.PowerSlot.EnhancedPower.CastTimeReal);
+            }
+
+            lblRotation.Text = txt;
+        }
+
+        private void btnAddPower_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox1.SelectedValue;
+            ctlCombatTimeline1.Powers.Add(item.Value);
+            UpdatePowersText();
+        }
+
+        private void btnAddBoost_Click(object sender, EventArgs e)
+        {
+            var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox2.SelectedValue;
+
+            ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+            UpdateBoostsText();
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox1.SelectedValue;
+            ctlCombatTimeline1.Powers.Add(item.Value);
+            UpdatePowersText();
+        }
+
+        private void listBox2_DoubleClick(object sender, EventArgs e)
+        {
+            var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox2.SelectedValue;
+
+            ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+            UpdateBoostsText();
+        }
+
+        private void btnClearPowers_Click(object sender, EventArgs e)
+        {
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            lblRotation.Text = "";
+        }
+
+        private void btnClearBoosts_Click(object sender, EventArgs e)
+        {
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+            lblBoosts.Text = "";
+        }
+
+        private void ctlCombatTimeline1_CalcEnhancedProgress(object sender, float value)
+        {
+            if (value >= 100 - float.Epsilon)
+            {
+                label4.Visible = false;
+                progressBarEx1.Visible = false;
+                Stopwatch.Stop();
+                Debug.WriteLine($"Place powers on timeline: {Stopwatch.ElapsedMilliseconds} ms");
+                UpdatePowersText(true);
+                ctlCombatTimeline1.Invalidate();
+
+                return;
+            }
+
+            progressBarEx1.Value = (int)Math.Round(value);
+        }
+
+        private void btnCalcTimeline_Click(object sender, EventArgs e)
+        {
+            label4.Visible = true;
+            progressBarEx1.Value = 0;
+            progressBarEx1.Visible = true;
+            Stopwatch = Stopwatch.StartNew();
+            ctlCombatTimeline1.PlacePowers(false);
+        }
+
+        private void cbViewProfile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ctlCombatTimeline1.Profile = cbViewProfile.SelectedIndex switch
+            {
+                1 => ctlCombatTimeline.ViewProfileType.Healing,
+                2 => ctlCombatTimeline.ViewProfileType.Survival,
+                _ => ctlCombatTimeline.ViewProfileType.Damage
+            };
+        }
+
+        private void imageButtonEx1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void imageButtonEx2_Click(object sender, EventArgs e)
+        {
+            TopMost = imageButtonEx2.ToggleState switch
+            {
+                ImageButtonEx.States.ToggledOn => true,
+                _ => false
+            };
+        }
+
+        private void btnCopyRotation_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(lblRotation.Text))
+            {
+                Clipboard.SetText(lblRotation.Text);
+            }
+        }
+
+        private void chkCastTimeReal_CheckedChanged(object sender, EventArgs e)
+        {
+            ctlCombatTimeline1.UseArcanaTime = chkCastTimeReal.Checked;
+        }
+    }
+}

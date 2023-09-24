@@ -174,7 +174,7 @@ namespace Mids_Reborn.Forms
             this.tsViewTotals = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.tsRecipeViewer = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsDPSCalc = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsRotationHelper = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.tsSetFind = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
@@ -1462,8 +1462,8 @@ namespace Mids_Reborn.Forms
                 this.tsViewTotals,
                 this.ToolStripSeparator18,
                 this.tsRecipeViewer,
-                //this.tsDPSCalc,
-                //this.ToolStripSeparator19,
+                this.tsRotationHelper,
+                this.ToolStripSeparator19,
                 this.tsSetFind,
                 this.ToolStripSeparator21,
                 this.InGameRespecHelperToolStripMenuItem
@@ -1532,14 +1532,13 @@ namespace Mids_Reborn.Forms
             this.tsRecipeViewer.Text = "&Recipe Viewer";
             this.tsRecipeViewer.Click += new System.EventHandler(this.tsRecipeViewer_Click);
             // 
-            // tsDPSCalc
+            // tsRotationHelper
             // 
-            this.tsDPSCalc.Name = "tsDPSCalc";
-            this.tsDPSCalc.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.tsDPSCalc.Size = new System.Drawing.Size(232, 22);
-            this.tsDPSCalc.Text = "DPS Calculator (Beta)";
-            this.tsDPSCalc.Click += new System.EventHandler(this.tsDPSCalc_Click);
+            this.tsRotationHelper.Name = "tsRotationHelper";
+            this.tsRotationHelper.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z;
+            this.tsRotationHelper.Size = new System.Drawing.Size(232, 22);
+            this.tsRotationHelper.Text = "Rotation Helper (Beta)";
+            this.tsRotationHelper.Click += new System.EventHandler(this.tsRotationHelper_Click);
             // 
             // ToolStripSeparator19
             // 
@@ -2492,7 +2491,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsIOMax;
         ToolStripMenuItem tsIOMin;
         ToolStripMenuItem tsRecipeViewer;
-        ToolStripMenuItem tsDPSCalc;
+        ToolStripMenuItem tsRotationHelper;
         ToolStripMenuItem tsRemoveAllSlots;
         ToolStripMenuItem tsSetFind;
         ToolStripMenuItem tsGitHub;

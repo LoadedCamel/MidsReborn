@@ -2037,23 +2037,25 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        internal void FloatDPSCalc(bool showow)
+        internal void FloatRotationHelper(bool show)
         {
-            if (showow)
+            if (show)
             {
-                if (fDPSCalc == null)
-                    fDPSCalc = new frmDPSCalc(this);
-                fDPSCalc.SetLocation();
-                fDPSCalc.Show();
+                fRotationHelper ??= new frmRotationHelper(this);
+                //fRotationHelper.SetLocation();
+                fRotationHelper.Show();
                 FloatUpdate();
-                fDPSCalc.Activate();
+                fRotationHelper.Activate();
             }
             else
             {
-                if (fDPSCalc == null)
+                if (fRotationHelper == null)
+                {
                     return;
-                fDPSCalc.Hide();
-                fDPSCalc = null;
+                }
+
+                fRotationHelper.Hide();
+                fRotationHelper = null;
             }
         }
 
@@ -2327,8 +2329,9 @@ namespace Mids_Reborn.Forms
             fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();
-            fDPSCalc?.UpdateData();
+            fRotationHelper?.UpdateData();
             fData?.UpdateData(dvLastPower);
+            fRotationHelper?.UpdateData();
         }
 
         private void frmMain_Move(object? sender, EventArgs e)
@@ -6542,9 +6545,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatRecipe(true);
         }
 
-        private void tsDPSCalc_Click(object sender, EventArgs e)
+        private void tsRotationHelper_Click(object sender, EventArgs e)
         {
-            FloatDPSCalc(true);
+            FloatRotationHelper(true);
         }
 
         private void tsRemoveAllSlots_Click(object sender, EventArgs e)
@@ -7642,7 +7645,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private frmFloatingStats? FloatingDataForm;
         private frmMiniList? fMini;
         private frmRecipeViewer? fRecipe;
-        private frmDPSCalc? fDPSCalc;
+        private frmRotationHelper? fRotationHelper;
         private frmSetFind? fSetFinder;
         private frmSetViewer? fSets;
         private frmTemp? fTemp;

@@ -1977,6 +1977,18 @@ namespace Mids_Reborn
                 return null;
         }
 
+        public IPower? GetEnhancedPower(IPower? power)
+        {
+            if (power == null)
+            {
+                return null;
+            }
+
+            return _buffedPower
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(e => e != null && e.FullName == power.FullName);
+        }
+
         public int[] GetEnhancements(int iPowerSlot)
         {
             if (!(iPowerSlot < 0 || iPowerSlot >= CurrentBuild.Powers.Count) &&
