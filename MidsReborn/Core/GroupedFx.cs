@@ -1081,8 +1081,9 @@ namespace Mids_Reborn.Core
         /// Build grouped effects from ranked effects for a power
         /// </summary>
         /// <param name="power">Source power to build effects from. Use the enhanced power, not base.</param>
+        /// <oaram name="includeDamage">Where to include Damage effects</oaram>
         /// <returns>List of grouped effects from source power</returns>
-        public static List<GroupedFx> AssembleGroupedEffects(IPower power)
+        public static List<GroupedFx> AssembleGroupedEffects(IPower power, bool includeDamage = false)
         {
             var rankedEffects = power.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
@@ -1107,8 +1108,12 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Effects[re].EffectType is Enums.eEffectType.Damage
-                    or Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
+                if (!includeDamage & power.Effects[re].EffectType == Enums.eEffectType.Damage)
+                {
+                    continue;
+                }
+                
+                if (power.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
                     or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
                     or Enums.eEffectType.ExecutePower)
                 {
@@ -1167,6 +1172,45 @@ namespace Mids_Reborn.Core
 
                 switch (power.Effects[re].EffectType)
                 {
+                    case Enums.eEffectType.Damage:
+                        similarFxIds = GetSimilarEffects(power,
+                            new FxId
+                            {
+                                DamageType = power.Effects[re].DamageType,
+                                EffectType = Enums.eEffectType.Damage,
+                                ETModifies = Enums.eEffectType.None,
+                                MezType = Enums.eMez.None,
+                                ToWho = power.Effects[re].ToWho,
+                                SummonId = -1,
+                                Duration = power.Effects[re].Duration,
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
+                            }, power.Effects[re].BuffedMag,
+                            power.Effects[re].SpecialCase,
+                            power.Effects[re].isEnhancementEffect);
+
+                        ignoredEffects.AddRangeUnique(similarFxIds);
+
+                        groupedRankedEffects.Add(
+                            new GroupedFx(new FxId
+                                {
+                                    DamageType = power.Effects[re].DamageType,
+                                    EffectType = Enums.eEffectType.Damage,
+                                    ETModifies = Enums.eEffectType.None,
+                                    MezType = Enums.eMez.None,
+                                    ToWho = power.Effects[re].ToWho,
+                                    SummonId = -1,
+                                    Duration = power.Effects[re].Duration,
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                                },
+                                power.Effects[re].BuffedMag,
+                                "Damage",
+                                similarFxIds,
+                                power.Effects[re].isEnhancementEffect));
+
+                        break;
+
                     case Enums.eEffectType.EntCreate:
                         similarFxIds = GetSimilarEffects(power,
                             new FxId
@@ -1623,6 +1667,11 @@ namespace Mids_Reborn.Core
         /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
         public float GetMagSum(IPower power)
         {
+            if (IncludedEffects.Count <= 0)
+            {
+                return 0;
+            }
+
             var allNegEnh = IncludedEffects
                 .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                 .All(e => e < 0);

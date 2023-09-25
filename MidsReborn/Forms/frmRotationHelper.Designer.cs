@@ -57,6 +57,9 @@ namespace Mids_Reborn.Forms
             lblBoosts = new Label();
             chkCastTimeReal = new CheckBox();
             imageButtonEx2 = new Controls.ImageButtonEx();
+            button1 = new Button();
+            button2 = new Button();
+            btnClearLastPower = new Button();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
@@ -68,7 +71,7 @@ namespace Mids_Reborn.Forms
             listBox1.ItemHeight = 15;
             listBox1.Location = new System.Drawing.Point(12, 52);
             listBox1.Name = "listBox1";
-            listBox1.Size = new System.Drawing.Size(354, 199);
+            listBox1.Size = new System.Drawing.Size(400, 199);
             listBox1.TabIndex = 0;
             listBox1.DoubleClick += listBox1_DoubleClick;
             // 
@@ -172,11 +175,11 @@ namespace Mids_Reborn.Forms
             // 
             // btnClearPowers
             // 
-            btnClearPowers.Location = new System.Drawing.Point(218, 261);
+            btnClearPowers.Location = new System.Drawing.Point(289, 261);
             btnClearPowers.Name = "btnClearPowers";
             btnClearPowers.Size = new System.Drawing.Size(123, 33);
             btnClearPowers.TabIndex = 10;
-            btnClearPowers.Text = "Clear powers";
+            btnClearPowers.Text = "Clear all powers";
             btnClearPowers.UseVisualStyleBackColor = true;
             btnClearPowers.Click += btnClearPowers_Click;
             // 
@@ -242,7 +245,7 @@ namespace Mids_Reborn.Forms
             // 
             // btnAddPower
             // 
-            btnAddPower.Location = new System.Drawing.Point(36, 261);
+            btnAddPower.Location = new System.Drawing.Point(12, 261);
             btnAddPower.Name = "btnAddPower";
             btnAddPower.Size = new System.Drawing.Size(123, 33);
             btnAddPower.TabIndex = 19;
@@ -331,7 +334,7 @@ namespace Mids_Reborn.Forms
             // 
             imageButtonEx2.BackgroundImageLayout = ImageLayout.None;
             imageButtonEx2.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            imageButtonEx2.CurrentText = "Top Most";
+            imageButtonEx2.CurrentText = "ToggledOff State";
             imageButtonEx2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             imageButtonEx2.ForeColor = System.Drawing.Color.WhiteSmoke;
             imageButtonEx2.Images.Background = MRBResourceLib.Resources.HeroButton;
@@ -353,12 +356,45 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.UseAlt = false;
             imageButtonEx2.Click += imageButtonEx2_Click;
             // 
+            // button1
+            // 
+            button1.Location = new System.Drawing.Point(798, 504);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(131, 33);
+            button1.TabIndex = 26;
+            button1.Text = "Test rotation (full)";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new System.Drawing.Point(967, 504);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(131, 33);
+            button2.TabIndex = 27;
+            button2.Text = "Test rotation (simple)";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // btnClearLastPower
+            // 
+            btnClearLastPower.Location = new System.Drawing.Point(150, 261);
+            btnClearLastPower.Name = "btnClearLastPower";
+            btnClearLastPower.Size = new System.Drawing.Size(123, 33);
+            btnClearLastPower.TabIndex = 28;
+            btnClearLastPower.Text = "Clear last power";
+            btnClearLastPower.UseVisualStyleBackColor = true;
+            btnClearLastPower.Click += btnClearLastPower_Click;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(1148, 893);
+            Controls.Add(btnClearLastPower);
+            Controls.Add(button2);
+            Controls.Add(button1);
             Controls.Add(imageButtonEx2);
             Controls.Add(chkCastTimeReal);
             Controls.Add(borderPanel3);
@@ -421,5 +457,8 @@ namespace Mids_Reborn.Forms
         private Label lblBoosts;
         private CheckBox chkCastTimeReal;
         private Controls.ImageButtonEx imageButtonEx2;
+        private Button button1;
+        private Button button2;
+        private Button btnClearLastPower;
     }
 }

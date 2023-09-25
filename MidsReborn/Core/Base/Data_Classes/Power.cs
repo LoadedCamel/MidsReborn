@@ -564,7 +564,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             get
             {
                 var strArray = FullName.Split('.');
-                return strArray.Length <= 1 ? string.Empty : strArray[0] + "." + strArray[1];
+                return strArray.Length <= 1 ? string.Empty : $"{strArray[0]}.{strArray[1]}";
             }
         }
 
@@ -572,9 +572,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             get => !MidsContext.Config.UseArcanaTime
                 ? CastTimeReal
-                : (float) (Math.Ceiling(CastTimeReal / 0.132f) + 1.0) * 0.132f;
+                : (float) (Math.Ceiling(CastTimeReal / 0.132f) + 1) * 0.132f;
             set => CastTimeReal = value;
         }
+
+        public float CastTimeBase => CastTimeReal;
+
+        public float ArcanaCastTime => (float) (Math.Ceiling(CastTimeReal / 0.132f) + 1) * 0.132f;
 
         public bool Slottable
         {

@@ -98,6 +98,11 @@ namespace Mids_Reborn.Controls
                 ToWho = toWho;
                 ValueSign = valueSign;
             }
+
+            public override string ToString()
+            {
+                return $"<ctlCombatTimeline.FxIdentifier> {{EffectType={EffectType}, MezType={MezType}, ETModifies={ETModifies}, ToWho={ToWho}, ValueSign={ValueSign}}}";
+            }
         }
 
         #endregion
@@ -481,7 +486,7 @@ namespace Mids_Reborn.Controls
                     Timeline.Add(p);
                 }
 
-                time += UseArcanaTime ? CalcArcanaCastTime(power.BasePower?.CastTimeReal ?? 0) : power.BasePower?.CastTimeReal ?? 0;
+                time += UseArcanaTime ? power.BasePower?.ArcanaCastTime ?? 0 : power.BasePower?.CastTimeBase ?? 0;
                 k++;
             }
 
@@ -844,7 +849,7 @@ namespace Mids_Reborn.Controls
             {
                 ViewProfileType.Healing => Profiles.Healing,
                 ViewProfileType.Survival => Profiles.Survival,
-                _ => Profiles.Damage,
+                _ => Profiles.Damage
             };
         }
 
@@ -859,7 +864,24 @@ namespace Mids_Reborn.Controls
         {
             var profileFilter = SelectViewProfile(profile);
 
-            return gfx
+            var gfxList = gfx.ToList();
+            var fxIdentifiers = gfxList
+                .Select(e => new FxIdentifier(
+                    e.EffectType,
+                    e.ETModifies == Enums.eEffectType.None ? null : e.ETModifies,
+                    e.MezType == Enums.eMez.None ? null : e.MezType,
+                    e.ToWho,
+                    e.GetMagSum(power) switch
+                    {
+                        > 0 => ValueSign.Positive,
+                        < 0 => ValueSign.Negative,
+                        _ => ValueSign.Zero
+                    }))
+                .ToList();
+
+            Debug.WriteLine($"FxIdentifiers for {power.FullName}:\r\n{string.Join("\r\n", fxIdentifiers)}");
+
+            return gfxList
                 .Select(e => new KeyValuePair<FxIdentifier, GroupedFx>(new FxIdentifier(
                     e.EffectType,
                     e.ETModifies == Enums.eEffectType.None ? null : e.ETModifies,
@@ -871,9 +893,21 @@ namespace Mids_Reborn.Controls
                         < 0 => ValueSign.Negative,
                         _ => ValueSign.Zero
                     }), e))
-                .Where(e => profileFilter.Contains(e.Key))
+                .Where(e => FilterGfx(e.Key, profileFilter))
                 .Select(e => e.Value)
                 .ToList();
+        }
+
+        private bool FilterGfx(FxIdentifier fxIdentifier, IEnumerable<FxIdentifier> profile)
+        {
+            return (from e in profile
+                let effectTypeCheck = e.EffectType == null | e.EffectType == fxIdentifier.EffectType
+                let mezTypeCheck = e.MezType == null | e.MezType == fxIdentifier.MezType
+                let etModifies = e.ETModifies == null | e.ETModifies == fxIdentifier.ETModifies
+                let toWhoCheck = e.ToWho is Enums.eToWho.All or Enums.eToWho.Unspecified | e.ToWho == fxIdentifier.ToWho
+                let valueSignCheck = e.ValueSign == null | e.ValueSign == fxIdentifier.ValueSign
+                where effectTypeCheck & mezTypeCheck & etModifies & toWhoCheck & valueSignCheck
+                select effectTypeCheck).Any();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -939,7 +973,7 @@ namespace Mids_Reborn.Controls
                 }
 
                 var h = 0f;
-                var gfxRaw = GroupedFx.AssembleGroupedEffects(p.PowerSlot.EnhancedPower);
+                var gfxRaw = GroupedFx.AssembleGroupedEffects(p.PowerSlot.EnhancedPower, true);
                 var gfx = ApplyViewProfile(gfxRaw, p.PowerSlot.EnhancedPower, Profile);
                 var genericEnhancements = gfx
                     .Select((e, i) => new KeyValuePair<int, GroupedFx>(i, e))
@@ -949,6 +983,11 @@ namespace Mids_Reborn.Controls
                                     or Enums.eEffectType.SpeedFlying or Enums.eEffectType.JumpHeight
                                     or Enums.eEffectType.Mez))
                     .ToDictionary(e => e.Key, e => e.Value);
+
+                Debug.WriteLine("");
+                Debug.WriteLine($"Active profile: {Profile}");
+                Debug.WriteLine($"Profile content:\r\n{string.Join("\r\n", SelectViewProfile(Profile))}");
+                Debug.WriteLine("");
 
                 Debug.WriteLine($"GroupedFX count (raw): {gfxRaw.Count}");
                 Debug.WriteLine($"GroupedFX detail (raw):\r\n{string.Join("\r\n", gfxRaw)}");

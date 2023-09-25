@@ -154,7 +154,7 @@ namespace Mids_Reborn.Forms
             var txt = "";
             var prevTime = 0f;
             foreach (var p in ctlCombatTimeline1.Timeline)
-            { 
+            {
                 if (!string.IsNullOrWhiteSpace(txt))
                 {
                     txt += " > ";
@@ -165,10 +165,10 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                txt += $"{p.PowerSlot.EnhancedPower?.DisplayName}{(p.Time == 0 ? "" : $"({p.Time:#####0.##} s. - cast time: {(ctlCombatTimeline1.UseArcanaTime ? CalcArcanaCastTime(p.PowerSlot.EnhancedPower?.CastTimeReal ?? 0) : p.PowerSlot.EnhancedPower?.CastTimeReal ?? 0):#####0.##} s.)")}";
+                txt += $"{p.PowerSlot.EnhancedPower?.DisplayName}{(p.Time == 0 ? "" : $"({p.Time:#####0.##} s.)")}";
                 prevTime = p.Time + (p.PowerSlot.EnhancedPower == null
                     ? 0
-                    : ctlCombatTimeline1.UseArcanaTime ? CalcArcanaCastTime(p.PowerSlot.EnhancedPower.CastTimeReal) : p.PowerSlot.EnhancedPower.CastTimeReal);
+                    : ctlCombatTimeline1.UseArcanaTime ? p.PowerSlot.EnhancedPower.ArcanaCastTime : p.PowerSlot.EnhancedPower.CastTimeBase);
             }
 
             lblRotation.Text = txt;
@@ -189,8 +189,15 @@ namespace Mids_Reborn.Forms
         private void btnAddBoost_Click(object sender, EventArgs e)
         {
             var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox2.SelectedValue;
+            if (ctlCombatTimeline1.UserBoosts.Contains(item.Value.BasePower))
+            {
+                ctlCombatTimeline1.UserBoosts = ctlCombatTimeline1.UserBoosts.Where(e => !e.Equals(item.Value.BasePower)).ToList();
+            }
+            else
+            {
+                ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+            }
 
-            ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
             UpdateBoostsText();
         }
 
@@ -198,14 +205,22 @@ namespace Mids_Reborn.Forms
         {
             var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox1.SelectedValue;
             ctlCombatTimeline1.Powers.Add(item.Value);
+
             UpdatePowersText();
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
             var item = (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>)listBox2.SelectedValue;
+            if (ctlCombatTimeline1.UserBoosts.Contains(item.Value.BasePower))
+            {
+                ctlCombatTimeline1.UserBoosts = ctlCombatTimeline1.UserBoosts.Where(e => !e.Equals(item.Value.BasePower)).ToList();
+            }
+            else
+            {
+                ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+            }
 
-            ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
             UpdateBoostsText();
         }
 
@@ -282,6 +297,100 @@ namespace Mids_Reborn.Forms
         private void chkCastTimeReal_CheckedChanged(object sender, EventArgs e)
         {
             ctlCombatTimeline1.UseArcanaTime = chkCastTimeReal.Checked;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var powers = new List<string> { "Hasten", "Ionize", "Aim", "Abyssal Gaze", "Dark Blast", "Gloom", "Life Drain", "Hasten", "Ionize", "Aim" };
+            var boosts = new List<string> { "Aim", "Hasten", "Ionize" };
+
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+
+            foreach (var p in powers)
+            {
+                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox1.Items)
+                {
+                    if (!item.Key.StartsWith(p))
+                    {
+                        continue;
+                    }
+
+                    ctlCombatTimeline1.Powers.Add(item.Value);
+                    break;
+                }
+            }
+
+            foreach (var b in boosts)
+            {
+                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox2.Items)
+                {
+                    if (!item.Key.StartsWith(b))
+                    {
+                        continue;
+                    }
+
+                    ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+                    break;
+                }
+            }
+
+            UpdatePowersText();
+            UpdateBoostsText();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var powers = new List<string> { "Abyssal Gaze" };
+            var boosts = new List<string> { "Aim", "Hasten", "Ionize" };
+
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+
+            foreach (var p in powers)
+            {
+                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox1.Items)
+                {
+                    if (!item.Key.StartsWith(p))
+                    {
+                        continue;
+                    }
+
+                    ctlCombatTimeline1.Powers.Add(item.Value);
+                    break;
+                }
+            }
+
+            foreach (var b in boosts)
+            {
+                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox2.Items)
+                {
+                    if (!item.Key.StartsWith(b))
+                    {
+                        continue;
+                    }
+
+                    ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+                    break;
+                }
+            }
+
+            UpdatePowersText();
+            UpdateBoostsText();
+        }
+
+        private void btnClearLastPower_Click(object sender, EventArgs e)
+        {
+            if (ctlCombatTimeline1.Powers.Count <= 0)
+            {
+                return;
+            }
+            
+            ctlCombatTimeline1.Powers = ctlCombatTimeline1.Powers
+                .Take(ctlCombatTimeline1.Powers.Count - 1)
+                .ToList();
+
+            UpdatePowersText();
         }
     }
 }
