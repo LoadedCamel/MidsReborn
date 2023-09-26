@@ -214,9 +214,9 @@ namespace Mids_Reborn.Controls
 
         #region ColorTheme sub-class
 
-        private class ColorTheme
+        public class ColorTheme
         {
-            internal struct EffectTypeShort
+            public struct EffectTypeShort
             {
                 public Enums.eEffectType EffectType;
                 public Enums.eEffectType? ETModifies;

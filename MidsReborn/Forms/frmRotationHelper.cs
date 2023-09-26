@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
@@ -14,6 +13,7 @@ namespace Mids_Reborn.Forms
     public partial class frmRotationHelper : Form
     {
         private readonly frmMain myParent;
+        private frmTimelineColorRefTable? fTimelineColorRefTable;
         private Stopwatch Stopwatch;
 
         public frmRotationHelper(frmMain parent)
@@ -385,12 +385,39 @@ namespace Mids_Reborn.Forms
             {
                 return;
             }
-            
+
             ctlCombatTimeline1.Powers = ctlCombatTimeline1.Powers
                 .Take(ctlCombatTimeline1.Powers.Count - 1)
                 .ToList();
 
             UpdatePowersText();
+        }
+
+        private void btnColorsRef_Click(object sender, EventArgs e)
+        {
+            if (fTimelineColorRefTable != null)
+            {
+                return;
+            }
+
+            fTimelineColorRefTable = new frmTimelineColorRefTable(this);
+            fTimelineColorRefTable.Show(this);
+            fTimelineColorRefTable.Activate();
+            fTimelineColorRefTable.Closing += fTimelineColorRefTable_Closing;
+        }
+
+        private void fTimelineColorRefTable_Closing(object? sender, EventArgs e)
+        {
+            if (fTimelineColorRefTable == null)
+            {
+                return;
+            }
+
+            fTimelineColorRefTable.Hide();
+            fTimelineColorRefTable.Closing -= fTimelineColorRefTable_Closing;
+            fTimelineColorRefTable.Dispose();
+
+            fTimelineColorRefTable = null;
         }
     }
 }

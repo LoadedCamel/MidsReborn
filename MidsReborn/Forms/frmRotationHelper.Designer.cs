@@ -60,6 +60,7 @@ namespace Mids_Reborn.Forms
             button1 = new Button();
             button2 = new Button();
             btnClearLastPower = new Button();
+            btnColorsRef = new Controls.ImageButtonEx();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
@@ -386,12 +387,38 @@ namespace Mids_Reborn.Forms
             btnClearLastPower.UseVisualStyleBackColor = true;
             btnClearLastPower.Click += btnClearLastPower_Click;
             // 
+            // btnColorsRef
+            // 
+            btnColorsRef.BackgroundImageLayout = ImageLayout.None;
+            btnColorsRef.CurrentText = "Colors Reference";
+            btnColorsRef.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btnColorsRef.ForeColor = System.Drawing.Color.WhiteSmoke;
+            btnColorsRef.Images.Background = MRBResourceLib.Resources.HeroButton;
+            btnColorsRef.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            btnColorsRef.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            btnColorsRef.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            btnColorsRef.Location = new System.Drawing.Point(630, 847);
+            btnColorsRef.Lock = false;
+            btnColorsRef.Name = "btnColorsRef";
+            btnColorsRef.Size = new System.Drawing.Size(142, 30);
+            btnColorsRef.TabIndex = 29;
+            btnColorsRef.Text = "Colors Reference";
+            btnColorsRef.TextOutline.Color = System.Drawing.Color.Black;
+            btnColorsRef.TextOutline.Width = 2;
+            btnColorsRef.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            btnColorsRef.ToggleText.Indeterminate = "Indeterminate State";
+            btnColorsRef.ToggleText.ToggledOff = "ToggledOff State";
+            btnColorsRef.ToggleText.ToggledOn = "ToggledOn State";
+            btnColorsRef.UseAlt = false;
+            btnColorsRef.Click += btnColorsRef_Click;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(1148, 893);
+            Controls.Add(btnColorsRef);
             Controls.Add(btnClearLastPower);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -421,6 +448,7 @@ namespace Mids_Reborn.Forms
             ForeColor = System.Drawing.Color.WhiteSmoke;
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "frmRotationHelper";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Rotation Helper (beta)";
             Load += frmRotationHelper_Load;
             borderPanel1.ResumeLayout(false);
@@ -460,5 +488,6 @@ namespace Mids_Reborn.Forms
         private Button button1;
         private Button button2;
         private Button btnClearLastPower;
+        private Controls.ImageButtonEx btnColorsRef;
     }
 }
