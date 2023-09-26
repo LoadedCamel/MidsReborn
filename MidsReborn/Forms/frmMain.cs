@@ -2041,6 +2041,12 @@ namespace Mids_Reborn.Forms
         {
             if (show)
             {
+                // ???
+                if (fRotationHelper?.IsDisposed == true)
+                {
+                    fRotationHelper = null;
+                }
+
                 fRotationHelper ??= new frmRotationHelper(this);
                 //fRotationHelper.SetLocation();
                 fRotationHelper.Show();
@@ -2063,8 +2069,7 @@ namespace Mids_Reborn.Forms
         {
             if (show)
             {
-                if (fSetFinder == null)
-                    fSetFinder = new frmSetFind(this);
+                fSetFinder ??= new frmSetFind(this);
                 fSetFinder.Show();
                 fSetFinder.Activate();
             }
@@ -2082,12 +2087,7 @@ namespace Mids_Reborn.Forms
         {
             if (show)
             {
-                if (fSets == null)
-                {
-                    var iParent = this;
-                    fSets = new frmSetViewer(iParent);
-                }
-
+                fSets ??= new frmSetViewer(this);
                 fSets.SetLocation();
                 fSets.Show();
                 FloatUpdate();
@@ -2096,7 +2096,10 @@ namespace Mids_Reborn.Forms
             else
             {
                 if (fSets == null)
+                {
                     return;
+                }
+
                 fSets.Hide();
                 fSets.Dispose();
                 fSets = null;

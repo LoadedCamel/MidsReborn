@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.Controls
@@ -114,14 +115,18 @@ namespace Mids_Reborn.Controls
             // Buff/Debuff profile ?
             public readonly List<FxIdentifier> Damage = new()
             {
-                new FxIdentifier(Enums.eEffectType.Damage, Enums.eToWho.Target, ValueSign.Positive),
+                new FxIdentifier(Enums.eEffectType.Damage, Enums.eToWho.Target, null), // ???
                 new FxIdentifier(Enums.eEffectType.Mez, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Accuracy, Enums.eToWho.Target, ValueSign.Negative),
                 new FxIdentifier(Enums.eEffectType.ToHit, Enums.eToWho.Target, ValueSign.Negative),
                 new FxIdentifier(Enums.eEffectType.Regeneration, Enums.eToWho.Target, ValueSign.Negative),
                 new FxIdentifier(Enums.eEffectType.Recovery, Enums.eToWho.Target, ValueSign.Negative),
                 new FxIdentifier(Enums.eEffectType.PerceptionRadius, Enums.eToWho.Target, ValueSign.Negative),
-                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Target, ValueSign.Negative)
+                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.ToHit, Enums.eToWho.Self, ValueSign.Positive),
+                new FxIdentifier(Enums.eEffectType.DamageBuff, Enums.eToWho.Self, ValueSign.Positive),
+                new FxIdentifier(Enums.eEffectType.Mez, Enums.eToWho.Self, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Self, ValueSign.Positive)
             };
 
             public readonly List<FxIdentifier> Healing = new()
@@ -865,22 +870,6 @@ namespace Mids_Reborn.Controls
             var profileFilter = SelectViewProfile(profile);
 
             var gfxList = gfx.ToList();
-            var fxIdentifiers = gfxList
-                .Select(e => new FxIdentifier(
-                    e.EffectType,
-                    e.ETModifies == Enums.eEffectType.None ? null : e.ETModifies,
-                    e.MezType == Enums.eMez.None ? null : e.MezType,
-                    e.ToWho,
-                    e.GetMagSum(power) switch
-                    {
-                        > 0 => ValueSign.Positive,
-                        < 0 => ValueSign.Negative,
-                        _ => ValueSign.Zero
-                    }))
-                .ToList();
-
-            Debug.WriteLine($"FxIdentifiers for {power.FullName}:\r\n{string.Join("\r\n", fxIdentifiers)}");
-
             return gfxList
                 .Select(e => new KeyValuePair<FxIdentifier, GroupedFx>(new FxIdentifier(
                     e.EffectType,
@@ -933,6 +922,7 @@ namespace Mids_Reborn.Controls
 
             Debug.WriteLine($"Distinct powers: {distinctPowers.Count}");
             Debug.WriteLine($"Timeline:\r\n{string.Join("\r\n", Timeline)}");
+            Debug.WriteLine("\r\n--------------------------\r\n");
 
             var powerHeights = distinctPowers
                 .Select(e => Timeline
@@ -957,22 +947,26 @@ namespace Mids_Reborn.Controls
             var vScale = totalHeight < float.Epsilon ? 1 : (Height - 2 * padding) / totalHeight;
             NaturalSize = new Size((int)Math.Ceiling(maxTime + 2 * padding), totalHeight);
 
+            var font = new Font(new FontFamily("Microsoft Sans Serif"), normalTextSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
             g.Clear(bgColor);
 
+            var k = 0;
             foreach (var p in Timeline)
             {
                 var pIndex = powersRows[p.PowerSlot.EnhancedPower?.FullName];
-                var hOffset = padding + pIndex == 0 ? 0 : powerHeights.Take(pIndex - 1).Sum() + interlineHeight * pIndex;
+                var vOffset = padding + pIndex == 0 ? 0 : powerHeights.Take(pIndex - 1).Sum() + interlineHeight * pIndex;
 
-                Debug.WriteLine("");
-                Debug.WriteLine($"Drawing power {p.PowerSlot.BasePower?.FullName} - pIndex: {pIndex}, hOffset: {hOffset}, EnhancedPower is null: {p.PowerSlot.EnhancedPower == null}");
+                Debug.WriteLine("\r\n=====================\r\n");
+                Debug.WriteLine($"Drawing power {p.PowerSlot.BasePower?.FullName} - pIndex: {pIndex}, hOffset: {vOffset}, EnhancedPower is null: {p.PowerSlot.EnhancedPower == null}");
 
                 if (p.PowerSlot.EnhancedPower == null)
                 {
                     continue;
                 }
 
-                var h = 0f;
+                var vp = 0f;
+                
                 var gfxRaw = GroupedFx.AssembleGroupedEffects(p.PowerSlot.EnhancedPower, true);
                 var gfx = ApplyViewProfile(gfxRaw, p.PowerSlot.EnhancedPower, Profile);
                 var genericEnhancements = gfx
@@ -985,14 +979,17 @@ namespace Mids_Reborn.Controls
                     .ToDictionary(e => e.Key, e => e.Value);
 
                 Debug.WriteLine("");
-                Debug.WriteLine($"Active profile: {Profile}");
-                Debug.WriteLine($"Profile content:\r\n{string.Join("\r\n", SelectViewProfile(Profile))}");
-                Debug.WriteLine("");
+                Debug.WriteLine($"GroupedFX count (filtered with {Profile} profile): {gfx.Count}");
 
-                Debug.WriteLine($"GroupedFX count (raw): {gfxRaw.Count}");
-                Debug.WriteLine($"GroupedFX detail (raw):\r\n{string.Join("\r\n", gfxRaw)}");
-                Debug.WriteLine("");
-                Debug.WriteLine($"GroupedFX count (filtered with profile: {Profile}): {gfx.Count}");
+                Debug.WriteLine($"TextRendererExt.DrawOutlineText(g, \"{p.PowerSlot.EnhancedPower.FullName}\", font, <Rectangle>{{0, {vOffset}, {textGapLeft}, {powerHeights[pIndex]}}}, shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);");
+                TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.FullName, font, new Rectangle(0, vOffset, textGapLeft, powerHeights[pIndex]), shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);
+
+                // Move damage effects to last elements so they are drawn on top of the others.
+                // Ensure dots and zero duration effects always show.
+                gfx = gfx
+                    .OrderBy(f => $"{f.EffectType}")
+                    .ThenBy(f => f.EffectType == Enums.eEffectType.Damage ? 1 : 0)
+                    .ToList();
 
                 for (var i = 0; i < gfx.Count; i++)
                 {
@@ -1007,16 +1004,16 @@ namespace Mids_Reborn.Controls
 
                     if (gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration < float.Epsilon)
                     {
-                        Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{padding + textGapLeft + p.Time * hScale - 6}, y:{hOffset + h - 6}, w:12, h:12");
-                        g.DrawEllipse(linePen, new RectangleF(padding + textGapLeft + p.Time * hScale - 6, hOffset + h - 6, 12, 12));
+                        Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{padding + textGapLeft + p.Time * hScale - 6}, y:{vOffset + vp - 6 - lineThickness / 2f}, w:12, h:12");
+                        g.DrawEllipse(linePen, new RectangleF(padding + textGapLeft + p.Time * hScale - 6, vOffset + vp - 6 - lineThickness / 2f, 12, 12));
                     }
                     else
                     {
-                        Debug.WriteLine($"gfx[{i}] - DrawLine(x1:{padding + textGapLeft + p.Time * hScale}, y1:{hOffset + h}, x2:{padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale}, y2:{hOffset + h}");
-                        g.DrawLine(linePen, padding + textGapLeft + p.Time * hScale, hOffset + h, padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale, hOffset + h);
+                        Debug.WriteLine($"gfx[{i}] - DrawLine(x1:{padding + textGapLeft + p.Time * hScale}, y1:{vOffset + vp}, x2:{padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale}, y2:{vOffset + vp}");
+                        g.DrawLine(linePen, padding + textGapLeft + p.Time * hScale, vOffset + vp, padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale, vOffset + vp);
                     }
 
-                    h += lineThickness / 2f;
+                    vp += lineThickness / 2f;
                 }
             }
         }

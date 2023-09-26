@@ -1073,6 +1073,18 @@ namespace Mids_Reborn.Core
                     .Select(e => e.Key)
                     .ToList(),
 
+                Enums.eEffectType.Damage => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
+                                Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
+                                e.Value.DamageType == fxIdentifier.DamageType &&
+                                e.Value.SpecialCase == specialCase &&
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
+                    .Select(e => e.Key)
+                    .ToList(),
+
                 _ => new List<int>()
             };
         }
