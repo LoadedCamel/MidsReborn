@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms
@@ -39,7 +40,12 @@ namespace Mids_Reborn.Forms
             var x = padding;
             var y = padding;
 
+            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+
             SuspendLayout();
+
+            borderPanel1.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(12, 56, 100);
+            ibClose.UseAlt = isVillain;
 
             foreach (var colorRef in colorDict)
             {
@@ -71,7 +77,7 @@ namespace Mids_Reborn.Forms
                         Location = new Point(x + (i == 0 ? cellH : (i + 1) * cellHsmall + i * cellHgap) + labelSpacing, y),
                         AutoSize = true,
                         ForeColor = Color.WhiteSmoke,
-                        Text = @$"{colorRef.Key.EffectType}{(colorRef.Key.EffectType == Enums.eEffectType.Enhancement & colorRef.Key.ETModifies is null or Enums.eEffectType.None ? "(Generic 1-8)" : colorRef.Key.ETModifies is null or Enums.eEffectType.None ? "" : $"({colorRef.Key.ETModifies})")}"
+                        Text = @$"{colorRef.Key.EffectType}{(colorRef.Key.EffectType == Enums.eEffectType.Enhancement & colorRef.Key.ETModifies is null or Enums.eEffectType.None ? "(Generic #1 - #8)" : colorRef.Key.ETModifies is null or Enums.eEffectType.None ? "" : $"({colorRef.Key.ETModifies})")}"
                     };
 
                     borderPanel1.Controls.Add(cellLabel);

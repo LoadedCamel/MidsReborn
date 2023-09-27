@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
@@ -29,6 +30,7 @@ namespace Mids_Reborn.Forms
         private void frmRotationHelper_Load(object sender, EventArgs e)
         {
             SetDataSources();
+            UpdateColorTheme();
 
             cbViewProfile.SelectedIndex = 0;
 
@@ -418,6 +420,26 @@ namespace Mids_Reborn.Forms
             fTimelineColorRefTable.Dispose();
 
             fTimelineColorRefTable = null;
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            var isVillain = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
+            borderPanel2.Invalidate();
+            imageButtonEx1.UseAlt = isVillain;
+            imageButtonEx2.UseAlt = isVillain;
+            btnColorsRef.UseAlt = isVillain;
+        }
+
+        private void UpdateColorTheme()
+        {
+            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
+            borderPanel2.Invalidate();
+            imageButtonEx1.UseAlt = isVillain;
+            imageButtonEx2.UseAlt = isVillain;
+            btnColorsRef.UseAlt = isVillain;
         }
     }
 }

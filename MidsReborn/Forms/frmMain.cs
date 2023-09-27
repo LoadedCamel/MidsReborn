@@ -561,6 +561,11 @@ namespace Mids_Reborn.Forms
             {
                 fGraphStats.UpdateColorTheme(e);
             }
+
+            if (fRotationHelper is {Visible: true})
+            {
+                fRotationHelper.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)

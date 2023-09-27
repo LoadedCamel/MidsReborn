@@ -982,18 +982,17 @@ namespace Mids_Reborn.Controls
                 Debug.WriteLine($"GroupedFX count (filtered with {Profile} profile): {gfx.Count}");
 
                 Debug.WriteLine($"TextRendererExt.DrawOutlineText(g, \"{p.PowerSlot.EnhancedPower.FullName}\", font, <Rectangle>{{0, {vOffset}, {textGapLeft}, {powerHeights[pIndex]}}}, shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);");
-                TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.FullName, font, new Rectangle(0, vOffset, textGapLeft, powerHeights[pIndex]), shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);
+                TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.FullName, font, new Rectangle(0, vOffset, textGapLeft, vOffset - Height - padding), shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);
 
-                // Move damage effects to last elements so they are drawn on top of the others.
-                // Ensure dots and zero duration effects always show.
+                // Move damage/heal effects to last elements so they are drawn on top of the others.
                 gfx = gfx
                     .OrderBy(f => $"{f.EffectType}")
-                    .ThenBy(f => f.EffectType == Enums.eEffectType.Damage ? 1 : 0)
+                    .ThenBy(f => f.EffectType is Enums.eEffectType.Damage or Enums.eEffectType.Heal ? 1 : 0)
                     .ToList();
 
                 for (var i = 0; i < gfx.Count; i++)
                 {
-                    var index = genericEnhancements.Keys.Contains(i)
+                    var index = genericEnhancements.ContainsKey(i)
                         ? genericEnhancements.Keys.TryFindIndex(f => f == i)
                         : 0;
                     var maxIndex = gfx[i].EffectType == Enums.eEffectType.Enhancement
