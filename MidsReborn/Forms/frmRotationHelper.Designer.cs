@@ -61,6 +61,10 @@ namespace Mids_Reborn.Forms
             button2 = new Button();
             btnClearLastPower = new Button();
             btnColorsRef = new Controls.ImageButtonEx();
+            icnBtnZoomOut = new FontAwesome.Sharp.IconButton();
+            icnBtnZoomIn = new FontAwesome.Sharp.IconButton();
+            lblZoom = new Label();
+            btnAddAllBoosts = new Button();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
@@ -79,9 +83,10 @@ namespace Mids_Reborn.Forms
             // label1
             // 
             label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label1.Location = new System.Drawing.Point(12, 20);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(99, 15);
+            label1.Size = new System.Drawing.Size(104, 15);
             label1.TabIndex = 1;
             label1.Text = "Available powers:";
             // 
@@ -98,18 +103,20 @@ namespace Mids_Reborn.Forms
             // label2
             // 
             label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label2.Location = new System.Drawing.Point(444, 20);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(44, 15);
+            label2.Size = new System.Drawing.Size(47, 15);
             label2.TabIndex = 3;
             label2.Text = "Profile:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(772, 20);
+            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Location = new System.Drawing.Point(727, 20);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(45, 15);
+            label3.Size = new System.Drawing.Size(47, 15);
             label3.TabIndex = 4;
             label3.Text = "Boosts:";
             // 
@@ -117,9 +124,9 @@ namespace Mids_Reborn.Forms
             // 
             listBox2.FormattingEnabled = true;
             listBox2.ItemHeight = 15;
-            listBox2.Location = new System.Drawing.Point(772, 52);
+            listBox2.Location = new System.Drawing.Point(727, 52);
             listBox2.Name = "listBox2";
-            listBox2.Size = new System.Drawing.Size(354, 199);
+            listBox2.Size = new System.Drawing.Size(399, 199);
             listBox2.TabIndex = 5;
             listBox2.DoubleClick += listBox2_DoubleClick;
             // 
@@ -167,6 +174,7 @@ namespace Mids_Reborn.Forms
             // label4
             // 
             label4.AutoSize = true;
+            label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             label4.Location = new System.Drawing.Point(12, 555);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(172, 15);
@@ -186,7 +194,7 @@ namespace Mids_Reborn.Forms
             // 
             // btnClearBoosts
             // 
-            btnClearBoosts.Location = new System.Drawing.Point(975, 261);
+            btnClearBoosts.Location = new System.Drawing.Point(1003, 261);
             btnClearBoosts.Name = "btnClearBoosts";
             btnClearBoosts.Size = new System.Drawing.Size(123, 33);
             btnClearBoosts.TabIndex = 11;
@@ -229,18 +237,20 @@ namespace Mids_Reborn.Forms
             // label5
             // 
             label5.AutoSize = true;
+            label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label5.Location = new System.Drawing.Point(12, 417);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(55, 15);
+            label5.Size = new System.Drawing.Size(58, 15);
             label5.TabIndex = 16;
             label5.Text = "Rotation:";
             // 
             // label6
             // 
             label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label6.Location = new System.Drawing.Point(12, 317);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(45, 15);
+            label6.Size = new System.Drawing.Size(47, 15);
             label6.TabIndex = 17;
             label6.Text = "Boosts:";
             // 
@@ -256,7 +266,7 @@ namespace Mids_Reborn.Forms
             // 
             // btnAddBoost
             // 
-            btnAddBoost.Location = new System.Drawing.Point(798, 261);
+            btnAddBoost.Location = new System.Drawing.Point(865, 261);
             btnAddBoost.Name = "btnAddBoost";
             btnAddBoost.Size = new System.Drawing.Size(123, 33);
             btnAddBoost.TabIndex = 20;
@@ -276,6 +286,7 @@ namespace Mids_Reborn.Forms
             // 
             // borderPanel2
             // 
+            borderPanel2.AutoScroll = true;
             borderPanel2.Border.Color = System.Drawing.Color.FromArgb(16, 76, 135);
             borderPanel2.Border.Style = ButtonBorderStyle.Solid;
             borderPanel2.Border.Thickness = 1;
@@ -412,12 +423,68 @@ namespace Mids_Reborn.Forms
             btnColorsRef.UseAlt = false;
             btnColorsRef.Click += btnColorsRef_Click;
             // 
+            // icnBtnZoomOut
+            // 
+            icnBtnZoomOut.BackColor = System.Drawing.Color.FromArgb(9, 51, 90);
+            icnBtnZoomOut.FlatStyle = FlatStyle.Popup;
+            icnBtnZoomOut.ForeColor = System.Drawing.Color.LightGray;
+            icnBtnZoomOut.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlassMinus;
+            icnBtnZoomOut.IconColor = System.Drawing.Color.LightGray;
+            icnBtnZoomOut.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            icnBtnZoomOut.IconSize = 28;
+            icnBtnZoomOut.Location = new System.Drawing.Point(12, 840);
+            icnBtnZoomOut.Name = "icnBtnZoomOut";
+            icnBtnZoomOut.Size = new System.Drawing.Size(40, 40);
+            icnBtnZoomOut.TabIndex = 30;
+            icnBtnZoomOut.UseVisualStyleBackColor = false;
+            icnBtnZoomOut.Click += icnBtnZoomOut_Click;
+            // 
+            // icnBtnZoomIn
+            // 
+            icnBtnZoomIn.BackColor = System.Drawing.Color.FromArgb(9, 51, 90);
+            icnBtnZoomIn.FlatStyle = FlatStyle.Popup;
+            icnBtnZoomIn.ForeColor = System.Drawing.Color.LightGray;
+            icnBtnZoomIn.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlassPlus;
+            icnBtnZoomIn.IconColor = System.Drawing.Color.LightGray;
+            icnBtnZoomIn.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            icnBtnZoomIn.IconSize = 28;
+            icnBtnZoomIn.Location = new System.Drawing.Point(159, 840);
+            icnBtnZoomIn.Name = "icnBtnZoomIn";
+            icnBtnZoomIn.Size = new System.Drawing.Size(40, 40);
+            icnBtnZoomIn.TabIndex = 31;
+            icnBtnZoomIn.UseVisualStyleBackColor = false;
+            icnBtnZoomIn.Click += icnBtnZoomIn_Click;
+            // 
+            // lblZoom
+            // 
+            lblZoom.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblZoom.Location = new System.Drawing.Point(56, 841);
+            lblZoom.Name = "lblZoom";
+            lblZoom.Size = new System.Drawing.Size(100, 39);
+            lblZoom.TabIndex = 32;
+            lblZoom.Text = "100%";
+            lblZoom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnAddAllBoosts
+            // 
+            btnAddAllBoosts.Location = new System.Drawing.Point(727, 261);
+            btnAddAllBoosts.Name = "btnAddAllBoosts";
+            btnAddAllBoosts.Size = new System.Drawing.Size(123, 33);
+            btnAddAllBoosts.TabIndex = 33;
+            btnAddAllBoosts.Text = "Add all";
+            btnAddAllBoosts.UseVisualStyleBackColor = true;
+            btnAddAllBoosts.Click += btnAddAllBoosts_Click;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(1148, 893);
+            Controls.Add(btnAddAllBoosts);
+            Controls.Add(lblZoom);
+            Controls.Add(icnBtnZoomIn);
+            Controls.Add(icnBtnZoomOut);
             Controls.Add(btnColorsRef);
             Controls.Add(btnClearLastPower);
             Controls.Add(button2);
@@ -489,5 +556,9 @@ namespace Mids_Reborn.Forms
         private Button button2;
         private Button btnClearLastPower;
         private Controls.ImageButtonEx btnColorsRef;
+        private FontAwesome.Sharp.IconButton icnBtnZoomOut;
+        private FontAwesome.Sharp.IconButton icnBtnZoomIn;
+        private Label lblZoom;
+        private Button btnAddAllBoosts;
     }
 }

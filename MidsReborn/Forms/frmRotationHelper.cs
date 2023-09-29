@@ -16,6 +16,8 @@ namespace Mids_Reborn.Forms
         private readonly frmMain myParent;
         private frmTimelineColorRefTable? fTimelineColorRefTable;
         private Stopwatch Stopwatch;
+        private Size NormalGraphSize;
+        private float GraphZoom;
 
         public frmRotationHelper(frmMain parent)
         {
@@ -32,6 +34,8 @@ namespace Mids_Reborn.Forms
             SetDataSources();
             UpdateColorTheme();
 
+            NormalGraphSize = new Size(1118, 209);
+
             cbViewProfile.SelectedIndex = 0;
 
             label4.Visible = false;
@@ -43,6 +47,8 @@ namespace Mids_Reborn.Forms
             TopMost = true;
             imageButtonEx2.ToggleState = ImageButtonEx.States.ToggledOn;
             chkCastTimeReal.Checked = ctlCombatTimeline1.UseArcanaTime;
+
+            GraphZoom = 100;
         }
 
         public void UpdateData()
@@ -220,6 +226,22 @@ namespace Mids_Reborn.Forms
             }
             else
             {
+                ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
+            }
+
+            UpdateBoostsText();
+        }
+
+        private void btnAddAllBoosts_Click(object sender, EventArgs e)
+        {
+            var items = listBox2.Items.Cast<KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot>>().ToList();
+            foreach (var item in items)
+            {
+                if (ctlCombatTimeline1.UserBoosts.Contains(item.Value.BasePower))
+                {
+                    continue;
+                }
+
                 ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
             }
 
@@ -424,22 +446,84 @@ namespace Mids_Reborn.Forms
 
         public void UpdateColorTheme(Enums.Alignment alignment)
         {
+            SuspendLayout();
+
             var isVillain = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
             borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
             borderPanel2.Invalidate();
             imageButtonEx1.UseAlt = isVillain;
             imageButtonEx2.UseAlt = isVillain;
             btnColorsRef.UseAlt = isVillain;
+            icnBtnZoomIn.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
+            icnBtnZoomOut.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
+
+            ResumeLayout(true);
         }
 
         private void UpdateColorTheme()
         {
+            SuspendLayout();
+
             var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
             borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
             borderPanel2.Invalidate();
             imageButtonEx1.UseAlt = isVillain;
             imageButtonEx2.UseAlt = isVillain;
             btnColorsRef.UseAlt = isVillain;
+            icnBtnZoomIn.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
+            icnBtnZoomOut.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
+
+            ResumeLayout(true);
+        }
+
+        private void icnBtnZoomOut_Click(object sender, EventArgs e)
+        {
+            GraphZoom = GraphZoom switch
+            {
+                500 => 300,
+                300 => 250,
+                250 => 200,
+                200 => 175,
+                175 => 150,
+                150 => 125,
+                125 => 100,
+                100 => 75,
+                75 => 50,
+                50 => 25,
+                25 => 10,
+                _ => 10
+            };
+
+            icnBtnZoomOut.Enabled = GraphZoom > 10;
+            lblZoom.Text = $"{GraphZoom}%";
+
+            ctlCombatTimeline1.Scale(new SizeF(GraphZoom / 100f, GraphZoom / 100f));
+            // ctlCombatTimeline1.Invalidate(); // ???
+        }
+
+        private void icnBtnZoomIn_Click(object sender, EventArgs e)
+        {
+            GraphZoom = GraphZoom switch
+            {
+                10 => 25,
+                25 => 50,
+                50 => 75,
+                75 => 100,
+                100 => 125,
+                125 => 150,
+                150 => 175,
+                175 => 200,
+                200 => 250,
+                250 => 300,
+                300 => 500,
+                _ => 500
+            };
+
+            icnBtnZoomIn.Enabled = GraphZoom < 500;
+            lblZoom.Text = $"{GraphZoom}%";
+
+            ctlCombatTimeline1.Scale(new SizeF(GraphZoom / 100f, GraphZoom / 100f));
+            // ctlCombatTimeline1.Invalidate(); // ???
         }
     }
 }

@@ -951,14 +951,13 @@ namespace Mids_Reborn.Controls
 
             g.Clear(bgColor);
 
-            var k = 0;
-            foreach (var p in Timeline)
+           foreach (var p in Timeline)
             {
                 var pIndex = powersRows[p.PowerSlot.EnhancedPower?.FullName];
                 var vOffset = padding + pIndex == 0 ? 0 : powerHeights.Take(pIndex - 1).Sum() + interlineHeight * pIndex;
 
                 Debug.WriteLine("\r\n=====================\r\n");
-                Debug.WriteLine($"Drawing power {p.PowerSlot.BasePower?.FullName} - pIndex: {pIndex}, hOffset: {vOffset}, EnhancedPower is null: {p.PowerSlot.EnhancedPower == null}");
+                Debug.WriteLine($"--- Drawing power {p.PowerSlot.BasePower?.FullName} - pIndex: {pIndex}, vOffset: {vOffset}, EnhancedPower is null: {p.PowerSlot.EnhancedPower == null}");
 
                 if (p.PowerSlot.EnhancedPower == null)
                 {
@@ -966,9 +965,20 @@ namespace Mids_Reborn.Controls
                 }
 
                 var vp = 0f;
-                
+
+                // Raw GroupedFx for enhanced power
                 var gfxRaw = GroupedFx.AssembleGroupedEffects(p.PowerSlot.EnhancedPower, true);
+                
+                // Profile-filtered GroupedFx
                 var gfx = ApplyViewProfile(gfxRaw, p.PowerSlot.EnhancedPower, Profile);
+                
+                // Move damage/heal effects to last elements so they are drawn on top of the others.
+                gfx = gfx
+                    .OrderBy(f => $"{f.EffectType}")
+                    .ThenBy(f => f.EffectType is Enums.eEffectType.Damage or Enums.eEffectType.Heal ? 1 : 0)
+                    .ToList();
+
+                // Generic enhancement effects for power
                 var genericEnhancements = gfx
                     .Select((e, i) => new KeyValuePair<int, GroupedFx>(i, e))
                     .Where(e => e.Value.EffectType == Enums.eEffectType.Enhancement &
@@ -981,34 +991,38 @@ namespace Mids_Reborn.Controls
                 Debug.WriteLine("");
                 Debug.WriteLine($"GroupedFX count (filtered with {Profile} profile): {gfx.Count}");
 
-                Debug.WriteLine($"TextRendererExt.DrawOutlineText(g, \"{p.PowerSlot.EnhancedPower.FullName}\", font, <Rectangle>{{0, {vOffset}, {textGapLeft}, {powerHeights[pIndex]}}}, shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);");
-                TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.FullName, font, new Rectangle(0, vOffset, textGapLeft, vOffset - Height - padding), shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);
-
-                // Move damage/heal effects to last elements so they are drawn on top of the others.
-                gfx = gfx
-                    .OrderBy(f => $"{f.EffectType}")
-                    .ThenBy(f => f.EffectType is Enums.eEffectType.Damage or Enums.eEffectType.Heal ? 1 : 0)
-                    .ToList();
-
                 for (var i = 0; i < gfx.Count; i++)
                 {
+                    if (i == 0)
+                    {
+                        // Draw power name text
+                        Debug.WriteLine($"TextRendererExt.DrawOutlineText(g, \"{p.PowerSlot.EnhancedPower.DisplayName}\", font, <Rectangle>{{0, {Math.Round(vOffset + vp)}, {textGapLeft}, {Math.Round(Height - padding - vOffset - vp)}}}, shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter)");
+                        TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.DisplayName, font, new Rectangle(0, (int)Math.Round(vOffset + vp), textGapLeft, (int)Math.Round(Height - padding - vOffset - vp)), shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.VerticalCenter);
+                    }
+
+                    // Index among generic enhancements, 0 if none.
                     var index = genericEnhancements.ContainsKey(i)
                         ? genericEnhancements.Keys.TryFindIndex(f => f == i)
                         : 0;
+
+                    // Count of generic enhancements, 0 if none
                     var maxIndex = gfx[i].EffectType == Enums.eEffectType.Enhancement
                         ? genericEnhancements.Count
                         : 0;
+
                     var barColor = Theme.AssignColor(gfx[i].EffectType, gfx[i].EnhancementEffect, gfx[i].ETModifies, index, maxIndex);
                     var linePen = new Pen(new SolidBrush(barColor), lineThickness);
 
                     if (gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration < float.Epsilon)
                     {
-                        Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{padding + textGapLeft + p.Time * hScale - 6}, y:{vOffset + vp - 6 - lineThickness / 2f}, w:12, h:12");
+                        // Zero-duration effects: draw hollow ring
+                        Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{padding + textGapLeft + p.Time * hScale - 6}, y:{vOffset + vp - 6 - lineThickness / 2f}, w:12, h:12)");
                         g.DrawEllipse(linePen, new RectangleF(padding + textGapLeft + p.Time * hScale - 6, vOffset + vp - 6 - lineThickness / 2f, 12, 12));
                     }
                     else
                     {
-                        Debug.WriteLine($"gfx[{i}] - DrawLine(x1:{padding + textGapLeft + p.Time * hScale}, y1:{vOffset + vp}, x2:{padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale}, y2:{vOffset + vp}");
+                        // DoTs, HoTs + effects with duration > 0: draw line
+                        Debug.WriteLine($"gfx[{i}] - DrawLine(x1:{padding + textGapLeft + p.Time * hScale}, y1:{vOffset + vp}, x2:{padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale}, y2:{vOffset + vp})");
                         g.DrawLine(linePen, padding + textGapLeft + p.Time * hScale, vOffset + vp, padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale, vOffset + vp);
                     }
 
