@@ -943,8 +943,11 @@ namespace Mids_Reborn.Controls
             var powersRows = distinctPowers
                 .Select((p, i) => new KeyValuePair<string, int>(p, i))
                 .ToDictionary(p => p.Key, p => p.Value);
-            var lastPowerDuration = Timeline.Count <= 0 ? 0 : Timeline[^1].PowerSlot.EnhancedPower?.Effects.Max(f => f.Duration);
-            var maxTime = Timeline.Count <= 0 ? 1 : Timeline[^1].Time + (lastPowerDuration ?? 0); // Buggy, to be redone
+            var maxTime = Timeline.Count <= 0
+                ? 1
+                : Timeline
+                    .Select(p => p.Time + p.PowerSlot.EnhancedPower?.Effects.Max(f => f.Duration))
+                    .Max() ?? 1;
 
             var totalItems = powerHeights.Sum();
             var lineThickness = Math.Max(minLineThickness, (int)Math.Round((Height - Math.Max(0, totalItems - 1) * interlineHeight) / (double)totalItems));
