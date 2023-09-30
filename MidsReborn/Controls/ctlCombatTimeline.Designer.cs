@@ -28,7 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
             SuspendLayout();
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 10000;
+            toolTip1.InitialDelay = 500;
+            toolTip1.ReshowDelay = 100;
+            toolTip1.UseAnimation = false;
             // 
             // ctlCombatTimeline
             // 
@@ -37,9 +46,13 @@
             DoubleBuffered = true;
             Name = "ctlCombatTimeline";
             Size = new System.Drawing.Size(1245, 260);
+            MouseLeave += ctlCombatTimeline_MouseLeave;
+            MouseMove += ctlCombatTimeline_MouseMove;
             ResumeLayout(false);
         }
 
         #endregion
+
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
