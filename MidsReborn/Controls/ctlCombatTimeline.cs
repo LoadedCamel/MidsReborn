@@ -427,7 +427,6 @@ namespace Mids_Reborn.Controls
             }
 
             ListPowersToTimeline();
-            CalcAllEnhancedPowers();
 
             if (!redraw)
             {
@@ -445,15 +444,16 @@ namespace Mids_Reborn.Controls
             var time = 0f;
             Timeline = new List<TimelineItem>();
 
+            CalcEnhancedProgress?.Invoke(this, 0);
+
             var k = 0;
             foreach (var power in Powers)
             {
-                var timeWait = 0f;
                 var previousPowerOccurrences = Timeline
                     .Where(e => e.PowerSlot.BasePower != null && e.PowerSlot.BasePower?.FullName == power.BasePower?.FullName)
                     .ToList();
 
-                var previousOccurrence = previousPowerOccurrences.Count <= 0
+                var previousOccurrence = k == 0 | previousPowerOccurrences.Count <= 0
                     ? null
                     : previousPowerOccurrences
                         .Select((e, i) => new KeyValuePair<int, TimelineItem>(i, e))
@@ -464,58 +464,65 @@ namespace Mids_Reborn.Controls
                     .First(e => e.EffectType == Enums.eEffectType.Enhancement & e.ETModifies == Enums.eEffectType.RechargeTime)
                     .Duration;
 
-                if (k > 0)
+                Timeline.Add(new TimelineItem(power, time));
+
+                var rechargeBoosts = new List<RechBoost>();
+                // Recharge boosts will self-affect current power
+                for (var i = 0; i < Math.Min(k + 1, Powers.Count); i++)
                 {
-                    var rechargeBoosts = new List<RechBoost>();
-                    for (var i = 0; i < k; i++)
+                    var enhRechBoost = HasBoost(Powers[i]).Any(e => e != null && e.Contains("Force_Feedback_F"));
+                    var powerRechBoost = Powers[i].BasePower?.ClickBuff &
+                                         Powers[i].BasePower?.Effects
+                                             .Any(e => e.EffectType == Enums.eEffectType.Enhancement &
+                                                       e.ETModifies == Enums.eEffectType.RechargeTime &
+                                                       e.ToWho == Enums.eToWho.Self);
+
+                    if (enhRechBoost)
                     {
-                        var enhRechBoost = HasBoost(Powers[i]).Any(e => e != null && e.Contains("Force_Feedback_F"));
-                        var powerRechBoost = Powers[i].BasePower?.ClickBuff &
-                                             Powers[i].BasePower?.Effects
-                                                 .Any(e => e.EffectType == Enums.eEffectType.Enhancement & e.ETModifies == Enums.eEffectType.RechargeTime & e.ToWho == Enums.eToWho.Self);
-
-                        if (enhRechBoost)
-                        {
-                            rechargeBoosts.Add(new RechBoost { TimelineIndex = i, BoostType = BoostType.Enhancement, Duration = ffBoostDuration ?? 0 });
-
-                            continue;
-                        }
-
-                        if (powerRechBoost != true)
-                        {
-                            continue;
-                        }
-
-                        var powerBoostDuration = Powers[i].EnhancedPower?.Effects
-                            .Where(e => e.EffectType == Enums.eEffectType.Enhancement &
-                                        e.ETModifies == Enums.eEffectType.RechargeTime &
-                                        e.ToWho == Enums.eToWho.Self & e.BuffedMag > 0)
-                            .Select(e => e.Duration)
-                            .Max();
                         rechargeBoosts.Add(new RechBoost
-                        { TimelineIndex = i, BoostType = BoostType.Power, Duration = powerBoostDuration ?? 0 });
+                        {
+                            TimelineIndex = i,
+                            BoostType = BoostType.Enhancement,
+                            Duration = ffBoostDuration ?? 0
+                        });
+
+                        continue;
                     }
 
-                    var rechargeTime = previousOccurrence?.PowerSlot.EnhancedPower?.RechargeTime ?? 0;
-                    var startTimePrev = previousOccurrence?.Time ?? 0;
-                    timeWait = Math.Max(0, startTimePrev + rechargeTime - time);
-                    Debug.WriteLine($"Power: {power.BasePower?.FullName}, current time: {time}, start time prev: {startTimePrev}, recharge time: {rechargeTime}, time wait: {timeWait}");
-                    var p = new TimelineItem(power, time + timeWait);
-                    CalcEnhancedPower(ref p, rechargeBoosts);
+                    if (powerRechBoost != true)
+                    {
+                        continue;
+                    }
 
-                    Timeline.Add(p);
+                    var powerBoostDuration = Powers[i].EnhancedPower?.Effects
+                        .Where(e => e.EffectType == Enums.eEffectType.Enhancement &
+                                    e.ETModifies == Enums.eEffectType.RechargeTime &
+                                    e.ToWho == Enums.eToWho.Self & e.BuffedMag > 0)
+                        .Select(e => e.Duration)
+                        .Max();
+                    rechargeBoosts.Add(new RechBoost
+                    {
+                        TimelineIndex = i,
+                        BoostType = BoostType.Power,
+                        Duration = powerBoostDuration ?? 0
+                    });
                 }
-                else
-                {
-                    timeWait = 0;
-                    var p = new TimelineItem(power, time);
-                    CalcEnhancedPower(ref p);
-                    Timeline.Add(p);
-                }
+
+                var rechargeTime = previousOccurrence?.PowerSlot.EnhancedPower?.RechargeTime ?? 0;
+                var startTimePrev = previousOccurrence?.Time ?? 0;
+                var timeWait = k == 0 ? 0 : Math.Max(0, startTimePrev + rechargeTime - time);
+                Debug.WriteLine($"Power: {power.BasePower?.FullName}, current time: {time}, start time prev: {startTimePrev}, recharge time: {rechargeTime}, time wait: {timeWait}");
+                Timeline[k].Time = time + timeWait;
+                var tpw = Timeline[k];
+                CalcEnhancedPower(ref tpw, rechargeBoosts);
 
                 time += (UseArcanaTime ? power.BasePower?.ArcanaCastTime ?? 0 : power.BasePower?.CastTimeBase ?? 0) + timeWait;
                 k++;
+
+                CalcEnhancedProgress?.Invoke(this, (int)Math.Round(k / (float)Powers.Count * 100));
             }
+
+            CalcEnhancedProgress?.Invoke(this, 100);
         }
 
         /// <summary>
@@ -619,31 +626,6 @@ namespace Mids_Reborn.Controls
                 .ToList();
 
             return boostSources.Count <= 0 ? null : boostSources;
-        }
-
-        /// <summary>
-        /// Calculate all enhanced powers
-        /// </summary>
-        /// <remarks>Can take some time depending on how many powers are on the timeline.</remarks>
-        private void CalcAllEnhancedPowers()
-        {
-            if (Timeline.Count == 0)
-            {
-                return;
-            }
-
-            CalcEnhancedProgress?.Invoke(this, 0);
-
-            for (var i = 0; i < Timeline.Count; i++)
-            {
-                var p = Timeline[i];
-                CalcEnhancedPower(ref p);
-                CalcEnhancedProgress?.Invoke(this, i / (float)Timeline.Count * 100);
-            }
-
-            RecalcTotals();
-
-            CalcEnhancedProgress?.Invoke(this, 100);
         }
 
         /// <summary>
@@ -792,6 +774,11 @@ namespace Mids_Reborn.Controls
 
             foreach (var b in rechargeBoosts)
             {
+                if (b.TimelineIndex >= Timeline.Count)
+                {
+                    continue;
+                }
+                
                 if (Timeline[b.TimelineIndex].Time + b.Duration < timelinePower.Time)
                 {
                     continue;

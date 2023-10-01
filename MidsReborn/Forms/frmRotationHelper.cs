@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms
             lblBoosts.Text = "";
 
             TopMost = true;
-            imageButtonEx2.ToggleState = ImageButtonEx.States.ToggledOn;
+            imageButtonEx2.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
             chkCastTimeReal.Checked = ctlCombatTimeline1.UseArcanaTime;
 
             GraphZoom = 100;
