@@ -1057,9 +1057,11 @@ namespace Mids_Reborn.Controls
                         Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{ringRect.X}, y:{ringRect.Y}, w:{ringRect.Width}, h:{ringRect.Height}), index:{index}, maxIndex:{maxIndex}");
                         g.DrawEllipse(linePen, ringRect);
                         ActiveZones.Add(
-                            new Rectangle((int)Math.Floor(ringRect.X), (int)Math.Floor(ringRect.Y),
-                                (int)Math.Ceiling(ringRect.Width), (int)Math.Ceiling(ringRect.Height)),
-                            new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
+                            key: new Rectangle((int)Math.Floor(ringRect.X),
+                                (int)Math.Floor(ringRect.Y),
+                                (int)Math.Ceiling(ringRect.Width),
+                                (int)Math.Ceiling(ringRect.Height)),
+                            value: new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
                     }
                     else
                     {
@@ -1070,11 +1072,11 @@ namespace Mids_Reborn.Controls
                         //g.DrawLine(linePen, barPoint1.X, barPoint1.Y, barPoint2.X, barPoint2.Y);
                         g.FillRectangle(barBrush, barPoint1.X, barPoint1.Y, Math.Abs(barPoint2.X - barPoint1.X), lineThickness);
                         ActiveZones.Add(
-                            new Rectangle((int)Math.Floor(barPoint1.X),
+                            key: new Rectangle((int)Math.Floor(barPoint1.X),
                                 (int)Math.Floor(barPoint1.Y),
                                 (int)Math.Ceiling(Math.Abs(barPoint2.X - barPoint1.X)),
-                                (int)Math.Ceiling(barPoint2.Y + lineThickness)),
-                            new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
+                                lineThickness),
+                            value: new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
                     }
 
                     vp += lineThickness;
@@ -1093,7 +1095,7 @@ namespace Mids_Reborn.Controls
 
                 if (prevMousePos != null && prevMousePos?.X == e.X & prevMousePos?.Y == e.Y)
                 {
-                    continue;
+                    return;
                 }
 
                 ItemMouseover?.Invoke(this, z.Value);
@@ -1102,10 +1104,10 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            if (prevMousePos != null && prevMousePos?.X == e.X & prevMousePos?.Y == e.Y)
+            /*if (prevMousePos != null && prevMousePos?.X == e.X & prevMousePos?.Y == e.Y)
             {
                 return;
-            }
+            }*/
 
             ItemMouseover?.Invoke(this, null);
             prevMousePos = new Point(e.X, e.Y);
