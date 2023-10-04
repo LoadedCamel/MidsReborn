@@ -61,13 +61,13 @@ namespace Mids_Reborn.Forms
             button2 = new Button();
             btnClearLastPower = new Button();
             btnColorsRef = new Controls.ImageButtonEx();
-            icnBtnZoomOut = new FontAwesome.Sharp.IconButton();
-            icnBtnZoomIn = new FontAwesome.Sharp.IconButton();
-            lblZoom = new Label();
             btnAddAllBoosts = new Button();
+            borderPanel4 = new Controls.BorderPanel();
+            timelineCursorZoom1 = new Controls.TimelineCursorZoom();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
+            borderPanel4.SuspendLayout();
             SuspendLayout();
             // 
             // listBox1
@@ -156,7 +156,7 @@ namespace Mids_Reborn.Forms
             imageButtonEx1.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             imageButtonEx1.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             imageButtonEx1.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            imageButtonEx1.Location = new System.Drawing.Point(988, 847);
+            imageButtonEx1.Location = new System.Drawing.Point(988, 896);
             imageButtonEx1.Lock = false;
             imageButtonEx1.Name = "imageButtonEx1";
             imageButtonEx1.Size = new System.Drawing.Size(120, 30);
@@ -353,7 +353,7 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             imageButtonEx2.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             imageButtonEx2.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            imageButtonEx2.Location = new System.Drawing.Point(835, 847);
+            imageButtonEx2.Location = new System.Drawing.Point(835, 896);
             imageButtonEx2.Lock = false;
             imageButtonEx2.Name = "imageButtonEx2";
             imageButtonEx2.Size = new System.Drawing.Size(120, 30);
@@ -408,7 +408,7 @@ namespace Mids_Reborn.Forms
             btnColorsRef.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             btnColorsRef.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             btnColorsRef.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            btnColorsRef.Location = new System.Drawing.Point(630, 847);
+            btnColorsRef.Location = new System.Drawing.Point(630, 896);
             btnColorsRef.Lock = false;
             btnColorsRef.Name = "btnColorsRef";
             btnColorsRef.Size = new System.Drawing.Size(142, 30);
@@ -423,48 +423,6 @@ namespace Mids_Reborn.Forms
             btnColorsRef.UseAlt = false;
             btnColorsRef.Click += btnColorsRef_Click;
             // 
-            // icnBtnZoomOut
-            // 
-            icnBtnZoomOut.BackColor = System.Drawing.Color.FromArgb(9, 51, 90);
-            icnBtnZoomOut.FlatStyle = FlatStyle.Popup;
-            icnBtnZoomOut.ForeColor = System.Drawing.Color.LightGray;
-            icnBtnZoomOut.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlassMinus;
-            icnBtnZoomOut.IconColor = System.Drawing.Color.LightGray;
-            icnBtnZoomOut.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            icnBtnZoomOut.IconSize = 28;
-            icnBtnZoomOut.Location = new System.Drawing.Point(12, 840);
-            icnBtnZoomOut.Name = "icnBtnZoomOut";
-            icnBtnZoomOut.Size = new System.Drawing.Size(40, 40);
-            icnBtnZoomOut.TabIndex = 30;
-            icnBtnZoomOut.UseVisualStyleBackColor = false;
-            icnBtnZoomOut.Click += icnBtnZoomOut_Click;
-            // 
-            // icnBtnZoomIn
-            // 
-            icnBtnZoomIn.BackColor = System.Drawing.Color.FromArgb(9, 51, 90);
-            icnBtnZoomIn.FlatStyle = FlatStyle.Popup;
-            icnBtnZoomIn.ForeColor = System.Drawing.Color.LightGray;
-            icnBtnZoomIn.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlassPlus;
-            icnBtnZoomIn.IconColor = System.Drawing.Color.LightGray;
-            icnBtnZoomIn.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            icnBtnZoomIn.IconSize = 28;
-            icnBtnZoomIn.Location = new System.Drawing.Point(159, 840);
-            icnBtnZoomIn.Name = "icnBtnZoomIn";
-            icnBtnZoomIn.Size = new System.Drawing.Size(40, 40);
-            icnBtnZoomIn.TabIndex = 31;
-            icnBtnZoomIn.UseVisualStyleBackColor = false;
-            icnBtnZoomIn.Click += icnBtnZoomIn_Click;
-            // 
-            // lblZoom
-            // 
-            lblZoom.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            lblZoom.Location = new System.Drawing.Point(56, 841);
-            lblZoom.Name = "lblZoom";
-            lblZoom.Size = new System.Drawing.Size(100, 39);
-            lblZoom.TabIndex = 32;
-            lblZoom.Text = "100%";
-            lblZoom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // btnAddAllBoosts
             // 
             btnAddAllBoosts.Location = new System.Drawing.Point(727, 261);
@@ -475,16 +433,44 @@ namespace Mids_Reborn.Forms
             btnAddAllBoosts.UseVisualStyleBackColor = true;
             btnAddAllBoosts.Click += btnAddAllBoosts_Click;
             // 
+            // borderPanel4
+            // 
+            borderPanel4.Border.Color = System.Drawing.Color.FromArgb(12, 56, 100);
+            borderPanel4.Border.Style = ButtonBorderStyle.Solid;
+            borderPanel4.Border.Thickness = 1;
+            borderPanel4.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
+            borderPanel4.Controls.Add(timelineCursorZoom1);
+            borderPanel4.Location = new System.Drawing.Point(12, 840);
+            borderPanel4.Name = "borderPanel4";
+            borderPanel4.Size = new System.Drawing.Size(1124, 30);
+            borderPanel4.TabIndex = 34;
+            // 
+            // timelineCursorZoom1
+            // 
+            timelineCursorZoom1.BackColor = System.Drawing.Color.FromArgb(41, 49, 52);
+            timelineCursorZoom1.EndMarkerColor = System.Drawing.Color.FromArgb(255, 32, 32);
+            timelineCursorZoom1.ForeColor = System.Drawing.Color.Gainsboro;
+            timelineCursorZoom1.GridColor = System.Drawing.Color.FromArgb(108, 120, 140);
+            timelineCursorZoom1.HoveredPosColor = System.Drawing.Color.BurlyWood;
+            timelineCursorZoom1.Location = new System.Drawing.Point(3, 3);
+            timelineCursorZoom1.MarkersColor = System.Drawing.Color.FromArgb(147, 199, 99);
+            timelineCursorZoom1.Name = "timelineCursorZoom1";
+            timelineCursorZoom1.Size = new System.Drawing.Size(1118, 24);
+            timelineCursorZoom1.StartMarkerColor = System.Drawing.Color.FromArgb(32, 32, 255);
+            timelineCursorZoom1.TabIndex = 0;
+            timelineCursorZoom1.TabStop = false;
+            timelineCursorZoom1.TextShadowColor = System.Drawing.Color.Black;
+            timelineCursorZoom1.TextSize = 10;
+            timelineCursorZoom1.ViewIntervalChanged += timelineCursorZoom1_ViewIntervalChanged;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(1148, 893);
+            ClientSize = new System.Drawing.Size(1148, 944);
+            Controls.Add(borderPanel4);
             Controls.Add(btnAddAllBoosts);
-            Controls.Add(lblZoom);
-            Controls.Add(icnBtnZoomIn);
-            Controls.Add(icnBtnZoomOut);
             Controls.Add(btnColorsRef);
             Controls.Add(btnClearLastPower);
             Controls.Add(button2);
@@ -521,6 +507,7 @@ namespace Mids_Reborn.Forms
             borderPanel1.ResumeLayout(false);
             borderPanel2.ResumeLayout(false);
             borderPanel3.ResumeLayout(false);
+            borderPanel4.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -556,9 +543,8 @@ namespace Mids_Reborn.Forms
         private Button button2;
         private Button btnClearLastPower;
         private Controls.ImageButtonEx btnColorsRef;
-        private FontAwesome.Sharp.IconButton icnBtnZoomOut;
-        private FontAwesome.Sharp.IconButton icnBtnZoomIn;
-        private Label lblZoom;
         private Button btnAddAllBoosts;
+        private Controls.BorderPanel borderPanel4;
+        private Controls.TimelineCursorZoom timelineCursorZoom1;
     }
 }

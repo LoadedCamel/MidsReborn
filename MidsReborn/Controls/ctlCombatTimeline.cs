@@ -377,11 +377,17 @@ namespace Mids_Reborn.Controls
         //public Size? NaturalSize { get; private set; }
         public List<TimelineItem> Timeline { get; private set; }
 
+        public float MaxTime => Timeline.Count <= 0
+            ? 1
+            : Timeline
+                .Select(p => p.Time + p.PowerSlot.EnhancedPower?.Effects.Max(f => f.Duration))
+                .Max() ?? 1;
+
         private List<string> Boosts;
         private ViewProfiles Profiles;
         private ColorTheme Theme;
         private Dictionary<Rectangle, PowerEffectInfo> ActiveZones;
-        private Point? prevMousePos = null;
+        private Point? prevMousePos;
 
         public ctlCombatTimeline()
         {
@@ -959,15 +965,10 @@ namespace Mids_Reborn.Controls
             var powersRows = distinctPowers
                 .Select((p, i) => new KeyValuePair<string, int>(p, i))
                 .ToDictionary(p => p.Key, p => p.Value);
-            var maxTime = Timeline.Count <= 0
-                ? 1
-                : Timeline
-                    .Select(p => p.Time + p.PowerSlot.EnhancedPower?.Effects.Max(f => f.Duration))
-                    .Max() ?? 1;
-
+            
             var totalItems = powerHeights.Sum();
             var lineThickness = Math.Max(minLineThickness, (int)Math.Round((Height - Math.Max(0, totalItems - 1) * interlineHeight) / (double)totalItems));
-            var hScale = (Width - 2 * padding - textGapLeft) / maxTime; // time -> pixels
+            var hScale = (Width - 2 * padding - textGapLeft) / MaxTime; // time -> pixels
             var totalHeight = powerHeights.Sum() + Math.Max(0, powerHeights.Count - 1) * interlineHeight;
             //var vScale = totalHeight < float.Epsilon ? 1 : (Height - 2 * padding) / totalHeight;
             //NaturalSize = new Size((int)Math.Ceiling(maxTime + 2 * padding), totalHeight);

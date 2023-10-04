@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms
 {
-    public partial class frmRotationHelper : Form
+    public partial class frmRotationHelper : Form, IMessageFilter
     {
         private readonly frmMain myParent;
         private frmTimelineColorRefTable? fTimelineColorRefTable;
@@ -19,14 +21,42 @@ namespace Mids_Reborn.Forms
         private Size NormalGraphSize;
         private float GraphZoom;
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr WindowFromPoint(Point pt);
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+
         public frmRotationHelper(frmMain parent)
         {
             myParent = parent;
             InitializeComponent();
+            Application.AddMessageFilter(this);
             Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
             ctlCombatTimeline1.UseArcanaTime = true;
             ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
             ctlCombatTimeline1.UserBoosts = new List<IPower>();
+        }
+
+        // https://stackoverflow.com/a/10006877
+        public bool PreFilterMessage(ref Message m)
+        {
+            const int WM_MOUSEWHEEL = 0x20a;
+            if (m.Msg != WM_MOUSEWHEEL)
+            {
+                return false;
+            }
+
+            // Find the control at screen position m.LParam
+            var pos = new Point(m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16);
+            var hWnd = WindowFromPoint(pos);
+            if (hWnd == IntPtr.Zero || hWnd == m.HWnd || FromHandle(hWnd) == null)
+            {
+                return false;
+            }
+
+            SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
+
+            return true;
         }
 
         private void frmRotationHelper_Load(object sender, EventArgs e)
@@ -260,6 +290,15 @@ namespace Mids_Reborn.Forms
             lblBoosts.Text = "";
         }
 
+        private void btnCalcTimeline_Click(object sender, EventArgs e)
+        {
+            label4.Visible = true;
+            progressBarEx1.Value = 0;
+            progressBarEx1.Visible = true;
+            Stopwatch = Stopwatch.StartNew();
+            ctlCombatTimeline1.PlacePowers(false);
+        }
+
         private void ctlCombatTimeline1_CalcEnhancedProgress(object sender, float value)
         {
             if (value >= 100 - float.Epsilon)
@@ -270,20 +309,12 @@ namespace Mids_Reborn.Forms
                 Debug.WriteLine($"Place powers on timeline: {Stopwatch.ElapsedMilliseconds} ms");
                 UpdatePowersText(true);
                 ctlCombatTimeline1.Invalidate();
+                timelineCursorZoom1.SetData(ctlCombatTimeline1.Timeline.Select(e => e.Time).Distinct().ToList(), new Interval(ctlCombatTimeline1.MaxTime));
 
                 return;
             }
 
             progressBarEx1.Value = (int)Math.Round(value);
-        }
-
-        private void btnCalcTimeline_Click(object sender, EventArgs e)
-        {
-            label4.Visible = true;
-            progressBarEx1.Value = 0;
-            progressBarEx1.Visible = true;
-            Stopwatch = Stopwatch.StartNew();
-            ctlCombatTimeline1.PlacePowers(false);
         }
 
         private void cbViewProfile_SelectedIndexChanged(object sender, EventArgs e)
@@ -454,8 +485,6 @@ namespace Mids_Reborn.Forms
             imageButtonEx1.UseAlt = isVillain;
             imageButtonEx2.UseAlt = isVillain;
             btnColorsRef.UseAlt = isVillain;
-            icnBtnZoomIn.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
-            icnBtnZoomOut.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
 
             ResumeLayout(true);
         }
@@ -470,60 +499,13 @@ namespace Mids_Reborn.Forms
             imageButtonEx1.UseAlt = isVillain;
             imageButtonEx2.UseAlt = isVillain;
             btnColorsRef.UseAlt = isVillain;
-            icnBtnZoomIn.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
-            icnBtnZoomOut.BackColor = isVillain ? Color.FromArgb(100, 0, 0) : Color.FromArgb(9, 51, 90);
 
             ResumeLayout(true);
         }
 
-        private void icnBtnZoomOut_Click(object sender, EventArgs e)
+        private void timelineCursorZoom1_ViewIntervalChanged(Interval? viewInterval)
         {
-            GraphZoom = GraphZoom switch
-            {
-                500 => 300,
-                300 => 250,
-                250 => 200,
-                200 => 175,
-                175 => 150,
-                150 => 125,
-                125 => 100,
-                100 => 75,
-                75 => 50,
-                50 => 25,
-                25 => 10,
-                _ => 10
-            };
-
-            icnBtnZoomOut.Enabled = GraphZoom > 10;
-            lblZoom.Text = $"{GraphZoom}%";
-
-            ctlCombatTimeline1.Scale(new SizeF(GraphZoom / 100f, GraphZoom / 100f));
-            // ctlCombatTimeline1.Invalidate(); // ???
-        }
-
-        private void icnBtnZoomIn_Click(object sender, EventArgs e)
-        {
-            GraphZoom = GraphZoom switch
-            {
-                10 => 25,
-                25 => 50,
-                50 => 75,
-                75 => 100,
-                100 => 125,
-                125 => 150,
-                150 => 175,
-                175 => 200,
-                200 => 250,
-                250 => 300,
-                300 => 500,
-                _ => 500
-            };
-
-            icnBtnZoomIn.Enabled = GraphZoom < 500;
-            lblZoom.Text = $"{GraphZoom}%";
-
-            ctlCombatTimeline1.Scale(new SizeF(GraphZoom / 100f, GraphZoom / 100f));
-            // ctlCombatTimeline1.Invalidate(); // ???
+            Debug.WriteLine($"Total interval: {(timelineCursorZoom1.TimelineInterval == null ? "null" : timelineCursorZoom1.TimelineInterval)}, view interval: {(viewInterval == null ? "null" : viewInterval)}");
         }
     }
 }
