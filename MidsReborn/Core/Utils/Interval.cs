@@ -87,6 +87,50 @@ namespace Mids_Reborn.Core.Utils
         }
 
         /// <summary>
+        /// Apply an offset on the lower bound of the interval, keep a minimum size to avoid over-shrinking.
+        /// </summary>
+        /// <param name="offset">Offset value to apply</param>
+        /// <param name="minSize">Minimum interval size</param>
+        /// <param name="allowBoundsSwap">Allow bounds to be swapped (move beyond each other)</param>
+        /// <returns>Moved interval</returns>
+        public Interval OffsetStart(float offset, float minSize = 5, bool allowBoundsSwap = true)
+        {
+            if (!allowBoundsSwap)
+            {
+                return new Interval(Math.Min(Start + offset, End - minSize), End);
+            }
+
+            var start = Start + offset <= End
+                ? Math.Min(Start + offset, End - minSize)
+                : Math.Max(Start + offset, End + minSize);
+
+            return new Interval(start, End);
+
+        }
+
+        /// <summary>
+        /// Apply an offset on the upper bound of the interval, keep a minimum size to avoid over-shrinking.
+        /// </summary>
+        /// <param name="offset">Offset value to apply</param>
+        /// <param name="minSize">Minimum interval size</param>
+        /// <param name="allowBoundsSwap">Allow bounds to be swapped (move beyond each other)</param>
+        /// <returns>Moved interval</returns>
+        public Interval OffsetEnd(float offset, float minSize = 5, bool allowBoundsSwap = true)
+        {
+            if (!allowBoundsSwap)
+            {
+                return new Interval(Start, Math.Max(Start + minSize, End + offset));
+            }
+
+            var end = End + offset >= Start
+                ? Math.Max(Start + minSize, End + offset)
+                : Math.Min(Start - minSize, End + offset);
+
+            return new Interval(Start, end);
+
+        }
+
+        /// <summary>
         /// Check if a value is inside the interval
         /// </summary>
         /// <param name="value">Value to check</param>

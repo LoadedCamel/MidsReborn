@@ -2,7 +2,6 @@
 using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
 {
@@ -374,7 +374,6 @@ namespace Mids_Reborn.Controls
         public ViewProfileType Profile { get; set; }
         public bool UseArcanaTime { get; set; }
         public List<string> BuffsLookup { get; }
-        //public Size? NaturalSize { get; private set; }
         public List<TimelineItem> Timeline { get; private set; }
 
         public float MaxTime => Timeline.Count <= 0
@@ -387,7 +386,8 @@ namespace Mids_Reborn.Controls
         private ViewProfiles Profiles;
         private ColorTheme Theme;
         private Dictionary<Rectangle, PowerEffectInfo> ActiveZones;
-        private Point? prevMousePos;
+        private Point? PrevMousePos;
+        private Interval? ViewInterval;
 
         public ctlCombatTimeline()
         {
@@ -409,6 +409,14 @@ namespace Mids_Reborn.Controls
 
             InitializeComponent();
             ItemMouseover += ctlCombatTimeline_ItemMouseover;
+        }
+
+        #region Helper methods
+
+        public void SetView(Interval? viewInterval = null)
+        {
+            ViewInterval = viewInterval;
+            Invalidate();
         }
 
         /// <summary>
@@ -517,7 +525,6 @@ namespace Mids_Reborn.Controls
                 var rechargeTime = previousOccurrence?.PowerSlot.EnhancedPower?.RechargeTime ?? 0;
                 var startTimePrev = previousOccurrence?.Time ?? 0;
                 var timeWait = k == 0 ? 0 : Math.Max(0, startTimePrev + rechargeTime - time);
-                Debug.WriteLine($"Power: {power.BasePower?.FullName}, current time: {time}, start time prev: {startTimePrev}, recharge time: {rechargeTime}, time wait: {timeWait}");
                 Timeline[k].Time = time + timeWait;
                 var tpw = Timeline[k];
                 CalcEnhancedPower(ref tpw, rechargeBoosts);
@@ -784,7 +791,7 @@ namespace Mids_Reborn.Controls
                 {
                     continue;
                 }
-                
+
                 if (Timeline[b.TimelineIndex].Time + b.Duration < timelinePower.Time)
                 {
                     continue;
@@ -925,6 +932,10 @@ namespace Mids_Reborn.Controls
                     select effectTypeCheck).Any();
         }
 
+        #endregion
+
+        #region Drawing process
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -946,10 +957,6 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            Debug.WriteLine($"Distinct powers: {distinctPowers.Count}");
-            Debug.WriteLine($"Timeline:\r\n{string.Join("\r\n", Timeline)}");
-            Debug.WriteLine("\r\n--------------------------\r\n");
-
             const int padding = 8;
             const int minLineThickness = 3;
             const int interlineHeight = 16;
@@ -959,25 +966,21 @@ namespace Mids_Reborn.Controls
             var powerHeights = distinctPowers
                 .Select(p => Timeline
                     .Where(f => f.PowerSlot.EnhancedPower?.FullName == p)
-                    .Select(f => ApplyViewProfile(GroupedFx.AssembleGroupedEffects(f.PowerSlot.EnhancedPower), f.PowerSlot.EnhancedPower, Profile).Count))
+                    .Select(f => ApplyViewProfile(GroupedFx.AssembleGroupedEffects(f.PowerSlot.EnhancedPower),
+                        f.PowerSlot.EnhancedPower, Profile).Count))
                 .Select(p => p.Max())
                 .ToList();
             var powersRows = distinctPowers
                 .Select((p, i) => new KeyValuePair<string, int>(p, i))
                 .ToDictionary(p => p.Key, p => p.Value);
-            
+
             var totalItems = powerHeights.Sum();
-            var lineThickness = Math.Max(minLineThickness, (int)Math.Round((Height - Math.Max(0, totalItems - 1) * interlineHeight) / (double)totalItems));
-            var hScale = (Width - 2 * padding - textGapLeft) / MaxTime; // time -> pixels
-            var totalHeight = powerHeights.Sum() + Math.Max(0, powerHeights.Count - 1) * interlineHeight;
-            //var vScale = totalHeight < float.Epsilon ? 1 : (Height - 2 * padding) / totalHeight;
-            //NaturalSize = new Size((int)Math.Ceiling(maxTime + 2 * padding), totalHeight);
+            var lineThickness = Math.Max(minLineThickness, (int) Math.Round((Height - Math.Max(0, totalItems - 1) * interlineHeight) / (double) totalItems));
+            var hScale = (Width - 2 * padding - textGapLeft) / (ViewInterval?.Length ?? MaxTime); // time -> pixels
+            var tOffset = ViewInterval?.Start * hScale ?? 0;
+            //var totalHeight = powerHeights.Sum() + Math.Max(0, powerHeights.Count - 1) * interlineHeight;
 
             var font = new Font(new FontFamily("Microsoft Sans Serif"), normalTextSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-            Debug.WriteLine($"Power Heights: [{string.Join(", ", powerHeights)}], total: {powerHeights.Sum()}");
-            Debug.WriteLine($"Power Rows:\r\n{string.Join("\r\n", powersRows.Select(p => $"{p.Key} => {p.Value}"))}");
-            Debug.WriteLine($"Line thickness: {lineThickness}");
 
             var orderedTimeline = Timeline
                 .OrderBy(f => f.PowerSlot.EnhancedPower == null ? 9999 : powersRows[f.PowerSlot.EnhancedPower.FullName])
@@ -992,9 +995,6 @@ namespace Mids_Reborn.Controls
             {
                 var pIndex = powersRows[p.PowerSlot.EnhancedPower?.FullName];
                 var vOffset = padding + (pIndex == 0 ? 0 : powerHeights.Take(pIndex - 1).Sum()) * lineThickness + interlineHeight * pIndex;
-
-                Debug.WriteLine("\r\n=====================\r\n");
-                Debug.WriteLine($"--- Drawing power {p.PowerSlot.BasePower?.FullName} - pIndex: {pIndex}, vOffset: {vOffset}, EnhancedPower is null: {p.PowerSlot.EnhancedPower == null}");
 
                 if (p.PowerSlot.EnhancedPower == null)
                 {
@@ -1022,18 +1022,14 @@ namespace Mids_Reborn.Controls
                                     or Enums.eEffectType.Mez))
                     .ToDictionary(f => f.Key, f => f.Value);
 
-                Debug.WriteLine("");
-                Debug.WriteLine($"GroupedFX count (filtered with {Profile} profile): {gfx.Count}");
-
                 for (var i = 0; i < gfx.Count; i++)
                 {
                     if (i == 0)
                     {
                         // Draw power name text
-                        Debug.WriteLine($"TextRendererExt.DrawOutlineText(g, \"{p.PowerSlot.EnhancedPower.DisplayName}\", font, <Rectangle>{{0, {Math.Round(vOffset + vp - normalTextSize / 2f)}, {textGapLeft}, {Math.Round(Height - padding - vOffset - vp + normalTextSize / 2f)}}}, shadowColor, textColor, TextFormatFlags.Right | TextFormatFlags.Top)");
                         TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.DisplayName, font,
-                            new Rectangle(0, (int)Math.Round(vOffset + vp - normalTextSize / 2f), textGapLeft,
-                                (int)Math.Round(Height - padding - vOffset - vp + normalTextSize / 2f)), shadowColor,
+                            new Rectangle(0, (int) Math.Round(vOffset + vp - normalTextSize / 2f), textGapLeft,
+                                (int) Math.Round(Height - padding - vOffset - vp + normalTextSize / 2f)), shadowColor,
                             textColor, TextFormatFlags.Right | TextFormatFlags.Top);
                     }
 
@@ -1054,36 +1050,56 @@ namespace Mids_Reborn.Controls
                     if (gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration < float.Epsilon)
                     {
                         // Zero-duration effects: draw hollow ring
-                        var ringRect = new RectangleF(padding + textGapLeft + p.Time * hScale - 2 * lineThickness, vOffset + vp - 1.5f * lineThickness, 4 * lineThickness, 4 * lineThickness);
-                        Debug.WriteLine($"gfx[{i}] - DrawEllipse(x:{ringRect.X}, y:{ringRect.Y}, w:{ringRect.Width}, h:{ringRect.Height}), index:{index}, maxIndex:{maxIndex}");
-                        g.DrawEllipse(linePen, ringRect);
-                        ActiveZones.Add(
-                            key: new Rectangle((int)Math.Floor(ringRect.X),
-                                (int)Math.Floor(ringRect.Y),
-                                (int)Math.Ceiling(ringRect.Width),
-                                (int)Math.Ceiling(ringRect.Height)),
-                            value: new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
+                        if (padding + textGapLeft + p.Time * hScale - tOffset >= textGapLeft)
+                        {
+                            var ringRect = new RectangleF(
+                                Math.Max(textGapLeft,
+                                    padding + textGapLeft + p.Time * hScale - 2 * lineThickness - tOffset),
+                                vOffset + vp - 1.5f * lineThickness, 4 * lineThickness, 4 * lineThickness);
+                            g.DrawEllipse(linePen, ringRect);
+                            ActiveZones.Add(
+                                key: new Rectangle((int) Math.Floor(ringRect.X),
+                                    (int) Math.Floor(ringRect.Y),
+                                    (int) Math.Ceiling(ringRect.Width),
+                                    (int) Math.Ceiling(ringRect.Height)),
+                                value: new PowerEffectInfo {TimelineItem = p, GroupedFx = gfx[i]});
+                        }
                     }
                     else
                     {
                         // DoTs, HoTs + effects with duration > 0: draw line
-                        var barPoint1 = new PointF(padding + textGapLeft + p.Time * hScale, vOffset + vp);
-                        var barPoint2 = new PointF(padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale, vOffset + vp);
-                        Debug.WriteLine($"gfx[{i}] - FillRectangle(x:{barPoint1.X}, y:{barPoint1.Y}, w:{Math.Abs(barPoint2.X - barPoint1.X)}, h:{lineThickness}), index:{index}, maxIndex:{maxIndex}");
-                        //g.DrawLine(linePen, barPoint1.X, barPoint1.Y, barPoint2.X, barPoint2.Y);
-                        g.FillRectangle(barBrush, barPoint1.X, barPoint1.Y, Math.Abs(barPoint2.X - barPoint1.X), lineThickness);
-                        ActiveZones.Add(
-                            key: new Rectangle((int)Math.Floor(barPoint1.X),
-                                (int)Math.Floor(barPoint1.Y),
-                                (int)Math.Ceiling(Math.Abs(barPoint2.X - barPoint1.X)),
-                                lineThickness),
-                            value: new PowerEffectInfo { TimelineItem = p, GroupedFx = gfx[i] });
+                        var x1 = padding + textGapLeft + p.Time * hScale - tOffset;
+                        var x2 = padding + textGapLeft + (p.Time + gfx[i].GetEffectAt(p.PowerSlot.EnhancedPower).Duration) * hScale - tOffset;
+                        var barPoint1 = new PointF(Math.Max(textGapLeft, x1), vOffset + vp);
+                        var barPoint2 = new PointF(Math.Max(textGapLeft, x2), vOffset + vp);
+                        if (x1 >= textGapLeft & x2 >= textGapLeft)
+                        {
+                            //g.DrawLine(linePen, barPoint1.X, barPoint1.Y, barPoint2.X, barPoint2.Y);
+                            g.FillRectangle(barBrush, barPoint1.X, barPoint1.Y, Math.Abs(barPoint2.X - barPoint1.X),
+                                lineThickness);
+                            ActiveZones.Add(
+                                key: new Rectangle((int) Math.Floor(barPoint1.X),
+                                    (int) Math.Floor(barPoint1.Y),
+                                    (int) Math.Ceiling(Math.Abs(barPoint2.X - barPoint1.X)),
+                                    lineThickness),
+                                value: new PowerEffectInfo {TimelineItem = p, GroupedFx = gfx[i]});
+                        }
                     }
 
                     vp += lineThickness;
                 }
+
+                TextRendererExt.DrawOutlineText(g,
+                    $"Time interval: [{(ViewInterval == null ? $"0 s. - {MaxTime:####0.##} s." : $"{ViewInterval.Start:####0.##} s. - {ViewInterval.End:####0.##} s.")}]",
+                    font, new Rectangle(3, 3, Width - 6, 24), shadowColor, textColor,
+                    TextFormatFlags.Right | TextFormatFlags.Top);
             }
         }
+
+
+        #endregion
+
+        #region Event handlers
 
         private void ctlCombatTimeline_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1094,30 +1110,30 @@ namespace Mids_Reborn.Controls
                     continue;
                 }
 
-                if (prevMousePos != null && prevMousePos?.X == e.X & prevMousePos?.Y == e.Y)
+                if (PrevMousePos != null && PrevMousePos?.X == e.X & PrevMousePos?.Y == e.Y)
                 {
                     return;
                 }
 
                 ItemMouseover?.Invoke(this, z.Value);
-                prevMousePos = new Point(e.X, e.Y);
+                PrevMousePos = new Point(e.X, e.Y);
 
                 return;
             }
 
-            /*if (prevMousePos != null && prevMousePos?.X == e.X & prevMousePos?.Y == e.Y)
+            /*if (PrevMousePos != null && PrevMousePos?.X == e.X & PrevMousePos?.Y == e.Y)
             {
                 return;
             }*/
 
             ItemMouseover?.Invoke(this, null);
-            prevMousePos = new Point(e.X, e.Y);
+            PrevMousePos = new Point(e.X, e.Y);
         }
 
         private void ctlCombatTimeline_MouseLeave(object sender, EventArgs e)
         {
             ItemMouseover?.Invoke(this, null);
-            prevMousePos = null;
+            PrevMousePos = null;
         }
 
         private void ctlCombatTimeline_ItemMouseover(object sender, PowerEffectInfo? powerInfo)
@@ -1128,5 +1144,8 @@ namespace Mids_Reborn.Controls
 
             toolTip1.SetToolTip(this, tip);
         }
+
+        #endregion
+		
     }
 }

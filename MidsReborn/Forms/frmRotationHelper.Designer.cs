@@ -460,7 +460,7 @@ namespace Mids_Reborn.Forms
             timelineCursorZoom1.TabIndex = 0;
             timelineCursorZoom1.TabStop = false;
             timelineCursorZoom1.TextShadowColor = System.Drawing.Color.Black;
-            timelineCursorZoom1.TextSize = 10;
+            timelineCursorZoom1.TextSize = 10F;
             timelineCursorZoom1.ViewIntervalChanged += timelineCursorZoom1_ViewIntervalChanged;
             // 
             // frmRotationHelper

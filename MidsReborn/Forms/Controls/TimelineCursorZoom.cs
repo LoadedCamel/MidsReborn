@@ -2,7 +2,6 @@
 using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core.Utils;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -15,14 +14,19 @@ namespace Mids_Reborn.Forms.Controls
         #region Custom events
 
         public delegate void ViewIntervalChangedEventHandler(Interval? viewInterval);
-
         public event ViewIntervalChangedEventHandler? ViewIntervalChanged;
 
         public delegate void HoveredPosChangedEventHandler(float? time, int? pixelValue);
-
         public event HoveredPosChangedEventHandler HoveredPosChanged;
 
         #endregion
+
+        private enum DragTargetType
+        {
+            Interval,
+            LowerBound,
+            UpperBound
+        }
 
         public Color GridColor { get; set; }
         public Color MarkersColor { get; set; }
@@ -38,6 +42,7 @@ namespace Mids_Reborn.Forms.Controls
         private int? HoveredPos;
         private bool HideHovered;
         private int? DragPos;
+        private DragTargetType? DragTarget;
 
         private float Hscale => TimelineInterval == null || TimelineInterval.End < float.Epsilon
             ? 1
@@ -46,8 +51,8 @@ namespace Mids_Reborn.Forms.Controls
         public TimelineCursorZoom()
         {
             SetStyle(ControlStyles.DoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-            
-            // Default settings;
+
+            // Default settings
             BackColor = Color.FromArgb(41, 49, 52);
             GridColor = Color.FromArgb(108, 120, 140);
             MarkersColor = Color.FromArgb(147, 199, 99); // Color.FromArgb(85, 228, 57); // ???
@@ -137,9 +142,11 @@ namespace Mids_Reborn.Forms.Controls
             // Draw view slice brackets
             if (ViewInterval != null && ViewInterval.Length < TimelineInterval.Length)
             {
+                // Add shadow for areas outside of bounds
                 g.FillRectangle(maskBrush, new RectangleF(0, 0, ViewInterval.Start * Hscale, Height));
                 g.FillRectangle(maskBrush, new RectangleF(ViewInterval.End * Hscale, 0, Width - ViewInterval.End * Hscale, Height));
 
+                // Replace with DrawPath
                 g.DrawLine(startMarkerBrush, new PointF(ViewInterval.Start * Hscale, 4),
                     new PointF(ViewInterval.Start * Hscale + 4, 4));
                 g.DrawLine(startMarkerBrush, new PointF(ViewInterval.Start * Hscale, 4),
@@ -170,7 +177,7 @@ namespace Mids_Reborn.Forms.Controls
                 var x = i == 0
                     ? (int)Math.Round(i * Hscale + 2)
                     : (int)Math.Round(i * Hscale);
-                
+
                 if ((i == 0 ? x + textSize.Width : x + textSize.Width / 2f + 1) > Width - 2)
                 {
                     continue;
@@ -209,8 +216,6 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            Debug.WriteLine($"{Name} - MouseMove(Location: ({e.X}, {e.Y}), HideHovered: {HideHovered}, DragPos: {(DragPos == null ? "<null>" : DragPos)})");
-
             HoveredPosChanged?.Invoke(null, null);
 
             if (DragPos == null)
@@ -223,18 +228,30 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            ViewInterval = (ViewInterval ?? TimelineInterval)?.Offset(e.X - DragPos.Value).MinMax(TimelineInterval);
+            if (DragTarget == null)
+            {
+                return;
+            }
+
+            var valOffset = (e.X - DragPos.Value) / Hscale;
+            ViewInterval = ViewInterval ?? TimelineInterval;
+            ViewInterval = DragTarget switch
+            {
+                DragTargetType.LowerBound => ViewInterval?.OffsetStart(valOffset).MinMax(TimelineInterval),
+                DragTargetType.UpperBound => ViewInterval?.OffsetEnd(valOffset).MinMax(TimelineInterval),
+                DragTargetType.Interval => ViewInterval?.Offset(valOffset).MinMax(TimelineInterval),
+                _ => ViewInterval
+            };
+
             HoveredPos = e.X;
             DragPos = e.X;
+            ViewIntervalChanged?.Invoke(ViewInterval);
 
             Invalidate();
-
-            ViewIntervalChanged?.Invoke(ViewInterval);
         }
 
         private void TimelineCursorZoom_MouseLeave(object sender, EventArgs e)
         {
-            Debug.WriteLine($"{Name} - MouseLeave()");
             HoveredPos = null;
             HoveredPosChanged?.Invoke(null, null);
             Invalidate();
@@ -242,15 +259,12 @@ namespace Mids_Reborn.Forms.Controls
 
         private void TimelineCursorZoom_MouseWheel(object? sender, MouseEventArgs e)
         {
-            Debug.WriteLine($"{Name} - MouseWheel(Delta: {e.Delta})");
-
             if (TimelineInterval == null)
             {
                 return;
             }
 
             ViewInterval ??= new Interval(TimelineInterval);
-            Debug.WriteLine($"  ViewInterval: {ViewInterval} (Center: {ViewInterval.Center})");
 
             switch (e.Delta)
             {
@@ -272,15 +286,12 @@ namespace Mids_Reborn.Forms.Controls
                     return;
             }
 
-            Debug.WriteLine($"  New ViewInterval: {ViewInterval} (Center: {ViewInterval.Center})");
-
             ViewIntervalChanged?.Invoke(ViewInterval);
             Invalidate();
         }
 
         private void TimelineCursorZoom_MouseDown(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine($"{Name} - MouseDown(Button: {e.Button})");
             if (TimelineInterval == null)
             {
                 return;
@@ -292,7 +303,22 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             ViewInterval ??= new Interval(TimelineInterval);
-            if (!ViewInterval.Scale(Hscale).Contains(e.X))
+
+            const int bracketGap = 4;
+            var pixelViewInterval = ViewInterval.Scale(Hscale);
+            var pixelBar = new Interval(Width);
+            var lowerBracketInterval = new Interval(pixelViewInterval.Start - bracketGap, pixelViewInterval.Start + bracketGap).MinMax(pixelBar);
+            var upperBracketInterval = new Interval(pixelViewInterval.End - bracketGap, pixelViewInterval.End + bracketGap).MinMax(pixelBar);
+
+            DragTarget = e.X switch
+            {
+                _ when lowerBracketInterval.Contains(e.X) => DragTargetType.LowerBound,
+                _ when upperBracketInterval.Contains(e.X) => DragTargetType.UpperBound,
+                _ when pixelViewInterval.Contains(e.X) => DragTargetType.Interval,
+                _ => null
+            };
+
+            if (DragTarget == null)
             {
                 return;
             }
@@ -303,12 +329,12 @@ namespace Mids_Reborn.Forms.Controls
 
         private void TimelineCursorZoom_MouseUp(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine($"{Name} - MouseUp(Button: {e.Button})");
             if (e.Button != MouseButtons.Left)
             {
                 return;
             }
 
+            DragTarget = null;
             HideHovered = false;
         }
 

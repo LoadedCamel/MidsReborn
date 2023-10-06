@@ -505,7 +505,7 @@ namespace Mids_Reborn.Forms
 
         private void timelineCursorZoom1_ViewIntervalChanged(Interval? viewInterval)
         {
-            Debug.WriteLine($"Total interval: {(timelineCursorZoom1.TimelineInterval == null ? "null" : timelineCursorZoom1.TimelineInterval)}, view interval: {(viewInterval == null ? "null" : viewInterval)}");
+            ctlCombatTimeline1.SetView(viewInterval);
         }
     }
 }
