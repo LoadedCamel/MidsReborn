@@ -163,7 +163,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             // Draw hover indicator
-            if (HoveredPos != null)
+            if (HoveredPos != null && !HideHovered)
             {
                 using var hoveredIndicatorBrush = new Pen(new SolidBrush(HoveredPosColor), 1);
                 g.DrawLine(hoveredIndicatorBrush, new Point(HoveredPos.Value, 0), new Point(HoveredPos.Value, Height));
