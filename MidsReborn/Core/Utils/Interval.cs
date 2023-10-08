@@ -54,12 +54,13 @@ namespace Mids_Reborn.Core.Utils
         /// Scale interval by a factor, keeping the center of the segment identical.
         /// </summary>
         /// <param name="factor">Scale factor</param>
+        /// <param name="minLength">Minimum length to keep</param>
         /// <returns>Rescaled interval</returns>
-        public Interval ScaleCenter(float factor)
+        public Interval ScaleCenter(float factor, float minLength = 5)
         {
             var dist2 = Math.Abs(Center - Start);
 
-            return new Interval(Center - dist2 * factor, Center + dist2 * factor);
+            return new Interval(Center - Math.Max(minLength / 2f, dist2 * factor), Center + Math.Max(minLength / 2f, dist2 * factor));
         }
 
         /// <summary>

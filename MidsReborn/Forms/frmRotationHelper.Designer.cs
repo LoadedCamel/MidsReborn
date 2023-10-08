@@ -64,6 +64,8 @@ namespace Mids_Reborn.Forms
             btnAddAllBoosts = new Button();
             borderPanel4 = new Controls.BorderPanel();
             timelineCursorZoom1 = new Controls.TimelineCursorZoom();
+            ibxZoomOut = new Controls.ImageButtonEx();
+            ibxZoomIn = new Controls.ImageButtonEx();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
@@ -308,6 +310,7 @@ namespace Mids_Reborn.Forms
             ctlCombatTimeline1.UseArcanaTime = true;
             ctlCombatTimeline1.UserBoosts = (System.Collections.Generic.List<Core.IPower>)resources.GetObject("ctlCombatTimeline1.UserBoosts");
             ctlCombatTimeline1.CalcEnhancedProgress += ctlCombatTimeline1_CalcEnhancedProgress;
+            ctlCombatTimeline1.SetZoom += ctlCombatTimeline1_SetZoom;
             // 
             // borderPanel3
             // 
@@ -463,12 +466,66 @@ namespace Mids_Reborn.Forms
             timelineCursorZoom1.TextSize = 10F;
             timelineCursorZoom1.ViewIntervalChanged += timelineCursorZoom1_ViewIntervalChanged;
             // 
+            // ibxZoomOut
+            // 
+            ibxZoomOut.BackgroundImageLayout = ImageLayout.None;
+            ibxZoomOut.CurrentText = "-";
+            ibxZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibxZoomOut.ForeColor = System.Drawing.Color.WhiteSmoke;
+            ibxZoomOut.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibxZoomOut.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibxZoomOut.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibxZoomOut.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibxZoomOut.Location = new System.Drawing.Point(30, 896);
+            ibxZoomOut.Lock = false;
+            ibxZoomOut.Name = "ibxZoomOut";
+            ibxZoomOut.Size = new System.Drawing.Size(40, 30);
+            ibxZoomOut.TabIndex = 35;
+            ibxZoomOut.Text = "-";
+            ibxZoomOut.TextOutline.Color = System.Drawing.Color.Black;
+            ibxZoomOut.TextOutline.Width = 2;
+            ibxZoomOut.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            ibxZoomOut.ToggleText.Indeterminate = "Indeterminate State";
+            ibxZoomOut.ToggleText.ToggledOff = "ToggledOff State";
+            ibxZoomOut.ToggleText.ToggledOn = "ToggledOn State";
+            ibxZoomOut.UseAlt = false;
+            ibxZoomOut.Visible = false;
+            ibxZoomOut.Click += ibxZoomOut_Click;
+            // 
+            // ibxZoomIn
+            // 
+            ibxZoomIn.BackgroundImageLayout = ImageLayout.None;
+            ibxZoomIn.CurrentText = "+";
+            ibxZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibxZoomIn.ForeColor = System.Drawing.Color.WhiteSmoke;
+            ibxZoomIn.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibxZoomIn.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibxZoomIn.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibxZoomIn.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibxZoomIn.Location = new System.Drawing.Point(95, 896);
+            ibxZoomIn.Lock = false;
+            ibxZoomIn.Name = "ibxZoomIn";
+            ibxZoomIn.Size = new System.Drawing.Size(40, 30);
+            ibxZoomIn.TabIndex = 36;
+            ibxZoomIn.Text = "+";
+            ibxZoomIn.TextOutline.Color = System.Drawing.Color.Black;
+            ibxZoomIn.TextOutline.Width = 2;
+            ibxZoomIn.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            ibxZoomIn.ToggleText.Indeterminate = "Indeterminate State";
+            ibxZoomIn.ToggleText.ToggledOff = "ToggledOff State";
+            ibxZoomIn.ToggleText.ToggledOn = "ToggledOn State";
+            ibxZoomIn.UseAlt = false;
+            ibxZoomIn.Visible = false;
+            ibxZoomIn.Click += ibxZoomIn_Click;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(1148, 944);
+            Controls.Add(ibxZoomIn);
+            Controls.Add(ibxZoomOut);
             Controls.Add(borderPanel4);
             Controls.Add(btnAddAllBoosts);
             Controls.Add(btnColorsRef);
@@ -546,5 +603,7 @@ namespace Mids_Reborn.Forms
         private Button btnAddAllBoosts;
         private Controls.BorderPanel borderPanel4;
         private Controls.TimelineCursorZoom timelineCursorZoom1;
+        private Controls.ImageButtonEx ibxZoomOut;
+        private Controls.ImageButtonEx ibxZoomIn;
     }
 }

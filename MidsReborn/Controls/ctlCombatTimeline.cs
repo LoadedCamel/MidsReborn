@@ -23,6 +23,9 @@ namespace Mids_Reborn.Controls
         public delegate void ItemMouseoverEventHandler(object sender, PowerEffectInfo? powerInfo);
         public event ItemMouseoverEventHandler? ItemMouseover;
 
+        public delegate void SetZoomEventHandler(object sender, Interval? viewInterval);
+        public event SetZoomEventHandler? SetZoom;
+
         #endregion
 
         #region Enums
@@ -932,6 +935,101 @@ namespace Mids_Reborn.Controls
                     select effectTypeCheck).Any();
         }
 
+        /// <summary>
+        /// Checks if the view interval can be zoomed out.
+        /// </summary>
+        /// <returns>True if ViewInterval.Length is lower than MaxTime</returns>
+        public bool MaxZoomOut()
+        {
+            return ViewInterval == null || ViewInterval.Length >= MaxTime;
+        }
+
+        /// <summary>
+        /// Checks if the view interval can be zoomed in.
+        /// </summary>
+        /// <returns>True if ViewInterval.Length > 5</returns>
+        public bool MaxZoomIn()
+        {
+            return ViewInterval is {Length: <= 5};
+        }
+
+        /// <summary>
+        /// Zooms in, by a defined factor.
+        /// </summary>
+        /// <remarks>Factor must be in ]0; 1[ and will shrink the view interval by this value.</remarks>
+        /// <param name="redraw">Performs a redraw when done</param>
+        /// <param name="factor">Scale factor</param>
+        public void ZoomIn(bool redraw = false, float factor = 0.8f)
+        {
+            if (Math.Abs(factor) <= 0.01)
+            {
+                return;
+            }
+
+            if (factor is < 0 or >= 1)
+            {
+                return;
+            }
+
+            if (MaxZoomIn())
+            {
+                return;
+            }
+
+            ViewInterval ??= new Interval(MaxTime);
+            ViewInterval = ViewInterval.ScaleCenter(factor);
+
+            SetZoom?.Invoke(this, ViewInterval);
+
+            if (!redraw)
+            {
+                return;
+            }
+
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Zooms out, by a defined factor.
+        /// </summary>
+        /// <remarks>Factor must be in ]0; 1[ and will grow the view interval by the inverse of this value.</remarks>
+        /// <param name="redraw">Performs a redraw when done</param>
+        /// <param name="factor">Scale factor</param>
+        public void ZoomOut(bool redraw = false, float factor = 0.8f)
+        {
+            if (Math.Abs(factor) <= 0.01)
+            {
+                return;
+            }
+
+            if (factor is < 0 or >= 1)
+            {
+                return;
+            }
+
+            if (MaxZoomOut())
+            {
+                return;
+            }
+
+            var timelineInterval = new Interval(MaxTime);
+            ViewInterval ??= timelineInterval;
+            ViewInterval = ViewInterval.ScaleCenter(1 / factor).MinMax(timelineInterval);
+            if (Math.Abs(ViewInterval.Length - timelineInterval.Length) <= 0.01)
+            {
+                ViewInterval = null;
+            }
+
+            SetZoom?.Invoke(this, ViewInterval);
+
+            if (!redraw)
+            {
+                return;
+            }
+
+            Invalidate();
+        }
+
         #endregion
 
         #region Drawing process
@@ -1146,6 +1244,6 @@ namespace Mids_Reborn.Controls
         }
 
         #endregion
-		
+
     }
 }

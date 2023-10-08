@@ -292,6 +292,11 @@ namespace Mids_Reborn.Forms
 
         private void btnCalcTimeline_Click(object sender, EventArgs e)
         {
+            if (ctlCombatTimeline1.Powers.Count <= 0)
+            {
+                return;
+            }
+
             label4.Visible = true;
             progressBarEx1.Value = 0;
             progressBarEx1.Visible = true;
@@ -310,6 +315,8 @@ namespace Mids_Reborn.Forms
                 UpdatePowersText(true);
                 ctlCombatTimeline1.Invalidate();
                 timelineCursorZoom1.SetData(ctlCombatTimeline1.Timeline.Select(e => e.Time).Distinct().ToList(), new Interval(ctlCombatTimeline1.MaxTime));
+                ibxZoomIn.Visible = !ctlCombatTimeline1.MaxZoomIn();
+                ibxZoomOut.Visible = !ctlCombatTimeline1.MaxZoomOut();
 
                 return;
             }
@@ -506,6 +513,35 @@ namespace Mids_Reborn.Forms
         private void timelineCursorZoom1_ViewIntervalChanged(Interval? viewInterval)
         {
             ctlCombatTimeline1.SetView(viewInterval);
+        }
+
+        private void ibxZoomOut_Click(object sender, EventArgs e)
+        {
+            if (ctlCombatTimeline1.MaxZoomOut())
+            {
+                return;
+            }
+
+            ctlCombatTimeline1.ZoomOut();
+            ibxZoomIn.Visible = !ctlCombatTimeline1.MaxZoomIn();
+            ibxZoomOut.Visible = !ctlCombatTimeline1.MaxZoomOut();
+        }
+
+        private void ibxZoomIn_Click(object sender, EventArgs e)
+        {
+            if (ctlCombatTimeline1.MaxZoomIn())
+            {
+                return;
+            }
+
+            ctlCombatTimeline1.ZoomIn();
+            ibxZoomIn.Visible = !ctlCombatTimeline1.MaxZoomIn();
+            ibxZoomOut.Visible = !ctlCombatTimeline1.MaxZoomOut();
+        }
+
+        private void ctlCombatTimeline1_SetZoom(object sender, Interval? viewInterval)
+        {
+            timelineCursorZoom1.SetView(viewInterval);
         }
     }
 }

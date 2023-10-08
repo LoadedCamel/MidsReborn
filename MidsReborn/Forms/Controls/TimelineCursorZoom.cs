@@ -82,6 +82,19 @@ namespace Mids_Reborn.Forms.Controls
             Invalidate();
         }
 
+        public void SetView(Interval? viewInterval, bool redraw = true)
+        {
+            ViewInterval = viewInterval;
+            ViewIntervalChanged?.Invoke(ViewInterval);
+
+            if (!redraw)
+            {
+                return;
+            }
+
+            Invalidate();
+        }
+
         #region Draw routine
 
         protected override void OnPaint(PaintEventArgs e)
