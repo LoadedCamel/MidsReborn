@@ -76,16 +76,16 @@
             btnCancel = new System.Windows.Forms.Button();
             btnOkay = new System.Windows.Forms.Button();
             groupBox2 = new System.Windows.Forms.GroupBox();
-            checkBox1 = new System.Windows.Forms.CheckBox();
-            checkBox2 = new System.Windows.Forms.CheckBox();
-            checkBox3 = new System.Windows.Forms.CheckBox();
-            checkBox4 = new System.Windows.Forms.CheckBox();
-            checkBox5 = new System.Windows.Forms.CheckBox();
-            checkBox6 = new System.Windows.Forms.CheckBox();
-            checkBox7 = new System.Windows.Forms.CheckBox();
-            checkBox8 = new System.Windows.Forms.CheckBox();
-            checkBox9 = new System.Windows.Forms.CheckBox();
             checkBox10 = new System.Windows.Forms.CheckBox();
+            checkBox9 = new System.Windows.Forms.CheckBox();
+            checkBox8 = new System.Windows.Forms.CheckBox();
+            checkBox7 = new System.Windows.Forms.CheckBox();
+            checkBox6 = new System.Windows.Forms.CheckBox();
+            checkBox5 = new System.Windows.Forms.CheckBox();
+            checkBox4 = new System.Windows.Forms.CheckBox();
+            checkBox3 = new System.Windows.Forms.CheckBox();
+            checkBox2 = new System.Windows.Forms.CheckBox();
+            checkBox1 = new System.Windows.Forms.CheckBox();
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)udBasePerception).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udBaseRunSpeed).BeginInit();
@@ -274,7 +274,7 @@
             // 
             // udMaxSlots
             // 
-            udMaxSlots.Location = new System.Drawing.Point(92, 230);
+            udMaxSlots.Location = new System.Drawing.Point(137, 217);
             udMaxSlots.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxSlots.Name = "udMaxSlots";
             udMaxSlots.Size = new System.Drawing.Size(60, 23);
@@ -291,7 +291,7 @@
             // 
             // label47
             // 
-            label47.Location = new System.Drawing.Point(6, 228);
+            label47.Location = new System.Drawing.Point(51, 215);
             label47.Name = "label47";
             label47.Size = new System.Drawing.Size(80, 20);
             label47.TabIndex = 67;
@@ -308,9 +308,9 @@
             // 
             // label39
             // 
-            label39.Location = new System.Drawing.Point(9, 108);
+            label39.Location = new System.Drawing.Point(7, 108);
             label39.Name = "label39";
-            label39.Size = new System.Drawing.Size(99, 20);
+            label39.Size = new System.Drawing.Size(124, 20);
             label39.TabIndex = 69;
             label39.Text = "Max Run Speed:";
             label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -318,7 +318,7 @@
             // udMaxRunSpeed
             // 
             udMaxRunSpeed.DecimalPlaces = 2;
-            udMaxRunSpeed.Location = new System.Drawing.Point(114, 109);
+            udMaxRunSpeed.Location = new System.Drawing.Point(133, 109);
             udMaxRunSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxRunSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxRunSpeed.Name = "udMaxRunSpeed";
@@ -328,18 +328,18 @@
             // 
             // label41
             // 
-            label41.Location = new System.Drawing.Point(9, 57);
+            label41.Location = new System.Drawing.Point(7, 57);
             label41.Name = "label41";
-            label41.Size = new System.Drawing.Size(99, 20);
+            label41.Size = new System.Drawing.Size(124, 20);
             label41.TabIndex = 65;
             label41.Text = "Max Fly Speed:";
             label41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label42
             // 
-            label42.Location = new System.Drawing.Point(9, 83);
+            label42.Location = new System.Drawing.Point(7, 83);
             label42.Name = "label42";
-            label42.Size = new System.Drawing.Size(99, 20);
+            label42.Size = new System.Drawing.Size(124, 20);
             label42.TabIndex = 67;
             label42.Text = "Max Jump Speed:";
             label42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -347,7 +347,7 @@
             // udMaxFlySpeed
             // 
             udMaxFlySpeed.DecimalPlaces = 2;
-            udMaxFlySpeed.Location = new System.Drawing.Point(114, 57);
+            udMaxFlySpeed.Location = new System.Drawing.Point(133, 57);
             udMaxFlySpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxFlySpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxFlySpeed.Name = "udMaxFlySpeed";
@@ -358,7 +358,7 @@
             // udMaxJumpSpeed
             // 
             udMaxJumpSpeed.DecimalPlaces = 2;
-            udMaxJumpSpeed.Location = new System.Drawing.Point(114, 83);
+            udMaxJumpSpeed.Location = new System.Drawing.Point(133, 83);
             udMaxJumpSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxJumpSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxJumpSpeed.Name = "udMaxJumpSpeed";
@@ -598,85 +598,15 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Enabled Incarnates";
             // 
-            // checkBox1
+            // checkBox10
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new System.Drawing.Point(17, 30);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new System.Drawing.Size(57, 19);
-            checkBox1.TabIndex = 1;
-            checkBox1.Text = "Alpha";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            checkBox2.AutoSize = true;
-            checkBox2.Location = new System.Drawing.Point(80, 30);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new System.Drawing.Size(65, 19);
-            checkBox2.TabIndex = 2;
-            checkBox2.Text = "Destiny";
-            checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            checkBox3.AutoSize = true;
-            checkBox3.Location = new System.Drawing.Point(151, 30);
-            checkBox3.Name = "checkBox3";
-            checkBox3.Size = new System.Drawing.Size(66, 19);
-            checkBox3.TabIndex = 3;
-            checkBox3.Text = "Genesis";
-            checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            checkBox4.AutoSize = true;
-            checkBox4.Location = new System.Drawing.Point(223, 30);
-            checkBox4.Name = "checkBox4";
-            checkBox4.Size = new System.Drawing.Size(62, 19);
-            checkBox4.TabIndex = 4;
-            checkBox4.Text = "Hybrid";
-            checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            checkBox5.AutoSize = true;
-            checkBox5.Location = new System.Drawing.Point(291, 30);
-            checkBox5.Name = "checkBox5";
-            checkBox5.Size = new System.Drawing.Size(72, 19);
-            checkBox5.TabIndex = 5;
-            checkBox5.Text = "Interface";
-            checkBox5.UseVisualStyleBackColor = true;
-            // 
-            // checkBox6
-            // 
-            checkBox6.AutoSize = true;
-            checkBox6.Location = new System.Drawing.Point(18, 55);
-            checkBox6.Name = "checkBox6";
-            checkBox6.Size = new System.Drawing.Size(85, 19);
-            checkBox6.TabIndex = 6;
-            checkBox6.Text = "Judgement";
-            checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // checkBox7
-            // 
-            checkBox7.AutoSize = true;
-            checkBox7.Location = new System.Drawing.Point(109, 55);
-            checkBox7.Name = "checkBox7";
-            checkBox7.Size = new System.Drawing.Size(49, 19);
-            checkBox7.TabIndex = 7;
-            checkBox7.Text = "Lore";
-            checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // checkBox8
-            // 
-            checkBox8.AutoSize = true;
-            checkBox8.Location = new System.Drawing.Point(164, 55);
-            checkBox8.Name = "checkBox8";
-            checkBox8.Size = new System.Drawing.Size(65, 19);
-            checkBox8.TabIndex = 8;
-            checkBox8.Text = "Omega";
-            checkBox8.UseVisualStyleBackColor = true;
+            checkBox10.AutoSize = true;
+            checkBox10.Location = new System.Drawing.Point(302, 55);
+            checkBox10.Name = "checkBox10";
+            checkBox10.Size = new System.Drawing.Size(52, 19);
+            checkBox10.TabIndex = 10;
+            checkBox10.Text = "Vitae";
+            checkBox10.UseVisualStyleBackColor = true;
             // 
             // checkBox9
             // 
@@ -688,15 +618,85 @@
             checkBox9.Text = "Stance";
             checkBox9.UseVisualStyleBackColor = true;
             // 
-            // checkBox10
+            // checkBox8
             // 
-            checkBox10.AutoSize = true;
-            checkBox10.Location = new System.Drawing.Point(302, 55);
-            checkBox10.Name = "checkBox10";
-            checkBox10.Size = new System.Drawing.Size(52, 19);
-            checkBox10.TabIndex = 10;
-            checkBox10.Text = "Vitae";
-            checkBox10.UseVisualStyleBackColor = true;
+            checkBox8.AutoSize = true;
+            checkBox8.Location = new System.Drawing.Point(164, 55);
+            checkBox8.Name = "checkBox8";
+            checkBox8.Size = new System.Drawing.Size(65, 19);
+            checkBox8.TabIndex = 8;
+            checkBox8.Text = "Omega";
+            checkBox8.UseVisualStyleBackColor = true;
+            // 
+            // checkBox7
+            // 
+            checkBox7.AutoSize = true;
+            checkBox7.Location = new System.Drawing.Point(109, 55);
+            checkBox7.Name = "checkBox7";
+            checkBox7.Size = new System.Drawing.Size(49, 19);
+            checkBox7.TabIndex = 7;
+            checkBox7.Text = "Lore";
+            checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // checkBox6
+            // 
+            checkBox6.AutoSize = true;
+            checkBox6.Location = new System.Drawing.Point(18, 55);
+            checkBox6.Name = "checkBox6";
+            checkBox6.Size = new System.Drawing.Size(85, 19);
+            checkBox6.TabIndex = 6;
+            checkBox6.Text = "Judgement";
+            checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // checkBox5
+            // 
+            checkBox5.AutoSize = true;
+            checkBox5.Location = new System.Drawing.Point(291, 30);
+            checkBox5.Name = "checkBox5";
+            checkBox5.Size = new System.Drawing.Size(72, 19);
+            checkBox5.TabIndex = 5;
+            checkBox5.Text = "Interface";
+            checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            checkBox4.AutoSize = true;
+            checkBox4.Location = new System.Drawing.Point(223, 30);
+            checkBox4.Name = "checkBox4";
+            checkBox4.Size = new System.Drawing.Size(62, 19);
+            checkBox4.TabIndex = 4;
+            checkBox4.Text = "Hybrid";
+            checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new System.Drawing.Point(151, 30);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new System.Drawing.Size(66, 19);
+            checkBox3.TabIndex = 3;
+            checkBox3.Text = "Genesis";
+            checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new System.Drawing.Point(80, 30);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new System.Drawing.Size(65, 19);
+            checkBox2.TabIndex = 2;
+            checkBox2.Text = "Destiny";
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new System.Drawing.Point(17, 30);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new System.Drawing.Size(57, 19);
+            checkBox1.TabIndex = 1;
+            checkBox1.Text = "Alpha";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // frmServerData
             // 
