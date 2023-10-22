@@ -1,13 +1,17 @@
 using System;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
 {
     public class Statistics
     {
         public static readonly float MaxRunSpeed = DatabaseAPI.ServerData.MaxRunSpeed;
-        public readonly float MaxJumpSpeed = DatabaseAPI.ServerData.MaxJumpSpeed;
+        public static readonly float MaxJumpSpeed = DatabaseAPI.ServerData.MaxJumpSpeed;
         public static readonly float MaxFlySpeed = DatabaseAPI.ServerData.MaxFlySpeed;
+        public static readonly float MaxMaxRunSpeed = DatabaseAPI.ServerData.MaxMaxRunSpeed;
+        public static readonly float MaxMaxJumpSpeed = DatabaseAPI.ServerData.MaxMaxJumpSpeed;
+        public static readonly float MaxMaxFlySpeed = DatabaseAPI.ServerData.MaxMaxFlySpeed;
         public const float CapRunSpeed = 135.67f;
         public const float CapJumpSpeed = 114.4f;
         public const float CapFlySpeed = 128.99f;
@@ -109,7 +113,7 @@ namespace Mids_Reborn.Core
 
         public float Speed(float iSpeed, Enums.eSpeedMeasure unit)
         {
-            var num = unit switch
+            return unit switch
             {
                 Enums.eSpeedMeasure.FeetPerSecond => iSpeed,
                 Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.3048f,
@@ -117,12 +121,53 @@ namespace Mids_Reborn.Core
                 Enums.eSpeedMeasure.KilometersPerHour => iSpeed * 1.09728f,
                 _ => iSpeed
             };
-            return num;
+        }
+
+        public float Speed(float iSpeed, Enums.eSpeedMeasure unit, Enums.eSpeedMeasure baseUnit)
+        {
+            return baseUnit switch
+            {
+                Enums.eSpeedMeasure.FeetPerSecond => unit switch
+                {
+                    Enums.eSpeedMeasure.FeetPerSecond => iSpeed,
+                    Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.3048f,
+                    Enums.eSpeedMeasure.MilesPerHour => iSpeed * 0.6818182f,
+                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed * 1.09728f,
+                    _ => iSpeed
+                },
+
+                Enums.eSpeedMeasure.MetersPerSecond => unit switch
+                {
+                    Enums.eSpeedMeasure.FeetPerSecond => iSpeed * 3.2808399f,
+                    Enums.eSpeedMeasure.MetersPerSecond => iSpeed,
+                    Enums.eSpeedMeasure.MilesPerHour => iSpeed * 2.23693629f,
+                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed * 3.6f,
+                    _ => iSpeed
+                },
+
+                Enums.eSpeedMeasure.MilesPerHour => unit switch
+                {
+                    Enums.eSpeedMeasure.FeetPerSecond => iSpeed * 1.46666667f,
+                    Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.44704f,
+                    Enums.eSpeedMeasure.MilesPerHour => iSpeed,
+                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed * 1.60934387f,
+                    _ => iSpeed
+                },
+
+                Enums.eSpeedMeasure.KilometersPerHour => unit switch
+                {
+                    Enums.eSpeedMeasure.FeetPerSecond => iSpeed * 0.911344488f,
+                    Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.2777778f,
+                    Enums.eSpeedMeasure.MilesPerHour => iSpeed * 0.621371242f,
+                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed,
+                    _ => iSpeed
+                }
+            };
         }
 
         public float Distance(float iDist, Enums.eSpeedMeasure unit)
         {
-            var num = unit switch
+            return unit switch
             {
                 Enums.eSpeedMeasure.FeetPerSecond => iDist,
                 Enums.eSpeedMeasure.MetersPerSecond => iDist * 0.3048f,
@@ -130,36 +175,57 @@ namespace Mids_Reborn.Core
                 Enums.eSpeedMeasure.KilometersPerHour => iDist * 0.3048f,
                 _ => iDist
             };
-            return num;
         }
 
         public float MovementRunSpeed(Enums.eSpeedMeasure sType, bool uncapped)
         {
-            var iSpeed = _character.Totals.RunSpd;
-            if (!uncapped && _character.Totals.RunSpd > (double) _character.Totals.MaxRunSpd)
+            /*var iSpeed = _character.Totals.RunSpd;
+            if (!uncapped && _character.Totals.RunSpd > _character.Totals.MaxRunSpd)
+            {
                 iSpeed = _character.Totals.MaxRunSpd;
-            return Speed(iSpeed, sType);
+            }*/
+
+            var iSpeed = uncapped
+                ? MidsContext.Character?.Totals.RunSpd
+                : MidsContext.Character?.TotalsCapped.RunSpd;
+
+            return Speed(iSpeed ?? 0, sType);
+        }
+
+        public float MovementRunSpeed(Enums.eSpeedMeasure sType, Enums.eSpeedMeasure baseUnit, bool uncapped)
+        {
+            var iSpeed = uncapped
+                ? MidsContext.Character?.Totals.RunSpd
+                : MidsContext.Character?.TotalsCapped.RunSpd;
+
+            return Speed(iSpeed ?? 0, sType, baseUnit);
         }
 
         public float MovementFlySpeed(Enums.eSpeedMeasure sType, bool uncapped)
         {
             var iSpeed = _character.Totals.FlySpd;
-            if (!uncapped && _character.Totals.FlySpd > (double) _character.Totals.MaxFlySpd)
+            if (!uncapped && _character.Totals.FlySpd > _character.Totals.MaxFlySpd)
+            {
                 iSpeed = _character.Totals.MaxFlySpd;
+            }
+
             return Speed(iSpeed, sType);
         }
 
         public float MovementJumpSpeed(Enums.eSpeedMeasure sType, bool uncapped)
         {
             var iSpeed = _character.Totals.JumpSpd;
-            if (!uncapped && _character.Totals.JumpSpd > (double) _character.Totals.MaxJumpSpd)
+            if (!uncapped && _character.Totals.JumpSpd > _character.Totals.MaxJumpSpd)
+            {
                 iSpeed = _character.Totals.MaxJumpSpd;
+            }
+
             return Speed(iSpeed, sType);
         }
 
         public float MovementJumpHeight(Enums.eSpeedMeasure sType)
         {
-            return (sType == Enums.eSpeedMeasure.KilometersPerHour) | (sType == Enums.eSpeedMeasure.MetersPerSecond)
+            return sType is Enums.eSpeedMeasure.KilometersPerHour or Enums.eSpeedMeasure.MetersPerSecond
                 ? _character.TotalsCapped.JumpHeight * 0.3048f
                 : _character.TotalsCapped.JumpHeight;
         }

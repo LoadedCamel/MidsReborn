@@ -30,7 +30,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udBaseToHit.Value = new decimal(_serverData.BaseToHit * 100f);
             udMaxFlySpeed.Value = Convert.ToDecimal(_serverData.MaxFlySpeed);
             udMaxJumpSpeed.Value = Convert.ToDecimal(_serverData.MaxJumpSpeed);
+            udMaxJumpHeight.Value = Convert.ToDecimal(_serverData.MaxJumpHeight);
             udMaxRunSpeed.Value = Convert.ToDecimal(_serverData.MaxRunSpeed);
+            udMaxMaxFlySpeed.Value = Convert.ToDecimal(_serverData.MaxMaxFlySpeed);
+            udMaxMaxJumpSpeed.Value = Convert.ToDecimal(_serverData.MaxMaxJumpSpeed);
+            udMaxMaxRunSpeed.Value = Convert.ToDecimal(_serverData.MaxMaxRunSpeed);
+            
             udMaxSlots.Value = _serverData.MaxSlots;
             chkEnableInhSlot.Checked = _serverData.EnableInherentSlotting;
             udHealthSlots.Value = _serverData.HealthSlots;

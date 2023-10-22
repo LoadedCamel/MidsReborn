@@ -44,6 +44,14 @@
             udBaseFlySpeed = new System.Windows.Forms.NumericUpDown();
             udBaseJumpSpeed = new System.Windows.Forms.NumericUpDown();
             groupBox10 = new System.Windows.Forms.GroupBox();
+            label3 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
+            udMaxMaxRunSpeed = new System.Windows.Forms.NumericUpDown();
+            label7 = new System.Windows.Forms.Label();
+            label8 = new System.Windows.Forms.Label();
+            udMaxMaxFlySpeed = new System.Windows.Forms.NumericUpDown();
+            udMaxMaxJumpSpeed = new System.Windows.Forms.NumericUpDown();
+            label2 = new System.Windows.Forms.Label();
             udMaxSlots = new System.Windows.Forms.NumericUpDown();
             label48 = new System.Windows.Forms.Label();
             label47 = new System.Windows.Forms.Label();
@@ -86,6 +94,8 @@
             checkBox3 = new System.Windows.Forms.CheckBox();
             checkBox2 = new System.Windows.Forms.CheckBox();
             checkBox1 = new System.Windows.Forms.CheckBox();
+            label9 = new System.Windows.Forms.Label();
+            udMaxJumpHeight = new System.Windows.Forms.NumericUpDown();
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)udBasePerception).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udBaseRunSpeed).BeginInit();
@@ -94,6 +104,9 @@
             ((System.ComponentModel.ISupportInitialize)udBaseFlySpeed).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udBaseJumpSpeed).BeginInit();
             groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxRunSpeed).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxFlySpeed).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxJumpSpeed).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udMaxSlots).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udMaxRunSpeed).BeginInit();
             ((System.ComponentModel.ISupportInitialize)udMaxFlySpeed).BeginInit();
@@ -107,6 +120,7 @@
             ((System.ComponentModel.ISupportInitialize)udHealthSlots).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)udMaxJumpHeight).BeginInit();
             SuspendLayout();
             // 
             // groupBox4
@@ -155,7 +169,7 @@
             // 
             label5.Location = new System.Drawing.Point(6, 109);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(99, 20);
+            label5.Size = new System.Drawing.Size(119, 20);
             label5.TabIndex = 63;
             label5.Text = "Base Jump Height:";
             label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -164,7 +178,7 @@
             // 
             label12.Location = new System.Drawing.Point(6, 135);
             label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(99, 20);
+            label12.Size = new System.Drawing.Size(119, 20);
             label12.TabIndex = 69;
             label12.Text = "Base Run Speed:";
             label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -172,10 +186,10 @@
             // udBaseRunSpeed
             // 
             udBaseRunSpeed.DecimalPlaces = 2;
-            udBaseRunSpeed.Location = new System.Drawing.Point(111, 135);
+            udBaseRunSpeed.Location = new System.Drawing.Point(129, 135);
             udBaseRunSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udBaseRunSpeed.Name = "udBaseRunSpeed";
-            udBaseRunSpeed.Size = new System.Drawing.Size(88, 23);
+            udBaseRunSpeed.Size = new System.Drawing.Size(76, 23);
             udBaseRunSpeed.TabIndex = 68;
             udBaseRunSpeed.Value = new decimal(new int[] { 21, 0, 0, 0 });
             // 
@@ -192,7 +206,7 @@
             // 
             label6.Location = new System.Drawing.Point(6, 57);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(99, 20);
+            label6.Size = new System.Drawing.Size(119, 20);
             label6.TabIndex = 65;
             label6.Text = "Base Fly Speed:";
             label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -210,7 +224,7 @@
             // 
             label11.Location = new System.Drawing.Point(6, 83);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(99, 20);
+            label11.Size = new System.Drawing.Size(119, 20);
             label11.TabIndex = 67;
             label11.Text = "Base Jump Speed:";
             label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -226,35 +240,45 @@
             // udBaseJumpHeight
             // 
             udBaseJumpHeight.DecimalPlaces = 2;
-            udBaseJumpHeight.Location = new System.Drawing.Point(111, 109);
+            udBaseJumpHeight.Location = new System.Drawing.Point(129, 109);
             udBaseJumpHeight.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udBaseJumpHeight.Name = "udBaseJumpHeight";
-            udBaseJumpHeight.Size = new System.Drawing.Size(88, 23);
+            udBaseJumpHeight.Size = new System.Drawing.Size(76, 23);
             udBaseJumpHeight.TabIndex = 66;
             udBaseJumpHeight.Value = new decimal(new int[] { 4, 0, 0, 0 });
             // 
             // udBaseFlySpeed
             // 
             udBaseFlySpeed.DecimalPlaces = 2;
-            udBaseFlySpeed.Location = new System.Drawing.Point(111, 57);
+            udBaseFlySpeed.Location = new System.Drawing.Point(129, 57);
             udBaseFlySpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udBaseFlySpeed.Name = "udBaseFlySpeed";
-            udBaseFlySpeed.Size = new System.Drawing.Size(88, 23);
+            udBaseFlySpeed.Size = new System.Drawing.Size(76, 23);
             udBaseFlySpeed.TabIndex = 62;
             udBaseFlySpeed.Value = new decimal(new int[] { 315, 0, 0, 65536 });
             // 
             // udBaseJumpSpeed
             // 
             udBaseJumpSpeed.DecimalPlaces = 2;
-            udBaseJumpSpeed.Location = new System.Drawing.Point(111, 83);
+            udBaseJumpSpeed.Location = new System.Drawing.Point(129, 83);
             udBaseJumpSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udBaseJumpSpeed.Name = "udBaseJumpSpeed";
-            udBaseJumpSpeed.Size = new System.Drawing.Size(88, 23);
+            udBaseJumpSpeed.Size = new System.Drawing.Size(76, 23);
             udBaseJumpSpeed.TabIndex = 64;
             udBaseJumpSpeed.Value = new decimal(new int[] { 21, 0, 0, 0 });
             // 
             // groupBox10
             // 
+            groupBox10.Controls.Add(label9);
+            groupBox10.Controls.Add(udMaxJumpHeight);
+            groupBox10.Controls.Add(label3);
+            groupBox10.Controls.Add(label4);
+            groupBox10.Controls.Add(udMaxMaxRunSpeed);
+            groupBox10.Controls.Add(label7);
+            groupBox10.Controls.Add(label8);
+            groupBox10.Controls.Add(udMaxMaxFlySpeed);
+            groupBox10.Controls.Add(udMaxMaxJumpSpeed);
+            groupBox10.Controls.Add(label2);
             groupBox10.Controls.Add(udMaxSlots);
             groupBox10.Controls.Add(label48);
             groupBox10.Controls.Add(label47);
@@ -272,9 +296,87 @@
             groupBox10.TabStop = false;
             groupBox10.Text = "Max Values";
             // 
+            // label3
+            // 
+            label3.Location = new System.Drawing.Point(238, 53);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(186, 23);
+            label3.TabIndex = 78;
+            label3.Text = "Hard caps";
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            label4.Location = new System.Drawing.Point(244, 132);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(90, 21);
+            label4.TabIndex = 77;
+            label4.Text = "Run Speed:";
+            label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxMaxRunSpeed
+            // 
+            udMaxMaxRunSpeed.DecimalPlaces = 2;
+            udMaxMaxRunSpeed.Location = new System.Drawing.Point(336, 133);
+            udMaxMaxRunSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            udMaxMaxRunSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            udMaxMaxRunSpeed.Name = "udMaxMaxRunSpeed";
+            udMaxMaxRunSpeed.Size = new System.Drawing.Size(88, 23);
+            udMaxMaxRunSpeed.TabIndex = 76;
+            udMaxMaxRunSpeed.Value = new decimal(new int[] { 13567, 0, 0, 131072 });
+            // 
+            // label7
+            // 
+            label7.Location = new System.Drawing.Point(244, 81);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(90, 21);
+            label7.TabIndex = 74;
+            label7.Text = "Fly Speed:";
+            label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label8
+            // 
+            label8.Location = new System.Drawing.Point(244, 107);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(90, 21);
+            label8.TabIndex = 75;
+            label8.Text = "Jump Speed:";
+            label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxMaxFlySpeed
+            // 
+            udMaxMaxFlySpeed.DecimalPlaces = 2;
+            udMaxMaxFlySpeed.Location = new System.Drawing.Point(336, 81);
+            udMaxMaxFlySpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            udMaxMaxFlySpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            udMaxMaxFlySpeed.Name = "udMaxMaxFlySpeed";
+            udMaxMaxFlySpeed.Size = new System.Drawing.Size(88, 23);
+            udMaxMaxFlySpeed.TabIndex = 72;
+            udMaxMaxFlySpeed.Value = new decimal(new int[] { 86, 0, 0, 0 });
+            // 
+            // udMaxMaxJumpSpeed
+            // 
+            udMaxMaxJumpSpeed.DecimalPlaces = 2;
+            udMaxMaxJumpSpeed.Location = new System.Drawing.Point(336, 107);
+            udMaxMaxJumpSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            udMaxMaxJumpSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            udMaxMaxJumpSpeed.Name = "udMaxMaxJumpSpeed";
+            udMaxMaxJumpSpeed.Size = new System.Drawing.Size(88, 23);
+            udMaxMaxJumpSpeed.TabIndex = 73;
+            udMaxMaxJumpSpeed.Value = new decimal(new int[] { 1144, 0, 0, 65536 });
+            // 
+            // label2
+            // 
+            label2.Location = new System.Drawing.Point(6, 53);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(186, 23);
+            label2.TabIndex = 71;
+            label2.Text = "Maximums";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // udMaxSlots
             // 
-            udMaxSlots.Location = new System.Drawing.Point(137, 217);
+            udMaxSlots.Location = new System.Drawing.Point(137, 240);
             udMaxSlots.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxSlots.Name = "udMaxSlots";
             udMaxSlots.Size = new System.Drawing.Size(60, 23);
@@ -283,15 +385,15 @@
             // 
             // label48
             // 
-            label48.Location = new System.Drawing.Point(14, 158);
+            label48.Location = new System.Drawing.Point(14, 196);
             label48.Name = "label48";
-            label48.Size = new System.Drawing.Size(426, 59);
+            label48.Size = new System.Drawing.Size(426, 42);
             label48.TabIndex = 68;
             label48.Text = resources.GetString("label48.Text");
             // 
             // label47
             // 
-            label47.Location = new System.Drawing.Point(51, 215);
+            label47.Location = new System.Drawing.Point(51, 238);
             label47.Name = "label47";
             label47.Size = new System.Drawing.Size(80, 20);
             label47.TabIndex = 67;
@@ -308,17 +410,17 @@
             // 
             // label39
             // 
-            label39.Location = new System.Drawing.Point(7, 108);
+            label39.Location = new System.Drawing.Point(12, 155);
             label39.Name = "label39";
-            label39.Size = new System.Drawing.Size(124, 20);
+            label39.Size = new System.Drawing.Size(90, 21);
             label39.TabIndex = 69;
-            label39.Text = "Max Run Speed:";
+            label39.Text = "Run Speed:";
             label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // udMaxRunSpeed
             // 
             udMaxRunSpeed.DecimalPlaces = 2;
-            udMaxRunSpeed.Location = new System.Drawing.Point(133, 109);
+            udMaxRunSpeed.Location = new System.Drawing.Point(104, 156);
             udMaxRunSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxRunSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxRunSpeed.Name = "udMaxRunSpeed";
@@ -328,26 +430,26 @@
             // 
             // label41
             // 
-            label41.Location = new System.Drawing.Point(7, 57);
+            label41.Location = new System.Drawing.Point(12, 81);
             label41.Name = "label41";
-            label41.Size = new System.Drawing.Size(124, 20);
+            label41.Size = new System.Drawing.Size(90, 21);
             label41.TabIndex = 65;
-            label41.Text = "Max Fly Speed:";
+            label41.Text = "Fly Speed:";
             label41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label42
             // 
-            label42.Location = new System.Drawing.Point(7, 83);
+            label42.Location = new System.Drawing.Point(12, 107);
             label42.Name = "label42";
-            label42.Size = new System.Drawing.Size(124, 20);
+            label42.Size = new System.Drawing.Size(90, 21);
             label42.TabIndex = 67;
-            label42.Text = "Max Jump Speed:";
+            label42.Text = "Jump Speed:";
             label42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // udMaxFlySpeed
             // 
             udMaxFlySpeed.DecimalPlaces = 2;
-            udMaxFlySpeed.Location = new System.Drawing.Point(133, 57);
+            udMaxFlySpeed.Location = new System.Drawing.Point(104, 81);
             udMaxFlySpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxFlySpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxFlySpeed.Name = "udMaxFlySpeed";
@@ -358,7 +460,7 @@
             // udMaxJumpSpeed
             // 
             udMaxJumpSpeed.DecimalPlaces = 2;
-            udMaxJumpSpeed.Location = new System.Drawing.Point(133, 83);
+            udMaxJumpSpeed.Location = new System.Drawing.Point(104, 107);
             udMaxJumpSpeed.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             udMaxJumpSpeed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             udMaxJumpSpeed.Name = "udMaxJumpSpeed";
@@ -698,6 +800,26 @@
             checkBox1.Text = "Alpha";
             checkBox1.UseVisualStyleBackColor = true;
             // 
+            // label9
+            // 
+            label9.Location = new System.Drawing.Point(12, 131);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(90, 21);
+            label9.TabIndex = 80;
+            label9.Text = "Jump Height:";
+            label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udMaxJumpHeight
+            // 
+            udMaxJumpHeight.DecimalPlaces = 2;
+            udMaxJumpHeight.Location = new System.Drawing.Point(104, 132);
+            udMaxJumpHeight.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            udMaxJumpHeight.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            udMaxJumpHeight.Name = "udMaxJumpHeight";
+            udMaxJumpHeight.Size = new System.Drawing.Size(88, 23);
+            udMaxJumpHeight.TabIndex = 79;
+            udMaxJumpHeight.Value = new decimal(new int[] { 30000, 0, 0, 131072 });
+            // 
             // frmServerData
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -722,6 +844,9 @@
             ((System.ComponentModel.ISupportInitialize)udBaseFlySpeed).EndInit();
             ((System.ComponentModel.ISupportInitialize)udBaseJumpSpeed).EndInit();
             groupBox10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxRunSpeed).EndInit();
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxFlySpeed).EndInit();
+            ((System.ComponentModel.ISupportInitialize)udMaxMaxJumpSpeed).EndInit();
             ((System.ComponentModel.ISupportInitialize)udMaxSlots).EndInit();
             ((System.ComponentModel.ISupportInitialize)udMaxRunSpeed).EndInit();
             ((System.ComponentModel.ISupportInitialize)udMaxFlySpeed).EndInit();
@@ -738,6 +863,7 @@
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)udMaxJumpHeight).EndInit();
             ResumeLayout(false);
         }
 
@@ -800,5 +926,15 @@
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown udMaxMaxRunSpeed;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown udMaxMaxFlySpeed;
+        private System.Windows.Forms.NumericUpDown udMaxMaxJumpSpeed;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown udMaxJumpHeight;
     }
 }

@@ -762,42 +762,68 @@ namespace Mids_Reborn
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
 
-            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
+            Totals.FlySpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f)) * Statistics.BaseFlySpeed;
+            Totals.RunSpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f)) * Statistics.BaseRunSpeed;
+            Totals.JumpSpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f)) * Statistics.BaseJumpSpeed;
+            Totals.JumpHeight = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f)) * Statistics.BaseJumpHeight;
+
+            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseFlySpeed;
+            Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
+            Totals.MaxJumpSpd = Statistics.MaxJumpSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed;
+            // No MaxJumpHeight
+
+            // Apply MaxMax
+            Totals.FlySpd = Math.Min(Totals.FlySpd, DatabaseAPI.ServerData.MaxMaxFlySpeed); // Statistics.BaseFlySpeed * 8.19f == 257.985
+            Totals.RunSpd = Math.Min(Totals.RunSpd, DatabaseAPI.ServerData.MaxMaxRunSpeed); // Statistics.BaseRunSpeed * 8.398f == 166.257
+            Totals.JumpSpd = Math.Min(Totals.JumpSpd, DatabaseAPI.ServerData.MaxMaxJumpSpeed); // Statistics.BaseJumpSpeed * 7.917f == 176.358
+
+            /*Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
             // This number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
             // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed, because increasing speed caps do not use 1.5x modifier fly speed gives.
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxFlySpd > 171.990005493164) // 128.990005493164
+            {
                 Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: although the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
-            
+            }
+
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
             Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxRunSpd > 176.35777) // 135.669998168945
+            {
                 Totals.MaxRunSpd = 135.67f; // 8.398f * 21.0f == 135.67f
-            
-            Totals.JumpSpd = (float) (Statistics.BaseJumpSpeed +
-                                      (double) Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed);
+            }
+
+            Totals.JumpSpd = Statistics.BaseJumpSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed;
             Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed);
             if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
+            {
                 Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
-            
-            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;
-            
-            Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
+            }
+
+            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;*/
+
+            Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + (Archetype?.Hitpoints ?? 0);
             if (!canFly)
-                Totals.FlySpd = 0.0f;
+            {
+                Totals.FlySpd = 0;
+            }
+
             var maxDmgBuff = -1000f;
             var minDmgBuff = -1000f;
-            var avgDmgBuff = 0.0f;
+            var avgDmgBuff = 0f;
             for (var index = 0; index < _selfBuffs.Damage.Length; index++)
             {
-                if (0 >= index || index >= 9)
+                if (index is <= 0 or >= 9)
+                {
                     continue;
-                if (_selfEnhance.Damage[index] > (double) maxDmgBuff)
+                }
+
+                if (_selfEnhance.Damage[index] > maxDmgBuff)
                 {
                     maxDmgBuff = _selfEnhance.Damage[index];
                 }
 
-                if (_selfEnhance.Damage[index] < (double) minDmgBuff)
+                if (_selfEnhance.Damage[index] < minDmgBuff)
                 {
                     minDmgBuff = _selfEnhance.Damage[index];
                 }
@@ -806,11 +832,11 @@ namespace Mids_Reborn
             }
 
             avgDmgBuff /= _selfEnhance.Damage.Length;
-            if (maxDmgBuff - (double) avgDmgBuff < avgDmgBuff - (double) minDmgBuff)
+            if (maxDmgBuff - avgDmgBuff < avgDmgBuff - minDmgBuff)
             {
                 Totals.BuffDam = maxDmgBuff;
             }
-            else if (maxDmgBuff - (double) avgDmgBuff > avgDmgBuff - (double) minDmgBuff & minDmgBuff > 0.0)
+            else if (maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff & minDmgBuff > 0)
             {
                 Totals.BuffDam = minDmgBuff;
             }
@@ -821,25 +847,25 @@ namespace Mids_Reborn
 
             ApplyPvpDr();
             TotalsCapped.Assign(Totals);
-            TotalsCapped.BuffDam = Math.Min(TotalsCapped.BuffDam, Archetype.DamageCap - 1f);
-            TotalsCapped.BuffHaste = Math.Min(TotalsCapped.BuffHaste, Archetype.RechargeCap - 1f);
-            TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1f);
-            TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1f);
-            var num11 = TotalsCapped.Res.Length;
-            for (var index = 0; index < num11; index++)
+            TotalsCapped.BuffDam = Math.Min(TotalsCapped.BuffDam, Archetype.DamageCap - 1);
+            TotalsCapped.BuffHaste = Math.Min(TotalsCapped.BuffHaste, Archetype.RechargeCap - 1);
+            TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1);
+            TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1);
+            for (var index = 0; index < TotalsCapped.Res.Length; index++)
             {
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
             }
 
-            if (Archetype.HPCap > 0.0)
+            if (Archetype.HPCap > 0)
             {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);
                 TotalsCapped.Absorb = Math.Min(TotalsCapped.Absorb, TotalsCapped.HPMax);
             }
 
-            TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, 135.67f);
-            TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, 114.4f);
-            TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, 86f);
+            TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, Totals.MaxRunSpd);
+            TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, Totals.MaxJumpSpd);
+            TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, Totals.MaxFlySpd);
+            TotalsCapped.JumpHeight = Math.Min(TotalsCapped.JumpHeight, DatabaseAPI.ServerData.MaxJumpHeight); // Statistics.BaseJumpHeight * 50 == 200 (MaxMax is at 300 but unused)
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
