@@ -1764,6 +1764,11 @@ namespace Mids_Reborn.Core
         /// <param name="displayBlockFontSize">Display block font size</param>
         private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, bool powerInBuild, float displayBlockFontSize)
         {
+            if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate) & pBase.AbsorbSummonEffects)
+            {
+                pBase.AbsorbPetEffects();
+            }
+
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
@@ -1943,7 +1948,7 @@ namespace Mids_Reborn.Core
                         _ => rankedEffect.Value
                     };
                     
-                    rankedEffect.ToolTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip + "\r\n\r\n" + $"magDiff: {magDiff}, mezDurationDiff: {mezDurationDiff}\r\nBase Mag: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0)}\r\nEnhanced Mag: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)}\r\n-----------------\r\nBase duration: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0)}\r\nEnhanced duration: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)}";
 
                     break;
 
