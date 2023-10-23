@@ -1426,6 +1426,7 @@ namespace Mids_Reborn.Forms
             {
                 return false;
             }
+
             DataViewLocked = false;
             NewToon(true, true);
             if (CharacterBuildFile.Load(fileName))
@@ -1441,7 +1442,11 @@ namespace Mids_Reborn.Forms
             }
 
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             switch (MidsContext.Character?.Archetype?.DisplayName)
             {
                 case "Mastermind":
@@ -1457,6 +1462,11 @@ namespace Mids_Reborn.Forms
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
+            for (var i = 0; i < 5; i++)
+            {
+                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1;
+            }
+
             UpdateControls(true);
             SetTitleBar();
             Application.DoEvents();
@@ -1464,6 +1474,7 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             DoRedraw();
             FloatUpdate(true);
+            
             return true;
         }
 
@@ -6839,7 +6850,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             }
 
-            if (fRecipe != null && fRecipe.Visible)
+            if (fRecipe is {Visible: true})
             {
                 fRecipe.UpdateColorTheme();
             }
