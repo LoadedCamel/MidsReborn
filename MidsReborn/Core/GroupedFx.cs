@@ -858,12 +858,6 @@ namespace Mids_Reborn.Core
         /// <returns>Build effect string from each effect, then concatenate into a single string (one effect per line)</returns>
         public string GetTooltip(IPower power)
         {
-            if (IsAggregated)
-            {
-                return string.Join("\r\n", IncludedEffects
-                    .Select(e => power.Effects[e].BuildEffectString(false, "", false, false, false, false, false, true)));
-            }
-
             var vectors = "";
             var statName = GetStatName(power);
             var groupedVector = GetGroupedVector(statName);
