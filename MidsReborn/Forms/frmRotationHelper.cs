@@ -73,6 +73,8 @@ namespace Mids_Reborn.Forms
 
             lblRotation.Text = "";
             lblBoosts.Text = "";
+            lblDamage.Text = "";
+            lblDps.Text = "";
 
             TopMost = true;
             imageButtonEx2.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
@@ -314,9 +316,16 @@ namespace Mids_Reborn.Forms
                 Debug.WriteLine($"Place powers on timeline: {Stopwatch.ElapsedMilliseconds} ms");
                 UpdatePowersText(true);
                 ctlCombatTimeline1.Invalidate();
+
                 timelineCursorZoom1.SetData(ctlCombatTimeline1.Timeline.Select(e => e.Time).Distinct().ToList(), new Interval(ctlCombatTimeline1.MaxTime));
                 ibxZoomIn.Visible = !ctlCombatTimeline1.MaxZoomIn();
                 ibxZoomOut.Visible = !ctlCombatTimeline1.MaxZoomOut();
+
+                var totalDamage = ctlCombatTimeline1.GetTotalDamage();
+                lblDamage.Text = $"Damage: {totalDamage:#####0.##}\r\nTotal time: {ctlCombatTimeline1.MaxTime:####0.##} s.";
+                lblDps.Text = ctlCombatTimeline1.MaxTime <= float.Epsilon
+                    ? "N/A"
+                    : $"Estimated DPS: {totalDamage / ctlCombatTimeline1.MaxTime:####0.##} dmg/s.";
 
                 return;
             }
@@ -352,7 +361,7 @@ namespace Mids_Reborn.Forms
         {
             if (!string.IsNullOrWhiteSpace(lblRotation.Text))
             {
-                Clipboard.SetText(lblRotation.Text);
+                Clipboard.SetText($"{lblRotation.Text}\r\n\r\n{lblDamage.Text}\r\n{lblDps.Text}");
             }
         }
 

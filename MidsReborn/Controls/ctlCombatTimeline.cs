@@ -66,6 +66,13 @@ namespace Mids_Reborn.Controls
             public GroupedFx GroupedFx;
         }
 
+        private struct PowerEntryStatus
+        {
+            public bool ProcInclude;
+            public bool StatInclude;
+            public int VariableValue;
+        }
+
         #endregion
 
         #region FxIdentifier sub-class
@@ -581,6 +588,19 @@ namespace Mids_Reborn.Controls
         }
 
         /// <summary>
+        /// Get total damage from powers on the timeline.
+        /// </summary>
+        /// <returns>Total powers damage sum</returns>
+        public float GetTotalDamage()
+        {
+            return Timeline.Count <= 0
+                ? 0
+                : Timeline
+                    .Select(e => e.PowerSlot.EnhancedPower?.FXGetDamageValue() ?? 0)
+                    .Sum();
+        }
+
+        /// <summary>
         /// Check if a power is affected by any boost
         /// </summary>
         /// <param name="powerSlot">Target power</param>
@@ -732,25 +752,39 @@ namespace Mids_Reborn.Controls
             RecalcTotals();
         }
 
+        
+
+        /// <summary>
+        /// Get active stacks for a power boost, at the time of a reference power.
+        /// </summary>
+        /// <param name="timelinePower">Reference power in timeline</param>
+        /// <param name="boostPower">Boost power to check for</param>
+        /// <returns>Active stacks of boost power</returns>
+        private int GetActiveBoostsCount(TimelineItem timelinePower, TimelineItem? boostPower)
+        {
+            if (boostPower == null)
+            {
+                return 0;
+            }
+
+            return Timeline.Count <= 0
+                ? 0
+                : Timeline
+                    .Count(e => e.Time <= timelinePower.Time &
+                                e.Time + (e.PowerSlot.EnhancedPower == null ? 0 : e.PowerSlot.EnhancedPower.Effects.Select(f => f.Duration).Max()) >= timelinePower.Time);
+        }
+
         private void CalcEnhancedPower(ref TimelineItem timelinePower, List<RechBoost> rechargeBoosts, bool recalcStats = false)
         {
-            var origProcIncludes = MidsContext.Character.CurrentBuild.Powers
-                .Select(e => e?.ProcInclude)
-                .ToList();
-
-            var origStatIncludes = MidsContext.Character.CurrentBuild.Powers
-                .Select(e => e?.StatInclude)
-                .ToList();
-
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (pe == null)
+            // Take a snapshot of build powers' ProcInclude, StatInclude, VariableValue to restore later
+            var originalPeStatus = MidsContext.Character.CurrentBuild.Powers
+                .Select(e => new PowerEntryStatus
                 {
-                    continue;
-                }
-
-                pe.ProcInclude = false;
-            }
+                    ProcInclude = e?.ProcInclude ?? false,
+                    StatInclude = e?.StatInclude ?? false,
+                    VariableValue = e?.VariableValue ?? 0,
+                })
+                .ToList();
 
             var userBoostNames = UserBoosts
                 .Select(e => e.FullName)
@@ -758,17 +792,15 @@ namespace Mids_Reborn.Controls
 
             foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
             {
-                if (pe == null)
+                if (pe != null)
                 {
-                    continue;
+                    pe.ProcInclude = false;
                 }
 
-                if (!userBoostNames.Contains(pe.Power?.FullName))
+                if (userBoostNames.Contains(pe.Power?.FullName))
                 {
-                    continue;
+                    pe.StatInclude = false;
                 }
-
-                pe.StatInclude = false;
             }
 
             var boostingPowers = IsAffectedByBoosts(timelinePower);
@@ -785,6 +817,16 @@ namespace Mids_Reborn.Controls
 
                     pe.ProcInclude = true;
                     pe.StatInclude = true;
+
+                    // Only set stacks if stacking is enabled.
+                    if (pe.Power is not {VariableEnabled: true})
+                    {
+                        continue;
+                    }
+
+                    var activeCount = GetActiveBoostsCount(timelinePower, p);
+                    pe.VariableValue = activeCount;
+                    pe.Power.Stacks = activeCount;
                 }
             }
 
@@ -838,8 +880,10 @@ namespace Mids_Reborn.Controls
                     continue;
                 }
 
-                MidsContext.Character.CurrentBuild.Powers[i].ProcInclude = origProcIncludes[i] == true;
-                MidsContext.Character.CurrentBuild.Powers[i].StatInclude = origStatIncludes[i] == true;
+                MidsContext.Character.CurrentBuild.Powers[i].ProcInclude = originalPeStatus[i].ProcInclude;
+                MidsContext.Character.CurrentBuild.Powers[i].StatInclude = originalPeStatus[i].StatInclude;
+                MidsContext.Character.CurrentBuild.Powers[i].VariableValue = originalPeStatus[i].VariableValue;
+                MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = originalPeStatus[i].VariableValue;
             }
 
             RecalcTotals();
@@ -1193,7 +1237,6 @@ namespace Mids_Reborn.Controls
                     TextFormatFlags.Right | TextFormatFlags.Top);
             }
         }
-
 
         #endregion
 

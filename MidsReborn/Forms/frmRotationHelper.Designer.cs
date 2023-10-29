@@ -66,10 +66,16 @@ namespace Mids_Reborn.Forms
             timelineCursorZoom1 = new Controls.TimelineCursorZoom();
             ibxZoomOut = new Controls.ImageButtonEx();
             ibxZoomIn = new Controls.ImageButtonEx();
+            borderPanel5 = new Controls.BorderPanel();
+            lblDamage = new Label();
+            borderPanel6 = new Controls.BorderPanel();
+            lblDps = new Label();
             borderPanel1.SuspendLayout();
             borderPanel2.SuspendLayout();
             borderPanel3.SuspendLayout();
             borderPanel4.SuspendLayout();
+            borderPanel5.SuspendLayout();
+            borderPanel6.SuspendLayout();
             SuspendLayout();
             // 
             // listBox1
@@ -142,7 +148,7 @@ namespace Mids_Reborn.Forms
             progressBarEx1.Colors.BarStartColor = System.Drawing.Color.FromArgb(30, 144, 255);
             progressBarEx1.Colors.BorderColor = System.Drawing.Color.FromArgb(44, 47, 51);
             progressBarEx1.Colors.TextColor = System.Drawing.Color.WhiteSmoke;
-            progressBarEx1.Location = new System.Drawing.Point(12, 580);
+            progressBarEx1.Location = new System.Drawing.Point(12, 667);
             progressBarEx1.Name = "progressBarEx1";
             progressBarEx1.Size = new System.Drawing.Size(1124, 23);
             progressBarEx1.TabIndex = 6;
@@ -158,7 +164,7 @@ namespace Mids_Reborn.Forms
             imageButtonEx1.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             imageButtonEx1.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             imageButtonEx1.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            imageButtonEx1.Location = new System.Drawing.Point(988, 896);
+            imageButtonEx1.Location = new System.Drawing.Point(988, 983);
             imageButtonEx1.Lock = false;
             imageButtonEx1.Name = "imageButtonEx1";
             imageButtonEx1.Size = new System.Drawing.Size(120, 30);
@@ -177,7 +183,7 @@ namespace Mids_Reborn.Forms
             // 
             label4.AutoSize = true;
             label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            label4.Location = new System.Drawing.Point(12, 555);
+            label4.Location = new System.Drawing.Point(12, 642);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(172, 15);
             label4.TabIndex = 9;
@@ -206,7 +212,7 @@ namespace Mids_Reborn.Forms
             // 
             // btnCopyRotation
             // 
-            btnCopyRotation.Location = new System.Drawing.Point(387, 504);
+            btnCopyRotation.Location = new System.Drawing.Point(431, 504);
             btnCopyRotation.Name = "btnCopyRotation";
             btnCopyRotation.Size = new System.Drawing.Size(123, 33);
             btnCopyRotation.TabIndex = 13;
@@ -278,7 +284,7 @@ namespace Mids_Reborn.Forms
             // 
             // btnCalcTimeline
             // 
-            btnCalcTimeline.Location = new System.Drawing.Point(603, 504);
+            btnCalcTimeline.Location = new System.Drawing.Point(591, 504);
             btnCalcTimeline.Name = "btnCalcTimeline";
             btnCalcTimeline.Size = new System.Drawing.Size(123, 33);
             btnCalcTimeline.TabIndex = 21;
@@ -294,7 +300,7 @@ namespace Mids_Reborn.Forms
             borderPanel2.Border.Thickness = 1;
             borderPanel2.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
             borderPanel2.Controls.Add(ctlCombatTimeline1);
-            borderPanel2.Location = new System.Drawing.Point(12, 619);
+            borderPanel2.Location = new System.Drawing.Point(12, 706);
             borderPanel2.Name = "borderPanel2";
             borderPanel2.Size = new System.Drawing.Size(1124, 215);
             borderPanel2.TabIndex = 22;
@@ -356,7 +362,7 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             imageButtonEx2.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             imageButtonEx2.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            imageButtonEx2.Location = new System.Drawing.Point(835, 896);
+            imageButtonEx2.Location = new System.Drawing.Point(835, 983);
             imageButtonEx2.Lock = false;
             imageButtonEx2.Name = "imageButtonEx2";
             imageButtonEx2.Size = new System.Drawing.Size(120, 30);
@@ -373,7 +379,7 @@ namespace Mids_Reborn.Forms
             // 
             // button1
             // 
-            button1.Location = new System.Drawing.Point(798, 504);
+            button1.Location = new System.Drawing.Point(857, 504);
             button1.Name = "button1";
             button1.Size = new System.Drawing.Size(131, 33);
             button1.TabIndex = 26;
@@ -383,7 +389,7 @@ namespace Mids_Reborn.Forms
             // 
             // button2
             // 
-            button2.Location = new System.Drawing.Point(967, 504);
+            button2.Location = new System.Drawing.Point(1002, 504);
             button2.Name = "button2";
             button2.Size = new System.Drawing.Size(131, 33);
             button2.TabIndex = 27;
@@ -411,7 +417,7 @@ namespace Mids_Reborn.Forms
             btnColorsRef.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             btnColorsRef.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             btnColorsRef.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            btnColorsRef.Location = new System.Drawing.Point(630, 896);
+            btnColorsRef.Location = new System.Drawing.Point(630, 983);
             btnColorsRef.Lock = false;
             btnColorsRef.Name = "btnColorsRef";
             btnColorsRef.Size = new System.Drawing.Size(142, 30);
@@ -443,7 +449,7 @@ namespace Mids_Reborn.Forms
             borderPanel4.Border.Thickness = 1;
             borderPanel4.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
             borderPanel4.Controls.Add(timelineCursorZoom1);
-            borderPanel4.Location = new System.Drawing.Point(12, 840);
+            borderPanel4.Location = new System.Drawing.Point(12, 927);
             borderPanel4.Name = "borderPanel4";
             borderPanel4.Size = new System.Drawing.Size(1124, 30);
             borderPanel4.TabIndex = 34;
@@ -476,7 +482,7 @@ namespace Mids_Reborn.Forms
             ibxZoomOut.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibxZoomOut.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             ibxZoomOut.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            ibxZoomOut.Location = new System.Drawing.Point(30, 896);
+            ibxZoomOut.Location = new System.Drawing.Point(30, 983);
             ibxZoomOut.Lock = false;
             ibxZoomOut.Name = "ibxZoomOut";
             ibxZoomOut.Size = new System.Drawing.Size(40, 30);
@@ -502,7 +508,7 @@ namespace Mids_Reborn.Forms
             ibxZoomIn.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibxZoomIn.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
             ibxZoomIn.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            ibxZoomIn.Location = new System.Drawing.Point(95, 896);
+            ibxZoomIn.Location = new System.Drawing.Point(95, 983);
             ibxZoomIn.Lock = false;
             ibxZoomIn.Name = "ibxZoomIn";
             ibxZoomIn.Size = new System.Drawing.Size(40, 30);
@@ -518,12 +524,60 @@ namespace Mids_Reborn.Forms
             ibxZoomIn.Visible = false;
             ibxZoomIn.Click += ibxZoomIn_Click;
             // 
+            // borderPanel5
+            // 
+            borderPanel5.Border.Color = System.Drawing.Color.FromArgb(44, 47, 51);
+            borderPanel5.Border.Style = ButtonBorderStyle.Solid;
+            borderPanel5.Border.Thickness = 1;
+            borderPanel5.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
+            borderPanel5.Controls.Add(lblDamage);
+            borderPanel5.Location = new System.Drawing.Point(12, 546);
+            borderPanel5.Name = "borderPanel5";
+            borderPanel5.Size = new System.Drawing.Size(562, 80);
+            borderPanel5.TabIndex = 37;
+            // 
+            // lblDamage
+            // 
+            lblDamage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDamage.ForeColor = System.Drawing.Color.Firebrick;
+            lblDamage.Location = new System.Drawing.Point(3, 3);
+            lblDamage.Name = "lblDamage";
+            lblDamage.Size = new System.Drawing.Size(556, 74);
+            lblDamage.TabIndex = 0;
+            lblDamage.Text = "Damage";
+            lblDamage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // borderPanel6
+            // 
+            borderPanel6.Border.Color = System.Drawing.Color.FromArgb(44, 47, 51);
+            borderPanel6.Border.Style = ButtonBorderStyle.Solid;
+            borderPanel6.Border.Thickness = 1;
+            borderPanel6.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
+            borderPanel6.Controls.Add(lblDps);
+            borderPanel6.Location = new System.Drawing.Point(573, 546);
+            borderPanel6.Name = "borderPanel6";
+            borderPanel6.Size = new System.Drawing.Size(562, 80);
+            borderPanel6.TabIndex = 38;
+            // 
+            // lblDps
+            // 
+            lblDps.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDps.ForeColor = System.Drawing.Color.IndianRed;
+            lblDps.Location = new System.Drawing.Point(3, 3);
+            lblDps.Name = "lblDps";
+            lblDps.Size = new System.Drawing.Size(556, 74);
+            lblDps.TabIndex = 0;
+            lblDps.Text = "DPS";
+            lblDps.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // frmRotationHelper
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(1148, 944);
+            ClientSize = new System.Drawing.Size(1148, 1025);
+            Controls.Add(borderPanel6);
+            Controls.Add(borderPanel5);
             Controls.Add(ibxZoomIn);
             Controls.Add(ibxZoomOut);
             Controls.Add(borderPanel4);
@@ -565,6 +619,8 @@ namespace Mids_Reborn.Forms
             borderPanel2.ResumeLayout(false);
             borderPanel3.ResumeLayout(false);
             borderPanel4.ResumeLayout(false);
+            borderPanel5.ResumeLayout(false);
+            borderPanel6.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -605,5 +661,9 @@ namespace Mids_Reborn.Forms
         private Controls.TimelineCursorZoom timelineCursorZoom1;
         private Controls.ImageButtonEx ibxZoomOut;
         private Controls.ImageButtonEx ibxZoomIn;
+        private Controls.BorderPanel borderPanel5;
+        private Controls.BorderPanel borderPanel6;
+        private Label lblDamage;
+        private Label lblDps;
     }
 }
