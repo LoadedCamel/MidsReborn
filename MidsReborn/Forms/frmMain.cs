@@ -561,6 +561,11 @@ namespace Mids_Reborn.Forms
             {
                 fGraphStats.UpdateColorTheme(e);
             }
+
+            if (fRotationHelper is {Visible: true})
+            {
+                fRotationHelper.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
@@ -1109,48 +1114,44 @@ namespace Mids_Reborn.Forms
             FloatTop(false);
             var msgBoxResult = MessageBox.Show(@"Do you wish to save your build before closing?", @"Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             FloatTop(true);
-            int num;
-            switch (msgBoxResult)
-            {
-                case DialogResult.Cancel:
-                    return true;
-                case DialogResult.Yes:
-                    num = DoSave() ? 1 : 0;
-                    break;
-                default:
-                    num = 1;
-                    break;
-            }
 
-            return num == 0;
+            return msgBoxResult switch
+            {
+                DialogResult.Cancel => true,
+                DialogResult.Yes => !DoSave(),
+                _ => false
+            };
         }
 
         private bool ComboCheckAT(Archetype?[] playableClasses)
         {
             var cbtAT = CbtAT.Value;
-            if (cbtAT.Count != playableClasses.Length) return true;
+            if (cbtAT.Count != playableClasses.Length)
+            {
+                return true;
+            }
 
-            var num = playableClasses.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (cbtAT[index].Idx != playableClasses[index].Idx)
-                    return true;
-
-            return false;
+            return playableClasses
+                .Where((t, index) => cbtAT[index].Idx != t.Idx)
+                .Any();
         }
 
         private bool ComboCheckOrigin()
         {
             var cbtOrigin = GetCbOrigin();
-            if (cbtOrigin.Count != MidsContext.Character.Archetype.Origin.Length) return true;
+            if (cbtOrigin.Count != MidsContext.Character.Archetype.Origin.Length)
+            {
+                return true;
+            }
 
             if (cbtOrigin.Count > 1)
+            {
                 return false;
-            var num = MidsContext.Character.Archetype.Origin.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (cbtOrigin[index] != MidsContext.Character.Archetype.Origin[index])
-                    return true;
+            }
 
-            return false;
+            return MidsContext.Character.Archetype.Origin
+                .Where((t, index) => cbtOrigin[index] != t)
+                .Any();
         }
 
         private static void ComboCheckPool(ComboBoxT<string> iCB, Enums.ePowerSetType iSetType)
@@ -1425,6 +1426,7 @@ namespace Mids_Reborn.Forms
             {
                 return false;
             }
+
             DataViewLocked = false;
             NewToon(true, true);
             if (CharacterBuildFile.Load(fileName))
@@ -1440,7 +1442,11 @@ namespace Mids_Reborn.Forms
             }
 
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             switch (MidsContext.Character?.Archetype?.DisplayName)
             {
                 case "Mastermind":
@@ -1456,6 +1462,11 @@ namespace Mids_Reborn.Forms
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
+            for (var i = 0; i < 5; i++)
+            {
+                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1;
+            }
+
             UpdateControls(true);
             SetTitleBar();
             Application.DoEvents();
@@ -1463,6 +1474,7 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             DoRedraw();
             FloatUpdate(true);
+            
             return true;
         }
 
@@ -2041,23 +2053,31 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        internal void FloatDPSCalc(bool showow)
+        internal void FloatRotationHelper(bool show)
         {
-            if (showow)
+            if (show)
             {
-                if (fDPSCalc == null)
-                    fDPSCalc = new frmDPSCalc(this);
-                fDPSCalc.SetLocation();
-                fDPSCalc.Show();
+                // ???
+                if (fRotationHelper?.IsDisposed == true)
+                {
+                    fRotationHelper = null;
+                }
+
+                fRotationHelper ??= new frmRotationHelper(this);
+                //fRotationHelper.SetLocation();
+                fRotationHelper.Show();
                 FloatUpdate();
-                fDPSCalc.Activate();
+                fRotationHelper.Activate();
             }
             else
             {
-                if (fDPSCalc == null)
+                if (fRotationHelper == null)
+                {
                     return;
-                fDPSCalc.Hide();
-                fDPSCalc = null;
+                }
+
+                fRotationHelper.Hide();
+                fRotationHelper = null;
             }
         }
 
@@ -2065,8 +2085,7 @@ namespace Mids_Reborn.Forms
         {
             if (show)
             {
-                if (fSetFinder == null)
-                    fSetFinder = new frmSetFind(this);
+                fSetFinder ??= new frmSetFind(this);
                 fSetFinder.Show();
                 fSetFinder.Activate();
             }
@@ -2084,12 +2103,7 @@ namespace Mids_Reborn.Forms
         {
             if (show)
             {
-                if (fSets == null)
-                {
-                    var iParent = this;
-                    fSets = new frmSetViewer(iParent);
-                }
-
+                fSets ??= new frmSetViewer(this);
                 fSets.SetLocation();
                 fSets.Show();
                 FloatUpdate();
@@ -2098,7 +2112,10 @@ namespace Mids_Reborn.Forms
             else
             {
                 if (fSets == null)
+                {
                     return;
+                }
+
                 fSets.Hide();
                 fSets.Dispose();
                 fSets = null;
@@ -2331,8 +2348,9 @@ namespace Mids_Reborn.Forms
             fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();
-            fDPSCalc?.UpdateData();
+            fRotationHelper?.UpdateData();
             fData?.UpdateData(dvLastPower);
+            fRotationHelper?.UpdateData();
         }
 
         private void frmMain_Move(object? sender, EventArgs e)
@@ -2358,7 +2376,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     MidsContext.Config.WindowState = WindowState.ToString();
                     break;
             }
+
             MidsContext.Config.SaveConfig();
+
+            FormClosing -= frmMain_Closing;
 
             Application.Exit();
         }
@@ -6543,9 +6564,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatRecipe(true);
         }
 
-        private void tsDPSCalc_Click(object sender, EventArgs e)
+        private void tsRotationHelper_Click(object sender, EventArgs e)
         {
-            FloatDPSCalc(true);
+            FloatRotationHelper(true);
         }
 
         private void tsRemoveAllSlots_Click(object sender, EventArgs e)
@@ -6830,7 +6851,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             }
 
-            if (fRecipe != null && fRecipe.Visible)
+            if (fRecipe is {Visible: true})
             {
                 fRecipe.UpdateColorTheme();
             }
@@ -7377,8 +7398,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Select(e => DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName)
                 .ToList();
 
-            Debug.WriteLine($"Trunk powersets: {string.Join(", ", trunkPowersets)}");
-
             foreach (var ps in listPowersetsFull)
             {
                 if (!trunkPowersets.Contains(ps))
@@ -7425,8 +7444,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     // Regular powers
-                    Debug.WriteLine($"PowerPickedNoRedraw(power={powerEntryList[k].Power?.FullName}, level={powerEntryList[k].Level}, NIDPowerset={powerEntryList[k].NIDPowerset}, NIDPower={powerEntryList[k].NIDPower})");
-                    Debug.WriteLine($"  Powerset from NID: {DatabaseAPI.Database.Powersets[powerEntryList[k].NIDPowerset]?.FullName}, Power from NID: {DatabaseAPI.Database.Power[powerEntryList[k].NIDPower]?.FullName}");
                     PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
                 }
             }
@@ -7648,7 +7665,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private frmFloatingStats? FloatingDataForm;
         private frmMiniList? fMini;
         private frmRecipeViewer? fRecipe;
-        private frmDPSCalc? fDPSCalc;
+        private frmRotationHelper? fRotationHelper;
         private frmSetFind? fSetFinder;
         private frmSetViewer? fSets;
         private frmTemp? fTemp;

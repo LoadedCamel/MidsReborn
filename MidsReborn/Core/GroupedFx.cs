@@ -858,12 +858,6 @@ namespace Mids_Reborn.Core
         /// <returns>Build effect string from each effect, then concatenate into a single string (one effect per line)</returns>
         public string GetTooltip(IPower power)
         {
-            if (IsAggregated)
-            {
-                return string.Join("\r\n", IncludedEffects
-                    .Select(e => power.Effects[e].BuildEffectString(false, "", false, false, false, false, false, true)));
-            }
-
             var vectors = "";
             var statName = GetStatName(power);
             var groupedVector = GetGroupedVector(statName);
@@ -1073,6 +1067,18 @@ namespace Mids_Reborn.Core
                     .Select(e => e.Key)
                     .ToList(),
 
+                Enums.eEffectType.Damage => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
+                                Math.Abs(e.Value.BuffedMag - mag) < float.Epsilon &&
+                                e.Value.DamageType == fxIdentifier.DamageType &&
+                                e.Value.SpecialCase == specialCase &&
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
+                    .Select(e => e.Key)
+                    .ToList(),
+
                 _ => new List<int>()
             };
         }
@@ -1081,8 +1087,9 @@ namespace Mids_Reborn.Core
         /// Build grouped effects from ranked effects for a power
         /// </summary>
         /// <param name="power">Source power to build effects from. Use the enhanced power, not base.</param>
+        /// <oaram name="includeDamage">Where to include Damage effects</oaram>
         /// <returns>List of grouped effects from source power</returns>
-        public static List<GroupedFx> AssembleGroupedEffects(IPower power)
+        public static List<GroupedFx> AssembleGroupedEffects(IPower power, bool includeDamage = false)
         {
             var rankedEffects = power.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
@@ -1107,8 +1114,12 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Effects[re].EffectType is Enums.eEffectType.Damage
-                    or Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
+                if (!includeDamage & power.Effects[re].EffectType == Enums.eEffectType.Damage)
+                {
+                    continue;
+                }
+                
+                if (power.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
                     or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
                     or Enums.eEffectType.ExecutePower)
                 {
@@ -1167,6 +1178,45 @@ namespace Mids_Reborn.Core
 
                 switch (power.Effects[re].EffectType)
                 {
+                    case Enums.eEffectType.Damage:
+                        similarFxIds = GetSimilarEffects(power,
+                            new FxId
+                            {
+                                DamageType = power.Effects[re].DamageType,
+                                EffectType = Enums.eEffectType.Damage,
+                                ETModifies = Enums.eEffectType.None,
+                                MezType = Enums.eMez.None,
+                                ToWho = power.Effects[re].ToWho,
+                                SummonId = -1,
+                                Duration = power.Effects[re].Duration,
+                                PvMode = power.Effects[re].PvMode,
+                                IgnoreScaling = power.Effects[re].IgnoreScaling
+                            }, power.Effects[re].BuffedMag,
+                            power.Effects[re].SpecialCase,
+                            power.Effects[re].isEnhancementEffect);
+
+                        ignoredEffects.AddRangeUnique(similarFxIds);
+
+                        groupedRankedEffects.Add(
+                            new GroupedFx(new FxId
+                                {
+                                    DamageType = power.Effects[re].DamageType,
+                                    EffectType = Enums.eEffectType.Damage,
+                                    ETModifies = Enums.eEffectType.None,
+                                    MezType = Enums.eMez.None,
+                                    ToWho = power.Effects[re].ToWho,
+                                    SummonId = -1,
+                                    Duration = power.Effects[re].Duration,
+                                    PvMode = power.Effects[re].PvMode,
+                                    IgnoreScaling = power.Effects[re].IgnoreScaling
+                                },
+                                power.Effects[re].BuffedMag,
+                                "Damage",
+                                similarFxIds,
+                                power.Effects[re].isEnhancementEffect));
+
+                        break;
+
                     case Enums.eEffectType.EntCreate:
                         similarFxIds = GetSimilarEffects(power,
                             new FxId
@@ -1623,6 +1673,11 @@ namespace Mids_Reborn.Core
         /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
         public float GetMagSum(IPower power)
         {
+            if (IncludedEffects.Count <= 0)
+            {
+                return 0;
+            }
+
             var allNegEnh = IncludedEffects
                 .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                 .All(e => e < 0);
@@ -1675,7 +1730,10 @@ namespace Mids_Reborn.Core
                         continue;
                     }
 
-                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier))
+                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
+                        Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon |
+                        greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                        greList[i].SpecialCase != greList[j].SpecialCase)
                     {
                         continue;
                     }
@@ -1700,6 +1758,11 @@ namespace Mids_Reborn.Core
         /// <param name="displayBlockFontSize">Display block font size</param>
         private static void FinalizeListItem(ref PairedListEx.Item rankedEffect, IPower pBase, IPower pEnh, GroupedFx gre, int effectIndex, bool powerInBuild, float displayBlockFontSize)
         {
+            if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate) & pBase.AbsorbSummonEffects)
+            {
+                pBase.AbsorbPetEffects();
+            }
+
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
@@ -1879,7 +1942,7 @@ namespace Mids_Reborn.Core
                         _ => rankedEffect.Value
                     };
                     
-                    rankedEffect.ToolTip = greTooltip;
+                    rankedEffect.ToolTip = greTooltip + "\r\n\r\n" + $"magDiff: {magDiff}, mezDurationDiff: {mezDurationDiff}\r\nBase Mag: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0)}\r\nEnhanced Mag: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)}\r\n-----------------\r\nBase duration: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0)}\r\nEnhanced duration: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)}";
 
                     break;
 

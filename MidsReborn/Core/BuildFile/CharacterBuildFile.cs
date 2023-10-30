@@ -171,9 +171,8 @@ namespace Mids_Reborn.Core.BuildFile
 
             LastPower = characterData.CurrentBuild.LastPower + 1;
 
-            for (var powerIndex = 0; powerIndex < characterData.CurrentBuild.Powers.Count; powerIndex++)
+            foreach (var powerEntry in characterData.CurrentBuild.Powers)
             {
-                var powerEntry = characterData.CurrentBuild.Powers[powerIndex];
                 if (powerEntry == null) continue;
 
                 var powerData = new PowerData();
@@ -203,7 +202,7 @@ namespace Mids_Reborn.Core.BuildFile
                         }
 
                         subPowerData.StatInclude = subPowerEntry.StatInclude;
-                        PowerEntries[powerIndex]?.SubPowerEntries.Add(subPowerData);
+                        PowerEntries[^1]?.SubPowerEntries.Add(subPowerData);
                     }
 
                     foreach (var slot in powerEntry.Slots)
@@ -215,7 +214,7 @@ namespace Mids_Reborn.Core.BuildFile
                         };
                         WriteSlotData(ref slotData, slot.Enhancement);
                         WriteAltSlotData(ref slotData, slot.FlippedEnhancement);
-                        PowerEntries[powerIndex]?.SlotEntries.Add(slotData);
+                        PowerEntries[^1]?.SlotEntries.Add(slotData);
                     }
                 }
             }

@@ -34,7 +34,11 @@ namespace Mids_Reborn.Core
             BaseRunSpeed = 21f;
             MaxFlySpeed = 86f;
             MaxJumpSpeed = 114.40f;
+            MaxJumpHeight = 50f * BaseJumpHeight;
             MaxRunSpeed = 135.67f;
+            MaxMaxFlySpeed = 8.19f * BaseFlySpeed;
+            MaxMaxJumpSpeed = 7.917f * BaseJumpSpeed;
+            MaxMaxRunSpeed = 8.398f * BaseRunSpeed;
             MaxSlots = 67;
             EnableInherentSlotting = false;
             HealthSlots = 2;
@@ -77,7 +81,15 @@ namespace Mids_Reborn.Core
         [JsonProperty]
         public float MaxJumpSpeed { get; set; }
         [JsonProperty]
+        public float MaxJumpHeight { get; set; }
+        [JsonProperty]
         public float MaxRunSpeed { get; set; }
+        [JsonProperty]
+        public float MaxMaxFlySpeed { get; set; }
+        [JsonProperty]
+        public float MaxMaxJumpSpeed { get; set; }
+        [JsonProperty]
+        public float MaxMaxRunSpeed { get; set; }
         [JsonProperty]
         public int MaxSlots { get; set; }
         [JsonProperty]

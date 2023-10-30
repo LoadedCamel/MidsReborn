@@ -762,42 +762,68 @@ namespace Mids_Reborn
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
 
-            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
+            Totals.FlySpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f)) * Statistics.BaseFlySpeed;
+            Totals.RunSpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f)) * Statistics.BaseRunSpeed;
+            Totals.JumpSpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f)) * Statistics.BaseJumpSpeed;
+            Totals.JumpHeight = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f)) * Statistics.BaseJumpHeight;
+
+            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseFlySpeed;
+            Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
+            Totals.MaxJumpSpd = Statistics.MaxJumpSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed;
+            // No MaxJumpHeight
+
+            // Apply MaxMax
+            Totals.FlySpd = Math.Min(Totals.FlySpd, DatabaseAPI.ServerData.MaxMaxFlySpeed); // Statistics.BaseFlySpeed * 8.19f == 257.985
+            Totals.RunSpd = Math.Min(Totals.RunSpd, DatabaseAPI.ServerData.MaxMaxRunSpeed); // Statistics.BaseRunSpeed * 8.398f == 166.257
+            Totals.JumpSpd = Math.Min(Totals.JumpSpd, DatabaseAPI.ServerData.MaxMaxJumpSpeed); // Statistics.BaseJumpSpeed * 7.917f == 176.358
+
+            /*Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
             // This number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
             // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed, because increasing speed caps do not use 1.5x modifier fly speed gives.
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxFlySpd > 171.990005493164) // 128.990005493164
+            {
                 Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: although the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
-            
+            }
+
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
             Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxRunSpd > 176.35777) // 135.669998168945
+            {
                 Totals.MaxRunSpd = 135.67f; // 8.398f * 21.0f == 135.67f
-            
-            Totals.JumpSpd = (float) (Statistics.BaseJumpSpeed +
-                                      (double) Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed);
+            }
+
+            Totals.JumpSpd = Statistics.BaseJumpSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed;
             Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed);
             if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
+            {
                 Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
-            
-            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;
-            
-            Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
+            }
+
+            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;*/
+
+            Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + (Archetype?.Hitpoints ?? 0);
             if (!canFly)
-                Totals.FlySpd = 0.0f;
+            {
+                Totals.FlySpd = 0;
+            }
+
             var maxDmgBuff = -1000f;
             var minDmgBuff = -1000f;
-            var avgDmgBuff = 0.0f;
+            var avgDmgBuff = 0f;
             for (var index = 0; index < _selfBuffs.Damage.Length; index++)
             {
-                if (0 >= index || index >= 9)
+                if (index is <= 0 or >= 9)
+                {
                     continue;
-                if (_selfEnhance.Damage[index] > (double) maxDmgBuff)
+                }
+
+                if (_selfEnhance.Damage[index] > maxDmgBuff)
                 {
                     maxDmgBuff = _selfEnhance.Damage[index];
                 }
 
-                if (_selfEnhance.Damage[index] < (double) minDmgBuff)
+                if (_selfEnhance.Damage[index] < minDmgBuff)
                 {
                     minDmgBuff = _selfEnhance.Damage[index];
                 }
@@ -806,11 +832,11 @@ namespace Mids_Reborn
             }
 
             avgDmgBuff /= _selfEnhance.Damage.Length;
-            if (maxDmgBuff - (double) avgDmgBuff < avgDmgBuff - (double) minDmgBuff)
+            if (maxDmgBuff - avgDmgBuff < avgDmgBuff - minDmgBuff)
             {
                 Totals.BuffDam = maxDmgBuff;
             }
-            else if (maxDmgBuff - (double) avgDmgBuff > avgDmgBuff - (double) minDmgBuff & minDmgBuff > 0.0)
+            else if (maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff & minDmgBuff > 0)
             {
                 Totals.BuffDam = minDmgBuff;
             }
@@ -821,25 +847,25 @@ namespace Mids_Reborn
 
             ApplyPvpDr();
             TotalsCapped.Assign(Totals);
-            TotalsCapped.BuffDam = Math.Min(TotalsCapped.BuffDam, Archetype.DamageCap - 1f);
-            TotalsCapped.BuffHaste = Math.Min(TotalsCapped.BuffHaste, Archetype.RechargeCap - 1f);
-            TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1f);
-            TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1f);
-            var num11 = TotalsCapped.Res.Length;
-            for (var index = 0; index < num11; index++)
+            TotalsCapped.BuffDam = Math.Min(TotalsCapped.BuffDam, Archetype.DamageCap - 1);
+            TotalsCapped.BuffHaste = Math.Min(TotalsCapped.BuffHaste, Archetype.RechargeCap - 1);
+            TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1);
+            TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1);
+            for (var index = 0; index < TotalsCapped.Res.Length; index++)
             {
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
             }
 
-            if (Archetype.HPCap > 0.0)
+            if (Archetype.HPCap > 0)
             {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);
                 TotalsCapped.Absorb = Math.Min(TotalsCapped.Absorb, TotalsCapped.HPMax);
             }
 
-            TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, 135.67f);
-            TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, 114.4f);
-            TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, 86f);
+            TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, Totals.MaxRunSpd);
+            TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, Totals.MaxJumpSpd);
+            TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, Totals.MaxFlySpd);
+            TotalsCapped.JumpHeight = Math.Min(TotalsCapped.JumpHeight, DatabaseAPI.ServerData.MaxJumpHeight); // Statistics.BaseJumpHeight * 50 == 200 (MaxMax is at 300 but unused)
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
@@ -1977,6 +2003,18 @@ namespace Mids_Reborn
                 return null;
         }
 
+        public IPower? GetEnhancedPower(IPower? power)
+        {
+            if (power == null)
+            {
+                return null;
+            }
+
+            return _buffedPower
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(e => e != null && e.FullName == power.FullName);
+        }
+
         public int[] GetEnhancements(int iPowerSlot)
         {
             if (!(iPowerSlot < 0 || iPowerSlot >= CurrentBuild.Powers.Count) &&
@@ -2788,130 +2826,116 @@ namespace Mids_Reborn
         public ListLabelV3.LlItemState PowerState(int nIDPower, ref string message)
         {
             if (nIDPower < 0)
+            {
                 return ListLabelV3.LlItemState.Disabled;
-            var power = DatabaseAPI.Database.Power[nIDPower];
-            var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
-            var flag1 = inToonHistory > -1;
-            var num1 = Level;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal && RequestedLevel > -1) 
-            {
-                num1 = RequestedLevel;
-            }
-            else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec && RequestedLevel > -1)
-            {
-                num1 = RequestedLevel;
             }
 
-            var nLevel = num1;
-            if (flag1)
+            var power = DatabaseAPI.Database.Power[nIDPower];
+            var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
+            var foundInBuild = inToonHistory > -1;
+            var num1 = MidsContext.Config.BuildMode switch
             {
-                nLevel = CurrentBuild.Powers[inToonHistory].Level;
-            }
+                Enums.dmModes.Normal when RequestedLevel > -1 => RequestedLevel,
+                Enums.dmModes.Respec when RequestedLevel > -1 => RequestedLevel,
+                _ => Level
+            };
+
+            var nLevel = foundInBuild
+                ? CurrentBuild.Powers[inToonHistory].Level
+                : num1;
 
             message = "";
             var flag2 = CurrentBuild.MeetsRequirement(power, nLevel);
             if (PowersetMutexClash(nIDPower))
             {
-                message = "You cannot take the " + Powersets[0].DisplayName + " and " + Powersets[1].DisplayName +
-                          " sets together.";
+                message = $"You cannot take the {Powersets[0].DisplayName} and {Powersets[1].DisplayName} sets together.";
                 return ListLabelV3.LlItemState.Heading;
             }
 
-            if (flag1)
+            if (!foundInBuild)
+                return flag2 && num1 >= power?.Level - 1
+                    ? ListLabelV3.LlItemState.Enabled
+                    : ListLabelV3.LlItemState.Disabled;
+            
+            var num2 = 0;
+            Enums.PowersetType powersetType;
+            int[] numArray;
+            do
             {
-                var num2 = 0;
-                Enums.PowersetType powersetType;
-                int[] numArray;
-                do
+                Enums.ePowerSetType ePowerSetType;
+                int index1;
+                if (num2 == 0)
                 {
-                    Enums.ePowerSetType ePowerSetType;
-                    int index1;
-                    if (num2 == 0)
-                    {
-                        ePowerSetType = Enums.ePowerSetType.Primary;
-                        powersetType = Enums.PowersetType.Primary;
-                        index1 = 0;
-                    }
-                    else
-                    {
-                        ePowerSetType = Enums.ePowerSetType.Secondary;
-                        powersetType = Enums.PowersetType.Secondary;
-                        index1 = 1;
-                    }
-
-                    if ((power.GetPowerSet().SetType == ePowerSetType) & (power.Level - 1 == 0))
-                    {
-                        numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[(int) powersetType].nID);
-                        var flag3 = false;
-                        var num3 = 0;
-                        var num4 = numArray.Length - 1;
-                        for (var index2 = 0; index2 <= num4; ++index2)
-                            if (CurrentBuild.Powers[index1].NIDPower == numArray[index2])
-                                flag3 = true;
-                            else if (CurrentBuild.FindInToonHistory(numArray[index2]) > -1)
-                                ++num3;
-
-                        if (((CurrentBuild.Powers[index1].NIDPowerset > 0) & !flag3) | (num3 == numArray.Length))
-                            goto label_22;
-                    }
-
-                    ++num2;
-                } while (num2 <= 1);
-
-                goto label_23;
-                label_22:
-                message = "This power has been placed in a way that is not possible in-game. One of the " +
-                          Convert.ToString(numArray.Length) + " level 1 powers from your " +
-                          Enum.GetName(powersetType.GetType(), powersetType) + " set must be taken at level 1.";
-                return ListLabelV3.LlItemState.Invalid;
-                label_23:
-                if (!flag2)
+                    ePowerSetType = Enums.ePowerSetType.Primary;
+                    powersetType = Enums.PowersetType.Primary;
+                    index1 = 0;
+                }
+                else
                 {
-                    if ((power.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary) |
-                        (power.GetPowerSet().SetType == Enums.ePowerSetType.Pool))
-                    {
-                        message = "This power has been placed in a way that is not possible in-game.";
-                        switch (power.PowerSetIndex)
-                        {
-                            case 2:
-                                message +=
-                                    "\r\nYou must take one of the first two powers in a pool before taking the third.";
-                                break;
-                            case 3:
-                                message +=
-                                    "\r\nYou must take two of the first three powers in a pool before taking the fourth.";
-                                break;
-                            case 4:
-                                message +=
-                                    "\r\nYou must take two of the first three powers in a pool before taking the fifth.";
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (power.InherentType != Enums.eGridType.None)
-                        {
-                            return ListLabelV3.LlItemState.Enabled;
-                        }
-
-                        message =
-                            "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
-
-                        return ListLabelV3.LlItemState.Invalid;
-
-                    }
-
-                    return ListLabelV3.LlItemState.Invalid;
+                    ePowerSetType = Enums.ePowerSetType.Secondary;
+                    powersetType = Enums.PowersetType.Secondary;
+                    index1 = 1;
                 }
 
-                if (num1 <= power.Level - 1)
-                    return ListLabelV3.LlItemState.SelectedDisabled;
-                return num1 <= power.Level - 1 ? ListLabelV3.LlItemState.Enabled : ListLabelV3.LlItemState.Selected;
+                if (power?.GetPowerSet().SetType == ePowerSetType & power.Level - 1 == 0)
+                {
+                    numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[(int)powersetType].nID);
+                    var flag3 = false;
+                    var num3 = 0;
+                    foreach (var k in numArray)
+                    {
+                        if (CurrentBuild.Powers[index1].NIDPower == k)
+                        {
+                            flag3 = true;
+                        }
+                        else if (CurrentBuild.FindInToonHistory(k) > -1)
+                        {
+                            num3++;
+                        }
+                    }
+
+                    if (CurrentBuild.Powers[index1].NIDPowerset > 0 & !flag3 | num3 == numArray.Length)
+                    {
+                        message = $"This power has been placed in a way that is not possible in-game. One of the {numArray.Length} level 1 powers from your {Enum.GetName(powersetType.GetType(), powersetType)} set must be taken at level 1.";
+                        
+                        return ListLabelV3.LlItemState.Invalid;
+                    }
+                }
+
+                ++num2;
+            } while (num2 <= 1);
+
+            if (flag2)
+            {
+                return num1 <= power.Level - 1
+                    ? ListLabelV3.LlItemState.SelectedDisabled
+                    : ListLabelV3.LlItemState.Selected;
             }
 
-            if (flag2 && num1 >= power.Level - 1)
-                return ListLabelV3.LlItemState.Enabled;
-            return ListLabelV3.LlItemState.Disabled;
+            if (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary | power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool)
+            {
+                message = "This power has been placed in a way that is not possible in-game.";
+                message += power?.PowerSetIndex switch
+                {
+                    2 => "\r\nYou must take one of the first two powers in a pool before taking the third.",
+                    3 => "\r\nYou must take two of the first three powers in a pool before taking the fourth.",
+                    4 => "\r\nYou must take two of the first three powers in a pool before taking the fifth.",
+                    _ => ""
+                };
+            }
+            else
+            {
+                if (power?.InherentType != Enums.eGridType.None)
+                {
+                    return ListLabelV3.LlItemState.Enabled;
+                }
+
+                message = "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
+
+                return ListLabelV3.LlItemState.Invalid;
+            }
+
+            return ListLabelV3.LlItemState.Invalid;
         }
 
         private bool ReadInternalData(StreamReader iStream)

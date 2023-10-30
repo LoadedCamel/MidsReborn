@@ -238,6 +238,10 @@ namespace Mids_Reborn.Core
 
         int VirtualStacks { get; set; }
 
+        float CastTimeBase { get; }
+        
+        float ArcanaCastTime { get; }
+
         bool HasDefEffects();
 
         bool HasResEffects();

@@ -174,7 +174,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void frmDPSCalc_FormClosed(object sender, FormClosedEventArgs e)
         {
             StoreLocation();
-            myParent.FloatDPSCalc(false);
+            //myParent.FloatDPSCalc(false);
         }
 
         private void SetIbStyle(ImageButton ib)
