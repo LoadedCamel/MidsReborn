@@ -1725,7 +1725,7 @@ namespace Mids_Reborn.Core
             public sTwinID Enhance;
             public eSchedule Schedule;
             public float Multiplier;
-            public IEffect FX;
+            public IEffect? FX;
 
             public void Assign(sEffect effect)
             {

@@ -6572,7 +6572,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsSetFind_Click(object sender, EventArgs e)
         {
-            FloatSetFinder(true);
+            using var setFinder = new SetInspector();
+            setFinder.ShowDialog(this);
         }
 
         private void Github_Link(object? sender, EventArgs e)

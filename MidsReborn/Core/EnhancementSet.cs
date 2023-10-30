@@ -146,6 +146,13 @@ namespace Mids_Reborn.Core
             }
         }
 
+        public string GetEnhancementSetRarity()
+        {
+            var enhIdx = Enhancements[0];
+            var recipeIdx = DatabaseAPI.Database.Enhancements[enhIdx].RecipeIDX;
+            return DatabaseAPI.Database.Recipes[recipeIdx].Rarity.ToString();
+        }
+
         public List<IEffect> GetEffectDetailedData(int index, bool special)
         {
             var ret = new List<IEffect>();
@@ -340,37 +347,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        /*public bool ImportFromCSV(string iCSV)
-        {
-            bool flag;
-            if (iCSV == null)
-            {
-                flag = false;
-            }
-            else if (string.IsNullOrEmpty(iCSV))
-            {
-                flag = false;
-            }
-            else
-            {
-                var array = CSV.ToArray(iCSV);
-                DisplayName = array[1];
-                ShortName = GenerateShortName(DisplayName);
-                Uid = array[0];
-                LevelMin = int.Parse(array[3]) - 1;
-                LevelMax = int.Parse(array[4]) - 1;
-                var str = array[2];
-                for (var index = 0; index < DatabaseAPI.Database.SetTypeStringLong.Length; ++index)
-                    if (str == DatabaseAPI.Database.SetTypeStringLong[index])
-                        SetType = (Enums.eSetType) index;
-                flag = true;
-            }
-
-            return flag;
-        }*/
-
         private static string GenerateShortName(string displayName)
-
         {
             var strArray = displayName.Split(' ');
             var stringBuilder = new StringBuilder();

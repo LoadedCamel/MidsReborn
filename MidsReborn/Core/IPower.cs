@@ -279,6 +279,9 @@ namespace Mids_Reborn.Core
             bool fromPopup = false,
             bool ignoreConditions = false);
 
+        string? BuildEffectStringGrouped(int idEffect, bool simple = true, bool noMag = false, bool shortForm = false,
+            bool fromPopup = false, bool ignoreConditions = false);
+
         int[] AbsorbEffects(
             IPower? source,
             float nDuration,

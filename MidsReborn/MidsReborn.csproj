@@ -73,6 +73,18 @@
     <Content Include="Data\Rebirth\SData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Fonts\DejaVuSansMono-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\DejaVuSansMono-BoldOblique.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\DejaVuSansMono-Oblique.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\DejaVuSansMono.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Fonts\NotoSans-Black.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -374,6 +386,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Data\Rebirth\SData.json" />
+    <None Remove="Fonts\DejaVuSansMono-Bold.ttf" />
+    <None Remove="Fonts\DejaVuSansMono-BoldOblique.ttf" />
+    <None Remove="Fonts\DejaVuSansMono-Oblique.ttf" />
+    <None Remove="Fonts\DejaVuSansMono.ttf" />
     <None Remove="Fonts\NotoSans-Black.ttf" />
     <None Remove="Fonts\NotoSans-BlackItalic.ttf" />
     <None Remove="Fonts\NotoSans-Bold.ttf" />

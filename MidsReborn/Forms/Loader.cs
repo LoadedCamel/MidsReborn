@@ -139,7 +139,8 @@ namespace Mids_Reborn.Forms
             _mainForm = new frmMain(_passedArgs)
             {
                 Loader = this,
-                Location = MidsContext.Config.Bounds.Location
+                Location = MidsContext.Config.Bounds.Location,
+                Size = MidsContext.Config.Bounds.Size,
             };
             _mainForm.Load += MainFormOnLoad;
             _mainForm.Shown += MainFormOnShown;

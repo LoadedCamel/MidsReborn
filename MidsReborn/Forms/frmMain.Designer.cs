@@ -1551,7 +1551,7 @@ namespace Mids_Reborn.Forms
             // 
             this.tsSetFind.Name = "tsSetFind";
             this.tsSetFind.Size = new System.Drawing.Size(232, 22);
-            this.tsSetFind.Text = "Set &Bonus Finder";
+            this.tsSetFind.Text = "Set &Inspector";
             this.tsSetFind.Click += new System.EventHandler(this.tsSetFind_Click);
             // 
             // ToolStripSeparator21

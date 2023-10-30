@@ -263,20 +263,18 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
-        public static async Task<List<string>> LoadPowerSets()
+        public static async Task<List<string?>> LoadPowerSets()
         {
-            var cSource = new TaskCompletionSource<List<string>>();
-            var retList = new List<string>();
+            var cSource = new TaskCompletionSource<List<string?>>();
+            var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             if (retList.Any(p => p != unknown))
             {
-                retList.Add(unknown); 
+                if (unknown != null) retList.Add(unknown);
             }
-            retList.AddRange(DatabaseAPI.Database.Powersets
-                .Select(ps => powersetImages.FirstOrDefault(i => i.FileName == $"{ps.ImageName}").Path)
-                .Where(path => !string.IsNullOrWhiteSpace(path)));
+            retList.AddRange(DatabaseAPI.Database.Powersets.Select(ps => powersetImages.FirstOrDefault(i => ps != null && i.FileName == $"{ps.ImageName}").Path).Where(path => !string.IsNullOrWhiteSpace(path)));
 
             cSource.TrySetResult(retList);
 
@@ -300,12 +298,7 @@ namespace Mids_Reborn.Core
                 }
                 retList.Add(path);
             }
-
-            // foreach (var img in enhancementImages)
-            // {
-            //     Debug.WriteLine(img.Path);
-            // }
-
+            
             for (var index = 0; index < retList.Count; index++)
             {
                 DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
@@ -889,8 +882,12 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
+            if (Borders.Bitmap == null) return;
             iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
+            if (Sets.Bitmap != null)
+            {
+                iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
+            }
         }
 
         public static Rectangle GetOverlayRect(Origin.Grade iGrade)

@@ -1,6 +1,6 @@
-﻿namespace Mids_Reborn.Forms.Controls
+﻿namespace Mids_Reborn.Controls
 {
-    partial class AtOriginCombo
+    sealed partial class EnhSetInfo
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         #endregion
-
     }
 }
