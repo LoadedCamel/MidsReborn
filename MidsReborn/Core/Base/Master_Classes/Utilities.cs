@@ -39,7 +39,6 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 { @"(SpeedJumping.*JumpHeight.*SpeedFlying.*SpeedRunning)", @"Movement Speed" },
                 { @"(Knockback.*\(Mag.-)", @"Knockback Protection (Mag " }, 
                 { @"(Knockback.*Knockup.*protection)", @"Knockback Protection"}
-
             };
 
             var matchCollection2 = new Dictionary<string, string>

@@ -1833,160 +1833,174 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
         {
             bool flag;
-            if ((idEffect < 0) | (idEffect > Effects.Length - 1))
+            if (idEffect < 0 | idEffect > Effects.Length - 1)
             {
-                flag = false;
+                return false;
             }
-            else
+
+            var str = string.Empty;
+            var array = Array.Empty<int>();
+            var effect = (IEffect) Effects[idEffect].Clone();
+            switch (effect.EffectType)
             {
-                var str = string.Empty;
-                var array = Array.Empty<int>();
-                var effect = (IEffect) Effects[idEffect].Clone();
-                switch (effect.EffectType)
+                case Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
                 {
-                    case Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
+                    var iDamage = new bool[Enum.GetValues(typeof(Enums.eDamage)).Length];
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
                     {
-                        var iDamage = new bool[Enum.GetValues(typeof(Enums.eDamage)).Length];
-                        for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
+                        for (var index2 = 0; index2 < iDamage.Length; index2++)
                         {
-                            for (var index2 = 0; index2 <= iDamage.Length - 1; ++index2)
+                            effect.DamageType = (Enums.eDamage) index2;
+                            if (effect.CompareTo(Effects[index1]) != 0)
                             {
-                                effect.DamageType = (Enums.eDamage) index2;
-                                if (effect.CompareTo(Effects[index1]) != 0)
-                                {
-                                    continue;
-                                }
-
-                                iDamage[index2] = true;
-                                Array.Resize(ref array, array.Length + 1);
-                                array[^1] = index1;
+                                continue;
                             }
-                        }
 
-                        if (array.Length <= 1)
-                        {
-                            return false;
+                            iDamage[index2] = true;
+                            Array.Resize(ref array, array.Length + 1);
+                            array[^1] = index1;
                         }
-
-                        effect.DamageType = Enums.eDamage.Special;
-                        var newValue = effect.EffectType == Enums.eEffectType.Defense ? Enums.GetGroupedDefense(iDamage, shortForm) : Enums.GetGroupedDamage(iDamage, shortForm);
-                        str = shortForm ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("Special", newValue);
-                        break;
                     }
-                    case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+
+                    if (array.Length <= 1)
                     {
-                        var iMez = new bool[Enum.GetValues(typeof(Enums.eMez)).Length];
-                        for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
-                        {
-                            for (var index2 = 0; index2 <= iMez.Length - 1; ++index2)
-                            {
-                                effect.MezType = (Enums.eMez) index2;
-                                if (effect.CompareTo(Effects[index1]) != 0)
-                                {
-                                    continue;
-                                }
-
-                                iMez[index2] = true;
-                                Array.Resize(ref array, array.Length + 1);
-                                array[^1] = index1;
-                            }
-                        }
-
-                        if (array.Length <= 1)
-                        {
-                            return false;
-                        }
-
-                        effect.MezType = Enums.eMez.None;
-                        var newValue = Enums.GetGroupedMez(iMez, shortForm);
-
-                        if (newValue == "Knocked" && effect.BuffedMag < 0.0)
-                        {
-                            newValue = "Knockback Protection";
-                        }
-
-                        if (shortForm)
-                        {
-                            str = effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue);
-                        }
-                        else
-                        {
-                            str = effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("None", newValue);
-                        }
-
-                        switch (effect.EffectType)
-                        {
-                            case Enums.eEffectType.MezResist:
-                            {
-                                if (newValue == "Mez")
-                                {
-                                    str = str.Replace("MezResist(Mez)", "Status Resistance");
-                                }
-
-                                break;
-                            }
-                            case Enums.eEffectType.Mez when (newValue == "Mez") & (effect.BuffedMag < 0.0):
-                                str = str.Replace("Mez", "Status Protection").Replace("-", string.Empty);
-                                break;
-                            case Enums.eEffectType.Mez:
-                            {
-                                if (newValue != "Knockback Protection")
-                                {
-                                    str = str.Replace("(Mag -", "protection (Mag ");
-                                }
-
-                                break;
-                            }
-                        }
-
-                        break;
+                        return false;
                     }
-                    case Enums.eEffectType.Enhancement:
-                    {
-                        var num = 0;
-                        if (Effects.Length == 4)
-                        {
-                            for (var index = 0; index <= Effects.Length - 1; ++index)
-                            {
-                                if (Effects[index].EffectType == Enums.eEffectType.Enhancement && (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) | (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) | (Effects[index].ETModifies == Enums.eEffectType.SpeedJumping) | (Effects[index].ETModifies == Enums.eEffectType.JumpHeight))
-                                {
-                                    ++num;
-                                }
-                            }
 
-                            if (num == Effects.Length)
-                            {
-                                array = new int[Effects.Length];
-                                for (var index = 0; index <= array.Length - 1; ++index)
-                                {
-                                    array[index] = index;
-                                }
-
-                                effect.ETModifies = Enums.eEffectType.Slow;
-                                str = shortForm ? effect.BuildEffectStringShort(noMag, simple) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions);
-                                if (BuffMode != Enums.eBuffMode.Debuff)
-                                {
-                                    str = str.Replace("Slow", "Movement");
-                                }
-                            }
-                        }
-
-                        break;
-                    }
+                    effect.DamageType = Enums.eDamage.Special;
+                    var newValue = effect.EffectType == Enums.eEffectType.Defense
+                        ? Enums.GetGroupedDefense(iDamage, shortForm)
+                        : Enums.GetGroupedDamage(iDamage, shortForm);
+                    str = shortForm
+                        ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true,
+                            ignoreConditions).Replace("Special", newValue);
+                    break;
                 }
+                case Enums.eEffectType.RechargePower:
+                {
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
+                    {
+                        if (Effects[index1].EffectType != Enums.eEffectType.RechargePower)
+                        {
+                            continue;
+                        }
 
-                returnMask = new int[array.Length];
-                Array.Copy(array, returnMask, array.Length);
-                returnString = str;
-                flag = true;
+                        Array.Resize(ref array, array.Length + 1);
+                        array[^1] = index1;
+                    }
+
+                    str = shortForm
+                        ? effect.BuildEffectStringShort(noMag, simple).Replace("RechargePower", "RechargePower(Stalker's Build-Ups)")
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("RechargePower", "RechargePower(Stalker's Build-Ups)");
+                    break;
+                }
+                case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+                {
+                    var iMez = new bool[Enum.GetValues(typeof(Enums.eMez)).Length];
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
+                    {
+                        for (var index2 = 0; index2 < iMez.Length; index2++)
+                        {
+                            effect.MezType = (Enums.eMez) index2;
+                            if (effect.CompareTo(Effects[index1]) != 0)
+                            {
+                                continue;
+                            }
+
+                            iMez[index2] = true;
+                            Array.Resize(ref array, array.Length + 1);
+                            array[^1] = index1;
+                        }
+                    }
+
+                    if (array.Length <= 1)
+                    {
+                        return false;
+                    }
+
+                    effect.MezType = Enums.eMez.None;
+                    var newValue = Enums.GetGroupedMez(iMez, shortForm);
+
+                    if (newValue == "Knocked" && effect.BuffedMag < 0)
+                    {
+                        newValue = "Knockback Protection";
+                    }
+
+                    str = shortForm
+                        ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue)
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true,
+                            ignoreConditions).Replace("None", newValue);
+
+                    switch (effect.EffectType)
+                    {
+                        case Enums.eEffectType.MezResist:
+                            if (newValue == "Mez")
+                            {
+                                str = str.Replace("MezResist(Mez)", "Status Resistance");
+                            }
+
+                            break;
+                        case Enums.eEffectType.Mez when newValue == "Mez" & effect.BuffedMag < 0:
+                            str = str.Replace("Mez", "Status Protection").Replace("-", string.Empty);
+                            break;
+                        case Enums.eEffectType.Mez:
+                            if (newValue != "Knockback Protection")
+                            {
+                                str = str.Replace("(Mag -", "protection (Mag ");
+                            }
+
+                            break;
+                    }
+
+                    break;
+                }
+                case Enums.eEffectType.Enhancement:
+                {
+                    var num = 0;
+                    if (Effects.Length == 4)
+                    {
+                        num += Effects.Count(t =>
+                            t.EffectType == Enums.eEffectType.Enhancement &&
+                            t.ETModifies == Enums.eEffectType.SpeedRunning |
+                            t.ETModifies == Enums.eEffectType.SpeedFlying |
+                            t.ETModifies == Enums.eEffectType.SpeedJumping |
+                            t.ETModifies == Enums.eEffectType.JumpHeight);
+
+                        if (num == Effects.Length)
+                        {
+                            array = new int[Effects.Length];
+                            for (var index = 0; index < array.Length; index++)
+                            {
+                                array[index] = index;
+                            }
+
+                            effect.ETModifies = Enums.eEffectType.Slow;
+                            str = shortForm
+                                ? effect.BuildEffectStringShort(noMag, simple)
+                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true,
+                                    ignoreConditions);
+                            if (BuffMode != Enums.eBuffMode.Debuff)
+                            {
+                                str = str.Replace("Slow", "Movement");
+                            }
+                        }
+                    }
+
+                    break;
+                }
             }
 
-            return flag;
+            returnMask = new int[array.Length];
+            Array.Copy(array, returnMask, array.Length);
+            returnString = str;
+            
+            return true;
         }
 
-        public string? BuildEffectStringGrouped(int idEffect,bool simple = true, bool noMag = false, bool shortForm = false, bool fromPopup = false, bool ignoreConditions = false)
+        public string? BuildEffectStringGrouped(int idEffect, bool simple = true, bool noMag = false, bool shortForm = false, bool fromPopup = false, bool ignoreConditions = false)
         {
-            if ((idEffect < 0) | (idEffect > Effects.Length - 1))
+            if (idEffect < 0 | idEffect > Effects.Length - 1)
             {
                 return null;
             }
@@ -1999,9 +2013,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
                 {
                     var iDamage = new bool[Enum.GetValues(typeof(Enums.eDamage)).Length];
-                    for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
                     {
-                        for (var index2 = 0; index2 <= iDamage.Length - 1; ++index2)
+                        for (var index2 = 0; index2 < iDamage.Length; index2++)
                         {
                             effect.DamageType = (Enums.eDamage) index2;
                             if (effect.CompareTo(Effects[index1]) != 0)
@@ -2025,12 +2039,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     returnValue = shortForm ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("Special", newValue);
                     break;
                 }
+                case Enums.eEffectType.RechargePower:
+                {
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
+                    {
+                        if (Effects[index1].EffectType != Enums.eEffectType.RechargePower)
+                        {
+                            continue;
+                        }
+
+                        Array.Resize(ref array, array.Length + 1);
+                        array[^1] = index1;
+                    }
+
+                    returnValue = shortForm
+                        ? effect.BuildEffectStringShort(noMag, simple)
+                            .Replace("RechargePower", "RechargePower(Stalker's Build-Ups)")
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true,
+                            ignoreConditions).Replace("RechargePower", "RechargePower(Stalker's Build-Ups)");
+                    break;
+                }
                 case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
                 {
                     var iMez = new bool[Enum.GetValues(typeof(Enums.eMez)).Length];
-                    for (var index1 = 0; index1 <= Effects.Length - 1; ++index1)
+                    for (var index1 = 0; index1 < Effects.Length; index1++)
                     {
-                        for (var index2 = 0; index2 <= iMez.Length - 1; ++index2)
+                        for (var index2 = 0; index2 < iMez.Length; index2++)
                         {
                             effect.MezType = (Enums.eMez) index2;
                             if (effect.CompareTo(Effects[index1]) != 0)
@@ -2052,7 +2086,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effect.MezType = Enums.eMez.None;
                     var newValue = Enums.GetGroupedMez(iMez, shortForm);
 
-                    if (newValue == "Knocked" && effect.BuffedMag < 0.0)
+                    if (newValue == "Knocked" && effect.BuffedMag < 0)
                     {
                         newValue = "Knockback Protection";
                     }
@@ -2062,26 +2096,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.MezResist:
-                        {
                             if (newValue == "Mez")
                             {
                                 returnValue = returnValue.Replace("MezResist(Mez)", "Status Resistance");
                             }
 
                             break;
-                        }
-                        case Enums.eEffectType.Mez when (newValue == "Mez") & (effect.BuffedMag < 0.0):
+                        case Enums.eEffectType.Mez when newValue == "Mez" & effect.BuffedMag < 0:
                             returnValue = returnValue.Replace("Mez", "Status Protection").Replace("-", string.Empty);
                             break;
                         case Enums.eEffectType.Mez:
-                        {
                             if (newValue != "Knockback Protection")
                             {
                                 returnValue = returnValue.Replace("(Mag -", "protection (Mag ");
                             }
 
                             break;
-                        }
                     }
 
                     break;
@@ -2091,18 +2121,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var num = 0;
                     if (Effects.Length == 4)
                     {
-                        for (var index = 0; index <= Effects.Length - 1; ++index)
-                        {
-                            if (Effects[index].EffectType == Enums.eEffectType.Enhancement && (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) | (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) | (Effects[index].ETModifies == Enums.eEffectType.SpeedJumping) | (Effects[index].ETModifies == Enums.eEffectType.JumpHeight))
-                            {
-                                ++num;
-                            }
-                        }
+                        num += Effects.Count(t => t.EffectType == Enums.eEffectType.Enhancement && t.ETModifies == Enums.eEffectType.SpeedRunning | t.ETModifies == Enums.eEffectType.SpeedFlying | t.ETModifies == Enums.eEffectType.SpeedJumping | t.ETModifies == Enums.eEffectType.JumpHeight);
 
                         if (num == Effects.Length)
                         {
                             array = new int[Effects.Length];
-                            for (var index = 0; index <= array.Length - 1; ++index)
+                            for (var index = 0; index < array.Length; index++)
                             {
                                 array[index] = index;
                             }
@@ -2127,7 +2151,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var num1 = -1;
             var length = Effects.Length;
-            var array = new int[0];
+            var array = Array.Empty<int>();
             var num2 = 0f;
             if (source.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
             {
