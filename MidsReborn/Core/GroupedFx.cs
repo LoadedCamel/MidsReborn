@@ -1801,6 +1801,7 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.Recovery:
                 case Enums.eEffectType.Endurance:
+                case Enums.eEffectType.Regeneration:
                     rankedEffect.Name = $"{effectType}";
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{magSum * 100:###0.##}%{toWhoShort}"
