@@ -577,6 +577,7 @@ namespace Mids_Reborn.Core
                                      p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
                                      p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
                                      p.GetPowerSet().nArchetype == -1 &&
+                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
                                      !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
         }
 
@@ -590,6 +591,7 @@ namespace Mids_Reborn.Core
                                      p.FullName.StartsWith("Incarnate") | 
                                      (listPowersets.Contains(p.GetPowerSet().FullName) &&
                                       p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1) &&
+                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
                                      !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
         }
 
