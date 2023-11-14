@@ -741,11 +741,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var sResMax = 5;
             foreach (var e in eMezArray)
             {
-                var iTip11 = Math.Abs(totals.Mez[(int) e]) < float.Epsilon
+                var mezProtection = totals.Mez[(int) e] > 0 ? 0 : Math.Abs(totals.Mez[(int) e]);
+                var iTip11 = mezProtection < float.Epsilon
                     ? $"You have no protection from {names3[(int) e]} effects.\r\n{str9}"
-                    : $"You have mag {Math.Abs(totals.Mez[(int) e]):##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
+                    : $"You have mag {mezProtection:##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
 
-                graphSProt.AddItem($"{names2[(int) e]}|{Math.Abs(totals.Mez[(int) e]):##0.##}", Math.Abs(totals.Mez[(int) e]), 0, iTip11);
+                graphSProt.AddItem($"{names2[(int) e]}|{mezProtection:##0.##}", mezProtection, 0, iTip11);
+                
                 var mezResPercent = 100 / (1 + totals.MezRes[(int) e] / 100);
                 var str11 = "";
                 if (e != Enums.eMez.Knockback & e != Enums.eMez.Knockup & e != Enums.eMez.Repel & e != Enums.eMez.Teleport)

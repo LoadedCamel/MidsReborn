@@ -1943,7 +1943,7 @@ namespace Mids_Reborn.Core
                         _ => rankedEffect.Value
                     };
                     
-                    rankedEffect.ToolTip = greTooltip + "\r\n\r\n" + $"magDiff: {magDiff}, mezDurationDiff: {mezDurationDiff}\r\nBase Mag: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0)}\r\nEnhanced Mag: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)}\r\n-----------------\r\nBase duration: {(effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0)}\r\nEnhanced duration: {(effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)}";
+                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -2011,7 +2011,9 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.Heal:
                     rankedEffect.Name = $"Heal{toWhoShort}";
-                    rankedEffect.Value = $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
+                    rankedEffect.Value = effectSource.DisplayPercentage
+                        ? $"{gre.Mag * 100:####0.##}% HP"
+                        : $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
