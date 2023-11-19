@@ -1659,7 +1659,11 @@ namespace Mids_Reborn.Forms
 
         private void DoResize(bool forceResize = false)
         {
-            if (drawing == null) return;
+            if (drawing == null)
+            {
+                return;
+            }
+
             var prevDrawingWidth = pnlGFX.Width;
             var clientWidth = ClientRectangle.Width - pnlGFXFlow.Left;
             var clientHeight = ClientRectangle.Height - pnlGFXFlow.Top;
@@ -1691,8 +1695,43 @@ namespace Mids_Reborn.Forms
             drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             drawing.SetScaling(pnlGFX.Size);
             ReArrange(false);
+            ReArrangeButtons();
             NoResizeEvent = true;
             DoRedraw();
+        }
+
+        private void ReArrangeButtons()
+        {
+            var layout = new List<List<ImageButtonEx>>
+            {
+                new()
+                {
+                    ibTeamEx, ibAlignmentEx, ibPvXEx, ibRecipeEx, ibPopupEx
+                },
+                new()
+                {
+                    ibPrestigePowersEx, ibAccoladesEx, ibIncarnatePowersEx, ibTempPowersEx
+                }
+            };
+
+            const int outerGap = 16;
+            const int innerGapX = 6;
+            const int clientWidthLimit = 1316;
+
+            foreach (var row in layout)
+            {
+                var x = Math.Min(ClientSize.Width, clientWidthLimit) - outerGap;
+                for (var j = row.Count - 1; j >= 0; j--)
+                {
+                    x -= row[j].Size.Width;
+                    if (j < row.Count - 1)
+                    {
+                        x -= innerGapX;
+                    }
+
+                    row[j].Location = new Point(x, row[j].Location.Y);
+                }
+            }
         }
 
         public void DoRefresh()
