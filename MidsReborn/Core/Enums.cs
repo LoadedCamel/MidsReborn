@@ -1549,23 +1549,21 @@ namespace Mids_Reborn.Core
             return array;
         }
 
-        public static bool IsEnumValue(string iStr, object eEnum)
+        public static bool IsEnumValue(string? iStr, object eEnum)
         {
-            bool flag;
             if (iStr == null)
             {
-                flag = false;
-            }
-            else
-            {
-                var names = Enum.GetNames(eEnum.GetType());
-                iStr = iStr.ToUpper();
-                for (var index = 0; index < names.Length; ++index)
-                    names[index] = names[index].ToUpper();
-                flag = Array.IndexOf(names, iStr) > -1;
+                return false;
             }
 
-            return flag;
+            var names = Enum.GetNames(eEnum.GetType());
+            iStr = iStr.ToUpper();
+            for (var index = 0; index < names.Length; index++)
+            {
+                names[index] = names[index].ToUpper();
+            }
+
+            return Array.IndexOf(names, iStr) > -1;
         }
 
         public static string[] StringToArray(string iStr)
