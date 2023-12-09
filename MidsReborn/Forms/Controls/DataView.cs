@@ -1184,7 +1184,7 @@ namespace Mids_Reborn.Forms.Controls
                                 bounds.Y -= 3f;
                                 bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                                 var graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
+                                ClsDrawX.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
                                     Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                             }
                             else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
@@ -1200,7 +1200,7 @@ namespace Mids_Reborn.Forms.Controls
                                             : Color.Yellow
                                         : Color.Red;
                                 var graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText(
+                                ClsDrawX.DrawOutlineText(
                                     Enums.GetRelativeString(power.Slots[index].Enhancement.RelativeLevel,
                                         MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
                                     pnlEnhActive.Font, 1f, graphics2);
@@ -1229,7 +1229,7 @@ namespace Mids_Reborn.Forms.Controls
                                 bounds.Y -= 3f;
                                 bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                                 var graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText(
+                                ClsDrawX.DrawOutlineText(
                                     $"{power.Slots[index].FlippedEnhancement.IOLevel + 1}", bounds, Color.Cyan,
                                     Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                             }
@@ -1246,7 +1246,7 @@ namespace Mids_Reborn.Forms.Controls
                                             : Color.Yellow
                                         : Color.Red;
                                 var graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText(
+                                ClsDrawX.DrawOutlineText(
                                     Enums.GetRelativeString(power.Slots[index].FlippedEnhancement.RelativeLevel,
                                         MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
                                     pnlEnhActive.Font, 1f, graphics2);
@@ -1541,7 +1541,7 @@ namespace Mids_Reborn.Forms.Controls
             var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
+            ImageAttributes recolorIa = ClsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;

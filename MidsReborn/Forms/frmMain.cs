@@ -286,7 +286,7 @@ namespace Mids_Reborn.Forms
         private Lazy<ComboBoxT<string>> CbtPool2 => new(() => new ComboBoxT<string>(cbPool2));
         private Lazy<ComboBoxT<string>> CbtPool3 => new(() => new ComboBoxT<string>(cbPool3));
 
-        internal clsDrawX? Drawing => drawing;
+        internal ClsDrawX? Drawing => drawing;
 
         private void InitializeDv()
         {
@@ -1301,15 +1301,15 @@ namespace Mids_Reborn.Forms
             var Enh2 = -1;
             I9Slot? i9Slot1 = null;
             I9Slot? i9Slot2 = null;
-            var recolorIa = clsDrawX.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
+            var recolorIa = ClsDrawX.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
             var slotId = -1;
             for (var i = 0; i <= num1; ++i)
             {
-                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
-                point1.Y = point2.Y + clsDrawX.OffsetY;
+                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.SzSlot.Width * 6) / 2.0);
+                point1.Y = point2.Y + ClsDrawX.OffsetY;
                 ++FlipSlotState[i];
                 var num2 = 1f;
                 var powerEntry = MidsContext.Character.CurrentBuild.Powers[FlipPowerID];
@@ -1365,7 +1365,7 @@ namespace Mids_Reborn.Forms
                 rectangle1 = drawing.ScaleDown(rectangle1);
                 if (index > -1)
                 {
-                    var graphics = drawing.bxBuffer.Graphics;
+                    var graphics = drawing.BxBuffer.Graphics;
                     if (i9Slot1 != null)
                         I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, num2,
                             DatabaseAPI.Database.Enhancements[index].ImageIdx,
@@ -1373,14 +1373,14 @@ namespace Mids_Reborn.Forms
                 }
                 else
                 {
-                    drawing.bxBuffer.Graphics?.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
+                    drawing.BxBuffer.Graphics?.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
                 if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) | (slot.Level >= MidsContext.Config.ForceLevel) | ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
                 {
                     rectangle2.Inflate(1, 1);
-                    drawing.bxBuffer.Graphics?.FillEllipse(solidBrush, rectangle2);
+                    drawing.BxBuffer.Graphics?.FillEllipse(solidBrush, rectangle2);
                 }
 
                 if (!((myDataView == null) | (i9Slot1 == null) | (i9Slot2 == null)))
@@ -1390,7 +1390,7 @@ namespace Mids_Reborn.Forms
             }
 
             rectangle1 = new Rectangle(point1.X - 1, point1.Y - 1, drawing.SzPower.Width + 1,
-                drawing.szSlot.Height + 1);
+                drawing.SzSlot.Height + 1);
             drawing.Refresh(drawing.ScaleDown(rectangle1));
             if (FlipSlotState[^1] >= FlipSteps)
                 EndFlip();
@@ -1689,10 +1689,10 @@ namespace Mids_Reborn.Forms
                 pnlGFX.Height = drawingHeight;
             }
 
-            drawing.bxBuffer.Size = pnlGFX.Size;
+            drawing.BxBuffer.Size = pnlGFX.Size;
             drawing.ReInit(pnlGFX);
-            pnlGFX.Image = drawing.bxBuffer.Bitmap;
-            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
+            pnlGFX.Image = drawing.BxBuffer.Bitmap;
+            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.BxBuffer.Size);
             drawing.SetScaling(pnlGFX.Size);
             ReArrange(false);
             ReArrangeButtons();
@@ -3485,14 +3485,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (drawing == null)
             {
-                drawing = new clsDrawX(pnlGFX);
+                drawing = new ClsDrawX(pnlGFX);
             }
             else
             {
                 drawing.ReInit(pnlGFX);
             }
 
-            pnlGFX.Image = drawing.bxBuffer.Bitmap;
+            pnlGFX.Image = drawing.BxBuffer.Bitmap;
             if (drawing != null)
                 drawing.Highlight = -1;
             if (skipDraw)
@@ -3669,8 +3669,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var x = position.X - dragXOffset;
                 position = Cursor.Position;
                 var y = position.Y - dragYOffset;
-                var width = drawing.ScaleDown(drawing.szSlot.Width);
-                var height = drawing.ScaleDown(drawing.szSlot.Height);
+                var width = drawing.ScaleDown(drawing.SzSlot.Width);
+                var height = drawing.ScaleDown(drawing.SzSlot.Height);
                 dragRect = new Rectangle(x, y, width, height);
             }
             else
@@ -3751,8 +3751,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         if (drawing != null)
                         {
-                            dragXOffset = drawing.ScaleDown(drawing.szSlot.Width / 2);
-                            dragYOffset = drawing.ScaleDown(drawing.szSlot.Height / 2);
+                            dragXOffset = drawing.ScaleDown(drawing.SzSlot.Width / 2);
+                            dragYOffset = drawing.ScaleDown(drawing.SzSlot.Height / 2);
                         }
                     }
                     else
@@ -5364,7 +5364,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     case Enums.eVisibleSize.VerySmall:
                         return;
                     case Enums.eVisibleSize.Compact:
-                        switch (drawing.EpicColumns)
+                        switch (ClsDrawX.EpicColumns)
                         {
                             case false:
                                 break;
@@ -5990,7 +5990,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var rectangle2 = new Rectangle
             {
                 Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),
-                Size = drawing.bxPower[0].Size
+                Size = drawing.BxPower[0].Size
             };
             rectangle1.Height = 15;
             rectangle1.Width = rectangle1.Height;
@@ -6010,7 +6010,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var rectangle2 = new Rectangle
             {
                 Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),
-                Size = drawing.bxPower[0].Size
+                Size = drawing.BxPower[0].Size
             };
             rectangle1.Height = 15;
             rectangle1.Width = rectangle1.Height;
@@ -7678,8 +7678,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private int dragStartY;
         private int dragXOffset;
         private int dragYOffset;
-        private clsDrawX? drawing;
-        public clsDrawX? DrawX => drawing;
+        private ClsDrawX? drawing;
+        public ClsDrawX? DrawX => drawing;
         private int dvLastEnh;
         private bool dvLastNoLev;
         private int dvLastPower;

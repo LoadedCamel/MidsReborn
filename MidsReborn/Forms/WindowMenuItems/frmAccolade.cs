@@ -137,13 +137,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var llRight = this.llRight;
             UpdateLlColours(ref llRight);
             this.llRight = llRight;
-            ibClose.IA = _myParent.Drawing.pImageAttributes;
+            ibClose.IA = _myParent.Drawing.PImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[2].Bitmap
-                : _myParent.Drawing.bxPower[4].Bitmap;
+                ? _myParent.Drawing.BxPower[2].Bitmap
+                : _myParent.Drawing.BxPower[4].Bitmap;
             ibClose.ImageOn = MidsContext.Character.IsHero()
-                ? _myParent.Drawing.bxPower[3].Bitmap
-                : _myParent.Drawing.bxPower[5].Bitmap;
+                ? _myParent.Drawing.BxPower[3].Bitmap
+                : _myParent.Drawing.BxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);

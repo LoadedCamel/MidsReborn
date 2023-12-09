@@ -50,7 +50,12 @@ namespace Mids_Reborn.Core.Base.Display
 
         public ExtendedBitmap(Image image)
         {
-            _bits = new Bitmap(image);
+            _cache = new PropertyCache
+            {
+                Size = image.Size,
+                BitDepth = image.PixelFormat
+            };
+            Initialize(image);
         }
 
         public ExtendedBitmap(Stream stream)
@@ -146,6 +151,19 @@ namespace Mids_Reborn.Core.Base.Display
             _isNew = true;
             _isInitialized = true;
             return true;
+        }
+
+        private void Initialize(Image file)
+        {
+            _surface?.Dispose();
+            _bits?.Dispose();
+            _bits = new Bitmap(file);
+            _surface = Graphics.FromImage(_bits);
+            _cache?.Update(ref _bits);
+            _surface.Clip = new Region(_cache!.Bounds);
+            _cache.Update(ref _surface);
+            _isNew = true;
+            _isInitialized = true;
         }
 
         private void Initialize(string file)

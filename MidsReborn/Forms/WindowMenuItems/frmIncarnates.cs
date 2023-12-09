@@ -83,9 +83,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             buttonArray[9] = OmegaButton;
             foreach (var button in buttonArray)
             {
-                button.IA = myParent.Drawing.pImageAttributes;
-                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
-                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+                button.IA = myParent.Drawing.PImageAttributes;
+                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
+                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
                 Debug.WriteLine(button.TextOn);
                 Debug.WriteLine(DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn]);
                 button.Enabled = DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn];
@@ -99,9 +99,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var plRight = PLRight;
             UpdatePLColors(ref plRight);
             //LLRight = llRight;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            ibClose.IA = myParent.Drawing.PImageAttributes;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);

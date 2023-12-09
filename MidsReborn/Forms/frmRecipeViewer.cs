@@ -754,45 +754,45 @@ namespace Mids_Reborn.Forms
         public void UpdateColorTheme()
         {
             BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
+            ibClose.IA = myParent.Drawing.PImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? myParent.Drawing.BxPower[2].Bitmap
+                : myParent.Drawing.BxPower[4].Bitmap;
             ibClose.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? myParent.Drawing.BxPower[3].Bitmap
+                : myParent.Drawing.BxPower[5].Bitmap;
             
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
+            ibTopmost.IA = myParent.Drawing.PImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? myParent.Drawing.BxPower[2].Bitmap
+                : myParent.Drawing.BxPower[4].Bitmap;
             ibTopmost.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? myParent.Drawing.BxPower[3].Bitmap
+                : myParent.Drawing.BxPower[5].Bitmap;
             
-            ibEnhCheckMode.IA = myParent.Drawing.pImageAttributes;
+            ibEnhCheckMode.IA = myParent.Drawing.PImageAttributes;
             ibEnhCheckMode.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? myParent.Drawing.BxPower[2].Bitmap
+                : myParent.Drawing.BxPower[4].Bitmap;
             ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? myParent.Drawing.BxPower[3].Bitmap
+                : myParent.Drawing.BxPower[5].Bitmap;
 
-            ibClipboard.IA = myParent.Drawing.pImageAttributes;
+            ibClipboard.IA = myParent.Drawing.PImageAttributes;
             ibClipboard.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? myParent.Drawing.BxPower[2].Bitmap
+                : myParent.Drawing.BxPower[4].Bitmap;
             ibClipboard.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? myParent.Drawing.BxPower[3].Bitmap
+                : myParent.Drawing.BxPower[5].Bitmap;
 
-            ibMiniList.IA = myParent.Drawing.pImageAttributes;
+            ibMiniList.IA = myParent.Drawing.PImageAttributes;
             ibMiniList.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
+                ? myParent.Drawing.BxPower[2].Bitmap
+                : myParent.Drawing.BxPower[4].Bitmap;
             ibMiniList.ImageOn = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[3].Bitmap
-                : myParent.Drawing.bxPower[5].Bitmap;
+                ? myParent.Drawing.BxPower[3].Bitmap
+                : myParent.Drawing.BxPower[5].Bitmap;
         }
 
         private bool HasIOs(int hIDX)
