@@ -270,6 +270,8 @@ namespace Mids_Reborn.Forms
                     UpdateUtils.CheckForUpdates(this, true);
                     break;
             }
+            
+            Loader?.DisposeControls();
         }
 
         public bool PetWindowFlag { get; set; }

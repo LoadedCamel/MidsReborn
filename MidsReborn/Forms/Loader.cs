@@ -208,5 +208,10 @@ setTimeout(() => {{ messageDiv.style.opacity = 1; }}, 100);");
             path.AddRoundRectangle(new Rectangle(0, 0, control.Width, control.Height), 20); // 20 is the corner radius
             control.Region = new Region(path);
         }
+
+        internal void DisposeControls()
+        {
+            webView.Dispose();
+        }
     }
 }
