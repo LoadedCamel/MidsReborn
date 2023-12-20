@@ -452,6 +452,8 @@ namespace Mids_Reborn
                 "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
                 "blaster_support.tactical_arrow.quickness" => "Blaster_Support.Tactical_Arrow.Gymnastics",
                 "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
+                "blaster_support.electricity_manipulation.lightning_clap" => "Blaster_Support.Electricity_Manipulation.Lightning_Field",
+                "blaster_support.electricity_manipulation.lightning_field" => "Blaster_Support.Electricity_Manipulation.Lightning_Clap",
                 _ => fullName
             };
         }
