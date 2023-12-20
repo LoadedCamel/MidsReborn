@@ -2003,7 +2003,7 @@ namespace Mids_Reborn.Core
                     break;
 
                 case Enums.eEffectType.ToHit:
-                    rankedEffect.Name = $"ToHit";
+                    rankedEffect.Name = "ToHit";
                     rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
@@ -2014,6 +2014,14 @@ namespace Mids_Reborn.Core
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{gre.Mag * 100:####0.##}% HP"
                         : $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
+                case Enums.eEffectType.MaxRunSpeed:
+                case Enums.eEffectType.MaxJumpSpeed:
+                case Enums.eEffectType.MaxFlySpeed:
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
