@@ -913,9 +913,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
             var imageOnIdx = imageOffIdx + 1;
 
-            ib.IA = myParent.Drawing.pImageAttributes;
-            ib.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
-            ib.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+            ib.IA = myParent.Drawing.PImageAttributes;
+            ib.ImageOff = myParent.Drawing.BxPower[imageOffIdx].Bitmap;
+            ib.ImageOn = myParent.Drawing.BxPower[imageOnIdx].Bitmap;
         }
 
         public void UpdateData()

@@ -179,9 +179,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void SetIbStyle(ImageButton ib)
         {
-            ib.IA = myParent.Drawing.pImageAttributes;
-            ib.ImageOff = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 2 : 4].Bitmap;
-            ib.ImageOn = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 3 : 5].Bitmap;
+            ib.IA = myParent.Drawing.PImageAttributes;
+            ib.ImageOff = myParent.Drawing.BxPower[MidsContext.Character.IsHero() ? 2 : 4].Bitmap;
+            ib.ImageOn = myParent.Drawing.BxPower[MidsContext.Character.IsHero() ? 3 : 5].Bitmap;
         }
 
         private void frmDPSCalc_Load(object sender, EventArgs e)

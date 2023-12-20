@@ -268,19 +268,19 @@ namespace Mids_Reborn.Forms
                 button.Enabled = DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn];
                 if (button.Enabled)
                 {
-                    button.IA = _myParent.Drawing.pImageAttributes;
+                    button.IA = _myParent.Drawing.PImageAttributes;
                     button.ImageOff = MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap;
+                        ? _myParent.Drawing.BxPower[2].Bitmap
+                        : _myParent.Drawing.BxPower[4].Bitmap;
                     button.ImageOn = MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[3].Bitmap
-                        : _myParent.Drawing.bxPower[5].Bitmap;
+                        ? _myParent.Drawing.BxPower[3].Bitmap
+                        : _myParent.Drawing.BxPower[5].Bitmap;
                 }
                 else
                 {
-                    button.IA = _myParent.Drawing.pImageAttributes;
-                    button.ImageOff = _myParent.Drawing.bxPower[1].Bitmap;
-                    button.ImageOn = _myParent.Drawing.bxPower[1].Bitmap;
+                    button.IA = _myParent.Drawing.PImageAttributes;
+                    button.ImageOff = _myParent.Drawing.BxPower[1].Bitmap;
+                    button.ImageOn = _myParent.Drawing.BxPower[1].Bitmap;
                 }
             }
 
@@ -292,9 +292,9 @@ namespace Mids_Reborn.Forms
             var llRight = LlRight;
             UpdateLlColours(ref llRight);
             LlRight = llRight;
-            _ibClose.IA = _myParent.Drawing.pImageAttributes;
-            _ibClose.ImageOff = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap;
-            _ibClose.ImageOn = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[3].Bitmap : _myParent.Drawing.bxPower[5].Bitmap;
+            _ibClose.IA = _myParent.Drawing.PImageAttributes;
+            _ibClose.ImageOff = MidsContext.Character.IsHero() ? _myParent.Drawing.BxPower[2].Bitmap : _myParent.Drawing.BxPower[4].Bitmap;
+            _ibClose.ImageOn = MidsContext.Character.IsHero() ? _myParent.Drawing.BxPower[3].Bitmap : _myParent.Drawing.BxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);

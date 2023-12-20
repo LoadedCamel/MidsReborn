@@ -135,9 +135,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var iStr = "Close";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
-            var size = _myParent.Drawing.bxPower[2].Size;
+            var size = _myParent.Drawing.BxPower[2].Size;
             var width = size.Width;
-            size = _myParent.Drawing.bxPower[2].Size;
+            size = _myParent.Drawing.BxPower[2].Size;
             var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             var destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
@@ -149,14 +149,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             extendedBitmap.Graphics.Clear(BackColor);
             extendedBitmap.Graphics.DrawImage(
                 MidsContext.Character.IsHero()
-                    ? _myParent.Drawing.bxPower[2].Bitmap
-                    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
-                rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                    ? _myParent.Drawing.BxPower[2].Bitmap
+                    : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
+                rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
 
             var height2 = bFont.GetHeight(e.Graphics) + 2f;
             var bounds = new RectangleF(0f, (tab0.Height - height2) / 2f, tab0.Width, height2);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -181,8 +181,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             var iStr = "Keep On Top";
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-                _myParent.Drawing.bxPower[index].Size.Height);
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.BxPower[index].Size.Width,
+                _myParent.Drawing.BxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
             var stringFormat = new StringFormat();
             var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
@@ -193,22 +193,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (index == 3)
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[3].Bitmap
-                        : _myParent.Drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                        ? _myParent.Drawing.BxPower[3].Bitmap
+                        : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                        ? _myParent.Drawing.BxPower[2].Bitmap
+                        : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                    GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
             var height = bFont.GetHeight(e.Graphics) + 2f;
             var Bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -408,8 +408,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 index = 3;
             }
 
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-                _myParent.Drawing.bxPower[index].Size.Height);
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.BxPower[index].Size.Width,
+                _myParent.Drawing.BxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, iTab.Width, iTab.Height);
             var stringFormat = new StringFormat();
             var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
@@ -420,22 +420,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (index == 3)
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[3].Bitmap
-                        : _myParent.Drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                        ? _myParent.Drawing.BxPower[3].Bitmap
+                        : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                        ? _myParent.Drawing.BxPower[2].Bitmap
+                        : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                    GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
             var height = bFont.GetHeight(e.Graphics) + 2f;
             var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 

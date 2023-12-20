@@ -18,7 +18,7 @@ namespace Mids_Reborn.Controls.Extensions
         /// <param name="label">Button text</param>
         /// <param name="active">'Pressed' state for the button</param>
         /// <remarks>Graphics once drawn are sent to the control BackgroundImage bitmap.</remarks>
-        public static void DrawImageButton(this Control target, clsDrawX drawing, Color backColor, string label, bool active = false)
+        public static void DrawImageButton(this Control target, ClsDrawX drawing, Color backColor, string label, bool active = false)
         {
             if (drawing == null)
             {
@@ -36,11 +36,11 @@ namespace Mids_Reborn.Controls.Extensions
                     ? 2
                     : 4;
 
-            using var bgBitmap = drawing.bxPower[bgBitmapIndex].Bitmap.ToSKImage();
+            using var bgBitmap = drawing.BxPower[bgBitmapIndex].Bitmap.ToSKImage();
             using var colorFilter = s.Canvas.HeroVillainColorMatrix();
 
             s.Canvas.DrawImage(bgBitmap,
-                new SKRect(0, 0, drawing.bxPower[bgBitmapIndex].Size.Width, drawing.bxPower[bgBitmapIndex].Size.Height),
+                new SKRect(0, 0, drawing.BxPower[bgBitmapIndex].Size.Width, drawing.BxPower[bgBitmapIndex].Size.Height),
                 new SKRect(0, 0, target.Width, target.Height),
                 new SKPaint { ColorFilter = colorFilter });
 

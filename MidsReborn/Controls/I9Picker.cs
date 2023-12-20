@@ -44,7 +44,7 @@ namespace Mids_Reborn.Controls
         private const int IoMax = 50;
         private Color _cHighlight;
         private Color _cSelected;
-        private clsDrawX? _hDraw;
+        private ClsDrawX? _hDraw;
         private int _headerHeight;
         private Point _hoverCell;
         private string _hoverText;
@@ -455,7 +455,7 @@ namespace Mids_Reborn.Controls
             {
                 srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30,
-                    GraphicsUnit.Pixel, _hDraw.pImageAttributes);
+                    GraphicsUnit.Pixel, _hDraw.PImageAttributes);
 
                 eType = Enums.eType.Normal;
                 rectBounds = GetRectBounds(1, 0);
@@ -578,7 +578,7 @@ namespace Mids_Reborn.Controls
                     return new ImageAttributes();
                 }
 
-                var colorMatrix = new ColorMatrix(clsDrawX.heroMatrix);
+                var colorMatrix = new ColorMatrix(ClsDrawX.HeroMatrix);
                 var r = 0;
                 do
                 {
@@ -1628,7 +1628,7 @@ namespace Mids_Reborn.Controls
             return iPowerIdx < 0 ? new List<int>() : DatabaseAPI.Database.Power[iPowerIdx].GetValidEnhancements(iType, iSubType);
         }
 
-        public void SetData(int iPower, ref I9Slot iSlot, ref clsDrawX iDraw, int[] slotted)
+        public void SetData(int iPower, ref I9Slot iSlot, ref ClsDrawX iDraw, int[] slotted)
         {
             TimerReset();
             _levelCapped = false;
