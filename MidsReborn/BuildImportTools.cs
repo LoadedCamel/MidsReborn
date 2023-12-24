@@ -470,6 +470,7 @@ namespace Mids_Reborn
                 "epic.sentinel_electricity_mastery" when archetype == "sentinel" => "Epic.Sentinel_Elec_Mastery",
                 "epic.sentinel_leviathan_mastery" when archetype == "sentinel" => "Epic.Sentinel_Lev_Mastery",
                 "epic.sentinel_psionic_mastery" when archetype == "sentinel" => "Epic.Sentinel_Psi_Mastery",
+                "blaster_support.time_manipulation" when archetype == "blaster" => "Blaster_Support.Temporal_Manipulation",
                 _ => fullName
             };
         }
@@ -540,6 +541,7 @@ namespace Mids_Reborn
                     }
 
                     p.Valid = CheckValid(p.pData);
+                    Debug.WriteLine($"Detected power: {p.FullName}, valid: {p.Valid}");
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
                     if (p.Valid && CheckValid(p.Powerset))
