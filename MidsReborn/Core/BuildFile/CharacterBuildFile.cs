@@ -511,15 +511,50 @@ namespace Mids_Reborn.Core.BuildFile
         {
             if (string.IsNullOrWhiteSpace(fileName)) return false;
             var returnedVal = false;
-            _instance = CreateInstance();
-            _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(File.ReadAllText(fileName));
-            if (_instance == null) throw new NullReferenceException(nameof(_instance));
-            var metaData = _instance.BuiltWith;
-            if (metaData == null) throw new NullReferenceException(nameof(metaData));
+            try
+            {
+                _instance = CreateInstance();
+                _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(File.ReadAllText(fileName));
+            }
+            catch (JsonReaderException ex)
+            {
+                // Will be thrown if e.g. trying to load a mxd build renamed as mbd
+                var msgBox =
+                    new MessageBoxEx(
+                        $"Cannot load {fileName}: error parsing JSON data.\r\n(Is this really a mbd file?)\r\n\r\n{ex.Message}",
+                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                msgBox.ShowDialog(Application.OpenForms["frmMain"]);
 
+                return false;
+            }
+
+            if (_instance == null)
+            {
+                //throw new NullReferenceException(nameof(_instance));
+                var msgBox =
+                    new MessageBoxEx(
+                        $"Cannot load {fileName} - error reading build data.\r\n\r\n{nameof(_instance)}",
+                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                msgBox.ShowDialog(Application.OpenForms["frmMain"]);
+
+                return false;
+            }
+
+            var metaData = _instance.BuiltWith;
+            if (metaData == null)
+            {
+                //throw new NullReferenceException(nameof(metaData));
+                var msgBox =
+                    new MessageBoxEx(
+                        $"Cannot load {fileName} - error reading build metadata.\r\n\r\n{nameof(metaData)}",
+                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                msgBox.ShowDialog(Application.OpenForms["frmMain"]);
+
+                return false;
+            }
 
             // Compare App Version if Enabled
-            if (MidsContext.Config.WarnOnOldAppMbd)
+            if (MidsContext.Config?.WarnOnOldAppMbd == true)
             {
                 var outDatedApp = Helpers.CompareVersions(MidsContext.AppFileVersion, metaData.Version);
                 var newerApp = Helpers.CompareVersions(metaData.Version, MidsContext.AppFileVersion);
@@ -537,14 +572,12 @@ namespace Mids_Reborn.Core.BuildFile
                 }
             }
 
-
             var fileInfo = new FileInfo(fileName);
             if (DatabaseAPI.DatabaseName == metaData.Database)
             {
                 // Compare Database Version if Enabled
                 if (MidsContext.Config.WarnOnOldDbMbd)
                 {
-                    
                     var outDatedDb = Helpers.CompareVersions(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
                     var newerDb = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
 
@@ -576,7 +609,10 @@ namespace Mids_Reborn.Core.BuildFile
                         }
                     }
 
-                    if (!outDatedDb && !newerDb) returnedVal = LoadBuild();
+                    if (!outDatedDb && !newerDb)
+                    {
+                        returnedVal = LoadBuild();
+                    }
                 }
                 else
                 {
@@ -596,6 +632,7 @@ namespace Mids_Reborn.Core.BuildFile
                         {
                             var messageBox = new MessageBoxEx($"Sorry, but it appears you do not have the {metaData.Database} installed.\r\nPlease install the database and try again.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
                             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
+                            
                             return false;
                         }
 
@@ -604,6 +641,7 @@ namespace Mids_Reborn.Core.BuildFile
                         MidsContext.Config.SavePath = selected;
                         MidsContext.Config.SaveConfig();
                         Application.Restart();
+
                         break;
                     case DialogResult.No:
                         return false;
@@ -618,6 +656,7 @@ namespace Mids_Reborn.Core.BuildFile
             var serialized = JsonConvert.SerializeObject(_instance, Formatting.None);
             var iBytes = Encoding.UTF8.GetBytes(serialized);
             var output = Compression.CompressToBase64(iBytes);
+            
             return output;
         }
 
@@ -636,8 +675,10 @@ namespace Mids_Reborn.Core.BuildFile
             {
                 var errorMsg = new MessageBoxEx($"{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
                 errorMsg.ShowDialog(Application.OpenForms["frmMain"]);
+                
                 return false;
             }
+            
             return true;
         }
 
@@ -646,6 +687,5 @@ namespace Mids_Reborn.Core.BuildFile
             var dataRead = ReadShareData(data);
             return dataRead && LoadBuild();
         }
-
     }
 }

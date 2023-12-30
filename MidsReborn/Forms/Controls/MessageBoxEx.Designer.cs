@@ -74,6 +74,7 @@ namespace Mids_Reborn.Forms.Controls
             messageText.TabIndex = 4;
             messageText.Text = "Message Text Goes Here";
             messageText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            messageText.UseMnemonic = false;
             // 
             // spacer
             // 
@@ -179,6 +180,7 @@ namespace Mids_Reborn.Forms.Controls
             titleText.TabIndex = 0;
             titleText.Text = "Title Text";
             titleText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            titleText.UseMnemonic = false;
             // 
             // MessageBoxEx
             // 
@@ -189,6 +191,7 @@ namespace Mids_Reborn.Forms.Controls
             BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             ClientSize = new System.Drawing.Size(420, 150);
             Controls.Add(mainPanel);
+            DoubleBuffered = true;
             Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             ForeColor = System.Drawing.Color.Azure;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
