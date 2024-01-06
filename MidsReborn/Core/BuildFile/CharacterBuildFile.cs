@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,22 +38,38 @@ namespace Mids_Reborn.Core.BuildFile
 
         [JsonProperty]
         public MetaData? BuiltWith { get; set; }
+
+        [Required]
         [JsonProperty]
         public string Level { get; set; }
+
+        [Required]
         [JsonProperty]
         public string Class { get; set; }
+
+        [Required]
         [JsonProperty]
         public string Origin { get; set; }
+
+        [Required]
         [JsonProperty]
         public string Alignment { get; set; }
+        
         [JsonProperty]
         public string Name { get; set; }
+
         [JsonProperty]
         public string? Comment { get; set; }
+
+        [Required]
         [JsonProperty]
         public List<string> PowerSets { get; set; }
+
+        [Required]
         [JsonProperty]
         public int LastPower { get; set; }
+
+        [Required]
         [JsonProperty]
         public List<PowerData?> PowerEntries { get; set; }
 
@@ -511,27 +528,24 @@ namespace Mids_Reborn.Core.BuildFile
         {
             if (string.IsNullOrWhiteSpace(fileName)) return false;
             var returnedVal = false;
-            try
+            var schemaValidator = new Validator();
+            var validationResult = schemaValidator.Validate(fileName);
+            if (validationResult.Valid)
             {
                 _instance = CreateInstance();
-                _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(File.ReadAllText(fileName));
+                _instance = JsonConvert.DeserializeObject<CharacterBuildFile>(validationResult.Data);
             }
-            catch (JsonReaderException ex)
+            else
             {
-                // Will be thrown if e.g. trying to load a mxd build renamed as mbd
-                var msgBox =
-                    new MessageBoxEx(
-                        $"Cannot load {fileName}: error parsing JSON data.\r\n(Is this really a mbd file?)\r\n\r\n{ex.Message}",
-                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                using var msgBox = new MessageBoxEx(validationResult.ErrorMessage, MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
                 msgBox.ShowDialog(Application.OpenForms["frmMain"]);
-
                 return false;
             }
 
             if (_instance == null)
             {
                 //throw new NullReferenceException(nameof(_instance));
-                var msgBox =
+                using var msgBox =
                     new MessageBoxEx(
                         $"Cannot load {fileName} - error reading build data.\r\n\r\n{nameof(_instance)}",
                         MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
@@ -544,7 +558,7 @@ namespace Mids_Reborn.Core.BuildFile
             if (metaData == null)
             {
                 //throw new NullReferenceException(nameof(metaData));
-                var msgBox =
+                using var msgBox =
                     new MessageBoxEx(
                         $"Cannot load {fileName} - error reading build metadata.\r\n\r\n{nameof(metaData)}",
                         MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
@@ -561,13 +575,13 @@ namespace Mids_Reborn.Core.BuildFile
 
                 if (outDatedApp)
                 {
-                    var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
                     appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 }
 
                 if (newerApp)
                 {
-                    var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an newer version of {MidsContext.AppName}.\r\nIt is recommended that you update the application.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an newer version of {MidsContext.AppName}.\r\nIt is recommended that you update the application.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
                     appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 }
             }
@@ -583,7 +597,7 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (outDatedDb)
                     {
-                        var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nSome powers may have changed, you may need to rebuild some of it.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nSome powers may have changed, you may need to rebuild some of it.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
                         dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                         if (dbVerMsg.DialogResult == DialogResult.Yes)
                         {
@@ -597,7 +611,7 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (newerDb)
                     {
-                        var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
                         dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                         if (dbVerMsg.DialogResult == DialogResult.Yes)
                         {
@@ -621,7 +635,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             else
             {
-                var dbSwitchResult = new MessageBoxEx(fileInfo.Name, $"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                using var dbSwitchResult = new MessageBoxEx(fileInfo.Name, $"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
                 dbSwitchResult.ShowDialog(Application.OpenForms["frmMain"]);
                 switch (dbSwitchResult.DialogResult)
                 {
