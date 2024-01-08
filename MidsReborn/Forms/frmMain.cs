@@ -3834,15 +3834,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 var hIDPower = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 var slotID = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                if ((hIDPower < 0) | (hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count))
+                if (hIDPower < 0 | hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count)
                     return;
                 var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
-                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) && EditAccoladesOrTemps(hIDPower))
+                if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
                     return;
 
                 if (MidsContext.EnhCheckMode)
                 {
-                    if (!((e.Button == MouseButtons.Left) & (slotID > -1))) return;
+                    if (!(e.Button == MouseButtons.Left & slotID > -1)) return;
 
                     MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained = !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
                     if (fRecipe != null && fRecipe.Visible)
@@ -3861,7 +3861,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
                 else
                 {
-                    if ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & (e.Button == MouseButtons.Left))
+                    if (drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle & e.Button == MouseButtons.Left)
                     {
                         if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                         {
@@ -3872,7 +3872,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             else
                             {
                                 var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                                if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
                                     MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
                             }
                         }
@@ -3894,7 +3894,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         pnlGFX.Update();
                         pnlGFX.Refresh();
                     }
-                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
+                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
                     {
                         if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
                             !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
@@ -3907,7 +3907,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             else
                             {
                                 var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                                if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
                                 {
                                     MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
                                     MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
@@ -3941,7 +3941,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                     if (MainModule.MidsController.Toon.CurrentBuild != null)
                                     {
                                         var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                        if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                                        if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
                                         {
                                             MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
                                             MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
@@ -3956,7 +3956,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         EnhancementModified();
                         LastClickPlacedSlot = false;
                     }
-                    else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
+                    else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
                     {
                         var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
                         if (!flag && powerEntry.CanIncludeForStats() && powerEntry.HasProc())
@@ -3968,7 +3968,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         RedrawSinglePower(ref powerEntry, true, true);
                         LastClickPlacedSlot = false;
                     }
-                    else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Alt))
+                    else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Alt)
                     {
                         MainModule.MidsController.Toon?.BuildPower(
                             MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPowerset,
@@ -3976,7 +3976,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         PowerModified(true);
                         LastClickPlacedSlot = false;
                     }
-                    else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Shift) & (slotID > -1))
+                    else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Shift & slotID > -1)
                     {
                         if (MidsContext.Config is { BuildMode: Enums.dmModes.LevelUp })
                         {
@@ -3995,9 +3995,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
                     else
                     {
-                        if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
+                        if (e.Button == MouseButtons.Left & !EnhPickerActive)
                         {
-                            if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
+                            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -4011,7 +4011,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                     return;
                                 }
                             }
-                            else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                            else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec & flag)
                             {
                                 if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
@@ -4045,7 +4045,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             }
                         }
 
-                        if ((e.Button == MouseButtons.Middle) & (slotID > -1) & !MidsContext.Config.DisableRepeatOnMiddleClick)
+                        if (e.Button == MouseButtons.Middle & slotID > -1 & !MidsContext.Config.DisableRepeatOnMiddleClick)
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
@@ -4056,7 +4056,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             
                             drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
                         }
-                        else if ((e.Button == MouseButtons.Right) & (slotID > -1) && ModifierKeys != Keys.Shift)
+                        else if (e.Button == MouseButtons.Right & slotID > -1 && ModifierKeys != Keys.Shift)
                         {
                             EnhancingSlot = slotID;
                             EnhancingPower = hIDPower;
@@ -4107,7 +4107,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             I9Picker.Select();
                             LastClickPlacedSlot = false;
                         }
-                        else if ((e.Button == MouseButtons.Right) & (ModifierKeys == Keys.Shift))
+                        else if (e.Button == MouseButtons.Right & ModifierKeys == Keys.Shift)
                         {
                             //MidsContext.Character.PEnhancementsList.Clear();
                             StartFlip(hIDPower);
