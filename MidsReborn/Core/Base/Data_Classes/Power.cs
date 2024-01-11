@@ -711,14 +711,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(VariableMin);
             writer.Write(VariableMax);
             writer.Write(UIDSubPower.Length - 1);
-            for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
-                writer.Write(UIDSubPower[index]);
+            foreach (var sp in UIDSubPower)
+            {
+                writer.Write(sp);
+            }
+
             writer.Write(IgnoreEnh.Length - 1);
-            for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
-                writer.Write((int) IgnoreEnh[index]);
+            foreach (var ie in IgnoreEnh)
+            {
+                writer.Write((int) ie);
+            }
+
             writer.Write(Ignore_Buff.Length - 1);
-            for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
-                writer.Write((int) Ignore_Buff[index]);
+            foreach (var ib in Ignore_Buff)
+            {
+                writer.Write((int) ib);
+            }
+
             writer.Write(SkipMax);
             writer.Write((int) InherentType);
             writer.Write(LocationIndex);
@@ -735,8 +744,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(BoostBoostable);
             writer.Write(BoostUsePlayerLevel);
             writer.Write(Effects.Length - 1);
-            for (var index = 0; index <= Effects.Length - 1; ++index)
-                Effects[index].StoreTo(ref writer);
+            foreach (var fx in Effects)
+            {
+                fx.StoreTo(ref writer);
+            }
+
             writer.Write(HiddenPower);
             writer.Write(Active);
             writer.Write(Taken);
@@ -760,8 +772,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (effect.EffectType != Enums.eEffectType.Damage ||
                     MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    (effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special &&
-                        effect.ToWho == Enums.eToWho.Self) || (!(effect.Probability > 0) || !effect.CanInclude()) ||
+                    (effect.EffectClass == Enums.eEffectClass.Ignored || effect is {DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self}) || (!(effect.Probability > 0) || !effect.CanInclude()) ||
                     !effect.PvXInclude())
                 {
                     continue;
@@ -794,7 +805,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             switch (MidsContext.Config.DamageMath.ReturnValue)
             {
                 case ConfigData.EDamageReturn.DPS:
-                    if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
+                    if (power is {PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0})
                     {
                         totalDamage /= power.ActivatePeriod;
                         break;
@@ -807,7 +818,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     break;
                 case ConfigData.EDamageReturn.DPA:
-                    if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
+                    if (power is {PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0})
                     {
                         totalDamage /= power.ActivatePeriod;
                         break;
@@ -2309,12 +2320,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var num2 = 0;
             if (HasGrantPowerEffect)
             {
-                for (; flag & (num1 < 100); ++num1)
+                for (; flag & (num1 < 100); num1++)
                 {
                     flag = false;
-                    var array1 = new int[0];
-                    var array2 = new int[0];
-                    for (var index = num2; index < Effects.Length; ++index)
+                    var array1 = Array.Empty<int>();
+                    var array2 = Array.Empty<int>();
+                    for (var index = num2; index < Effects.Length; index++)
                     {
                         if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
                         {
@@ -2328,13 +2339,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     num2 = Effects.Length;
-                    for (var index1 = 0; index1 <= array1.Length - 1; ++index1)
+                    for (var index1 = 0; index1 < array1.Length; index1++)
                     {
                         flag = true;
                         Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
                         var length = Effects.Length;
-                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0.0f, MidsContext.Archetype, 1, true, array1[index1]);
-                        for (var index2 = length; index2 < Effects.Length; ++index2)
+                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0, MidsContext.Archetype, 1, true, array1[index1]);
+                        for (var index2 = length; index2 < Effects.Length; index2++)
                         {
                             if (Effects[array1[index1]].Absorbed_Power_nID > -1)
                             {
@@ -2358,7 +2369,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             }
 
                             Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                            if (Effects[array1[index1]].Probability < 1.0)
+                            if (Effects[array1[index1]].Probability < 1)
                             {
                                 Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
                             }
@@ -3468,6 +3479,72 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return extraAttribs.Count <= 0
                 ? ""
                 : $", {string.Join(", ", extraAttribs)}";
+        }
+
+        public static string? GetRootPowerName(IPower? basePower, IPower? enhancedPower)
+        {
+            if (basePower == null)
+            {
+                return null;
+            }
+
+            var rootPowerName = MidsContext.Character?.Powersets
+                .Where(e => e != null)
+                .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
+                .Where(e => e != null)
+                .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
+                .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                .FirstOrDefault(e => e.Value.Any(fx =>
+                    fx.EffectType == Enums.eEffectType.PowerRedirect &&
+                    fx.Override == basePower.FullName |
+                    (enhancedPower != null && fx.Override == enhancedPower.FullName)))
+                .Key;
+
+            var rootPowerBase = string.IsNullOrEmpty(rootPowerName)
+                ? null
+                : DatabaseAPI.GetPowerByFullName(rootPowerName);
+
+            /*var rootPowerHidx = string.IsNullOrEmpty(rootPowerName)
+                ? -1
+                : MidsContext.Character.CurrentBuild.Powers.TryFindIndex(e => e is { Power: not null } && e.Power.FullName == rootPowerName);
+
+            var rootPowerEnh = string.IsNullOrEmpty(rootPowerName) & rootPowerHidx >= 0
+                ? null
+                : MainModule.MidsController.Toon?.GetEnhancedPower(rootPowerHidx);*/
+
+            return !string.IsNullOrEmpty(rootPowerName) && rootPowerBase != null && basePower.FullName != rootPowerName
+                ? rootPowerName
+                : null;
+        }
+
+        public static string? GetRootPowerName(int historyIdx, IPower? basePower, IPower? enhancedPower)
+        {
+            if (basePower == null)
+            {
+                return null;
+            }
+
+            var rootPowerName = historyIdx >= 0 & historyIdx < MidsContext.Character?.CurrentBuild?.Powers.Count
+                ? MidsContext.Character?.CurrentBuild?.Powers[historyIdx]?.Power?.FullName
+                : MidsContext.Character?.Powersets
+                    .Where(e => e != null)
+                    .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
+                    .Where(e => e != null)
+                    .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
+                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                    .FirstOrDefault(e => e.Value.Any(fx =>
+                        fx.EffectType == Enums.eEffectType.PowerRedirect &&
+                        fx.Override == basePower.FullName |
+                        (enhancedPower != null && fx.Override == enhancedPower.FullName)))
+                    .Key;
+
+            var rootPowerBase = string.IsNullOrEmpty(rootPowerName)
+                ? null
+                : DatabaseAPI.GetPowerByFullName(rootPowerName);
+
+            return !string.IsNullOrEmpty(rootPowerName) && rootPowerBase != null && basePower.FullName != rootPowerName
+                ? rootPowerName
+                : null;
         }
 
         public override string ToString()

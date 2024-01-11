@@ -2423,21 +2423,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
-
-            var rootPowerName = iHistoryIdx >= 0 & iHistoryIdx < MidsContext.Character.CurrentBuild.Powers.Count
-                ? MidsContext.Character.CurrentBuild.Powers[iHistoryIdx]?.Power?.FullName
-                
-                : MidsContext.Character.Powersets
-                    .Where(e => e != null)
-                    .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
-                    .Where(e => e != null)
-                    .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
-                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
-                    .FirstOrDefault(e => e.Value.Any(fx =>
-                        fx.EffectType == Enums.eEffectType.PowerRedirect &&
-                        ((basePower != null && fx.Override == basePower.FullName) |
-                         (enhancedPower != null && fx.Override == enhancedPower.FullName))))
-                    .Key;
+            var rootPowerName = Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower);
 
             rootPowerBase = string.IsNullOrEmpty(rootPowerName)
                 ? null
