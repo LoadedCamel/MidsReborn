@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Mids_Reborn.Core;
@@ -24,6 +25,7 @@ namespace Mids_Reborn.Controls
         private int _hoverIndex = -1;
         private bool _setItemsBold;
         private List<Item>? _items;
+        private bool _autoSizeLineHeight = true;
 
         public delegate void ItemClickEventHandler(object? sender, Item item, MouseEventArgs e);
         public delegate void ItemHoverEventHandler(object? sender, int index, Enums.ShortFX tagId, string? tooltip = "");
@@ -152,6 +154,16 @@ namespace Mids_Reborn.Controls
             set
             {
                 _highlightTextColor = value;
+                Invalidate();
+            }
+        }
+
+        public bool AutoSizeLineHeight
+        {
+            get => _autoSizeLineHeight;
+            set
+            {
+                _autoSizeLineHeight = value;
                 Invalidate();
             }
         }
@@ -324,21 +336,36 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
+            if (!Items.Any())
+            {
+                return;
+            }
+
+            const int interlineHeight = 5;
+            const int vPadding = 3;
+            var y = vPadding;
             var rect = ClientRectangle;
             var columnWidth = rect.Width / Columns;
             var rowHeight = rect.Height / Rows;
+            var font = SetItemsBold
+                ? new Font(Font.FontFamily, Font.Size, FontStyle.Bold)
+                : Font;
+
+            if (Items.Count > 0 & !_autoSizeLineHeight)
+            {
+                var nameMeasured = TextRenderer.MeasureText(Items[0].Name?.Trim(), font, new Size(new Point(5, 0)), TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                Rows = (int)Math.Floor(Math.Max(0, rect.Height - 2 * vPadding + interlineHeight) / (double)(nameMeasured.Height + interlineHeight));
+            }
 
             var itemLocations = new List<Point>();
             for (var cIndex = 0; cIndex < Columns; cIndex++)
             {
                 for (var rIndex = 0; rIndex < Rows; rIndex++)
                 {
-                    var tLocation = new Point(5+ columnWidth * cIndex, rowHeight * rIndex);
+                    var tLocation = new Point(5 + columnWidth * cIndex, rowHeight * rIndex);
                     itemLocations.Add(tLocation);
                 }
             }
-
-            if (!Items.Any()) return;
 
             for (var index = 0; index < Math.Min(Items.Count, itemLocations.Count); index++)
             {
@@ -351,18 +378,20 @@ namespace Mids_Reborn.Controls
                     itemName += ":";
                 }
 
-                var font = SetItemsBold switch
-                {
-                    false => Font,
-                    true => new Font(Font.FontFamily, Font.Size, FontStyle.Bold)
-                };
-
                 var itemValue = Items[index].Value?.Trim();
                 var nameMeasured = TextRenderer.MeasureText(itemName, font, new Size(itemLocations[index]), TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 var valueMeasured = TextRenderer.MeasureText(itemValue, font, new Size(itemLocations[index]), TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                var nameLocation = itemLocations[index];
-                var valueLocation = nameLocation;
-                valueLocation.X += nameMeasured.Width + 2;
+                y += index == 0 ? 0 : nameMeasured.Height + interlineHeight;
+                var nameLocation = _autoSizeLineHeight
+                    ? itemLocations[index]
+                    : new Point(itemLocations[index].X, y);
+
+                if (!_autoSizeLineHeight)
+                {
+                    itemLocations[index] = nameLocation;
+                }
+
+                var valueLocation = nameLocation with {X = nameLocation.X + nameMeasured.Width + 2};
 
                 var itemBounds = new Rectangle(itemLocations[index], nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width + 2 });
                 Items[index].SetBounds(itemBounds);

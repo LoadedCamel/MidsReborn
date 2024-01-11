@@ -713,6 +713,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // enhListing
             // 
+            enhListing.AutoSizeLineHeight = false;
             enhListing.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             enhListing.Columns = 1;
             enhListing.UseHighlighting = true;
