@@ -248,6 +248,7 @@ namespace Mids_Reborn.Core.BuildFile
                 slotData.Enhancement = new EnhancementData
                 {
                     Enhancement = DatabaseAPI.Database.Enhancements[slot.Enh].LongName,
+                    Uid = DatabaseAPI.Database.Enhancements[slot.Enh].UID,
                     Obtained = slot.Obtained
                 };
 
@@ -274,6 +275,7 @@ namespace Mids_Reborn.Core.BuildFile
                 slotData.FlippedEnhancement = new EnhancementData
                 {
                     Enhancement = DatabaseAPI.Database.Enhancements[slot.Enh].LongName,
+                    Uid = DatabaseAPI.Database.Enhancements[slot.Enh].UID,
                     Obtained = slot.Obtained
                 };
 
@@ -393,7 +395,12 @@ namespace Mids_Reborn.Core.BuildFile
                             i9Enhancement.Obtained = enhData.Obtained;
                             if (!string.IsNullOrWhiteSpace(enhData.Enhancement))
                             {
-                                i9Enhancement.Enh = DatabaseAPI.GetEnhancementByName(enhData.Enhancement);
+                                var enh = DatabaseAPI.GetEnhancementByName(enhData.Enhancement);
+                                if (enh <= -1)
+                                {
+                                    enh = DatabaseAPI.GetEnhancementByUIDName(enhData.Uid);
+                                }
+                                i9Enhancement.Enh = enh;
                             }
 
                             if (!string.IsNullOrWhiteSpace(enhData.Grade))
@@ -415,7 +422,12 @@ namespace Mids_Reborn.Core.BuildFile
                             i9Flipped.Obtained = flippedEnhData.Obtained;
                             if (!string.IsNullOrWhiteSpace(flippedEnhData.Enhancement))
                             {
-                                i9Flipped.Enh = DatabaseAPI.GetEnhancementByName(flippedEnhData.Enhancement);
+                                var enh = DatabaseAPI.GetEnhancementByName(flippedEnhData.Enhancement);
+                                if (enh <= -1)
+                                {
+                                    enh = DatabaseAPI.GetEnhancementByUIDName(flippedEnhData.Uid);
+                                }
+                                i9Flipped.Enh = enh;
                             }
 
                             if (!string.IsNullOrWhiteSpace(flippedEnhData.Grade))
