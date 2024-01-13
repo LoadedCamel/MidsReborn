@@ -811,6 +811,7 @@ namespace Mids_Reborn.Forms.Controls
             Controls.Add(pnlTotal);
             Controls.Add(pnlEnh);
             Controls.Add(pnlFX);
+            DoubleBuffered = true;
             Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             Name = "DataView";
             Size = new System.Drawing.Size(1221, 479);
