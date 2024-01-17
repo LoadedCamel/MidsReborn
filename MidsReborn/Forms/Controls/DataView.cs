@@ -1012,7 +1012,8 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Heal/Endurance",
                     Filter = e => e.EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints
-                        or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance or Enums.eEffectType.Recovery,
+                        or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance
+                        or Enums.eEffectType.Recovery or Enums.eEffectType.Absorb,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 

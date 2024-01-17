@@ -1394,7 +1394,7 @@ namespace Mids_Reborn.Core
                         break;
                 }
             }
-            
+
             // Pass 2: aggregate similar grouped effect containing a single effect
             
             var groupedRankedEffects2 = new List<GroupedFx>();
