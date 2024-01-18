@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
+using Newtonsoft.Json.Serialization;
 
 namespace Mids_Reborn.Core.BuildFile
 {
@@ -22,7 +23,7 @@ namespace Mids_Reborn.Core.BuildFile
         {
             var generator = new JSchemaGenerator
             {
-                DefaultRequired = Required.AllowNull,
+                DefaultRequired = Required.Default,
                 SchemaIdGenerationHandling = SchemaIdGenerationHandling.TypeName
             };
             _schema = generator.Generate(typeof(CharacterBuildFile));

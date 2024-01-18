@@ -39,7 +39,6 @@ namespace Mids_Reborn.Core.BuildFile
         [JsonProperty]
         public MetaData? BuiltWith { get; set; }
 
-        [Required]
         [JsonProperty]
         public string Level { get; set; }
 
