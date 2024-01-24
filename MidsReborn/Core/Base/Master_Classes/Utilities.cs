@@ -71,5 +71,10 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 _ => effectString
             };
         }
+
+        public static int GetEnhClassById(int id)
+        {
+            return Math.Max(0, DatabaseAPI.Database.EnhancementClasses.TryFindIndex(e => e.ID == id));
+        }
     }
 }

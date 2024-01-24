@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
@@ -871,10 +872,10 @@ namespace Mids_Reborn.Core
                 var uniqueVectors = new List<string>();
                 var vectorsChunks = power.Effects[IncludedEffects[0]].EffectType switch
                 {
-                    Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning  => IncludedEffects
-                        .Select(e => $"{power.Effects[e].EffectType}")
-                        .ToList(),
-                    
+                    Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => IncludedEffects
+                            .Select(e => $"{power.Effects[e].EffectType}")
+                            .ToList(),
+
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => IncludedEffects
                         .Select(e => $"{power.Effects[e].MezType}") // Cannot use .Cast<string>()
                         .ToList(),
@@ -921,45 +922,62 @@ namespace Mids_Reborn.Core
 
             // Change stat name inside effect string with list of vectors
             // Use the first effect of the group as base
-            var baseEffectString = power.Effects[IncludedEffects[0]].BuildEffectString(false, "", false, false, false, false, false, true);
+            var maxRange = IsAggregated & IncludedEffects.Count > 1 & IncludedEffects
+                .Select(e => power.Effects[e].BuffedMag)
+                .Any(e => e != power.Effects[IncludedEffects[0]].BuffedMag)
+                ? IncludedEffects.Count
+                : 0;
 
-            var tip = power.Effects[IncludedEffects[0]].EffectType switch
+            var tip = "";
+            for (var i = 0; i < maxRange; i++)
             {
-                Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => statName == "Slow"
-                    ? InvertStringValue(Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", "Slow")) // Slow is positive when speeds are negative
-                    : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
+                var baseEffectString = power.Effects[IncludedEffects[i]]
+                    .BuildEffectString(false, "", false, false, false, false, false, true);
 
-                Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                var fxTip = power.Effects[IncludedEffects[i]].EffectType switch
+                {
+                    Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning =>
+                        statName == "Slow"
+                            ? InvertStringValue(Regex.Replace(baseEffectString,
+                                @"(SpeedFlying|SpeedJumping|SpeedRunning)",
+                                "Slow")) // Slow is positive when speeds are negative
+                            : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
 
-                Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
-                    or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].MezType})",
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[0]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
-                Enums.eEffectType.Enhancement when
-                    power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Defense
-                        or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType} {power.Effects[IncludedEffects[0]].ETModifies})",
-                        $"{power.Effects[IncludedEffects[0]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
+                    Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType
+                            .Mez
+                        or Enums.eEffectType.MezResist => baseEffectString.Replace(
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[i]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
 
-                Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => baseEffectString.Replace(
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].ETModifies})",
-                    $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                    Enums.eEffectType.Enhancement when
+                        power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType.Defense
+                            or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => baseEffectString.Replace(
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType} {power.Effects[IncludedEffects[i]].ETModifies})",
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
 
-                Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity
-                    or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[0]].EffectType}({power.Effects[IncludedEffects[0]].DamageType})",
-                        $"{power.Effects[IncludedEffects[0]].EffectType}({vectors})"),
+                    Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => baseEffectString.Replace(
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].ETModifies})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
-                Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
-                    .Replace(" in ", " after ")
-                    .Replace(" to Self", "")
-                    .Replace(" to Target", ""),
+                    Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity
+                        or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
-                _ => baseEffectString
-            };
+                    Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
+                        .Replace(" in ", " after ")
+                        .Replace(" to Self", "")
+                        .Replace(" to Target", ""),
+
+                    _ => baseEffectString
+                };
+
+                tip += $"{(string.IsNullOrEmpty(tip) ? "" : "\r\n")}{fxTip}";
+            }
 
             return Regex.Replace(tip, @"(?<stat>[0-9A-Za-z\-]+)\(\k<stat>", "$1") // statName(statName (both same expression match)
                 .Replace("((", "(")
@@ -1435,10 +1453,14 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                gre.Mag = gre.GetMagSum(power);
+                gre.Mag = gre.GetMagSum(power, gre.FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight));
             }
 
-            return greAggregated;
+            // Pass 4: filter 0-mag GroupedFx
+
+            return greAggregated
+                .Where(e => Math.Abs(e.Mag) > float.Epsilon)
+                .ToList();
         }
 
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>
@@ -1665,22 +1687,25 @@ namespace Mids_Reborn.Core
         /// <summary>
         /// Get the total magnitude of a grouped effect.
         /// If all values are negative sum up everything.
-        /// If some are positive, ignore the negative ones.
+        /// If some are positive, ignore the negative ones. This behavior can be overriden.
         /// This overload will return magnitude sum based on a single power.
         /// </summary>
         /// <remarks>This is intended to be used with the enhanced power as a shortcut.</remarks>
         /// <param name="power">Source power</param>
+        /// <param name="ignoreNegs">For when there are mixed signs, ignore negative values.</param>
         /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
-        public float GetMagSum(IPower power)
+        public float GetMagSum(IPower power, bool ignoreNegs = true)
         {
             if (IncludedEffects.Count <= 0)
             {
                 return 0;
             }
 
+            // Exception in GetMagSum(power: Incarnate.Alpha.Intuition_Radial_Boost, ignoreNegs: True)
+            // Exception.IndexOutOfBoundsException
             var allNegEnh = IncludedEffects
-                .Select(e => GetPowerEffectAt(power, e).BuffedMag)
-                .All(e => e < 0);
+                    .Select(e => e >= 0 && e < power.Effects.Length ? GetPowerEffectAt(power, e).BuffedMag : 0)
+                    .All(e => e < 0);
 
             if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
                 or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez
@@ -1689,7 +1714,7 @@ namespace Mids_Reborn.Core
                 return GetEffectAt(power).BuffedMag;
             }
 
-            return allNegEnh
+            return allNegEnh | !ignoreNegs
                 ? IncludedEffects
                     .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .Sum()
@@ -1730,12 +1755,26 @@ namespace Mids_Reborn.Core
                         continue;
                     }
 
-                    if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
-                        Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon |
-                        greList[i].EnhancementEffect != greList[j].EnhancementEffect |
-                        greList[i].SpecialCase != greList[j].SpecialCase)
+                    if (greList[i].FxIdentifier.EffectType is Enums.eEffectType.SpeedFlying
+                        or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning
+                        or Enums.eEffectType.JumpHeight)
                     {
-                        continue;
+                        if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
+                            greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                            greList[i].SpecialCase != greList[j].SpecialCase)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
+                            Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon |
+                            greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                            greList[i].SpecialCase != greList[j].SpecialCase)
+                        {
+                            continue;
+                        }
                     }
 
                     includedGre.Add(j);
@@ -1767,13 +1806,52 @@ namespace Mids_Reborn.Core
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = gre.GetTooltip(pEnh);
-            var magSum = gre.GetMagSum(pEnh);
+            var magSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
+                or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
+                ? gre.GetMagSum(pEnh, false)
+                : gre.GetMagSum(pEnh);
+            var baseMagSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
+                or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
+                ? gre.GetMagSum(pBase, false)
+                : gre.GetMagSum(pBase);
+
             var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
                 (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
                 (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon;
-            var magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
+            
+            var magDiff = false;
+            var buffedMagDiff = false;
+            if (pEnh.Effects[effectIndex].Buffable)
+            {
+                 magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
                                    (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)) > float.Epsilon |
+                          Math.Abs(magSum - baseMagSum) > float.Epsilon |
                           mezDurationDiff;
+                 buffedMagDiff = effectIndex < pEnh.Effects.Length &&
+                                 Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) >
+                                 float.Epsilon;
+            }
+            else
+            {
+                var indexedFx = pEnh.Effects.Select((f, i) => new KeyValuePair<int, IEffect>(i, f)).ToList();
+                var fxSourceAlt = gre.IncludedEffects
+                    .Select(e => indexedFx[e])
+                    .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
+                    .FirstOrDefault(e => e.Value.Buffable & e.Key < pBase.Effects.Length)
+                    .Key;
+
+                if (fxSourceAlt >= 0)
+                {
+                    magDiff = Math.Abs((fxSourceAlt < pBase.Effects.Length ? pBase.Effects[fxSourceAlt].BuffedMag : 0) -
+                                       (fxSourceAlt < pEnh.Effects.Length ? pEnh.Effects[fxSourceAlt].BuffedMag : 0)) > float.Epsilon |
+                              Math.Abs(magSum - baseMagSum) > float.Epsilon |
+                              mezDurationDiff;
+                    buffedMagDiff = fxSourceAlt < pEnh.Effects.Length &&
+                                    Math.Abs(pEnh.Effects[fxSourceAlt].BuffedMag - pEnh.Effects[fxSourceAlt].Mag) >
+                                    float.Epsilon;
+                }
+            }
+
             var toWhoShort = effectSource.ToWho switch
             {
                 Enums.eToWho.Self => " (Slf)",
@@ -1784,9 +1862,17 @@ namespace Mids_Reborn.Core
             rankedEffect.UseUniqueColor = effectSource.isEnhancementEffect;
             rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &
                                           magDiff &
-                                          ((effectIndex < pEnh.Effects.Length && Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon) | mezDurationDiff) &
-                                          effectSource.Buffable &
+                                          (buffedMagDiff | mezDurationDiff) &
+                                          gre.IncludedEffects.Select(e => pEnh.Effects[e].Buffable).Any(e => e) &
                                           powerInBuild;
+
+            if (gre.IsAggregated & effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
+                    or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight)
+            {
+                rankedEffect.Value = effectSource.DisplayPercentage
+                    ? $"{magSum * 100:###0.##}%{toWhoShort}"
+                    : $"{magSum:###0.##}{toWhoShort}";
+            }
 
             switch (effectType)
             {
@@ -1964,9 +2050,9 @@ namespace Mids_Reborn.Core
                         rankedEffect.Name = "Slow";
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
-                    else if (gre.IncludedEffects.Count > 1)
+                    else if (gre.IncludedEffects.Count > 1 & gre.IncludedEffects.Select(e => pEnh.Effects[e].EffectType).Any(e => e != pEnh.Effects[gre.IncludedEffects[0]].EffectType))
                     {
-                        rankedEffect.Name = $"{(effectSource.Mag < 0 ? "-" : "")}Movement";
+                        rankedEffect.Name = $"{((gre.IsAggregated ? magSum : effectSource.Mag) < 0 ? "-" : "")}Movement";
                     }
 
                     rankedEffect.ToolTip = greTooltip;

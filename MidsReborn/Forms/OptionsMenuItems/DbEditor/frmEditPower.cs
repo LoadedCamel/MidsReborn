@@ -1518,15 +1518,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
-        private static int GetClassByID(int iID)
-        {
-            var num = DatabaseAPI.Database.EnhancementClasses.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if (DatabaseAPI.Database.EnhancementClasses[index].ID == iID)
-                    return index;
-            return 0;
-        }
-
         private int GetInvSetIndex(Point e)
         {
             var num1 = -1;
@@ -1733,7 +1724,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     num = index;
             var index1 = num;
             if ((index1 < myPower.Enhancements.Length) & (num > -1))
-                lblEnhName.Text = DatabaseAPI.Database.EnhancementClasses[GetClassByID(myPower.Enhancements[index1])]
+                lblEnhName.Text = DatabaseAPI.Database.EnhancementClasses[Utilities.GetEnhClassById(myPower.Enhancements[index1])]
                     .Name;
             else
                 lblEnhName.Text = "";
@@ -2005,7 +1996,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             for (var index = 0; index <= num; ++index)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(GetClassByID(myPower.Enhancements[index])), GraphicsUnit.Pixel);
+                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(Utilities.GetEnhClassById(myPower.Enhancements[index])), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + enhPadding;
             }
 

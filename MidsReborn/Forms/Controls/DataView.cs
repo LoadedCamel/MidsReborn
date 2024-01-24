@@ -855,13 +855,15 @@ namespace Mids_Reborn.Forms.Controls
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
-                             or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
+                             or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
+                             or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
                     e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
-                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x) ||
+                             or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
+                             or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
@@ -2488,7 +2490,7 @@ namespace Mids_Reborn.Forms.Controls
             if (iEnh.Enh > -1)
             {
                 str1 = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
-                if ((str1.Length > 38) & (iLevel > -1))
+                if (str1.Length > 38 & iLevel > -1)
                     str1 = DatabaseAPI.GetEnhancementNameShortWSet(iEnh.Enh);
             }
             else
