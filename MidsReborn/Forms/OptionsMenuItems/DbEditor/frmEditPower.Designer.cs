@@ -370,9 +370,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             chkAlwaysToggle.Location = new System.Drawing.Point(6, 48);
             chkAlwaysToggle.Name = "chkAlwaysToggle";
-            chkAlwaysToggle.Size = new System.Drawing.Size(168, 24);
+            chkAlwaysToggle.Size = new System.Drawing.Size(202, 24);
             chkAlwaysToggle.TabIndex = 1;
-            chkAlwaysToggle.Text = "Toggle Defaults to ON";
+            chkAlwaysToggle.Text = "Toggle/Auto Defaults to ON";
             chkAlwaysToggle.CheckedChanged += chkAlwaysToggle_CheckedChanged;
             // 
             // chkBuffCycle
@@ -846,9 +846,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpBasic.Controls.Add(cbPowerType);
             tpBasic.Controls.Add(Label5);
             tpBasic.Controls.Add(Label4);
-            tpBasic.Location = new System.Drawing.Point(4, 22);
+            tpBasic.Location = new System.Drawing.Point(4, 24);
             tpBasic.Name = "tpBasic";
-            tpBasic.Size = new System.Drawing.Size(832, 413);
+            tpBasic.Size = new System.Drawing.Size(832, 411);
             tpBasic.TabIndex = 0;
             tpBasic.Text = "Power Attributes";
             tpBasic.UseVisualStyleBackColor = true;
