@@ -77,7 +77,7 @@ namespace Mids_Reborn.Core
 
     #endregion
 
-    public class GroupedFx
+    public class GroupedFx : ICloneable
     {
         public struct FxId
         {
@@ -126,6 +126,11 @@ namespace Mids_Reborn.Core
         public Enums.ePvX PvMode => FxIdentifier.PvMode;
         public bool IgnoreScaling => FxIdentifier.IgnoreScaling;
         public bool EnhancementEffect => IsEnhancement;
+
+        public object Clone()
+        {
+            return (GroupedFx)MemberwiseClone();
+        }
 
         /// <summary>
         /// Build a grouped effect instance from an effect identifier
@@ -1787,6 +1792,16 @@ namespace Mids_Reborn.Core
             return ret;
         }
 
+        private GroupedFx CropIncludedEffects(IPower power)
+        {
+            var gre = (GroupedFx)Clone();
+            gre.IncludedEffects = gre.IncludedEffects
+                .Where(e => e >= 0 & e < power.Effects.Length)
+                .ToList();
+
+            return gre;
+        }
+
         /// <summary>Post-processing of a ranked effect to fine-tune display</summary>
         /// <param name="rankedEffect">Base ranked effect (as ref)</param>
         /// <param name="pBase">Source power (base)</param>
@@ -1812,8 +1827,8 @@ namespace Mids_Reborn.Core
                 : gre.GetMagSum(pEnh);
             var baseMagSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                 or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
-                ? gre.GetMagSum(pBase, false)
-                : gre.GetMagSum(pBase);
+                ? gre.CropIncludedEffects(pBase).GetMagSum(pBase, false)
+                : gre.CropIncludedEffects(pBase).GetMagSum(pBase);
 
             var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
                 (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
