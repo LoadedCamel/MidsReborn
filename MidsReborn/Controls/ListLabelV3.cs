@@ -6,8 +6,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Utils;
 
@@ -462,51 +460,52 @@ namespace Mids_Reborn.Controls
 
         private void WrapString(int index)
         {
-            checked
+            if (string.IsNullOrEmpty(_items[index].Text)) return;
+
+            InitBuffer();
+            var num = 1;
+            if (!_items[index].Text.Contains(' '))
             {
-                if (Operators.CompareString(_items[index].Text, "", false) == 0) return;
-                InitBuffer();
-                var num = 1;
-                if (_items[index].Text.Contains(" "))
-                {
-                    var array = _items[index].Text.Split(" ".ToCharArray());
-                    var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
-                    var font = new Font(Font, (FontStyle) _items[index].FontFlags);
-                    var str = (_items[index].ItemState == LlItemState.Heading) ? "~  ~" : "";
-
-                    var text = array[0];
-                    for (var i = 1; i < array.Length; i++)
-                    {
-                        var graphics = _bxBuffer.Graphics;
-                        var text2 = $"{text} {array[i]}{str}";
-                        var font2 = font;
-                        var layoutArea = new SizeF(1024f, Height);
-                        if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) > _textArea.Width)
-                        {
-                            text = _items[index].ItemState == LlItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
-                            num++;
-                        }
-                        else
-                        {
-                            text = $"{text} {array[i]}";
-                        }
-                    }
-
-                    _items[index].WrappedText = text;
-                }
-                else
-                {
-                    _items[index].WrappedText = _items[index].Text;
-                }
-
-                if (_items[index].ItemState == LlItemState.Heading)
-                {
-                    _items[index].WrappedText = $"~ {_items[index].WrappedText} ~";
-                }
-
-                _items[index].LineCount = num;
-                _items[index].ItemHeight = num * (ActualLineHeight - _yPadding * 2) + _yPadding * 2;
+                _items[index].WrappedText = _items[index].Text;
             }
+            else
+            {
+                var strWords = _items[index].Text.Split(" ".ToCharArray());
+                var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
+                var font = new Font(Font.FontFamily, Font.Size, (FontStyle)_items[index].FontFlags, GraphicsUnit.Point);
+                var str = (_items[index].ItemState == LlItemState.Heading) ? "~  ~" : "";
+                var text = strWords[0];
+
+                for (var i = 1; i < strWords.Length; i++)
+                {
+                    var text2 = $"{text} {strWords[i]}{str}";
+                    var layoutArea = new SizeF(1024f, Height);
+                    if (Math.Ceiling(_bxBuffer.Graphics.MeasureString(text2, font, layoutArea, stringFormat).Width) > _textArea.Width)
+
+                    {
+                        text = _items[index].ItemState == LlItemState.Heading
+                            ? $"{text} ~\r\n~ {strWords[i]}"
+                            : $"{text}\r\n {strWords[i]}";
+                        num++;
+                    }
+                    else
+                    {
+                        text = $"{text} {strWords[i]}";
+                    }
+                }
+
+                _items[index].WrappedText = text;
+            }
+
+            _items[index].WrappedText = _items[index].WrappedText.Replace("  ", " ");
+
+            if (_items[index].ItemState == LlItemState.Heading)
+            {
+                _items[index].WrappedText = $"~ {_items[index].WrappedText} ~";
+            }
+
+            _items[index].LineCount = num;
+            _items[index].ItemHeight = num * (ActualLineHeight - _yPadding * 2) + _yPadding * 2;
         }
 
         private void InitBuffer()
@@ -1022,7 +1021,7 @@ namespace Mids_Reborn.Controls
                 if (_disableRedraw) return;
                 if (!Visible) return;
                 InitBuffer();
-                if ((Width == 0) | (Height == 0)) return;
+                if (Width == 0 | Height == 0) return;
                 _bxBuffer.Graphics.Clear(IsExpanded ? Color.Black : BackColor);
                 for (var i = _scrollOffset; i < _items.Count; i++) DrawItem(i);
 
@@ -1070,10 +1069,10 @@ namespace Mids_Reborn.Controls
                 };
 
                 var fontStyle = FontStyle.Regular;
-                if (_items[index].Bold) fontStyle++;
-                if (_items[index].Italic) fontStyle += 2;
-                if (_items[index].Underline) fontStyle += 4;
-                if (_items[index].Strikethrough) fontStyle += 8;
+                if (_items[index].Bold) fontStyle |= FontStyle.Bold;
+                if (_items[index].Italic) fontStyle |= FontStyle.Italic;
+                if (_items[index].Underline) fontStyle |= FontStyle.Underline;
+                if (_items[index].Strikethrough) fontStyle |= FontStyle.Strikeout;
 
                 var font = new Font(Fonts.Family("Noto Sans"), Font.Size, fontStyle);
                 if (index == HoverId && _highlightOn[(int) _items[index].ItemState])
@@ -1106,28 +1105,24 @@ namespace Mids_Reborn.Controls
 
                 brush2 = new SolidBrush(_colors[(int) _items[index].ItemState]);
                 _bxBuffer.Graphics.DrawString(_items[index].WrappedText, font, brush2, rectangle, stringFormat);
-
             }
         }
 
         private int GetVisibleLineCount()
         {
-            int result;
             if (!_canScroll)
             {
                 _scrollSteps = 0;
-                result = 0;
-            }
-            else if (IsExpanded)
-            {
-                result = GetTotalLineCount();
-            }
-            else
-            {
-                result = checked((int) Math.Round(Conversion.Int(_textArea.Height / (double) ActualLineHeight)));
+                
+                return 0;
             }
 
-            return result;
+            if (IsExpanded)
+            {
+                return GetTotalLineCount();
+            }
+
+            return checked((int)Math.Round(_textArea.Height / (double)ActualLineHeight));
         }
 
         private int GetTotalLineCount()
@@ -1163,7 +1158,7 @@ namespace Mids_Reborn.Controls
 
         private void DrawScrollBar()
         {
-            if ((_scrollWidth < 1) | !_canScroll | (_scrollSteps < 1))
+            if (_scrollWidth < 1 | !_canScroll | _scrollSteps < 1)
                 return;
             SolidBrush brush;
             var pen = new Pen(_scBarColor);
