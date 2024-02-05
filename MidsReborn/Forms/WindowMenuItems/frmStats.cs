@@ -187,7 +187,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.DarkRed;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.Damage, "");
                         break;
                     case DisplayMode.DPA:
@@ -196,7 +196,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPA;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPA, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -206,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPS, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -216,7 +216,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPE, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -266,8 +266,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Heal).Sum,
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Heal).Sum,
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.Healing); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.Healing);
                         break;
                     case DisplayMode.HPS:
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
@@ -301,15 +301,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                                 return nEnh;
                             },
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.HPS); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.HPS);
                         break;
                     case DisplayMode.HPE:
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Heal).Sum / (e.EndCost > 0 ? b.EndCost : 1),
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Heal).Sum / (e.EndCost > 0 ? e.EndCost : 1),
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.HPE); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.HPE);
                         break;
                     case DisplayMode.EffectDuration:
                         Graph.ColorFadeEnd = Color.FromArgb(128, 0, 255);
@@ -390,8 +390,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.FromArgb(96, 192, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum,
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum,
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon,
-                            DisplayMode.Regeneration, "%/s"); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon,
+                            DisplayMode.Regeneration, "%/s");
                         break;
                 }
             }
