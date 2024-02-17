@@ -1183,7 +1183,8 @@ namespace Mids_Reborn.Core
             Fire_Attack = 64, // 0x00000040
             Energy_Attack = 128, // 0x00000080
             Negative_Energy_Attack = 256, // 0x00000100
-            Psionic_Attack = 512 // 0x00000200
+            Psionic_Attack = 512, // 0x00000200
+            Toxic_Attack = 1024 // 0x00000400
         }
 
         public enum eVisibleSize
