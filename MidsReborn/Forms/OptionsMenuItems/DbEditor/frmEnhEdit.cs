@@ -68,7 +68,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             ImageUpdate();
-            AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
+            lvEnh.Invalidate();
+            //AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -97,7 +98,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             dbEnhancements.Add(newEnhancement);
             DatabaseAPI.Database.Enhancements = dbEnhancements.ToArray();
             ImageUpdate();
-            AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
+            lvEnh.Invalidate();
+            //AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
