@@ -68,6 +68,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             ImageUpdate();
+            lvEnh.VirtualListSize = 0;
+            lvEnh.VirtualListSize = DatabaseAPI.Database.Enhancements.Length - 1;
             lvEnh.Invalidate();
             //AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
         }
@@ -98,6 +100,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             dbEnhancements.Add(newEnhancement);
             DatabaseAPI.Database.Enhancements = dbEnhancements.ToArray();
             ImageUpdate();
+            lvEnh.VirtualListSize = 0;
+            lvEnh.VirtualListSize = DatabaseAPI.Database.Enhancements.Length - 1;
             lvEnh.Invalidate();
             //AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
         }
