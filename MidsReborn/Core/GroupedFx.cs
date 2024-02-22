@@ -1971,6 +1971,7 @@ namespace Mids_Reborn.Core
                     }
 
                     break;
+
                 case Enums.eEffectType.GrantPower:
                     rankedEffect.Name = "Grant";
                     if (effectSource.nSummon > -1)
@@ -2122,6 +2123,12 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MaxRunSpeed:
                 case Enums.eEffectType.MaxJumpSpeed:
                 case Enums.eEffectType.MaxFlySpeed:
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
+                case Enums.eEffectType.EnduranceDiscount:
                     rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
