@@ -1107,7 +1107,7 @@ namespace Mids_Reborn.Controls
                     return -1;
                 }
 
-                iX -= point.X - SzPower.Width - IcoOffset * 8; // X boundary of enhancements
+                //iX -= point.X - SzPower.Width - IcoOffset * 8; // X boundary of enhancements
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
                 {
                     var iZ = (i + 1) * IcoOffset;
