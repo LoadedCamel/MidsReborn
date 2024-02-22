@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -1107,7 +1108,11 @@ namespace Mids_Reborn.Controls
                     return -1;
                 }
 
-                //iX -= point.X - SzPower.Width - IcoOffset * 8; // X boundary of enhancements
+                var column = SzPower.Width + PaddingX == 0
+                    ? 0
+                    : (int)Math.Floor(iX / (decimal)(SzPower.Width + PaddingX));
+                iX -= column * (SzPower.Width + PaddingX); // Remove column x offset
+
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
                 {
                     var iZ = (i + 1) * IcoOffset;
