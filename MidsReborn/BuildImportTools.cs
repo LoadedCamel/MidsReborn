@@ -456,6 +456,8 @@ namespace Mids_Reborn
                 "blaster_support.electricity_manipulation.lightning_field" => "Blaster_Support.Electricity_Manipulation.Lightning_Clap",
                 "teamwork.widow_teamwork.pain_tolerance" => "Teamwork.Widow_Teamwork.NW_Pain_Tolerance",
                 "teamwork.fortunata_teamwork.fate_sealed" => "Teamwork.Fortunata_Teamwork.FRT_Fate_Sealed",
+                "pool.speed.speedphase" => "Inherent.Inherent.Speed_Phase",
+
                 _ => fullName
             };
         }
