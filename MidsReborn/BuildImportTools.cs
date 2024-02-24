@@ -454,6 +454,8 @@ namespace Mids_Reborn
                 "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
                 "blaster_support.electricity_manipulation.lightning_clap" => "Blaster_Support.Electricity_Manipulation.Lightning_Field",
                 "blaster_support.electricity_manipulation.lightning_field" => "Blaster_Support.Electricity_Manipulation.Lightning_Clap",
+                "teamwork.widow_teamwork.pain_tolerance" => "Teamwork.Widow_Teamwork.NW_Pain_Tolerance",
+                "teamwork.fortunata_teamwork.fate_sealed" => "Teamwork.Fortunata_Teamwork.FRT_Fate_Sealed",
                 _ => fullName
             };
         }
@@ -471,6 +473,16 @@ namespace Mids_Reborn
                 "epic.sentinel_leviathan_mastery" when archetype == "sentinel" => "Epic.Sentinel_Lev_Mastery",
                 "epic.sentinel_psionic_mastery" when archetype == "sentinel" => "Epic.Sentinel_Psi_Mastery",
                 "blaster_support.time_manipulation" when archetype == "blaster" => "Blaster_Support.Temporal_Manipulation",
+                "epic.tank_dark_mastery" when archetype is "tanker" or "brute" => "Epic.Dark_Mastery_TankBrute",
+                "epic.blaster_dark_mastery" when archetype == "blaster" => "Epic.Dark_Mastery_Blaster",
+                "epic.controller_dark_mastery" when archetype == "controller" => "Epic.Dark_Mastery_Controller",
+                "epic.dominator_dark_mastery" when archetype == "dominator" => "Epic.Dark_Mastery_Dominator",
+                "epic.mastermind_dark_mastery" when archetype == "mastermind" => "Epic.Dark_Mastery_Mastermind",
+                "epic.defender_ice_mastery" when archetype is "defender" or "corruptor" => "Epic.Ice_Mastery_DefCorr",
+                "epic.scrapper_ice_mastery" when archetype is "scrapper" or "stalker" => "Epic.Ice_Mastery_ScrapStalk",
+                "epic.tank_psionic_mastery" when archetype is "tanker" or "brute" => "Epic.Psionic_Mastery_TankBrute",
+                "epic.melee_psionic_mastery" when archetype is "scrapper" or "stalker" => "Epic.Psionic_Mastery_ScrapStalk",
+
                 _ => fullName
             };
         }
@@ -541,7 +553,7 @@ namespace Mids_Reborn
                     }
 
                     p.Valid = CheckValid(p.pData);
-                    Debug.WriteLine($"Detected power: {p.FullName}, valid: {p.Valid}");
+                    Debug.WriteLine($"Detected power: {p.FullName} [{p.pData?.DisplayName ?? "<null>"}], powerset: {p.Powerset?.FullName ?? "<null>"} [{p.Powerset?.DisplayName ?? "<null>"}], valid: {p.Valid}");
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
                     if (p.Valid && CheckValid(p.Powerset))
