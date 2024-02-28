@@ -931,7 +931,7 @@ namespace Mids_Reborn.Core
                 .Select(e => power.Effects[e].BuffedMag)
                 .Any(e => e != power.Effects[IncludedEffects[0]].BuffedMag)
                 ? IncludedEffects.Count
-                : 0;
+                : 1; // Will completely hide tooltip if set to zero
 
             var tip = "";
             for (var i = 0; i < maxRange; i++)
