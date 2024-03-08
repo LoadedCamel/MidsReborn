@@ -966,7 +966,7 @@ namespace Mids_Reborn
             return ret;
         }
 
-        private void GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
+        /*private void GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
         {
             if (MidsContext.Config is null || CurrentBuild is null || MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower is null) return;
 
@@ -1002,59 +1002,57 @@ namespace Mids_Reborn
                             var summon = DatabaseAPI.NidFromUidEntity(uidEntity);
                             var entitySetName = DatabaseAPI.Database.Entities[summon].PowersetFullName[0];
                             var entitySet = DatabaseAPI.GetPowersetByFullname(entitySetName);
-                            if (entitySet != null)
+                            if (entitySet == null) continue;
+                            foreach (var entPower in entitySet.Powers)
                             {
-                                foreach (var entPower in entitySet.Powers)
+                                if (setBonusPower != null && entPower != null && entPower.HasResEffects() && setBonusPower.HasResEffects())
                                 {
-                                    if (setBonusPower != null && entPower != null && entPower.HasResEffects() && setBonusPower.HasResEffects())
-                                    {
-                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
-                                        clonedEffect.isEnhancementEffect = true;
-                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
-                                        clonedEffect.ToWho = enhEffect.ToWho;
-                                        clonedEffect.Absorbed_Effect = true;
-                                        clonedEffect.Ticks = enhEffect.Ticks;
-                                        clonedEffect.Buffable = false;
-                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+                                    if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                    clonedEffect.isEnhancementEffect = true;
+                                    clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                    clonedEffect.ToWho = enhEffect.ToWho;
+                                    clonedEffect.Absorbed_Effect = true;
+                                    clonedEffect.Ticks = enhEffect.Ticks;
+                                    clonedEffect.Buffable = false;
+                                    entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
 
-                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
-                                        {
-                                            entPower.HasGrantPowerEffect = true;
-                                        }
+                                    if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
+                                    {
+                                        entPower.HasGrantPowerEffect = true;
                                     }
+                                }
 
-                                    if (entPower != null && entPower.HasDefEffects())
+                                if (entPower != null && entPower.HasDefEffects())
+                                {
+                                    if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                    clonedEffect.isEnhancementEffect = true;
+                                    clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                    clonedEffect.ToWho = enhEffect.ToWho;
+                                    clonedEffect.Absorbed_Effect = true;
+                                    clonedEffect.Ticks = enhEffect.Ticks;
+                                    clonedEffect.Buffable = false;
+                                    entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+
+                                    if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
                                     {
-                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
-                                        clonedEffect.isEnhancementEffect = true;
-                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
-                                        clonedEffect.ToWho = enhEffect.ToWho;
-                                        clonedEffect.Absorbed_Effect = true;
-                                        clonedEffect.Ticks = enhEffect.Ticks;
-                                        clonedEffect.Buffable = false;
-                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
-
-                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
-                                        {
-                                            entPower.HasGrantPowerEffect = true;
-                                        }
+                                        entPower.HasGrantPowerEffect = true;
                                     }
+                                }
 
-                                    if (entPower == null || !entPower.HasDamageEffects()) continue;
+                                if (entPower == null || !entPower.HasDamageEffects()) continue;
+                                {
+                                    if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                    clonedEffect.isEnhancementEffect = true;
+                                    clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                    clonedEffect.ToWho = enhEffect.ToWho;
+                                    clonedEffect.Absorbed_Effect = true;
+                                    clonedEffect.Ticks = enhEffect.Ticks;
+                                    clonedEffect.Buffable = false;
+                                    entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+
+                                    if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
                                     {
-                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
-                                        clonedEffect.isEnhancementEffect = true;
-                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
-                                        clonedEffect.ToWho = enhEffect.ToWho;
-                                        clonedEffect.Absorbed_Effect = true;
-                                        clonedEffect.Ticks = enhEffect.Ticks;
-                                        clonedEffect.Buffable = false;
-                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
-
-                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
-                                        {
-                                            entPower.HasGrantPowerEffect = true;
-                                        }
+                                        entPower.HasGrantPowerEffect = true;
                                     }
                                 }
                             }
@@ -1082,6 +1080,89 @@ namespace Mids_Reborn
                     }
                 }
             }
+        }*/
+
+        private void GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
+        {
+            if (MidsContext.Config is null || CurrentBuild is null || MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 ||
+                iPower is null)
+                return;
+
+            var currentPowerEntry = CurrentBuild.Powers[iIndex];
+            if (currentPowerEntry?.Power == null)
+                return;
+
+            var newEffects = new List<IEffect>();
+
+            foreach (var slotEntry in currentPowerEntry.Slots.Where(slot => slot.Enhancement.Enh >= 0))
+            {
+                var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
+                var enhancementPower = enhancement.GetPower();
+                if (enhancementPower == null || enhancement.Effect.All(e => e.Mode != Enums.eEffMode.FX))
+                    continue;
+
+                if (currentPowerEntry.ProcInclude & enhancement.IsProc)
+                    continue;
+
+                foreach (var enhEffect in enhancementPower.Effects)
+                {
+                    var shouldAddEffect = false;
+                    if (enhEffect.AffectsPetsOnly() && iPower.IsBasePetPower)
+                    {
+                        var uidEntity = iPower.Effects.FirstOrDefault(x => x.EffectType == Enums.eEffectType.EntCreate)
+                            ?.Summon;
+                        if (uidEntity != null)
+                        {
+                            var summon = DatabaseAPI.NidFromUidEntity(uidEntity);
+                            var entitySetName = DatabaseAPI.Database.Entities[summon].PowersetFullName.FirstOrDefault();
+                            var entitySet = DatabaseAPI.GetPowersetByFullname(entitySetName);
+                            if (entitySet != null)
+                            {
+                                foreach (var entPower in entitySet.Powers)
+                                {
+                                    if (entPower == null) continue;
+                                    shouldAddEffect = entPower.HasResEffects() || entPower.HasDefEffects() ||
+                                                      entPower.HasDamageEffects();
+                                    if (!shouldAddEffect) continue;
+                                    AddClonedEffectToList(newEffects, enhEffect, enhancement.IsProc);
+                                    if (enhEffect.EffectType == Enums.eEffectType.GrantPower)
+                                    {
+                                        entPower.HasGrantPowerEffect = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        shouldAddEffect = true;
+                    }
+
+                    if (!shouldAddEffect) continue;
+                    AddClonedEffectToList(newEffects, enhEffect, enhancement.IsProc);
+                    if (enhEffect.EffectType == Enums.eEffectType.GrantPower)
+                    {
+                        iPower.HasGrantPowerEffect = true;
+                    }
+                }
+            }
+
+            if (newEffects.Any())
+            {
+                iPower.Effects = iPower.Effects.Concat(newEffects).ToArray();
+            }
+        }
+
+        private static void AddClonedEffectToList(ICollection<IEffect> effectsList, IEffect enhEffect, bool isProc)
+        {
+            if (enhEffect.Clone() is not IEffect clonedEffect) return;
+            clonedEffect.isEnhancementEffect = true;
+            clonedEffect.IgnoreScaling = isProc;
+            clonedEffect.ToWho = enhEffect.ToWho;
+            clonedEffect.Absorbed_Effect = true;
+            clonedEffect.Ticks = enhEffect.Ticks;
+            clonedEffect.Buffable = false;
+            effectsList.Add(clonedEffect);
         }
 
         private bool GBPA_AddSubPowerEffects(ref IPower ret, int hIDX)
