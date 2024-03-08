@@ -75,8 +75,10 @@ namespace Mids_Reborn.Core
                     Slots = Array.Empty<SlotEntry>();
                 }
 
-                if (power.AlwaysToggle | (power.PowerType == Enums.ePowerType.Auto_))
+                if (power.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_ & power.AlwaysToggle)
+                {
                     StatInclude = true;
+                }
             }
             else
             {

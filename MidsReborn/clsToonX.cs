@@ -3307,40 +3307,41 @@ namespace Mids_Reborn
             return flag;
         }
 
-        private void SetPower_NID(int Index, int nIDPower)
+        private void SetPower_NID(int index, int nIDPower)
         {
-            if ((Index < 0) | (Index >= CurrentBuild.Powers.Count))
+            if (index < 0 | index >= CurrentBuild.Powers.Count)
                 return;
             var power1 = DatabaseAPI.Database.Power[nIDPower];
             if (power1 != null)
             {
-                var power2 = CurrentBuild.Powers[Index];
+                var power2 = CurrentBuild.Powers[index];
                 power2.NIDPowerset = power1.PowerSetID;
                 power2.IDXPower = power1.PowerSetIndex;
                 power2.NIDPower = power1.PowerIndex;
                 if (power1.NIDSubPower.Length > 0)
                 {
                     power2.SubPowers = new PowerSubEntry[power1.NIDSubPower.Length];
-                    var num = power2.SubPowers.Length - 1;
-                    for (var index = 0; index <= num; ++index)
-                        if (power2.SubPowers[index] != null)
-                            power2.SubPowers[index] = new PowerSubEntry
+                    for (var i = 0; i < power2.SubPowers.Length; i++)
+                    {
+                        if (power2.SubPowers[i] != null)
+                            power2.SubPowers[i] = new PowerSubEntry
                             {
-                                nIDPower = power1.NIDSubPower[index],
-                                Powerset = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetID,
-                                Power = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetIndex
+                                nIDPower = power1.NIDSubPower[i],
+                                Powerset = DatabaseAPI.Database.Power[power2.SubPowers[i].nIDPower].PowerSetID,
+                                Power = DatabaseAPI.Database.Power[power2.SubPowers[i].nIDPower].PowerSetIndex
                             };
+                    }
                 }
 
-                if (power1.Slottable & (power2.Slots.Length == 0))
+                if (power1.Slottable & power2.Slots.Length == 0)
+                {
                     power2.AddSlot(power2.Level);
-                if (power1.AlwaysToggle)
-                    CurrentBuild.Powers[Index].StatInclude = true;
-                if (power1.PowerType == Enums.ePowerType.Auto_)
-                    CurrentBuild.Powers[Index].StatInclude = true;
+                }
+
+                CurrentBuild.Powers[index].StatInclude = power1.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_ & power1.AlwaysToggle;
             }
 
-            CurrentBuild.Powers[Index].ValidateSlots();
+            CurrentBuild.Powers[index].ValidateSlots();
         }
 
         public bool StringToInternalData(string iString)

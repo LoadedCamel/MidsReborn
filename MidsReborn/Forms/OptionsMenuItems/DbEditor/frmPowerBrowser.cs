@@ -307,7 +307,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 case 0:
                     {
-                        if ((lvGroup.SelectedItems.Count > 0) & (lvSet.SelectedItems.Count > 0))
+                        if (lvGroup.SelectedItems.Count > 0 & lvSet.SelectedItems.Count > 0)
                             iPower.FullName =
                                 $"{lvGroup.SelectedItems[0].SubItems[0].Text}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
                         break;

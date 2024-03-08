@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -1052,13 +1053,16 @@ namespace Mids_Reborn.Controls
             {
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
-                    Point point;
-                    if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen))
-                        point = PowerPosition(GetVisualIdx(i));
-                    else
-                        point = PowerPosition(i);
-                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + (PaddingY / 2))
+                    var point = MidsContext.Character.CurrentBuild.Powers[i] != null &&
+                            (MidsContext.Character.CurrentBuild.Powers[i].Power == null ||
+                             MidsContext.Character.CurrentBuild.Powers[i].Chosen)
+                        ? PowerPosition(GetVisualIdx(i))
+                        : PowerPosition(i);
+                    
+                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + PaddingY / 2)
+                    {
                         return i;
+                    }
                 }
 
                 return -1;
@@ -1073,10 +1077,11 @@ namespace Mids_Reborn.Controls
                 Point point = default;
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen))
-                        point = PowerPosition(GetVisualIdx(i));
-                    else
-                        point = PowerPosition(i);
+                    point = MidsContext.Character.CurrentBuild.Powers[i] != null &&
+                            (MidsContext.Character.CurrentBuild.Powers[i]?.Power == null ||
+                             MidsContext.Character.CurrentBuild.Powers[i]?.Chosen == true)
+                        ? PowerPosition(GetVisualIdx(i))
+                        : PowerPosition(i);
 
                     if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + PaddingY / 2)
                     {
@@ -1092,28 +1097,22 @@ namespace Mids_Reborn.Controls
                     return -1;
                 }
 
-                var isValid = false;
-                if (iY >= point.Y + OffsetY) // Y boundary of enhancments
-                {
-                    if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
-                    {
-                        if (DatabaseAPI.Database
-                            .Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
-                            .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
-                            isValid = true;
-                    }
-                    else
-                    {
-                        isValid = true;
-                    }
-                }
+                var isValid = iY >= point.Y + OffsetY &&
+                               MidsContext.Character.CurrentBuild.Powers[oPower] != null &&
+                               MidsContext.Character.CurrentBuild.Powers[oPower]?.NIDPowerset > -1 &&
+                               DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
+                                   .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable;
 
                 if (!isValid)
                 {
                     return -1;
                 }
 
-                iX -= point.X - checked(SzPower.Width - IcoOffset * 8); //X boundary of enhancments
+                var column = SzPower.Width + PaddingX == 0
+                    ? 0
+                    : (int)Math.Floor(iX / (decimal)(SzPower.Width + PaddingX));
+                iX -= column * (SzPower.Width + PaddingX); // Remove column x offset
+
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
                 {
                     var iZ = (i + 1) * IcoOffset;
@@ -1133,7 +1132,11 @@ namespace Mids_Reborn.Controls
             {
                 if (MidsContext.Character.CurrentBuild.Powers.Count >= 1)
                 {
-                    if (Highlight == idx && !force) return false;
+                    if (Highlight == idx && !force)
+                    {
+                        return false;
+                    }
+
                     if (idx != -1)
                     {
                         Build currentBuild;

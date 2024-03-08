@@ -1992,11 +1992,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             size = bxEnhPicked.Size;
             var height = size.Height - 1;
             graphics.DrawRectangle(pen, 0, 0, width, height);
-            var num = myPower.Enhancements.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            foreach (var e in myPower.Enhancements)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
-                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(Utilities.GetEnhClassById(myPower.Enhancements[index])), GraphicsUnit.Pixel);
+                bxEnhPicked.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(Utilities.GetEnhClassById(e)), GraphicsUnit.Pixel);
                 enhPadding2 += 30 + enhPadding;
             }
 
@@ -2020,8 +2019,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             size = bxEnhPicker.Size;
             var height = size.Height - 1;
             graphics.DrawRectangle(pen, 0, 0, width, height);
-            var num2 = DatabaseAPI.Database.EnhancementClasses.Length - 1;
-            for (var ecIndex = 0; ecIndex <= num2; ++ecIndex)
+            for (var ecIndex = 0; ecIndex < DatabaseAPI.Database.EnhancementClasses.Length; ecIndex++)
             {
                 var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
                 bxEnhPicker.Graphics.DrawImage(I9Gfx.Classes.Bitmap, destRect, I9Gfx.GetImageRect(ecIndex), GraphicsUnit.Pixel);
@@ -2145,23 +2143,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void Req_UpdateItem()
         {
-            if ((lvPrListing.SelectedIndices.Count < 1) | (lvPrGroup.SelectedIndices.Count < 1) |
-                (lvPrSet.SelectedIndices.Count < 1) | (lvPrPower.SelectedIndices.Count < 1))
+            if (lvPrListing.SelectedIndices.Count < 1 | lvPrGroup.SelectedIndices.Count < 1 |
+                lvPrSet.SelectedIndices.Count < 1 | lvPrPower.SelectedIndices.Count < 1)
+            {
                 return;
-            var str = lvPrGroup.SelectedItems[0].Text + "." + lvPrSet.SelectedItems[0].Text + "." +
-                      lvPrPower.SelectedItems[0].Text;
+            }
+
+            var str = $"{lvPrGroup.SelectedItems[0].Text}.{lvPrSet.SelectedItems[0].Text}.{lvPrPower.SelectedItems[0].Text}";
             var index = (int)Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
                 if (rbPrPowerA.Checked)
                 {
                     myPower.Requires.PowerIDNot[index][0] = str;
-                    lvPrListing.SelectedItems[0].SubItems[0].Text = "NOT " + str;
+                    lvPrListing.SelectedItems[0].SubItems[0].Text = $"NOT {str}";
                 }
                 else
                 {
                     myPower.Requires.PowerIDNot[index][1] = str;
-                    lvPrListing.SelectedItems[0].SubItems[2].Text = "NOT " + str;
+                    lvPrListing.SelectedItems[0].SubItems[2].Text = $"NOT {str}";
                 }
             }
             else if (rbPrPowerA.Checked)
@@ -2182,11 +2182,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var strArray = iPower.Split(".".ToCharArray());
             if (strArray.Length > 0)
             {
-                var num = lvPrGroup.Items.Count - 1;
-                for (var index = 0; index <= num; ++index)
+                for (var index = 0; index < lvPrGroup.Items.Count; index++)
                 {
                     if (!string.Equals(lvPrGroup.Items[index].Text, strArray[0], StringComparison.OrdinalIgnoreCase))
+                    {
                         continue;
+                    }
+
                     lvPrGroup.Items[index].Selected = true;
                     lvPrGroup.Items[index].EnsureVisible();
                     break;
@@ -2196,8 +2198,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Req_SetList();
             if (strArray.Length > 1)
             {
-                var num = lvPrSet.Items.Count - 1;
-                for (var index = 0; index <= num; ++index)
+                for (var index = 0; index < lvPrSet.Items.Count; index++)
                 {
                     if (!string.Equals(lvPrSet.Items[index].Text, strArray[1], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -2210,8 +2211,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Req_PowerList();
             if (strArray.Length > 2)
             {
-                var num = lvPrPower.Items.Count - 1;
-                for (var index = 0; index <= num; ++index)
+                for (var index = 0; index < lvPrPower.Items.Count; index++)
                 {
                     if (!string.Equals(lvPrPower.Items[index].Text, strArray[2], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -2226,12 +2226,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void SetDynamics()
         {
-            var power = myPower;
-            chkBuffCycle.Enabled = power.PowerType == Enums.ePowerType.Click;
-            chkAlwaysToggle.Enabled = power.PowerType == Enums.ePowerType.Toggle;
-            if ((power.ActivatePeriod > 0.0) & (power.PowerType == Enums.ePowerType.Toggle))
+            chkBuffCycle.Enabled = myPower.PowerType == Enums.ePowerType.Click;
+            chkAlwaysToggle.Enabled = myPower.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_;
+            if (myPower.ActivatePeriod > 0 & myPower.PowerType == Enums.ePowerType.Toggle)
             {
-                lblEndCost.Text = $@"{Convert.ToDecimal(power.EndCost / power.ActivatePeriod):##0.##}/s";
+                lblEndCost.Text = $@"{Convert.ToDecimal(myPower.EndCost / myPower.ActivatePeriod):##0.##}/s";
                 //lblEndCost.Text = "(" + Strings.Format((float) (power.EndCost / (double) power.ActivatePeriod), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "/s)";
             }
             else
@@ -2239,14 +2238,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lblEndCost.Text = "";
             }
 
-            lblAcc.Text = $@"({Convert.ToDecimal(power.Accuracy * MidsContext.Config.ScalingToHit * 100.0):##0.##}%)";
+            lblAcc.Text = $@"({Convert.ToDecimal(myPower.Accuracy * MidsContext.Config.ScalingToHit * 100):##0.##}%)";
             //lblAcc.Text = "(" + Strings.Format((float) (power.Accuracy * (double) DatabaseAPI.ServerData.BaseToHit * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%)";
         }
 
         private void SetFullName()
         {
-            var power = myPower;
-            power.FullName = power.GroupName + "." + power.SetName + "." + power.PowerName;
+            myPower.FullName = $"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
         }
 
         private void SP_GroupList()
@@ -2254,7 +2252,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSPGroup.BeginUpdate();
             lvSPGroup.Items.Clear();
             foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
+            {
                 lvSPGroup.Items.Add(key);
+            }
+
             lvSPGroup.EndUpdate();
         }
 
