@@ -11,6 +11,7 @@ using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UIv2;
 
 namespace Mids_Reborn.Forms
 {
@@ -19,6 +20,7 @@ namespace Mids_Reborn.Forms
         private delegate void LoadDataHandler(object? sender, bool success);
         private event LoadDataHandler? LoadData;
 
+        //private MainForm? _mainForm;
         private frmMain? _mainForm;
 
         private const int BorderSize = 2;
@@ -136,6 +138,12 @@ namespace Mids_Reborn.Forms
             }
 
             MidsContext.Config.SaveConfig();
+            // _mainForm = new MainForm(_passedArgs)
+            // {
+            //     Loader = this,
+            //     Location = MidsContext.Config.Bounds.Location,
+            //     Size = MidsContext.Config.Bounds.Size,
+            // };
             _mainForm = new frmMain(_passedArgs)
             {
                 Loader = this,

@@ -46,7 +46,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Forms\Controls\PowerList.cs">
+    <Compile Update="UIv2\Controls\CollapsiblePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UIv2\Controls\MultiOrientButton.cs" />
+    <Compile Update="UIv2\Controls\PowerList.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Content Include="Data\Generic\Example UpdateManifest.xml">
@@ -302,9 +306,6 @@
     <Content Include="Images\Origins\Natural.png" />
     <Content Include="Images\Origins\Science.png" />
     <Content Include="Images\Origins\Technology.png" />
-    <Content Include="lib\zlib1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -352,13 +353,13 @@
     <PackageReference Include="FontAwesome.Sharp">
       <Version>6.3.0</Version>
     </PackageReference>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.57" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" />
     <PackageReference Include="Jace4fc" Version="1.0.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.2210.55</Version>
+      <Version>1.0.2277.86</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
+    <PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.9.0-preview.3.24054.5" />
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
@@ -369,9 +370,11 @@
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
       <Version>110.2.0</Version>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.7" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.2" />
     <PackageReference Include="WebMarkupMin.Core" Version="2.14.0" />
+    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Homecoming\Images\Classes\" />
@@ -412,6 +415,11 @@
     <None Remove="Images\MRBLoading.gif" />
     <None Remove="Images\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MaterialSkin">
+      <HintPath>..\..\..\MaterialSkin.NET\MaterialSkin\bin\Debug\net6.0-windows\win\MaterialSkin.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Update="appSettings.json">

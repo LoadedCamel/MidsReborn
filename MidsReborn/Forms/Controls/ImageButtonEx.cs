@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
@@ -38,6 +39,7 @@ namespace Mids_Reborn.Forms.Controls
         private event EventHandler<ButtonTypes>? ButtonTypeChanged;
         private event EventHandler<bool>? UseAltChanged;
         private event EventHandler<MouseButtons>? ToggleMouseButtonChanged;
+        private event EventHandler<bool>? VerticalDisplayChanged;
 
         private delegate void StateChangedEventHandler(object? sender, States state);
 
@@ -83,6 +85,7 @@ namespace Mids_Reborn.Forms.Controls
         private bool _setByToggle;
         private MouseButtons _toggleMouseButton = MouseButtons.Left;
         private MouseClicks _toggleActivation = MouseClicks.LeftButton;
+        private bool _displayVertically;
 
         private Color ColorWhenClicked
         {
@@ -245,6 +248,22 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        [Description("Determines if aspects of the control should be displayed vertically.")]
+        [Category("Behavior")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool DisplayVertically
+        {
+            get => _displayVertically;
+            set
+            {
+                _displayVertically = value;
+                VerticalDisplayChanged?.Invoke(this, value);
+            }
+        }
+
         [Description("Indicates whether the ImageButton allows three states instead of only two when in toggle mode.")]
         [Category("Behavior")]
         [Browsable(true)]
@@ -298,7 +317,8 @@ namespace Mids_Reborn.Forms.Controls
                 return true;
             }
 
-            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value,
+                Attribute[]? attributes)
             {
                 return TypeDescriptor.GetProperties(typeof(T));
             }
@@ -318,7 +338,8 @@ namespace Mids_Reborn.Forms.Controls
             [NotifyParentProperty(true)]
             public Image? Background { get; set; }
 
-            [Description("The image to be used when hovering over the control.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
+            [Description(
+                "The image to be used when hovering over the control.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
@@ -356,7 +377,8 @@ namespace Mids_Reborn.Forms.Controls
             [NotifyParentProperty(true)]
             public Image? Background { get; set; }
 
-            [Description("The alternate hover image used when the 'UseAlt' flag is true.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
+            [Description(
+                "The alternate hover image used when the 'UseAlt' flag is true.\r\nNote: This image will also be used in non-ThreeState Toggle mode.")]
             [Browsable(true)]
             [EditorBrowsable(EditorBrowsableState.Always)]
             [Bindable(true)]
@@ -456,7 +478,9 @@ namespace Mids_Reborn.Forms.Controls
 
         public ImageButtonEx()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             ButtonTypeChanged += OnButtonTypeChanged;
             FontChanged += OnFontChanged;
             ForeColorChanged += OnForeColorChanged;
@@ -470,6 +494,7 @@ namespace Mids_Reborn.Forms.Controls
             ThreeStateChanged += OnThreeStateChanged;
             UseAltChanged += OnUseAltChanged;
             ToggleMouseButtonChanged += OnToggleMouseButtonChanged;
+            VerticalDisplayChanged += OnVerticalDisplayChanged;
             if (_currentTextColor == Color.Empty) _currentTextColor = _foreColor;
             InitializeComponent();
             Images = new BaseImages();
@@ -478,6 +503,12 @@ namespace Mids_Reborn.Forms.Controls
             TextOutline = new Outline();
             TextOutline.PropertyChanged += TextOutlineOnPropertyChanged;
             ToggleText = new StateText();
+        }
+
+        private void OnVerticalDisplayChanged(object? sender, bool e)
+        {
+            _displayVertically = e;
+            Refresh();
         }
 
         private void OnToggleMouseButtonChanged(object? sender, MouseButtons e)
@@ -668,6 +699,7 @@ namespace Mids_Reborn.Forms.Controls
 
                         _setByToggle = false;
                     }
+
                     break;
                 case States.ToggledOn:
                     TextChanged?.Invoke(this, ToggleText.ToggledOn);
@@ -685,6 +717,7 @@ namespace Mids_Reborn.Forms.Controls
 
                         _setByToggle = true;
                     }
+
                     break;
                 case States.Indeterminate:
                     if (_isThreeState) TextChanged?.Invoke(this, ToggleText.Indeterminate);
@@ -701,7 +734,7 @@ namespace Mids_Reborn.Forms.Controls
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            // Set graphics quality
+            // Set graphics quality settings
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             e.Graphics.CompositingMode = CompositingMode.SourceOver;
@@ -709,38 +742,76 @@ namespace Mids_Reborn.Forms.Controls
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            // Assign variable to be used in drawing operations (some may be wrapped in using statements)
+            if (_displayVertically)
+            {
+                if (_currentImage == null) return;
+                // Rotate the image
+                var newSize = new Size(ClientSize.Width, ClientSize.Height);
+                var bmp = new Bitmap(_currentImage);
+                bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                var rotatedImage = bmp; // Assuming a 90-degree rotation
+
+                // Calculate the total height of the text
+                if (CurrentText == null) return;
+                var totalTextHeight = CurrentText.Select(c => e.Graphics.MeasureString(c.ToString(), Font)).Sum(size => size.Height);
+
+                // Start drawing the text from this vertical position to center it.
+                var verticalTextPosition = (ClientSize.Height - totalTextHeight) / 2;
+                
+                // Draw the rotated and resized image
+                e.Graphics.DrawImage(rotatedImage, ClientRectangle);
+
+                // Draw the vertical text in the image
+                DrawVerticalText(e, verticalTextPosition);
+            }
+            else
+            {
+                // Fallback to original drawing logic for horizontal text and full image display
+                DrawHorizontalTextAndImage(e);
+            }
+        }
+
+        private void DrawVerticalText(PaintEventArgs e, float verticalPosition)
+        {
+            using var brush = new SolidBrush(_currentTextColor);
+            float horizontalCenter = ClientSize.Width / 2;
+            if (CurrentText == null) return;
+            foreach (var character in CurrentText)
+            {
+                var charSize = e.Graphics.MeasureString(character.ToString(), Font);
+                var charPosition = new PointF(horizontalCenter - (charSize.Width / 2), verticalPosition);
+                e.Graphics.DrawString(character.ToString(), Font, brush, charPosition);
+                verticalPosition += charSize.Height;
+            }
+        }
+
+        private void DrawHorizontalTextAndImage(PaintEventArgs e)
+        {
+            // Original logic to draw horizontal text and the image
             var rect = ClientRectangle with { X = 0, Y = 0 };
             var rectPen = new Pen(Color.Cyan, 1f);
             var outlinePen = new Pen(TextOutline.Color, TextOutline.Width) { LineJoin = LineJoin.Round };
             var brush = new SolidBrush(_currentTextColor);
-            var sFormat = new StringFormat
-            {
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center,
-                Trimming = StringTrimming.None
-            };
             var gfxPath = new GraphicsPath();
 
-            // Perform drawing operations dependent on if currentImage is null for Designer support
             if (_currentImage == null)
             {
                 e.Graphics.DrawRectangle(rectPen, rect);
                 gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
-                    sFormat);
-                outlinePen.LineJoin = LineJoin.Round;
-                e.Graphics.DrawPath(outlinePen, gfxPath);
-                e.Graphics.FillPath(brush, gfxPath);
+                    new StringFormat
+                        { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
             else
             {
                 e.Graphics.DrawImage(_currentImage, ClientRectangle);
                 gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
-                    sFormat);
-                outlinePen.LineJoin = LineJoin.Round;
-                e.Graphics.DrawPath(outlinePen, gfxPath);
-                e.Graphics.FillPath(brush, gfxPath);
+                    new StringFormat
+                        { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
+
+            outlinePen.LineJoin = LineJoin.Round;
+            e.Graphics.DrawPath(outlinePen, gfxPath);
+            e.Graphics.FillPath(brush, gfxPath);
         }
     }
 }

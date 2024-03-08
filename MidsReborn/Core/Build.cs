@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -44,7 +45,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public IPower SetBonusVirtualPower
+        public IPower? SetBonusVirtualPower
         {
             get
             {
@@ -1145,7 +1146,7 @@ namespace Mids_Reborn.Core
                         {
                             // Standard MessageBox may spawn behind TopMost controls like the totals or sets windows.
                             //MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
-                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning);
+                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Warning);
                             msgBox.ShowDialog();
                         }
 
@@ -1351,7 +1352,7 @@ namespace Mids_Reborn.Core
                         {
                             skipEffects = true;
                         }
-                        //Console.WriteLine($"{DatabaseAPI.Database.Power[power].DisplayName} skip effects? {skipEffects}");
+                        Console.WriteLine($"{DatabaseAPI.Database.Power[power].DisplayName} skip effects? {skipEffects}");
                         if (setCount[power] < 6)
                         {
                             effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));

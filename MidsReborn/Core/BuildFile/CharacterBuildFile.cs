@@ -291,7 +291,6 @@ namespace Mids_Reborn.Core.BuildFile
             }
         }
 
-
         private static bool LoadBuild()
         {
             if (_instance == null)
@@ -508,7 +507,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             catch (Exception ex)
             {
-                var messageBox = new MessageBoxEx($"An error occurred while attempting to read the build data.\r\n{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx($"An error occurred while attempting to read the build data.\r\n{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return false;
             }
@@ -525,13 +524,15 @@ namespace Mids_Reborn.Core.BuildFile
             var powerEntries = MidsContext.Character.CurrentBuild.Powers.GetRange(0, 24);
             if (powerEntries.All(x => x?.Power == null))
             {
-                var warnMsg = new MessageBoxEx(@"Error", @"Unable to save build, you have not selected any powers.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var warnMsg = new MessageBoxEx(@"Error", @"Unable to save build, you have not selected any powers.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 warnMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 return false;
             }
 
             var instance = GetInstance(MidsContext.Character, true);
             File.WriteAllText(fileName, JsonConvert.SerializeObject(instance, Formatting.Indented));
+            File.WriteAllText($"{fileName}z", GenerateShareDataFromStream(false));
+            File.WriteAllText($"{fileName}z2", MxDGenerateString(false));
             return true;
         }
 
@@ -548,7 +549,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             else
             {
-                using var msgBox = new MessageBoxEx(validationResult.ErrorMessage, MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                using var msgBox = new MessageBoxEx(validationResult.ErrorMessage, MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
                 msgBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return false;
             }
@@ -559,7 +560,7 @@ namespace Mids_Reborn.Core.BuildFile
                 using var msgBox =
                     new MessageBoxEx(
                         $"Cannot load {fileName} - error reading build data.\r\n\r\n{nameof(_instance)}",
-                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                        MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
                 msgBox.ShowDialog(Application.OpenForms["frmMain"]);
 
                 return false;
@@ -572,7 +573,7 @@ namespace Mids_Reborn.Core.BuildFile
                 using var msgBox =
                     new MessageBoxEx(
                         $"Cannot load {fileName} - error reading build metadata.\r\n\r\n{nameof(metaData)}",
-                        MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                        MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
                 msgBox.ShowDialog(Application.OpenForms["frmMain"]);
 
                 return false;
@@ -586,13 +587,13 @@ namespace Mids_Reborn.Core.BuildFile
 
                 if (outDatedApp)
                 {
-                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an older version of {MidsContext.AppName}, some features may not be available.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Warning, true);
                     appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 }
 
                 if (newerApp)
                 {
-                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an newer version of {MidsContext.AppName}.\r\nIt is recommended that you update the application.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Warning, true);
+                    using var appVerMsg = new MessageBoxEx(@"Version Warning", $"This build was created with an newer version of {MidsContext.AppName}.\r\nIt is recommended that you update the application.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Warning, true);
                     appVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 }
             }
@@ -608,7 +609,7 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (outDatedDb)
                     {
-                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nSome powers may have changed, you may need to rebuild some of it.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an older version of the {metaData.Database} database.\r\nSome powers may have changed, you may need to rebuild some of it.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Warning, true);
                         dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                         if (dbVerMsg.DialogResult == DialogResult.Yes)
                         {
@@ -622,7 +623,7 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (newerDb)
                     {
-                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                        using var dbVerMsg = new MessageBoxEx(fileInfo.Name, $"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.\r\n\r\nDo you wish to load it anyway?", MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Warning, true);
                         dbVerMsg.ShowDialog(Application.OpenForms["frmMain"]);
                         if (dbVerMsg.DialogResult == DialogResult.Yes)
                         {
@@ -646,7 +647,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             else
             {
-                using var dbSwitchResult = new MessageBoxEx(fileInfo.Name, $"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", MessageBoxEx.MessageBoxButtons.YesNo, MessageBoxEx.MessageBoxIcon.Warning, true);
+                using var dbSwitchResult = new MessageBoxEx(fileInfo.Name, $"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Warning, true);
                 dbSwitchResult.ShowDialog(Application.OpenForms["frmMain"]);
                 switch (dbSwitchResult.DialogResult)
                 {
@@ -655,7 +656,7 @@ namespace Mids_Reborn.Core.BuildFile
                         var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
                         if (selected == null)
                         {
-                            var messageBox = new MessageBoxEx($"Sorry, but it appears you do not have the {metaData.Database} installed.\r\nPlease install the database and try again.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                            var messageBox = new MessageBoxEx($"Sorry, but it appears you do not have the {metaData.Database} installed.\r\nPlease install the database and try again.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                             
                             return false;
@@ -682,7 +683,124 @@ namespace Mids_Reborn.Core.BuildFile
             var iBytes = Encoding.UTF8.GetBytes(serialized);
             var output = Compression.CompressToBase64(iBytes);
             
-            return output;
+            return output.OutString;
+        }
+
+        public static string GenerateShareDataFromStream(bool inclFlipped)
+        {
+            using var stream = GenerateBinaryShareStream(inclFlipped);
+            var compressionResult = Compression.ZCompress(stream.ToArray());
+            //var formattedString = Compression.BreakBase64String(compressionResult.OutString, 67, true);
+            return $"|MBD;{compressionResult.UncompressedSize};{compressionResult.CompressedSize};{compressionResult.EncodedSize};HEX;|{string.Empty}\n{compressionResult.OutString}";
+        }
+
+        private static CompressionResult MxDBuild(MemoryStream stream)
+        {
+            var byteArray = stream.ToArray();
+            var asciiEncoding = new ASCIIEncoding();
+            var compressedBytes = ModernZlib.CompressChunk(byteArray);
+            var hexBytes = ModernZlib.HexEncodeBytes(compressedBytes);
+            var outString = ModernZlib.BreakString(asciiEncoding.GetString(hexBytes), 67, true);
+
+            return new CompressionResult(outString, byteArray.Length, compressedBytes.Length, hexBytes.Length);
+        }
+
+        public static string MxDGenerateString(bool inclFlipped)
+        {
+            using var stream = GenerateBinaryShareStream(inclFlipped);
+            var compressionResult = MxDBuild(stream);
+            var separator = string.Empty;
+            return $"|MxDz;{compressionResult.UncompressedSize};{compressionResult.CompressedSize};{compressionResult.EncodedSize};HEX;|{separator}\n{compressionResult.OutString}";
+        }
+
+        private static MemoryStream GenerateBinaryShareStream(bool inclFlipped = false)
+        {
+            var characterData = MidsContext.Character;
+            if (characterData == null) throw new ArgumentNullException(nameof(characterData), @"Character data cannot be null");
+            if (characterData.Archetype == null) throw new NullReferenceException(nameof(characterData.Archetype));
+            if (characterData.CurrentBuild == null) throw new ArgumentException(nameof(characterData.CurrentBuild));
+            var binStream = new MemoryStream();
+            using var writer = new BinaryWriter(binStream);
+
+            writer.Write(DatabaseAPI.DatabaseName);
+            writer.Write(DatabaseAPI.Database.Version.ToString());
+            writer.Write(characterData.Archetype.ClassName);
+            writer.Write(characterData.Archetype.Origin[characterData.Origin]);
+            writer.Write((int)characterData.Alignment);
+            writer.Write(characterData.Name);
+            writer.Write(characterData.Comment);
+            writer.Write(characterData.Powersets.Length);
+            foreach (var powerSet in characterData.Powersets)
+            {
+                writer.Write(powerSet != null ? powerSet.FullName : string.Empty);
+            }
+            writer.Write(characterData.CurrentBuild.LastPower);
+            writer.Write(characterData.CurrentBuild.Powers.Count);
+            foreach (var powerEntry in characterData.CurrentBuild.Powers)
+            {
+                if (powerEntry is null || powerEntry.NIDPower < 0)
+                {
+                    writer.Write(-1);
+                }
+                else
+                {
+                    writer.Write(DatabaseAPI.Database.Power[powerEntry.NIDPower]!.StaticIndex);
+                    writer.Write(Convert.ToSByte(powerEntry.Level));
+                    writer.Write(powerEntry.StatInclude);
+                    writer.Write(powerEntry.ProcInclude);
+                    writer.Write(powerEntry.VariableValue);
+                    writer.Write(powerEntry.InherentSlotsUsed);
+                    writer.Write(Convert.ToSByte(powerEntry.SubPowers.Length));
+                    foreach (var subPower in powerEntry.SubPowers)
+                    {
+                        if (subPower.nIDPower > -1)
+                        {
+                            writer.Write(DatabaseAPI.Database.Power[powerEntry.NIDPower]!.StaticIndex);
+                        }
+                        else
+                        {
+                            writer.Write(-1);
+                        }
+                        writer.Write(subPower.StatInclude);
+                    }
+                }
+                writer.Write(Convert.ToSByte(powerEntry!.Slots.Length));
+                foreach (var slot in powerEntry.Slots)
+                {
+                    writer.Write(Convert.ToSByte(slot.Level));
+                    writer.Write(slot.IsInherent);
+                    WriteBinarySlotData(writer, slot.Enhancement);
+                    writer.Write(inclFlipped);
+                    if (inclFlipped) WriteBinarySlotData(writer, slot.FlippedEnhancement);
+                }
+            }
+
+            binStream.Position = 0;
+            return binStream;
+        }
+
+        private static void WriteBinarySlotData(BinaryWriter writer, I9Slot slot)
+        {
+            if (slot.Enh < 0)
+            {
+                writer.Write(-1);
+            }
+            else
+            {
+                writer.Write(DatabaseAPI.Database.Enhancements[slot.Enh].StaticIndex);
+                writer.Write(DatabaseAPI.Database.Enhancements[slot.Enh].UID);
+                writer.Write(slot.Obtained);
+                if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO)
+                {
+                    writer.Write(Convert.ToSByte(slot.RelativeLevel));
+                    writer.Write(Convert.ToSByte(slot.Grade));
+                }
+                else if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO)
+                {
+                    writer.Write(Convert.ToSByte(slot.IOLevel));
+                    writer.Write(Convert.ToSByte(slot.RelativeLevel));
+                }
+            }
         }
 
         private static bool ReadShareData(string data)
@@ -698,7 +816,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             catch (Exception ex)
             {
-                var errorMsg = new MessageBoxEx($"{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                var errorMsg = new MessageBoxEx($"{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
                 errorMsg.ShowDialog(Application.OpenForms["frmMain"]);
                 
                 return false;

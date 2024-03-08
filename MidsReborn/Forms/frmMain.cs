@@ -264,10 +264,10 @@ namespace Mids_Reborn.Forms
             switch (MidsContext.Config.AutomaticUpdates.Type)
             {
                 case ConfigData.AutoUpdType.Startup:
-                    UpdateUtils.CheckForUpdates(this);
+                    await UpdateUtils.CheckForUpdates(this);
                     break;
                 case ConfigData.AutoUpdType.Delay:
-                    UpdateUtils.CheckForUpdates(this, true);
+                    await UpdateUtils.CheckForUpdates(this, true);
                     break;
             }
             
@@ -2748,6 +2748,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
                 if (!dvAnchored.PetInfo.HasEmptyBasePower)
                     dvAnchored.PetInfo.ExecuteUpdate();
+                MidsContext.Config.Tips.Show(Tips.TipType.FirstEnhancement);
             }
             else
             {
@@ -4037,7 +4038,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                     DoRedraw();
                                     PowerModified(false);
                                     LastClickPlacedSlot = true;
-                                    //MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);
+                                    MidsContext.Config.Tips.Show(Tips.TipType.FirstSlot);
                                     return;
                                 }
 
@@ -4071,9 +4072,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                                         ref drawing, enhancements);
                             }
                             else if (enhancements != null)
+                            {
                                 I9Picker.SetData(-1,
                                     ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
                                     ref drawing, enhancements);
+                            }
 
 
                             var point = new Point(
@@ -4467,15 +4470,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)SetID].nID, nIDPower);
             PowerModified(true);
-            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
+            MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
         }
 
         private void PowerPicked(int nIDPowerset, int nIDPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIDPowerset, nIDPower);
             PowerModified(true);
-            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-            //DoRedraw();
+            MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
+            DoRedraw();
         }
 
         private void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)
@@ -5336,7 +5339,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (drawing != null) drawing.InterfaceMode = Enums.eInterfaceMode.PowerToggle;
                 DoRedraw();
                 //Fix so tips only show once
-                //MidsContext.Config.Tips.Show(Tips.TipType.TotalsTab);
+                MidsContext.Config.Tips.Show(Tips.TipType.TotalsTab);
             }
             else
             {
@@ -6232,7 +6235,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (MidsContext.Character.CurrentBuild.PowersPlaced <= 0)
             {
-                var errorMsg = new MessageBoxEx("Share Protection Activated", "You cannot access the Share Menu at this time as there is not any build data to share.\r\nPlease either start creating a build or load one prior to accessing the menu.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Protected, true);
+                var errorMsg = new MessageBoxEx("Share Protection Activated", "You cannot access the Share Menu at this time as there is not any build data to share.\r\nPlease either start creating a build or load one prior to accessing the menu.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Protected, true);
                 errorMsg.ShowDialog(this);
             }
             else
@@ -6643,9 +6646,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SupportSites.GoToGitHub();
         }
 
-        private void tsUpdateCheck_Click(object sender, EventArgs e)
+        private async void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            UpdateUtils.CheckForUpdates(this);
+            await UpdateUtils.CheckForUpdates(this);
         }
 
         private void tsViewSelected()

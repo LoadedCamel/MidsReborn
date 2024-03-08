@@ -200,5 +200,7 @@ namespace Mids_Reborn.Core
         string SummonedEntityName { get; }
 
         EffectIdentifier GenerateIdentifier();
+
+        bool AffectsPetsOnly();
     }
 }

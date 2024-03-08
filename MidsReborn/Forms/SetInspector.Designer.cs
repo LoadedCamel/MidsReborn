@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Mids_Reborn.UIv2.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -39,7 +40,7 @@ namespace Mids_Reborn.Forms
             columnHeader6 = new System.Windows.Forms.ColumnHeader();
             columnHeader7 = new System.Windows.Forms.ColumnHeader();
             powerImageList = new System.Windows.Forms.ImageList(components);
-            cbArchetype = new Controls.AopCombo();
+            cbArchetype = new AoCombo();
             enhSetInfo1 = new Mids_Reborn.Controls.EnhSetInfo();
             alvSets = new Controls.AdvListView();
             columnHeader1 = new System.Windows.Forms.ColumnHeader();
@@ -112,7 +113,7 @@ namespace Mids_Reborn.Forms
             // 
             // cbArchetype
             // 
-            cbArchetype.ComboType = Forms.Controls.AopCombo.ComboBoxType.Archetype;
+            cbArchetype.ComboType = AoCombo.ComboBoxType.Archetype;
             cbArchetype.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             cbArchetype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cbArchetype.FormattingEnabled = true;
@@ -200,7 +201,7 @@ namespace Mids_Reborn.Forms
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
-        private Controls.AopCombo cbArchetype;
+        private AoCombo cbArchetype;
         private Controls.AdvListView alvSets;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;

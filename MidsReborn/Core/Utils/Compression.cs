@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace Mids_Reborn.Core.Utils
@@ -64,15 +65,28 @@ namespace Mids_Reborn.Core.Utils
             return outputStream.ToArray();
         }
 
-        public static string CompressToBase64(byte[] sourceBytes)
+        public static CompressionResult CompressToBase64(byte[] sourceBytes)
         {
-            using var stream = new MemoryStream();
-            using (var compressionStream = new BrotliStream(stream, CompressionLevel.SmallestSize))
+            using var uncompressedStream = new MemoryStream(sourceBytes);
+            using var compressedStream = new MemoryStream();
+            using (var compressionStream = new BrotliStream(compressedStream, CompressionLevel.SmallestSize))
             {
                 compressionStream.Write(sourceBytes, 0, sourceBytes.Length);
             }
 
-            return Convert.ToBase64String(stream.ToArray());
+            var compressedBytes = compressedStream.ToArray();
+            var base64String = Convert.ToBase64String(compressedBytes);
+
+            return new CompressionResult(base64String, sourceBytes.Length, compressedBytes.Length, base64String.Length);
+        }
+
+        public static CompressionResult ZCompress(byte[] sourceBytes)
+        {
+            var compressedBytes = ModernZlib.CompressChunk(sourceBytes);
+            var hexEncodedBytes = ModernZlib.HexEncodeBytes(compressedBytes);
+            var hexString = Encoding.UTF8.GetString(hexEncodedBytes);
+            var brokenHexString = ModernZlib.BreakString(hexString, 67, true);
+            return new CompressionResult(brokenHexString, sourceBytes.Length, compressedBytes.Length, hexString.Length);
         }
 
         public static byte[] DecompressFromBase64(string base64)
@@ -107,6 +121,33 @@ namespace Mids_Reborn.Core.Utils
             compressionStream.CopyTo(outputStream);
             outputStream.Seek(0, SeekOrigin.Begin);
             return outputStream.ToArray();
+        }
+
+        public static string BreakBase64String(string base64String, int lineLength, bool bookend = false)
+        {
+            var stringBuilder = new StringBuilder();
+            var currentIndex = 0;
+
+            while (currentIndex < base64String.Length)
+            {
+                // Determine the length of the next chunk
+                var chunkLength = Math.Min(lineLength, base64String.Length - currentIndex);
+
+                // Optionally add a bookend at the start of the line
+                if (bookend) stringBuilder.Append("|");
+
+                // Append the next chunk of the base64 string
+                stringBuilder.Append(base64String, currentIndex, chunkLength);
+
+                // Optionally add a bookend at the end of the line
+                if (bookend) stringBuilder.Append("|");
+
+                // Move to the next chunk and append a newline if not at the end of the string
+                currentIndex += chunkLength;
+                if (currentIndex < base64String.Length) stringBuilder.AppendLine();
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

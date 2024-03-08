@@ -610,6 +610,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return false;
         }
 
+        public bool IsBasePetPower => Effects.Any(x => x.EffectType is Enums.eEffectType.EntCreate);
+
         public bool Active { get; set; }
         public bool Taken { get; set; }
 
@@ -1551,6 +1553,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool HasResEffects()
         {
             return Effects.Any(t => t.EffectType == Enums.eEffectType.Resistance & t.Probability > 0 & (t.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None & (t.PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE | t.PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE));
+        }
+
+        public bool HasDamageBuffEffects()
+        {
+            return Effects.Any(t => t.EffectType == Enums.eEffectType.DamageBuff);
+        }
+
+        public bool HasDamageEffects()
+        {
+            return Effects.Any(t => t.EffectType == Enums.eEffectType.Damage);
         }
 
         public bool HasAttribModEffects()

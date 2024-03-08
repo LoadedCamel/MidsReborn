@@ -242,9 +242,15 @@ namespace Mids_Reborn.Core
         
         float ArcanaCastTime { get; }
 
+        bool IsBasePetPower { get; }
+
         bool HasDefEffects();
 
         bool HasResEffects();
+
+        bool HasDamageEffects();
+
+        bool HasDamageBuffEffects();
 
         bool HasAttribModEffects();
 

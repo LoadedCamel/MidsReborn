@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core
 {
@@ -199,11 +200,11 @@ namespace Mids_Reborn.Core
             {
                 var asciiEncoding = new ASCIIEncoding();
                 cData.SzUncompressed = numArray.Length;
-                var iBytes = Zlib.CompressChunk(ref numArray);
+                var iBytes = ModernZlib.CompressChunk(numArray);
                 cData.SzCompressed = iBytes.Length;
-                var bytes = Zlib.HexEncodeBytes(iBytes);
+                var bytes = ModernZlib.HexEncodeBytes(iBytes);
                 cData.SzEncoded = bytes.Length;
-                str = @break ? Zlib.BreakString(asciiEncoding.GetString(bytes), 67, true) : asciiEncoding.GetString(bytes);
+                str = @break ? ModernZlib.BreakString(asciiEncoding.GetString(bytes), 67, true) : asciiEncoding.GetString(bytes);
             }
 
             return str;
@@ -761,8 +762,8 @@ namespace Mids_Reborn.Core
                             isHex = string.Equals(strArray1[4], "HEX", StringComparison.OrdinalIgnoreCase);
                         var iBytes =
                             new ASCIIEncoding().GetBytes(isHex
-                                ? Zlib.UnbreakHex(iString)
-                                : Zlib.UnbreakString(iString, true));
+                                ? ModernZlib.UnbreakHex(iString)
+                                : ModernZlib.UnbreakString(iString, true));
                         streamReader.Close();
                         if (iBytes.Length < int32_3)
                         {
@@ -775,7 +776,7 @@ namespace Mids_Reborn.Core
                         {
                             if (iBytes.Length > int32_3)
                                 Array.Resize(ref iBytes, int32_3);
-                            iBytes = isHex ? Zlib.HexDecodeBytes(iBytes) : Zlib.UUDecodeBytes(iBytes);
+                            iBytes = isHex ? ModernZlib.HexDecodeBytes(iBytes) : ModernZlib.UuDecodeBytes(iBytes);
                             if (iBytes.Length == 0)
                             {
                                 eLoadReturnCode = eLoadReturnCode.Failure;
@@ -786,7 +787,7 @@ namespace Mids_Reborn.Core
                                 {
                                     Array.Resize(ref iBytes, int32_2);
                                     var tempByteArray = iBytes; // Pine
-                                    iBytes = Zlib.UncompressChunk(ref tempByteArray, int32_1);
+                                    iBytes = ModernZlib.DecompressChunk(tempByteArray, int32_1);
                                 }
 
                                 eLoadReturnCode = iBytes.Length != 0

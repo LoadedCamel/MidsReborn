@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Resources;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -14,6 +17,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn
 {
@@ -872,61 +876,212 @@ namespace Mids_Reborn
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
-        private bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
+        private bool GBPA_Pass0_InitializePowerArray()
         {
-            if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)
+            _buffedPower = new IPower[CurrentBuild.Powers.Count];
+            _mathPower = new IPower[CurrentBuild.Powers.Count];
+            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
             {
-                return false;
+                if (CurrentBuild.Powers[hIDX] == null)
+                {
+                    continue;
+                }
+
+                if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
+                {
+                    _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                    //_refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                }
             }
 
-            for (var index1 = 0; index1 < CurrentBuild.Powers[iIndex].SlotCount; index1++)
+            for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
-                if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
+                if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1]?.NIDPower <= -1)
                 {
                     continue;
                 }
 
-                var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
-                var enh = DatabaseAPI.Database.Enhancements[enhIndex];
-                var power1 = enh?.GetPower();
-
-                var hasPower = enh.Effect.Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower)
+                for (var index2 = 0; index2 < CurrentBuild.Powers.Count; index2++)
                 {
-                    continue;
-                }
-
-                // Procs are actually disabled when turned on...
-                // Keep 'always-on' specials active
-                if (CurrentBuild.Powers[iIndex].ProcInclude & enh.IsProc)
-                {
-                    continue;
-                }
-
-                if (power1 == null)
-                {
-                    return false;
-                }
-
-                for (var index2 = 0; index2 < power1.Effects.Length; index2++)
-                {
-                    var effect = power1.Effects[index2];
-                    var toAdd = (IEffect)effect.Clone();
-                    toAdd.isEnhancementEffect = true;
-                    toAdd.IgnoreScaling = enh.IsProc;
-                    toAdd.ToWho = effect.ToWho;
-                    toAdd.Absorbed_Effect = true;
-                    toAdd.Ticks = effect.Ticks;
-                    toAdd.Buffable = false;
-                    iPower.Effects = iPower.Effects.Append(toAdd).ToArray();
-                    if (enh.GetPower().Effects[index2].EffectType == Enums.eEffectType.GrantPower)
+                    if (((index1 != index2) & CurrentBuild.Powers[index2]?.StatInclude & (CurrentBuild.Powers[index2]?.NIDPower > -1)) == false)
                     {
-                        iPower.HasGrantPowerEffect = true;
+                        continue;
                     }
+
+                    var effectType = Enums.eEffectType.GrantPower;
+                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false, ref effectType);
                 }
+            }
+
+            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
+            {
+                if (CurrentBuild.Powers[hIDX] == null || CurrentBuild.Powers[hIDX].NIDPower <= -1)
+                {
+                    continue;
+                }
+
+                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX);
+                _buffedPower[hIDX] = new Power(_mathPower[hIDX]);
+                _buffedPower[hIDX]?.SetMathMag();
             }
 
             return true;
+        }
+
+        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
+        {
+            if (nIDPower < 0)
+                return null;
+            IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
+            GBPA_ApplyPowerOverride(ref power2);
+            GBPA_AddEnhFX(ref power2, hIDX);
+            power2.AbsorbPetEffects(hIDX, stackingOverride);
+            power2.ApplyGrantPowerEffects();
+            GBPA_AddSubPowerEffects(ref power2, hIDX);
+            return power2;
+        }
+
+        private IPower GBPA_ApplyPowerOverride(ref IPower ret)
+        {
+            if (!ret.HasPowerOverrideEffect)
+            {
+                return ret;
+            }
+
+            foreach (var fx in ret.Effects)
+            {
+                if (fx.EffectType != Enums.eEffectType.PowerRedirect || !(fx.nOverride > -1 & Math.Abs(fx.Probability - 1) < 0.01 & fx.CanInclude()))
+                {
+                    continue;
+                }
+
+                var level = ret.Level;
+                ret = new Power(DatabaseAPI.Database.Power[fx.nOverride])
+                {
+                    Level = level
+                };
+                return ret;
+            }
+
+            return ret;
+        }
+
+        private void GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
+        {
+            if (MidsContext.Config is null || CurrentBuild is null || MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower is null) return;
+
+            var currentPowerEntry = CurrentBuild.Powers[iIndex];
+
+            var currentPower = currentPowerEntry?.Power;
+            if (currentPower == null) return;
+
+            if (currentPowerEntry == null) return;
+            foreach (var slotEntry in currentPowerEntry.Slots)
+            {
+                if (slotEntry.Enhancement.Enh <= -1) continue;
+
+                var enhIndex = slotEntry.Enhancement.Enh;
+                var enhancement = DatabaseAPI.Database.Enhancements[enhIndex];
+                var enhancementPower = enhancement.GetPower();
+
+                var hasFxPower = enhancement.Effect.Any(e => e.Mode is Enums.eEffMode.FX);
+                if (!hasFxPower) continue;
+
+                if (currentPowerEntry.ProcInclude & enhancement.IsProc) continue;
+
+                if (enhancementPower is null) continue;
+
+                foreach (var enhEffect in enhancementPower.Effects)
+                {
+                    var setBonusPower = DatabaseAPI.GetPowerByFullName(enhEffect.Reward);
+                    if (enhEffect.AffectsPetsOnly() && iPower.IsBasePetPower)
+                    {
+                        var uidEntity = iPower.Effects.FirstOrDefault(x => x.EffectType is Enums.eEffectType.EntCreate)?.Summon;
+                        if (uidEntity != null)
+                        {
+                            var summon = DatabaseAPI.NidFromUidEntity(uidEntity);
+                            var entitySetName = DatabaseAPI.Database.Entities[summon].PowersetFullName[0];
+                            var entitySet = DatabaseAPI.GetPowersetByFullname(entitySetName);
+                            if (entitySet != null)
+                            {
+                                foreach (var entPower in entitySet.Powers)
+                                {
+                                    if (setBonusPower != null && entPower != null && entPower.HasResEffects() && setBonusPower.HasResEffects())
+                                    {
+                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                        clonedEffect.isEnhancementEffect = true;
+                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                        clonedEffect.ToWho = enhEffect.ToWho;
+                                        clonedEffect.Absorbed_Effect = true;
+                                        clonedEffect.Ticks = enhEffect.Ticks;
+                                        clonedEffect.Buffable = false;
+                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+
+                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
+                                        {
+                                            entPower.HasGrantPowerEffect = true;
+                                        }
+                                    }
+
+                                    if (entPower != null && entPower.HasDefEffects())
+                                    {
+                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                        clonedEffect.isEnhancementEffect = true;
+                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                        clonedEffect.ToWho = enhEffect.ToWho;
+                                        clonedEffect.Absorbed_Effect = true;
+                                        clonedEffect.Ticks = enhEffect.Ticks;
+                                        clonedEffect.Buffable = false;
+                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+
+                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
+                                        {
+                                            entPower.HasGrantPowerEffect = true;
+                                        }
+                                    }
+
+                                    if (entPower == null || !entPower.HasDamageEffects()) continue;
+                                    {
+                                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                                        clonedEffect.isEnhancementEffect = true;
+                                        clonedEffect.IgnoreScaling = enhancement.IsProc;
+                                        clonedEffect.ToWho = enhEffect.ToWho;
+                                        clonedEffect.Absorbed_Effect = true;
+                                        clonedEffect.Ticks = enhEffect.Ticks;
+                                        clonedEffect.Buffable = false;
+                                        entPower.Effects = entPower.Effects.Append(clonedEffect).ToArray();
+
+                                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
+                                        {
+                                            entPower.HasGrantPowerEffect = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                    
+
+                        if (enhEffect.Clone() is not IEffect clonedEffect) continue;
+                        clonedEffect.isEnhancementEffect = true;
+                        clonedEffect.IgnoreScaling = enhancement.IsProc;
+                        clonedEffect.ToWho = enhEffect.ToWho;
+                        clonedEffect.Absorbed_Effect = true;
+                        clonedEffect.Ticks = enhEffect.Ticks;
+                        clonedEffect.Buffable = false;
+
+                        iPower.Effects = iPower.Effects.Append(clonedEffect).ToArray();
+
+                        if (enhEffect.EffectType is Enums.eEffectType.GrantPower)
+                        {
+                            iPower.HasGrantPowerEffect = true;
+                        }
+                    }
+                }
+            }
         }
 
         private bool GBPA_AddSubPowerEffects(ref IPower ret, int hIDX)
@@ -1231,31 +1386,6 @@ namespace Mids_Reborn
             }
         }
 
-        private IPower GBPA_ApplyPowerOverride(ref IPower ret)
-        {
-            if (!ret.HasPowerOverrideEffect)
-            {
-                return ret;
-            }
-
-            foreach (var fx in ret.Effects)
-            {
-                if (fx.EffectType != Enums.eEffectType.PowerRedirect || !(fx.nOverride > -1 & Math.Abs(fx.Probability - 1) < 0.01 & fx.CanInclude()))
-                {
-                    continue;
-                }
-
-                var level = ret.Level;
-                ret = new Power(DatabaseAPI.Database.Power[fx.nOverride])
-                {
-                    Level = level
-                };
-                return ret;
-            }
-
-            return ret;
-        }
-
         private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
         {
             if (iPower == null)
@@ -1279,48 +1409,6 @@ namespace Mids_Reborn
                 {
                     fx.Scale *= CurrentBuild.Powers[hIDX].VariableValue;
                 }
-            }
-
-            return true;
-        }
-
-        private bool GBPA_Pass0_InitializePowerArray()
-        {
-            _buffedPower = new IPower[CurrentBuild.Powers.Count];
-            _mathPower = new IPower[CurrentBuild.Powers.Count];
-            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
-            {
-                if (CurrentBuild.Powers[hIDX] == null) continue;
-                if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
-                {
-                    _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
-                    //_refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
-                }
-            }
-
-            for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
-            {
-                if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1]?.NIDPower <= -1)
-                    continue;
-                for (var index2 = 0; index2 < CurrentBuild.Powers.Count; index2++)
-                {
-                    if (((index1 != index2) & CurrentBuild.Powers[index2]?.StatInclude &
-                         (CurrentBuild.Powers[index2]?.NIDPower > -1)) == false)
-                        continue;
-
-                    var effectType = Enums.eEffectType.GrantPower;
-                    GBPA_ApplyIncarnateEnhancements(ref _mathPower[index1], -1, _mathPower[index2], false,
-                        ref effectType);
-                }
-            }
-
-            for (var hIDX = 0; hIDX < CurrentBuild.Powers.Count; hIDX++)
-            {
-                if (CurrentBuild.Powers[hIDX] == null || CurrentBuild.Powers[hIDX].NIDPower <= -1)
-                    continue;
-                GBPA_MultiplyVariable(ref _mathPower[hIDX], hIDX);
-                _buffedPower[hIDX] = new Power(_mathPower[hIDX]);
-                _buffedPower[hIDX]?.SetMathMag();
             }
 
             return true;
@@ -1895,19 +1983,6 @@ namespace Mids_Reborn
             powerBuffed.Accuracy = (float) (powerBuffed.Accuracy * (1.0 + powerMath.Accuracy + nAcc) * (MidsContext.Config.ScalingToHit + (double) nToHit));
             powerBuffed.AccuracyMult = powerBuffed.Accuracy * (1f + powerMath.Accuracy + nAcc);
             return true;
-        }
-
-        private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
-        {
-            if (nIDPower < 0)
-                return null;
-            IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
-            GBPA_ApplyPowerOverride(ref power2);
-            GBPA_AddEnhFX(ref power2, hIDX);
-            power2.AbsorbPetEffects(hIDX, stackingOverride);
-            power2.ApplyGrantPowerEffects();
-            GBPA_AddSubPowerEffects(ref power2, hIDX);
-            return power2;
         }
 
         private void GenerateBuffData(ref Enums.BuffsX nBuffs, bool enhancementPass)
@@ -3099,13 +3174,13 @@ namespace Mids_Reborn
             using var memoryStream = new MemoryStream();
             using var binaryWriter = new BinaryWriter(memoryStream);
             //var iBytes = (byte[]) Utils.CopyArray(Zlib.UUDecodeBytes((byte[]) Utils.CopyArray(asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd())), new byte[num2])), new byte[num1]);
-            var encoding = asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd()));
-            var zlibDecode = Zlib.UUDecodeBytes(encoding);
+            var encoding = asciiEncoding.GetBytes(ModernZlib.UnbreakString(iStream.ReadToEnd()));
+            var zlibDecode = ModernZlib.UuDecodeBytes(encoding);
             var dest1 = new byte[num2];
             Array.Copy(zlibDecode, dest1, zlibDecode.Length);
             var iBytes = new byte[num1];
             Array.Copy(dest1, iBytes, dest1.Length);
-            iBytes = Zlib.UncompressChunk(ref iBytes, outSize);
+            iBytes = ModernZlib.DecompressChunk(iBytes, outSize);
             binaryWriter.Write(iBytes);
             memoryStream.Seek(0L, SeekOrigin.Begin);
             using var reader = new StreamReader(memoryStream);

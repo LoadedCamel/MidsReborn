@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -159,28 +160,18 @@ namespace Mids_Reborn.Core
             return await cSource.Task;
         }
 
-        public static async Task<List<string?>> LoadArchetypes()
+        public static Task<List<string>> LoadArchetypes()
         {
-            var cSource = new TaskCompletionSource<List<string?>>();
-            var retList = new List<string?>();
-            var baseImages = Images.Where(x => x.IsBase).ToList();
-            var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            var baseImage = Images.FirstOrDefault(x => x is { IsBase: true, FileName: "Unknown.png" }).Path ?? string.Empty;
+            var archTypePaths = new HashSet<string>();
+
             foreach (var c in DatabaseAPI.Database.Classes)
             {
-                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
-                if (retList.All(p => p != path))
-                {
-                    retList.Add(path);
-                }
+                var path = Images.FirstOrDefault(i => c != null && i.Directory == "Archetypes" && i.FileName == $"{c.ClassName}.png").Path ?? baseImage;
+                archTypePaths.Add(path);
             }
 
-            cSource.TrySetResult(retList);
-            return await cSource.Task;
+            return Task.FromResult(archTypePaths.ToList());
         }
 
         public static List<string> ArchetypeImages
@@ -231,28 +222,18 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static async Task<List<string?>> LoadOrigins()
+        public static Task<List<string>> LoadOrigins()
         {
-            var cSource = new TaskCompletionSource<List<string?>>();
-            var retList = new List<string?>();
-            var baseImages = Images.Where(x => x.IsBase).ToList();
-            var images = Images.Where(x => x.Directory == "Origins").ToList();
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            foreach (var o in DatabaseAPI.Database.Origins)
+            var baseImage = Images.FirstOrDefault(x => x is { IsBase: true, FileName: "Unknown.png" }).Path ?? string.Empty;
+            var originPaths = new HashSet<string>();
+
+            foreach (var origin in DatabaseAPI.Database.Origins)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{o.Name}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
-                if (retList.All(p => p != path))
-                {
-                    retList.Add(path);
-                }
+                var path = Images.FirstOrDefault(i => i.Directory == "Origins" && i.FileName == $"{origin.Name}.png").Path ?? baseImage;
+                originPaths.Add(path);
             }
 
-            cSource.TrySetResult(retList);
-            return await cSource.Task;
+            return Task.FromResult(originPaths.ToList());
         }
 
         public static async Task LoadEnhancements()

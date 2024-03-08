@@ -74,7 +74,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
         }
         
-        public static async void CheckForUpdates(IWin32Window parent, bool checkDelay = false)
+        public static async Task CheckForUpdates(IWin32Window parent, bool checkDelay = false)
         {
             if (checkDelay)
             {
@@ -86,7 +86,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
             if (!Updates.Any())
             {
-                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxButtons.Okay);
+                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxExButtons.Okay);
                 updateMsg.ShowDialog(parent);
                 return;
             }

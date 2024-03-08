@@ -24,7 +24,7 @@ namespace Mids_Reborn.Core.ShareSystem
         {
             var response = await Client.GetJsonAsync<ResponseModel>("build/requestId");
             if (response != null && response.Status != "Failed") return response.Id;
-            var messageBox = new MessageBoxEx("Failed to obtain a share id.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+            var messageBox = new MessageBoxEx("Failed to obtain a share id.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
             messageBox.ShowDialog(Application.OpenForms["frmMain"]);
             return null;
         }
@@ -34,14 +34,14 @@ namespace Mids_Reborn.Core.ShareSystem
             var subResponse = await Client.PostJsonAsync<SubmissionModel, ResponseModel>("build/submit", submission);
             if (subResponse == null)
             {
-                var messageBox = new MessageBoxEx("Failed to submit build data to the server.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx("Failed to submit build data to the server.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return null;
             }
 
             if (subResponse.Status != "Failed") return subResponse;
             {
-                var messageBox = new MessageBoxEx($"Failed to submit build data to the server.\r\nReason: {subResponse.ErrorMessage}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx($"Failed to submit build data to the server.\r\nReason: {subResponse.ErrorMessage}", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return null;
             }
@@ -52,14 +52,14 @@ namespace Mids_Reborn.Core.ShareSystem
             var updResponse = await Client.PostJsonAsync<UpdateModel, ResponseModel>("build/update-page", update);
             if (updResponse == null)
             {
-                var messageBox = new MessageBoxEx("Failed to update page data.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx("Failed to update page data.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return null;
             }
 
             if (updResponse.Status != "Failed") return updResponse;
             {
-                var messageBox = new MessageBoxEx($"Failed to update page data.\r\nReason: {updResponse.ErrorMessage}", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx($"Failed to update page data.\r\nReason: {updResponse.ErrorMessage}", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return null;
             }

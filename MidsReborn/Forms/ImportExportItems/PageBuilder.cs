@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         {
             if (MidsContext.Character == null || MidsContext.Character.CurrentBuild == null || !MidsContext.Character.CurrentBuild.Powers.Any())
             {
-                var messageBox = new MessageBoxEx("Unable to initialize builder, either the character data is null or you have not selected any powers.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                var messageBox = new MessageBoxEx("Unable to initialize builder, either the character data is null or you have not selected any powers.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return;
             }
@@ -54,7 +54,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             GenerateHtml(HtmlBoilerPlate, dataLink, inclIncarnate, inclAccolade, inclSetBonus, inclBreakdown, out var generatedHtml);
             var bytes = Encoding.UTF8.GetBytes(generatedHtml);
             var compressedBase = Compression.CompressToBase64(bytes);
-            return compressedBase;
+            return compressedBase.OutString;
         }
 
         private void GenerateHtml(string boilerPlate, DataLink dataLink, bool inclIncarnate, bool inclAccolade, bool inclSetBonus, bool inclBreakdown, out string generatedHtml)

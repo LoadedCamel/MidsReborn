@@ -77,7 +77,7 @@ namespace Mids_Reborn.Core
 
     #endregion
 
-    public class GroupedFx
+    public class GroupedFx : ICloneable
     {
         public struct FxId
         {
@@ -209,6 +209,21 @@ namespace Mids_Reborn.Core
             return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}, Aggregated: {IsAggregated}}}";
         }
 
+        public object Clone()
+        {
+            return (GroupedFx)MemberwiseClone();
+        }
+
+        private GroupedFx CropIncludedEffects(IPower power)
+        {
+            var gre = (GroupedFx)Clone();
+            gre.IncludedEffects = gre.IncludedEffects
+                .Where(e => e >= 0 & e < power.Effects.Length)
+                .ToList();
+
+            return gre;
+        }
+
         /// <summary>
         /// From an effect index, try to find the matching index in the ranked effects table.
         /// Returns -1 if IncludedEffects is empty.
@@ -231,7 +246,17 @@ namespace Mids_Reborn.Core
         /// <returns>Matching effect from source power</returns>
         public IEffect GetEffectAt(IPower power, int index = 0)
         {
-            return power.Effects[IncludedEffects[index]];
+            // Ensure index is within range before accessing the array
+            if (index >= 0 && index < power.Effects.Length)
+            {
+                return power.Effects[index];
+            }
+            else
+            {
+                // Handle the case where index is out of range
+                // Might throw an exception, return null, or handle it as you see fit
+                throw new IndexOutOfRangeException("The provided index is out of range.");
+            }
         }
 
         /// <summary>
@@ -1696,29 +1721,41 @@ namespace Mids_Reborn.Core
         /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
         public float GetMagSum(IPower power, bool ignoreNegs = true)
         {
-            if (IncludedEffects.Count <= 0)
+            if (IncludedEffects.Count <= 0 || power.Effects.Length <= 0)
             {
                 return 0;
             }
 
-            // Exception in GetMagSum(power: Incarnate.Alpha.Intuition_Radial_Boost, ignoreNegs: True)
-            // Exception.IndexOutOfBoundsException
-            var allNegEnh = IncludedEffects
-                    .Select(e => e >= 0 && e < power.Effects.Length ? GetPowerEffectAt(power, e).BuffedMag : 0)
-                    .All(e => e < 0);
+            // Ensure all indices in IncludedEffects are within the range of power.Effects indices
+            var validIncludedEffects = IncludedEffects.Where(e => e >= 0 && e < power.Effects.Length).ToList();
 
-            if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
+            // If there are no valid effects, return 0
+            if (!validIncludedEffects.Any())
+            {
+                return 0;
+            }
+
+            // Check if all valid included effects have a negative BuffedMag
+            var allNegEnh = validIncludedEffects
+                .Select(e => GetPowerEffectAt(power, e).BuffedMag)
+                .All(mag => mag < 0);
+
+            // Getting the first effect, ensuring the index is within range
+            var firstEffect = GetEffectAt(power, validIncludedEffects.FirstOrDefault());
+
+            if (firstEffect.EffectType is Enums.eEffectType.Defense
                 or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez
                 or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement)
             {
-                return GetEffectAt(power).BuffedMag;
+                return firstEffect.BuffedMag;
             }
 
-            return allNegEnh | !ignoreNegs
-                ? IncludedEffects
+            // Summation logic with consideration for ignoreNegs flag and ensuring only valid indices are used
+            return (allNegEnh || !ignoreNegs)
+                ? validIncludedEffects
                     .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .Sum()
-                : IncludedEffects
+                : validIncludedEffects
                     .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .Where(e => e > 0)
                     .Sum();
@@ -1812,8 +1849,9 @@ namespace Mids_Reborn.Core
                 : gre.GetMagSum(pEnh);
             var baseMagSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                 or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
-                ? gre.GetMagSum(pBase, false)
-                : gre.GetMagSum(pBase);
+                ? gre.CropIncludedEffects(pBase).GetMagSum(pBase, false)
+                : gre.CropIncludedEffects(pBase).GetMagSum(pBase);
+
 
             var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
                 (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -

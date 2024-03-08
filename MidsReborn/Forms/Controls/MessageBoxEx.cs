@@ -7,14 +7,14 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class MessageBoxEx : Form
     {
-        public enum MessageBoxButtons
+        public enum MessageBoxExButtons
         {
             Okay,
             OkayCancel,
             YesNo,
         }
 
-        public enum MessageBoxIcon
+        public enum MessageBoxExIcon
         {
             Error,
             Information,
@@ -23,13 +23,13 @@ namespace Mids_Reborn.Forms.Controls
             Warning
         }
 
-        private readonly Dictionary<MessageBoxIcon, Bitmap> _icons = new()
+        private readonly Dictionary<MessageBoxExIcon, Bitmap> _icons = new()
         {
-            { MessageBoxIcon.Error , Bitmap.FromHicon(SystemIcons.Error.Handle)},
-            { MessageBoxIcon.Information , Bitmap.FromHicon(SystemIcons.Information.Handle)},
-            { MessageBoxIcon.Protected , Bitmap.FromHicon(SystemIcons.Shield.Handle)},
-            { MessageBoxIcon.Question , Bitmap.FromHicon(SystemIcons.Question.Handle)},
-            { MessageBoxIcon.Warning , Bitmap.FromHicon(SystemIcons.Warning.Handle)}
+            { MessageBoxExIcon.Error , Bitmap.FromHicon(SystemIcons.Error.Handle)},
+            { MessageBoxExIcon.Information , Bitmap.FromHicon(SystemIcons.Information.Handle)},
+            { MessageBoxExIcon.Protected , Bitmap.FromHicon(SystemIcons.Shield.Handle)},
+            { MessageBoxExIcon.Question , Bitmap.FromHicon(SystemIcons.Question.Handle)},
+            { MessageBoxExIcon.Warning , Bitmap.FromHicon(SystemIcons.Warning.Handle)}
         };
 
         private Font _font = new("Microsoft Sans Serif", 9.25f);
@@ -66,8 +66,8 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private MessageBoxButtons _buttons;
-        public MessageBoxButtons Buttons
+        private MessageBoxExButtons _buttons;
+        public MessageBoxExButtons Buttons
         {
             get => _buttons;
             set
@@ -77,17 +77,17 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private void InitializeButtons(MessageBoxButtons messageBoxButtons)
+        private void InitializeButtons(MessageBoxExButtons messageBoxButtons)
         {
             switch (messageBoxButtons)
             {
-                case MessageBoxButtons.Okay:
+                case MessageBoxExButtons.Okay:
                     btnOkay.Text = @"OK";
                     btnOkay.DialogResult = DialogResult.OK;
                     btnCancel.Visible = false;
                     btnCancel.Enabled = false;
                     break;
-                case MessageBoxButtons.OkayCancel:
+                case MessageBoxExButtons.OkayCancel:
                     btnOkay.Text = @"OK";
                     btnOkay.DialogResult = DialogResult.OK;
                     btnCancel.Visible = true;
@@ -95,7 +95,7 @@ namespace Mids_Reborn.Forms.Controls
                     btnCancel.Text = @"Cancel";
                     btnCancel.DialogResult = DialogResult.Cancel;
                     break;
-                case MessageBoxButtons.YesNo:
+                case MessageBoxExButtons.YesNo:
                     btnOkay.Text = @"Yes";
                     btnOkay.DialogResult = DialogResult.Yes;
                     btnCancel.Visible = true;
@@ -106,56 +106,92 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
-        private MessageBoxIcon _icon;
-        public new MessageBoxIcon Icon
+        private readonly MessageBoxExIcon _icon;
+        public MessageBoxExIcon MessageBoxIcon
         {
             get => _icon;
-            set
+            private init
             {
                 _icon = value;
                 iconImage.Image = _icons[_icon];
             }
         }
 
-        private bool _centerParent;
-        public bool CenterParent
-        {
-            get => _centerParent;
-            set
-            {
-                _centerParent = value;
-                if (_centerParent) CenterToParent();
-            }
-        }
+        private bool CenterParent { get; set; }
 
-        public MessageBoxEx(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon = MessageBoxIcon.Information, bool centerParent = false)
+        public MessageBoxEx(string title, string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false)
         {
             InitializeComponent();
             Title = title;
             Message = message;
             Buttons = buttons;
-            Icon = icon;
+            MessageBoxIcon = icon;
             CenterParent = centerParent;
         }
 
-        public MessageBoxEx(string message, MessageBoxButtons buttons, MessageBoxIcon icon = MessageBoxIcon.Information, bool centerParent = false)
+        public MessageBoxEx(string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false)
         {
             InitializeComponent();
-            titlePanel.Visible = false;
+            titleText.Visible = false;
             Message = message;
             Buttons = buttons;
-            Icon = icon;
+            MessageBoxIcon = icon;
             CenterParent = centerParent;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (CenterParent && Owner is not null)
+            {
+                CenterToParent();
+            }
+            else
+            {
+                CenterToScreen();
+            }
         }
 
         private void BtnOkay_Click(object sender, EventArgs e)
         {
+            DialogResult = btnOkay.DialogResult;
             Close();
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
+            DialogResult = btnCancel.DialogResult;
             Close();
+        }
+
+        public static DialogResult ShowDialog(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        {
+            using var msgBox = new MessageBoxEx(title, message, buttons, icon);
+            return msgBox.ShowDialog();
+        }
+
+        public static void Show(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        {
+            var msgBox = new MessageBoxEx(title, message, buttons, icon)
+            {
+                TopMost = true
+            };
+            msgBox.Show();
+        }
+
+        public static DialogResult ShowDialog(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        {
+            using var msgBox = new MessageBoxEx(title, message, buttons, icon);
+            return msgBox.ShowDialog(owner);
+        }
+
+        public static void Show(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        {
+            var msgBox = new MessageBoxEx(title, message, buttons, icon)
+            {
+                TopMost = true
+            };
+            msgBox.Show(owner);
         }
     }
 }

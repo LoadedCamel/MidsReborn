@@ -10,7 +10,7 @@ using FontStyle = System.Drawing.FontStyle;
 
 namespace MRBUpdater.Controls
 {
-    public sealed partial class ProgressBarEx : ProgressBar, INotifyPropertyChanged
+    public partial class ProgressBarEx : ProgressBar, INotifyPropertyChanged
     {
         #region Events
 
@@ -59,6 +59,12 @@ namespace MRBUpdater.Controls
 
         #region PrivateProps
 
+        private ProgressBorder _border = new();
+        private ProgressColors _colors = new();
+        private Font _font = new(@"Microsoft Sans Serif", 9.75f, FontStyle.Bold);
+        private Positions _position = Positions.Center;
+        private bool _showValue = true;
+
         [Description("The value text of the control")]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -89,7 +95,11 @@ namespace MRBUpdater.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ProgressBorder Border { get; set; } = new();
+        public ProgressBorder Border
+        {
+            get => _border;
+            set => SetField(ref _border, value);
+        }
 
         [Description("Defines the colors for the control.")]
         [Category("Appearance")]
@@ -97,7 +107,11 @@ namespace MRBUpdater.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ProgressColors Colors { get; set; } = new();
+        public ProgressColors Colors
+        {
+            get => _colors;
+            set => SetField(ref _colors, value);
+        }
 
         [Description("The font used to display the value on the control.")]
         [Category("Appearance")]
@@ -105,7 +119,11 @@ namespace MRBUpdater.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public override Font Font { get; set; } = new(@"Microsoft Sans Serif", 9.75f, FontStyle.Bold);
+        public override Font Font
+        {
+            get => _font;
+            set => SetField(ref _font, value);
+        }
 
         // Behavior group
         [Description("Defines the position of the controls value text.")]
@@ -115,7 +133,11 @@ namespace MRBUpdater.Controls
         [Bindable(true)]
         [DefaultValue(Positions.Center)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Positions Position { get; set; } = Positions.Center;
+        public Positions Position
+        {
+            get => _position;
+            set => SetField(ref _position, value);
+        }
 
         [Description("Determines if the value is displayed on the control.")]
         [Category("Behavior")]
@@ -124,9 +146,15 @@ namespace MRBUpdater.Controls
         [Bindable(true)]
         [DefaultValue(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public bool ShowValue { get; set; } = true;
+        public bool ShowValue
+        {
+            get => _showValue; 
+            set => SetField(ref _showValue, value);
+        }
 
         #endregion
+
+        #region Constructor
 
         public ProgressBarEx()
         {
@@ -135,6 +163,10 @@ namespace MRBUpdater.Controls
             PropertyChanged += OnPropertyChanged;
         }
 
+        #endregion
+        
+        #region Methods
+
         private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             Invalidate();
@@ -142,70 +174,69 @@ namespace MRBUpdater.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            // Set high-quality rendering modes for smooth output.
             e.Graphics.CompositingMode = CompositingMode.SourceCopy;
             e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
             e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            switch (Border.Which)
-            {
-                case ProgressBorder.BorderToDraw.All:
-                    ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Colors.BorderColor, Border.Thickness, Border.Style);
-                    break;
-                case ProgressBorder.BorderToDraw.Left:
-                    ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None);
-                    break;
-                case ProgressBorder.BorderToDraw.Top:
-                    ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None);
-                    break;
-                case ProgressBorder.BorderToDraw.Right:
-                    ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Colors.BorderColor, Border.Thickness, Border.Style,
-                        Color.Empty, 0, ButtonBorderStyle.None);
-                    break;
-                case ProgressBorder.BorderToDraw.Bottom:
-                    ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Color.Empty, 0, ButtonBorderStyle.None,
-                        Colors.BorderColor, Border.Thickness, Border.Style);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
 
-            var progressRect = new Rectangle(ClientRectangle.X + Border.Thickness, ClientRectangle.Y + Border.Thickness, ClientRectangle.Width - Border.Thickness*2, ClientRectangle.Height - Border.Thickness*2);
+            // Determine if all borders should be drawn, to optimize border color and thickness setup.
+            var drawAllBorders = Border.Which == ProgressBorder.BorderToDraw.All ||
+                                 Border.Which.HasFlag(ProgressBorder.BorderToDraw.All);
+            var effectiveBorderColor = drawAllBorders ? Colors.BorderColor : Color.Transparent;
+            var effectiveBorderThickness = drawAllBorders ? Border.Thickness : 0;
+            var effectiveBorderStyle = drawAllBorders ? Border.Style : ButtonBorderStyle.None;
+
+            // Draw border considering individual sides if not drawing all.
+            ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
+                Border.Which.HasFlag(ProgressBorder.BorderToDraw.Left) ? effectiveBorderColor : Color.Transparent,
+                effectiveBorderThickness, effectiveBorderStyle,
+                Border.Which.HasFlag(ProgressBorder.BorderToDraw.Top) ? effectiveBorderColor : Color.Transparent,
+                effectiveBorderThickness, effectiveBorderStyle,
+                Border.Which.HasFlag(ProgressBorder.BorderToDraw.Right) ? effectiveBorderColor : Color.Transparent,
+                effectiveBorderThickness, effectiveBorderStyle,
+                Border.Which.HasFlag(ProgressBorder.BorderToDraw.Bottom) ? effectiveBorderColor : Color.Transparent,
+                effectiveBorderThickness, effectiveBorderStyle);
+
+            // Adjust the progress rectangle to respect border thickness.
+            var progressRect = new Rectangle(ClientRectangle.X + effectiveBorderThickness,
+                ClientRectangle.Y + effectiveBorderThickness,
+                ClientRectangle.Width - 2 * effectiveBorderThickness,
+                ClientRectangle.Height - 2 * effectiveBorderThickness);
+
+            // Draw the progress bar within the adjusted rectangle.
             ProgressBarRenderer.DrawHorizontalBar(e.Graphics, progressRect);
             e.Graphics.FillRectangle(new SolidBrush(Colors.BackColor), progressRect);
-            if (Value <= 0) return;
-            var bar = progressRect with { Width = (int)Math.Round((float)Value / Maximum * progressRect.Width) };
-            var barGradient = new LinearGradientBrush(bar, Colors.BarStartColor, Colors.BarEndColor, LinearGradientMode.ForwardDiagonal);
-            ProgressBarRenderer.DrawHorizontalBar(e.Graphics, bar);
-            e.Graphics.FillRectangle(barGradient, bar);
-            var formatFlags = Position switch
+
+            // Draw filled part of the progress bar based on the Value.
+            if (Value > 0)
+            {
+                var fillWidth = (int)Math.Round((double)Value / Maximum * progressRect.Width);
+                var filledRect = progressRect with { Width = fillWidth };
+                using var barGradient = new LinearGradientBrush(filledRect, Colors.BarStartColor, Colors.BarEndColor,
+                    LinearGradientMode.ForwardDiagonal);
+                e.Graphics.FillRectangle(barGradient, filledRect);
+            }
+
+            // Conditionally draw the text.
+            if (ShowValue)
+            {
+                TextRenderer.DrawText(e.Graphics, ValueText, Font, progressRect, Colors.TextColor,
+                    GetFormatFlags(Position));
+            }
+        }
+
+        private TextFormatFlags GetFormatFlags(Positions position)
+        {
+            return position switch
             {
                 Positions.Left => TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                 Positions.Right => TextFormatFlags.Right | TextFormatFlags.VerticalCenter,
                 Positions.Center => TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(Position), $@"Invalid position value: {Position}.")
             };
-            if (!ShowValue) return;
-            TextRenderer.DrawText(e.Graphics, ValueText, Font, progressRect, Colors.TextColor, formatFlags);
         }
 
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -213,17 +244,18 @@ namespace MRBUpdater.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            if (EqualityComparer<T>.Default.Equals(field, value)) return;
             field = value;
             OnPropertyChanged(propertyName);
-            return true;
         }
+
+        #endregion
 
         #region TypeClasses
 
-        [TypeConverter(typeof(MrbTypeConverter<ProgressColors>))]
+        [TypeConverter(typeof(GenericTypeConverter<ProgressColors>))]
         public sealed class ProgressColors : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler? PropertyChanged;
@@ -265,20 +297,22 @@ namespace MRBUpdater.Controls
 
             public override string ToString()
             {
-                return $"{BackColor}, {BarStartColor}, {BarEndColor}, {TextColor}";
+                return $"back={BackColor.Name}, start={BarStartColor.Name}, end={BarEndColor.Name}, text={TextColor.Name}";
             }
         }
 
-        [TypeConverter(typeof(MrbTypeConverter<ProgressBorder>))]
+        [TypeConverter(typeof(GenericTypeConverter<ProgressBorder>))]
         public sealed class ProgressBorder : INotifyPropertyChanged
         {
+            [Flags]
             public enum BorderToDraw
             {
-                All,
-                Left,
-                Top,
-                Right,
-                Bottom
+                None = 0,
+                Left = 1 << 0, // 1
+                Top = 1 << 1, // 2
+                Right = 1 << 2, // 4
+                Bottom = 1 << 3, // 8
+                All = Left | Top | Right | Bottom // 15
             }
 
             [Description("Determines which of the components borders to draw.")]
@@ -304,10 +338,27 @@ namespace MRBUpdater.Controls
 
             public override string ToString()
             {
-                return $"{Which}, {Thickness}, {Style}";
+                return $"{Which}, {Thickness}pt, style={Style}";
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
+        }
+
+        #endregion
+
+        #region TypeConverter
+
+        public class GenericTypeConverter<T> : TypeConverter
+        {
+            public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
+            {
+                return true;
+            }
+
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object value, Attribute[]? attributes)
+            {
+                return TypeDescriptor.GetProperties(typeof(T));
+            }
         }
 
         #endregion

@@ -164,7 +164,7 @@ namespace Mids_Reborn.Core
         {
             var imgBytes = Generate(useAltBg);
             var compressed = Compression.CompressToBase64(imgBytes);
-            return compressed;
+            return compressed.OutString;
         }
 
         private static SolidBrush BrushFromHex(string hex)
