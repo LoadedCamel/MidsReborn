@@ -353,7 +353,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             {
                 htmlNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'{breakdown-details}')]");
                 var bonusCheck = new int[DatabaseAPI.NidPowers("set_bonus").Length];
-                var setBonuses = MidsContext.Character.CurrentBuild.SetBonus;
+                var setBonuses = MidsContext.Character.CurrentBuild.SetBonuses;
                 if (setBonuses.Any())
                 {
                     var breakdown = "<h2 class=\"header\">Set Bonus Breakdown</h2>";
@@ -704,7 +704,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             {
                 htmlNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'{breakdown-details}')]");
                 var bonusCheck = new int[DatabaseAPI.NidPowers("set_bonus").Length];
-                var setBonuses = MidsContext.Character.CurrentBuild.SetBonus;
+                var setBonuses = MidsContext.Character.CurrentBuild.SetBonuses;
                 if (setBonuses.Any())
                 {
                     var breakdown = "<h2 class=\"header\">Set Bonus Breakdown</h2>";

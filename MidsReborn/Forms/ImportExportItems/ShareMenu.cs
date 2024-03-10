@@ -659,7 +659,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 var setsEffects = "";
                 var countDict = new Dictionary<int, int>();
 
-                foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+                foreach (var s in MidsContext.Character.CurrentBuild.SetBonuses)
                 {
                     for (var i = 0; i < s.SetInfo.Length; i++)
                     {

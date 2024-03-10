@@ -248,6 +248,23 @@ namespace Mids_Reborn.Core
             }
         }
 
+        public bool IsPetSpecialEnh
+        {
+            get
+            {
+                var set = GetEnhancementSet();
+                return set.GetPetSpecialEnhancement() == this;
+            }
+        }
+
+        // public IPower? PetSpecialPower
+        // {
+        //     get
+        //     {
+        //         var set
+        //     }
+        // }
+
         public string LongName
         {
             get

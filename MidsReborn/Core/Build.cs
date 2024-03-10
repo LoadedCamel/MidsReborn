@@ -11,6 +11,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
+using static Mids_Reborn.Core.CSV;
 
 namespace Mids_Reborn.Core
 {
@@ -19,9 +20,12 @@ namespace Mids_Reborn.Core
         private readonly Character _character;
 
         public readonly List<PowerEntry?> Powers;
-        public readonly List<I9SetData> SetBonus;
+        public readonly List<I9SetData> SetBonuses;
 
         private IPower? _setBonusVirtualPower;
+
+        private bool _isInitializingSetBonusPowers;
+        private List<IPower> _setBonusPowers = new();
 
         public int LastPower;
         public EnhancementSet? MySet;
@@ -33,7 +37,7 @@ namespace Mids_Reborn.Core
             {
                 new PowerEntry(0, null, true)
             };
-            SetBonus = new List<I9SetData>();
+            SetBonuses = new List<I9SetData>();
             LastPower = 0;
             for (var iLevel = 0; iLevel < iLevels.Count; ++iLevel)
             {
@@ -45,14 +49,18 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public IPower? SetBonusVirtualPower
+        public IPower? SetBonusVirtualPower => _setBonusVirtualPower ??= GetSetBonusVirtualPower();
+
+        public List<IPower> SetBonusPowers 
         {
             get
             {
-                IPower? power;
-                if ((power = _setBonusVirtualPower) == null)
-                    power = _setBonusVirtualPower = GetSetBonusVirtualPower();
-                return power;
+                if (_setBonusPowers.Any() || _isInitializingSetBonusPowers) return _setBonusPowers;
+                _isInitializingSetBonusPowers = true;
+                _setBonusPowers = GetSetBonusPowers();
+                _isInitializingSetBonusPowers = false;
+
+                return _setBonusPowers;
             }
         }
 
@@ -87,6 +95,24 @@ namespace Mids_Reborn.Core
                 }
 
                 return placed;
+            }
+        }
+
+        public int BasePetPowersPlaced
+        {
+            get
+            {
+                return Powers.Count(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate));
+
+            }
+        }
+
+        public List<IPower?> PetPowers
+        {
+            get
+            {
+                return Powers.Where(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate))
+                    .Select(pe => pe?.Power).ToList();
             }
         }
 
@@ -1293,7 +1319,7 @@ namespace Mids_Reborn.Core
 
         public void GenerateSetBonusData()
         {
-            SetBonus.Clear();
+            SetBonuses.Clear();
             for (var index1 = 0; index1 < Powers.Count; ++index1)
             {
                 var i9SetData = new I9SetData
@@ -1311,7 +1337,7 @@ namespace Mids_Reborn.Core
                 i9SetData.BuildEffects(!MidsContext.Config.Inc.DisablePvE ? Enums.ePvX.PvE : Enums.ePvX.PvP);
                 if (!i9SetData.Empty)
                 {
-                    SetBonus.Add(i9SetData);
+                    SetBonuses.Add(i9SetData);
                 }
             }
 
@@ -1327,35 +1353,37 @@ namespace Mids_Reborn.Core
             }
 
             var nidPowers = DatabaseAPI.NidPowers("set_bonus");
+            // Initialize setCount with 0's using LINQ, more concise.
             var setCount = new int[nidPowers.Length];
-            for (var index = 0; index < setCount.Length; ++index)
-            {
-                setCount[index] = 0;
-            }
 
             var skipEffects = false;
             var effectList = new List<IEffect>();
-            foreach (var setBonus in SetBonus)
+
+            foreach (var setBonus in SetBonuses)
             {
                 foreach (var setInfo in setBonus.SetInfo)
                 {
                     foreach (var power in setInfo.Powers.Where(x => x > -1))
                     {
-                        if (power > setCount.Length - 1)
+                        if (power >= setCount.Length)
                         {
-                            throw new IndexOutOfRangeException("power to setBonusArray");
+                            throw new IndexOutOfRangeException("Power index exceeds setCount bounds.");
                         }
 
                         ++setCount[power];
-                        
-                        if ((DatabaseAPI.Database.Power[power].Target & Enums.eEntity.MyPet) != 0 && (DatabaseAPI.Database.Power[power].EntitiesAffected & Enums.eEntity.MyPet) != 0)
+
+                        // Refactor the bitwise comparison to method call or direct comparison
+                        var powerInfo = DatabaseAPI.Database.Power[power];
+                        if (ShouldSkipEffects(powerInfo))
                         {
                             skipEffects = true;
                         }
-                        Console.WriteLine($"{DatabaseAPI.Database.Power[power].DisplayName} skip effects? {skipEffects}");
+                
+                        Debug.WriteLine($"{powerInfo.FullName} skip effects? {skipEffects}");
+
                         if (setCount[power] < 6)
                         {
-                            effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));
+                            effectList.AddRange(powerInfo.Effects.Select(t => (IEffect)t.Clone()));
                         }
                     }
                 }
@@ -1365,17 +1393,64 @@ namespace Mids_Reborn.Core
             return power1;
         }
 
+        private List<IPower> GetSetBonusPowers()
+        {
+            var powerList = new List<IPower>();
+            if (MidsContext.Config == null || MidsContext.Config.I9.IgnoreSetBonusFX)
+            {
+                return powerList;
+            }
+
+            var nidPowers = DatabaseAPI.NidPowers("set_bonus");
+            var setCount = new int[nidPowers.Length];
+
+            foreach (var setBonus in SetBonuses)
+            {
+                foreach (var info in setBonus.SetInfo)
+                {
+                    foreach (var powerIndex in info.Powers)
+                    {
+                        if (powerIndex >= setCount.Length)
+                        {
+                            throw new IndexOutOfRangeException("Power index exceeds setCount bounds.");
+                        }
+
+                        ++setCount[powerIndex];
+
+                        var power = DatabaseAPI.Database.Power[powerIndex];
+
+                        if (setCount[powerIndex] >= 6) continue;
+                        if (power != null) powerList.Add(power.Clone());
+                    }
+                }
+            }
+
+            return powerList;
+        }
+
+        private bool ShouldSkipEffects(IPower power)
+        {
+            // Assuming Target and EntitiesAffected are enums, refactor your bitwise comparison logic here.
+            // This example directly checks for a specific condition. Adjust based on your actual logic.
+            return power.Target.HasFlag(Enums.eEntity.MyPet) && power.EntitiesAffected.HasFlag(Enums.eEntity.MyPet);
+        }
+
         public List<IEffect> GetCumulativeSetBonuses()
         {
             var bonusVirtualPower = SetBonusVirtualPower;
             var fxList = new List<IEffect>();
+            if (bonusVirtualPower == null) return fxList;
             foreach (var effIdx in bonusVirtualPower.Effects)
             {
-                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special)) continue;
-                var index2 = GcsbCheck(fxList.ToArray(), effIdx);
+                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special))
+                {
+                    continue;
+                }
+
+                var index2 = FindMatchingEffectIndex(fxList.ToArray(), effIdx);
                 if (index2 < 0)
                 {
-                    var fx = (IEffect) effIdx.Clone();
+                    var fx = (IEffect)effIdx.Clone();
                     fx.Math_Mag = effIdx.Mag;
                     fxList = fxList.Append(fx).ToList();
                 }
@@ -1388,42 +1463,57 @@ namespace Mids_Reborn.Core
             return fxList;
         }
 
-        private static int GcsbCheck(IReadOnlyList<IEffect> fxList, IEffect testFx)
+
+        private static int FindMatchingEffectIndex(IReadOnlyList<IEffect> fxList, IEffect testFx)
         {
-            for (var index = 0; index < fxList.Count; ++index)
-            {
-                if (fxList[index].EffectType != testFx.EffectType || !((fxList[index].Mag > 0.0) & (testFx.Mag > 0.0)) && !((fxList[index].Mag < 0.0) & (testFx.Mag < 0.0)) && !(Math.Abs(fxList[index].Mag - ((double)testFx.Mag > 0.0 ? 1f : 0.0f)) < 0.001))
-                {
-                    continue;
-                }
+            var index = fxList
+                .Select((effect, idx) => new { effect, idx })
+                .FirstOrDefault(item =>
+                    IsEffectMatch(item.effect, testFx) &&
+                    IsSpecialMatch(item.effect, testFx) ||
+                    IsFallbackMatch(item.effect, testFx)
+                )?.idx;
 
-                switch (testFx.EffectType)
-                {
-                    case Enums.eEffectType.Mez or Enums.eEffectType.MezResist when fxList[index].MezType == testFx.MezType:
-                    case Enums.eEffectType.Damage when testFx.DamageType == fxList[index].DamageType:
-                    case Enums.eEffectType.Defense when testFx.DamageType == fxList[index].DamageType:
-                    case Enums.eEffectType.Resistance when testFx.DamageType == fxList[index].DamageType:
-                    case Enums.eEffectType.DamageBuff when testFx.DamageType == fxList[index].DamageType:
-                    case Enums.eEffectType.Enhancement when testFx.ETModifies == fxList[index].ETModifies && testFx.DamageType == fxList[index].DamageType && testFx.MezType == fxList[index].MezType:
-                    case Enums.eEffectType.ResEffect when testFx.ETModifies == fxList[index].ETModifies:
-                    case Enums.eEffectType.None when testFx.Special == fxList[index].Special && testFx.Special.IndexOf("DEBT", StringComparison.OrdinalIgnoreCase) > -1:
-                        return index;
-                }
-                switch ((testFx.EffectType != Enums.eEffectType.Mez) & (testFx.EffectType != Enums.eEffectType.MezResist) &
-                        (testFx.EffectType != Enums.eEffectType.Damage) & (testFx.EffectType != Enums.eEffectType.Defense) &
-                        (testFx.EffectType != Enums.eEffectType.Resistance) &
-                        (testFx.EffectType != Enums.eEffectType.DamageBuff) &
-                        (testFx.EffectType != Enums.eEffectType.Enhancement) &
-                        (testFx.EffectType != Enums.eEffectType.ResEffect) &
-                        (testFx.EffectType == fxList[index].EffectType))
-                {
-                    case true:
-                        return index;
-                }
-            }
-
-            return -1;
+            return index ?? -1;
         }
+
+        private static bool IsEffectMatch(IEffect effect, IEffect testFx)
+        {
+            var isSameType = effect.EffectType == testFx.EffectType;
+            var hasValidMagnitude = effect.Mag > 0 == testFx.Mag > 0 || effect.Mag < 0 == testFx.Mag < 0;
+            var isWithinThreshold = Math.Abs(effect.Mag - (testFx.Mag > 0 ? 1 : 0)) < 0.001;
+
+            return isSameType && (hasValidMagnitude || isWithinThreshold);
+        }
+
+        private static bool IsSpecialMatch(IEffect effect, IEffect testFx)
+        {
+            return effect.EffectType switch
+            {
+                Enums.eEffectType.Mez or Enums.eEffectType.MezResist when effect.MezType == testFx.MezType => true,
+                Enums.eEffectType.Damage or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff when effect.DamageType == testFx.DamageType => true,
+                Enums.eEffectType.Enhancement when effect.ETModifies == testFx.ETModifies && effect.DamageType == testFx.DamageType && effect.MezType == testFx.MezType => true,
+                Enums.eEffectType.ResEffect when effect.ETModifies == testFx.ETModifies => true,
+                Enums.eEffectType.None when testFx.Special == effect.Special && testFx.Special.IndexOf("DEBT", StringComparison.OrdinalIgnoreCase) > -1 => true,
+                _ => false
+            };
+        }
+
+        private static bool IsFallbackMatch(IEffect effect, IEffect testFx)
+        {
+            return effect.EffectType == testFx.EffectType && !new[]
+            {
+                Enums.eEffectType.Mez,
+                Enums.eEffectType.MezResist,
+                Enums.eEffectType.Damage,
+                Enums.eEffectType.Defense,
+                Enums.eEffectType.Resistance,
+                Enums.eEffectType.DamageBuff,
+                Enums.eEffectType.Enhancement,
+                Enums.eEffectType.ResEffect
+            }.Contains(testFx.EffectType);
+        }
+
 
         public Enums.eMutex MutexV2(int hIdx, bool silent = false, bool doDetoggle = false)
         {
@@ -1546,7 +1636,7 @@ namespace Mids_Reborn.Core
         {
             var ret = new Dictionary<FXIdentifierKey, List<FXSourceData>>();
 
-            foreach (var s in SetBonus)
+            foreach (var s in SetBonuses)
             {
                 for (var i = 0; i < s.SetInfo.Length; i++)
                 {

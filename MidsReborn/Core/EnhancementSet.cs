@@ -220,6 +220,50 @@ namespace Mids_Reborn.Core
             return ret;
         }
 
+        public IPower? GetLinkedPower(int index, bool special)
+        {
+            IPower? power = null;
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return power;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                power = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+            }
+
+            return power;
+        }
+
+        public bool HasPetSpecial
+        {
+            get
+            {
+                var isPetSet = DatabaseAPI.GetSetTypeByIndex(SetType).Name.Contains("Pet");
+                var special = GetLinkedPower(Enhancements.Length - 1, true);
+                return isPetSet && special != null;
+            }
+        }
+
+        public IEnhancement? GetPetSpecialEnhancement()
+        {
+            IEnhancement? petSpecial = null;
+            var lastEnh = Enhancements.Length - 1;
+            var isPetSet = DatabaseAPI.GetSetTypeByIndex(SetType).Name.Contains("Pet");
+            var special = GetLinkedPower(lastEnh, true);
+
+            if (isPetSet && special != null)
+            {
+                petSpecial = DatabaseAPI.Database.Enhancements[Enhancements[lastEnh]];
+            }
+            return petSpecial;
+        }
+
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
         {
             BonusItem[] bonusItemArray;

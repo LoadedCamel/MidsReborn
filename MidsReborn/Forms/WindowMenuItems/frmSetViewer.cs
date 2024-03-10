@@ -468,7 +468,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lstSets.Items.Clear();
             var imageIndex = -1;
             FillImageList();
-            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonuses)
             {
                 for (var i = 0; i < s.SetInfo.Length; i++)
                 {
@@ -511,7 +511,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             var hasOvercap = false;
             EnhancementSet enhancementSet = null;
-            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonuses)
             {
                 for (var index2 = 0; index2 < s.SetInfo.Length; index2++)
                 {
@@ -780,7 +780,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             */
 
-            var imgSets = MidsContext.Character.CurrentBuild.SetBonus
+            var imgSets = MidsContext.Character.CurrentBuild.SetBonuses
                 .SelectMany(e => e.SetInfo.Where(f => f.SetIDX >= 0))
                 .Select(e => DatabaseAPI.Database.EnhancementSets[e.SetIDX].Image)
                 .Select(e => DatabaseAPI.Database.EnhancementSets.TryFindIndex(f => f.Image == e))
