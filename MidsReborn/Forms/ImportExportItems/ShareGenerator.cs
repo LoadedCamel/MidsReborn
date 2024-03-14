@@ -18,10 +18,11 @@ namespace Mids_Reborn.Forms.ImportExportItems
     {
         internal static string GeneratedBuildDataChunk()
         {
-            var buildData = CharacterBuildFile.GenerateShareData();
+            //var buildData = CharacterBuildData.GenerateShareData();
             //var chunks = buildData.Chunk(105);
             //var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{new string(chunk)}\r\n");
-            return buildData;
+            //return buildData;
+            return string.Empty;
         }
 
         internal static string BuildDataFromChunk(string dataChunk)
@@ -41,13 +42,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         internal static async void ShareMobileFriendlyBuild(Control control, bool inclIncarnate, bool inclAccolade, bool inclSetBonus, bool inclBreakdown)
         {
-            var buildData = CharacterBuildFile.GenerateShareData();
-            var imageData = InfoGraphic.GenerateImageData();
+            //var buildData = CharacterBuildData.GenerateShareData();
+            /*var imageData = InfoGraphic.GenerateImageData();
 
             var id = await ShareClient.RequestId();
             if (id == null)
             {
-                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response id was null.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response id was null.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(control);
                 return;
             }
@@ -56,7 +57,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             if (subResponse == null) return;
             if (subResponse.BuildUrl == null || subResponse.ImageUrl == null || subResponse.Code == null)
             {
-                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response data was null.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response data was null.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(control);
                 return;
             }
@@ -69,8 +70,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             var dataObject = new DataObject();
             dataObject.SetData(DataFormats.StringFormat, $"{updateResponse.PageUrl}");
             Clipboard.SetDataObject(dataObject, true);
-            var msgBox = new MessageBoxEx("Export Result", "The mobile friendly link has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Okay);
-            msgBox.ShowDialog(control);
+            var msgBox = new MessageBoxEx("Export Result", "The mobile friendly link has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
+            msgBox.ShowDialog(control);*/
         }
     }
 }

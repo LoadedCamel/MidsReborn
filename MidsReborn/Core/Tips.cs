@@ -50,7 +50,7 @@ namespace Mids_Reborn.Core
             if (_tipShown == null || !_tipShown.ContainsKey(tip) || _tipShown[tip]) return;
             var message = GetTipMessage(tip);
             _tipShown[tip] = true; // Mark the tip as shown
-            MessageBoxEx.Show($"{message}\n\nThis message should not appear again.\n",@"Tip", MessageBoxEx.MessageBoxExButtons.Okay);
+            MessageBoxEx.Show($"{message}\n\nThis message should not appear again.\n",@"Tip", MessageBoxEx.MessageBoxExButtons.Ok);
         }
 
         private string GetTipMessage(TipType tip)

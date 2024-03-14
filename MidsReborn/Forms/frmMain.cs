@@ -68,6 +68,7 @@ namespace Mids_Reborn.Forms
         private Rectangle _pnlGfxOrigin;
         private Rectangle _pnlGfxFlowOrigin;
         private Rectangle _formOrigin;
+        private readonly BuildManager _buildManager;
 
         public frmMain(string[]? args = null)
         {
@@ -108,6 +109,7 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
             AddNonStandardControls();
             MainInstance = this;
+            _buildManager = BuildManager.Instance;
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
@@ -1400,9 +1402,11 @@ namespace Mids_Reborn.Forms
 
         private bool DoLoadFromSchema(ImportModel response)
         {
+            return false;
+/*
             DataViewLocked = false;
             NewToon(true, true);
-            var ret = response.ImportData != null && CharacterBuildFile.LoadImportData(response.ImportData);
+            var ret = response.ImportData != null && CharacterBuildData.LoadImportData(response.ImportData);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
@@ -1420,6 +1424,7 @@ namespace Mids_Reborn.Forms
             myDataView?.Clear();
             PowerModified(false);
             return ret;
+*/
         }
 
         private bool LoadCharacterFile(string? fileName)
@@ -1431,7 +1436,7 @@ namespace Mids_Reborn.Forms
 
             DataViewLocked = false;
             NewToon(true, true);
-            if (CharacterBuildFile.Load(fileName))
+            if (_buildManager.LoadFromFile(fileName))
             {
                 MidsContext.Config.LastFileName = fileName;
                 LastFileName = fileName;
@@ -1757,7 +1762,7 @@ namespace Mids_Reborn.Forms
                     LastFileName = fileName;
                     break;
             }
-            if (!CharacterBuildFile.Generate(LastFileName)) return false;
+            if (!_buildManager.SaveToFile(LastFileName)) return false;
             MidsContext.Config.LastFileName = LastFileName;
             FileModified = false;
             SetTitleBar();
@@ -1796,7 +1801,7 @@ namespace Mids_Reborn.Forms
                     buildFile += ".mbd";
                 }
 
-                if (!CharacterBuildFile.Generate(buildFile))
+                if (!_buildManager.SaveToFile(buildFile))
                 {
                     return false;
                 }
@@ -6235,7 +6240,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (MidsContext.Character.CurrentBuild.PowersPlaced <= 0)
             {
-                var errorMsg = new MessageBoxEx("Share Protection Activated", "You cannot access the Share Menu at this time as there is not any build data to share.\r\nPlease either start creating a build or load one prior to accessing the menu.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Protected, true);
+                var errorMsg = new MessageBoxEx("Share Protection Activated", "You cannot access the Share Menu at this time as there is not any build data to share.\r\nPlease either start creating a build or load one prior to accessing the menu.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Protected, true);
                 errorMsg.ShowDialog(this);
             }
             else
@@ -6259,13 +6264,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsImportChunk_Click(object? sender, EventArgs e)
         {
-            using var importBuild = new ImportCode();
+            /*using var importBuild = new ImportCode();
             var result = importBuild.ShowDialog(this);
             if (result != DialogResult.Continue) return;
             if (importBuild.Data == null) return;
             DataViewLocked = false;
             NewToon(true, true);
-            CharacterBuildFile.LoadImportData(importBuild.Data);
+            CharacterBuildData.LoadImportData(importBuild.Data);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
@@ -6281,7 +6286,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             myDataView?.Clear();
-            PowerModified(false);
+            PowerModified(false);*/
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)

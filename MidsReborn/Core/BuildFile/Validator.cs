@@ -26,7 +26,7 @@ namespace Mids_Reborn.Core.BuildFile
                 DefaultRequired = Required.Default,
                 SchemaIdGenerationHandling = SchemaIdGenerationHandling.TypeName
             };
-            _schema = generator.Generate(typeof(CharacterBuildFile));
+            _schema = generator.Generate(typeof(CharacterBuildData));
         }
 
         public BuildValidationResult Validate(string buildFile)

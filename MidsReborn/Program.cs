@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms;

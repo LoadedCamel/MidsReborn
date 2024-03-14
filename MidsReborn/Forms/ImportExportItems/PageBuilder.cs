@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         {
             if (MidsContext.Character == null || MidsContext.Character.CurrentBuild == null || !MidsContext.Character.CurrentBuild.Powers.Any())
             {
-                var messageBox = new MessageBoxEx("Unable to initialize builder, either the character data is null or you have not selected any powers.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                var messageBox = new MessageBoxEx("Unable to initialize builder, either the character data is null or you have not selected any powers.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                 messageBox.ShowDialog(Application.OpenForms["frmMain"]);
                 return;
             }

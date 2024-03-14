@@ -86,7 +86,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
             if (!Updates.Any())
             {
-                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxExButtons.Okay);
+                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxExButtons.Ok);
                 updateMsg.ShowDialog(parent);
                 return;
             }

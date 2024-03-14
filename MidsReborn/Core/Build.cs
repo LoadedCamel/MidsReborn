@@ -1172,7 +1172,7 @@ namespace Mids_Reborn.Core
                         {
                             // Standard MessageBox may spawn behind TopMost controls like the totals or sets windows.
                             //MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
-                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Warning);
+                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning);
                             msgBox.ShowDialog();
                         }
 

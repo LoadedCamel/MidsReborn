@@ -235,21 +235,21 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     case "bdExport":
                         data = new DataObject(bdChunkBox.Text);
                         Clipboard.SetDataObject(data, true);
-                        var messageBox = new MessageBoxEx("Export Result", "The data chunk has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Okay);
+                        var messageBox = new MessageBoxEx("Export Result", "The data chunk has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
                     case "ffExport":
                         var exportData = ExportData(_share.ForumFormat.InclAccolades, _share.ForumFormat.InclIncarnates, _share.ForumFormat.InclBonusBreakdown);
                         data = new DataObject(exportData);
                         Clipboard.SetDataObject(data, true);
-                        messageBox = new MessageBoxEx("Export Result", "The Forum data has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Okay);
+                        messageBox = new MessageBoxEx("Export Result", "The Forum data has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
                     case "igExport":
                         var image = ShareGenerator.SharedBuildImage(_share.InfoGraphic.UseAltImage);
                         data = new DataObject(image);
                         Clipboard.SetDataObject(data, true);
-                        messageBox = new MessageBoxEx("Export Result", "The InfoGraphic has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Okay);
+                        messageBox = new MessageBoxEx("Export Result", "The InfoGraphic has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
                     case "mbfExport":

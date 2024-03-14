@@ -9,7 +9,7 @@ namespace Mids_Reborn.Forms.Controls
     {
         public enum MessageBoxExButtons
         {
-            Okay,
+            Ok,
             OkayCancel,
             YesNo,
         }
@@ -81,7 +81,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             switch (messageBoxButtons)
             {
-                case MessageBoxExButtons.Okay:
+                case MessageBoxExButtons.Ok:
                     btnOkay.Text = @"OK";
                     btnOkay.DialogResult = DialogResult.OK;
                     btnCancel.Visible = false;

@@ -2592,7 +2592,7 @@ namespace Mids_Reborn.Core
             catch (Exception ex)
             {
                 var m = new MessageBoxEx("Error loading enhancement Maths",
-                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Okay,
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Ok,
                     MessageBoxEx.MessageBoxExIcon.Error);
                 m.ShowDialog();
 
@@ -2606,7 +2606,7 @@ namespace Mids_Reborn.Core
                 if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2615,7 +2615,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "EDRT"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2641,7 +2641,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "EGE"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2698,7 +2698,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "LBIOE"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2722,7 +2722,7 @@ namespace Mids_Reborn.Core
             catch (Exception ex)
             {
                 var m = new MessageBoxEx("Error loading enhancement Maths",
-                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Okay,
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Ok,
                     MessageBoxEx.MessageBoxExIcon.Error);
                 m.ShowDialog();
                 streamReader.Close();
@@ -2749,7 +2749,7 @@ namespace Mids_Reborn.Core
                     6 => "IO",
                     _ => "Other"
                 } + $" multipliers in {path}.\r\nFaulty multipliers have been defaulted to 1.",
-                MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
+                MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
             mbe.ShowDialog();
 
             return false;
