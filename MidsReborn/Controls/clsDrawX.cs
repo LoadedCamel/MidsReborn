@@ -2369,51 +2369,20 @@ namespace Mids_Reborn.Controls
             return CRtoXy(crPos.X, crPos.Y, ignorePadding);
         }
 
-        // private Point CRtoXy(int iCol, int iRow, bool ignorePadding = false)
-        // {
-        //     // Convert a column/row location to the top left XY co-ord of a power entry
-        //     // 3 Columns, 15 Rows
-        //     return new Point(
-        //         iCol * (SzPower.Width + PaddingX * (ignorePadding ? 0 : 1)),
-        //         iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue) : 0))) + (iRow >= _vcRowsPowers ? OffsetInherent : 0));
-        // }
-        
         private Point CRtoXy(int iCol, int iRow, bool ignorePadding = false)
         {
-            int dynamicPaddingX = DynamicPaddingX();
-            int dynamicPaddingY = DynamicPaddingY();
-
             return new Point(
-                iCol * (SzPower.Width + dynamicPaddingX * (ignorePadding ? 0 : 1)),
-                iRow * (SzPower.Height + dynamicPaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue) : 0)) + 
-                (iRow >= _vcRowsPowers ? OffsetInherent : 0));
-        }
-        
-        private int DynamicPaddingX()
-        {
-            // Calculate scaling factor based on width
-            double scaleX = (double)_cTarget.Width / _baseControlSize.Width;
-            // Apply scaling factor to original padding, ensuring it doesn't go below the original value
-            return Math.Max(PaddingX, (int)(PaddingX * scaleX));
-        }
-
-        private int DynamicPaddingY()
-        {
-            // Calculate scaling factor based on height
-            double scaleY = (double)_cTarget.Height / _baseControlSize.Height;
-            // Apply scaling factor to original padding, ensuring it doesn't go below the original value
-            return Math.Max(PaddingY, (int)(PaddingY * scaleY));
+                iCol * (SzPower.Width + PaddingX * (ignorePadding ? 0 : 1)),
+                iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue) : 0))) + (iRow >= _vcRowsPowers ? OffsetInherent : 0));
         }
 
         public Size GetDrawingArea()
         {
             var result = (Size)PowerPosition(VcPowers - 1);
-            int dynamicPaddingX = DynamicPaddingX();
-            int dynamicPaddingY = DynamicPaddingY();
             checked
             {
-                result.Width += SzPower.Width + dynamicPaddingX;
-                result.Height = result.Height + SzPower.Height + dynamicPaddingY;
+                result.Width += SzPower.Width;
+                result.Height = result.Height + SzPower.Height + PaddingY;
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
                     if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen && i > MidsContext.Character.CurrentBuild.LastPower))

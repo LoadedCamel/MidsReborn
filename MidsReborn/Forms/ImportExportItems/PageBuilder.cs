@@ -94,7 +94,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             heading += $"<h3 class=\"generated\">Using the <font color=\"#B1C9F5\">{DatabaseAPI.DatabaseName}</font> database <font color=\"#B1C9F5\">v{DatabaseAPI.Database.Version}</font></h3>";
             heading += "<h3 class=\"generated\">You can grab the latest MRB release from <a href=\"https://midsreborn.com\">Our Site</a> or <a href=\"https://github.com/LoadedCamel/MidsReborn/releases/latest\">GitHub</a></h3>";
             heading += "<br />";
-            heading += $"<a class=\"build\" href=\"{dataLink.BuildLink}\" target=\"_blank\">Open In MidsReborn</a>";
+            heading += $"<a class=\"build\" href=\"{dataLink.BuildLink}\" target=\"_blank\">Open In MidsReborn</a> or <a class=\"build\" href=\"{dataLink.BuildLink}\" target=\"_blank\">Download Build</a>";
             htmlNode.InnerHtml = heading;
 
             #endregion
@@ -445,7 +445,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             heading += $"<h3 class=\"generated\">Using the <font color=\"#B1C9F5\">{DatabaseAPI.DatabaseName}</font> database <font color=\"#B1C9F5\">v{DatabaseAPI.Database.Version}</font></h3>";
             heading += "<h3 class=\"generated\">You can grab the latest MRB release from <a href=\"https://midsreborn.com\">Our Site</a> or <a href=\"https://github.com/LoadedCamel/MidsReborn/releases/latest\">GitHub</a></h3>";
             heading += "<br />";
-            heading += $"<a class=\"build\" href=\"\" target=\"_blank\">Open In MidsReborn</a>";
+            heading += $"<a class=\"build\" href=\"\" target=\"_blank\">Open In MidsReborn</a>\r\nor\r\n<a class=\"build\" href=\"\" target=\"_blank\">Download Build</a>";
             htmlNode.InnerHtml = heading;
 
             #endregion
@@ -502,34 +502,34 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 var statValue = Stats["Defense"][index];
                 //tableNode = htmlDoc.DocumentNode.SelectSingleNode("//tr");
                 htmlNode = htmlNode.LastChild;
-                newNode = HtmlNode.CreateNode($"<td><font color=\"whitesmoke\">{statValue.Type}:</font><font color=\"{statValue.Hex}\">{statValue.Percentage}</font></td>");
+                newNode = HtmlNode.CreateNode($"<td><font color=\"whitesmoke\">{statValue.Type}:</font> <font color=\"{statValue.Hex}\">{statValue.Percentage}</font></td>");
                 htmlNode.AppendChild(newNode);
 
                 // Process Resistance
                 htmlNode = htmlNode.LastChild;
                 newNode = HtmlNode.CreateNode(index < Stats["Resistance"].Count
-                    ? $"<td><font color=\"whitesmoke\">{Stats["Resistance"][index].Type}:</font><font color=\"{Stats["Resistance"][index].Hex}\">{Stats["Resistance"][index].Percentage}</font></td>"
+                    ? $"<td><font color=\"whitesmoke\">{Stats["Resistance"][index].Type}:</font> <font color=\"{Stats["Resistance"][index].Hex}\">{Stats["Resistance"][index].Percentage}</font></td>"
                     : "<td></td>");
                 htmlNode.AppendChild(newNode);
 
                 // Process Sustain
                 htmlNode = htmlNode.LastChild;
                 newNode = HtmlNode.CreateNode(index < Stats["Sustain"].Count
-                    ? $"<td><font color=\"whitesmoke\">{Stats["Sustain"][index].Type}:</font><font color=\"{Stats["Sustain"][index].Hex}\">{Stats["Sustain"][index].Percentage}{Stats["Sustain"][index].ExtraData}</font></td>"
+                    ? $"<td><font color=\"whitesmoke\">{Stats["Sustain"][index].Type}:</font> <font color=\"{Stats["Sustain"][index].Hex}\">{Stats["Sustain"][index].Percentage}{Stats["Sustain"][index].ExtraData}</font></td>"
                     : "<td></td>");
                 htmlNode.AppendChild(newNode);
 
                 // Process Offense
                 htmlNode = htmlNode.LastChild;
                 newNode = HtmlNode.CreateNode(index < Stats["Offense"].Count
-                    ? $"<td><font color=\"whitesmoke\">{Stats["Offense"][index].Type}:</font><font color=\"{Stats["Offense"][index].Hex}\">{Stats["Offense"][index].Percentage}</font></td>"
+                    ? $"<td><font color=\"whitesmoke\">{Stats["Offense"][index].Type}:</font> <font color=\"{Stats["Offense"][index].Hex}\">{Stats["Offense"][index].Percentage}</font></td>"
                     : "<td></td>");
                 htmlNode.AppendChild(newNode);
 
                 // Process Debuff Resistance
                 htmlNode = htmlNode.LastChild;
                 newNode = HtmlNode.CreateNode(index < Stats["Debuff Resistance"].Count
-                    ? $"<td><font color=\"whitesmoke\">{Stats["Debuff Resistance"][index].Type}:</font><font color=\"{Stats["Debuff Resistance"][index].Hex}\">{Stats["Debuff Resistance"][index].Percentage}</font></td>"
+                    ? $"<td><font color=\"whitesmoke\">{Stats["Debuff Resistance"][index].Type}:</font>  <font color=\"{Stats["Debuff Resistance"][index].Hex}\">{Stats["Debuff Resistance"][index].Percentage}</font></td>"
                     : "<td></td>");
                 htmlNode.AppendChild(newNode);
             }
