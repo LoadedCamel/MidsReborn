@@ -31,493 +31,476 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.btnImage = new System.Windows.Forms.Button();
-            this.btnNoImage = new System.Windows.Forms.Button();
-            this.ilEnh = new System.Windows.Forms.ImageList(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbSetType = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtDesc = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.udMaxLevel = new System.Windows.Forms.NumericUpDown();
-            this.udMinLevel = new System.Windows.Forms.NumericUpDown();
-            this.txtInternal = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtNameShort = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtNameFull = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lvEnh = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txtBonusFilter = new System.Windows.Forms.TextBox();
-            this.lvBonusList = new System.Windows.Forms.ListView();
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.txtAlternate = new System.Windows.Forms.TextBox();
-            this.lstBonus = new System.Windows.Forms.ListBox();
-            this.cbSlotCount = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.rtbBonus = new System.Windows.Forms.RichTextBox();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.rbIfAny = new System.Windows.Forms.RadioButton();
-            this.rbIfCritter = new System.Windows.Forms.RadioButton();
-            this.rbIfPlayer = new System.Windows.Forms.RadioButton();
-            this.ImagePicker = new System.Windows.Forms.OpenFileDialog();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            btnImage = new Button();
+            btnNoImage = new Button();
+            ilEnh = new ImageList(components);
+            groupBox1 = new GroupBox();
+            cbSetType = new ComboBox();
+            label7 = new Label();
+            txtDesc = new RichTextBox();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            udMaxLevel = new NumericUpDown();
+            udMinLevel = new NumericUpDown();
+            txtInternal = new TextBox();
+            label3 = new Label();
+            txtNameShort = new TextBox();
+            label2 = new Label();
+            txtNameFull = new TextBox();
+            label1 = new Label();
+            groupBox2 = new GroupBox();
+            lvEnh = new ListView();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            groupBox3 = new GroupBox();
+            txtBonusFilter = new TextBox();
+            lvBonusList = new ListView();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            txtAlternate = new TextBox();
+            lstBonus = new ListBox();
+            cbSlotCount = new ComboBox();
+            label8 = new Label();
+            rtbBonus = new RichTextBox();
+            btnCancel = new Button();
+            btnSave = new Button();
+            label9 = new Label();
+            rbIfAny = new RadioButton();
+            rbIfCritter = new RadioButton();
+            rbIfPlayer = new RadioButton();
+            ImagePicker = new OpenFileDialog();
+            groupBox1.SuspendLayout();
+            ((ISupportInitialize)udMaxLevel).BeginInit();
+            ((ISupportInitialize)udMinLevel).BeginInit();
+            groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            SuspendLayout();
             // 
             // btnImage
             // 
-            this.btnImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImage.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnImage.Location = new System.Drawing.Point(12, 12);
-            this.btnImage.Name = "btnImage";
-            this.btnImage.Size = new System.Drawing.Size(97, 68);
-            this.btnImage.TabIndex = 0;
-            this.btnImage.Text = "ImageName";
-            this.btnImage.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnImage.UseVisualStyleBackColor = true;
-            this.btnImage.Click += new System.EventHandler(this.btnImage_Click);
+            btnImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            btnImage.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            btnImage.Location = new System.Drawing.Point(12, 12);
+            btnImage.Name = "btnImage";
+            btnImage.Size = new System.Drawing.Size(97, 68);
+            btnImage.TabIndex = 0;
+            btnImage.Text = "ImageName";
+            btnImage.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            btnImage.UseVisualStyleBackColor = true;
+            btnImage.Click += btnImage_Click;
             // 
             // btnNoImage
             // 
-            this.btnNoImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNoImage.Location = new System.Drawing.Point(12, 86);
-            this.btnNoImage.Name = "btnNoImage";
-            this.btnNoImage.Size = new System.Drawing.Size(97, 23);
-            this.btnNoImage.TabIndex = 1;
-            this.btnNoImage.Text = "Clear Image";
-            this.btnNoImage.UseVisualStyleBackColor = true;
-            this.btnNoImage.Click += new System.EventHandler(this.btnNoImage_Click);
+            btnNoImage.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            btnNoImage.Location = new System.Drawing.Point(12, 86);
+            btnNoImage.Name = "btnNoImage";
+            btnNoImage.Size = new System.Drawing.Size(97, 23);
+            btnNoImage.TabIndex = 1;
+            btnNoImage.Text = "Clear Image";
+            btnNoImage.UseVisualStyleBackColor = true;
+            btnNoImage.Click += btnNoImage_Click;
             // 
             // ilEnh
             // 
-            this.ilEnh.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilEnh.ImageSize = new System.Drawing.Size(30, 30);
-            this.ilEnh.TransparentColor = System.Drawing.Color.Transparent;
+            ilEnh.ColorDepth = ColorDepth.Depth32Bit;
+            ilEnh.ImageSize = new System.Drawing.Size(30, 30);
+            ilEnh.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cbSetType);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.txtDesc);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.udMaxLevel);
-            this.groupBox1.Controls.Add(this.udMinLevel);
-            this.groupBox1.Controls.Add(this.txtInternal);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtNameShort);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtNameFull);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(115, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(230, 238);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Info";
+            groupBox1.Controls.Add(cbSetType);
+            groupBox1.Controls.Add(label7);
+            groupBox1.Controls.Add(txtDesc);
+            groupBox1.Controls.Add(label6);
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(udMaxLevel);
+            groupBox1.Controls.Add(udMinLevel);
+            groupBox1.Controls.Add(txtInternal);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(txtNameShort);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(txtNameFull);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            groupBox1.Location = new System.Drawing.Point(115, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new System.Drawing.Size(230, 238);
+            groupBox1.TabIndex = 2;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Info";
             // 
             // cbSetType
             // 
-            this.cbSetType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSetType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbSetType.FormattingEnabled = true;
-            this.cbSetType.Location = new System.Drawing.Point(68, 209);
-            this.cbSetType.Name = "cbSetType";
-            this.cbSetType.Size = new System.Drawing.Size(156, 22);
-            this.cbSetType.TabIndex = 13;
-            this.cbSetType.SelectedIndexChanged += new System.EventHandler(this.cbSetType_SelectedIndexChanged);
+            cbSetType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSetType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            cbSetType.FormattingEnabled = true;
+            cbSetType.Location = new System.Drawing.Point(68, 209);
+            cbSetType.Name = "cbSetType";
+            cbSetType.Size = new System.Drawing.Size(156, 21);
+            cbSetType.TabIndex = 13;
+            cbSetType.SelectedIndexChanged += cbSetType_SelectedIndexChanged;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(13, 212);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 14);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "SetType:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label7.AutoSize = true;
+            label7.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label7.Location = new System.Drawing.Point(13, 212);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(49, 13);
+            label7.TabIndex = 12;
+            label7.Text = "SetType:";
+            label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtDesc
             // 
-            this.txtDesc.Location = new System.Drawing.Point(68, 99);
-            this.txtDesc.Name = "txtDesc";
-            this.txtDesc.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.txtDesc.Size = new System.Drawing.Size(156, 104);
-            this.txtDesc.TabIndex = 11;
-            this.txtDesc.Text = "";
-            this.txtDesc.TextChanged += new System.EventHandler(this.txtDesc_TextChanged);
+            txtDesc.Location = new System.Drawing.Point(68, 99);
+            txtDesc.Name = "txtDesc";
+            txtDesc.ScrollBars = RichTextBoxScrollBars.None;
+            txtDesc.Size = new System.Drawing.Size(156, 104);
+            txtDesc.TabIndex = 11;
+            txtDesc.Text = "";
+            txtDesc.TextChanged += txtDesc_TextChanged;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 99);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(64, 14);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Description:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label6.Location = new System.Drawing.Point(6, 99);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(69, 13);
+            label6.TabIndex = 10;
+            label6.Text = "Description:";
+            label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 163);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 14);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "MaxLevel";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label5.AutoSize = true;
+            label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label5.Location = new System.Drawing.Point(6, 163);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(53, 13);
+            label5.TabIndex = 9;
+            label5.Text = "MaxLevel";
+            label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(6, 123);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 14);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "MinLevel";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label4.AutoSize = true;
+            label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label4.Location = new System.Drawing.Point(6, 123);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(52, 13);
+            label4.TabIndex = 8;
+            label4.Text = "MinLevel";
+            label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // udMaxLevel
             // 
-            this.udMaxLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.udMaxLevel.Location = new System.Drawing.Point(13, 180);
-            this.udMaxLevel.Name = "udMaxLevel";
-            this.udMaxLevel.Size = new System.Drawing.Size(32, 20);
-            this.udMaxLevel.TabIndex = 7;
-            this.udMaxLevel.ValueChanged += new System.EventHandler(this.udMaxLevel_ValueChanged);
-            this.udMaxLevel.Leave += new System.EventHandler(this.udMaxLevel_Leave);
+            udMaxLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            udMaxLevel.Location = new System.Drawing.Point(13, 180);
+            udMaxLevel.Name = "udMaxLevel";
+            udMaxLevel.Size = new System.Drawing.Size(32, 22);
+            udMaxLevel.TabIndex = 7;
+            udMaxLevel.ValueChanged += udMaxLevel_ValueChanged;
+            udMaxLevel.Leave += udMaxLevel_Leave;
             // 
             // udMinLevel
             // 
-            this.udMinLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.udMinLevel.Location = new System.Drawing.Point(13, 140);
-            this.udMinLevel.Name = "udMinLevel";
-            this.udMinLevel.Size = new System.Drawing.Size(32, 20);
-            this.udMinLevel.TabIndex = 6;
-            this.udMinLevel.ValueChanged += new System.EventHandler(this.udMinLevel_ValueChanged);
-            this.udMinLevel.Leave += new System.EventHandler(this.udMinLevel_Leave);
+            udMinLevel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            udMinLevel.Location = new System.Drawing.Point(13, 140);
+            udMinLevel.Name = "udMinLevel";
+            udMinLevel.Size = new System.Drawing.Size(32, 22);
+            udMinLevel.TabIndex = 6;
+            udMinLevel.ValueChanged += udMinLevel_ValueChanged;
+            udMinLevel.Leave += udMinLevel_Leave;
             // 
             // txtInternal
             // 
-            this.txtInternal.Location = new System.Drawing.Point(68, 73);
-            this.txtInternal.Name = "txtInternal";
-            this.txtInternal.Size = new System.Drawing.Size(156, 20);
-            this.txtInternal.TabIndex = 5;
-            this.txtInternal.TextChanged += new System.EventHandler(this.txtInternal_TextChanged);
+            txtInternal.Location = new System.Drawing.Point(68, 73);
+            txtInternal.Name = "txtInternal";
+            txtInternal.Size = new System.Drawing.Size(156, 22);
+            txtInternal.TabIndex = 5;
+            txtInternal.TextChanged += txtInternal_TextChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(25, 76);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 14);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Internal:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label3.AutoSize = true;
+            label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label3.Location = new System.Drawing.Point(25, 76);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(50, 13);
+            label3.TabIndex = 4;
+            label3.Text = "Internal:";
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtNameShort
             // 
-            this.txtNameShort.Location = new System.Drawing.Point(69, 47);
-            this.txtNameShort.Name = "txtNameShort";
-            this.txtNameShort.Size = new System.Drawing.Size(155, 20);
-            this.txtNameShort.TabIndex = 3;
-            this.txtNameShort.TextChanged += new System.EventHandler(this.txtNameShort_TextChanged);
+            txtNameShort.Location = new System.Drawing.Point(69, 47);
+            txtNameShort.Name = "txtNameShort";
+            txtNameShort.Size = new System.Drawing.Size(155, 22);
+            txtNameShort.TabIndex = 3;
+            txtNameShort.TextChanged += txtNameShort_TextChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(4, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 14);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Short Name:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label2.Location = new System.Drawing.Point(4, 50);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(70, 13);
+            label2.TabIndex = 2;
+            label2.Text = "Short Name:";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtNameFull
             // 
-            this.txtNameFull.Location = new System.Drawing.Point(69, 21);
-            this.txtNameFull.Name = "txtNameFull";
-            this.txtNameFull.Size = new System.Drawing.Size(156, 20);
-            this.txtNameFull.TabIndex = 1;
-            this.txtNameFull.TextChanged += new System.EventHandler(this.txtNameFull_TextChanged);
+            txtNameFull.Location = new System.Drawing.Point(69, 21);
+            txtNameFull.Name = "txtNameFull";
+            txtNameFull.Size = new System.Drawing.Size(156, 22);
+            txtNameFull.TabIndex = 1;
+            txtNameFull.TextChanged += txtNameFull_TextChanged;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(14, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 14);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Full Name:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label1.Location = new System.Drawing.Point(14, 24);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(61, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Full Name:";
+            label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lvEnh);
-            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(12, 256);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(333, 229);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Enhancements belonging to this set:";
+            groupBox2.Controls.Add(lvEnh);
+            groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            groupBox2.Location = new System.Drawing.Point(12, 256);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new System.Drawing.Size(333, 229);
+            groupBox2.TabIndex = 3;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Enhancements belonging to this set:";
             // 
             // lvEnh
             // 
-            this.lvEnh.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.lvEnh.FullRowSelect = true;
-            this.lvEnh.HideSelection = false;
-            this.lvEnh.LargeImageList = this.ilEnh;
-            this.lvEnh.Location = new System.Drawing.Point(6, 19);
-            this.lvEnh.Name = "lvEnh";
-            this.lvEnh.Size = new System.Drawing.Size(321, 204);
-            this.lvEnh.SmallImageList = this.ilEnh;
-            this.lvEnh.TabIndex = 0;
-            this.lvEnh.UseCompatibleStateImageBehavior = false;
-            this.lvEnh.View = System.Windows.Forms.View.Details;
+            lvEnh.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
+            lvEnh.FullRowSelect = true;
+            lvEnh.LargeImageList = ilEnh;
+            lvEnh.Location = new System.Drawing.Point(6, 19);
+            lvEnh.Name = "lvEnh";
+            lvEnh.Size = new System.Drawing.Size(321, 204);
+            lvEnh.SmallImageList = ilEnh;
+            lvEnh.TabIndex = 0;
+            lvEnh.UseCompatibleStateImageBehavior = false;
+            lvEnh.View = View.Details;
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 244;
+            columnHeader1.Text = "Name";
+            columnHeader1.Width = 244;
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Classes";
-            this.columnHeader2.Width = 71;
+            columnHeader2.Text = "Classes";
+            columnHeader2.Width = 71;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.txtBonusFilter);
-            this.groupBox3.Controls.Add(this.lvBonusList);
-            this.groupBox3.Controls.Add(this.txtAlternate);
-            this.groupBox3.Controls.Add(this.lstBonus);
-            this.groupBox3.Controls.Add(this.cbSlotCount);
-            this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.rtbBonus);
-            this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(351, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(785, 473);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Set Bonuses";
+            groupBox3.Controls.Add(txtBonusFilter);
+            groupBox3.Controls.Add(lvBonusList);
+            groupBox3.Controls.Add(txtAlternate);
+            groupBox3.Controls.Add(lstBonus);
+            groupBox3.Controls.Add(cbSlotCount);
+            groupBox3.Controls.Add(label8);
+            groupBox3.Controls.Add(rtbBonus);
+            groupBox3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            groupBox3.Location = new System.Drawing.Point(351, 12);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new System.Drawing.Size(785, 473);
+            groupBox3.TabIndex = 4;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Set Bonuses";
             // 
             // txtBonusFilter
             // 
-            this.txtBonusFilter.Location = new System.Drawing.Point(318, 447);
-            this.txtBonusFilter.Name = "txtBonusFilter";
-            this.txtBonusFilter.Size = new System.Drawing.Size(428, 20);
-            this.txtBonusFilter.TabIndex = 6;
-            this.txtBonusFilter.TextChanged += new System.EventHandler(this.TxtBonusFilter_TextChanged);
+            txtBonusFilter.Location = new System.Drawing.Point(318, 447);
+            txtBonusFilter.Name = "txtBonusFilter";
+            txtBonusFilter.Size = new System.Drawing.Size(428, 22);
+            txtBonusFilter.TabIndex = 6;
+            txtBonusFilter.TextChanged += TxtBonusFilter_TextChanged;
             // 
             // lvBonusList
             // 
-            this.lvBonusList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3,
-            this.columnHeader4});
-            this.lvBonusList.HideSelection = false;
-            this.lvBonusList.Location = new System.Drawing.Point(281, 20);
-            this.lvBonusList.MultiSelect = false;
-            this.lvBonusList.Name = "lvBonusList";
-            this.lvBonusList.Size = new System.Drawing.Size(498, 421);
-            this.lvBonusList.TabIndex = 5;
-            this.lvBonusList.UseCompatibleStateImageBehavior = false;
-            this.lvBonusList.View = System.Windows.Forms.View.Details;
-            this.lvBonusList.DoubleClick += new System.EventHandler(this.lvBonusList_DoubleClick);
+            lvBonusList.Columns.AddRange(new ColumnHeader[] { columnHeader3, columnHeader4 });
+            lvBonusList.Location = new System.Drawing.Point(281, 20);
+            lvBonusList.MultiSelect = false;
+            lvBonusList.Name = "lvBonusList";
+            lvBonusList.Size = new System.Drawing.Size(498, 421);
+            lvBonusList.TabIndex = 5;
+            lvBonusList.UseCompatibleStateImageBehavior = false;
+            lvBonusList.View = View.Details;
+            lvBonusList.DoubleClick += lvBonusList_DoubleClick;
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Bonus";
-            this.columnHeader3.Width = 212;
+            columnHeader3.Text = "Bonus";
+            columnHeader3.Width = 212;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Effect";
-            this.columnHeader4.Width = 253;
+            columnHeader4.Text = "Effect";
+            columnHeader4.Width = 253;
             // 
             // txtAlternate
             // 
-            this.txtAlternate.Location = new System.Drawing.Point(10, 447);
-            this.txtAlternate.Name = "txtAlternate";
-            this.txtAlternate.Size = new System.Drawing.Size(263, 20);
-            this.txtAlternate.TabIndex = 4;
-            this.txtAlternate.TextChanged += new System.EventHandler(this.txtAlternate_TextChanged);
+            txtAlternate.Location = new System.Drawing.Point(10, 447);
+            txtAlternate.Name = "txtAlternate";
+            txtAlternate.Size = new System.Drawing.Size(263, 22);
+            txtAlternate.TabIndex = 4;
+            txtAlternate.TextChanged += txtAlternate_TextChanged;
             // 
             // lstBonus
             // 
-            this.lstBonus.FormattingEnabled = true;
-            this.lstBonus.ItemHeight = 14;
-            this.lstBonus.Location = new System.Drawing.Point(10, 337);
-            this.lstBonus.Name = "lstBonus";
-            this.lstBonus.Size = new System.Drawing.Size(263, 102);
-            this.lstBonus.TabIndex = 3;
-            this.lstBonus.DoubleClick += new System.EventHandler(this.lstBonus_DoubleClick);
+            lstBonus.FormattingEnabled = true;
+            lstBonus.Location = new System.Drawing.Point(10, 337);
+            lstBonus.Name = "lstBonus";
+            lstBonus.Size = new System.Drawing.Size(263, 95);
+            lstBonus.TabIndex = 3;
+            lstBonus.DoubleClick += lstBonus_DoubleClick;
             // 
             // cbSlotCount
             // 
-            this.cbSlotCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSlotCount.FormattingEnabled = true;
-            this.cbSlotCount.Items.AddRange(new object[] {
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"});
-            this.cbSlotCount.Location = new System.Drawing.Point(108, 309);
-            this.cbSlotCount.Name = "cbSlotCount";
-            this.cbSlotCount.Size = new System.Drawing.Size(165, 22);
-            this.cbSlotCount.TabIndex = 2;
-            this.cbSlotCount.SelectedIndexChanged += new System.EventHandler(this.cbSlotX_SelectedIndexChanged);
+            cbSlotCount.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSlotCount.FormattingEnabled = true;
+            cbSlotCount.Items.AddRange(new object[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" });
+            cbSlotCount.Location = new System.Drawing.Point(108, 309);
+            cbSlotCount.Name = "cbSlotCount";
+            cbSlotCount.Size = new System.Drawing.Size(165, 21);
+            cbSlotCount.TabIndex = 2;
+            cbSlotCount.SelectedIndexChanged += cbSlotX_SelectedIndexChanged;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 312);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(95, 14);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "Bonus for slotting:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(7, 312);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(103, 13);
+            label8.TabIndex = 1;
+            label8.Text = "Bonus for slotting:";
+            label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // rtbBonus
             // 
-            this.rtbBonus.Location = new System.Drawing.Point(7, 20);
-            this.rtbBonus.Name = "rtbBonus";
-            this.rtbBonus.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtbBonus.Size = new System.Drawing.Size(267, 283);
-            this.rtbBonus.TabIndex = 0;
-            this.rtbBonus.Text = "";
+            rtbBonus.BackColor = System.Drawing.Color.Black;
+            rtbBonus.Location = new System.Drawing.Point(7, 20);
+            rtbBonus.Name = "rtbBonus";
+            rtbBonus.ScrollBars = RichTextBoxScrollBars.Vertical;
+            rtbBonus.Size = new System.Drawing.Size(267, 283);
+            rtbBonus.TabIndex = 0;
+            rtbBonus.Text = "";
             // 
             // btnCancel
             // 
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(980, 491);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnCancel.Location = new System.Drawing.Point(980, 491);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 23);
+            btnCancel.TabIndex = 5;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
-            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(1061, 491);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnSave.Location = new System.Drawing.Point(1061, 491);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(75, 23);
+            btnSave.TabIndex = 6;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(376, 496);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "If Target =";
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(376, 496);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(60, 15);
+            label9.TabIndex = 7;
+            label9.Text = "If Target =";
             // 
             // rbIfAny
             // 
-            this.rbIfAny.AutoSize = true;
-            this.rbIfAny.Checked = true;
-            this.rbIfAny.Location = new System.Drawing.Point(438, 494);
-            this.rbIfAny.Name = "rbIfAny";
-            this.rbIfAny.Size = new System.Drawing.Size(43, 17);
-            this.rbIfAny.TabIndex = 8;
-            this.rbIfAny.TabStop = true;
-            this.rbIfAny.Text = "Any";
-            this.rbIfAny.UseVisualStyleBackColor = true;
+            rbIfAny.AutoSize = true;
+            rbIfAny.Checked = true;
+            rbIfAny.Location = new System.Drawing.Point(438, 494);
+            rbIfAny.Name = "rbIfAny";
+            rbIfAny.Size = new System.Drawing.Size(46, 19);
+            rbIfAny.TabIndex = 8;
+            rbIfAny.TabStop = true;
+            rbIfAny.Text = "Any";
+            rbIfAny.UseVisualStyleBackColor = true;
             // 
             // rbIfCritter
             // 
-            this.rbIfCritter.AutoSize = true;
-            this.rbIfCritter.Location = new System.Drawing.Point(487, 494);
-            this.rbIfCritter.Name = "rbIfCritter";
-            this.rbIfCritter.Size = new System.Drawing.Size(57, 17);
-            this.rbIfCritter.TabIndex = 9;
-            this.rbIfCritter.TabStop = true;
-            this.rbIfCritter.Text = "Critters";
-            this.rbIfCritter.UseVisualStyleBackColor = true;
+            rbIfCritter.AutoSize = true;
+            rbIfCritter.Location = new System.Drawing.Point(487, 494);
+            rbIfCritter.Name = "rbIfCritter";
+            rbIfCritter.Size = new System.Drawing.Size(63, 19);
+            rbIfCritter.TabIndex = 9;
+            rbIfCritter.TabStop = true;
+            rbIfCritter.Text = "Critters";
+            rbIfCritter.UseVisualStyleBackColor = true;
             // 
             // rbIfPlayer
             // 
-            this.rbIfPlayer.AutoSize = true;
-            this.rbIfPlayer.Location = new System.Drawing.Point(550, 494);
-            this.rbIfPlayer.Name = "rbIfPlayer";
-            this.rbIfPlayer.Size = new System.Drawing.Size(59, 17);
-            this.rbIfPlayer.TabIndex = 10;
-            this.rbIfPlayer.TabStop = true;
-            this.rbIfPlayer.Text = "Players";
-            this.rbIfPlayer.UseVisualStyleBackColor = true;
+            rbIfPlayer.AutoSize = true;
+            rbIfPlayer.Location = new System.Drawing.Point(550, 494);
+            rbIfPlayer.Name = "rbIfPlayer";
+            rbIfPlayer.Size = new System.Drawing.Size(62, 19);
+            rbIfPlayer.TabIndex = 10;
+            rbIfPlayer.TabStop = true;
+            rbIfPlayer.Text = "Players";
+            rbIfPlayer.UseVisualStyleBackColor = true;
             // 
             // ImagePicker
             // 
-            this.ImagePicker.Filter = "PNG Images|*.png";
-            this.ImagePicker.Title = "Select Image File";
+            ImagePicker.Filter = "PNG Images|*.png";
+            ImagePicker.Title = "Select Image File";
             // 
-            // frmSetEditNEW
+            // FrmSetEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1148, 522);
-            this.Controls.Add(this.rbIfPlayer);
-            this.Controls.Add(this.rbIfCritter);
-            this.Controls.Add(this.rbIfAny);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnNoImage);
-            this.Controls.Add(this.btnImage);
-            this.Name = "frmSetEditNEW";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "PvE Invention Set Editor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(1148, 522);
+            Controls.Add(rbIfPlayer);
+            Controls.Add(rbIfCritter);
+            Controls.Add(rbIfAny);
+            Controls.Add(label9);
+            Controls.Add(btnSave);
+            Controls.Add(btnCancel);
+            Controls.Add(groupBox3);
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
+            Controls.Add(btnNoImage);
+            Controls.Add(btnImage);
+            Name = "FrmSetEdit";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "PvE Invention Set Editor";
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((ISupportInitialize)udMaxLevel).EndInit();
+            ((ISupportInitialize)udMinLevel).EndInit();
+            groupBox2.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

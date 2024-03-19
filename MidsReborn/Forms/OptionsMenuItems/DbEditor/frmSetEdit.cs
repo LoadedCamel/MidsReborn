@@ -320,60 +320,59 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void DisplayBonusText()
         {
             var str1 = RTF.StartRTF();
-            var num1 = MySet.Bonus.Length - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            for (var index1 = 0; index1 < MySet.Bonus.Length; index1++)
             {
                 if (MySet.Bonus[index1].Index.Length > 0)
-                    str1 = str1 + RTF.Color(RTF.ElementID.Black) +
+                    str1 += RTF.Color(RTF.ElementID.Black) +
                            RTF.Bold($"{MySet.Bonus[index1].Slotted} Enhancements: ");
-                var num2 = MySet.Bonus[index1].Index.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < MySet.Bonus[index1].Index.Length; index2++)
+                {
                     if (MySet.Bonus[index1].Index[index2] > -1)
                     {
                         if (index2 > 0)
                             str1 += ", ";
-                        str1 = str1 + RTF.Color(RTF.ElementID.InventionInvert) +
-                               DatabaseAPI.Database.Power[MySet.Bonus[index1].Index[index2]].PowerName;
+                        str1 += RTF.Color(RTF.ElementID.Invention) +
+                                DatabaseAPI.Database.Power[MySet.Bonus[index1].Index[index2]].PowerName;
                     }
+                }
 
                 if (MySet.Bonus[index1].Index.Length > 0)
-                    str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, false));
+                    str1 += RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, false));
                 if (MySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
                     str1 += "(PvP)";
                 if (MySet.Bonus[index1].Index.Length > 0)
                     str1 += RTF.Crlf();
             }
 
-            var num3 = MySet.SpecialBonus.Length - 1;
-            for (var index1 = 0; index1 <= num3; ++index1)
+            for (var index1 = 0; index1 < MySet.SpecialBonus.Length; index1++)
             {
                 if (MySet.SpecialBonus[index1].Special > -1)
                 {
                     var str2 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold("Special Case Enhancement: ") +
-                               RTF.Color(RTF.ElementID.InventionInvert);
+                               RTF.Color(RTF.ElementID.Invention);
                     if (MySet.Enhancements[MySet.SpecialBonus[index1].Special] > -1)
                         str2 += DatabaseAPI.Database
                             .Enhancements[MySet.Enhancements[MySet.SpecialBonus[index1].Special]].Name;
                     var str3 = str2 + RTF.Crlf();
-                    var num2 = MySet.SpecialBonus[index1].Index.Length - 1;
-                    for (var index2 = 0; index2 <= num2; ++index2)
+                    for (var index2 = 0; index2 < MySet.SpecialBonus[index1].Index.Length; index2++)
+                    {
                         if (MySet.SpecialBonus[index1].Index[index2] > -1)
                         {
                             if (index2 > 0)
                                 str3 += ", ";
-                            str3 = str3 + RTF.Color(RTF.ElementID.InventionInvert) + DatabaseAPI.Database
+                            str3 += RTF.Color(RTF.ElementID.Invention) + DatabaseAPI.Database
                                 .Power[MySet.SpecialBonus[index1].Index[index2]].PowerName;
                         }
+                    }
 
-                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, true)) +
-                           RTF.Crlf();
+                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, true)) + RTF.Crlf();
                 }
 
                 if (MySet.SpecialBonus[index1].Index.Length > 0)
                     str1 += RTF.Crlf();
             }
 
-            rtbBonus.Rtf = str1 + RTF.EndRTF();
+            rtbBonus.Rtf = str1.Trim() + RTF.EndRTF();
         }
 
         private void DisplayIcon()
