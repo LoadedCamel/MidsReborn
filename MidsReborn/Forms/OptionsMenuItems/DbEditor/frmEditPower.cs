@@ -681,14 +681,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating) return;
 
             myPower.PowerType = (Enums.ePowerType)cbPowerType.SelectedIndex;
-            if ((myPower.ActivatePeriod > 0) & (myPower.PowerType == Enums.ePowerType.Toggle))
-            {
-                lblEndCost.Text = $"({myPower.EndCost / myPower.ActivatePeriod:##0.##}/s)";
-            }
-            else
-            {
-                lblEndCost.Text = "";
-            }
+            lblEndCost.Text = myPower.ActivatePeriod > 0 & myPower.PowerType == Enums.ePowerType.Toggle
+                ? $"({myPower.EndCost / myPower.ActivatePeriod:##0.##}/s)"
+                : "";
+
+            chkAlwaysToggle.Enabled = myPower.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_;
         }
 
         private bool CheckStaticIndex()

@@ -846,9 +846,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpBasic.Controls.Add(cbPowerType);
             tpBasic.Controls.Add(Label5);
             tpBasic.Controls.Add(Label4);
-            tpBasic.Location = new System.Drawing.Point(4, 24);
+            tpBasic.Location = new System.Drawing.Point(4, 22);
             tpBasic.Name = "tpBasic";
-            tpBasic.Size = new System.Drawing.Size(832, 411);
+            tpBasic.Size = new System.Drawing.Size(832, 413);
             tpBasic.TabIndex = 0;
             tpBasic.Text = "Power Attributes";
             tpBasic.UseVisualStyleBackColor = true;
@@ -1026,7 +1026,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             GroupBox9.Controls.Add(rbFlagAutoHit);
             GroupBox9.Location = new System.Drawing.Point(521, 9);
             GroupBox9.Name = "GroupBox9";
-            GroupBox9.Size = new System.Drawing.Size(300, 369);
+            GroupBox9.Size = new System.Drawing.Size(300, 392);
             GroupBox9.TabIndex = 103;
             GroupBox9.TabStop = false;
             GroupBox9.Text = "Adv. Attributes";
@@ -1095,7 +1095,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             clbFlags.FormattingEnabled = true;
             clbFlags.Location = new System.Drawing.Point(6, 150);
             clbFlags.Name = "clbFlags";
-            clbFlags.Size = new System.Drawing.Size(288, 191);
+            clbFlags.Size = new System.Drawing.Size(288, 225);
             clbFlags.TabIndex = 10;
             clbFlags.ItemCheck += clbFlags_ItemCheck;
             // 
@@ -1695,7 +1695,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnhName
             // 
-            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             lblEnhName.Location = new System.Drawing.Point(21, 78);
             lblEnhName.Name = "lblEnhName";
             lblEnhName.Size = new System.Drawing.Size(316, 19);
@@ -1725,7 +1725,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblInvSet
             // 
-            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             lblInvSet.Location = new System.Drawing.Point(24, 78);
             lblInvSet.Name = "lblInvSet";
             lblInvSet.Size = new System.Drawing.Size(316, 19);
