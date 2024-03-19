@@ -76,6 +76,14 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = "power.base>activatetime",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
                 Keyword = "power.base>areafactor",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
@@ -329,6 +337,22 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.ExpressionNumeric,
                 SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "GCMActive(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "GCMScale(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
             }
         };
 
@@ -375,8 +399,22 @@ namespace Mids_Reborn.Core
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
                 { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
-                { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) }
+                { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
+                { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(e.Groups[1].Value) },
+                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) }
             };
+        }
+
+        private static string CheckGCM(string gcm)
+        {
+            return MidsContext.Character.ModifyEffects.ContainsKey(gcm) ? "1" : "0";
+        }
+
+        private static string GCMScale(string gcm)
+        {
+            return MidsContext.Character.ModifyEffects.TryGetValue(gcm, out var gcmScale)
+                ? $"{gcmScale}"
+                : "0";
         }
 
         private static string ModifierCaster(IEffect effect)
