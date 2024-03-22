@@ -904,6 +904,8 @@ namespace Mids_Reborn.Controls
 
                                 HoverId = -1;
                                 EmptyHover?.Invoke();
+
+                                break;
                             }
 
                             var num = 0;

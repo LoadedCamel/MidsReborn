@@ -1302,33 +1302,36 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillTab_Basic()
         {
-            var power = myPower;
-            txtNameDisplay.Text = power.DisplayName;
-            txtNamePower.Text = power.PowerName;
-            cbNameGroup.Text = power.GroupName;
-            cbNameSet.Text = power.SetName;
+            myPower.VariableStart = (int)Math.Clamp(myPower.VariableStart, udScaleStart.Minimum, udScaleStart.Maximum);
+            myPower.VariableMin = (int)Math.Clamp(myPower.VariableMin, udScaleMin.Minimum, udScaleMin.Maximum);
+            myPower.VariableMax = (int)Math.Clamp(myPower.VariableMax, udScaleMax.Minimum, udScaleMax.Maximum);
+
+            txtNameDisplay.Text = myPower.DisplayName;
+            txtNamePower.Text = myPower.PowerName;
+            cbNameGroup.Text = myPower.GroupName;
+            cbNameSet.Text = myPower.SetName;
             DisplayNameData();
-            txtDescLong.Text = power.DescLong;
-            txtDescShort.Text = power.DescShort;
-            udScaleStart.Value = new decimal(power.VariableStart);
-            udScaleMin.Value = new decimal(power.VariableMin);
-            udScaleMax.Value = new decimal(power.VariableMax);
-            txtScaleName.Text = power.VariableName;
-            chkScale.Checked = power.VariableEnabled;
-            overideScale.Checked = power.VariableOverride;
-            chkBuffCycle.Checked = power.ClickBuff;
-            chkAlwaysToggle.Checked = power.AlwaysToggle;
+            txtDescLong.Text = myPower.DescLong;
+            txtDescShort.Text = myPower.DescShort;
+            udScaleStart.Value = new decimal(myPower.VariableStart);
+            udScaleMin.Value = new decimal(myPower.VariableMin);
+            udScaleMax.Value = new decimal(myPower.VariableMax);
+            txtScaleName.Text = myPower.VariableName;
+            chkScale.Checked = myPower.VariableEnabled;
+            overideScale.Checked = myPower.VariableOverride;
+            chkBuffCycle.Checked = myPower.ClickBuff;
+            chkAlwaysToggle.Checked = myPower.AlwaysToggle;
             chkGraphFix.Checked = myPower.SkipMax;
             cbInherentType.SelectedIndex = (int)myPower.InherentType;
             //chkAltSub.Checked = power.SubIsAltColor;
-            chkSubInclude.Checked = power.IncludeFlag;
-            chkSortOverride.Checked = power.SortOverride;
-            txtVisualLocation.Text = $"{power.DisplayLocation}";
-            chkSummonStealEffects.Checked = power.AbsorbSummonEffects;
-            chkSummonStealAttributes.Checked = power.AbsorbSummonAttributes;
-            chkSummonDisplayEntity.Checked = power.ShowSummonAnyway;
+            chkSubInclude.Checked = myPower.IncludeFlag;
+            chkSortOverride.Checked = myPower.SortOverride;
+            txtVisualLocation.Text = $"{myPower.DisplayLocation}";
+            chkSummonStealEffects.Checked = myPower.AbsorbSummonEffects;
+            chkSummonStealAttributes.Checked = myPower.AbsorbSummonAttributes;
+            chkSummonDisplayEntity.Checked = myPower.ShowSummonAnyway;
             chkNoAUReq.Checked = myPower.NeverAutoUpdateRequirements;
-            cbForcedClass.SelectedIndex = DatabaseAPI.NidFromUidClass(power.ForcedClass) + 1;
+            cbForcedClass.SelectedIndex = DatabaseAPI.NidFromUidClass(myPower.ForcedClass) + 1;
             chkNoAutoUpdate.Checked = myPower.NeverAutoUpdate;
             chkHidden.Visible = MidsContext.Config.MasterMode;
             chkHidden.Checked = myPower.HiddenPower;
