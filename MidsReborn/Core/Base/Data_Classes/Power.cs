@@ -11,6 +11,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     public class Power : IPower, IComparable
     {
         private bool Contains;
+        public bool AppliedPowersOverride { get; set; } = false;
+        public bool AbsorbedPetEffects { get; set; } = false;
+        public bool AppliedExecutes { get; set; } = false;
+        public bool AppliedSubPowers { get; set; } = false;
+
         public Power()
         {
             DescLong = string.Empty;
@@ -43,12 +48,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             BoostsAllowed = new string[0];
             Requires = new Requirement();
             var num = -2;
-            for (var index = 0; index <= DatabaseAPI.Database.Power.Length - 1; ++index)
-                if (DatabaseAPI.Database.Power[index] != null && DatabaseAPI.Database.Power[index].StaticIndex > -1 &&
-                    DatabaseAPI.Database.Power[index].StaticIndex > num)
+            foreach (var p in DatabaseAPI.Database.Power)
+            {
+                if (p is {StaticIndex: > -1} && p.StaticIndex > num)
                 {
-                    num = DatabaseAPI.Database.Power[index].StaticIndex;
+                    num = p.StaticIndex;
                 }
+            }
 
             StaticIndex = num + 1;
             Active = false;
@@ -590,8 +596,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public float AoEModifier => EffectArea != Enums.eEffectArea.Cone
-            ? EffectArea != Enums.eEffectArea.Sphere ? 1f : (float) (1.0 + Radius * 0.150000005960464)
-            : (float) (1.0 + Radius * 0.150000005960464 - Radius * 0.000366669992217794 * (360 - Arc));
+            ? EffectArea != Enums.eEffectArea.Sphere ? 1 : (float) (1 + Radius * 0.150000005960464)
+            : (float) (1 + Radius * 0.150000005960464 - Radius * 0.000366669992217794 * (360 - Arc));
 
         public int DisplayLocation
         {
@@ -601,13 +607,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool HasMutexID(int index)
         {
-            for (var index1 = 0; index1 <= NGroupMembership.Length - 1; ++index1)
-                if (NGroupMembership[index1] == index)
-                {
-                    return true;
-                }
-
-            return false;
+            return NGroupMembership.Any(t => t == index);
         }
 
         public bool IsBasePetPower => Effects.Any(x => x.EffectType is Enums.eEffectType.EntCreate);
@@ -2454,9 +2454,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return;
             }
             var intList = new List<int>();
-            for (var index = 0; index < Effects.Length; ++index)
+            for (var index = 0; index < Effects.Length; index++)
             {
-                if (Effects[index].EffectType == Enums.eEffectType.EntCreate && Effects[index].nSummon > -1 && Math.Abs(Effects[index].Probability - 1f) < 0.01 && DatabaseAPI.Database.Entities.Length > Effects[index].nSummon)
+                if (Effects[index].EffectType == Enums.eEffectType.EntCreate && Effects[index].nSummon > -1 && Math.Abs(Effects[index].Probability - 1) < 0.01 && DatabaseAPI.Database.Entities.Length > Effects[index].nSummon)
                 {
                     intList.Add(index);
                 }
@@ -2472,7 +2472,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var effect = Effects[t];
                 var nSummon1 = effect.nSummon;
                 var stacking = 1;
-                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
+                if (VariableEnabled && effect.VariableModified && hIdx > -1 && MidsContext.Character != null && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                 {
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;
                 }
@@ -2549,6 +2549,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
                     }
                 }
+
+                AbsorbedPetEffects = true;
             }
         }
 
@@ -2971,6 +2973,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 fx.SetPower(this);
             }
+
+            AppliedExecutes = true;
         }
 
         public List<IEffect>? ProcessExecutesInner(IPower power = null, int rLevel = 0)
