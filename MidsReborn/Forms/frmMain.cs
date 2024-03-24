@@ -3266,11 +3266,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.NIdPower);
-            var llBounds = new Rectangle(
-                llPool0.Bounds.X + poolsPanel.Bounds.X,
-                llPool0.Bounds.Y + poolsPanel.Bounds.Y,
-                llPool0.Bounds.Width,
-                llPool0.Bounds.Height);
+            var llBounds = llPool0.Bounds with {X = llPool0.Bounds.X + poolsPanel.Bounds.X, Y = llPool0.Bounds.Y + poolsPanel.Bounds.Y};
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
@@ -3303,11 +3299,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.NIdPower);
-            var llBounds = new Rectangle(
-                llPool1.Bounds.X + poolsPanel.Bounds.X,
-                llPool1.Bounds.Y + poolsPanel.Bounds.Y,
-                llPool1.Bounds.Width,
-                llPool1.Bounds.Height);
+            var llBounds = llPool1.Bounds with {X = llPool1.Bounds.X + poolsPanel.Bounds.X, Y = llPool1.Bounds.Y + poolsPanel.Bounds.Y};
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
@@ -3340,11 +3332,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.NIdPower);
-            var llBounds = new Rectangle(
-                llPool2.Bounds.X + poolsPanel.Bounds.X,
-                llPool2.Bounds.Y + poolsPanel.Bounds.Y,
-                llPool2.Bounds.Width,
-                llPool2.Bounds.Height);
+            var llBounds = llPool2.Bounds with {X = llPool2.Bounds.X + poolsPanel.Bounds.X, Y = llPool2.Bounds.Y + poolsPanel.Bounds.Y};
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
@@ -3377,11 +3365,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.NIdPower);
-            var llBounds = new Rectangle(
-                llPool3.Bounds.X + poolsPanel.Bounds.X,
-                llPool3.Bounds.Y + poolsPanel.Bounds.Y,
-                llPool3.Bounds.Width,
-                llPool3.Bounds.Height);
+            var llBounds = llPool3.Bounds with {X = llPool3.Bounds.X + poolsPanel.Bounds.X, Y = llPool3.Bounds.Y + poolsPanel.Bounds.Y};
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
@@ -3744,7 +3728,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pnlGFX_MouseMove(object sender, MouseEventArgs e)
         {
-            if ((e.Button == MouseButtons.Left) & pnlGFX.AllowDrop && Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
+            if (e.Button == MouseButtons.Left & pnlGFX.AllowDrop && Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
             {
                 if (dragStartSlot == 0)
                 {
@@ -3786,7 +3770,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (drawing == null) return;
                 var index = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 var sIDX = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                if ((index < 0) | (index >= MidsContext.Character.CurrentBuild.Powers.Count))
+                if (index < 0 | index >= MidsContext.Character.CurrentBuild.Powers.Count)
                 {
                     HidePopup();
                 }
@@ -3794,13 +3778,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 {
                     var e1 = new Point(e.X + 10, e.Y + 10);
                     ShowPopup(index, -1, sIDX, e1, new Rectangle());
-                    if (MidsContext.Character.CanPlaceSlot & (MainModule.MidsController.Toon.SlotCheck(MidsContext.Character.CurrentBuild.Powers[index]) > -1))
+                    if (MidsContext.Character.CanPlaceSlot & MainModule.MidsController.Toon.SlotCheck(MidsContext.Character.CurrentBuild.Powers[index]) > -1)
                     {
                         drawing.HighlightSlot(index);
-                        if ((index > -1) & (drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle))
-                            pnlGFX.Cursor = Cursors.Hand;
-                        else
-                            pnlGFX.Cursor = Cursors.Default;
+                        pnlGFX.Cursor = index > -1 & drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle
+                            ? Cursors.Hand
+                            : Cursors.Default;
                     }
                     else
                     {
@@ -3808,7 +3791,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         drawing.HighlightSlot(-1);
                     }
 
-                    if (index <= -1 || !((index != LastIndex) | (LastEnhIndex != sIDX)))
+                    if (index <= -1 || !(index != LastIndex | LastEnhIndex != sIDX))
                         return;
                     LastIndex = index;
                     LastEnhIndex = sIDX;
@@ -3885,14 +3868,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                         else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                         {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
-                            }
-                            else
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
-                            }
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
                         }
 
                         EnhancementModified();
@@ -3924,14 +3900,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         }
                         else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                         {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
-                            }
-                            else
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
-                            }
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
                         }
                         else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                         {
@@ -4852,11 +4821,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private Rectangle raGetPoolRect(int Index)
+        private Rectangle raGetPoolRect(int index)
         {
             Label label;
             ListLabelV3 ll;
-            switch (Index)
+            switch (index)
             {
                 case 0:
                     label = lblPool1;
@@ -4898,13 +4867,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return iVal1 <= iVal2 ? iVal2 : iVal1;
         }
 
-        private void raMovePool(int Index, int X, int Y)
+        private void raMovePool(int index, int x, int y)
         {
             Label label1;
             ComboBox comboBox;
             Label label2;
             ListLabelV3 ll;
-            switch (Index)
+            switch (index)
             {
                 case 0:
                     label1 = lblPool1;
@@ -4940,7 +4909,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     return;
             }
 
-            label1.Location = new Point(X, Y);
+            label1.Location = new Point(x, y);
 
             var point = new Point(label1.Location.X, label1.Location.Y);
             point.Y += label1.Height;
@@ -4994,53 +4963,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llPool3.Height = llPool3.DesiredHeight;
             llAncillary.Height = llAncillary.DesiredHeight;
             FixPrimarySecondaryHeight();
-            var num1 = llPool0.Top + cbPool0.Height * 4 + lblPool1.Height * 4;
-            var num2 = 3 * llAncillary.ActualLineHeight;
-            if (num1 + llPool0.Height + llPool1.Height + llPool2.Height + llPool3.Height + llAncillary.Height >
-                ClientSize.Height)
+            var llList = new List<ListLabelV3> {llAncillary, llPool3, llPool2, llPool1, llPool0};
+
+            foreach (var ll in llList)
             {
-                var num3 = ClientSize.Height - num1 - llPool0.Height - llPool1.Height - llPool2.Height - llPool3.Height;
-                if (num3 < num2)
-                    num3 = num2;
-                if (llAncillary.Height > num3)
-                    llAncillary.Height = num3;
-                if (num1 + llPool0.Height + llPool1.Height + llPool2.Height + llPool3.Height + llAncillary.Height >
-                    ClientSize.Height)
-                {
-                    var num4 = ClientSize.Height - num1 - llPool0.Height - llPool1.Height - llPool2.Height -
-                               llAncillary.Height;
-                    if (num4 < num2)
-                        num4 = num2;
-                    llPool3.Height = num4;
-                    if (num1 + llPool0.Height + llPool1.Height + llPool2.Height + llPool3.Height + llAncillary.Height >
-                        ClientSize.Height)
-                    {
-                        var num5 = ClientSize.Height - num1 - llPool0.Height - llPool1.Height - llPool3.Height -
-                                   llAncillary.Height;
-                        if (num5 < num2)
-                            num5 = num2;
-                        llPool2.Height = num5;
-                        if (num1 + llPool0.Height + llPool1.Height + llPool2.Height + llPool3.Height +
-                            llAncillary.Height > ClientSize.Height)
-                        {
-                            var num6 = ClientSize.Height - num1 - llPool0.Height - llPool2.Height - llPool3.Height -
-                                       llAncillary.Height;
-                            if (num6 < num2)
-                                num6 = num2;
-                            llPool1.Height = num6;
-                            if (num1 + llPool0.Height + llPool1.Height + llPool2.Height + llPool3.Height +
-                                llAncillary.Height >
-                                ClientSize.Height)
-                            {
-                                var num7 = ClientSize.Height - num1 - llPool1.Height - llPool2.Height - llPool3.Height -
-                                           llAncillary.Height;
-                                if (num7 < num2)
-                                    num7 = num2;
-                                llPool0.Height = num7;
-                            }
-                        }
-                    }
-                }
+                //ll.Height = Math.Max(ll.DesiredHeight, 3 * llAncillary.ActualLineHeight);
+                ll.Size = ll.Size with {Height = Math.Max(ll.DesiredHeight + 5, 3 * llAncillary.ActualLineHeight)};
+
+                //Debug.WriteLine($"raToNormal(): {ll.Name}.Height = {ll.Height}/{ll.Size.Height} | {ll.Name}.DesiredHeight = {ll.DesiredHeight}, min = {3 * llAncillary.ActualLineHeight}");
             }
 
             var poolRect = raGetPoolRect(0);
@@ -5056,6 +4986,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llPool2.SuspendRedraw = false;
             llPool3.SuspendRedraw = false;
             llAncillary.SuspendRedraw = false;
+            
             return false;
         }
 

@@ -141,7 +141,7 @@ namespace Mids_Reborn.Controls
             get
             {
                 Color result;
-                if ((Item.ItemState < LlItemState.Enabled) | (Item.ItemState > LlItemState.Heading))
+                if (Item.ItemState < LlItemState.Enabled | Item.ItemState > LlItemState.Heading)
                     result = Color.Black;
                 else
                     result = _colors[(int) Item.ItemState];
@@ -150,7 +150,7 @@ namespace Mids_Reborn.Controls
             }
             set
             {
-                if ((Item.ItemState < LlItemState.Enabled) | (Item.ItemState > LlItemState.Heading))
+                if (Item.ItemState < LlItemState.Enabled | Item.ItemState > LlItemState.Heading)
                     return;
                 _colors[(int) Item.ItemState] = value;
                 Draw();
@@ -182,7 +182,7 @@ namespace Mids_Reborn.Controls
             get => _xPadding;
             set
             {
-                if (!((value >= 0) & checked(value * 2 < Width - 5)))
+                if (!(value >= 0 & checked(value * 2 < Width - 5)))
                     return;
                 _xPadding = value;
                 Draw();
@@ -194,7 +194,7 @@ namespace Mids_Reborn.Controls
             get => _yPadding;
             set
             {
-                if (!((value >= 0) & (value < Height / 3.0)))
+                if (!(value >= 0 & value < Height / 3.0))
                     return;
                 _yPadding = value;
                 SetLineHeight();
@@ -281,7 +281,7 @@ namespace Mids_Reborn.Controls
             get => _scrollWidth;
             set
             {
-                if ((value > 0) & (value < Width / 2.0)) _scrollWidth = value;
+                if (value > 0 & value < Width / 2.0) _scrollWidth = value;
 
                 Recalculate();
                 Draw();
@@ -312,13 +312,13 @@ namespace Mids_Reborn.Controls
         {
             get
             {
-                if ((Item.Index < 0) | (Item.Index > checked(_items.Count - 1)))
+                if (Item.Index < 0 | Item.Index > checked(_items.Count - 1))
                     return new ListLabelItemV3();
                 return _items[Item.Index];
             }
             set
             {
-                if ((Item.Index < 0) | (Item.Index > checked(_items.Count - 1)))
+                if (Item.Index < 0 | Item.Index > checked(_items.Count - 1))
                     return;
                 _items[Item.Index] = new ListLabelItemV3(value);
                 Draw();
@@ -326,8 +326,12 @@ namespace Mids_Reborn.Controls
         }
 
         public int ContentHeight => Height;
+        private const int MultilineTextInterline = 4;
 
-        public int DesiredHeight => checked(GetTotalLineCount() * ActualLineHeight);
+        public int DesiredHeight => _items
+            .Select(item => item.WrappedText.Split("\r\n").Length)
+            .Select(lines => lines * ActualLineHeight + (lines > 1 ? (lines - 1) * MultilineTextInterline : 0))
+            .Sum();
 
         public int ActualLineHeight { get; set; }
 
@@ -431,14 +435,14 @@ namespace Mids_Reborn.Controls
                 
                 var bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height);
                 RecalcLines(bRect);
-                if ((_scrollSteps > 0) | IsExpanded)
+                if (_scrollSteps > 0 | IsExpanded)
                 {
                     bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height - (_scrollWidth + _yPadding));
                     RecalcLines(bRect);
                 }
 
                 if (expanded || _scrollSteps <= 0) return;
-                var num = (_canExpand) ? _scrollWidth + _yPadding : 0;
+                var num = _canExpand ? _scrollWidth + _yPadding : 0;
 
                 bRect = new Rectangle(_xPadding, 0, Width - (_xPadding * 2 + _scrollWidth), Height - num);
                 RecalcLines(bRect);
@@ -473,7 +477,7 @@ namespace Mids_Reborn.Controls
                 var strWords = _items[index].Text.Split(" ".ToCharArray());
                 var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
                 var font = new Font(Font.FontFamily, Font.Size, (FontStyle)_items[index].FontFlags, GraphicsUnit.Point);
-                var str = (_items[index].ItemState == LlItemState.Heading) ? "~  ~" : "";
+                var str = _items[index].ItemState == LlItemState.Heading ? "~  ~" : "";
                 var text = strWords[0];
 
                 for (var i = 1; i < strWords.Length; i++)
@@ -513,12 +517,12 @@ namespace Mids_Reborn.Controls
             if (_disableRedraw) return;
             _bxBuffer ??= new ExtendedBitmap(Width, Height);
 
-            if ((_bxBuffer.Size.Width != Width) | (_bxBuffer.Size.Height != Height))
+            if (_bxBuffer.Size.Width != Width | _bxBuffer.Size.Height != Height)
             {
                 _bxBuffer.Dispose();
                 _bxBuffer = null;
                 GC.Collect();
-                if ((Height == 0) | (Width == 0)) return;
+                if (Height == 0 | Width == 0) return;
 
                 _bxBuffer = new ExtendedBitmap(Width, Height);
             }
@@ -560,23 +564,23 @@ namespace Mids_Reborn.Controls
             checked
             {
                 EMouseTarget result;
-                if ((x >= _textArea.Left) & (x <= _textArea.Right) & (y <= _textArea.Bottom))
+                if (x >= _textArea.Left & x <= _textArea.Right & y <= _textArea.Bottom)
                 {
                     result = EMouseTarget.Item;
                 }
-                else if ((x >= _textArea.Left) & (x <= _textArea.Right) & (y > _textArea.Bottom))
+                else if (x >= _textArea.Left & x <= _textArea.Right & y > _textArea.Bottom)
                 {
                     result = EMouseTarget.ExpandButton;
                 }
-                else if ((x > _textArea.Right) & (y <= _scrollWidth + _yPadding))
+                else if (x > _textArea.Right & y <= _scrollWidth + _yPadding)
                 {
                     result = EMouseTarget.UpButton;
                 }
-                else if ((x > _textArea.Right) & (y >= Height - (_scrollWidth + _yPadding)))
+                else if (x > _textArea.Right & y >= Height - (_scrollWidth + _yPadding))
                 {
                     result = EMouseTarget.DownButton;
                 }
-                else if (!((x > _textArea.Right) & (_scrollSteps > 0)))
+                else if (!(x > _textArea.Right & _scrollSteps > 0))
                 {
                     result = EMouseTarget.None;
                 }
@@ -600,12 +604,12 @@ namespace Mids_Reborn.Controls
 
         private void ListLabelV3_MouseWheel(object sender, MouseEventArgs e)
         {
-            if ((e.Delta > 0) & (_scrollSteps > 0) & (_scrollOffset > 0))
+            if (e.Delta > 0 & _scrollSteps > 0 & _scrollOffset > 0)
             {
                 _scrollOffset--;
                 Draw();
             }
-            else if ((e.Delta < 0) & (_scrollOffset + 1 < _scrollSteps))
+            else if (e.Delta < 0 & _scrollOffset + 1 < _scrollSteps)
             {
                 _scrollOffset++;
                 Draw();
@@ -616,7 +620,7 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control | Keys.Alt)))
+                if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control | Keys.Alt))
                 {
                     _disableEvents = false;
                     _disableRedraw = false;
@@ -645,17 +649,17 @@ namespace Mids_Reborn.Controls
                                 var num2 = 0;
                                 for (var i = _scrollOffset; i < itemAtY; i++) num2 += _items[i].ItemHeight;
 
-                                if (((num2 + _items[itemAtY].ItemHeight >= e.Y) &
-                                     (num2 + _items[itemAtY].ItemHeight <= _textArea.Height)) |
-                                    ((_items[itemAtY].LineCount > 1) & (num2 + ActualLineHeight >= e.Y) &
-                                     (num2 + ActualLineHeight <= _textArea.Height)))
+                                if (num2 + _items[itemAtY].ItemHeight >= e.Y &
+                                    num2 + _items[itemAtY].ItemHeight <= _textArea.Height |
+                                    _items[itemAtY].LineCount > 1 & num2 + ActualLineHeight >= e.Y &
+                                    num2 + ActualLineHeight <= _textArea.Height)
                                     ItemClick?.Invoke(_items[itemAtY], e.Button);
                             }
 
                             break;
                         }
                         case EMouseTarget.UpButton:
-                            if ((_scrollSteps > 0) & (_scrollOffset > 0))
+                            if (_scrollSteps > 0 & _scrollOffset > 0)
                             {
                                 _scrollOffset--;
                                 Draw();
@@ -663,7 +667,7 @@ namespace Mids_Reborn.Controls
 
                             break;
                         case EMouseTarget.DownButton:
-                            if ((_scrollSteps > 0) & (_scrollOffset + 1 < _scrollSteps))
+                            if (_scrollSteps > 0 & _scrollOffset + 1 < _scrollSteps)
                             {
                                 _scrollOffset++;
                                 Draw();
@@ -1165,7 +1169,7 @@ namespace Mids_Reborn.Controls
                     }
 
                     _bxBuffer.Graphics.DrawString(tl, font, new SolidBrush(_colors[(int)_items[index].ItemState]), rectangle, stringFormat);
-                    rectangle.Offset(0, (int)Math.Ceiling(font.Size) + 4);
+                    rectangle.Offset(0, (int)Math.Ceiling(font.Size) + MultilineTextInterline);
                 }
             }
         }
