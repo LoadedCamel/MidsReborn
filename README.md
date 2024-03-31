@@ -2,7 +2,7 @@
 A character build planner for City of Heroes built upon Windows Forms using C# .NET6
 
 #### Official Discord Server
-https://discord.gg/eAUuNQ3nxk
+https://discord.gg/mids-reborn-593336669004890113
 
 #### Official Twitter
 https://twitter.com/midsreborn
@@ -11,7 +11,7 @@ https://twitter.com/midsreborn
 
 #### Windows
    * Windows 10 1803 or higher (Windows 11 recommended)
-   * [.NET6](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.8-windows-x64-installer)
+   * [Latest .NET 6 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
    
 #### MacOS & Linux
    * This type of setup is not recommended (Not Officially Supported)
