@@ -1,5 +1,5 @@
 #### Description
-A character build planner for City of Heroes built upon Windows Forms using C# .NET6
+A character build planner for City of Heroes built upon Windows Forms using .NET 6+
 
 #### Official Discord Server
 https://discord.gg/mids-reborn-593336669004890113
