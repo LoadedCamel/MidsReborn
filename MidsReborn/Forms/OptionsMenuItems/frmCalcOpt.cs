@@ -338,6 +338,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             chkDimWindowBorders.Checked = config.DimWindowStyleColors;
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
+            cbWordwrapMode.SelectedIndex = (int)config.PowerListsWordwrapMode;
             ResumeLayout();
         }
 
@@ -643,18 +644,20 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
         private void Status_MouseHover(object sender, EventArgs e)
         {
-            var control = sender as Control;
+            /*var control = sender as Control;
             var controlName = control?.Name;
-            if (!string.IsNullOrWhiteSpace(controlName))
+            if (string.IsNullOrWhiteSpace(controlName))
             {
-                switch (controlName)
-                {
-                    case "FileAssocStatus":
-                        break;
-                    case "SchemaAssocStatus":
-                        break;
-                }
+                return;
             }
+
+            switch (controlName)
+            {
+                case "FileAssocStatus":
+                    break;
+                case "SchemaAssocStatus":
+                    break;
+            }*/
         }
 
         private void rbEnhPopupCloseStyle1_CheckedChanged(object sender, EventArgs e)
@@ -673,6 +676,21 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             if (!textBox.Text.All(char.IsDigit))
             {
                 textBox.Text = "3";
+            };
+        }
+
+        private void cbWordwrapMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (MidsContext.Config == null)
+            {
+                return;
+            }
+
+            MidsContext.Config.PowerListsWordwrapMode = cbWordwrapMode.SelectedIndex switch
+            {
+                1 => Enums.WordwrapMode.New,
+                2 => Enums.WordwrapMode.UseEllipsis,
+                _ => Enums.WordwrapMode.Legacy
             };
         }
     }

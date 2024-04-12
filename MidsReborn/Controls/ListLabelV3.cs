@@ -6,7 +6,9 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Controls
@@ -464,46 +466,140 @@ namespace Mids_Reborn.Controls
 
         private void WrapString(int index)
         {
-            if (string.IsNullOrEmpty(_items[index].Text)) return;
+            if (string.IsNullOrEmpty(_items[index].Text))
+            {
+                return;
+            }
 
             InitBuffer();
             var num = 1;
+            var strWords = _items[index].Text.Split(' ');
+            var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
+            var font = MidsContext.Config.PowerListsWordwrapMode is Enums.WordwrapMode.Legacy
+                ? new Font(Font, (FontStyle)_items[index].FontFlags)
+                : new Font(Font.FontFamily, Font.Size, (FontStyle)_items[index].FontFlags, GraphicsUnit.Point);
+            var str = _items[index].ItemState == LlItemState.Heading ? "~  ~" : "";
+            var text = strWords[0];
+            var layoutArea = new SizeF(1024f, Height);
+            
             if (!_items[index].Text.Contains(' '))
             {
-                _items[index].WrappedText = _items[index].Text;
+                // UseEllipsis mode needs some parsing here.
+                if (MidsContext.Config.PowerListsWordwrapMode is not Enums.WordwrapMode.UseEllipsis)
+                {
+                    _items[index].WrappedText = _items[index].Text;
+                }
+                else
+                {
+                    text = "";
+                    var fullFit = true;
+                    for (var i = 0; i < _items[index].Text.Length; i++)
+                    {
+                        var text2 = $"{text}{((i == 0) ? " " : "")}{_items[index].Text.Substring(i, 1)}";
+                        var tw = (int)Math.Ceiling(_bxBuffer.Graphics.MeasureString(_items[index].ItemState == LlItemState.Heading ? $"~ {text2.TrimEnd()}... ~" : $"{text2.TrimEnd()}...", font, layoutArea, stringFormat).Width);
+                        if (tw <= _textArea.Width)
+                        {
+                            text = text2;
+                        }
+                        else
+                        {
+                            fullFit = false;
+                            break;
+                        }
+                    }
+
+                    if (!fullFit)
+                    {
+                        text = $"{text.TrimEnd()}...";
+                    }
+
+                    _items[index].WrappedText = _items[index].ItemState == LlItemState.Heading
+                        ? $"~ {text} ~"
+                        : text;
+                }
             }
             else
             {
-                var strWords = _items[index].Text.Split(" ".ToCharArray());
-                var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
-                var font = new Font(Font.FontFamily, Font.Size, (FontStyle)_items[index].FontFlags, GraphicsUnit.Point);
-                var str = _items[index].ItemState == LlItemState.Heading ? "~  ~" : "";
-                var text = strWords[0];
-
-                for (var i = 1; i < strWords.Length; i++)
+                switch (MidsContext.Config.PowerListsWordwrapMode)
                 {
-                    var text2 = $"{text} {strWords[i]}{str}";
-                    var layoutArea = new SizeF(1024f, Height);
-                    if (Math.Ceiling(_bxBuffer.Graphics.MeasureString(text2, font, layoutArea, stringFormat).Width) > _textArea.Width)
+                    case Enums.WordwrapMode.Legacy:
+                    case Enums.WordwrapMode.New:
+                        for (var i = 1; i < strWords.Length; i++)
+                        {
+                            var text2 = $"{text} {strWords[i]}{str}";
+                            
+                            if (Math.Ceiling(_bxBuffer.Graphics.MeasureString(text2, font, layoutArea, stringFormat).Width) > _textArea.Width)
+                            {
+                                text = _items[index].ItemState == LlItemState.Heading
+                                    ? $"{text} ~\r\n~ {strWords[i]}"
+                                    : $"{text}\r\n {strWords[i]}";
+                                num++;
+                            }
+                            else
+                            {
+                                text = $"{text} {strWords[i]}";
+                            }
+                        }
 
-                    {
-                        text = _items[index].ItemState == LlItemState.Heading
-                            ? $"{text} ~\r\n~ {strWords[i]}"
-                            : $"{text}\r\n {strWords[i]}";
-                        num++;
-                    }
-                    else
-                    {
-                        text = $"{text} {strWords[i]}";
-                    }
+                        break;
+
+                    case Enums.WordwrapMode.UseEllipsis:
+                        text = "";
+                        var k = 0;
+                        var fullFit = true;
+                        strWords = _items[index].Text.Trim(" ~".ToCharArray()).Split(' ');
+                        for (k = 0; k < strWords.Length; k++)
+                        {
+                            var text2 = $"{text}{((k == 0) ? "" : " ")}{strWords[k]}";
+                            var tw = (int)Math.Ceiling(_bxBuffer.Graphics.MeasureString(_items[index].ItemState == LlItemState.Heading ? $"~ {text2}... ~" : text2, font, layoutArea, stringFormat).Width);
+                            if (tw <= _textArea.Width)
+                            {
+                                text = text2;
+                            }
+                            else
+                            {
+                                fullFit = false;
+                                break;
+                            }
+                        }
+
+                        if (!fullFit)
+                        {
+                            fullFit = true;
+                            for (var i = 0; i < strWords[k].Length; i++)
+                            {
+                                var text2 = $"{text}{((i == 0) ? " " : "")}{strWords[k].Substring(i, 1)}";
+                                var tw = (int)Math.Ceiling(_bxBuffer.Graphics.MeasureString(_items[index].ItemState == LlItemState.Heading ? $"~ {text2.TrimEnd()}... ~" : $"{text2.TrimEnd()}...", font, layoutArea, stringFormat).Width);
+                                if (tw <= _textArea.Width)
+                                {
+                                    text = text2;
+                                }
+                                else
+                                {
+                                    fullFit = false;
+                                    break;
+                                }
+                            }
+
+                            if (!fullFit)
+                            {
+                                text = $"{text.TrimEnd()}...";
+                            }
+                        }
+
+                        if (_items[index].ItemState == LlItemState.Heading)
+                        {
+                            text = $"~ {text} ~";
+                        }
+
+                        break;
                 }
 
                 _items[index].WrappedText = text;
             }
 
             _items[index].WrappedText = _items[index].WrappedText.Replace("  ", " ");
-
-            if (_items[index].ItemState == LlItemState.Heading)
+            if (_items[index].ItemState == LlItemState.Heading & _items[index].WrappedText[0] != '~')
             {
                 _items[index].WrappedText = $"~ {_items[index].WrappedText} ~";
             }
