@@ -6084,9 +6084,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void OnRelativeClick(Enums.eEnhRelative newVal)
         {
             if (MainModule.MidsController.Toon == null)
+            {
                 return;
+            }
+
+            if (MidsContext.Character?.CurrentBuild == null)
+            {
+                return;
+            }
+
             if (MidsContext.Character.CurrentBuild.SetEnhRelativeLevels(newVal))
+            {
                 I9Picker.Ui.Initial.RelLevel = newVal;
+            }
+
             info_Totals();
             DoRedraw();
         }
