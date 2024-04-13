@@ -201,6 +201,7 @@ namespace Mids_Reborn.Forms
                                            !CommandArgs[0].Contains("mrb://"):
                         ProcessedFromCommand = false;
                         MidsContext.Config.LastFileName = fileLoad;
+                        MidsContext.Config.DisableLoadLastFileOnStart = false;
                         break;
                     default:
                         if (Uri.TryCreate(CommandArgs[0], UriKind.Absolute, out var uri) &&
@@ -252,10 +253,10 @@ namespace Mids_Reborn.Forms
                 // Restore config variables to their original values.
                 case true:
                     MidsContext.Config.LastFileName = prevLastFileNameCfg;
-                    MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
                     break;
             }
 
+            MidsContext.Config.DisableLoadLastFileOnStart = prevLoadLastCfg;
 
             if (comLoad)
             {
