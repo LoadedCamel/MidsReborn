@@ -3716,11 +3716,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             dragStartSlot = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
         }
 
-        private void pnlGFX_MouseEnter(object sender, EventArgs e)
-        {
-            pnlGFXFlow.Focus();
-        }
-
         private void pnlGFX_MouseLeave(object sender, EventArgs e)
         {
             HidePopup();

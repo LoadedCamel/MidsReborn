@@ -1917,7 +1917,6 @@ namespace Mids_Reborn.Forms
             this.pnlGFX.DragOver += new System.Windows.Forms.DragEventHandler(this.pnlGFX_DragOver);
             this.pnlGFX.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pnlGFX_MouseDoubleClick);
             this.pnlGFX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlGFX_MouseDown);
-            this.pnlGFX.MouseEnter += new System.EventHandler(this.pnlGFX_MouseEnter);
             this.pnlGFX.MouseLeave += new System.EventHandler(this.pnlGFX_MouseLeave);
             this.pnlGFX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlGFX_MouseMove);
             this.pnlGFX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlGFX_MouseUp);
