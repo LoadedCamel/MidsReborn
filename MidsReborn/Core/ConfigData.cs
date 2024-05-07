@@ -157,6 +157,8 @@ namespace Mids_Reborn.Core
         public bool PopupRecipes { get; set; }
         public bool ShoppingListIncludesRecipes { get; set; }
 
+        public Point? RotationHelperLocation { get; set; }
+
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
         internal bool MasterMode

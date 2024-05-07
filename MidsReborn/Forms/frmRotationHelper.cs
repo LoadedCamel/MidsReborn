@@ -61,6 +61,11 @@ namespace Mids_Reborn.Forms
 
         private void frmRotationHelper_Load(object sender, EventArgs e)
         {
+            if (MidsContext.Config.RotationHelperLocation is not null)
+            {
+                Location = (Point)MidsContext.Config.RotationHelperLocation;
+            }
+
             SetDataSources();
             UpdateColorTheme();
 
@@ -81,6 +86,11 @@ namespace Mids_Reborn.Forms
             chkCastTimeReal.Checked = ctlCombatTimeline1.UseArcanaTime;
 
             GraphZoom = 100;
+        }
+
+        private void frmRotationHelper_Move(object sender, EventArgs e)
+        {
+            MidsContext.Config.RotationHelperLocation = Location;
         }
 
         public void UpdateData()
@@ -339,6 +349,7 @@ namespace Mids_Reborn.Forms
             {
                 1 => ctlCombatTimeline.ViewProfileType.Healing,
                 2 => ctlCombatTimeline.ViewProfileType.Survival,
+                3 => ctlCombatTimeline.ViewProfileType.Debuff,
                 _ => ctlCombatTimeline.ViewProfileType.Damage
             };
         }

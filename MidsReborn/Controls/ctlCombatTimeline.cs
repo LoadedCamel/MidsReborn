@@ -47,7 +47,8 @@ namespace Mids_Reborn.Controls
         {
             Damage,
             Healing,
-            Survival
+            Survival,
+            Debuff
         }
 
         #endregion
@@ -134,7 +135,6 @@ namespace Mids_Reborn.Controls
 
         private class ViewProfiles
         {
-            // Buff/Debuff profile ?
             public readonly List<FxIdentifier> Damage = new()
             {
                 new FxIdentifier(Enums.eEffectType.Damage, Enums.eToWho.Target, null), // ???
@@ -158,13 +158,14 @@ namespace Mids_Reborn.Controls
                 new FxIdentifier(Enums.eEffectType.Regeneration, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Recovery, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Mez, Enums.eToWho.Target, ValueSign.Negative),
-                new FxIdentifier(Enums.eEffectType.MezResist, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.MezResist, Enums.eToWho.Target, ValueSign.Negative), // ???
                 new FxIdentifier(Enums.eEffectType.Defense, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Resistance, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.ToHit, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Accuracy, Enums.eToWho.Target, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.DamageBuff, Enums.eToWho.Target, ValueSign.Positive),
-                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Target, ValueSign.Positive)
+                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Target, ValueSign.Positive),
+                new FxIdentifier(Enums.eEffectType.ResEffect, Enums.eToWho.Target, ValueSign.Negative)
             };
 
             public readonly List<FxIdentifier> Survival = new()
@@ -172,10 +173,38 @@ namespace Mids_Reborn.Controls
                 new FxIdentifier(Enums.eEffectType.Heal, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Regeneration, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.HitPoints, Enums.eToWho.Self, ValueSign.Positive),
+                new FxIdentifier(Enums.eEffectType.Absorb, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Mez, Enums.eToWho.Self, ValueSign.Negative),
                 new FxIdentifier(Enums.eEffectType.MezResist, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Defense, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Resistance, Enums.eToWho.Self, ValueSign.Positive)
+            };
+
+            public readonly List<FxIdentifier> Debuff = new()
+            {
+                new FxIdentifier(Enums.eEffectType.Defense, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Resistance, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.ToHit, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Accuracy, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Regeneration, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.HitPoints, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Endurance, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Recovery, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.EnduranceDiscount, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.DamageBuff, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.ResEffect, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.PerceptionRadius, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.StealthRadius, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.StealthRadiusPlayer, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.SpeedFlying, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.SpeedJumping, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.SpeedRunning, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.MaxFlySpeed, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.MaxJumpSpeed, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.MaxRunSpeed, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.JumpHeight, Enums.eToWho.Target, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.Fly, Enums.eToWho.Target, ValueSign.Negative)
             };
         }
 
@@ -257,6 +286,7 @@ namespace Mids_Reborn.Controls
             private readonly Color Green2 = Color.FromArgb(72, 193, 48);
             private readonly Color Green3 = Color.FromArgb(57, 153, 38);
             private readonly Color Green4 = Color.FromArgb(139, 226, 122);
+            private readonly Color Green5 = Color.FromArgb(186, 226, 169);
             private readonly Color Blue = Color.FromArgb(30, 154, 224);
             private readonly Color Blue2 = Color.FromArgb(23, 115, 165);
             private readonly Color Blue3 = Color.FromArgb(17, 89, 128);
@@ -269,6 +299,7 @@ namespace Mids_Reborn.Controls
             private readonly Color Purple2 = Color.FromArgb(86, 33, 186);
             private readonly Color LightPurple = Color.FromArgb(171, 102, 255);
             private readonly Color LightPurple2 = Color.FromArgb(203, 160, 255);
+            private readonly Color LightPurple3 = Color.FromArgb(231, 205, 255);
             private readonly Color White = Color.FromArgb(248, 248, 248);
             private readonly Color Gray = Color.FromArgb(168, 186, 194);
             private readonly Color Gray2 = Color.FromArgb(146, 161, 168);
@@ -302,6 +333,14 @@ namespace Mids_Reborn.Controls
                     new() {EffectType = Enums.eEffectType.Resistance},
                     new() {EffectType = Enums.eEffectType.SpeedRunning},
                     new() {EffectType = Enums.eEffectType.ToHit},
+                    new() {EffectType = Enums.eEffectType.StealthRadius},
+                    new() {EffectType = Enums.eEffectType.StealthRadiusPlayer},
+                    new() {EffectType = Enums.eEffectType.MaxFlySpeed},
+                    new() {EffectType = Enums.eEffectType.MaxJumpSpeed},
+                    new() {EffectType = Enums.eEffectType.MaxRunSpeed},
+                    new() {EffectType = Enums.eEffectType.JumpHeight},
+                    new() {EffectType = Enums.eEffectType.Fly},
+                    new() {EffectType = Enums.eEffectType.Absorb},
                     new() {EffectType = Enums.eEffectType.Enhancement, ETModifies = Enums.eEffectType.Heal},
                     new() {EffectType = Enums.eEffectType.Enhancement, ETModifies = Enums.eEffectType.Mez},
                     new() {EffectType = Enums.eEffectType.Enhancement, ETModifies = Enums.eEffectType.RechargeTime},
@@ -325,16 +364,17 @@ namespace Mids_Reborn.Controls
                     ? White
                     : effectType switch
                     {
+                        Enums.eEffectType.Absorb => Green5,
                         Enums.eEffectType.Accuracy => Yellow2,
                         Enums.eEffectType.Damage => Red,
                         Enums.eEffectType.DamageBuff => LightPink,
                         Enums.eEffectType.Defense => LightPurple,
                         Enums.eEffectType.Endurance => Blue2,
-                        Enums.eEffectType.SpeedFlying => Indigo3,
+                        Enums.eEffectType.Fly => Blue3,
                         Enums.eEffectType.Heal => Green,
                         Enums.eEffectType.HitPoints => Green2,
                         Enums.eEffectType.JumpHeight => Indigo4,
-                        Enums.eEffectType.SpeedJumping => Indigo2,
+                        Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.MaxRunSpeed => LightPurple2,
                         Enums.eEffectType.Mez => Purple,
                         Enums.eEffectType.MezResist => Purple2,
                         Enums.eEffectType.PerceptionRadius => Gray5,
@@ -342,7 +382,10 @@ namespace Mids_Reborn.Controls
                         Enums.eEffectType.Regeneration => Green3,
                         Enums.eEffectType.ResEffect => Indigo5,
                         Enums.eEffectType.Resistance => LightPurple2,
+                        Enums.eEffectType.SpeedJumping => Indigo2,
+                        Enums.eEffectType.SpeedFlying => Indigo3,
                         Enums.eEffectType.SpeedRunning => Indigo,
+                        Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer => LightPurple3,
                         Enums.eEffectType.ToHit => Yellow,
                         Enums.eEffectType.Enhancement => etModifies switch
                         {
@@ -927,6 +970,7 @@ namespace Mids_Reborn.Controls
             {
                 ViewProfileType.Healing => Profiles.Healing,
                 ViewProfileType.Survival => Profiles.Survival,
+                ViewProfileType.Debuff => Profiles.Debuff,
                 _ => Profiles.Damage
             };
         }
