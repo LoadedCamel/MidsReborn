@@ -1122,6 +1122,16 @@ namespace Mids_Reborn.Controls
 
         #region Drawing process
 
+        protected struct PowerText
+        {
+            public string PowerName;
+            public Font Font;
+            public Rectangle Bounds;
+            public Color ShadowColor;
+            public Color TextColor;
+            public TextFormatFlags FormatFlags;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -1174,6 +1184,7 @@ namespace Mids_Reborn.Controls
                 .ToList();
 
             ActiveZones = new Dictionary<Rectangle, PowerEffectInfo>();
+            var powerTexts = new List<PowerText>();
 
             g.Clear(bgColor);
 
@@ -1212,11 +1223,16 @@ namespace Mids_Reborn.Controls
                 {
                     if (i == 0)
                     {
-                        // Draw power name text
-                        TextRendererExt.DrawOutlineText(g, p.PowerSlot.EnhancedPower.DisplayName, font,
-                            new Rectangle(0, (int) Math.Round(vOffset + vp - normalTextSize / 2f), textGapLeft,
-                                (int) Math.Round(Height - padding - vOffset - vp + normalTextSize / 2f)), shadowColor,
-                            textColor, TextFormatFlags.Right | TextFormatFlags.Top);
+                        // Power name text
+                        powerTexts.Add(new PowerText
+                        {
+                            PowerName = p.PowerSlot.EnhancedPower.DisplayName,
+                            Bounds = new Rectangle(0, (int)Math.Round(vOffset + vp - normalTextSize / 2f), textGapLeft, (int)Math.Round(Height - padding - vOffset - vp + normalTextSize / 2f)),
+                            Font = font,
+                            ShadowColor = shadowColor,
+                            TextColor = textColor,
+                            FormatFlags = TextFormatFlags.Right | TextFormatFlags.Top
+                        });
                     }
 
                     // Index among generic enhancements, 0 if none.
@@ -1279,6 +1295,12 @@ namespace Mids_Reborn.Controls
                     $"Time interval: [{(ViewInterval == null ? $"0 s. - {MaxTime:####0.##} s." : $"{ViewInterval.Start:####0.##} s. - {ViewInterval.End:####0.##} s.")}]",
                     font, new Rectangle(3, 3, Width - 6, 24), shadowColor, textColor,
                     TextFormatFlags.Right | TextFormatFlags.Top);
+            }
+
+            // Draw power texts
+            foreach (var pt in powerTexts)
+            {
+                TextRendererExt.DrawOutlineText(g, pt.PowerName, pt.Font, pt.Bounds, pt.ShadowColor, pt.TextColor, pt.FormatFlags);
             }
         }
 

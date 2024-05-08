@@ -31,9 +31,9 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRotationHelper));
             components = new System.ComponentModel.Container();
-            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRotationHelper));
+            toolTip1 = new ToolTip(components);
             listBox1 = new ListBox();
             label1 = new Label();
             cbViewProfile = new ComboBox();
@@ -59,8 +59,6 @@ namespace Mids_Reborn.Forms
             lblBoosts = new Label();
             chkCastTimeReal = new CheckBox();
             imageButtonEx2 = new Controls.ImageButtonEx();
-            button1 = new Button();
-            button2 = new Button();
             btnClearLastPower = new Button();
             btnColorsRef = new Controls.ImageButtonEx();
             btnAddAllBoosts = new Button();
@@ -388,26 +386,6 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.UseAlt = false;
             imageButtonEx2.Click += imageButtonEx2_Click;
             // 
-            // button1
-            // 
-            button1.Location = new System.Drawing.Point(857, 504);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(131, 33);
-            button1.TabIndex = 26;
-            button1.Text = "Test rotation (full)";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new System.Drawing.Point(1002, 504);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(131, 33);
-            button2.TabIndex = 27;
-            button2.Text = "Test rotation (simple)";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
-            // 
             // btnClearLastPower
             // 
             btnClearLastPower.Location = new System.Drawing.Point(150, 261);
@@ -599,8 +577,6 @@ namespace Mids_Reborn.Forms
             Controls.Add(btnAddAllBoosts);
             Controls.Add(btnColorsRef);
             Controls.Add(btnClearLastPower);
-            Controls.Add(button2);
-            Controls.Add(button1);
             Controls.Add(imageButtonEx2);
             Controls.Add(chkCastTimeReal);
             Controls.Add(borderPanel3);
@@ -668,8 +644,6 @@ namespace Mids_Reborn.Forms
         private Label lblBoosts;
         private CheckBox chkCastTimeReal;
         private Controls.ImageButtonEx imageButtonEx2;
-        private Button button1;
-        private Button button2;
         private Button btnClearLastPower;
         private Controls.ImageButtonEx btnColorsRef;
         private Button btnAddAllBoosts;
