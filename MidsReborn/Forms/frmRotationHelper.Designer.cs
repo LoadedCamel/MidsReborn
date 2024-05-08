@@ -32,6 +32,8 @@ namespace Mids_Reborn.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRotationHelper));
+            components = new System.ComponentModel.Container();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
             listBox1 = new ListBox();
             label1 = new Label();
             cbViewProfile = new ComboBox();
@@ -77,6 +79,13 @@ namespace Mids_Reborn.Forms
             borderPanel5.SuspendLayout();
             borderPanel6.SuspendLayout();
             SuspendLayout();
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 10000;
+            toolTip1.InitialDelay = 500;
+            toolTip1.ReshowDelay = 100;
+            toolTip1.UseAnimation = false;
             // 
             // listBox1
             // 
@@ -474,6 +483,7 @@ namespace Mids_Reborn.Forms
             timelineCursorZoom1.TextShadowColor = System.Drawing.Color.Black;
             timelineCursorZoom1.TextSize = 10F;
             timelineCursorZoom1.ViewIntervalChanged += timelineCursorZoom1_ViewIntervalChanged;
+            timelineCursorZoom1.HoveredPosChanged += timelineCursorZoom1_HoveredPosChanged;
             // 
             // ibxZoomOut
             // 
@@ -671,5 +681,6 @@ namespace Mids_Reborn.Forms
         private Controls.BorderPanel borderPanel6;
         private Label lblDamage;
         private Label lblDps;
+        private ToolTip toolTip1;
     }
 }

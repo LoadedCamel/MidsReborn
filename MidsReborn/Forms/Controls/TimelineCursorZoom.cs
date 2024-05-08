@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Drawing.Text;
+using System.Runtime.CompilerServices;
 
 namespace Mids_Reborn.Forms.Controls
 {
@@ -47,6 +48,14 @@ namespace Mids_Reborn.Forms.Controls
         private float Hscale => TimelineInterval == null || TimelineInterval.End < float.Epsilon
             ? 1
             : Width / TimelineInterval.End;
+
+        [field: AccessedThroughProperty("tTip")]
+        protected virtual ToolTip? Tip
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set;
+        }
 
         public TimelineCursorZoom()
         {
@@ -247,7 +256,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var valOffset = (e.X - DragPos.Value) / Hscale;
-            ViewInterval = ViewInterval ?? TimelineInterval;
+            ViewInterval ??= TimelineInterval;
             ViewInterval = DragTarget switch
             {
                 DragTargetType.LowerBound => ViewInterval?.OffsetStart(valOffset).MinMax(TimelineInterval),
@@ -267,6 +276,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             HoveredPos = null;
             HoveredPosChanged?.Invoke(null, null);
+            Tip?.SetToolTip(this, "");
             Invalidate();
         }
 
@@ -349,11 +359,6 @@ namespace Mids_Reborn.Forms.Controls
 
             DragTarget = null;
             HideHovered = false;
-        }
-
-        private void TimelineCursorZoom_HoveredPosChanged(float? time, int? pixelValue)
-        {
-            toolTip1.SetToolTip(this, time == null ? "" : $"Time: {time.Value:####0.##} s.");
         }
 
         #endregion

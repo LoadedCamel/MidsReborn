@@ -1379,7 +1379,7 @@ namespace Mids_Reborn.Core
                             skipEffects = true;
                         }
                 
-                        Debug.WriteLine($"{powerInfo.FullName} skip effects? {skipEffects}");
+                        //Debug.WriteLine($"{powerInfo.FullName} skip effects? {skipEffects}");
 
                         if (setCount[power] < 6)
                         {

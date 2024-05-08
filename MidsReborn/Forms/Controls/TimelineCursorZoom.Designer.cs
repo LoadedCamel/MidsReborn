@@ -28,16 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            toolTip1 = new System.Windows.Forms.ToolTip(components);
             SuspendLayout();
-            // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 10000;
-            toolTip1.InitialDelay = 500;
-            toolTip1.ReshowDelay = 100;
-            toolTip1.UseAnimation = false;
             // 
             // TimelineCursorZoom
             // 
@@ -51,12 +42,10 @@
             MouseMove += TimelineCursorZoom_MouseMove;
             MouseUp += TimelineCursorZoom_MouseUp;
             MouseWheel += TimelineCursorZoom_MouseWheel;
-            HoveredPosChanged += TimelineCursorZoom_HoveredPosChanged;
             ResumeLayout(false);
         }
 
         #endregion
 
-        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
