@@ -1064,7 +1064,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 // Filter out effects with ToWho == None
-                if (weightedEffects[i].Key.Key.ToWho is not Enums.eToWho.Target or Enums.eToWho.Self)
+                if (weightedEffects[i].Key.Key.ToWho is not (Enums.eToWho.Target or Enums.eToWho.Self))
                 {
                     continue;
                 }
@@ -1149,6 +1149,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     Enums.eEffectType.SpeedFlying => 5,
                     Enums.eEffectType.GrantPower => -20,
                     Enums.eEffectType.Heal => 15,
+                    Enums.eEffectType.Absorb => 13,
                     Enums.eEffectType.HitPoints => 10,
                     Enums.eEffectType.JumpHeight => 5,
                     Enums.eEffectType.SpeedJumping => 5,
