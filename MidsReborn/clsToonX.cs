@@ -992,7 +992,7 @@ namespace Mids_Reborn
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null || enhancement.Effect.Where(e => e.FX is not null).Any(e => e.Mode != Enums.eEffMode.FX))
+                if (enhancementPower == null || enhancement.Effect.Any(e => e.FX != null && e.Mode != Enums.eEffMode.FX))
                 {
                     continue;
                 }
